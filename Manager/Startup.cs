@@ -52,6 +52,9 @@ namespace Manager
       services.AddSingleton(_ => serviceCompany);
       services.AddSingleton(_ => serviceAuthentication);
       services.AddSingleton(_ => servicePerson);
+      services.AddSingleton(_ => serviceWorkflow);
+      services.AddSingleton(_ => serviceAutoManager);
+      services.AddSingleton(_ => serviceLog);
 
     }
 

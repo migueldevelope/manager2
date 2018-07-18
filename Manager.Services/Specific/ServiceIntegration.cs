@@ -22,6 +22,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Schooling> schoolingService;
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceGeneric<Account> accountService;
+    private readonly IServiceLog logService;
 
     public ServiceIntegration(DataContext context)
       : base(context)
@@ -32,6 +33,7 @@ namespace Manager.Services.Specific
         schoolingService = new ServiceGeneric<Schooling>(context);
         companyService = new ServiceGeneric<Company>(context);
         accountService = new ServiceGeneric<Account>(context);
+        logService = new ServiceLog(context);
       }
       catch (Exception e)
       {
@@ -265,6 +267,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         foreach (var item in list)
         {
           SetItem(item);
@@ -278,6 +281,25 @@ namespace Manager.Services.Specific
       }
     }
 
+    public async void Log()
+    {
+      try
+      {
+        var user = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Import",
+          Local = "ImportPerson",
+          Person = user
+        };
+        logService.NewLog(log);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
@@ -285,6 +307,7 @@ namespace Manager.Services.Specific
       schoolingService._user = _user;
       companyService._user = _user;
       accountService._user = _user;
+      logService.user = _user;
     }
 
     public void SetUser(BaseUser user)

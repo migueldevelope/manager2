@@ -217,6 +217,56 @@ namespace Manager.Test.Test.Complete
       }
     }
 
+    [Fact]
+    public void ListPersonsTest()
+    {
+      try
+      {
+        base.Init();
+
+        var account = this.serviceAccount.GeAccount(p => p.Name == "Support")._id;
+        var baseUser = new BaseUser()
+        {
+          _idAccount = account
+        };
+        base.Init();
+        serviceIntegration = new ServiceIntegration(base.context);
+        serviceIntegration.SetUser(baseUser);
+
+        var list = new List<ViewPersonImport>();
+        long i = 0;
+        for (i = 0; i < 100; i++)
+        {
+          var nametest = "test " + i;
+          list.Add(new ViewPersonImport()
+          {
+            Mail = nametest + "@jmsoft.com.br",
+            Name = nametest,
+            NameCompany = "Test",
+            NameManager = "Juremir Milani",
+            NameSchooling = "Posgraduate",
+            Password = "1234",
+            Phone = "05432025412",
+            Registration = 1,
+            StatusUser = EnumStatusUser.Enabled,
+            DateAdm = DateTime.Parse("2012-01-01"),
+            DateBirth = DateTime.Parse("1993-05-11"),
+            Document = nametest,
+            DocumentManager = "02",
+            TypeUser = EnumTypeUser.Employee
+          });
+        }
+
+        var result = this.serviceIntegration.ImportPerson(list);
+
+        this.serviceIntegration.UpdateManager();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
   }
 
 }

@@ -32,9 +32,9 @@ namespace Manager.Test.Commons
     {
       try
       {
-        this.context = new DataContext("mongodb://test:bti9010@10.0.0.14:27017/evaluations_test", "evaluations_test");
+        //this.context = new DataContext("mongodb://test:bti9010@10.0.0.14:27017/evaluations_test", "evaluations_test");
         //this.context = new DataContext("mongodb://homologacao:bti9010@10.0.0.15:27017/evaluations_homologacao", "evaluations_homologacao");
-        //this.context = new DataContext("mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations", "evaluations");
+        this.context = new DataContext("mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations", "evaluations");
         this.service = new ServiceGeneric<Person>(context);
 
         var user = this.service.GetAuthentication(p => p.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
@@ -78,9 +78,9 @@ namespace Manager.Test.Commons
 
     protected void InitOffAccount()
     {
-      this.context = new DataContext("mongodb://test:bti9010@10.0.0.14:27017/evaluations_test", "evaluations_test");
+      //this.context = new DataContext("mongodb://test:bti9010@10.0.0.14:27017/evaluations_test", "evaluations_test");
       //this.context = new DataContext("mongodb://homologacao:bti9010@10.0.0.15:27017/evaluations_homologacao", "evaluations_homologacao");
-      //this.context = new DataContext("mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations", "evaluations");
+      this.context = new DataContext("mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations", "evaluations");
     }
 
     public IList<ValidationResult> ValidateModel(object model)
