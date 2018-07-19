@@ -9,7 +9,6 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public Axis Template { get; set; }
     public Company Company { get; set; }
-    public Sphere Sphere { get; set; }
     public EnumTypeAxis TypeAxis { get; set; }
   }
 }

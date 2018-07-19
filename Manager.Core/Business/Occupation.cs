@@ -7,10 +7,8 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public OccupationGroup OccupationGroup { get; set; }
-    public Company Company { get; set; }
     public Area Area { get; set; }
     public Occupation Template { get; set; }
-    public Sphere Sphere { get; set; }
     public long Position { get; set; }
     public List<Behavioral> Behavioral { get; set; }
     public List<Technique> Technique { get; set; }

@@ -45,6 +45,7 @@ namespace Manager
       IServiceLog serviceLog = new ServiceLog(_context);
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, servicePerson);
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, servicePerson);
+      IServiceInfra serviceInfra = new ServiceInfra(_context);
 
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
 
@@ -55,6 +56,7 @@ namespace Manager
       services.AddSingleton(_ => serviceWorkflow);
       services.AddSingleton(_ => serviceAutoManager);
       services.AddSingleton(_ => serviceLog);
+      services.AddSingleton(_ => serviceInfra);
 
     }
 
