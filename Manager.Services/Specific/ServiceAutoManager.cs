@@ -292,7 +292,7 @@ namespace Manager.Services.Specific
                 select auto
                     ).ToList()
                     .Where(p => p.Workflow.Where(t => t.StatusWorkflow == EnumWorkflow.Open
-                    & p.Requestor._id == idManager).Count() > 0)
+                    & t.Requestor._id == idManager).Count() > 0)
                     .Select(auto => new ViewAutoManager()
                     {
                       IdWorkflow = auto.Workflow.FirstOrDefault()._id,
