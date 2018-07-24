@@ -79,7 +79,7 @@ namespace Manager.Services.Specific
 
         mailSend.StatusMail = EnumStatusMail.Sended;
         mailSend.KeySendGrid = new List<string>();
-        foreach (var item in response.Headers.GetValues("X-Message-._id"))
+        foreach (var item in response.Headers.GetValues("X-Message-Id"))
           mailSend.KeySendGrid.Add(item);
 
         mailService.Update(mailSend, null);

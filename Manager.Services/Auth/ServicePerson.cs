@@ -21,6 +21,8 @@ namespace Manager.Services.Auth
   {
     private ServiceGeneric<Person> personService;
     private ServiceGeneric<Attachment> attachmentService;
+    private ServiceGeneric<Company> companyService;
+    private ServiceGeneric<Occupation> occupationService;
     private ServiceSendGrid mailService;
 
     public BaseUser user { get => _user; set => user = _user; }
@@ -33,6 +35,8 @@ namespace Manager.Services.Auth
         personService._user = _user;
         attachmentService._user = _user;
         mailService._user = _user;
+        companyService._user = _user;
+        occupationService._user = _user;
 
       }
       catch (Exception e)
@@ -49,6 +53,8 @@ namespace Manager.Services.Auth
         personService = new ServiceGeneric<Person>(context);
         attachmentService = new ServiceGeneric<Attachment>(context);
         mailService = new ServiceSendGrid(context);
+        companyService = new ServiceGeneric<Company>(context);
+        occupationService = new ServiceGeneric<Occupation>(context);
       }
       catch (Exception e)
       {
@@ -64,6 +70,8 @@ namespace Manager.Services.Auth
         personService._user = _user;
         attachmentService._user = _user;
         mailService._user = _user;
+        companyService._user = _user;
+        occupationService._user = _user;
       }
       catch (Exception e)
       {
@@ -99,6 +107,73 @@ namespace Manager.Services.Auth
         person.Status = EnumStatus.Enabled;
         personService.Insert(person);
         return person;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string NewPerson(ViewPersonsCrud person)
+    {
+      try
+      {
+        Person model = new Person()
+        {
+          Name = person.Name,
+          ChangePassword = EnumChangePassword.No,
+          TypeUser = person.TypeUser,
+          DateAdm = person.DateAdm,
+          DateBirth = person.DateBirth,
+          Document = person.Document,
+          Manager = person.Manager,
+          Occupation = person.Occupation,
+          Phone = person.Phone,
+          Mail = person.Mail,
+          Registration = person.Registration,
+          Company = person.Company,
+          Password = EncryptServices.GetMD5Hash(person.Document),
+          StatusUser = person.StatusUser,
+          Status = EnumStatus.Enabled
+        };
+
+        if (person.Manager != null)
+          model.DocumentManager = person.Manager.Document;
+
+        personService.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public string UpdatePerson(string id, ViewPersonsCrud person)
+    {
+      try
+      {
+        Person model = personService.GetAll(p => p._id == id).FirstOrDefault();
+
+        model.Name = person.Name;
+        model.TypeUser = person.TypeUser;
+        model.DateAdm = person.DateAdm;
+        model.DateBirth = person.DateBirth;
+        model.Document = person.Document;
+        model.Manager = person.Manager;
+        model.Occupation = person.Occupation;
+        model.Phone = person.Phone;
+        model.Mail = person.Mail;
+        model.Registration = person.Registration;
+        model.Company = person.Company;
+        model.StatusUser = person.StatusUser;
+
+        if (person.Manager != null)
+          model.DocumentManager = person.Manager.Document;
+
+        personService.Update(model,null);
+        return "ok";
       }
       catch (Exception e)
       {
@@ -354,6 +429,93 @@ namespace Manager.Services.Auth
       {
         throw new ServiceException(_user, e, this._context);
       }
+    }
+
+    public List<ViewPersonsCrud> GetPersonsCrud(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = personService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList()
+          .Select(item => new ViewPersonsCrud()
+          {
+            Name = item.Name,
+            ChangePassword = item.ChangePassword,
+            Occupation = item.Occupation,
+            Mail = item.Mail,
+            Manager = item.Manager,
+            Company = item.Company,
+            Registration = item.Registration,
+            StatusUser = item.StatusUser,
+            TypeUser = item.TypeUser,
+            DateAdm = item.DateAdm,
+            DateBirth = item.DateBirth,
+            Document = item.Document,
+            Phone = item.Phone
+          }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewPersonsCrud GetPersonCrud(string idperson)
+    {
+      try
+      {
+        return personService.GetAll(p => p._id == idperson)
+          .ToList().Select(item => new ViewPersonsCrud()
+          {
+            Name = item.Name,
+            ChangePassword = item.ChangePassword,
+            Occupation = item.Occupation,
+            Company = item.Company,
+            Registration = item.Registration,
+            Mail = item.Mail,
+            Manager = item.Manager,
+            StatusUser = item.StatusUser,
+            TypeUser = item.TypeUser,
+            DateAdm = item.DateAdm,
+            DateBirth = item.DateBirth,
+            Document = item.Document,
+            Phone = item.Phone
+          }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Occupation> ListOccupation(ref long total, string filter, int count, int page)
+    {
+      int skip = (count * (page - 1));
+      var detail = occupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+      total = detail.Count();
+
+      return detail.Skip(skip).Take(count).ToList();
+    }
+
+    public List<Person> ListManager(ref long total, string filter, int count, int page)
+    {
+      int skip = (count * (page - 1));
+      var detail = personService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+      total = detail.Count();
+
+      return detail.Skip(skip).Take(count).ToList();
+    }
+
+    public List<Company> ListCompany(ref long total, string filter, int count, int page)
+    {
+      int skip = (count * (page - 1));
+      var detail = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+      total = detail.Count();
+
+      return detail.Skip(skip).Take(count).ToList();
     }
   }
 }

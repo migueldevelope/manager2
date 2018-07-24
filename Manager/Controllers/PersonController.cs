@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Authorization;
@@ -89,7 +90,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersons")]
-    public List<ViewPersonList> List(string filter = "")
+    public List<ViewPersonList> ListPersons(string filter = "")
     {
       return service.GetPersons(filter);
     }
@@ -101,5 +102,77 @@ namespace Manager.Controllers
     {
       return service.Head(idperson);
     }
+
+    [Authorize]
+    [HttpGet]
+    [Route("list")]
+    public List<ViewPersonsCrud> List(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetPersonsCrud(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("{idperson}/edit")]
+    public ViewPersonsCrud GetEdit(string idperson)
+    { 
+      return service.GetPersonCrud(idperson); ;
+    }
+
+
+    [Authorize]
+    [HttpPost]
+    [Route("new")]
+    public string Post([FromBody] ViewPersonsCrud person)
+    {
+      return service.NewPerson(person); 
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("update/{id}")]
+    public string Put([FromBody] ViewPersonsCrud person, string id)
+    {
+      return service.UpdatePerson(id,person);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listoccupation")]
+    public List<Occupation> ListOccupation(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListOccupation(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listcompany")]
+    public List<Company> ListCompany(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListCompany(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listmanager")]
+    public List<Person> ListManager(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListManager(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+
+
   }
 }
