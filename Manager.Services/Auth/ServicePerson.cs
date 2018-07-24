@@ -172,7 +172,7 @@ namespace Manager.Services.Auth
         if (person.Manager != null)
           model.DocumentManager = person.Manager.Document;
 
-        personService.Update(model,null);
+        personService.Update(model, null);
         return "ok";
       }
       catch (Exception e)
@@ -431,7 +431,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<ViewPersonsCrud> GetPersonsCrud(ref long total, string filter, int count, int page)
+    public List<Person> GetPersonsCrud(ref long total, string filter, int count, int page)
     {
       try
       {
@@ -439,23 +439,7 @@ namespace Manager.Services.Auth
         var detail = personService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
         total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList()
-          .Select(item => new ViewPersonsCrud()
-          {
-            Name = item.Name,
-            ChangePassword = item.ChangePassword,
-            Occupation = item.Occupation,
-            Mail = item.Mail,
-            Manager = item.Manager,
-            Company = item.Company,
-            Registration = item.Registration,
-            StatusUser = item.StatusUser,
-            TypeUser = item.TypeUser,
-            DateAdm = item.DateAdm,
-            DateBirth = item.DateBirth,
-            Document = item.Document,
-            Phone = item.Phone
-          }).ToList();
+        return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
@@ -463,27 +447,11 @@ namespace Manager.Services.Auth
       }
     }
 
-    public ViewPersonsCrud GetPersonCrud(string idperson)
+    public Person GetPersonCrud(string idperson)
     {
       try
       {
-        return personService.GetAll(p => p._id == idperson)
-          .ToList().Select(item => new ViewPersonsCrud()
-          {
-            Name = item.Name,
-            ChangePassword = item.ChangePassword,
-            Occupation = item.Occupation,
-            Company = item.Company,
-            Registration = item.Registration,
-            Mail = item.Mail,
-            Manager = item.Manager,
-            StatusUser = item.StatusUser,
-            TypeUser = item.TypeUser,
-            DateAdm = item.DateAdm,
-            DateBirth = item.DateBirth,
-            Document = item.Document,
-            Phone = item.Phone
-          }).FirstOrDefault();
+        return personService.GetAll(p => p._id == idperson).FirstOrDefault();
       }
       catch (Exception e)
       {

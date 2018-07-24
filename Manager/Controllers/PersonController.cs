@@ -106,7 +106,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewPersonsCrud> List(int count = 10, int page = 1, string filter = "")
+    public List<Person> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetPersonsCrud(ref total, filter, count, page);
@@ -117,7 +117,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idperson}/edit")]
-    public ViewPersonsCrud GetEdit(string idperson)
+    public Person GetEdit(string idperson)
     { 
       return service.GetPersonCrud(idperson); ;
     }
