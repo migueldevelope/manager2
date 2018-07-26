@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -22,6 +23,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceGeneric<Skill> skillService;
     private readonly ServiceGeneric<Schooling> schoolingService;
+    private readonly ServiceGeneric<Person> personService;
 
 
     public ServiceInfra(DataContext context)
@@ -38,6 +40,7 @@ namespace Manager.Services.Specific
         companyService = new ServiceGeneric<Company>(context);
         skillService = new ServiceGeneric<Skill>(context);
         schoolingService = new ServiceGeneric<Schooling>(context);
+        personService = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
       {
@@ -88,8 +91,21 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            Type = view.Skill.TypeSkill
+          });
+          view.Skill = skill;
+        }
+
         view.Company.Skills.Add(view.Skill);
         companyService.Update(view.Company, null);
+
+        UpdateCompanyAll(view.Company);
         return "ok";
       }
       catch (Exception e)
@@ -123,13 +139,66 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async void UpdateSkillGroup()
+    private async Task UpdateSkillAll(Skill skill, bool remove)
     {
+      try
+      {
+        foreach (var company in companyService.GetAll().ToList())
+        {
+          foreach (var item in company.Skills)
+          {
+            if (item._id == skill._id)
+            {
+              company.Skills.Remove(item);
+              if (remove == false)
+                company.Skills.Add(skill);
 
-    }
+              break;
+            }
+          }
 
-    private async void UpdateSkillEssential()
-    {
+          companyService.Update(company, null);
+          UpdateCompanyAll(company);
+
+          foreach (var group in groupService.GetAll(p => p.Company._id == company._id).ToList())
+          {
+            foreach (var item in group.Skills)
+            {
+              if (item._id == skill._id)
+              {
+                group.Skills.Remove(item);
+                if (remove == false)
+                  group.Skills.Add(skill);
+
+                break;
+              }
+            }
+            groupService.Update(group, null);
+            UpdateGroupAll(group);
+          }
+
+          foreach (var occupation in occupationService.GetAll(p => p.Group.Company._id == company._id).ToList())
+          {
+            foreach (var item in occupation.Skills)
+            {
+              if (item._id == skill._id)
+              {
+                occupation.Skills.Remove(item);
+                if (remove == false)
+                  occupation.Skills.Add(skill);
+
+                break;
+              }
+            }
+            occupationService.Update(occupation, null);
+            UpdateOccupationAll(occupation);
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
 
     }
 
@@ -242,7 +311,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddSkill(ViewAddSkill view)
+    public Skill AddSkill(ViewAddSkill view)
     {
       try
       {
@@ -254,7 +323,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled
         };
         skillService.Insert(skill);
-        return "ok";
+        return skill;
       }
       catch (Exception e)
       {
@@ -294,7 +363,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeleteAxis(Axis axis)
+    public string DeleteAxis(string idaxis)
     {
       try
       {
@@ -307,12 +376,113 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeleteEssential(Company company, string id)
+    public string DeleteEssential(string idcompany, string id)
     {
       try
       {
+        var company = companyService.GetAll(p => p._id == idcompany).FirstOrDefault();
+        foreach (var item in company.Skills)
+        {
+          if (item._id == id)
+          {
+            company.Skills.Remove(item);
+            this.companyService.Update(company, null);
+            UpdateCompanyAll(company);
+            return "delete";
+          }
+        }
 
         return "delete";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private async Task UpdateCompanyAll(Company company)
+    {
+      try
+      {
+        foreach (var item in personService.GetAll(p => p.Company._id == company._id).ToList())
+        {
+          item.Company = company;
+          personService.Update(item, null);
+        }
+
+        foreach (var item in sphereService.GetAll(p => p.Company._id == company._id).ToList())
+        {
+          item.Company = company;
+          sphereService.Update(item, null);
+        }
+
+        foreach (var item in axisService.GetAll(p => p.Sphere.Company._id == company._id).ToList())
+        {
+          item.Sphere.Company = company;
+          axisService.Update(item, null);
+        }
+
+        foreach (var item in occupationService.GetAll(p => p.Group.Company._id == company._id).ToList())
+        {
+          item.Group.Company = company;
+          occupationService.Update(item, null);
+        }
+
+        foreach (var item in groupService.GetAll(p => p.Company._id == company._id).ToList())
+        {
+          item.Company = company;
+          groupService.Update(item, null);
+        }
+
+        foreach (var item in areaService.GetAll(p => p.Company._id == company._id).ToList())
+        {
+          item.Company = company;
+          areaService.Update(item, null);
+        }
+
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private async Task UpdateGroupAll(Group group)
+    {
+      try
+      {
+        foreach (var item in personService.GetAll(p => p.Occupation.Group._id == group._id).ToList())
+        {
+          item.Occupation.Group = group;
+          personService.Update(item, null);
+        }
+
+
+        foreach (var item in occupationService.GetAll(p => p.Group._id == group._id).ToList())
+        {
+          item.Group = group;
+          occupationService.Update(item, null);
+        }
+
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private async Task UpdateOccupationAll(Occupation occupation)
+    {
+      try
+      {
+        foreach (var item in personService.GetAll(p => p.Occupation._id == occupation._id).ToList())
+        {
+          item.Occupation = occupation;
+          personService.Update(item, null);
+        }
+
       }
       catch (Exception e)
       {
@@ -411,11 +581,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeleteSkill(Skill skill)
+    public string DeleteSkill(string idskill)
     {
       try
       {
+        var skill = skillService.GetAll(p => p._id == idskill).FirstOrDefault();
+        skill.Status = EnumStatus.Disabled;
+        skillService.Update(skill, null);
 
+        UpdateSkillAll(skill, true);
         return "delete";
       }
       catch (Exception e)
@@ -424,10 +598,23 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeleteSphere(Sphere sphere)
+    public string DeleteSphere(string idsphere)
     {
       try
       {
+        var sphere = sphereService.GetAll(p => p._id == idsphere).FirstOrDefault();
+
+        foreach (var item in axisService.GetAll(p => p.Sphere._id == sphere._id).ToList())
+        {
+          return "error_exists_register";
+        }
+
+        foreach (var item in groupService.GetAll(p => p.Sphere._id == sphere._id).ToList())
+        {
+          return "error_exists_register";
+        }
+        sphere.Status = EnumStatus.Disabled;
+        sphereService.Update(sphere, null);
 
         return "delete";
       }
@@ -549,6 +736,36 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewSkills> GetSkills(string company, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        List<string> skills = companyService.GetAll().ToList().Select(p => p.Name).ToList();
+
+        var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()))
+                      .ToList().Select(p => new ViewSkills()
+                      {
+                        _id = p._id,
+                        _idAccount = p._idAccount,
+                        Name = p.Name,
+                        Concept = p.Concept,
+                        Status = p.Status,
+                        TypeSkill = p.TypeSkill,
+                        Exists = skills.Contains(p.Name)
+                      }).ToList();
+
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Sphere> GetSpheres()
     {
       try
@@ -573,6 +790,7 @@ namespace Manager.Services.Specific
       companyService._user = _user;
       skillService._user = _user;
       schoolingService._user = _user;
+      personService._user = _user;
     }
 
     public string UpdateArea(Area area)
@@ -644,7 +862,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-
+        skillService.Update(skill, null);
         return "update";
       }
       catch (Exception e)
@@ -657,7 +875,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-
+        sphereService.Update(sphere, null);
+        UpdateSphereAll(sphere, false);
         return "update";
       }
       catch (Exception e)
@@ -665,5 +884,32 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    private async Task UpdateSphereAll(Sphere sphere, bool remove)
+    {
+      foreach (var item in axisService.GetAll(p => p.Sphere._id == sphere._id).ToList())
+      {
+        if (remove == true)
+          item.Sphere = null;
+        else
+          item.Sphere = sphere;
+
+        this.axisService.Update(item, null);
+      }
+
+      foreach (var item in groupService.GetAll(p => p.Sphere._id == sphere._id).ToList())
+      {
+        if (remove == true)
+          item.Sphere = null;
+        else
+          item.Sphere = sphere;
+
+        this.groupService.Update(item, null);
+      }
+
+    }
+
+
+
   }
 }

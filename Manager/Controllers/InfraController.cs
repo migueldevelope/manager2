@@ -122,7 +122,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addskill")]
-    public string AddSkill([FromBody]ViewAddSkill view)
+    public Skill AddSkill([FromBody]ViewAddSkill view)
     {
       return service.AddSkill(view);
     }
@@ -145,18 +145,18 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
-    [Route("deleteaxis")]
-    public string DeleteAxis([FromBody]Axis axis)
+    [Route("deleteaxis/{idaxis}")]
+    public string DeleteAxis(string idaxis)
     {
-      return service.DeleteAxis(axis);
+      return service.DeleteAxis(idaxis);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deleteessential/{id}")]
-    public string DeleteEssential([FromBody]Company company, string id)
+    [Route("deleteessential/{idcompany}/{id}")]
+    public string DeleteEssential(string idcompany, string id)
     {
-      return service.DeleteEssential(company, id);
+      return service.DeleteEssential(idcompany, id);
     }
 
     [Authorize]
@@ -217,18 +217,18 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
-    [Route("deleteskill")]
-    public string DeleteSkill([FromBody]Skill skill)
+    [Route("deleteskill/{idskill}")]
+    public string DeleteSkill(string idskill)
     {
-      return service.DeleteSkill(skill);
+      return service.DeleteSkill(idskill);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deletesphere")]
-    public string DeleteSphere([FromBody]Sphere sphere)
+    [Route("deletesphere/{idsphere}")]
+    public string DeleteSphere(string idsphere)
     {
-      return service.DeleteSphere(sphere);
+      return service.DeleteSphere(idsphere);
     }
 
     [Authorize]
@@ -298,9 +298,23 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills")]
-    public List<Skill> GetSkills(ref long total, string filter, int count, int page)
+    public List<Skill> GetSkills(int count = 10, int page = 1, string filter = "")
     {
-      return service.GetSkills(ref total, filter, count, page);
+      long total = 0;
+      var result = service.GetSkills(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getskills/{company}")]
+    public List<ViewSkills> GetSkills(string company, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetSkills(company, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
     [Authorize]

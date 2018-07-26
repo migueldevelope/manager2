@@ -95,7 +95,8 @@ namespace Manager.Services.Specific
         var item = new Company()
         {
           Name = name,
-          Status = EnumStatus.Enabled
+          Status = EnumStatus.Enabled,
+          Skills = new List<Skill>()
         };
         return companyService.Insert(item);
       }

@@ -19,6 +19,7 @@ namespace Manager.Test.Test.Complete
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Group> serviceGroup;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
+    private readonly ServiceGeneric<Company> serviceCompany;
 
     public TestInfra()
     {
@@ -29,13 +30,45 @@ namespace Manager.Test.Test.Complete
       servicePerson = new ServiceGeneric<Person>(base.context);
       serviceGroup = new ServiceGeneric<Group>(base.context);
       serviceOccupation = new ServiceGeneric<Occupation>(base.context);
+      serviceCompany = new ServiceGeneric<Company>(base.context);
 
       servicePerson._user = base.baseUser;
       serviceGroup._user = base.baseUser;
       serviceOccupation._user = base.baseUser;
+      serviceCompany._user = base.baseUser;
 
 
     }
+
+
+
+    //[Fact]
+    //public void TestCompany()
+    //{
+    //  try
+    //  {
+    //    foreach (var item in serviceCompany.GetAll().ToList())
+    //    {
+    //      item.Skills = new List<Skill>();
+    //      serviceCompany.Update(item, null);
+    //    }
+
+    //    var comp = new Company()
+    //    {
+    //      Name = "Outra ",
+    //      Skills = new List<Skill>(),
+    //      Status = EnumStatus.Enabled
+    //    };
+
+    //    serviceCompany.Insert(comp);
+
+
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
 
     [Fact]
     public void TestBasicVersion0()
@@ -43,14 +76,58 @@ namespace Manager.Test.Test.Complete
       try
       {
         var company = serviceInfra.GetCompanies().FirstOrDefault();
-        serviceInfra.AddSkill(new ViewAddSkill() { Name = "Skill 1", Type = EnumTypeSkill.Hard });
+        serviceInfra.AddSkill(new ViewAddSkill() { Name = "Skill 3", Type = EnumTypeSkill.Hard });
         long total = 0;
-        var skill = serviceInfra.GetSkills(ref total, "", 100, 1).FirstOrDefault();
-        serviceInfra.AddSphere(new ViewAddSphere() { Name = "Estrategico", Type = EnumTypeSphere.Strategic, Company = company });
+        var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).FirstOrDefault();
+        serviceInfra.AddSphere(new ViewAddSphere() { Name = "Tatico", Type = EnumTypeSphere.Strategic, Company = company });
         var sphere = serviceInfra.GetSpheres().FirstOrDefault();
-        serviceInfra.AddAxis(new ViewAddAxis() { Name = "Gestão", Type = EnumTypeAxis.A, Sphere = sphere });
+        serviceInfra.AddAxis(new ViewAddAxis() { Name = "Tecnico", Type = EnumTypeAxis.A, Sphere = sphere, });
         var axis = serviceInfra.GetAxis().FirstOrDefault();
         serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    [Fact]
+    public void TestDelete0()
+    {
+      try
+      {
+        //5b59d5bda49e0f344cd97fb6/5b5a23bd3ac6f1466cdd7d3d
+
+        var idcompany = "5b59d5bda49e0f344cd97fb6";
+        var id = "5b5a23bd3ac6f1466cdd7d3d";
+        serviceInfra.DeleteEssential(idcompany, id);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    [Fact]
+    public void TestUpdateBasicVersion0()
+    {
+      try
+      {
+        var company = serviceInfra.GetCompanies().FirstOrDefault();
+        long total = 0;
+        //var skills = serviceInfra.GetSkills(ref total, "", 100, 1);
+        var skill = serviceInfra.GetSkills(company._id, ref total, "", 100, 1).FirstOrDefault();
+        var sphere = serviceInfra.GetSpheres().FirstOrDefault();
+        var axis = serviceInfra.GetAxis().FirstOrDefault();
+
+        sphere.Name = sphere.Name + " test";
+        serviceInfra.UpdateSphere(sphere);
+
+        var idcompany = "5b59d5bda49e0f344cd97fb6";
+        var id = "5b5a23bd3ac6f1466cdd7d3d";
+
+
 
       }
       catch (Exception e)
