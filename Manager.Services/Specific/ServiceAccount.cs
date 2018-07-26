@@ -5,6 +5,7 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Tools;
@@ -54,6 +55,7 @@ namespace Manager.Services.Specific
         {
           Name = view.NameCompany,
           _idAccount = id,
+          Skills = new List<Skill>(),
           Status = EnumStatus.Enabled
         };
         var _company = companyService.InsertAccount(company);

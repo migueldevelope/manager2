@@ -33,335 +33,338 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddArea(ViewAddArea view)
+    [Route("addarea")]
+    public string AddArea([FromBody]ViewAddArea view)
     {
-      throw new NotImplementedException();
+      return service.AddArea(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddAxis(ViewAddAxis view)
+    [Route("addaxis")]
+    public string AddAxis([FromBody]ViewAddAxis view)
     {
-      throw new NotImplementedException();
+      return service.AddAxis(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddEssential(ViewAddEssential view)
+    [Route("addessential")]
+    public string AddEssential([FromBody]ViewAddEssential view)
     {
-      throw new NotImplementedException();
+      return service.AddEssential(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddGroup(ViewAddGroup view)
+    [Route("addgroup")]
+    public string AddGroup([FromBody]ViewAddGroup view)
     {
-      throw new NotImplementedException();
+      return service.AddGroup(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddMapGroupSchooling(ViewAddMapGroupSchooling view)
+    [Route("addmapgroupschooling")]
+    public string AddMapGroupSchooling([FromBody]ViewAddMapGroupSchooling view)
     {
-      throw new NotImplementedException();
+      return service.AddMapGroupSchooling(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddMapGroupScope(ViewAddMapGroupScope view)
+    [Route("addmapgroupscope")]
+    public string AddMapGroupScope([FromBody]ViewAddMapGroupScope view)
     {
-      throw new NotImplementedException();
+      return service.AddMapGroupScope(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddMapGroupSkill(ViewAddMapGroupSkill view)
+    [Route("addmapgroupskill")]
+    public string AddMapGroupSkill([FromBody]ViewAddMapGroupSkill view)
     {
-      throw new NotImplementedException();
+      return service.AddMapGroupSkill(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddOccupation(ViewAddOccupation view)
+    [Route("addoccupation")]
+    public string AddOccupation([FromBody]ViewAddOccupation view)
     {
-      throw new NotImplementedException();
+      return service.AddOccupation(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddOccupationActivities(ViewAddOccupationActivities view)
+    [Route("addoccupationactivities")]
+    public string AddOccupationActivities([FromBody]ViewAddOccupationActivities view)
     {
-      throw new NotImplementedException();
+      return service.AddOccupationActivities(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddOccupationSkill(ViewAddOccupationSkill view)
+    [Route("addoccupationskill")]
+    public string AddOccupationSkill([FromBody]ViewAddOccupationSkill view)
     {
-      throw new NotImplementedException();
+      return service.AddOccupationSkill(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddSchooling(ViewAddOccupationSchooling view)
+    [Route("addschooling")]
+    public string AddSchooling([FromBody]ViewAddOccupationSchooling view)
     {
-      throw new NotImplementedException();
+      return service.AddSchooling(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddSkill(ViewAddSkill view)
+    [Route("addskill")]
+    public string AddSkill([FromBody]ViewAddSkill view)
     {
-      throw new NotImplementedException();
+      return service.AddSkill(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("")]
-    public string AddSphere(ViewAddSphere view)
+    [Route("addsphere")]
+    public string AddSphere([FromBody]ViewAddSphere view)
     {
-      throw new NotImplementedException();
+      return service.AddSphere(view);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteArea(Area area)
+    [Route("deletearea")]
+    public string DeleteArea([FromBody]Area area)
     {
-      throw new NotImplementedException();
+      return service.DeleteArea(area);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteAxis(Axis axis)
+    [Route("deleteaxis")]
+    public string DeleteAxis([FromBody]Axis axis)
     {
-      throw new NotImplementedException();
+      return service.DeleteAxis(axis);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteEssential(Company company, string id)
+    [Route("deleteessential/{id}")]
+    public string DeleteEssential([FromBody]Company company, string id)
     {
-      throw new NotImplementedException();
+      return service.DeleteEssential(company, id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteGroup(Group group)
+    [Route("deletegroup")]
+    public string DeleteGroup([FromBody]Group group)
     {
-      throw new NotImplementedException();
+      return service.DeleteGroup(group);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteMapGroupSchooling(Group group, string id)
+    [Route("deletemapgroupschooling/{id}")]
+    public string DeleteMapGroupSchooling([FromBody]Group group, string id)
     {
-      throw new NotImplementedException();
+      return service.DeleteMapGroupSchooling(group, id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteMapGroupSkill(Group group, string id)
+    [Route("deletemapgroupskill/{id}")]
+    public string DeleteMapGroupSkill([FromBody]Group group, string id)
     {
-      throw new NotImplementedException();
+      return service.DeleteMapGroupSkill(group, id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteOccupation(Occupation occupation)
+    [Route("deleteoccupation")]
+    public string DeleteOccupation([FromBody]Occupation occupation)
     {
-      throw new NotImplementedException();
+      return service.DeleteOccupation(occupation);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteOccupationActivities(Occupation occupation, string activitie)
+    [Route("deleteoccupationactivities/{activitie}")]
+    public string DeleteOccupationActivities([FromBody]Occupation occupation, string activitie)
     {
-      throw new NotImplementedException();
-    }
-
-    public string DeleteOccupationSkill(Occupation occupation, string id)
-    {
-      throw new NotImplementedException();
+      return service.DeleteOccupationActivities(occupation, activitie);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteSchooling(Occupation occupation, string id)
+    [Route("deleteoccupationskill/{id}")]
+    public string DeleteOccupationSkill([FromBody]Occupation occupation, string id)
     {
-      throw new NotImplementedException();
+      return service.DeleteOccupationSkill(occupation, id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteSkill(Skill skill)
+    [Route("deleteschooling/{id}")]
+    public string DeleteSchooling([FromBody]Occupation occupation, string id)
     {
-      throw new NotImplementedException();
+      return service.DeleteSchooling(occupation, id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("")]
-    public string DeleteSphere(Sphere sphere)
+    [Route("deleteskill")]
+    public string DeleteSkill([FromBody]Skill skill)
     {
-      throw new NotImplementedException();
+      return service.DeleteSkill(skill);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deletesphere")]
+    public string DeleteSphere([FromBody]Sphere sphere)
+    {
+      return service.DeleteSphere(sphere);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getareas")]
     public List<Area> GetAreas()
     {
-      throw new NotImplementedException();
+      return service.GetAreas();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getaxis")]
     public List<Axis> GetAxis()
     {
-      throw new NotImplementedException();
+      return service.GetAxis();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getcompanies")]
     public List<Company> GetCompanies()
     {
-      throw new NotImplementedException();
+      return service.GetCompanies();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getgroup/{id}")]
     public Group GetGroup(string id)
     {
-      throw new NotImplementedException();
+      return service.GetGroup(id);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getgroups")]
     public List<Group> GetGroups()
     {
-      throw new NotImplementedException();
+      return service.GetGroups();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getoccupation/{id}")]
     public Occupation GetOccupation(string id)
     {
-      throw new NotImplementedException();
+      return service.GetOccupation(id);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getoccupations")]
     public List<Occupation> GetOccupations()
     {
-      throw new NotImplementedException();
+      return service.GetOccupations();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getschooling")]
     public List<Schooling> GetSchooling()
     {
-      throw new NotImplementedException();
+      return service.GetSchooling();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getskills")]
     public List<Skill> GetSkills(ref long total, string filter, int count, int page)
     {
-      throw new NotImplementedException();
+      return service.GetSkills(ref total, filter, count, page);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("")]
+    [Route("getspheres")]
     public List<Sphere> GetSpheres()
     {
-      throw new NotImplementedException();
+      return service.GetSpheres();
     }
 
     [Authorize]
     [HttpPut]
-    [Route("")]
-    public string UpdateArea(Area area)
+    [Route("updatearea")]
+    public string UpdateArea([FromBody]Area area)
     {
-      throw new NotImplementedException();
+      return service.UpdateArea(area);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("")]
-    public string UpdateAxis(Axis axis)
+    [Route("updateaxis")]
+    public string UpdateAxis([FromBody]Axis axis)
     {
-      throw new NotImplementedException();
+      return service.UpdateAxis(axis);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("")]
+    [Route("updateessential")]
     public string UpdateEssential(ViewAddEssential view)
     {
-      throw new NotImplementedException();
+      return service.UpdateEssential(view);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("")]
-    public string UpdateGroup(Group group)
+    [Route("updategroup")]
+    public string UpdateGroup([FromBody]Group group)
     {
-      throw new NotImplementedException();
+      return service.UpdateGroup(group);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("")]
-    public string UpdateOccupation(Occupation occupation)
+    [Route("updateoccupation")]
+    public string UpdateOccupation([FromBody]Occupation occupation)
     {
-      throw new NotImplementedException();
+      return service.UpdateOccupation(occupation);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("")]
-    public string UpdateSkill(Skill skill)
+    [Route("updateskill")]
+    public string UpdateSkill([FromBody]Skill skill)
     {
-      throw new NotImplementedException();
+      return service.UpdateSkill(skill);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("")]
-    public string UpdateSphere(Sphere sphere)
+    [Route("updatesphere")]
+    public string UpdateSphere([FromBody]Sphere sphere)
     {
-      throw new NotImplementedException();
+      return service.UpdateSphere(sphere);
     }
   }
 }
