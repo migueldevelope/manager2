@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
-  public class Occupation: BaseEntity
+  public class Group : BaseEntity
   {
     public string Name { get; set; }
-    public Group Group { get; set; }
-    public Area Area { get; set; }
+    public Company Company { get; set; }
+    public Axis Axis { get; set; }
+    public Sphere Sphere { get; set; }
     public long Line { get; set; }
     public List<Skill> Skills { get; set; }
     public List<Schooling> Schooling { get; set; }
-    public List<string> Activities { get; set; }
-    public Occupation Template { get; set; }
-
+    public string Scope { get; set; }
+    public Group Template { get; set; }
   }
 }

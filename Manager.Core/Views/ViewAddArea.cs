@@ -1,8 +1,8 @@
 ﻿namespace Manager.Core.Views
 {
-  public class ViewArea
+  public class ViewAddArea
   {
-    public string Id { get; set; }
     public string Name { get; set; }
+    public long Order { get; set; }
   }
 }

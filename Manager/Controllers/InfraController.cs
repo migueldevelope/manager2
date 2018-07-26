@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
@@ -30,337 +31,337 @@ namespace Manager.Controllers
       }
     }
 
-
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/career/{typeax}")]
-    public List<ViewOccupationGroupCareer> GetCareer(string idcompany, EnumTypeAxis typeax, EnumTypeCareer type = EnumTypeCareer.X)
+    [HttpPost]
+    [Route("")]
+    public string AddArea(ViewAddArea view)
     {
-      return service.GetViewOccupationGroupCareers(idcompany, typeax, type);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/career")]
-    public List<ViewCareer> GetCareerType(string idcompany)
+    [HttpPost]
+    [Route("")]
+    public string AddAxis(ViewAddAxis view)
     {
-      return service.GetCareer(idcompany);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("listcareer")]
-    public List<ViewCareer> GetCareerType()
+    [HttpPost]
+    [Route("")]
+    public string AddEssential(ViewAddEssential view)
     {
-      return service.ListGetCareer();
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/occupationgroupcareer/{id}")]
-    public List<ViewOccupationGroupCareer> GetOccupationGroupCareer(string idcompany, string id, EnumTypeCareer type = EnumTypeCareer.X)
+    [HttpPost]
+    [Route("")]
+    public string AddGroup(ViewAddGroup view)
     {
-      return service.GetOccupationGroupCareersEdit(idcompany, id, type);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/occupationgroupcareer")]
-    public List<ViewOccupationGroupCareer> GetOccupationGroupCareerList(string idcompany, EnumTypeCareer type = EnumTypeCareer.X)
+    [HttpPost]
+    [Route("")]
+    public string AddMapGroupSchooling(ViewAddMapGroupSchooling view)
     {
-      return service.GetOccupationGroupCareersList(idcompany, type);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/occupationgroup")]
-    public List<ViewOccupationGroupCareer> GetOccupationGroupList(string idcompany)
+    [HttpPost]
+    [Route("")]
+    public string AddMapGroupScope(ViewAddMapGroupScope view)
     {
-      return service.GetOccupationGroupList(idcompany);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("occupationgroup/{id}")]
-    public ViewOccupationGroupCareer GetOccupationGroupEdit(string id)
+    [HttpPost]
+    [Route("")]
+    public string AddMapGroupSkill(ViewAddMapGroupSkill view)
     {
-      return service.GetOccupationGroupEdit(id);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/occupation")]
-    public List<ViewOccupationLine> GetOccupationList(string idcompany)
+    [HttpPost]
+    [Route("")]
+    public string AddOccupation(ViewAddOccupation view)
     {
-      return service.GetOccupationList(idcompany);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("occupation/{id}")]
-    public ViewOccupationLine GetOccupationEdit(string id)
+    [HttpPost]
+    [Route("")]
+    public string AddOccupationActivities(ViewAddOccupationActivities view)
     {
-      return service.GetOccupationEdit(id);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/maxposition")]
-    public long GetMaxPosition(string idcompany, EnumTypeCareer type = EnumTypeCareer.X)
+    [HttpPost]
+    [Route("")]
+    public string AddOccupationSkill(ViewAddOccupationSkill view)
     {
-      return service.GetMaxPosition(idcompany, type);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/headsphere")]
-    public List<ViewHeadInfraSphere> GetSphere(string idcompany, EnumTypeCareer type = EnumTypeCareer.X)
+    [HttpPost]
+    [Route("")]
+    public string AddSchooling(ViewAddOccupationSchooling view)
     {
-      return service.GetHeadSphere(idcompany, type);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/headaxis")]
-    public List<ViewHeadInfraAxis> GetAxis(string idcompany, EnumTypeCareer type = EnumTypeCareer.X)
+    [HttpPost]
+    [Route("")]
+    public string AddSkill(ViewAddSkill view)
     {
-      return service.GetHeadAxis(idcompany, type);
+      throw new NotImplementedException();
     }
 
     [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/occupationline/{id}")]
-    public ViewOccupationLine GetOccupationLine(string idcompany, string id)
+    [HttpPost]
+    [Route("")]
+    public string AddSphere(ViewAddSphere view)
     {
-      return service.GetLinesOccuationEdit(idcompany, id);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/occupationline")]
-    public List<ViewOccupationLine> GetOccupationLine(string idcompany)
-    {
-      return service.GetLinesOccuation(idcompany);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/listarea")]
-    public List<ViewArea> GetArea(string idcompany)
-    {
-      return service.GetArea(idcompany);
-    }
-
-
-    [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/listaxis")]
-    public List<ViewAxis> GetAxis(string idcompany)
-    {
-      return service.GetAxis(idcompany);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("{idcompany}/listsphere")]
-    public List<ViewSphere> GetSphere(string idcompany)
-    {
-      return service.GetSphere(idcompany);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("listdictionary")]
-    public List<ViewLists> GetDictionary(EnumTypeSphere type)
-    {
-      return service.GetDictionary(type);
-    }
-    [Authorize]
-    [HttpDelete]
-    [Route("occupationgroupcareer/{id}")]
-    public string DeleteOccupationGroupCareer(string id, EnumTypeCareer type = EnumTypeCareer.X)
-    {
-      return service.DeleteOccupationGroupCareer(id);
+      throw new NotImplementedException();
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("occupationgroupcareer/{id}/disconnect")]
-    public string DisconnectOccupationGroupCareer(string id, EnumTypeCareer type = EnumTypeCareer.X)
+    [Route("")]
+    public string DeleteArea(Area area)
     {
-      return service.DisconnectOccupationGroupCareer(id, type);
+      throw new NotImplementedException();
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("occupation/{id}/disconnect")]
-    public string DisconnectOccupation(string id)
+    [Route("")]
+    public string DeleteAxis(Axis axis)
     {
-      return service.DisconnectOccupationLine(id);
-    }
-
-
-    [Authorize]
-    [HttpPost]
-    [Route("axis")]
-    public string Post([FromBody]ViewAxisNew view)
-    {
-      service.NewAxis(view);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("sphere")]
-    public string Post([FromBody]ViewSphereNew view)
-    {
-      service.NewSphere(view);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("dictionary")]
-    public string Post([FromBody]ViewDictionarySphereNew view)
-    {
-      service.NewDictionary(view);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("career")]
-    public string Post([FromBody]ViewCareerNew view)
-    {
-      service.NewCareer(view);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("occupationgroupcareer")]
-    public string Post([FromBody]ViewOccupationGroupCareerNew view, EnumTypeCareer type = EnumTypeCareer.X)
-    {
-      service.NewOccupationGroupCareer(view, type);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("area")]
-    public string Post([FromBody]ViewAreaNew view)
-    {
-      service.NewArea(view);
-      return "ok";
-    }
-
-
-    [Authorize]
-    [HttpPut]
-    [Route("axis/{id}")]
-    public string Put([FromBody]ViewAxisNew view, string id)
-    {
-      service.UpdateAxis(view, id);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("sphere/{id}")]
-    public string Put([FromBody]ViewSphereNew view, string id)
-    {
-      service.UpdateSphere(view, id);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("dictionary/{id}")]
-    public string Put([FromBody]ViewDictionarySphereNew view, string id)
-    {
-      service.UpdateDictionary(view, id);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("career/{id}")]
-    public string Put([FromBody]ViewCareerNew view, string id)
-    {
-      service.UpdateCareer(view, id);
-      return "ok";
-    }
-
-
-    [Authorize]
-    [HttpPut]
-    [Route("area/{id}")]
-    public string Put([FromBody]ViewAreaNew view, string id)
-    {
-      service.UpdateArea(view, id);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("occupationgroupcareer/{id}")]
-    public string Put([FromBody]ViewOccupationGroupCareerNew view, string id, EnumTypeCareer type = EnumTypeCareer.X)
-    {
-      service.UpdateOccupationGroupCareer(view, type, id);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("occupationgroupcareer/{id}/modify")]
-    public string Put([FromBody]ViewCareerPosition view, string id, EnumTypeCareer type = EnumTypeCareer.X)
-    {
-      service.UpdatePosition(view, type, id);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("occupationline/{id}/modify")]
-    public string Put([FromBody]ViewCareerPosition view, string id)
-    {
-      service.UpdatePositionLine(view, id);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("occupationline")]
-    public string Post([FromBody]ViewOccupationLineNew view)
-    {
-      service.NewOccupationLine(view);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("occupationline/{id}")]
-    public string Put([FromBody]ViewOccupationLineNew view, string id)
-    {
-      service.UpdateOccupationLine(view, id);
-      return "ok";
+      throw new NotImplementedException();
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("occupationline/{id}")]
-    public string DeleteOccupationLine(string id)
+    [Route("")]
+    public string DeleteEssential(Company company, string id)
     {
-      return service.DeleteOccupationLine(id);
+      throw new NotImplementedException();
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("area/{id}")]
-    public string DeleteArea(string id)
+    [Route("")]
+    public string DeleteGroup(Group group)
     {
-      return service.DeleteArea(id);
+      throw new NotImplementedException();
     }
 
+    [Authorize]
+    [HttpDelete]
+    [Route("")]
+    public string DeleteMapGroupSchooling(Group group, string id)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("")]
+    public string DeleteMapGroupSkill(Group group, string id)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("")]
+    public string DeleteOccupation(Occupation occupation)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("")]
+    public string DeleteOccupationActivities(Occupation occupation, string activitie)
+    {
+      throw new NotImplementedException();
+    }
+
+    public string DeleteOccupationSkill(Occupation occupation, string id)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("")]
+    public string DeleteSchooling(Occupation occupation, string id)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("")]
+    public string DeleteSkill(Skill skill)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("")]
+    public string DeleteSphere(Sphere sphere)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public List<Area> GetAreas()
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public List<Axis> GetAxis()
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public List<Company> GetCompanies()
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public Group GetGroup(string id)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public List<Group> GetGroups()
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public Occupation GetOccupation(string id)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public List<Occupation> GetOccupations()
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public List<Schooling> GetSchooling()
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public List<Skill> GetSkills(ref long total, string filter, int count, int page)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("")]
+    public List<Sphere> GetSpheres()
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("")]
+    public string UpdateArea(Area area)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("")]
+    public string UpdateAxis(Axis axis)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("")]
+    public string UpdateEssential(ViewAddEssential view)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("")]
+    public string UpdateGroup(Group group)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("")]
+    public string UpdateOccupation(Occupation occupation)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("")]
+    public string UpdateSkill(Skill skill)
+    {
+      throw new NotImplementedException();
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("")]
+    public string UpdateSphere(Sphere sphere)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

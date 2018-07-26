@@ -17,7 +17,7 @@ namespace Manager.Test.Test.Complete
   {
     private ServiceInfra serviceInfra;
     private readonly ServiceGeneric<Person> servicePerson;
-    private readonly ServiceGeneric<OccupationGroup> serviceOccupationGroup;
+    private readonly ServiceGeneric<Group> serviceGroup;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
 
     public TestInfra()
@@ -27,11 +27,11 @@ namespace Manager.Test.Test.Complete
       serviceInfra.SetUser(base.contextAccessor);
 
       servicePerson = new ServiceGeneric<Person>(base.context);
-      serviceOccupationGroup = new ServiceGeneric<OccupationGroup>(base.context);
+      serviceGroup = new ServiceGeneric<Group>(base.context);
       serviceOccupation = new ServiceGeneric<Occupation>(base.context);
 
       servicePerson._user = base.baseUser;
-      serviceOccupationGroup._user = base.baseUser;
+      serviceGroup._user = base.baseUser;
       serviceOccupation._user = base.baseUser;
 
 
@@ -43,14 +43,14 @@ namespace Manager.Test.Test.Complete
       try
       {
         var manager = this.servicePerson.GetAll(p => p.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
-        var occupationgroup = this.serviceOccupationGroup.GetAll(p => p.Name == "Analisty").FirstOrDefault();
+        var Group = this.serviceGroup.GetAll(p => p.Name == "Analisty").FirstOrDefault();
         var area = this.serviceInfra.NewArea(new ViewAreaNew() { Name = "Financeiro", IdCompany = manager.Company._id.ToString(),  });
 
         var view = new ViewOccupationLineNew()
         {
           IdArea = area.Id,
           NameOccupation = "System Analisty",
-          IdOccupationGroup = occupationgroup._id,
+          IdGroup = Group._id,
           
           TypeSphere = EnumTypeSphere.Operational
         };
@@ -174,139 +174,139 @@ namespace Manager.Test.Test.Complete
         //Groups new
         //Axis A
 
-        var viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        var viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.A,
           TypeSphere = EnumTypeSphere.Strategic,
-          NameOccupationGroup = "Coordenador",
+          NameGroup = "Coordenador",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.A,
           TypeSphere = EnumTypeSphere.Strategic,
-          NameOccupationGroup = "Gerente",
+          NameGroup = "Gerente",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.A,
           TypeSphere = EnumTypeSphere.Strategic,
-          NameOccupationGroup = "Diretor",
+          NameGroup = "Diretor",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
         //Axis B
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.B,
           TypeSphere = EnumTypeSphere.Tactical,
-          NameOccupationGroup = "Especialista",
+          NameGroup = "Especialista",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.B,
           TypeSphere = EnumTypeSphere.Strategic,
-          NameOccupationGroup = "Assessor",
+          NameGroup = "Assessor",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
         //Axis C
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.C,
           TypeSphere = EnumTypeSphere.Tactical,
-          NameOccupationGroup = "Analisty",
+          NameGroup = "Analisty",
           IdCompany = manager.Company._id,
           
         };
 
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.C,
           TypeSphere = EnumTypeSphere.Operational,
-          NameOccupationGroup = "Assistentes",
+          NameGroup = "Assistentes",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.C,
           TypeSphere = EnumTypeSphere.Operational,
-          NameOccupationGroup = "Auxiliar",
+          NameGroup = "Auxiliar",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.D,
           TypeSphere = EnumTypeSphere.Tactical,
-          NameOccupationGroup = "Facilitador",
+          NameGroup = "Facilitador",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.D,
           TypeSphere = EnumTypeSphere.Operational,
-          NameOccupationGroup = "Técnico",
+          NameGroup = "Técnico",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
-        viewOccupationGroup = new ViewOccupationGroupCareerNew()
+        viewGroup = new ViewGroupCareerNew()
         {
           NameCareer = career.Name,
           IdCareer = career._id,
           TypeAxis = EnumTypeAxis.D,
           TypeSphere = EnumTypeSphere.Operational,
-          NameOccupationGroup = "Operador",
+          NameGroup = "Operador",
           IdCompany = manager.Company._id,
           
         };
-        this.serviceInfra.NewOccupationGroupCareer(viewOccupationGroup, EnumTypeCareer.X);
+        this.serviceInfra.NewGroupCareer(viewGroup, EnumTypeCareer.X);
 
       }
       catch (Exception e)
@@ -324,10 +324,10 @@ namespace Manager.Test.Test.Complete
         var manager = this.servicePerson.GetAll(p => p.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
 
         var listcompany = this.serviceInfra.ListGetCareer();
-        var listA = this.serviceInfra.GetViewOccupationGroupCareers(manager.Company._id, EnumTypeAxis.A, EnumTypeCareer.X);
-        var listB = this.serviceInfra.GetViewOccupationGroupCareers(manager.Company._id, EnumTypeAxis.B, EnumTypeCareer.X);
-        var listC = this.serviceInfra.GetViewOccupationGroupCareers(manager.Company._id, EnumTypeAxis.C, EnumTypeCareer.X);
-        var listD = this.serviceInfra.GetViewOccupationGroupCareers(manager.Company._id, EnumTypeAxis.D, EnumTypeCareer.X);
+        var listA = this.serviceInfra.GetViewGroupCareers(manager.Company._id, EnumTypeAxis.A, EnumTypeCareer.X);
+        var listB = this.serviceInfra.GetViewGroupCareers(manager.Company._id, EnumTypeAxis.B, EnumTypeCareer.X);
+        var listC = this.serviceInfra.GetViewGroupCareers(manager.Company._id, EnumTypeAxis.C, EnumTypeCareer.X);
+        var listD = this.serviceInfra.GetViewGroupCareers(manager.Company._id, EnumTypeAxis.D, EnumTypeCareer.X);
 
         var max = this.serviceInfra.GetMaxPosition(manager.Company._id, EnumTypeCareer.X);
 
@@ -346,14 +346,14 @@ namespace Manager.Test.Test.Complete
         //Get user manutation
         var manager = this.servicePerson.GetAll(p => p.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
         var occupation = this.serviceOccupation.GetAll(p => p.Name == "System Analisty").FirstOrDefault();
-        var group = this.serviceOccupationGroup.GetAll(p => p.Name == "Assistentes").FirstOrDefault();
+        var group = this.serviceGroup.GetAll(p => p.Name == "Assistentes").FirstOrDefault();
         var view = new ViewOccupationLineNew()
         {
           IdArea = occupation.Area._id,
           IdOccupation = occupation._id,
           NameOccupation = occupation.Name,
           Position = occupation.Position,
-          IdOccupationGroup = group._id
+          IdGroup = group._id
         };
 
         serviceInfra.UpdateOccupationLine(view, occupation._id);

@@ -2,6 +2,6 @@
 {
   public enum EnumTypeProfile : byte
   {
-    Company = 0, OccupationGroup = 1, Occupation = 2
+    Company = 0, Group = 1, Occupation = 2
   }
 }
