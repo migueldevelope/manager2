@@ -226,6 +226,17 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            TypeSkill = view.Skill.TypeSkill
+          });
+          view.Skill = skill;
+        }
+
         view.Group.Skills.Add(view.Skill);
         groupService.Update(view.Group, null);
         UpdateGroupAll(view.Group);
@@ -286,6 +297,17 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            TypeSkill = view.Skill.TypeSkill
+          });
+          view.Skill = skill;
+        }
+
         view.Occupation.Skills.Add(view.Skill);
         occupationService.Update(view.Occupation, null);
         UpdateOccupationAll(view.Occupation);
@@ -1147,11 +1169,11 @@ namespace Manager.Services.Specific
                    ).FirstOrDefault().Name;
 
         var skillsOccupation = (List<string>)(from occupation in occupationService.GetAll()
-                                         where occupation._id == idoccupation
-                                         select new
-                                         {
-                                           Name = occupation.Skills.Select(p => p.Name)
-                                         }
+                                              where occupation._id == idoccupation
+                                              select new
+                                              {
+                                                Name = occupation.Skills.Select(p => p.Name)
+                                              }
                  ).FirstOrDefault().Name;
 
 
