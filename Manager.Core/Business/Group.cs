@@ -12,7 +12,7 @@ namespace Manager.Core.Business
     public long Line { get; set; }
     public List<Skill> Skills { get; set; }
     public List<Schooling> Schooling { get; set; }
-    public List<string> Scope { get; set; }
+    public List<Scope> Scope { get; set; }
     public Group Template { get; set; }
   }
 }

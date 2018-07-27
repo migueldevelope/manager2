@@ -113,14 +113,6 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("addschooling")]
-    public string AddSchooling([FromBody]ViewAddOccupationSchooling view)
-    {
-      return service.AddSchooling(view);
-    }
-
-    [Authorize]
-    [HttpPost]
     [Route("addskill")]
     public Skill AddSkill([FromBody]ViewAddSkill view)
     {
@@ -185,6 +177,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
+    [Route("deletemapgroupscope/{idgroup}/{scope}")]
+    public string DeleteMapGroupScope(string idgroup, string scope)
+    {
+      return service.DeleteMapGroupScope(idgroup, scope);
+    }
+
+    [Authorize]
+    [HttpDelete]
     [Route("deleteoccupation/{id}")]
     public string DeleteOccupation(string id)
     {
@@ -207,13 +207,6 @@ namespace Manager.Controllers
       return service.DeleteOccupationSkill(idoccupation, id);
     }
 
-    [Authorize]
-    [HttpDelete]
-    [Route("deleteschooling/{idoccupation}/{id}")]
-    public string DeleteSchooling(string idoccupation, string id)
-    {
-      return service.DeleteSchooling(idoccupation, id);
-    }
 
     [Authorize]
     [HttpDelete]
@@ -281,6 +274,15 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("getgroups/{idcompany}")]
+    public List<Group> GetGroups(string idcompany)
+    {
+      return service.GetGroups(idcompany);
+    }
+
+
+    [Authorize]
+    [HttpGet]
     [Route("getoccupation/{id}")]
     public Occupation GetOccupation(string id)
     {
@@ -293,6 +295,14 @@ namespace Manager.Controllers
     public List<Occupation> GetOccupations()
     {
       return service.GetOccupations();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getoccupations/{idcompany}")]
+    public List<Occupation> GetOccupations(string idcompany)
+    {
+      return service.GetOccupations(idcompany);
     }
 
     [Authorize]
@@ -321,6 +331,17 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.GetSkills(company, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getskills/{idcompany}/{idgroup}")]
+    public List<ViewSkills> GetSkills(string idcompany, string idgroup, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetSkillsGroup(idgroup, idcompany, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -359,14 +380,6 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("updateessential")]
-    public string UpdateEssential(ViewAddEssential view)
-    {
-      return service.UpdateEssential(view);
-    }
-
-    [Authorize]
-    [HttpPut]
     [Route("updategroup")]
     public string UpdateGroup([FromBody]Group group)
     {
@@ -395,6 +408,22 @@ namespace Manager.Controllers
     public string UpdateSphere([FromBody]Sphere sphere)
     {
       return service.UpdateSphere(sphere);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatemapgroupschooling/{idgroup}")]
+    public string UpdateMapGroupSchooling([FromBody]Schooling schooling, string idgroup)
+    {
+      return service.UpdateMapGroupSchooling(idgroup, schooling);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatemapoccupationschooling/{idoccupation}")]
+    public string UpdateMapOccupationSchooling([FromBody]Schooling schooling, string idoccupation)
+    {
+      return service.UpdateMapOccupationSchooling(idoccupation, schooling);
     }
   }
 }

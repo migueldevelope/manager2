@@ -9,5 +9,6 @@ namespace Manager.Core.Views
     public string Concept { get; set; }
     public EnumTypeSkill TypeSkill { get; set; }
     public bool Exists { get; set; }
+    public bool ExistsGroup { get; set; }
   }
 }

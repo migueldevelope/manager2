@@ -5,6 +5,6 @@ namespace Manager.Core.Views
   public class ViewAddMapGroupScope
   {
     public Group Group { get; set; }
-    public string Scope { get; set; }
+    public Scope Scope { get; set; }
   }
 }

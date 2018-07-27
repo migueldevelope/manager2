@@ -11,6 +11,7 @@ namespace Manager.Core.Interfaces
     List<Company> GetCompanies();
     List<Skill> GetSkills(ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkills(string company, ref long total, string filter, int count, int page);
+    List<ViewSkills> GetSkillsGroup(string idgroup, string idcompany, ref long total, string filter, int count, int page);
     List<Schooling> GetSchooling();
     List<Sphere> GetSpheres();
     List<Sphere> GetSpheres(string idcompany);
@@ -20,7 +21,9 @@ namespace Manager.Core.Interfaces
     Group GetGroup(string id);
     Occupation GetOccupation(string id);
     List<Group> GetGroups();
+    List<Group> GetGroups(string idcompany);
     List<Occupation> GetOccupations();
+    List<Occupation> GetOccupations(string idcompany);
     string AddEssential(ViewAddEssential view);
     Skill AddSkill(ViewAddSkill view);
     string AddAxis(Axis view);
@@ -33,7 +36,6 @@ namespace Manager.Core.Interfaces
     string AddOccupation(ViewAddOccupation view);
     string AddOccupationSkill(ViewAddOccupationSkill view);
     string AddOccupationActivities(ViewAddOccupationActivities view);
-    string AddSchooling(ViewAddOccupationSchooling view);
     string DeleteEssential(string idcompany, string id);
     string DeleteSkill(string idskill);
     string DeleteSphere(string idsphere);
@@ -44,14 +46,15 @@ namespace Manager.Core.Interfaces
     string DeleteArea(string idarea);
     string DeleteOccupation(string idoccupation);
     string DeleteOccupationSkill(string idoccupation, string id);
-    string DeleteOccupationActivities(string idoccupation, string activitie);
-    string DeleteSchooling(string idoccupation, string id);
-    string UpdateEssential(ViewAddEssential view);
+    string DeleteOccupationActivities(string idoccupation, string idactivitie);
+    string DeleteMapGroupScope(string idgroup, string idscope);
     string UpdateSkill(Skill skill);
     string UpdateSphere(Sphere sphere);
     string UpdateAxis(Axis axis);
     string UpdateGroup(Group group);
     string UpdateArea(Area area);
     string UpdateOccupation(Occupation occupation);
+    string UpdateMapGroupSchooling(string idgroup, Schooling schooling);
+    string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling);
   }
 }

@@ -11,7 +11,7 @@ namespace Manager.Core.Business
     public long Line { get; set; }
     public List<Skill> Skills { get; set; }
     public List<Schooling> Schooling { get; set; }
-    public List<string> Activities { get; set; }
+    public List<Activitie> Activities { get; set; }
     public Occupation Template { get; set; }
 
   }
