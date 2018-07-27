@@ -34,7 +34,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addarea")]
-    public string AddArea([FromBody]ViewAddArea view)
+    public string AddArea([FromBody]Area view)
     {
       return service.AddArea(view);
     }
@@ -42,7 +42,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addaxis")]
-    public string AddAxis([FromBody]ViewAddAxis view)
+    public string AddAxis([FromBody]Axis view)
     {
       return service.AddAxis(view);
     }
@@ -130,17 +130,17 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addsphere")]
-    public string AddSphere([FromBody]ViewAddSphere view)
+    public string AddSphere([FromBody]Sphere view)
     {
       return service.AddSphere(view);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deletearea")]
-    public string DeleteArea([FromBody]Area area)
+    [Route("deletearea/{id}")]
+    public string DeleteArea(string id)
     {
-      return service.DeleteArea(area);
+      return service.DeleteArea(id);
     }
 
     [Authorize]
@@ -161,58 +161,58 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
-    [Route("deletegroup")]
-    public string DeleteGroup([FromBody]Group group)
+    [Route("deletegroup/{id}")]
+    public string DeleteGroup(string id)
     {
-      return service.DeleteGroup(group);
+      return service.DeleteGroup(id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deletemapgroupschooling/{id}")]
-    public string DeleteMapGroupSchooling([FromBody]Group group, string id)
+    [Route("deletemapgroupschooling/{idgroup}/{id}")]
+    public string DeleteMapGroupSchooling(string idgroup, string id)
     {
-      return service.DeleteMapGroupSchooling(group, id);
+      return service.DeleteMapGroupSchooling(idgroup, id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deletemapgroupskill/{id}")]
-    public string DeleteMapGroupSkill([FromBody]Group group, string id)
+    [Route("deletemapgroupskill/{idgroup}/{id}")]
+    public string DeleteMapGroupSkill(string idgroup, string id)
     {
-      return service.DeleteMapGroupSkill(group, id);
+      return service.DeleteMapGroupSkill(idgroup, id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deleteoccupation")]
-    public string DeleteOccupation([FromBody]Occupation occupation)
+    [Route("deleteoccupation/{id}")]
+    public string DeleteOccupation(string id)
     {
-      return service.DeleteOccupation(occupation);
+      return service.DeleteOccupation(id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deleteoccupationactivities/{activitie}")]
-    public string DeleteOccupationActivities([FromBody]Occupation occupation, string activitie)
+    [Route("deleteoccupationactivities/{idoccupation}/{activitie}")]
+    public string DeleteOccupationActivities(string idoccupation, string activitie)
     {
-      return service.DeleteOccupationActivities(occupation, activitie);
+      return service.DeleteOccupationActivities(idoccupation, activitie);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deleteoccupationskill/{id}")]
-    public string DeleteOccupationSkill([FromBody]Occupation occupation, string id)
+    [Route("deleteoccupationskill/{idoccupation}/{id}")]
+    public string DeleteOccupationSkill(string idoccupation, string id)
     {
-      return service.DeleteOccupationSkill(occupation, id);
+      return service.DeleteOccupationSkill(idoccupation, id);
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("deleteschooling/{id}")]
-    public string DeleteSchooling([FromBody]Occupation occupation, string id)
+    [Route("deleteschooling/{idoccupation}/{id}")]
+    public string DeleteSchooling(string idoccupation, string id)
     {
-      return service.DeleteSchooling(occupation, id);
+      return service.DeleteSchooling(idoccupation, id);
     }
 
     [Authorize]
@@ -245,6 +245,14 @@ namespace Manager.Controllers
     public List<Axis> GetAxis()
     {
       return service.GetAxis();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getaxis/{idcompany}")]
+    public List<Axis> GetAxis(string idcompany)
+    {
+      return service.GetAxis(idcompany);
     }
 
     [Authorize]
@@ -323,6 +331,14 @@ namespace Manager.Controllers
     public List<Sphere> GetSpheres()
     {
       return service.GetSpheres();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getspheres/{idcompany}")]
+    public List<Sphere> GetSpheres(string idcompany)
+    {
+      return service.GetSpheres(idcompany);
     }
 
     [Authorize]

@@ -7,7 +7,7 @@ namespace Manager.Core.Views
   {
     public string Name { get; set; }
     public Company Company { get; set; }
-    public EnumTypeSphere Type { get; set; }
+    public EnumTypeSphere TypeSphere { get; set; }
 
   }
 }

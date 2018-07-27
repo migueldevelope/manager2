@@ -8,6 +8,6 @@ namespace Manager.Core.Views
   {
     public string Name { get; set; }
     public string Concept { get; set; }
-    public EnumTypeSkill Type { get; set; }
+    public EnumTypeSkill TypeSkill { get; set; }
   }
 }

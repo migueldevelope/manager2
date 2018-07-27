@@ -76,12 +76,12 @@ namespace Manager.Test.Test.Complete
       try
       {
         var company = serviceInfra.GetCompanies().FirstOrDefault();
-        serviceInfra.AddSkill(new ViewAddSkill() { Name = "Skill 3", Type = EnumTypeSkill.Hard });
+        serviceInfra.AddSkill(new ViewAddSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
         long total = 0;
         var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).FirstOrDefault();
-        serviceInfra.AddSphere(new ViewAddSphere() { Name = "Tatico", Type = EnumTypeSphere.Strategic, Company = company });
+        serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
         var sphere = serviceInfra.GetSpheres().FirstOrDefault();
-        serviceInfra.AddAxis(new ViewAddAxis() { Name = "Tecnico", Type = EnumTypeAxis.A, Sphere = sphere, });
+        serviceInfra.AddAxis(new Axis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator, Sphere = sphere, });
         var axis = serviceInfra.GetAxis().FirstOrDefault();
         serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
 
