@@ -12,6 +12,7 @@ namespace Manager.Core.Interfaces
     List<Skill> GetSkills(ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkills(string company, ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkillsGroup(string idgroup, string idcompany, ref long total, string filter, int count, int page);
+    List<ViewSkills> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref long total, string filter, int count, int page);
     List<Schooling> GetSchooling();
     List<Sphere> GetSpheres();
     List<Sphere> GetSpheres(string idcompany);

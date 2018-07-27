@@ -348,6 +348,17 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("getskills/{idcompany}/{idgroup}/{idoccupation}")]
+    public List<ViewSkills> GetSkills(string idcompany, string idgroup, string idoccupation, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetSkillsOccupation(idgroup, idcompany, idoccupation, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("getspheres")]
     public List<Sphere> GetSpheres()
     {

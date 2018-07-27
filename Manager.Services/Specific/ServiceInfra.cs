@@ -5,6 +5,7 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -208,6 +209,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        view.Scope._id = ObjectId.GenerateNewId().ToString();
+        view.Scope._idAccount = view.Group._idAccount;
         view.Group.Scope.Add(view.Scope);
         groupService.Update(view.Group, null);
         UpdateGroupAll(view.Group);
@@ -266,6 +269,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        view.Activities._id = ObjectId.GenerateNewId().ToString();
+        view.Activities._idAccount = view.Occupation._idAccount;
         view.Occupation.Activities.Add(view.Activities);
         occupationService.Update(view.Occupation, null);
         UpdateOccupationAll(view.Occupation);
@@ -1112,6 +1117,61 @@ namespace Manager.Services.Specific
         groupService.Update(group, null);
         UpdateGroupAll(group);
         return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<ViewSkills> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        var skills = (List<string>)(from comp in companyService.GetAll()
+                                    where comp._id == idcompany
+                                    select new
+                                    {
+                                      Name = comp.Skills.Select(p => p.Name)
+                                    }
+                    ).FirstOrDefault().Name;
+
+        var skillsGroup = (List<string>)(from groups in groupService.GetAll()
+                                         where groups._id == idgroup
+                                         select new
+                                         {
+                                           Name = groups.Skills.Select(p => p.Name)
+                                         }
+                   ).FirstOrDefault().Name;
+
+        var skillsOccupation = (List<string>)(from occupation in occupationService.GetAll()
+                                         where occupation._id == idoccupation
+                                         select new
+                                         {
+                                           Name = occupation.Skills.Select(p => p.Name)
+                                         }
+                 ).FirstOrDefault().Name;
+
+
+        var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()))
+                      .ToList().Select(p => new ViewSkills()
+                      {
+                        _id = p._id,
+                        _idAccount = p._idAccount,
+                        Name = p.Name,
+                        Concept = p.Concept,
+                        Status = p.Status,
+                        TypeSkill = p.TypeSkill,
+                        Exists = skills.Contains(p.Name),
+                        ExistsGroup = skillsGroup.Contains(p.Name),
+                        ExistsOccupation = skillsOccupation.Contains(p.Name)
+                      }).ToList();
+
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {

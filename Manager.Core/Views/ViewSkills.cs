@@ -10,5 +10,6 @@ namespace Manager.Core.Views
     public EnumTypeSkill TypeSkill { get; set; }
     public bool Exists { get; set; }
     public bool ExistsGroup { get; set; }
+    public bool ExistsOccupation { get; set; }
   }
 }
