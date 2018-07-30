@@ -17,6 +17,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Company> companyService;
+    private readonly ServiceInfra infraService;
 
     public ServiceAccount(DataContext context)
       : base(context)
@@ -26,6 +27,7 @@ namespace Manager.Services.Specific
         accountService = new ServiceGeneric<Account>(context);
         personService = new ServiceGeneric<Person>(context);
         companyService = new ServiceGeneric<Company>(context);
+        infraService = new ServiceInfra(context);
       }
       catch (Exception e)
       {
@@ -72,6 +74,9 @@ namespace Manager.Services.Specific
           TypeUser = EnumTypeUser.Support
         };
         personService.InsertAccount(user);
+
+        infraService._idAccount = account._id;
+        infraService.CopyTemplateInfra(company);
       }
       catch (Exception e)
       {

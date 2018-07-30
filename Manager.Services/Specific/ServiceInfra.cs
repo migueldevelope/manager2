@@ -25,6 +25,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Skill> skillService;
     private readonly ServiceGeneric<Schooling> schoolingService;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<Parameter> parameterService;
 
 
     public ServiceInfra(DataContext context)
@@ -42,6 +43,7 @@ namespace Manager.Services.Specific
         skillService = new ServiceGeneric<Skill>(context);
         schoolingService = new ServiceGeneric<Schooling>(context);
         personService = new ServiceGeneric<Person>(context);
+        parameterService = new ServiceGeneric<Parameter>(context);
       }
       catch (Exception e)
       {
@@ -252,9 +254,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = occupationService.GetAll(p => p.Line == view.Line).Count();
-        if (item > 0)
-          return "error_line";
+        //var item = occupationService.GetAll(p => p.Line == view.Line).Count();
+        //if (item > 0)
+        //  return "error_line";
 
         var occupation = new Occupation()
         {
@@ -719,6 +721,18 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Area> GetAreas(string idcompany)
+    {
+      try
+      {
+        return areaService.GetAll(p => p.Company._id == idcompany).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Axis> GetAxis()
     {
       try
@@ -759,7 +773,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return groupService.GetAll(p => p._id == id).FirstOrDefault();
+        var group = groupService.GetAll(p => p._id == id).FirstOrDefault();
+        group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).ToList();
+        return group;
       }
       catch (Exception e)
       {
@@ -771,7 +787,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return groupService.GetAll().ToList();
+        List<Group> groups = new List<Group>();
+        foreach (var item in groupService.GetAll())
+        {
+          item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
+          groups.Add(item);
+        }
+        return groups;
       }
       catch (Exception e)
       {
@@ -783,7 +805,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return groupService.GetAll(p => p.Company._id == idcompany).ToList();
+        List<Group> groups = new List<Group>();
+        foreach (var item in groupService.GetAll(p => p.Company._id == idcompany))
+        {
+          item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
+          groups.Add(item);
+        }
+        return groups;
       }
       catch (Exception e)
       {
@@ -1206,6 +1234,159 @@ namespace Manager.Services.Specific
         total = detail.Count();
 
         return detail.Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public Parameter DefaultParameter()
+    {
+      try
+      {
+        var account = new Parameter()
+        {
+          Name = "Account_Resolution",
+          Content = "5b5b76fdfaea7c328012e9f2"
+        };
+        return parameterService.Insert(account);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public async Task CopyTemplateInfra(Company company)
+    {
+      try
+      {
+        var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
+        var id = "";
+
+        if (parameter.Count() == 0)
+          id = DefaultParameter().Content;
+        else
+          id = parameter.FirstOrDefault().Content;
+
+        //company
+        var companyAccount = companyService.GetAuthentication(p => p._idAccount == id).FirstOrDefault();
+        company.Template = companyAccount;
+        company._idAccount = _idAccount;
+        foreach(var item in companyAccount.Skills)
+        {
+          item._idAccount = _idAccount;
+          company.Skills.Add(item);
+        }
+        companyService.Update(company, null);
+
+
+
+        //skill
+        foreach (var item in skillService.GetAuthentication(p => p._idAccount == id).ToList())
+        {
+          var skill = new Skill();
+          item._idAccount = _idAccount;
+          skill = item;
+          skillService.Insert(skill);
+
+          skill.Template = item;
+          skillService.Update(skill, null);
+        }
+
+        //spheres
+        foreach (var item in sphereService.GetAuthentication(p => p._idAccount == id).ToList())
+        {
+          var sphere = new Sphere();
+          item._idAccount = _idAccount;
+          item.Company = company;
+          sphere = item;
+          sphereService.Insert(item);
+
+          sphere.Template = item;
+          sphereService.Update(sphere, null);
+        }
+
+        //axis
+        foreach (var item in axisService.GetAuthentication(p => p._idAccount == id).ToList())
+        {
+          var axis = new Axis();
+          item._idAccount = _idAccount;
+          item.Sphere.Company = company;
+          item.Sphere._idAccount = _idAccount;
+          axis = item;
+          axisService.Insert(item);
+
+          axis.Template = item;
+          axisService.Update(axis, null);
+        }
+
+        //area
+        foreach (var item in areaService.GetAuthentication(p => p._idAccount == id).ToList())
+        {
+          var area = new Area();
+          item._idAccount = _idAccount;
+          item.Company = company;
+          area = item;
+          area.Template = item;
+          areaService.Insert(item);
+
+          item.Template = item;
+          areaService.Update(item, null);
+        }
+
+        //group
+        foreach (var item in groupService.GetAuthentication(p => p._idAccount == id).ToList())
+        {
+          var group = new Group();
+          item._idAccount = _idAccount;
+          item.Company = company;
+          foreach(var skill in group.Skills)
+          {
+            group.Skills.Remove(skill);
+            skill._idAccount = _idAccount;
+            group.Skills.Add(skill);
+
+          }
+          group = item;
+          groupService.Insert(item);
+
+          group.Template = item;
+          groupService.Update(group, null);
+        }
+
+        //schooling
+        foreach (var item in schoolingService.GetAuthentication(p => p._idAccount == id).ToList())
+        {
+          var schooling = new Schooling();
+          item._idAccount = _idAccount;
+          schooling = item;
+          schoolingService.Insert(schooling);
+
+          schooling.Template = item;
+          schoolingService.Update(schooling, null);
+        }
+
+        //occupation
+        foreach (var item in occupationService.GetAuthentication(p => p._idAccount == id).ToList())
+        {
+          var occupation = new Occupation();
+          item._idAccount = _idAccount;
+          item.Group.Company = company;
+          occupation = item;
+          foreach (var skill in occupation.Skills)
+          {
+            occupation.Skills.Remove(skill);
+            skill._idAccount = _idAccount;
+            occupation.Skills.Add(skill);
+          }
+          occupationService.Insert(occupation);
+
+          occupation.Template = item;
+          occupationService.Update(occupation, null);
+        }
+
+
       }
       catch (Exception e)
       {

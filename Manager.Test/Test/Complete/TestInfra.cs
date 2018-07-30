@@ -116,6 +116,7 @@ namespace Manager.Test.Test.Complete
       {
         var company = serviceInfra.GetCompanies().FirstOrDefault();
         long total = 0;
+        var groups = serviceInfra.GetGroups();
         //var skills = serviceInfra.GetSkills(ref total, "", 100, 1);
         var skill = serviceInfra.GetSkills(company._id, ref total, "", 100, 1).FirstOrDefault();
         var sphere = serviceInfra.GetSpheres().FirstOrDefault();

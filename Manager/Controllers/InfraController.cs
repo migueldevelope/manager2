@@ -234,6 +234,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("getareas/{idcompany}")]
+    public List<Area> GetAreas(string idcompany)
+    {
+      return service.GetAreas(idcompany);
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("getaxis")]
     public List<Axis> GetAxis()
     {

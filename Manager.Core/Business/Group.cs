@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace Manager.Core.Business
@@ -14,5 +15,7 @@ namespace Manager.Core.Business
     public List<Schooling> Schooling { get; set; }
     public List<Scope> Scope { get; set; }
     public Group Template { get; set; }
+    [BsonIgnore]
+    public List<Occupation> Occupations { get; set; }
   }
 }

@@ -19,6 +19,7 @@ namespace Manager.Core.Interfaces
     List<Axis> GetAxis();
     List<Axis> GetAxis(string idcompany);
     List<Area> GetAreas();
+    List<Area> GetAreas(string idcompany);
     Group GetGroup(string id);
     Occupation GetOccupation(string id);
     List<Group> GetGroups();
