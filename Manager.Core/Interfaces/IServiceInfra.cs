@@ -27,6 +27,7 @@ namespace Manager.Core.Interfaces
     List<Occupation> GetOccupations(string idcompany);
     string AddEssential(ViewAddEssential view);
     Skill AddSkill(ViewAddSkill view);
+    Schooling AddSchooling(Schooling schooling);
     string AddAxis(Axis view);
     string AddGroup(ViewAddGroup view);
     string AddMapGroupSkill(ViewAddMapGroupSkill view);

@@ -194,7 +194,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        view.Group.Schooling.Add(view.Schooling);
+        view.Group.Schooling.Add(AddSchooling(view.Schooling));
         groupService.Update(view.Group, null);
         UpdateGroupAll(view.Group);
         return "ok";
@@ -332,6 +332,18 @@ namespace Manager.Services.Specific
         };
         skillService.Insert(skill);
         return skill;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public Schooling AddSchooling(Schooling schooling)
+    {
+      try
+      {
+        return schoolingService.Insert(schooling);
       }
       catch (Exception e)
       {
