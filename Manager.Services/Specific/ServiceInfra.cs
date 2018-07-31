@@ -113,7 +113,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = groupService.GetAll(p => p.Line == view.Line).Count();
+        var item = groupService.GetAll(p => p.Line == view.Line & p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Count();
         if (item > 0)
           return "error_line";
 
