@@ -59,5 +59,7 @@ namespace Manager.Core.Interfaces
     string UpdateOccupation(Occupation occupation);
     string UpdateMapGroupSchooling(string idgroup, Schooling schooling);
     string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling);
+    string UpdateMapOccupationActivities(string idoccupation, Activitie activitie);
+    string AreaOrder(string idcompany, string idarea, long order, bool sum);
   }
 }

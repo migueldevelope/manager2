@@ -55,6 +55,11 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var item = areaService.GetAll(p => p.Order == view.Order).Count();
+        if (item > 0)
+          return "error_line";
+
+
         areaService.Insert(view);
         return "ok";
       }
@@ -108,6 +113,10 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var item = groupService.GetAll(p => p.Line == view.Line).Count();
+        if (item > 0)
+          return "error_line";
+
         var group = new Group()
         {
           Name = view.Name,
@@ -1166,6 +1175,26 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string UpdateMapOccupationActivities(string idoccupation, Activitie activitie)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+
+        var activitieOld = occupation.Activities.Where(p => p._id == activitie._id).FirstOrDefault();
+        occupation.Activities.Remove(activitieOld);
+        occupation.Activities.Add(activitie);
+
+        occupationService.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public string UpdateMapGroupSchooling(string idgroup, Schooling schooling)
     {
       try
@@ -1273,7 +1302,7 @@ namespace Manager.Services.Specific
         var companyAccount = companyService.GetAuthentication(p => p._idAccount == id).FirstOrDefault();
         company.Template = companyAccount;
         company._idAccount = _idAccount;
-        foreach(var item in companyAccount.Skills)
+        foreach (var item in companyAccount.Skills)
         {
           item._idAccount = _idAccount;
           company.Skills.Add(item);
@@ -1341,7 +1370,7 @@ namespace Manager.Services.Specific
           var group = new Group();
           item._idAccount = _idAccount;
           item.Company = company;
-          foreach(var skill in group.Skills)
+          foreach (var skill in group.Skills)
           {
             group.Skills.Remove(skill);
             skill._idAccount = _idAccount;
@@ -1387,6 +1416,21 @@ namespace Manager.Services.Specific
         }
 
 
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AreaOrder(string idcompany, string idarea, long order, bool sum)
+    {
+      try
+      {
+        var area = areaService.GetAll(p => p._id == idarea).FirstOrDefault();
+        var areas = areaService.GetAll(p => p.Company._id == idcompany).ToList();
+
+        return "reorder";
       }
       catch (Exception e)
       {

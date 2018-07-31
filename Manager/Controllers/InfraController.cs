@@ -444,5 +444,21 @@ namespace Manager.Controllers
     {
       return service.UpdateMapOccupationSchooling(idoccupation, schooling);
     }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatemapoccupationactivities/{idoccupation}")]
+    public string UpdateMapOccupationActivities([FromBody]Activitie activitie, string idoccupation)
+    {
+      return service.UpdateMapOccupationActivities(idoccupation, activitie);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("areaorder/{idcompany}/{idarea}/{order}/{sum}")]
+    public string AreaOrder(string idcompany, string idarea, long order, bool sum)
+    {
+      return service.AreaOrder(idcompany, idarea, order, sum);
+    }
   }
 }
