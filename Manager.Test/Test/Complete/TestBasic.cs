@@ -40,9 +40,9 @@ namespace Manager.Test.Test.Complete
       {
         var view = new ViewNewAccount()
         {
-          Mail = "suporte1@jmsoft.com.br",
-          NameAccount = "Support Test",
-          NameCompany = "Test 1",
+          Mail = "suporte3@jmsoft.com.br",
+          NameAccount = "Support Test 3",
+          NameCompany = "Test 3",
           Password = "1234"
         };
         this.serviceAccount.NewAccount(view);
