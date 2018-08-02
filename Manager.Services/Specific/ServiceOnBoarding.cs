@@ -158,10 +158,26 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateOnBoarding(OnBoarding onboarding)
+    public string UpdateOnBoarding(OnBoarding onboarding, string idperson)
     {
       try
       {
+        if (onboarding.Person._id != idperson)
+        {
+          if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Wait)
+          {
+            onboarding.DateEndManager = DateTime.Now;
+          }
+        }
+        else
+        {
+          if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
+          {
+            onboarding.DateEndPerson = DateTime.Now;
+            onboarding.DateEndEnd = DateTime.Now;
+          }
+
+        }
         onBoardingService.Update(onboarding, null);
         return "update";
       }
