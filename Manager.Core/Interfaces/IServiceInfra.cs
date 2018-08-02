@@ -9,6 +9,7 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     List<Company> GetCompanies();
+    List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page);
     List<Skill> GetSkills(ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkills(string company, ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkillsGroup(string idgroup, string idcompany, ref long total, string filter, int count, int page);

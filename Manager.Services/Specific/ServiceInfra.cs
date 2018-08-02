@@ -1298,16 +1298,16 @@ namespace Manager.Services.Specific
         else
           idresolution = parameter.FirstOrDefault().Content;
 
-        //company
-        var companyAccount = companyService.GetAuthentication(p => p._idAccount == idresolution).FirstOrDefault();
-        company.Template = companyAccount;
-        company._idAccount = _idAccount;
-        foreach (var item in companyAccount.Skills)
-        {
-          item._idAccount = _idAccount;
-          company.Skills.Add(item);
-        }
-        companyService.UpdateAccount(company, null);
+        ////company
+        //var companyAccount = companyService.GetAuthentication(p => p._idAccount == idresolution).FirstOrDefault();
+        //company.Template = companyAccount;
+        //company._idAccount = _idAccount;
+        //foreach (var item in companyAccount.Skills)
+        //{
+        //  item._idAccount = _idAccount;
+        //  company.Skills.Add(item);
+        //}
+        //companyService.UpdateAccount(company, null);
 
 
 
@@ -1367,23 +1367,41 @@ namespace Manager.Services.Specific
           axisService.InsertAccount(item);
         }
 
-        //area
-        foreach (var item in areaService.GetAuthentication(p => p._idAccount == idresolution).ToList())
+        ////area
+        //foreach (var item in areaService.GetAuthentication(p => p._idAccount == idresolution).ToList())
+        //{
+        //  var area = new Area();
+        //  item._idAccount = _idAccount;
+        //  item.Company = company;
+        //  area = item;
+        //  area.Template = new Area()
+        //  {
+        //    _id = item._id,
+        //    _idAccount = _idAccount,
+        //    Name = item.Name,
+        //    Order = item.Order,
+        //    Status = item.Status
+        //  };
+        //  areaService.InsertAccount(item);
+
+        //}
+
+        //schooling
+        foreach (var item in schoolingService.GetAuthentication(p => p._idAccount == idresolution).ToList())
         {
-          var area = new Area();
+          var schooling = new Schooling();
           item._idAccount = _idAccount;
-          item.Company = company;
-          area = item;
-          area.Template = new Area()
+          schooling = item;
+          schooling.Template = new Schooling()
           {
             _id = item._id,
             _idAccount = _idAccount,
             Name = item.Name,
-            Order = item.Order,
+            Complement = item.Complement,
+            Type = item.Type,
             Status = item.Status
           };
-          areaService.InsertAccount(item);
-
+          schoolingService.InsertAccount(schooling);
         }
 
         //group
@@ -1417,53 +1435,36 @@ namespace Manager.Services.Specific
           groupService.InsertAccount(item);
         }
 
-        //schooling
-        foreach (var item in schoolingService.GetAuthentication(p => p._idAccount == idresolution).ToList())
-        {
-          var schooling = new Schooling();
-          item._idAccount = _idAccount;
-          schooling = item;
-          schooling.Template = new Schooling()
-          {
-            _id = item._id,
-            _idAccount = _idAccount,
-            Name = item.Name,
-            Complement = item.Complement,
-            Type = item.Type,
-            Status = item.Status
-          };
-          schoolingService.InsertAccount(schooling);
-        }
 
-        //occupation
-        foreach (var item in occupationService.GetAuthentication(p => p._idAccount == idresolution).ToList())
-        {
-          var occupation = new Occupation();
-          item._idAccount = _idAccount;
-          item.Group.Company = company;
-          occupation = item;
-          foreach (var skill in occupation.Skills)
-          {
-            occupation.Skills.Remove(skill);
-            skill._idAccount = _idAccount;
-            occupation.Skills.Add(skill);
-          }
-          occupation.Template = new Occupation()
-          {
-            _id = item._id,
-            _idAccount = _idAccount,
-            Name = item.Name,
-            Group = item.Group,
-            Schooling = item.Schooling,
-            Line = item.Line,
-            Activities = item.Activities,
-            Skills = item.Skills,
-            Status = item.Status,
-            Area = item.Area
-          };
-          occupationService.InsertAccount(occupation);
+        ////occupation
+        //foreach (var item in occupationService.GetAuthentication(p => p._idAccount == idresolution).ToList())
+        //{
+        //  var occupation = new Occupation();
+        //  item._idAccount = _idAccount;
+        //  item.Group.Company = company;
+        //  occupation = item;
+        //  foreach (var skill in occupation.Skills)
+        //  {
+        //    occupation.Skills.Remove(skill);
+        //    skill._idAccount = _idAccount;
+        //    occupation.Skills.Add(skill);
+        //  }
+        //  occupation.Template = new Occupation()
+        //  {
+        //    _id = item._id,
+        //    _idAccount = _idAccount,
+        //    Name = item.Name,
+        //    Group = item.Group,
+        //    Schooling = item.Schooling,
+        //    Line = item.Line,
+        //    Activities = item.Activities,
+        //    Skills = item.Skills,
+        //    Status = item.Status,
+        //    Area = item.Area
+        //  };
+        //  occupationService.InsertAccount(occupation);
 
-        }
+        //}
 
 
       }
@@ -1481,6 +1482,30 @@ namespace Manager.Services.Specific
         var areas = areaService.GetAll(p => p.Company._id == idcompany).ToList();
 
         return "reorder";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
+        var idresolution = "";
+
+        if (parameter.Count() == 0)
+          idresolution = DefaultParameter().Content;
+        else
+          idresolution = parameter.FirstOrDefault().Content;
+
+        int skip = (count * (page - 1));
+        var detail = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {

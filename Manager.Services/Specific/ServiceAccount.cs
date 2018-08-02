@@ -71,7 +71,7 @@ namespace Manager.Services.Specific
           StatusUser = EnumStatusUser.Enabled,
           Status = EnumStatus.Enabled,
           Password = EncryptServices.GetMD5Hash(view.Password),
-          TypeUser = EnumTypeUser.Support
+          TypeUser = EnumTypeUser.Administrator
         };
         personService.InsertAccount(user);
 
