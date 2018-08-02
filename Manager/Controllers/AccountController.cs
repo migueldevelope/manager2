@@ -1,6 +1,9 @@
-﻿using Manager.Core.Interfaces;
+﻿using Manager.Core.Business;
+using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Manager.Controllers
 {
@@ -22,5 +25,18 @@ namespace Manager.Controllers
       service.NewAccount(view);
       return Ok("Account sucess!");
     }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getaccounts")]
+    public List<Account> GeAccounts(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GeAccounts(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+
   }
 }

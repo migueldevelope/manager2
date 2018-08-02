@@ -852,6 +852,26 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Occupation> GetOccupationsInfra()
+    {
+      try
+      {
+        var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
+        var idresolution = "";
+
+        if (parameter.Count() == 0)
+          idresolution = DefaultParameter().Content;
+        else
+          idresolution = parameter.FirstOrDefault().Content;
+
+        return occupationService.GetAuthentication(p => p._idAccount == idresolution).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Occupation> GetOccupations(string idcompany)
     {
       try
