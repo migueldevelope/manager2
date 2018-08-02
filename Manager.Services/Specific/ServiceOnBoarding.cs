@@ -248,8 +248,11 @@ namespace Manager.Services.Specific
         {
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
           {
-            onboarding.DateEndPerson = DateTime.Now;
             onboarding.DateEndEnd = DateTime.Now;
+          }
+          else if(onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
+          {
+            onboarding.DateEndPerson = DateTime.Now;
           }
 
         }

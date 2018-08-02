@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager.Core", "Manager.Core\Manager.Core.csproj", "{3A521E8C-6227-48BD-ABCC-3D5A55FADF02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager.Core", "Manager.Core\Manager.Core.csproj", "{3A521E8C-6227-48BD-ABCC-3D5A55FADF02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager.Data", "Manager.Data\Manager.Data.csproj", "{B376AC4C-595B-453C-AA40-AF97EE21BA6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager.Data", "Manager.Data\Manager.Data.csproj", "{B376AC4C-595B-453C-AA40-AF97EE21BA6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager.Services", "Manager.Services\Manager.Services.csproj", "{6944219A-49E7-46C3-A0A4-3E9AEEB86B99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager.Services", "Manager.Services\Manager.Services.csproj", "{6944219A-49E7-46C3-A0A4-3E9AEEB86B99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager.Test", "Manager.Test\Manager.Test.csproj", "{0D2BAC29-A0C9-46CB-BECC-E974251619AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager.Test", "Manager.Test\Manager.Test.csproj", "{0D2BAC29-A0C9-46CB-BECC-E974251619AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager", "Manager\Manager.csproj", "{0D793A4C-3484-48EA-BAD9-869D9D98D24E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager", "Manager\Manager.csproj", "{0D793A4C-3484-48EA-BAD9-869D9D98D24E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{AEFC8403-FCF7-4EE4-AED0-77636C1E33A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj", "{AEFC8403-FCF7-4EE4-AED0-77636C1E33A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail", "Mail\Mail.csproj", "{91D2313E-84DD-4F80-BF9A-9406D0E58007}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{AEFC8403-FCF7-4EE4-AED0-77636C1E33A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEFC8403-FCF7-4EE4-AED0-77636C1E33A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEFC8403-FCF7-4EE4-AED0-77636C1E33A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D2313E-84DD-4F80-BF9A-9406D0E58007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D2313E-84DD-4F80-BF9A-9406D0E58007}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D2313E-84DD-4F80-BF9A-9406D0E58007}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D2313E-84DD-4F80-BF9A-9406D0E58007}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
