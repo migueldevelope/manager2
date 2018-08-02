@@ -852,7 +852,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Occupation> GetOccupationsInfra()
+    public List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page)
     {
       try
       {
@@ -864,7 +864,11 @@ namespace Manager.Services.Specific
         else
           idresolution = parameter.FirstOrDefault().Content;
 
-        return occupationService.GetAuthentication(p => p._idAccount == idresolution).ToList();
+        int skip = (count * (page - 1));
+        var detail = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
