@@ -114,7 +114,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public string NewPerson(ViewPersonsCrud person)
+    public string NewPersonView(Person person)
     {
       try
       {

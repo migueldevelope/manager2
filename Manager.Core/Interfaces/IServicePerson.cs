@@ -16,7 +16,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     ViewPersonHead Head(string idperson);
     Person NewPerson(Person person);
-    string NewPerson(ViewPersonsCrud person);
+    string NewPersonView(Person person);
     string UpdatePerson(string id, ViewPersonsCrud person);
     Person UpdatePerson(Person person);
     void SetPhoto(string idPerson, string url);

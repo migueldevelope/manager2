@@ -16,9 +16,10 @@ namespace Manager.Controllers
   {
     private readonly IServiceOnBoarding service;
 
-    public OnBoardingController(IServiceOnBoarding _service)
+    public OnBoardingController(IServiceOnBoarding _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
+      service.SetUser(contextAccessor);
     }
 
     [Authorize]
@@ -57,6 +58,30 @@ namespace Manager.Controllers
       var result = service.ListOnBoardingsWait(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("personend/{idmanager}")]
+    public OnBoarding ListEndPerson(string idmanager)
+    {
+      return service.PersonOnBoardingsEnd(idmanager);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("personwait/{idmanager}")]
+    public OnBoarding ListPerson(string idmanager)
+    {
+      return service.PersonOnBoardingsWait(idmanager);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("get/{id}")]
+    public OnBoarding GetOnBoarding(string id)
+    {
+      return service.GetOnBoardings(id);
     }
 
 

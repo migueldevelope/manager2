@@ -118,25 +118,26 @@ namespace Manager.Controllers
     [HttpGet]
     [Route("{idperson}/edit")]
     public Person GetEdit(string idperson)
-    { 
+    {
       return service.GetPersonCrud(idperson); ;
     }
-
 
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public string Post([FromBody] ViewPersonsCrud person)
+    public string Post([FromBody] Person person)
     {
-      return service.NewPerson(person); 
+      service.NewPersonView(person);
+      return "ok";
     }
 
     [Authorize]
     [HttpPut]
-    [Route("update/{id}")]
-    public string Put([FromBody] ViewPersonsCrud person, string id)
+    [Route("update")]
+    public string Put([FromBody] Person person)
     {
-      return service.UpdatePerson(id,person);
+      service.UpdatePerson(person);
+      return "ok";
     }
 
     [Authorize]

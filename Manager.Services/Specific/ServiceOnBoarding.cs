@@ -3,16 +3,18 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Manager.Services.Specific
 {
-  public class ServiceOnBoarding : Repository<Account>, IServiceOnBoarding
+  public class ServiceOnBoarding : Repository<OnBoarding>, IServiceOnBoarding
   {
     private readonly ServiceGeneric<OnBoarding> onBoardingService;
     private readonly ServiceGeneric<Person> personService;
+
     public ServiceOnBoarding(DataContext context)
       : base(context)
     {
@@ -31,9 +33,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-
+        var manager = personService.GetAll(p => p._id == idmanager).FirstOrDefault();
         int skip = (count * (page - 1));
-        var detail = onBoardingService.GetAll(p => p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        var detail = onBoardingService.GetAll(p => p.Person.Manager == manager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
         total = detail.Count();
 
         return detail.Skip(skip).Take(count).ToList();
@@ -41,6 +43,23 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private void newOnZero()
+    {
+      try
+      {
+        var on = onBoardingService.GetAuthentication(p => p.Status == EnumStatus.Disabled).Count();
+        if (on == 0)
+        {
+          var person = personService.GetAll().FirstOrDefault();
+          var zero = onBoardingService.Insert(new OnBoarding() { Person = person, Status = EnumStatus.Disabled, StatusOnBoarding = EnumStatusOnBoarding.End });
+        }
+      }
+      catch (Exception)
+      {
+        throw;
       }
     }
 
@@ -48,21 +67,28 @@ namespace Manager.Services.Specific
     {
       try
       {
-
+        newOnZero();
         int skip = (count * (page - 1));
-        var detail = (from person in personService.GetAll()
-                      join onboard in onBoardingService.GetAll() on person._id equals onboard._id into onboardleft
-                      from onboarding in onboardleft.DefaultIfEmpty(
-                        new OnBoarding()
-                        {
-                          Person = person,
-                          _id = null,
-                          StatusOnBoarding = EnumStatusOnBoarding.Open
-                        })
-                      select onboarding);
+        var list = personService.GetAll(p => p.Manager._id == idmanager
+        & p.Name.ToUpper().Contains(filter.ToUpper()))
+        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList();
+
+        var detail = new List<OnBoarding>();
+        foreach (var item in list)
+        {
+          if (item.OnBoarding == null)
+            detail.Add(new OnBoarding
+            {
+              Person = item.Person,
+              _id = null,
+              StatusOnBoarding = EnumStatusOnBoarding.Open
+            });
+          else
+            detail.Add(item.OnBoarding);
+        }
 
         total = detail.Count();
-
         return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
@@ -71,6 +97,55 @@ namespace Manager.Services.Specific
       }
     }
 
+    public OnBoarding PersonOnBoardingsEnd(string idmanager)
+    {
+      try
+      {
+        return onBoardingService.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public OnBoarding PersonOnBoardingsWait(string idmanager)
+    {
+      try
+      {
+        var item = personService.GetAll(p => p._id == idmanager)
+        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .FirstOrDefault();
+
+        if (item.OnBoarding == null)
+          return new OnBoarding
+          {
+            Person = item.Person,
+            _id = null,
+            StatusOnBoarding = EnumStatusOnBoarding.Open
+          };
+        else
+          return item.OnBoarding;
+
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public OnBoarding GetOnBoardings(string id)
+    {
+      try
+      {
+        return onBoardingService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
 
     private OnBoarding loadMap(OnBoarding onBoarding)
     {
@@ -186,5 +261,12 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      personService._user = _user;
+    }
+
   }
 }
