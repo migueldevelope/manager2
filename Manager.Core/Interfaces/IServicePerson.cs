@@ -19,6 +19,7 @@ namespace Manager.Core.Interfaces
     string NewPersonView(Person person);
     string UpdatePerson(string id, ViewPersonsCrud person);
     Person UpdatePerson(Person person);
+    Person UpdatePersonView(Person person);
     void SetPhoto(string idPerson, string url);
     ViewPersonDetail GetPersonDetail(string idPerson);
     List<ViewPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page);

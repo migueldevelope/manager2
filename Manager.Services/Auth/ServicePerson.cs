@@ -181,6 +181,20 @@ namespace Manager.Services.Auth
       }
     }
 
+    public Person UpdatePersonView(Person person)
+    {
+      try
+      {
+        var pass = personService.GetAll(p => p._id == person._id).SingleOrDefault().Password;
+        personService.Update(person, null);
+        return person;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public Person UpdatePerson(Person person)
     {
       try

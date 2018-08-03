@@ -136,7 +136,7 @@ namespace Manager.Controllers
     [Route("update")]
     public string Put([FromBody] Person person)
     {
-      service.UpdatePerson(person);
+      service.UpdatePersonView(person);
       return "ok";
     }
 
