@@ -4,6 +4,7 @@ using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -154,37 +155,37 @@ namespace Manager.Services.Specific
         onBoarding.SkillsCompany = new List<OnBoardingSkills>();
         foreach (var item in onBoarding.Person.Company.Skills)
         {
-          onBoarding.SkillsCompany.Add(new OnBoardingSkills() { Skill = item });
+          onBoarding.SkillsCompany.Add(new OnBoardingSkills() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.SkillsGroup = new List<OnBoardingSkills>();
         foreach (var item in onBoarding.Person.Occupation.Group.Skills)
         {
-          onBoarding.SkillsGroup.Add(new OnBoardingSkills() { Skill = item });
+          onBoarding.SkillsGroup.Add(new OnBoardingSkills() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.SkillsOccupation = new List<OnBoardingSkills>();
         foreach (var item in onBoarding.Person.Occupation.Skills)
         {
-          onBoarding.SkillsOccupation.Add(new OnBoardingSkills() { Skill = item });
+          onBoarding.SkillsOccupation.Add(new OnBoardingSkills() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.Scopes = new List<OnBoardingScope>();
         foreach (var item in onBoarding.Person.Occupation.Group.Scope)
         {
-          onBoarding.Scopes.Add(new OnBoardingScope() { Scope = item });
+          onBoarding.Scopes.Add(new OnBoardingScope() { Scope = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.Activities = new List<OnBoardingActivities>();
         foreach (var item in onBoarding.Person.Occupation.Activities)
         {
-          onBoarding.Activities.Add(new OnBoardingActivities() { Activitie = item });
+          onBoarding.Activities.Add(new OnBoardingActivities() { Activitie = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.Schoolings = new List<OnBoardingSchooling>();
         foreach (var item in onBoarding.Person.Occupation.Schooling)
         {
-          onBoarding.Schoolings.Add(new OnBoardingSchooling() { Schooling = item });
+          onBoarding.Schoolings.Add(new OnBoardingSchooling() { Schooling = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         return onBoarding;
@@ -250,7 +251,7 @@ namespace Manager.Services.Specific
           {
             onboarding.DateEndEnd = DateTime.Now;
           }
-          else if(onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
+          else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
           {
             onboarding.DateEndPerson = DateTime.Now;
           }
