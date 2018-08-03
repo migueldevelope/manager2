@@ -270,6 +270,7 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
       personService._user = _user;
+      onBoardingService._user = _user;
     }
 
   }
