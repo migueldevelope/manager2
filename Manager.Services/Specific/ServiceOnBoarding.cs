@@ -86,6 +86,7 @@ namespace Manager.Services.Specific
               StatusOnBoarding = EnumStatusOnBoarding.Open
             });
           else
+            if (item.OnBoarding.StatusOnBoarding != EnumStatusOnBoarding.End)
             detail.Add(item.OnBoarding);
         }
 
@@ -126,7 +127,10 @@ namespace Manager.Services.Specific
             StatusOnBoarding = EnumStatusOnBoarding.Open
           };
         else
+         if (item.OnBoarding.StatusOnBoarding != EnumStatusOnBoarding.End)
           return item.OnBoarding;
+         else
+          return null;
 
 
       }
