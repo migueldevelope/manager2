@@ -34,9 +34,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var manager = personService.GetAll(p => p._id == idmanager).FirstOrDefault();
+        //var manager = personService.GetAll(p => p._id == idmanager).FirstOrDefault();
         int skip = (count * (page - 1));
-        var detail = onBoardingService.GetAll(p => p.Person.Manager == manager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        var detail = onBoardingService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
         total = detail.Count();
 
         return detail.Skip(skip).Take(count).ToList();
