@@ -1301,7 +1301,7 @@ namespace Manager.Services.Specific
         var account = new Parameter()
         {
           Name = "Account_Resolution",
-          Content = "5b5b76fdfaea7c328012e9f2"
+          Content = "5b6852b4eb2b3849044d9cb8"
         };
         return parameterService.Insert(account);
       }
@@ -1354,13 +1354,52 @@ namespace Manager.Services.Specific
 
         }
 
+        //schooling
+        foreach (var item in schoolingService.GetAuthentication(p => p._idAccount == idresolution).ToList())
+        {
+          var schooling = new Schooling();
+          schooling = item;
+          schooling._idAccount = _idAccount;
+          schooling.Template = new Schooling()
+          {
+            _id = item._id,
+            _idAccount = _idAccount,
+            Name = item.Name,
+            Complement = item.Complement,
+            Type = item.Type,
+            Status = item.Status
+          };
+          schoolingService.InsertAccount(schooling);
+        }
+
+        //axis
+        foreach (var itemAxis in axisService.GetAuthentication(p => p._idAccount == idresolution).ToList())
+        {
+          var axis = new Axis();
+          axis = itemAxis;
+          axis.Sphere = sphereService.GetAuthentication(p => p._idAccount == idresolution & p.TypeSphere == EnumTypeSphere.Operational).FirstOrDefault();
+          axis.Sphere._idAccount = _idAccount;
+          axis.Sphere.Company = company;
+          axis._idAccount = _idAccount;
+          axis.Template = new Axis()
+          {
+            _id = itemAxis._id,
+            _idAccount = _idAccount,
+            Name = itemAxis.Name,
+            TypeAxis = itemAxis.TypeAxis,
+            Status = itemAxis.Status
+          };
+          axisService.InsertAccount(axis);
+        }
+
+
         //spheres
         foreach (var item in sphereService.GetAuthentication(p => p._idAccount == idresolution).ToList())
         {
           var sphere = new Sphere();
+          sphere = item;
           item._idAccount = _idAccount;
           item.Company = company;
-          sphere = item;
           sphere.Template = new Sphere()
           {
             _id = item._id,
@@ -1369,30 +1408,47 @@ namespace Manager.Services.Specific
             TypeSphere = item.TypeSphere,
             Status = item.Status
           };
-          sphereService.InsertAccount(item);
+          sphereService.InsertAccount(sphere);
+
+          foreach (var itemaxis in axisService.GetAuthentication(p => p._idAccount == _idAccount).ToList())
+          {
+            //group
+            foreach (var itemGroup in groupService.GetAuthentication(p => p._idAccount == idresolution & p.Axis._id == itemaxis.Template._id & p.Sphere._id == sphere.Template._id).ToList())
+            {
+              var group = new Group();
+              group = itemGroup;
+              group.Sphere = sphere;
+              group.Axis = itemaxis;
+              group.Company = company;
+              group._idAccount = _idAccount;
+              if (group.Skills != null)
+              {
+                foreach (var skill in group.Skills)
+                {
+                  skill._idAccount = _idAccount;
+
+                }
+              }
+              group.Template = new Group()
+              {
+                _id = itemGroup._id,
+                _idAccount = _idAccount,
+                Name = itemGroup.Name,
+                Company = itemGroup.Company,
+                Axis = itemGroup.Axis,
+                Schooling = itemGroup.Schooling,
+                Line = itemGroup.Line,
+                Scope = itemGroup.Scope,
+                Sphere = itemGroup.Sphere,
+                Skills = itemGroup.Skills,
+                Status = itemGroup.Status
+              };
+              groupService.InsertAccount(group);
+            }
+          }
+
         }
 
-        //axis
-        foreach (var item in axisService.GetAuthentication(p => p._idAccount == idresolution).ToList())
-        {
-          var axis = new Axis();
-          item._idAccount = _idAccount;
-          if (item.Sphere != null)
-          {
-            item.Sphere.Company = company;
-            item.Sphere._idAccount = _idAccount;
-          }
-          axis = item;
-          axis.Template = new Axis()
-          {
-            _id = item._id,
-            _idAccount = _idAccount,
-            Name = item.Name,
-            TypeAxis = item.TypeAxis,
-            Status = item.Status
-          };
-          axisService.InsertAccount(item);
-        }
 
         ////area
         //foreach (var item in areaService.GetAuthentication(p => p._idAccount == idresolution).ToList())
@@ -1413,57 +1469,7 @@ namespace Manager.Services.Specific
 
         //}
 
-        //schooling
-        foreach (var item in schoolingService.GetAuthentication(p => p._idAccount == idresolution).ToList())
-        {
-          var schooling = new Schooling();
-          item._idAccount = _idAccount;
-          schooling = item;
-          schooling.Template = new Schooling()
-          {
-            _id = item._id,
-            _idAccount = _idAccount,
-            Name = item.Name,
-            Complement = item.Complement,
-            Type = item.Type,
-            Status = item.Status
-          };
-          schoolingService.InsertAccount(schooling);
-        }
 
-        //group
-        foreach (var item in groupService.GetAuthentication(p => p._idAccount == idresolution).ToList())
-        {
-          var group = new Group();
-          item._idAccount = _idAccount;
-          item.Company = company;
-          if (group.Skills != null)
-          {
-            foreach (var skill in group.Skills)
-            {
-              group.Skills.Remove(skill);
-              skill._idAccount = _idAccount;
-              group.Skills.Add(skill);
-
-            }
-          }
-          group = item;
-          group.Template = new Group()
-          {
-            _id = item._id,
-            _idAccount = _idAccount,
-            Name = item.Name,
-            Company = item.Company,
-            Axis = item.Axis,
-            Schooling = item.Schooling,
-            Line = item.Line,
-            Scope = item.Scope,
-            Sphere = item.Sphere,
-            Skills = item.Skills,
-            Status = item.Status
-          };
-          groupService.InsertAccount(item);
-        }
 
 
         ////occupation
