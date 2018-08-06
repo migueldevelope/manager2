@@ -1,0 +1,97 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Manager.Core.Business;
+using Manager.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Manager.Controllers
+{
+  [Produces("application/json")]
+  [Route("monitoring")]
+  public class MonitoringController : Controller
+  {
+    private readonly IServiceMonitoring service;
+
+    public MonitoringController(IServiceMonitoring _service, IHttpContextAccessor contextAccessor)
+    {
+      service = _service;
+      service.SetUser(contextAccessor);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("new/{idperson}")]
+    public Monitoring Post([FromBody]Monitoring monitoring, string idperson)
+    {
+      return service.NewMonitoring(monitoring, idperson);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("update/{idperson}")]
+    public string Put([FromBody]Monitoring monitoring, string idperson)
+    {
+      return service.UpdateMonitoring(monitoring, idperson);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listend/{idmanager}")]
+    public List<Monitoring> ListEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListMonitoringsEnd(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("list/{idmanager}")]
+    public List<Monitoring> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListMonitoringsWait(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("personend/{idmanager}")]
+    public Monitoring ListEndPerson(string idmanager)
+    {
+      return service.PersonMonitoringsEnd(idmanager);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("personwait/{idmanager}")]
+    public Monitoring ListPerson(string idmanager)
+    {
+      return service.PersonMonitoringsWait(idmanager);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("get/{id}")]
+    public Monitoring GetMonitoring(string id)
+    {
+      return service.GetMonitorings(id);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getskills/{idperson}")]
+    public List<Skill> GetSkills(string idperson)
+    {
+      return service.GetSkills(idperson);
+    }
+
+
+  }
+}
