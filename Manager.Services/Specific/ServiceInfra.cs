@@ -1368,7 +1368,7 @@ namespace Manager.Services.Specific
             Name = item.Name,
             TypeSphere = item.TypeSphere,
             Status = item.Status
-          }; 
+          };
           sphereService.InsertAccount(item);
         }
 
@@ -1377,17 +1377,20 @@ namespace Manager.Services.Specific
         {
           var axis = new Axis();
           item._idAccount = _idAccount;
-          item.Sphere.Company = company;
-          item.Sphere._idAccount = _idAccount;
+          if (item.Sphere != null)
+          {
+            item.Sphere.Company = company;
+            item.Sphere._idAccount = _idAccount;
+          }
           axis = item;
-          axis.Template  = new Axis()
+          axis.Template = new Axis()
           {
             _id = item._id,
             _idAccount = _idAccount,
             Name = item.Name,
             TypeAxis = item.TypeAxis,
             Status = item.Status
-          }; 
+          };
           axisService.InsertAccount(item);
         }
 
@@ -1434,12 +1437,15 @@ namespace Manager.Services.Specific
           var group = new Group();
           item._idAccount = _idAccount;
           item.Company = company;
-          foreach (var skill in group.Skills)
+          if (group.Skills != null)
           {
-            group.Skills.Remove(skill);
-            skill._idAccount = _idAccount;
-            group.Skills.Add(skill);
+            foreach (var skill in group.Skills)
+            {
+              group.Skills.Remove(skill);
+              skill._idAccount = _idAccount;
+              group.Skills.Add(skill);
 
+            }
           }
           group = item;
           group.Template = new Group()
