@@ -31,6 +31,7 @@ namespace Manager.Core.Interfaces
     List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
     string AddEssential(ViewAddEssential view);
     Skill AddSkill(ViewAddSkill view);
+    string AddSkills(List<ViewAddSkill> view);
     Schooling AddSchooling(Schooling schooling);
     string AddAxis(Axis view);
     string AddGroup(ViewAddGroup view);

@@ -396,6 +396,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (processLevelOneService.GetAll(p => p.Area._id == idarea).Count() > 0)
+          return "erro_exists_nivelone";
+
         var area = areaService.GetAll(p => p._id == idarea).FirstOrDefault();
 
 
@@ -758,11 +761,11 @@ namespace Manager.Services.Specific
         foreach (var item in areas)
         {
           item.ProcessLevelOnes = new List<ProcessLevelOne>();
-          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).ToList();
+          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
           foreach (var row in process)
           {
             row.Process = new List<ProcessLevelTwo>();
-            foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).ToList())
+            foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
             {
               row.Process.Add(leveltwo);
             }
@@ -786,11 +789,11 @@ namespace Manager.Services.Specific
         foreach (var item in areas)
         {
           item.ProcessLevelOnes = new List<ProcessLevelOne>();
-          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).ToList();
+          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
           foreach (var row in process)
           {
             row.Process = new List<ProcessLevelTwo>();
-            foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).ToList())
+            foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
             {
               row.Process.Add(leveltwo);
             }
@@ -884,7 +887,7 @@ namespace Manager.Services.Specific
           item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
           groups.Add(item);
         }
-        return groups.OrderBy(p => p.Name).OrderBy(p => p.Name).ToList();
+        return groups.OrderBy(p => p.Axis.TypeAxis).ThenBy(p => p.Line).ToList();
       }
       catch (Exception e)
       {
@@ -1752,7 +1755,31 @@ namespace Manager.Services.Specific
             list.Add(row);
           }
         }
-        return list.OrderBy(p => p.Order).ToList();
+        return list.OrderBy(p => p.ProcessLevelOne.Order).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddSkills(List<ViewAddSkill> view)
+    {
+      try
+      {
+        foreach (var item in view)
+        {
+          var skill = new Skill()
+          {
+            Name = item.Name,
+            Concept = item.Concept,
+            TypeSkill = item.TypeSkill,
+            Status = EnumStatus.Enabled
+          };
+          skillService.Insert(skill);
+        }
+
+        return "ok";
       }
       catch (Exception e)
       {

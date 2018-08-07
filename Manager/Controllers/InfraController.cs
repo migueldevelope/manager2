@@ -121,6 +121,15 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
+    [Route("addskills")]
+    public string AddSkills([FromBody]List<ViewAddSkill> view)
+    {
+      service.AddSkills(view);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
     [Route("addsphere")]
     public string AddSphere([FromBody]Sphere view)
     {
