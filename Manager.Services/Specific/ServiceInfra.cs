@@ -121,11 +121,20 @@ namespace Manager.Services.Specific
         //if (item > 0)
         //  return "error_line";
 
-        var line = groupService.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line);
-        if (line == 0)
+        long line = 0;
+        try
+        {
+          line = groupService.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line);
+          if (line == 0)
+            line = 1;
+          else
+            line += 1;
+        }
+        catch (Exception)
+        {
           line = 1;
-        else
-          line += 1;
+        }
+
 
         var group = new Group()
         {
