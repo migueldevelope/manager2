@@ -136,6 +136,25 @@ namespace Manager.Controllers
       return "ok";
     }
 
+
+    [Authorize]
+    [HttpPost]
+    [Route("addprocesslevelone")]
+    public string AddProcessLevelOne([FromBody]ProcessLevelOne processLevelOne)
+    {
+      service.AddProcessLevelOne(processLevelOne);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addprocessleveltwo")]
+    public string AddProcessLevelTwo([FromBody]ProcessLevelTwo processLevelTwo)
+    {
+      service.AddProcessLevelTwo(processLevelTwo);
+      return "ok";
+    }
+
     [Authorize]
     [HttpDelete]
     [Route("deletearea/{id}")]
@@ -239,6 +258,22 @@ namespace Manager.Controllers
     public string DeleteSchooling(string idschooling)
     {
       return service.DeleteSchooling(idschooling);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteprocesslevelone/{id}")]
+    public string DeleteProcessLevelOne(string id)
+    {
+      return service.DeleteProcessLevelOne(id);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteprocessleveltwo/{id}")]
+    public string DeleteProcessLevelTwo(string id)
+    {
+      return service.DeleteProcessLevelTwo(id);
     }
 
 
@@ -499,6 +534,22 @@ namespace Manager.Controllers
     public string UpdateSchooling([FromBody]Schooling schooling)
     {
       return service.UpdateSchooling(schooling);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updateprocesslevelone")]
+    public string UpdateProcessLevelOne([FromBody]ProcessLevelOne processLevelOne)
+    {
+      return service.UpdateProcessLevelOne(processLevelOne);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updateprocessleveltwo")]
+    public string UpdateProcessLevelTwo([FromBody]ProcessLevelTwo processLevelTwo)
+    {
+      return service.UpdateProcessLevelTwo(processLevelTwo);
     }
 
     [Authorize]

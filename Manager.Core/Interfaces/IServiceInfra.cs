@@ -41,6 +41,8 @@ namespace Manager.Core.Interfaces
     string AddOccupation(ViewAddOccupation view);
     string AddOccupationSkill(ViewAddOccupationSkill view);
     string AddOccupationActivities(ViewAddOccupationActivities view);
+    string AddProcessLevelOne(ProcessLevelOne model);
+    string AddProcessLevelTwo(ProcessLevelTwo model);
     string DeleteEssential(string idcompany, string id);
     string DeleteSkill(string idskill);
     string DeleteSphere(string idsphere);
@@ -54,6 +56,8 @@ namespace Manager.Core.Interfaces
     string DeleteOccupationActivities(string idoccupation, string idactivitie);
     string DeleteMapGroupScope(string idgroup, string idscope);
     string DeleteSchooling(string idschooling);
+    string DeleteProcessLevelOne(string id);
+    string DeleteProcessLevelTwo(string id);
     string UpdateSkill(Skill skill);
     string UpdateSphere(Sphere sphere);
     string UpdateAxis(Axis axis);
@@ -64,6 +68,8 @@ namespace Manager.Core.Interfaces
     string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling);
     string UpdateMapOccupationActivities(string idoccupation, Activitie activitie);
     string UpdateSchooling(Schooling schooling);
+    string UpdateProcessLevelOne(ProcessLevelOne model);
+    string UpdateProcessLevelTwo(ProcessLevelTwo model);
     string AreaOrder(string idcompany, string idarea, long order, bool sum);
   }
 }

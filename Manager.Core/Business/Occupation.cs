@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
-  public class Occupation: BaseEntity
+  public class Occupation : BaseEntity
   {
     public string Name { get; set; }
     public Group Group { get; set; }
@@ -13,6 +13,6 @@ namespace Manager.Core.Business
     public List<Schooling> Schooling { get; set; }
     public List<Activitie> Activities { get; set; }
     public Occupation Template { get; set; }
-
+    public ProcessLevelTwo ProcessLevelTwo { get; set; }
   }
 }

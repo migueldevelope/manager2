@@ -26,6 +26,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Schooling> schoolingService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Parameter> parameterService;
+    private readonly ServiceGeneric<ProcessLevelOne> processLevelOneService;
+    private readonly ServiceGeneric<ProcessLevelTwo> processLevelTwoService;
 
 
     public ServiceInfra(DataContext context)
@@ -44,6 +46,8 @@ namespace Manager.Services.Specific
         schoolingService = new ServiceGeneric<Schooling>(context);
         personService = new ServiceGeneric<Person>(context);
         parameterService = new ServiceGeneric<Parameter>(context);
+        processLevelOneService = new ServiceGeneric<ProcessLevelOne>(context);
+        processLevelTwoService = new ServiceGeneric<ProcessLevelTwo>(context);
       }
       catch (Exception e)
       {
@@ -749,7 +753,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return areaService.GetAll().OrderBy(p => p.Name).ToList();
+        var areas = areaService.GetAll().OrderBy(p => p.Name).ToList();
+        foreach (var item in areas)
+        {
+          item.ProcessLevelOnes = new List<ProcessLevelOne>();
+          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).FirstOrDefault();
+          item.ProcessLevelOnes.Add(process);
+        }
+        return areas.OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -761,7 +772,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return areaService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var areas = areaService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        foreach (var item in areas)
+        {
+          item.ProcessLevelOnes = new List<ProcessLevelOne>();
+          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).FirstOrDefault();
+          item.ProcessLevelOnes.Add(process);
+        }
+        return areas.OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -1105,6 +1123,30 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
+        var idresolution = "";
+
+        if (parameter.Count() == 0)
+          idresolution = DefaultParameter().Content;
+        else
+          idresolution = parameter.FirstOrDefault().Content;
+
+        int skip = (count * (page - 1));
+        var detail = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
@@ -1118,6 +1160,8 @@ namespace Manager.Services.Specific
       skillService._user = _user;
       schoolingService._user = _user;
       personService._user = _user;
+      processLevelOneService._user = _user;
+      processLevelTwoService._user = _user;
     }
 
     public string UpdateArea(Area area)
@@ -1566,28 +1610,88 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page)
+    public string AddProcessLevelOne(ProcessLevelOne model)
     {
       try
       {
-        var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
-        var idresolution = "";
-
-        if (parameter.Count() == 0)
-          idresolution = DefaultParameter().Content;
-        else
-          idresolution = parameter.FirstOrDefault().Content;
-
-        int skip = (count * (page - 1));
-        var detail = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
-
-        return detail.Skip(skip).Take(count).ToList();
+        model.Process = new List<ProcessLevelTwo>();
+        processLevelOneService.Insert(model);
+        return "ok";
       }
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public string AddProcessLevelTwo(ProcessLevelTwo model)
+    {
+      try
+      {
+        processLevelTwoService.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string DeleteProcessLevelOne(string id)
+    {
+      try
+      {
+        var item = processLevelOneService.GetAll(p => p._id == id).FirstOrDefault();
+        item.Status = EnumStatus.Disabled;
+        processLevelOneService.Update(item, null);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string DeleteProcessLevelTwo(string id)
+    {
+      try
+      {
+        var item = processLevelTwoService.GetAll(p => p._id == id).FirstOrDefault();
+        item.Status = EnumStatus.Disabled;
+        processLevelTwoService.Update(item, null);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateProcessLevelOne(ProcessLevelOne model)
+    {
+      try
+      {
+        processLevelOneService.Update(model, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateProcessLevelTwo(ProcessLevelTwo model)
+    {
+      try
+      {
+        processLevelTwoService.Update(model, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
   }
 }
