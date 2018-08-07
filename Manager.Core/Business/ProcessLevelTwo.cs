@@ -6,5 +6,6 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public ProcessLevelOne ProcessLevelOne { get; set; }
+    public long Order { get; set; }
   }
 }

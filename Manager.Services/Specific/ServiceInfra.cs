@@ -760,6 +760,7 @@ namespace Manager.Services.Specific
           var process = processLevelOneService.GetAll(p => p.Area._id == item._id).ToList();
           foreach (var row in process)
           {
+            row.Process = new List<ProcessLevelTwo>();
             foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).ToList())
             {
               row.Process.Add(leveltwo);
@@ -787,6 +788,7 @@ namespace Manager.Services.Specific
           var process = processLevelOneService.GetAll(p => p.Area._id == item._id).ToList();
           foreach (var row in process)
           {
+            row.Process = new List<ProcessLevelTwo>();
             foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).ToList())
             {
               row.Process.Add(leveltwo);
@@ -1630,6 +1632,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var order = processLevelOneService.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
+        model.Order = order;
+
         model.Process = new List<ProcessLevelTwo>();
         processLevelOneService.Insert(model);
         return "ok";
@@ -1644,6 +1649,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var order = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
+        model.Order = order;
+
         processLevelTwoService.Insert(model);
         return "ok";
       }

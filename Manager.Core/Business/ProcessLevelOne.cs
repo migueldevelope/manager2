@@ -8,6 +8,7 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public Area Area { get; set; }
+    public long Order { get; set; }
     [BsonIgnore]
     public List<ProcessLevelTwo> Process { get; set; }
   }

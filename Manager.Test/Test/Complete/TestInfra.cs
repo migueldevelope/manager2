@@ -75,6 +75,7 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
+        var ares = serviceInfra.GetAreas();
         var company = serviceInfra.GetCompanies().FirstOrDefault();
         serviceInfra.AddSkill(new ViewAddSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
         long total = 0;
