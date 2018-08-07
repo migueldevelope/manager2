@@ -113,9 +113,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = groupService.GetAll(p => p.Line == view.Line & p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Count();
-        if (item > 0)
-          return "error_line";
+        //var item = groupService.GetAll(p => p.Line == view.Line & p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Count();
+        //if (item > 0)
+        //  return "error_line";
+
+        var line = groupService.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line) + 1;
 
         var group = new Group()
         {
@@ -125,7 +127,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Skills = new List<Skill>(),
           Schooling = new List<Schooling>(),
-          Line = view.Line,
+          Line = line,
           Company = view.Company,
           Scope = new List<Scope>()
         };
@@ -205,6 +207,11 @@ namespace Manager.Services.Specific
     {
       try
       {
+
+        
+        if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
+          return "error_exists_schooling";
+
         view.Group.Schooling.Add(AddSchooling(view.Schooling));
         groupService.Update(view.Group, null);
         UpdateGroupAll(view.Group);
@@ -722,7 +729,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return areaService.GetAll().ToList();
+        return areaService.GetAll().OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -734,7 +741,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return areaService.GetAll(p => p.Company._id == idcompany).ToList();
+        return areaService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -746,7 +753,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return axisService.GetAll().ToList();
+        return axisService.GetAll().OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -758,7 +765,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return axisService.GetAll(p => p.Sphere.Company._id == idcompany).ToList();
+        return axisService.GetAll(p => p.Sphere.Company._id == idcompany).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -770,7 +777,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return companyService.GetAll().ToList();
+        return companyService.GetAll().OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -783,7 +790,7 @@ namespace Manager.Services.Specific
       try
       {
         var group = groupService.GetAll(p => p._id == id).FirstOrDefault();
-        group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).ToList();
+        group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
         return group;
       }
       catch (Exception e)
@@ -799,10 +806,10 @@ namespace Manager.Services.Specific
         List<Group> groups = new List<Group>();
         foreach (var item in groupService.GetAll())
         {
-          item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
+          item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
           groups.Add(item);
         }
-        return groups;
+        return groups.OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -820,7 +827,7 @@ namespace Manager.Services.Specific
           item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
           groups.Add(item);
         }
-        return groups;
+        return groups.OrderBy(p => p.Name).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -844,7 +851,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return occupationService.GetAll().ToList();
+        return occupationService.GetAll().OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -868,7 +875,7 @@ namespace Manager.Services.Specific
         var detail = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
         total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -880,7 +887,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return occupationService.GetAll(p => p.Group.Company._id == idcompany).ToList();
+        return occupationService.GetAll(p => p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -892,7 +899,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return schoolingService.GetAll().ToList();
+        return schoolingService.GetAll().OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -908,7 +915,7 @@ namespace Manager.Services.Specific
         var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
         total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -945,7 +952,7 @@ namespace Manager.Services.Specific
 
         total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -991,7 +998,7 @@ namespace Manager.Services.Specific
 
         total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -1003,7 +1010,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return sphereService.GetAll().ToList();
+        return sphereService.GetAll().OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -1015,7 +1022,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return sphereService.GetAll(p => p.Company._id == idcompany).ToList();
+        return sphereService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {

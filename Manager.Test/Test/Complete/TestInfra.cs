@@ -91,6 +91,37 @@ namespace Manager.Test.Test.Complete
         throw e;
       }
     }
+
+    [Fact]
+    public void TestBasicValidSchooling()
+    {
+      try
+      {
+        var schooling = new Schooling()
+        {
+          Name = "Teste1",
+          Complement = "1",
+          Type = EnumTypeSchooling.Excellence,
+          Status = EnumStatus.Enabled
+        };
+        var group = servicePerson.GetAll(p => p.Mail == "miguel@jmsoft.com.br").FirstOrDefault().Occupation.Group;
+
+        var view = new ViewAddMapGroupSchooling()
+        {
+          Group = group,
+          Schooling = schooling
+        };
+
+        var test = serviceInfra.AddMapGroupSchooling(view);
+
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     [Fact]
     public void TestDelete0()
     {
