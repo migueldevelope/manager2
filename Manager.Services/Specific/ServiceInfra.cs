@@ -1681,6 +1681,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == id).Count() > 0)
+          return "error_leveltwo_exists";
+
         var item = processLevelOneService.GetAll(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
         processLevelOneService.Update(item, null);
@@ -1696,6 +1699,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (occupationService.GetAll(p => p.ProcessLevelTwo._id == id).Count() > 0)
+          return "error_occupation_exists";
+
         var item = processLevelTwoService.GetAll(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
         processLevelTwoService.Update(item, null);
@@ -1741,7 +1747,7 @@ namespace Manager.Services.Specific
         var list = new List<ProcessLevelTwo>();
         foreach (var item in result)
         {
-          foreach(var row in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == item._id).ToList())
+          foreach (var row in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == item._id).ToList())
           {
             list.Add(row);
           }
