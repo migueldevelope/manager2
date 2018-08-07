@@ -757,8 +757,11 @@ namespace Manager.Services.Specific
         foreach (var item in areas)
         {
           item.ProcessLevelOnes = new List<ProcessLevelOne>();
-          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).FirstOrDefault();
-          item.ProcessLevelOnes.Add(process);
+          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).ToList();
+          foreach(var row in process)
+          {
+            item.ProcessLevelOnes.Add(row);
+          }
         }
         return areas.OrderBy(p => p.Name).ToList();
       }
@@ -776,8 +779,11 @@ namespace Manager.Services.Specific
         foreach (var item in areas)
         {
           item.ProcessLevelOnes = new List<ProcessLevelOne>();
-          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).FirstOrDefault();
-          item.ProcessLevelOnes.Add(process);
+          var process = processLevelOneService.GetAll(p => p.Area._id == item._id).ToList();
+          foreach (var row in process)
+          {
+            item.ProcessLevelOnes.Add(row);
+          }
         }
         return areas.OrderBy(p => p.Name).ToList();
       }
@@ -921,11 +927,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Occupation> GetOccupations(string idcompany)
+    public List<Occupation> GetOccupations(string idcompany, string idarea)
     {
       try
       {
-        return occupationService.GetAll(p => p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        return occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {

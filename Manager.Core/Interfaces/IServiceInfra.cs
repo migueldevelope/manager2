@@ -27,7 +27,7 @@ namespace Manager.Core.Interfaces
     List<Group> GetGroups(string idcompany);
     List<Occupation> GetOccupations();
     List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page);
-    List<Occupation> GetOccupations(string idcompany);
+    List<Occupation> GetOccupations(string idcompany, string idarea);
     string AddEssential(ViewAddEssential view);
     Skill AddSkill(ViewAddSkill view);
     Schooling AddSchooling(Schooling schooling);

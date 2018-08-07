@@ -371,10 +371,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getoccupations/{idcompany}")]
-    public List<Occupation> GetOccupations(string idcompany)
+    [Route("getoccupations/{idcompany}/{idarea}")]
+    public List<Occupation> GetOccupations(string idcompany, string idarea)
     {
-      return service.GetOccupations(idcompany);
+      return service.GetOccupations(idcompany, idarea);
     }
 
     [Authorize]
