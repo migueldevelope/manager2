@@ -28,6 +28,7 @@ namespace Manager.Core.Interfaces
     List<Occupation> GetOccupations();
     List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page);
     List<Occupation> GetOccupations(string idcompany, string idarea);
+    List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
     string AddEssential(ViewAddEssential view);
     Skill AddSkill(ViewAddSkill view);
     Schooling AddSchooling(Schooling schooling);

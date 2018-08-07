@@ -289,6 +289,7 @@ namespace Manager.Services.Specific
           Group = view.Group,
           Area = view.Area,
           Line = view.Line,
+          ProcessLevelTwo = view.ProcessLevelTwo,
           Status = EnumStatus.Enabled,
           Activities = new List<Activitie>(),
           Schooling = view.Group.Schooling,
@@ -1632,8 +1633,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var order = processLevelOneService.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
-        model.Order = order;
+        try
+        {
+          var order = processLevelOneService.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
+          model.Order = order;
+        }
+        catch (Exception e)
+        {
+          model.Order = 1;
+        }
+
 
         model.Process = new List<ProcessLevelTwo>();
         processLevelOneService.Insert(model);
@@ -1649,8 +1658,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var order = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
-        model.Order = order;
+        try
+        {
+          var order = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
+          model.Order = order;
+        }
+        catch (Exception e)
+        {
+          model.Order = 1;
+        }
 
         processLevelTwoService.Insert(model);
         return "ok";
@@ -1717,5 +1733,25 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ProcessLevelTwo> GetProcessLevelTwo(string idarea)
+    {
+      try
+      {
+        var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
+        var list = new List<ProcessLevelTwo>();
+        foreach (var item in result)
+        {
+          foreach(var row in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == item._id).ToList())
+          {
+            list.Add(row);
+          }
+        }
+        return list.OrderBy(p => p.Order).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
   }
 }

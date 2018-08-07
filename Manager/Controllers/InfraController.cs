@@ -450,6 +450,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("getprocessleveltwo/{idarea}")]
+    public List<ProcessLevelTwo> GetProcessLevelTwo(string idarea)
+    {
+      return service.GetProcessLevelTwo(idarea);
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("getspheres/{idcompany}")]
     public List<Sphere> GetSpheres(string idcompany)
     {
