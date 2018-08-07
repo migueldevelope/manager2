@@ -53,6 +53,7 @@ namespace Manager.Core.Interfaces
     string DeleteOccupationSkill(string idoccupation, string id);
     string DeleteOccupationActivities(string idoccupation, string idactivitie);
     string DeleteMapGroupScope(string idgroup, string idscope);
+    string DeleteSchooling(string idschooling);
     string UpdateSkill(Skill skill);
     string UpdateSphere(Sphere sphere);
     string UpdateAxis(Axis axis);
@@ -62,6 +63,7 @@ namespace Manager.Core.Interfaces
     string UpdateMapGroupSchooling(string idgroup, Schooling schooling);
     string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling);
     string UpdateMapOccupationActivities(string idoccupation, Activitie activitie);
+    string UpdateSchooling(Schooling schooling);
     string AreaOrder(string idcompany, string idarea, long order, bool sum);
   }
 }

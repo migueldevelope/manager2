@@ -128,6 +128,15 @@ namespace Manager.Controllers
     }
 
     [Authorize]
+    [HttpPost]
+    [Route("addchooling")]
+    public string AddSchooling([FromBody]Schooling schooling)
+    {
+      service.AddSchooling(schooling);
+      return "ok";
+    }
+
+    [Authorize]
     [HttpDelete]
     [Route("deletearea/{id}")]
     public string DeleteArea(string id)
@@ -223,6 +232,15 @@ namespace Manager.Controllers
     {
       return service.DeleteSphere(idsphere);
     }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteschooling/{idschooling}")]
+    public string DeleteSchooling(string idschooling)
+    {
+      return service.DeleteSchooling(idschooling);
+    }
+
 
     [Authorize]
     [HttpGet]
@@ -473,6 +491,14 @@ namespace Manager.Controllers
     public string UpdateMapOccupationActivities([FromBody]Activitie activitie, string idoccupation)
     {
       return service.UpdateMapOccupationActivities(idoccupation, activitie);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updateschooling")]
+    public string UpdateSchooling([FromBody]Schooling schooling)
+    {
+      return service.UpdateSchooling(schooling);
     }
 
     [Authorize]

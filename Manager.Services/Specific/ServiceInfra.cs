@@ -117,7 +117,11 @@ namespace Manager.Services.Specific
         //if (item > 0)
         //  return "error_line";
 
-        var line = groupService.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line) + 1;
+        var line = groupService.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line);
+        if (line == 0)
+          line = 1;
+        else
+          line += 1;
 
         var group = new Group()
         {
@@ -208,11 +212,12 @@ namespace Manager.Services.Specific
       try
       {
 
-        
+
         if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
           return "error_exists_schooling";
 
-        view.Group.Schooling.Add(AddSchooling(view.Schooling));
+        //view.Group.Schooling.Add(AddSchooling(view.Schooling));
+        view.Group.Schooling.Add(view.Schooling);
         groupService.Update(view.Group, null);
         UpdateGroupAll(view.Group);
         return "ok";
@@ -725,6 +730,21 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string DeleteSchooling(string idschooling)
+    {
+      try
+      {
+        var schooling = schoolingService.GetAll(p => p._id == idschooling).FirstOrDefault();
+        schooling.Status = EnumStatus.Disabled;
+        schoolingService.Update(schooling, null);
+        return "delete";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Area> GetAreas()
     {
       try
@@ -1006,6 +1026,61 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewSkills> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        var skills = (List<string>)(from comp in companyService.GetAll()
+                                    where comp._id == idcompany
+                                    select new
+                                    {
+                                      Name = comp.Skills.Select(p => p.Name)
+                                    }
+                    ).FirstOrDefault().Name;
+
+        var skillsGroup = (List<string>)(from groups in groupService.GetAll()
+                                         where groups._id == idgroup
+                                         select new
+                                         {
+                                           Name = groups.Skills.Select(p => p.Name)
+                                         }
+                   ).FirstOrDefault().Name;
+
+        var skillsOccupation = (List<string>)(from occupation in occupationService.GetAll()
+                                              where occupation._id == idoccupation
+                                              select new
+                                              {
+                                                Name = occupation.Skills.Select(p => p.Name)
+                                              }
+                 ).FirstOrDefault().Name;
+
+
+        var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()))
+                      .ToList().Select(p => new ViewSkills()
+                      {
+                        _id = p._id,
+                        _idAccount = p._idAccount,
+                        Name = p.Name,
+                        Concept = p.Concept,
+                        Status = p.Status,
+                        TypeSkill = p.TypeSkill,
+                        Exists = skills.Contains(p.Name),
+                        ExistsGroup = skillsGroup.Contains(p.Name),
+                        ExistsOccupation = skillsOccupation.Contains(p.Name)
+                      }).ToList();
+
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Sphere> GetSpheres()
     {
       try
@@ -1246,54 +1321,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewSkills> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref long total, string filter, int count, int page)
+    public string UpdateSchooling(Schooling schooling)
     {
       try
       {
-        int skip = (count * (page - 1));
-
-        var skills = (List<string>)(from comp in companyService.GetAll()
-                                    where comp._id == idcompany
-                                    select new
-                                    {
-                                      Name = comp.Skills.Select(p => p.Name)
-                                    }
-                    ).FirstOrDefault().Name;
-
-        var skillsGroup = (List<string>)(from groups in groupService.GetAll()
-                                         where groups._id == idgroup
-                                         select new
-                                         {
-                                           Name = groups.Skills.Select(p => p.Name)
-                                         }
-                   ).FirstOrDefault().Name;
-
-        var skillsOccupation = (List<string>)(from occupation in occupationService.GetAll()
-                                              where occupation._id == idoccupation
-                                              select new
-                                              {
-                                                Name = occupation.Skills.Select(p => p.Name)
-                                              }
-                 ).FirstOrDefault().Name;
-
-
-        var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()))
-                      .ToList().Select(p => new ViewSkills()
-                      {
-                        _id = p._id,
-                        _idAccount = p._idAccount,
-                        Name = p.Name,
-                        Concept = p.Concept,
-                        Status = p.Status,
-                        TypeSkill = p.TypeSkill,
-                        Exists = skills.Contains(p.Name),
-                        ExistsGroup = skillsGroup.Contains(p.Name),
-                        ExistsOccupation = skillsOccupation.Contains(p.Name)
-                      }).ToList();
-
-        total = detail.Count();
-
-        return detail.Skip(skip).Take(count).ToList();
+        schoolingService.Update(schooling, null);
+        return "update";
       }
       catch (Exception e)
       {
@@ -1317,6 +1350,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
     public async Task CopyTemplateInfra(Company company)
     {
       try
