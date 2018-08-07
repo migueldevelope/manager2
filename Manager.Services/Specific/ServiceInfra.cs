@@ -758,8 +758,13 @@ namespace Manager.Services.Specific
         {
           item.ProcessLevelOnes = new List<ProcessLevelOne>();
           var process = processLevelOneService.GetAll(p => p.Area._id == item._id).ToList();
-          foreach(var row in process)
+          foreach (var row in process)
           {
+            foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).ToList())
+            {
+              row.Process.Add(leveltwo);
+            }
+
             item.ProcessLevelOnes.Add(row);
           }
         }
@@ -782,6 +787,11 @@ namespace Manager.Services.Specific
           var process = processLevelOneService.GetAll(p => p.Area._id == item._id).ToList();
           foreach (var row in process)
           {
+            foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).ToList())
+            {
+              row.Process.Add(leveltwo);
+            }
+
             item.ProcessLevelOnes.Add(row);
           }
         }
