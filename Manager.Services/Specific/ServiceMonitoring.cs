@@ -246,19 +246,21 @@ namespace Manager.Services.Specific
 
         }
 
-        //verify plan
-        var listActivities = new List<Plan>();
-        var listSchoolings = new List<Plan>();
-        var listSkillsCompany = new List<Plan>();
+        //verify plan;
 
         foreach (var item in monitoring.Activities)
         {
+          var listActivities = new List<Plan>();
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
               listActivities.Add(AddPlan(plan, monitoring.Person));
             else
+            {
               UpdatePlan(plan);
+              listActivities.Add(plan);
+            }
+              
 
             item.Plans = listActivities;
           }
@@ -266,12 +268,16 @@ namespace Manager.Services.Specific
 
         foreach (var item in monitoring.Schoolings)
         {
+          var listSchoolings = new List<Plan>();
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
               listSchoolings.Add(AddPlan(plan, monitoring.Person));
             else
+            {
               UpdatePlan(plan);
+              listSchoolings.Add(plan);
+            }
 
 
             item.Plans = listSchoolings;
@@ -280,12 +286,16 @@ namespace Manager.Services.Specific
 
         foreach (var item in monitoring.SkillsCompany)
         {
+          var listSkillsCompany = new List<Plan>();
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
               listSkillsCompany.Add(AddPlan(plan, monitoring.Person));
             else
+            {
               UpdatePlan(plan);
+              listSkillsCompany.Add(plan);
+            }
 
 
             item.Plans = listSkillsCompany;
