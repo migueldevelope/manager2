@@ -259,8 +259,9 @@ namespace Manager.Services.Specific
               listActivities.Add(AddPlan(plan, monitoring.Person));
             else
               UpdatePlan(plan);
+
+            item.Plans = listActivities;
           }
-          item.Plans = listActivities;
         }
 
         foreach (var item in monitoring.Schoolings)
@@ -271,8 +272,10 @@ namespace Manager.Services.Specific
               listSchoolings.Add(AddPlan(plan, monitoring.Person));
             else
               UpdatePlan(plan);
+
+
+            item.Plans = listSchoolings;
           }
-          item.Plans = listSchoolings;
         }
 
         foreach (var item in monitoring.SkillsCompany)
@@ -283,8 +286,10 @@ namespace Manager.Services.Specific
               listSkillsCompany.Add(AddPlan(plan, monitoring.Person));
             else
               UpdatePlan(plan);
+
+
+            item.Plans = listSkillsCompany;
           }
-          item.Plans = listSkillsCompany;
         }
 
 
