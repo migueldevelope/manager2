@@ -16,6 +16,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<Plan> planService;
 
     public ServiceMonitoring(DataContext context)
       : base(context)
@@ -24,6 +25,7 @@ namespace Manager.Services.Specific
       {
         monitoringService = new ServiceGeneric<Monitoring>(context);
         personService = new ServiceGeneric<Person>(context);
+        planService = new ServiceGeneric<Plan>(context);
       }
       catch (Exception e)
       {
@@ -243,6 +245,50 @@ namespace Manager.Services.Specific
           }
 
         }
+
+        //verify plan
+        var listActivities = new List<Plan>();
+        var listSchoolings = new List<Plan>();
+        var listSkillsCompany = new List<Plan>();
+
+        foreach (var item in monitoring.Activities)
+        {
+          foreach (var plan in item.Plans)
+          {
+            if (plan._id == null)
+              listActivities.Add(AddPlan(plan, monitoring.Person));
+            else
+              UpdatePlan(plan);
+          }
+          item.Plans = listActivities;
+        }
+
+        foreach (var item in monitoring.Schoolings)
+        {
+          foreach (var plan in item.Plans)
+          {
+            if (plan._id == null)
+              listSchoolings.Add(AddPlan(plan, monitoring.Person));
+            else
+              UpdatePlan(plan);
+          }
+          item.Plans = listSchoolings;
+        }
+
+        foreach (var item in monitoring.SkillsCompany)
+        {
+          foreach (var plan in item.Plans)
+          {
+            if (plan._id == null)
+              listSkillsCompany.Add(AddPlan(plan, monitoring.Person));
+            else
+              UpdatePlan(plan);
+          }
+          item.Plans = listSkillsCompany;
+        }
+
+
+
         monitoringService.Update(monitoring, null);
         return "update";
       }
@@ -252,11 +298,38 @@ namespace Manager.Services.Specific
       }
     }
 
+    private string UpdatePlan(Plan plan)
+    {
+      try
+      {
+        planService.Update(plan, null);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private Plan AddPlan(Plan plan, Person person)
+    {
+      try
+      {
+        plan.DateInclude = DateTime.Now;
+        plan.UserInclude = person;
+        return planService.Insert(plan);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
       personService._user = _user;
       monitoringService._user = _user;
+      planService._user = _user;
     }
 
     public List<Skill> GetSkills(string idperson)
@@ -266,7 +339,7 @@ namespace Manager.Services.Specific
         var skills = personService.GetAll(p => p._id == idperson).FirstOrDefault().Occupation.Group.Skills;
         var skillsgroup = personService.GetAll(p => p._id == idperson).FirstOrDefault().Occupation.Skills;
         var list = skillsgroup;
-        foreach(var item in skills)
+        foreach (var item in skills)
         {
           list.Add(item);
         }
