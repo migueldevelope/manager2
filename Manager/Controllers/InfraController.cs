@@ -138,7 +138,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("addchooling")]
+    [Route("addschooling")]
     public string AddSchooling([FromBody]Schooling schooling)
     {
       service.AddSchooling(schooling);
