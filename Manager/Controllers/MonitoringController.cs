@@ -63,7 +63,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personend/{idmanager}")]
-    public Monitoring ListEndPerson(string idmanager)
+    public List<Monitoring> ListEndPerson(string idmanager)
     {
       return service.PersonMonitoringsEnd(idmanager);
     }

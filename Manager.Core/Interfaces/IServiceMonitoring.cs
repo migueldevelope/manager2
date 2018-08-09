@@ -12,7 +12,7 @@ namespace Manager.Core.Interfaces
     Monitoring GetMonitorings(string id);
     List<Skill> GetSkills(string idperson);
     Monitoring PersonMonitoringsWait(string idmanager);
-    Monitoring PersonMonitoringsEnd(string idmanager);
+    List<Monitoring> PersonMonitoringsEnd(string idmanager);
     Monitoring NewMonitoring(Monitoring monitoring, string idperson);
     string UpdateMonitoring(Monitoring monitoring, string idperson);
     void SetUser(IHttpContextAccessor contextAccessor);

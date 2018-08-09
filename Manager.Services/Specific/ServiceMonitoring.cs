@@ -101,11 +101,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Monitoring PersonMonitoringsEnd(string idmanager)
+    public List<Monitoring> PersonMonitoringsEnd(string idmanager)
     {
       try
       {
-        return monitoringService.GetAll(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).FirstOrDefault();
+        return monitoringService.GetAll(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
       }
       catch (Exception e)
       {
