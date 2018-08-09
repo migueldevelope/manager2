@@ -4,6 +4,7 @@ using Manager.Core.Views;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Tools;
 
 namespace Manager.Controllers
 {
@@ -36,6 +37,25 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
+
+    [Authorize]
+    [HttpPut]
+    [Route("alteraccount/{idaccount}")]
+    public ViewPerson AlterAccount(string idaccount)
+    {
+      var conn = ConnectionNoSqlService.GetConnetionServer();
+      return service.AlterAccount(idaccount, conn.TokenServer);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("alteraccountperson/{idperson}")]
+    public ViewPerson AlterAccountPerson(string idperson)
+    {
+      var conn = ConnectionNoSqlService.GetConnetionServer();
+      return service.AlterAccountPerson(idperson, conn.TokenServer);
+    }
+
 
 
   }

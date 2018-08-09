@@ -1,13 +1,16 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using Tools;
 
 namespace Manager.Services.Specific
@@ -18,6 +21,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceInfra infraService;
+    private IServiceLog logService;
 
     public ServiceAccount(DataContext context)
       : base(context)
@@ -28,6 +32,7 @@ namespace Manager.Services.Specific
         personService = new ServiceGeneric<Person>(context);
         companyService = new ServiceGeneric<Company>(context);
         infraService = new ServiceInfra(context);
+        logService = new ServiceLog(context);
       }
       catch (Exception e)
       {
@@ -97,6 +102,102 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewPerson AlterAccount(string idaccount, string link)
+    {
+      try
+      {
+        var user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
+        LogSave(user);
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri(link);
+          var data = new
+          {
+            Mail = user.Mail,
+            Password = user.Password
+          };
+          var json = JsonConvert.SerializeObject(data);
+          var content = new StringContent(json);
+          content.Headers.ContentType.MediaType = "application/json";
+          client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+
+          var resultContent = result.Content.ReadAsStringAsync().Result;
+          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+
+          return auth;
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewPerson AlterAccountPerson(string idperson, string link)
+    {
+      try
+      {
+        var user = personService.GetAll(p => p._id == idperson & p.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
+        LogSave(user);
+
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri(link);
+          var data = new
+          {
+            Mail = user.Mail,
+            Password = user.Password
+          };
+
+          var json = JsonConvert.SerializeObject(data);
+          var content = new StringContent(json);
+          content.Headers.ContentType.MediaType = "application/json";
+          client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+
+          var resultContent = result.Content.ReadAsStringAsync().Result;
+          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+
+          return auth;
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public async void LogSave(Person user)
+    {
+      try
+      {
+        var _user = new BaseUser()
+        {
+          _idAccount = user._idAccount,
+          NamePerson = user.Name,
+          Mail = user.Mail,
+          _idPerson = user._id
+        };
+        logService = new ServiceLog(_context);
+        var log = new ViewLog()
+        {
+          Description = "Alter Account/User out: " + user.Name + "/" + user._idAccount
+          + " - in: " + _user.NamePerson + "/" + _user._idAccount,
+          Local = "Authentication",
+          Person = user
+        };
+        logService.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
       }
     }
 

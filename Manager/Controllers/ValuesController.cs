@@ -13,7 +13,7 @@ namespace Manager.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "api", "version_0.000000003" };
+            return new string[] { "api", "version_0.000000004" };
         }
 
         // GET api/values/5

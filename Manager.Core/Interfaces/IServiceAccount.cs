@@ -11,5 +11,7 @@ namespace Manager.Core.Interfaces
     void NewAccount(ViewNewAccount view);
     Account GeAccount(Expression<Func<Account, bool>> filter);
     List<Account> GeAccounts(ref long total, int count = 10, int page = 1, string filter = "");
+    ViewPerson AlterAccount(string idaccount, string link);
+    ViewPerson AlterAccountPerson(string idperson, string link);
   }
 }

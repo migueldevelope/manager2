@@ -59,12 +59,12 @@ namespace Manager.Services.Specific
           var content = new StringContent(json);
           content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("evaluationconfiguration/authentication/encrypt", content).Result;
+          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
 
           var resultContent = result.Content.ReadAsStringAsync().Result;
           var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
-          var resultMail = client.PostAsync("evaluationmail/sendmail/" + idmail, null);
+          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null);
           return auth.Token;
         }
       }
