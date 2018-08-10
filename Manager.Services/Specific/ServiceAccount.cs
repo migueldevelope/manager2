@@ -110,6 +110,10 @@ namespace Manager.Services.Specific
       try
       {
         var user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
+        if(user == null)
+        {
+          user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).FirstOrDefault();
+        }
         LogSave(user);
         using (var client = new HttpClient())
         {
@@ -142,7 +146,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = personService.GetAll(p => p._id == idperson & p.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
+        var user = personService.GetAuthentication(p => p._id == idperson).FirstOrDefault();
         LogSave(user);
 
         using (var client = new HttpClient())
