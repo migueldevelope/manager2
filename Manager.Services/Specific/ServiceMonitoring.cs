@@ -261,7 +261,7 @@ namespace Manager.Services.Specific
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
-            Mail(monitoring.Person);
+            Mail(monitoring.Person.Manager);
           }
 
         }

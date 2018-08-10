@@ -277,7 +277,7 @@ namespace Manager.Services.Specific
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
           {
             onboarding.DateEndPerson = DateTime.Now;
-            Mail(onboarding.Person);
+            Mail(onboarding.Person.Manager);
           }
 
         }
