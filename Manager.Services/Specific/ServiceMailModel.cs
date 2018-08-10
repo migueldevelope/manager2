@@ -120,6 +120,21 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+    public MailModel MonitoringApproval(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "monitoringapproval");
+        if (model.Count() == 0)
+          return DefaultMonitoringApproval(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
     public MailModel DefaultOnBoardingApproval(string path)
     {
       try
@@ -130,6 +145,27 @@ namespace Manager.Services.Specific
           Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public MailModel DefaultMonitoringApproval(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do Monitoring.</br></br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de Monitoring",
+          Name = "monitoringapproval",
           Link = path
         };
         // Insert

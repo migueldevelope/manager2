@@ -6,9 +6,11 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 
 namespace Manager.Services.Specific
@@ -19,8 +21,12 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Plan> planService;
     private readonly ServiceLog logService;
+    private readonly ServiceMailModel mailModelService;
+    private readonly ServiceGeneric<MailMessage> mailMessageService;
+    private readonly ServiceGeneric<MailLog> mailService;
+    public string path;
 
-    public ServiceMonitoring(DataContext context)
+    public ServiceMonitoring(DataContext context, string pathToken)
       : base(context)
     {
       try
@@ -29,6 +35,10 @@ namespace Manager.Services.Specific
         personService = new ServiceGeneric<Person>(context);
         planService = new ServiceGeneric<Plan>(context);
         logService = new ServiceLog(_context);
+        mailModelService = new ServiceMailModel(context);
+        mailMessageService = new ServiceGeneric<MailMessage>(context);
+        mailService = new ServiceGeneric<MailLog>(context);
+        path = pathToken;
       }
       catch (Exception e)
       {
@@ -239,6 +249,7 @@ namespace Manager.Services.Specific
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.Wait)
           {
             monitoring.DateEndManager = DateTime.Now;
+            Mail(monitoring.Person);
           }
         }
         else
@@ -250,6 +261,7 @@ namespace Manager.Services.Specific
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
+            Mail(monitoring.Person);
           }
 
         }
@@ -347,6 +359,9 @@ namespace Manager.Services.Specific
       monitoringService._user = _user;
       planService._user = _user;
       logService._user = _user;
+      mailModelService._user = _user;
+      mailMessageService._user = _user;
+      mailService._user = _user;
     }
 
     public async void LogSave(string iduser, string local)
@@ -380,6 +395,79 @@ namespace Manager.Services.Specific
           list.Add(item);
         }
         return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    // send mail
+    public void Mail(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.MonitoringApproval(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Suporte"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Mail, person.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public string SendMail(string link, Person person, string idmail)
+    {
+      try
+      {
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri(link);
+          var data = new
+          {
+            mail = person.Mail,
+            password = person.Password
+          };
+          var json = JsonConvert.SerializeObject(data);
+          var content = new StringContent(json);
+          content.Headers.ContentType.MediaType = "application/json";
+          client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+          var resultContent = result.Content.ReadAsStringAsync().Result;
+          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
+          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
+          return auth.Token;
+        }
       }
       catch (Exception e)
       {
