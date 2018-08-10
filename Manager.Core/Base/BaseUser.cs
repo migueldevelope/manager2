@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-
-namespace Manager.Core.Base
+﻿namespace Manager.Core.Base
 {
   public class BaseUser
   {
