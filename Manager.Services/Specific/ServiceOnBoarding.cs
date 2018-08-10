@@ -265,6 +265,7 @@ namespace Manager.Services.Specific
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Wait)
           {
             onboarding.DateEndManager = DateTime.Now;
+            Mail(onboarding.Person);
           }
         }
         else
@@ -276,6 +277,7 @@ namespace Manager.Services.Specific
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
           {
             onboarding.DateEndPerson = DateTime.Now;
+            Mail(onboarding.Person);
           }
 
         }
@@ -381,7 +383,7 @@ namespace Manager.Services.Specific
           var resultContent = result.Content.ReadAsStringAsync().Result;
           var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
-          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null);
+          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
           return auth.Token;
         }
       }
