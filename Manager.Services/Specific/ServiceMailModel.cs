@@ -105,13 +105,13 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
     }
-    public MailModel AgreementExpectationsApproval(string path)
+    public MailModel OnBoardingApproval(string path)
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "agreementextectationsapproval");
+        var model = mailModelService.GetAll(p => p.Name == "onboardingapproval");
         if (model.Count() == 0)
-          return DefaultAgreementExpectationsApproval(path);
+          return DefaultOnBoardingApproval(path);
         else
           return model.FirstOrDefault();
       }
@@ -120,16 +120,16 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public MailModel DefaultAgreementExpectationsApproval(string path)
+    public MailModel DefaultOnBoardingApproval(string path)
     {
       try
       {
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do acordo de expectativas.</br></br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
-          Subject = "Aprovação de Acordo de Expectativas",
-          Name = "agreementextectationsapproval",
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de OnBoarding",
+          Name = "onboardingapproval",
           Link = path
         };
         // Insert
@@ -141,7 +141,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public MailModel AgreementExpectationsPendingManager(string path)
+    public MailModel OnBoardingPendingManager(string path)
     {
       try
       {
@@ -177,7 +177,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public MailModel AgreementExpectationsPendingEmployee(string path)
+    public MailModel OnBoardingPendingEmployee(string path)
     {
       try
       {

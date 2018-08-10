@@ -12,11 +12,11 @@ namespace Manager.Core.Interfaces
     MailModel DefaultAutoManager(string path);
     MailModel DevelopmentPlan(string path);
     MailModel DefaultDevelopmentPlan(string path);
-    MailModel AgreementExpectationsApproval(string path);
-    MailModel DefaultAgreementExpectationsApproval(string path);
-    MailModel AgreementExpectationsPendingManager(string path);
+    MailModel OnBoardingApproval(string path);
+    MailModel DefaultOnBoardingApproval(string path);
+    MailModel OnBoardingPendingManager(string path);
     MailModel DefaultExpectationsPendingManager(string path);
-    MailModel AgreementExpectationsPendingEmployee(string path);
+    MailModel OnBoardingPendingEmployee(string path);
     MailModel DefaultExpectationsPendingEmployee(string path);
 
   }

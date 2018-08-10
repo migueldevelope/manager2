@@ -18,7 +18,7 @@ namespace Manager.Test.Test.Complete
     public TestOnBoarding()
     {
       base.Init();
-      serviceOnBoarding = new ServiceOnBoarding(base.context);
+      serviceOnBoarding = new ServiceOnBoarding(base.context, "http://10.0.0.15/");
       serviceOnBoarding.SetUser(base.contextAccessor);
 
       servicePerson = new ServiceGeneric<Person>(base.context);

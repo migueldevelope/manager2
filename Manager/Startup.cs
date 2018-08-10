@@ -46,7 +46,7 @@ namespace Manager
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, servicePerson);
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, servicePerson);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context);
+      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, conn.TokenServer);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context);
 
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);

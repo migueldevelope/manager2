@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +18,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Plan> planService;
+    private readonly ServiceLog logService;
 
     public ServiceMonitoring(DataContext context)
       : base(context)
@@ -26,6 +28,7 @@ namespace Manager.Services.Specific
         monitoringService = new ServiceGeneric<Monitoring>(context);
         personService = new ServiceGeneric<Person>(context);
         planService = new ServiceGeneric<Plan>(context);
+        logService = new ServiceLog(_context);
       }
       catch (Exception e)
       {
@@ -37,6 +40,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(idmanager, "ListEnd");
         int skip = (count * (page - 1));
         var detail = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
         total = detail.Count();
@@ -70,6 +74,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(idmanager, "List");
         newOnZero();
         int skip = (count * (page - 1));
         var list = personService.GetAll(p => p.Manager._id == idmanager
@@ -105,6 +110,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(idmanager, "PersonEnd");
         return monitoringService.GetAll(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
       }
       catch (Exception e)
@@ -117,6 +123,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(idmanager, "PersonWait");
         var item = personService.GetAll(p => p._id == idmanager)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
         .FirstOrDefault();
@@ -188,6 +195,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(monitoring.Person._id, "Monitoring Process");
         if (monitoring._id == null)
         {
           loadMap(monitoring);
@@ -338,6 +346,26 @@ namespace Manager.Services.Specific
       personService._user = _user;
       monitoringService._user = _user;
       planService._user = _user;
+      logService._user = _user;
+    }
+
+    public async void LogSave(string iduser, string local)
+    {
+      try
+      {
+        var user = personService.GetAll(p => p._id == iduser).FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Access Monitoring ",
+          Local = local,
+          Person = user
+        };
+        logService.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
 
     public List<Skill> GetSkills(string idperson)
