@@ -121,7 +121,7 @@ namespace Manager.Services.Auth
         Person model = new Person()
         {
           Name = person.Name,
-          ChangePassword = EnumChangePassword.No,
+          ChangePassword = EnumChangePassword.AccessFirst,
           TypeUser = person.TypeUser,
           DateAdm = person.DateAdm,
           DateBirth = person.DateBirth,
