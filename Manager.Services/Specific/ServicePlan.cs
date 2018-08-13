@@ -59,7 +59,7 @@ namespace Manager.Services.Specific
 
 
 
-    public IEnumerable<IEnumerable<List<Plan>>> ListPlans(ref long total, string id, string filter, int count, int page)
+    public List<Plan> ListPlans(ref long total, string id, string filter, int count, int page)
     {
       try
       {
@@ -73,12 +73,47 @@ namespace Manager.Services.Specific
         var detailSkills = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => p.SkillsCompany.Select(x => x.Plans)).ToList();
 
+        List<Plan> result = new List<Plan>();
 
-        IEnumerable<IEnumerable<List<Plan>>> result = detail.Concat(detailSchool).Concat(detailSkills);
+        foreach (var item in detail)
+        {
+          foreach (var plan in item)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(res);
+            }
+          }
+
+        }
+
+        foreach (var item in detailSchool)
+        {
+          foreach (var plan in item)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(res);
+            }
+          }
+
+        }
+
+        foreach (var item in detailSkills)
+        {
+          foreach (var plan in item)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(res);
+            }
+          }
+
+        }
 
         total = result.Count();
 
-        return result.Skip(skip).Take(count).ToList();
+        return result;
       }
       catch (Exception e)
       {
@@ -86,7 +121,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<IEnumerable<List<Plan>>> ListPlansPerson(ref long total, string id, string filter, int count, int page)
+    public List<Plan> ListPlansPerson(ref long total, string id, string filter, int count, int page)
     {
       try
       {
@@ -101,16 +136,54 @@ namespace Manager.Services.Specific
           .Select(p => p.SkillsCompany.Select(x => x.Plans)).ToList();
 
 
-        IEnumerable<IEnumerable<List<Plan>>> result = detail.Concat(detailSchool).Concat(detailSkills);
+        List<Plan> result = new List<Plan>();
+
+        foreach (var item in detail)
+        {
+          foreach (var plan in item)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(res);
+            }
+          }
+
+        }
+
+        foreach (var item in detailSchool)
+        {
+          foreach (var plan in item)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(res);
+            }
+          }
+
+        }
+
+        foreach (var item in detailSkills)
+        {
+          foreach (var plan in item)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(res);
+            }
+          }
+
+        }
 
         total = result.Count();
 
-        return result.Skip(skip).Take(count).ToList();
+        return result;
       }
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
       }
+
     }
+
   }
 }

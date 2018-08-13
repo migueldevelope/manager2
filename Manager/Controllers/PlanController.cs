@@ -24,7 +24,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplans/{id}")]
-    public IEnumerable<IEnumerable<List<Plan>>> ListPlans(string id, int count = 10, int page = 1, string filter = "")
+    public List<Plan> ListPlans(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlans(ref total, id, filter, count, page);
@@ -36,7 +36,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplansperson/{id}")]
-    public IEnumerable<IEnumerable<List<Plan>>> ListPlansPerson(string id, int count = 10, int page = 1, string filter = "")
+    public List<Plan> ListPlansPerson(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlansPerson(ref total, id, filter, count, page);
