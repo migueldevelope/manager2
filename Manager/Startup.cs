@@ -48,6 +48,7 @@ namespace Manager
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, conn.TokenServer);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
+      IServicePlan servicePlan = new ServicePlan(_context);
 
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
 
@@ -61,6 +62,7 @@ namespace Manager
       services.AddSingleton(_ => serviceInfra);
       services.AddSingleton(_ => serviceOnBoarding);
       services.AddSingleton(_ => serviceMonitoring);
+      services.AddSingleton(_ => servicePlan);
 
     }
 

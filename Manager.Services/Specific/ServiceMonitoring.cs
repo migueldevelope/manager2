@@ -244,6 +244,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var userInclude = personService.GetAll(p => p._id == idperson).FirstOrDefault();
+
         if (monitoring.Person._id != idperson)
         {
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.Wait)
@@ -273,7 +275,7 @@ namespace Manager.Services.Specific
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
-              listActivities.Add(AddPlan(plan, monitoring.Person));
+              listActivities.Add(AddPlan(plan, userInclude));
             else
             {
               UpdatePlan(plan);
@@ -289,7 +291,7 @@ namespace Manager.Services.Specific
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
-              listSchoolings.Add(AddPlan(plan, monitoring.Person));
+              listSchoolings.Add(AddPlan(plan, userInclude));
             else
             {
               UpdatePlan(plan);
@@ -305,7 +307,7 @@ namespace Manager.Services.Specific
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
-              listSkillsCompany.Add(AddPlan(plan, monitoring.Person));
+              listSkillsCompany.Add(AddPlan(plan, userInclude));
             else
             {
               UpdatePlan(plan);
