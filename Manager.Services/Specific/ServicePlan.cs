@@ -144,7 +144,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return result;
+        return result.Skip(skip).Take(count).OrderBy(p => p.Deadline).ToList();
       }
       catch (Exception e)
       {
@@ -238,7 +238,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return result;
+        return result.Skip(skip).Take(count).OrderBy(p => p.Deadline).ToList();
       }
       catch (Exception e)
       {
