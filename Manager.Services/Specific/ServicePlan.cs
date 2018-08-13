@@ -59,56 +59,87 @@ namespace Manager.Services.Specific
 
 
 
-    public List<Plan> ListPlans(ref long total, string id, string filter, int count, int page)
+    public List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page)
     {
       try
       {
         int skip = (count * (page - 1));
+
         var detail = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => p.Activities.Select(x => x.Plans)).ToList();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person }).ToList();
 
-        var detailSchool = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => p.Schoolings.Select(x => x.Plans)).ToList();
+        var detailSchool = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person }).ToList();
 
-        var detailSkills = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => p.SkillsCompany.Select(x => x.Plans)).ToList();
+        var detailSkills = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person }).ToList();
 
-        List<Plan> result = new List<Plan>();
+        List<ViewPlan> result = new List<ViewPlan>();
 
         foreach (var item in detail)
         {
-          foreach (var plan in item)
+          foreach (var plan in item.Plans)
           {
             foreach (var res in plan)
             {
-              result.Add(res);
+              result.Add(new ViewPlan()
+              {
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name
+              });
             }
           }
-
         }
 
         foreach (var item in detailSchool)
         {
-          foreach (var plan in item)
+          foreach (var plan in item.Plans)
           {
             foreach (var res in plan)
             {
-              result.Add(res);
+              result.Add(new ViewPlan()
+              {
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name
+              });
             }
           }
-
         }
 
         foreach (var item in detailSkills)
         {
-          foreach (var plan in item)
+          foreach (var plan in item.Plans)
           {
             foreach (var res in plan)
             {
-              result.Add(res);
+              result.Add(new ViewPlan()
+              {
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name
+              });
             }
           }
-
         }
 
         total = result.Count();
@@ -121,57 +152,88 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Plan> ListPlansPerson(ref long total, string id, string filter, int count, int page)
+    public List<ViewPlan> ListPlansPerson(ref long total, string id, string filter, int count, int page)
     {
       try
       {
         int skip = (count * (page - 1));
+
         var detail = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => p.Activities.Select(x => x.Plans)).ToList();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person }).ToList();
 
         var detailSchool = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => p.Schoolings.Select(x => x.Plans)).ToList();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person }).ToList();
 
         var detailSkills = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => p.SkillsCompany.Select(x => x.Plans)).ToList();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person }).ToList();
 
 
-        List<Plan> result = new List<Plan>();
+        List<ViewPlan> result = new List<ViewPlan>();
 
         foreach (var item in detail)
         {
-          foreach (var plan in item)
+          foreach (var plan in item.Plans)
           {
             foreach (var res in plan)
             {
-              result.Add(res);
+              result.Add(new ViewPlan()
+              {
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name
+              });
             }
           }
-
         }
 
         foreach (var item in detailSchool)
         {
-          foreach (var plan in item)
+          foreach (var plan in item.Plans)
           {
             foreach (var res in plan)
             {
-              result.Add(res);
+              result.Add(new ViewPlan()
+              {
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name
+              });
             }
           }
-
         }
 
         foreach (var item in detailSkills)
         {
-          foreach (var plan in item)
+          foreach (var plan in item.Plans)
           {
             foreach (var res in plan)
             {
-              result.Add(res);
+              result.Add(new ViewPlan()
+              {
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name
+              });
             }
           }
-
         }
 
         total = result.Count();

@@ -1,0 +1,20 @@
+﻿using Manager.Core.Business;
+using Manager.Core.Enumns;
+using System;
+using System.Collections.Generic;
+
+namespace Manager.Core.Views
+{
+  public class ViewPlan
+  {
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public DateTime? Deadline { get; set; }
+    public List<Skill> Skills { get; set; }
+    public Person UserInclude { get; set; }
+    public DateTime? DateInclude { get; set; }
+    public EnumTypePlan TypePlan { get; set; }
+    public string IdPerson { get; set; }
+    public string NamePerson { get; set; }
+  }
+}
