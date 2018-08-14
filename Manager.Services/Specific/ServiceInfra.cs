@@ -59,9 +59,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = areaService.GetAll(p => p.Order == view.Order).Count();
-        if (item > 0)
-          return "error_line";
+        //var item = areaService.GetAll(p => p.Order == view.Order).Count();
+        //if (item > 0)
+        //  return "error_line";
 
 
         areaService.Insert(view);
