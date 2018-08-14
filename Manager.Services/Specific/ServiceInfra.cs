@@ -968,7 +968,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return schoolingService.GetAll().OrderBy(p => p.Name).ToList();
+        return schoolingService.GetAll().OrderBy(p => p.Order).ToList();
       }
       catch (Exception e)
       {

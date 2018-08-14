@@ -10,5 +10,6 @@ namespace Manager.Core.Business
     public string Complement { get; set; }
     public EnumTypeSchooling Type { get; set; }
     public Schooling Template { get; set; }
+    public long Order { get; set; }
   }
 }
