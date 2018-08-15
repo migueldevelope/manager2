@@ -168,7 +168,31 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return onBoardingService.GetAll(p => p._id == id).FirstOrDefault();
+        return onBoardingService.GetAll(p => p._id == id)
+          .ToList().Select(p => new OnBoarding()
+          {
+            _id = p._id,
+            _idAccount = p._idAccount,
+            Status = p.Status,
+            Person = p.Person,
+            DateBeginPerson = p.DateBeginPerson,
+            DateBeginManager = p.DateBeginManager,
+            DateBeginEnd = p.DateBeginEnd,
+            DateEndPerson = p.DateEndPerson,
+            DateEndManager = p.DateEndManager,
+            DateEndEnd = p.DateEndEnd,
+            CommentsPerson = p.CommentsPerson,
+            CommentsManager = p.CommentsManager,
+            CommentsEnd = p.CommentsEnd,
+            SkillsCompany = p.SkillsCompany.OrderBy(x => x.Skill.Name).ToList(),
+            SkillsGroup = p.SkillsGroup.OrderBy(x => x.Skill.Name).ToList(),
+            SkillsOccupation = p.SkillsOccupation.OrderBy(x => x.Skill.Name).ToList(),
+            Scopes = p.Scopes.OrderBy(x => x.Scope.Name).ToList(),
+            Schoolings = p.Schoolings.OrderBy(x => x.Schooling.Order).ToList(),
+            Activities = p.Activities.OrderBy(x => x.Activitie.Name).ToList(),
+            StatusOnBoarding = p.StatusOnBoarding
+          })
+          .FirstOrDefault();
       }
       catch (Exception e)
       {
