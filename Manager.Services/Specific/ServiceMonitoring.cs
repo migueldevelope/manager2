@@ -87,7 +87,7 @@ namespace Manager.Services.Specific
         LogSave(idmanager, "List");
         newOnZero();
         int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.Manager._id == idmanager
+        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
         & p.Name.ToUpper().Contains(filter.ToUpper()))
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
         .ToList();
@@ -134,7 +134,7 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(idmanager, "PersonWait");
-        var item = personService.GetAll(p => p._id == idmanager)
+        var item = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring & p._id == idmanager)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
         .FirstOrDefault();
 
