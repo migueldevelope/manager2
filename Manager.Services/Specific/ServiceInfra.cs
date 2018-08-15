@@ -1410,6 +1410,31 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async Task UpdateSchoolingAll(Schooling schooling)
+    {
+      try
+      {
+        foreach (var item in groupService.GetAll(p => p.Schooling.Where(x => x._id == schooling._id).Count() > 0).ToList())
+        {
+          foreach (var row in item.Schooling)
+          {
+            if (row._id == schooling._id)
+            {
+              row.Name = schooling.Name;
+              row.Order = schooling.Order;
+            }
+          }
+          this.groupService.Update(item, null);
+          UpdateGroupAll(item);
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling)
     {
       try
@@ -1475,6 +1500,7 @@ namespace Manager.Services.Specific
       try
       {
         schoolingService.Update(schooling, null);
+        UpdateSchoolingAll(schooling);
         return "update";
       }
       catch (Exception e)

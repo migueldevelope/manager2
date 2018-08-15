@@ -134,6 +134,9 @@ namespace Manager.Test.Test.Complete
         //var id = "5b5a23bd3ac6f1466cdd7d3d";
         //serviceInfra.DeleteEssential(idcompany, id);
 
+        var schooling = serviceInfra.GetSchooling().FirstOrDefault();
+        schooling.Name = schooling.Name + " test miguel";
+        serviceInfra.UpdateSchooling(schooling);
         var company = serviceInfra.GetCompanies().FirstOrDefault();
         var area = serviceInfra.GetAreas().FirstOrDefault();
         var map = serviceInfra.GetOccupations(company._id, area._id);
