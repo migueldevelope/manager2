@@ -138,6 +138,9 @@ namespace Manager.Services.Specific
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
         .FirstOrDefault();
 
+        if (item == null)
+          return null;
+
         if (item.Monitoring == null)
           return new Monitoring
           {

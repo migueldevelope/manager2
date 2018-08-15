@@ -136,6 +136,13 @@ namespace Manager.Services.Specific
         .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .FirstOrDefault();
 
+        if (item == null)
+        {
+          item = personService.GetAll(p => p.TypeJourney == null & p._id == idmanager)
+        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .FirstOrDefault();
+        }
+
         if (item.OnBoarding == null)
           return new OnBoarding
           {
