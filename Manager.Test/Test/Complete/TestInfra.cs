@@ -138,6 +138,7 @@ namespace Manager.Test.Test.Complete
         var area = serviceInfra.GetAreas().FirstOrDefault();
         var map = serviceInfra.GetOccupations(company._id, area._id);
 
+        var group = serviceInfra.GetGroups(company._id);
       }
       catch (Exception e)
       {

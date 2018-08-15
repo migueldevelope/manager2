@@ -226,8 +226,8 @@ namespace Manager.Services.Specific
       {
 
 
-        if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
-          return "error_exists_schooling";
+        //if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
+        //  return "error_exists_schooling";
 
         //view.Group.Schooling.Add(AddSchooling(view.Schooling));
         view.Group.Schooling.Add(view.Schooling);
@@ -846,7 +846,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return companyService.GetAll().OrderBy(p => p.Name).ToList();
+        return companyService.GetAll().ToList().Select(p => new Company()
+        {
+          _id = p._id,
+          _idAccount = p._idAccount,
+          Status = p.Status,
+          Name = p.Name,
+          Logo = p.Logo,
+          Skills = p.Skills.OrderBy(x => x.Name).ToList(),
+          Template = p.Template
+        }).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -859,7 +868,8 @@ namespace Manager.Services.Specific
       try
       {
         var group = groupService.GetAll(p => p._id == id).ToList().Select(
-          p => new Group(){
+          p => new Group()
+          {
             _id = p._id,
             _idAccount = p._idAccount,
             Status = p.Status,
@@ -920,7 +930,7 @@ namespace Manager.Services.Specific
           item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
           groups.Add(item);
         }
-        return groups.OrderBy(p => p.Axis.TypeAxis).ThenBy(p => p.Line).ToList();
+        return groups.OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ThenByDescending(p => p.Line).ToList();
       }
       catch (Exception e)
       {
