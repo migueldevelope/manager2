@@ -1381,7 +1381,7 @@ namespace Manager.Services.Specific
 
     private async Task UpdateAxisAll(Axis axis, bool remove)
     {
-      foreach (var item in groupService.GetAll(p => p.Sphere._id == axis._id).ToList())
+      foreach (var item in groupService.GetAll(p => p.Axis._id == axis._id).ToList())
       {
         if (remove == true)
           item.Axis = null;
