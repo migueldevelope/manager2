@@ -930,7 +930,7 @@ namespace Manager.Services.Specific
           item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
           groups.Add(item);
         }
-        return groups.OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ThenByDescending(p => p.Line).ToList();
+        return groups.OrderBy(p => p.Sphere.TypeSphere).ThenByDescending(p => p.Axis.TypeAxis).ThenBy(p => p.Line).ToList();
       }
       catch (Exception e)
       {
