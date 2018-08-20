@@ -86,10 +86,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getlistexclud/{idperson}")]
-    public List<OnBoarding> GetListExclud(string idperson)
+    [Route("getlistexclud")]
+    public List<OnBoarding> GetListExclud()
     {
-      return service.GetListExclud(idperson);
+      return service.GetListExclud();
     }
 
     [Authorize]

@@ -439,11 +439,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<OnBoarding> GetListExclud(string idperson)
+    public List<OnBoarding> GetListExclud()
     {
       try
       {
-        return onBoardingService.GetAll(p => p.Person._id == idperson).ToList();
+        return onBoardingService.GetAll().ToList();
       }catch(Exception e)
       {
         throw e;

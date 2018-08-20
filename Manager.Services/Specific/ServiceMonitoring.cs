@@ -548,11 +548,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Monitoring> GetListExclud(string idperson)
+    public List<Monitoring> GetListExclud()
     {
         try
         {
-          return monitoringService.GetAll(p => p.Person._id == idperson).ToList();
+          return monitoringService.GetAll().ToList();
         }
         catch (Exception e)
         {

@@ -51,10 +51,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getlistexclud/{idperson}")]
-    public List<Monitoring> GetListExclud(string idperson)
+    [Route("getlistexclud")]
+    public List<Monitoring> GetListExclud()
     {
-      return service.GetListExclud(idperson);
+      return service.GetListExclud();
     }
 
     [Authorize]
