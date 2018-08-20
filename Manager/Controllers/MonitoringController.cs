@@ -51,6 +51,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("getlistexclud/{idperson}")]
+    public List<Monitoring> GetListExclud(string idperson)
+    {
+      return service.GetListExclud(idperson);
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("list/{idmanager}")]
     public List<Monitoring> List(string idmanager, int count = 10, int page = 1, string filter = "")
     {

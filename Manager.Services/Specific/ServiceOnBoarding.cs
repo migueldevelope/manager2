@@ -138,9 +138,10 @@ namespace Manager.Services.Specific
 
         if (item == null)
         {
-          item = personService.GetAll(p => p.TypeJourney == null & p._id == idmanager)
+          item = personService.GetAll(p => (p.TypeJourney == null) & p._id == idmanager)
         .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .FirstOrDefault();
+          return null;
         }
 
         if (item.OnBoarding == null)
@@ -435,6 +436,17 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<OnBoarding> GetListExclud(string idperson)
+    {
+      try
+      {
+        return onBoardingService.GetAll(p => p.Person._id == idperson).ToList();
+      }catch(Exception e)
+      {
+        throw e;
       }
     }
   }

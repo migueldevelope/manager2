@@ -83,6 +83,15 @@ namespace Manager.Controllers
     {
       return service.GetOnBoardings(id);
     }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getlistexclud/{idperson}")]
+    public List<OnBoarding> GetListExclud(string idperson)
+    {
+      return service.GetListExclud(idperson);
+    }
+
     [Authorize]
     [HttpDelete]
     [Route("delete/{idperson}")]

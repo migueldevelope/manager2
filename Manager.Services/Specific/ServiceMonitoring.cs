@@ -547,5 +547,17 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public List<Monitoring> GetListExclud(string idperson)
+    {
+        try
+        {
+          return monitoringService.GetAll(p => p.Person._id == idperson).ToList();
+        }
+        catch (Exception e)
+        {
+          throw e;
+        }
+      }
   }
 }
