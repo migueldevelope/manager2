@@ -20,7 +20,7 @@ namespace Manager.Services.Auth
   public class ServicePerson : Repository<Person>, IServicePerson
   {
     private ServiceGeneric<Person> personService;
-    private ServiceGeneric<Attachment> attachmentService;
+    private ServiceGeneric<Attachments> attachmentService;
     private ServiceGeneric<Company> companyService;
     private ServiceGeneric<Occupation> occupationService;
     private ServiceSendGrid mailService;
@@ -51,7 +51,7 @@ namespace Manager.Services.Auth
       try
       {
         personService = new ServiceGeneric<Person>(context);
-        attachmentService = new ServiceGeneric<Attachment>(context);
+        attachmentService = new ServiceGeneric<Attachments>(context);
         mailService = new ServiceSendGrid(context);
         companyService = new ServiceGeneric<Company>(context);
         occupationService = new ServiceGeneric<Occupation>(context);

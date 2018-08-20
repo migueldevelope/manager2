@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager", "Manager\Manager.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj", "{AEFC8403-FCF7-4EE4-AED0-77636C1E33A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail", "Mail\Mail.csproj", "{91D2313E-84DD-4F80-BF9A-9406D0E58007}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mail", "Mail\Mail.csproj", "{91D2313E-84DD-4F80-BF9A-9406D0E58007}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Attachment", "Attachment\Attachment.csproj", "{38AC6C5B-0A73-41EF-83A7-016283095792}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{91D2313E-84DD-4F80-BF9A-9406D0E58007}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91D2313E-84DD-4F80-BF9A-9406D0E58007}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91D2313E-84DD-4F80-BF9A-9406D0E58007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38AC6C5B-0A73-41EF-83A7-016283095792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38AC6C5B-0A73-41EF-83A7-016283095792}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38AC6C5B-0A73-41EF-83A7-016283095792}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38AC6C5B-0A73-41EF-83A7-016283095792}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

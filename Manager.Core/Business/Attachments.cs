@@ -2,7 +2,7 @@
 
 namespace Manager.Core.Business
 {
-  public class Attachment : BaseEntity
+  public class Attachments : BaseEntity
   {
     public string LocalName { get; set; }
     public string Extension { get; set; }
