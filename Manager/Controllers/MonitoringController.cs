@@ -92,6 +92,29 @@ namespace Manager.Controllers
       return service.GetSkills(idperson);
     }
 
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteall/{idperson}")]
+    public string RemoveAllMonitoring(string idperson)
+    {
+      return service.RemoveAllMonitoring(idperson);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("delete/{idmonitoring}")]
+    public string RemoveOnBoarding(string idmonitoring)
+    {
+      return service.RemoveMonitoring(idmonitoring);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deletelast/{idperson}")]
+    public string RemoveLastMonitoring(string idperson)
+    {
+      return service.RemoveLastMonitoring(idperson);
+    }
 
   }
 }

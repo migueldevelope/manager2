@@ -83,6 +83,13 @@ namespace Manager.Controllers
     {
       return service.GetOnBoardings(id);
     }
+    [Authorize]
+    [HttpDelete]
+    [Route("delete/{idperson}")]
+    public string RemoveOnBoarding(string idperson)
+    {
+      return service.RemoveOnBoarding(idperson);
+    }
 
 
   }

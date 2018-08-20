@@ -13,6 +13,7 @@ namespace Manager.Core.Interfaces
     OnBoarding PersonOnBoardingsEnd(string idmanager);
     OnBoarding NewOnBoarding(OnBoarding onboarding, string idperson);
     string UpdateOnBoarding(OnBoarding onboarding, string idperson);
+    string RemoveOnBoarding(string idperson);
     void SetUser(IHttpContextAccessor contextAccessor);
   }
 }

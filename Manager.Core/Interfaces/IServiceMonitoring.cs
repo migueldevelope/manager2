@@ -16,5 +16,8 @@ namespace Manager.Core.Interfaces
     Monitoring NewMonitoring(Monitoring monitoring, string idperson);
     string UpdateMonitoring(Monitoring monitoring, string idperson);
     void SetUser(IHttpContextAccessor contextAccessor);
+    string RemoveAllMonitoring(string idperson);
+    string RemoveMonitoring(string idmonitoring);
+    string RemoveLastMonitoring(string idperson);
   }
 }

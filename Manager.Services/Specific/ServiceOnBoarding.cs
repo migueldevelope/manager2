@@ -423,5 +423,19 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string RemoveOnBoarding(string idperson)
+    {
+      try
+      {
+        var onboarding = onBoardingService.GetAll(p => p.Person._id == idperson).FirstOrDefault();
+        onboarding.Status = EnumStatus.Disabled;
+        onBoardingService.Update(onboarding, null);
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
   }
 }

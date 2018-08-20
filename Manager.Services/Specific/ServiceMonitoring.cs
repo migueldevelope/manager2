@@ -498,5 +498,54 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public string RemoveAllMonitoring(string idperson)
+    {
+      try
+      {
+        var monitorings = monitoringService.GetAll(p => p.Person._id == idperson).ToList();
+        foreach (var monitoring in monitorings)
+        {
+          monitoring.Status = EnumStatus.Disabled;
+          monitoringService.Update(monitoring, null);
+        }
+
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string RemoveMonitoring(string idmonitoring)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        monitoring.Status = EnumStatus.Disabled;
+        monitoringService.Update(monitoring, null);
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string RemoveLastMonitoring(string idperson)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p.Person._id == idperson).LastOrDefault();
+        monitoring.Status = EnumStatus.Disabled;
+        monitoringService.Update(monitoring, null);
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
   }
 }
