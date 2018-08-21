@@ -18,7 +18,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     string RemoveAllMonitoring(string idperson);
     string RemoveMonitoring(string idmonitoring);
-    List<Monitoring> GetListExclud();
+    List<Monitoring> GetListExclud(ref long total, string filter, int count, int page);
     string RemoveLastMonitoring(string idperson);
   }
 }

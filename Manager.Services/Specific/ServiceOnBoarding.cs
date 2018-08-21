@@ -428,6 +428,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "RemoveOnboarding:" + idperson);
         var onboarding = onBoardingService.GetAll(p => p.Person._id == idperson).FirstOrDefault();
         onboarding.Status = EnumStatus.Disabled;
         onBoardingService.Update(onboarding, null);
@@ -439,12 +440,18 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<OnBoarding> GetListExclud()
+    public List<OnBoarding> GetListExclud(ref long total, string filter, int count, int page)
     {
       try
       {
-        return onBoardingService.GetAll().ToList();
-      }catch(Exception e)
+        LogSave(_user._idPerson, "ListExclud");
+        int skip = (count * (page - 1));
+        var detail = onBoardingService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
       {
         throw e;
       }

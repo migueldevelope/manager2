@@ -14,7 +14,7 @@ namespace Manager.Core.Interfaces
     OnBoarding NewOnBoarding(OnBoarding onboarding, string idperson);
     string UpdateOnBoarding(OnBoarding onboarding, string idperson);
     string RemoveOnBoarding(string idperson);
-    List<OnBoarding> GetListExclud();
+    List<OnBoarding> GetListExclud(ref long total, string filter, int count, int page);
     void SetUser(IHttpContextAccessor contextAccessor);
   }
 }

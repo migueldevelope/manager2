@@ -503,6 +503,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+
+        LogSave(_user._idPerson, "RemoveAllMonitoring:" + idperson);
         var monitorings = monitoringService.GetAll(p => p.Person._id == idperson).ToList();
         foreach (var monitoring in monitorings)
         {
@@ -522,6 +524,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "RemoveMonitoring:" + idmonitoring);
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         monitoring.Status = EnumStatus.Disabled;
         monitoringService.Update(monitoring, null);
@@ -537,6 +540,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "RemoveLastMonitoring:" + idperson);
         var monitoring = monitoringService.GetAll(p => p.Person._id == idperson).LastOrDefault();
         monitoring.Status = EnumStatus.Disabled;
         monitoringService.Update(monitoring, null);
@@ -548,16 +552,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Monitoring> GetListExclud()
+    public List<Monitoring> GetListExclud(ref long total, string filter, int count, int page)
     {
-        try
-        {
-          return monitoringService.GetAll().ToList();
-        }
-        catch (Exception e)
-        {
-          throw e;
-        }
+      try
+      {
+        LogSave(_user._idPerson, "ListExclud");
+        int skip = (count * (page - 1));
+        var detail = monitoringService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList();
       }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
   }
 }

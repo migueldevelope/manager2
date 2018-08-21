@@ -87,9 +87,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public List<OnBoarding> GetListExclud()
+    public List<OnBoarding> GetListExclud(int count = 10, int page = 1, string filter = "")
     {
-      return service.GetListExclud();
+      long total = 0;
+      var result = service.GetListExclud(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
     [Authorize]
