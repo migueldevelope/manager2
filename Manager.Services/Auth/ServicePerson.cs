@@ -134,6 +134,7 @@ namespace Manager.Services.Auth
           Company = person.Company,
           Password = EncryptServices.GetMD5Hash(person.Document),
           StatusUser = person.StatusUser,
+          TypeJourney = person.TypeJourney,
           Status = EnumStatus.Enabled
         };
 
