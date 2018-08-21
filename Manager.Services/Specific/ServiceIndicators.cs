@@ -54,6 +54,7 @@ namespace Manager.Services.Specific
       User(contextAccessor);
       personService._user = _user;
       onboardingService._user = _user;
+      monitoringService._user = _user;
       logService._user = _user;
       mailModelService._user = _user;
       mailMessageService._user = _user;
@@ -69,8 +70,9 @@ namespace Manager.Services.Specific
         var monitorings = monitoringService.GetAll(p => p.Person.Manager._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Count();
         var onboardings = onboardingService.GetAll(p => p.Person.Manager._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.Wait & p.StatusOnBoarding != EnumStatusOnBoarding.End).Count();
 
+        totalqtd = monitorings + onboardings;
         result.Add(new ViewIndicatorsNotes() { Name = "Monitoring", qtd = monitorings, total = totalqtd });
-        result.Add(new ViewIndicatorsNotes() { Name = "Onboarding", qtd = monitorings, total = totalqtd });
+        result.Add(new ViewIndicatorsNotes() { Name = "Onboarding", qtd = onboardings, total = totalqtd });
 
         return result;
       }
@@ -89,8 +91,9 @@ namespace Manager.Services.Specific
         var monitorings = monitoringService.GetAll(p => p.Person._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressManager & p.StatusMonitoring != EnumStatusMonitoring.WaitManager & p.StatusMonitoring != EnumStatusMonitoring.End).Count();
         var onboardings = onboardingService.GetAll(p => p.Person._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressManager & p.StatusOnBoarding != EnumStatusOnBoarding.WaitManager & p.StatusOnBoarding != EnumStatusOnBoarding.End).Count();
 
+        totalqtd = monitorings + onboardings;
         result.Add(new ViewIndicatorsNotes() { Name = "Monitoring", qtd = monitorings, total = totalqtd });
-        result.Add(new ViewIndicatorsNotes() { Name = "Onboarding", qtd = monitorings, total = totalqtd });
+        result.Add(new ViewIndicatorsNotes() { Name = "Onboarding", qtd = onboardings, total = totalqtd });
 
         return result;
       }
