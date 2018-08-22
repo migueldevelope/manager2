@@ -75,5 +75,8 @@ namespace Manager.Core.Interfaces
     string AreaOrder(string idcompany, string idarea, long order, bool sum);
     string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum);
     string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum);
+
+    string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order);
+    string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order);
   }
 }

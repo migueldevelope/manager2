@@ -580,7 +580,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("reordergroupscope/{idcompany}/{idgroup}/{idscope}/{sum}")]
-    public string AreaOrder(string idcompany, string idgroup, string idscope, bool sum)
+    public string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
     {
       return service.ReorderGroupScope(idcompany, idgroup, idscope, sum);
     }
@@ -591,6 +591,22 @@ namespace Manager.Controllers
     public string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
     {
       return service.ReorderOccupationActivitie(idcompany, idoccupation, idactivitie, sum);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("reordergroupscopemanual/{idcompany}/{idgroup}/{idscope}/{order}")]
+    public string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
+    {
+      return service.ReorderGroupScopeManual(idcompany, idgroup, idscope, order);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("reorderoccupationactivitiemanual/{idcompany}/{idoccupation}/{idactivitie}/{order}")]
+    public string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
+    {
+      return service.ReorderOccupationActivitieManual(idcompany, idoccupation, idactivitie, order);
     }
 
   }

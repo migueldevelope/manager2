@@ -435,9 +435,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-
-
+    
     public string DeleteArea(string idarea)
     {
       try
@@ -1934,8 +1932,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
-
     public string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
     {
       try
@@ -1978,7 +1974,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
     public string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
     {
       try
@@ -2010,6 +2005,52 @@ namespace Manager.Services.Specific
 
         }
 
+        occupationService.Update(occupation, null);
+
+        UpdateOccupationAll(occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
+    {
+      try
+      {
+        var group = groupService.GetAll(p => p.Company._id == idcompany & p._id == idgroup).FirstOrDefault();
+        var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
+        
+        foreach (var item in group.Scope)
+        {
+          if (item._id == scope._id)
+            item.Order = order;
+        }
+
+        groupService.Update(group, null);
+        UpdateGroupAll(group);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p.Group.Company._id == idcompany & p._id == idoccupation).FirstOrDefault();
+        var activities = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
+ 
+        foreach (var item in occupation.Activities)
+        {
+          if (item._id == activities._id)
+            item.Order = order;
+        }
         occupationService.Update(occupation, null);
 
         UpdateOccupationAll(occupation);
