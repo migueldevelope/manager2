@@ -245,9 +245,25 @@ namespace Manager.Services.Specific
     {
       try
       {
+
+        long order = 1;
+        try
+        {
+          order = groupService.GetAll(p => p._id == view.Group._id).FirstOrDefault().Scope.Max(p => p.Order) + 1;
+        }
+        catch (Exception)
+        {
+          order = 1;
+        }
+
         view.Scope._id = ObjectId.GenerateNewId().ToString();
         view.Scope._idAccount = view.Group._idAccount;
+        view.Scope.Order = order;
+
         view.Group.Scope.Add(view.Scope);
+
+        
+
         groupService.Update(view.Group, null);
         UpdateGroupAll(view.Group);
         return "ok";
@@ -317,6 +333,16 @@ namespace Manager.Services.Specific
     {
       try
       {
+        long order = 1;
+        try
+        {
+          order = occupationService.GetAll(p => p._id == view.Activities._id).FirstOrDefault().Activities.Max(p => p.Order) + 1;
+        }
+        catch (Exception)
+        {
+          order = 1;
+        }
+
         view.Activities._id = ObjectId.GenerateNewId().ToString();
         view.Activities._idAccount = view.Occupation._idAccount;
         view.Occupation.Activities.Add(view.Activities);
@@ -400,6 +426,8 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+
 
     public string DeleteArea(string idarea)
     {
@@ -1896,5 +1924,80 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+
+
+    public string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
+    {
+      try
+      {
+        var group = groupService.GetAll(p => p.Company._id == idcompany & p._id == idgroup).FirstOrDefault();
+        var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
+        Scope scopeOld;
+        if (sum)
+          scopeOld = group.Scope.Where(p => p.Order > scope.Order).FirstOrDefault();
+        else
+          scopeOld = group.Scope.Where(p => p.Order < scope.Order).FirstOrDefault();
+
+        long orderold = scopeOld.Order;
+        long ordernew = scope.Order;
+
+        foreach (var item in group.Scope)
+        {
+          if (item._id == scope._id)
+            item.Order = orderold;
+
+          if (item._id == scopeOld._id)
+            item.Order = ordernew;
+
+        }
+
+        groupService.Update(group, null);
+        UpdateGroupAll(group);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p.Group.Company._id == idcompany & p._id == idoccupation).FirstOrDefault();
+        var activities = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
+        Activitie activitiesOld;
+        if (sum)
+          activitiesOld = occupation.Activities.Where(p => p.Order > activities.Order).FirstOrDefault();
+        else
+          activitiesOld = occupation.Activities.Where(p => p.Order < activities.Order).FirstOrDefault();
+
+        long orderold = activitiesOld.Order;
+        long ordernew = activities.Order;
+
+        foreach (var item in occupation.Activities)
+        {
+          if (item._id == activities._id)
+            item.Order = orderold;
+
+          if (item._id == activitiesOld._id)
+            item.Order = ordernew;
+
+        }
+
+        occupationService.Update(occupation, null);
+
+        UpdateOccupationAll(occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    
   }
 }

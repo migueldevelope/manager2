@@ -576,5 +576,22 @@ namespace Manager.Controllers
     {
       return service.AreaOrder(idcompany, idarea, order, sum);
     }
+
+    [Authorize]
+    [HttpPut]
+    [Route("reordergroupscope/{idcompany}/{idgroup}/{idscope}/{sum}")]
+    public string AreaOrder(string idcompany, string idgroup, string idscope, bool sum)
+    {
+      return service.ReorderGroupScope(idcompany, idgroup, idscope, sum);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("reorderoccupationactivitie/{idcompany}/{idoccupation}/{idactivitie}/{sum}")]
+    public string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
+    {
+      return service.ReorderOccupationActivitie(idcompany, idoccupation, idactivitie, sum);
+    }
+
   }
 }

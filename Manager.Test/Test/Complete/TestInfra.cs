@@ -149,6 +149,55 @@ namespace Manager.Test.Test.Complete
       }
     }
 
+    [Fact]
+    public void TestGroupNewAndReorder()
+    {
+      try
+      {
+        var company = serviceInfra.GetCompanies().FirstOrDefault();
+        var axis = serviceInfra.GetAxis(company._id).FirstOrDefault();
+        var sphere = serviceInfra.GetSpheres(company._id).FirstOrDefault();
+        long total = 0;
+
+        var viewGroup = new ViewAddGroup()
+        {
+          Axis = axis,
+          Sphere = sphere,
+          Company = company,
+          Line = 0,
+          Name = "Teste group miguel"
+        };
+        serviceInfra.AddGroup(viewGroup);
+        var group = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault();
+
+
+        var view = new ViewAddMapGroupScope()
+        {
+          Group = group,
+          Scope = new Scope() { Name = "teste", Order = 99 }
+        };
+        serviceInfra.AddMapGroupScope(view);
+
+        var view2 = new ViewAddMapGroupScope()
+        {
+          Group = group,
+          Scope = new Scope() { Name = "teste scope 2", Order = 99 }
+        };
+
+        serviceInfra.AddMapGroupScope(view2);
+
+        var scopeS = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 1).FirstOrDefault();
+
+        serviceInfra.ReorderGroupScope(company._id, group._id, scopeS._id, true);
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
 
     [Fact]
     public void TestUpdateBasicVersion0()

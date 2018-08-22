@@ -73,5 +73,7 @@ namespace Manager.Core.Interfaces
     string UpdateProcessLevelOne(ProcessLevelOne model);
     string UpdateProcessLevelTwo(ProcessLevelTwo model);
     string AreaOrder(string idcompany, string idarea, long order, bool sum);
+    string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum);
+    string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum);
   }
 }
