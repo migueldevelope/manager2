@@ -500,5 +500,22 @@ namespace Manager.Services.Auth
 
       return detail.Skip(skip).Take(count).ToList();
     }
+
+    public void SetUser(BaseUser baseUser)
+    {
+      try
+      {
+        _user = baseUser;
+        personService._user = _user;
+        attachmentService._user = _user;
+        mailService._user = _user;
+        companyService._user = _user;
+        occupationService._user = _user;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
   }
 }

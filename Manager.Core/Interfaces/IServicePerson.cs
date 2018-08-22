@@ -14,6 +14,7 @@ namespace Manager.Core.Interfaces
     List<Person> ListPerson(Expression<Func<Person, bool>> filter);
     BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser baseUser);
     ViewPersonHead Head(string idperson);
     Person NewPerson(Person person);
     string NewPersonView(Person person);

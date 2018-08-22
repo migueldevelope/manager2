@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
@@ -25,6 +26,7 @@ namespace Manager.Services.Specific
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
+    private readonly ServiceGeneric<Account> accountService;
     public string path;
 
     public ServiceIndicators(DataContext context, string pathToken)
@@ -40,6 +42,7 @@ namespace Manager.Services.Specific
         mailModelService = new ServiceMailModel(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
+        accountService = new ServiceGeneric<Account>(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -96,6 +99,42 @@ namespace Manager.Services.Specific
         result.Add(new ViewIndicatorsNotes() { Name = "Onboarding", qtd = onboardings, total = totalqtd });
 
         return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public bool VerifyAccount(string id)
+    {
+      try
+      {
+        var account = accountService.GetAuthentication(p => p._id == id).FirstOrDefault();
+        if (account == null)
+          return false;
+        else
+          return true;
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public void SetUser(BaseUser baseUser)
+    {
+      try
+      {
+        _user = baseUser;
+        personService._user = _user;
+        onboardingService._user = _user;
+        monitoringService._user = _user;
+        logService._user = _user;
+        mailModelService._user = _user;
+        mailMessageService._user = _user;
+        mailService._user = _user;
       }
       catch (Exception e)
       {

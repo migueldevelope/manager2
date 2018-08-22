@@ -106,7 +106,11 @@ namespace Manager
           .AllowCredentials()
       ));
 
+      
       services.AddMvc();
+
+      services.AddSignalR();
+
       RegistreServices(services);
     }
 
@@ -119,6 +123,10 @@ namespace Manager
       app.UseMiddleware<ErrorHandlingMiddleware>();
       app.UseCors("AllowAll");
       app.UseMvc();
+      app.UseSignalR(routes =>
+      {
+        routes.MapHub<MessagesHub>("/messagesHub");
+      });
     }
   }
 }
