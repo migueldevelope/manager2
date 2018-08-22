@@ -190,6 +190,18 @@ namespace Manager.Test.Test.Complete
 
         serviceInfra.ReorderGroupScope(company._id, group._id, scopeS._id, true);
 
+        var view3 = new ViewAddMapGroupScope()
+        {
+          Group = group,
+          Scope = new Scope() { Name = "teste scope 3", Order = 99 }
+        };
+
+        serviceInfra.AddMapGroupScope(view3);
+
+        var scopeD = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 3).FirstOrDefault();
+
+        serviceInfra.ReorderGroupScope(company._id, group._id, scopeD._id, false);
+
       }
       catch (Exception e)
       {

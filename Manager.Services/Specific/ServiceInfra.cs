@@ -250,6 +250,10 @@ namespace Manager.Services.Specific
         try
         {
           order = groupService.GetAll(p => p._id == view.Group._id).FirstOrDefault().Scope.Max(p => p.Order) + 1;
+          if (order == 0)
+          {
+            order = 1;
+          }
         }
         catch (Exception)
         {
@@ -262,7 +266,7 @@ namespace Manager.Services.Specific
 
         view.Group.Scope.Add(view.Scope);
 
-        
+
 
         groupService.Update(view.Group, null);
         UpdateGroupAll(view.Group);
@@ -336,13 +340,18 @@ namespace Manager.Services.Specific
         long order = 1;
         try
         {
-          order = occupationService.GetAll(p => p._id == view.Activities._id).FirstOrDefault().Activities.Max(p => p.Order) + 1;
+          order = occupationService.GetAll(p => p._id == view.Occupation._id).FirstOrDefault().Activities.Max(p => p.Order) + 1;
+          if(order == 0)
+          {
+            order = 1;
+          }
         }
         catch (Exception)
         {
           order = 1;
         }
 
+        view.Activities.Order = order;
         view.Activities._id = ObjectId.GenerateNewId().ToString();
         view.Activities._idAccount = view.Occupation._idAccount;
         view.Occupation.Activities.Add(view.Activities);
@@ -918,7 +927,7 @@ namespace Manager.Services.Specific
             Line = p.Line,
             Skills = p.Skills.OrderBy(x => x.Name).ToList(),
             Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
-            Scope = p.Scope.OrderBy(x => x.Name).ToList(),
+            Scope = p.Scope.OrderBy(x => x.Order).ToList(),
             Template = p.Template,
             Occupations = p.Occupations
           }).FirstOrDefault();
@@ -999,7 +1008,7 @@ namespace Manager.Services.Specific
               Line = p.Group.Line,
               Skills = p.Group.Skills.OrderBy(x => x.Name).ToList(),
               Schooling = p.Group.Schooling.OrderBy(x => x.Order).ToList(),
-              Scope = p.Group.Scope.OrderBy(x => x.Name).ToList(),
+              Scope = p.Group.Scope.OrderBy(x => x.Order).ToList(),
               Template = p.Group.Template,
               Occupations = p.Group.Occupations
             },
@@ -1007,7 +1016,7 @@ namespace Manager.Services.Specific
             Line = p.Line,
             Skills = p.Skills.OrderBy(x => x.Name).ToList(),
             Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
-            Activities = p.Activities.OrderBy(x => x.Name).ToList(),
+            Activities = p.Activities.OrderBy(x => x.Order).ToList(),
             Template = p.Template,
             ProcessLevelTwo = p.ProcessLevelTwo
           }).FirstOrDefault();
@@ -1935,9 +1944,16 @@ namespace Manager.Services.Specific
         var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
         Scope scopeOld;
         if (sum)
-          scopeOld = group.Scope.Where(p => p.Order > scope.Order).FirstOrDefault();
+        {
+          var min = group.Scope.Where(p => p.Order > scope.Order).Min(p => p.Order);
+          scopeOld = group.Scope.Where(p => p.Order == min).FirstOrDefault();
+        }
         else
-          scopeOld = group.Scope.Where(p => p.Order < scope.Order).FirstOrDefault();
+        {
+          var max = group.Scope.Where(p => p.Order < scope.Order).Max(p => p.Order);
+          scopeOld = group.Scope.Where(p => p.Order == max).FirstOrDefault();
+        }
+
 
         long orderold = scopeOld.Order;
         long ordernew = scope.Order;
@@ -1971,9 +1987,15 @@ namespace Manager.Services.Specific
         var activities = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
         Activitie activitiesOld;
         if (sum)
-          activitiesOld = occupation.Activities.Where(p => p.Order > activities.Order).FirstOrDefault();
+        {
+          var min = occupation.Activities.Where(p => p.Order > activities.Order).Min(p => p.Order);
+          activitiesOld = occupation.Activities.Where(p => p.Order == min).FirstOrDefault();
+        }
         else
-          activitiesOld = occupation.Activities.Where(p => p.Order < activities.Order).FirstOrDefault();
+        {
+          var max = occupation.Activities.Where(p => p.Order < activities.Order).Max(p => p.Order);
+          activitiesOld = occupation.Activities.Where(p => p.Order == max).FirstOrDefault();
+        }
 
         long orderold = activitiesOld.Order;
         long ordernew = activities.Order;
@@ -1998,6 +2020,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    
+
   }
 }
