@@ -183,7 +183,7 @@ namespace Manager.Services.Specific
           CommentsEnd = p.CommentsEnd,
           SkillsCompany = p.SkillsCompany.OrderBy(x => x.Skill.Name).ToList(),
           Schoolings = p.Schoolings.OrderBy(x => x.Schooling.Order).ToList(),
-          Activities = p.Activities.OrderBy(x => x.Activities.Name).ToList(),
+          Activities = p.Activities.OrderBy(x => x.Activities.Order).ToList(),
           StatusMonitoring = p.StatusMonitoring
         }).FirstOrDefault();
       }

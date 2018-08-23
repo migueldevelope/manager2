@@ -7,14 +7,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Manager.Web
+namespace Mail.Web
 {
   public class MessagesHub : Hub
   {
 
     private readonly IServiceIndicators service;
     private readonly IServicePerson servicePerson;
-    private Timer _timer;
 
     public MessagesHub(IServiceIndicators _service, IServicePerson _servicePerson)
     {

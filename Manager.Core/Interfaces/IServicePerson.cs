@@ -36,6 +36,7 @@ namespace Manager.Core.Interfaces
     List<Occupation> ListOccupation(ref long total, string filter, int count, int page);
     List<Person> ListManager(ref long total, string filter, int count, int page);
     List<Company> ListCompany(ref long total, string filter, int count, int page);
+    List<Person> ListAll();
 
   }
 }

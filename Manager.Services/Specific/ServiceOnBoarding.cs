@@ -188,9 +188,9 @@ namespace Manager.Services.Specific
             SkillsCompany = p.SkillsCompany.OrderBy(x => x.Skill.Name).ToList(),
             SkillsGroup = p.SkillsGroup.OrderBy(x => x.Skill.Name).ToList(),
             SkillsOccupation = p.SkillsOccupation.OrderBy(x => x.Skill.Name).ToList(),
-            Scopes = p.Scopes.OrderBy(x => x.Scope.Name).ToList(),
+            Scopes = p.Scopes.OrderBy(x => x.Scope.Order).ToList(),
             Schoolings = p.Schoolings.OrderBy(x => x.Schooling.Order).ToList(),
-            Activities = p.Activities.OrderBy(x => x.Activitie.Name).ToList(),
+            Activities = p.Activities.OrderBy(x => x.Activitie.Order).ToList(),
             StatusOnBoarding = p.StatusOnBoarding
           })
           .FirstOrDefault();

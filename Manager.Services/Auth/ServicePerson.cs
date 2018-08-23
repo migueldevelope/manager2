@@ -517,5 +517,17 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+
+    public List<Person> ListAll()
+    {
+      try
+      {
+        return personService.GetAuthentication(p => p.Status!= EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
   }
 }

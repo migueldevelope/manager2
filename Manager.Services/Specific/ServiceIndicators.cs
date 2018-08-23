@@ -6,6 +6,7 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR.Client;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 
 namespace Manager.Services.Specific
 {
@@ -28,6 +30,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> mailService;
     private readonly ServiceGeneric<Account> accountService;
     public string path;
+    private HubConnection hubConnection;
 
     public ServiceIndicators(DataContext context, string pathToken)
       : base(context)
@@ -141,5 +144,51 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+
+    public void StartAsync()
+    {
+     
+    }
+
+    private async void DoWork(object state)
+    {
+      try
+      {
+        foreach (var person in personService.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled).ToList())
+        {
+          await hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
+          await hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public void SendMessages(string link)
+    {
+      try
+      {
+        Timer _timer = new Timer(DoWork, null, TimeSpan.Zero,
+         TimeSpan.FromSeconds(5));
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(link + "messagesHub")
+            .Build();
+
+        hubConnection.StartAsync();
+       
+
+        path = link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
   }
 }

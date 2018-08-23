@@ -13,6 +13,8 @@ namespace Tools.Data
     public string DataBase { get; set; }
     [XmlElement("TokenServer")]
     public string TokenServer { get; set; }
+    [XmlElement("SignalRService")]
+    public string SignalRService { get; set; }
     [XmlElement("BlobKey")]
     public string BlobKey { get; set; }
     [XmlElement("SendGridKey")]

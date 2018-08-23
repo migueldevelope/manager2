@@ -60,6 +60,20 @@ namespace Tools
       }
     }
 
+    public static string GetSignalRServer(string hostName)
+    {
+      try
+      {
+        XmlConnectionNoSqlService<Tools.Data.ConnNoSql> xml = new XmlConnectionNoSqlService<Tools.Data.ConnNoSql>(hostName);
+        Tools.Data.ConnNoSql connection = xml.Get();
+        return connection.SignalRService;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
     public static string GetPath(string hostName)
     {
       try

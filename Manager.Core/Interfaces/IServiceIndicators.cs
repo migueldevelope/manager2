@@ -12,5 +12,6 @@ namespace Manager.Core.Interfaces
     List<ViewIndicatorsNotes> GetNotesPerson(string id);
     bool VerifyAccount(string id);
     void SetUser(BaseUser baseUser);
+    void SendMessages(string link);
   }
 }
