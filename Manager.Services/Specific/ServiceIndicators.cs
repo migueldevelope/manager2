@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -146,49 +147,46 @@ namespace Manager.Services.Specific
     }
 
 
-
-    public void StartAsync()
-    {
-     
-    }
-
-    private async void DoWork(object state)
+    public async Task SendMessages(string link)
     {
       try
       {
-        foreach (var person in personService.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled).ToList())
-        {
-          await hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
-          await hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public void SendMessages(string link)
-    {
-      try
-      {
-        Timer _timer = new Timer(DoWork, null, TimeSpan.Zero,
-         TimeSpan.FromSeconds(5));
-
         hubConnection = new HubConnectionBuilder()
             .WithUrl(link + "messagesHub")
             .Build();
 
-        hubConnection.StartAsync();
-       
+        await hubConnection.StartAsync();
 
-        path = link;
+        DoWork();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+
+
+    private async Task DoWork()
+    {
+      try
+      {
+        while (true)
+        {
+          foreach (var person in personService.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled).ToList())
+          {
+            await hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
+            await hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);
+          }
+          await Task.Delay(1000);
+        }
+        
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
   }
 }

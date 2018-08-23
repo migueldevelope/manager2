@@ -2,6 +2,7 @@
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
 {
@@ -12,6 +13,6 @@ namespace Manager.Core.Interfaces
     List<ViewIndicatorsNotes> GetNotesPerson(string id);
     bool VerifyAccount(string id);
     void SetUser(BaseUser baseUser);
-    void SendMessages(string link);
+    Task SendMessages(string link);
   }
 }
