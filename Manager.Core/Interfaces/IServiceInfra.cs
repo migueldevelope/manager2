@@ -64,6 +64,7 @@ namespace Manager.Core.Interfaces
     string UpdateSphere(Sphere sphere);
     string UpdateAxis(Axis axis);
     string UpdateGroup(Group group);
+    string UpdateMapGroupScope(string idgroup, Scope scope)
     string UpdateArea(Area area);
     string UpdateOccupation(Occupation occupation);
     string UpdateMapGroupSchooling(string idgroup, Schooling schooling);

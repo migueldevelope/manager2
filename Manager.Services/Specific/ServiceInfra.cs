@@ -341,7 +341,7 @@ namespace Manager.Services.Specific
         try
         {
           order = occupationService.GetAll(p => p._id == view.Occupation._id).FirstOrDefault().Activities.Max(p => p.Order) + 1;
-          if(order == 0)
+          if (order == 0)
           {
             order = 1;
           }
@@ -435,7 +435,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    
+
     public string DeleteArea(string idarea)
     {
       try
@@ -1511,6 +1511,27 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string UpdateMapGroupScope(string idgroup, Scope scope)
+    {
+      try
+      {
+        var group = groupService.GetAll(p => p._id == idgroup).FirstOrDefault();
+
+        var scopeOld = group.Scope.Where(p => p._id == scope._id).FirstOrDefault();
+        group.Scope.Remove(scopeOld);
+        group.Scope.Add(scope);
+
+        groupService.Update(group, null);
+        UpdateGroupAll(group);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
     public string UpdateMapGroupSchooling(string idgroup, Schooling schooling)
     {
       try
@@ -2022,7 +2043,7 @@ namespace Manager.Services.Specific
       {
         var group = groupService.GetAll(p => p.Company._id == idcompany & p._id == idgroup).FirstOrDefault();
         var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
-        
+
         foreach (var item in group.Scope)
         {
           if (item._id == scope._id)
@@ -2045,7 +2066,7 @@ namespace Manager.Services.Specific
       {
         var occupation = occupationService.GetAll(p => p.Group.Company._id == idcompany & p._id == idoccupation).FirstOrDefault();
         var activities = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
- 
+
         foreach (var item in occupation.Activities)
         {
           if (item._id == activities._id)

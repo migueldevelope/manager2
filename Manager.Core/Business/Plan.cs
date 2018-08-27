@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
-  public class Plan: BaseEntity
+  public class Plan : BaseEntity
   {
     public string Name { get; set; }
     public string Description { get; set; }
@@ -14,5 +14,6 @@ namespace Manager.Core.Business
     public Person UserInclude { get; set; }
     public DateTime? DateInclude { get; set; }
     public EnumTypePlan TypePlan { get; set; }
+    public EnumSourcePlan SourcePlan { get; set; }
   }
 }

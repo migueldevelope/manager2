@@ -305,6 +305,8 @@ namespace Manager.Services.Specific
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
           {
             onboarding.DateEndEnd = DateTime.Now;
+            onboarding.Person.TypeJourney = EnumTypeJourney.Checkpoint;
+            personService.Update(onboarding.Person, null);
           }
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
           {

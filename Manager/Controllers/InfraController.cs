@@ -499,6 +499,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
+    [Route("updatemapgroupscope/{idgroup}")]
+    public string UpdateMapGroupScope([FromBody]Scope scope, string idgroup)
+    {
+      return service.UpdateMapGroupScope(idgroup, scope);
+    }
+
+    [Authorize]
+    [HttpPut]
     [Route("updateoccupation")]
     public string UpdateOccupation([FromBody]Occupation occupation)
     {

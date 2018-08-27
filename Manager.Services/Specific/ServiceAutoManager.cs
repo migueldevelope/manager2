@@ -66,7 +66,7 @@ namespace Manager.Services.Specific
       try
       {
         return (from person in personService.GetAll()
-                where person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
+                where person.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
                 select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.Name, Status = EnumStatusAutoManagerView.Open }).ToList();
       }
       catch (Exception e)
