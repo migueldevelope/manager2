@@ -1337,7 +1337,43 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var groupOld = groupService.GetAll(p => p._id == group._id).FirstOrDefault();
+
+        if ((groupOld.Sphere._id != group.Sphere._id) || (groupOld.Axis._id != group.Axis._id))
+        {
+          UpdateGroupSphereAxis(group, groupOld);
+          return "update";
+        }
+          
+
         groupService.Update(group, null);
+        UpdateGroupAll(group);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateGroupSphereAxis(Group group, Group groupOld)
+    {
+      try
+      {
+        //var groupOld = groupService.GetAll(p => p._id == group._id).FirstOrDefault();
+        groupOld.Status = EnumStatus.Disabled;
+        groupService.Update(groupOld, null);
+
+        AddGroup(new ViewAddGroup()
+        {
+          Axis = group.Axis,
+          Sphere = group.Sphere,
+          Company = group.Company,
+          Line = group.Line,
+          Name = group.Name
+        });
+
+
         UpdateGroupAll(group);
         return "update";
       }
