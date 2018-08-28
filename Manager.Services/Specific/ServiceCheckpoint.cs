@@ -174,7 +174,8 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(checkpoint.Person._id, "Checkpoint Process");
-        
+        checkpoint.StatusCheckpoint = EnumStatusCheckpoint.InProgressManager;
+        checkpoint.DateBegin = DateTime.Now;
 
         return checkpoint;
       }
@@ -188,7 +189,17 @@ namespace Manager.Services.Specific
     {
       try
       {
-       
+        LogSave(checkpoint.Person._id, "Checkpoint update");
+        if (checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End)
+        {
+          checkpoint.DateEnd = DateTime.Now;
+          if (checkpoint.TypeCheckpoint == EnumCheckpoint.Approved)
+          {
+            checkpoint.Person.TypeJourney = EnumTypeJourney.Monitoring;
+            personService.Update(checkpoint.Person, null);
+          }
+        }
+
         checkpointService.Update(checkpoint, null);
         return "update";
       }
