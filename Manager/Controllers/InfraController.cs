@@ -166,11 +166,29 @@ namespace Manager.Controllers
     }
 
     [Authorize]
+    [HttpPost]
+    [Route("addquestions")]
+    public string AddQuestions([FromBody]Questions questions)
+    {
+      service.AddQuestions(questions);
+      return "ok";
+    }
+
+    [Authorize]
     [HttpDelete]
     [Route("deletearea/{id}")]
     public string DeleteArea(string id)
     {
       return service.DeleteArea(id);
+    }
+
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deletequestion/{id}")]
+    public string DeleteQuestion(string id)
+    {
+      return service.DeleteQuestion(id);
     }
 
     [Authorize]
@@ -284,6 +302,14 @@ namespace Manager.Controllers
     public string DeleteProcessLevelTwo(string id)
     {
       return service.DeleteProcessLevelTwo(id);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getquestions")]
+    public List<Questions> GetQuestions()
+    {
+      return service.GetQuestions();
     }
 
 
@@ -520,6 +546,14 @@ namespace Manager.Controllers
     public string UpdateSkill([FromBody]Skill skill)
     {
       return service.UpdateSkill(skill);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatequestions")]
+    public string UpdateQuestions([FromBody]Questions questions)
+    {
+      return service.UpdateQuestions(questions);
     }
 
     [Authorize]

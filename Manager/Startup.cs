@@ -51,6 +51,7 @@ namespace Manager
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, conn.TokenServer);
       IServicePlan servicePlan = new ServicePlan(_context);
+      IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, conn.TokenServer);
 
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
 
@@ -66,7 +67,7 @@ namespace Manager
       services.AddSingleton(_ => serviceMonitoring);
       services.AddSingleton(_ => servicePlan);
       services.AddSingleton(_ => serviceIndicators);
-
+      services.AddSingleton(_ => serviceCheckpoint);
 
       serviceIndicators.SendMessages(conn.SignalRService);
 

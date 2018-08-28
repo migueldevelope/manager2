@@ -28,6 +28,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Parameter> parameterService;
     private readonly ServiceGeneric<ProcessLevelOne> processLevelOneService;
     private readonly ServiceGeneric<ProcessLevelTwo> processLevelTwoService;
+    private readonly ServiceGeneric<Questions> questionsService;
 
 
     public ServiceInfra(DataContext context)
@@ -48,6 +49,7 @@ namespace Manager.Services.Specific
         parameterService = new ServiceGeneric<Parameter>(context);
         processLevelOneService = new ServiceGeneric<ProcessLevelOne>(context);
         processLevelTwoService = new ServiceGeneric<ProcessLevelTwo>(context);
+        questionsService = new ServiceGeneric<Questions>(context);
       }
       catch (Exception e)
       {
@@ -431,6 +433,20 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string AddQuestions(Questions view)
+    {
+      try
+      {
+        questionsService.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
     public string DeleteArea(string idarea)
     {
       try
@@ -793,6 +809,20 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string DeleteQuestion(string idquestion)
+    {
+      try
+      {
+        var questions = questionsService.GetAll(p => p._id == idquestion).FirstOrDefault();
+        questionsService.Update(questions, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Area> GetAreas()
     {
       try
@@ -866,6 +896,18 @@ namespace Manager.Services.Specific
       try
       {
         return axisService.GetAll(p => p.Sphere.Company._id == idcompany).OrderBy(p => p.TypeAxis).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Questions> GetQuestions()
+    {
+      try
+      {
+        return questionsService.GetAll().OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -968,6 +1010,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
 
     public Occupation GetOccupation(string id)
     {
@@ -1298,6 +1341,7 @@ namespace Manager.Services.Specific
       personService._user = _user;
       processLevelOneService._user = _user;
       processLevelTwoService._user = _user;
+      questionsService._user = _user;
     }
 
     public string UpdateArea(Area area)
@@ -1404,6 +1448,19 @@ namespace Manager.Services.Specific
       {
         skillService.Update(skill, null);
         UpdateSkillAll(skill, false);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateQuestions(Questions questions)
+    {
+      try
+      {
+        questionsService.Update(questions, null);
         return "update";
       }
       catch (Exception e)

@@ -21,6 +21,7 @@ namespace Manager.Core.Interfaces
     List<Axis> GetAxis(string idcompany);
     List<Area> GetAreas();
     List<Area> GetAreas(string idcompany);
+    List<Questions> GetQuestions();
     Group GetGroup(string id);
     Occupation GetOccupation(string id);
     List<Group> GetGroups();
@@ -45,6 +46,7 @@ namespace Manager.Core.Interfaces
     string AddOccupationActivities(ViewAddOccupationActivities view);
     string AddProcessLevelOne(ProcessLevelOne model);
     string AddProcessLevelTwo(ProcessLevelTwo model);
+    string AddQuestions(Questions view);
     string DeleteEssential(string idcompany, string id);
     string DeleteSkill(string idskill);
     string DeleteSphere(string idsphere);
@@ -53,6 +55,7 @@ namespace Manager.Core.Interfaces
     string DeleteMapGroupSkill(string idgroup, string id);
     string DeleteMapGroupSchooling(string idgroup, string id);
     string DeleteArea(string idarea);
+    string DeleteQuestion(string idquestion);
     string DeleteOccupation(string idoccupation);
     string DeleteOccupationSkill(string idoccupation, string id);
     string DeleteOccupationActivities(string idoccupation, string idactivitie);
@@ -63,6 +66,7 @@ namespace Manager.Core.Interfaces
     string UpdateSkill(Skill skill);
     string UpdateSphere(Sphere sphere);
     string UpdateAxis(Axis axis);
+    string UpdateQuestions(Questions questions);
     string UpdateGroup(Group group);
     string UpdateMapGroupScope(string idgroup, Scope scope);
     string UpdateArea(Area area);
