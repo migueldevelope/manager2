@@ -23,6 +23,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly ServiceGeneric<OnBoarding> onboardingService;
+    private readonly ServiceGeneric<Workflow> workflowService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Plan> planService;
     private readonly ServiceLog logService;
@@ -46,6 +47,7 @@ namespace Manager.Services.Specific
         mailModelService = new ServiceMailModel(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
+        workflowService = new ServiceGeneric<Workflow>(context);
         accountService = new ServiceGeneric<Account>(context);
         path = pathToken;
       }
@@ -65,6 +67,7 @@ namespace Manager.Services.Specific
       logService._user = _user;
       mailModelService._user = _user;
       mailMessageService._user = _user;
+      workflowService._user = _user;
       mailService._user = _user;
     }
 
@@ -76,10 +79,13 @@ namespace Manager.Services.Specific
         long totalqtd = 0;
         var monitorings = monitoringService.GetAll(p => p.Person.Manager._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Count();
         var onboardings = onboardingService.GetAll(p => p.Person.Manager._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.Wait & p.StatusOnBoarding != EnumStatusOnBoarding.End).Count();
+        var workflows = workflowService.GetAll(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Count();
 
-        totalqtd = monitorings + onboardings;
+        totalqtd = monitorings + onboardings + workflows;
+
         result.Add(new ViewIndicatorsNotes() { Name = "Monitoring", qtd = monitorings, total = totalqtd });
         result.Add(new ViewIndicatorsNotes() { Name = "Onboarding", qtd = onboardings, total = totalqtd });
+        result.Add(new ViewIndicatorsNotes() { Name = "Workflow", qtd = workflows, total = totalqtd });
 
         return result;
       }
@@ -97,10 +103,12 @@ namespace Manager.Services.Specific
         long totalqtd = 0;
         var monitorings = monitoringService.GetAll(p => p.Person._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressManager & p.StatusMonitoring != EnumStatusMonitoring.WaitManager & p.StatusMonitoring != EnumStatusMonitoring.End).Count();
         var onboardings = onboardingService.GetAll(p => p.Person._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressManager & p.StatusOnBoarding != EnumStatusOnBoarding.WaitManager & p.StatusOnBoarding != EnumStatusOnBoarding.End).Count();
+        var workflows = workflowService.GetAll(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Count();
 
-        totalqtd = monitorings + onboardings;
+        totalqtd = monitorings + onboardings + workflows;
         result.Add(new ViewIndicatorsNotes() { Name = "Monitoring", qtd = monitorings, total = totalqtd });
         result.Add(new ViewIndicatorsNotes() { Name = "Onboarding", qtd = onboardings, total = totalqtd });
+        result.Add(new ViewIndicatorsNotes() { Name = "Workflow", qtd = workflows, total = totalqtd });
 
         return result;
       }

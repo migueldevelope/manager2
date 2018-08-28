@@ -113,14 +113,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddGroup(ViewAddGroup view)
+    public Group AddGroup(ViewAddGroup view)
     {
       try
       {
-        //var item = groupService.GetAll(p => p.Line == view.Line & p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Count();
-        //if (item > 0)
-        //  return "error_line";
-
         long line = 0;
         try
         {
@@ -148,8 +144,7 @@ namespace Manager.Services.Specific
           Company = view.Company,
           Scope = new List<Scope>()
         };
-        groupService.Insert(group);
-        return "ok";
+        return groupService.Insert(group);
       }
       catch (Exception e)
       {
@@ -1344,7 +1339,7 @@ namespace Manager.Services.Specific
           UpdateGroupSphereAxis(group, groupOld);
           return "update";
         }
-          
+
 
         groupService.Update(group, null);
         UpdateGroupAll(group);
@@ -1364,7 +1359,7 @@ namespace Manager.Services.Specific
         groupOld.Status = EnumStatus.Disabled;
         groupService.Update(groupOld, null);
 
-        AddGroup(new ViewAddGroup()
+        var groupnew = AddGroup(new ViewAddGroup()
         {
           Axis = group.Axis,
           Sphere = group.Sphere,
@@ -1373,8 +1368,14 @@ namespace Manager.Services.Specific
           Name = group.Name
         });
 
+        groupnew.Schooling = groupOld.Schooling;
+        groupnew.Skills = groupOld.Skills;
+        groupnew.Scope = groupOld.Scope;
+        groupnew.Template = groupOld.Template;
 
-        UpdateGroupAll(group);
+        groupService.Update(groupnew, null);
+
+        UpdateGroupAll(groupnew);
         return "update";
       }
       catch (Exception e)

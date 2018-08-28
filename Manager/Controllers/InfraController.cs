@@ -60,7 +60,8 @@ namespace Manager.Controllers
     [Route("addgroup")]
     public string AddGroup([FromBody]ViewAddGroup view)
     {
-      return service.AddGroup(view);
+      service.AddGroup(view);
+      return "OK";
     }
 
     [Authorize]

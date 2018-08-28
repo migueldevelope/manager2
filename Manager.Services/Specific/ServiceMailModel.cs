@@ -135,6 +135,45 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+    public MailModel CheckpointApproval(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "checkpointapproval");
+        if (model.Count() == 0)
+          return DefaultCheckpointApproval(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultCheckpointApproval(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do checkpointapproval.</br></br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de checkpointapproval",
+          Name = "checkpointapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
     public MailModel DefaultOnBoardingApproval(string path)
     {
       try

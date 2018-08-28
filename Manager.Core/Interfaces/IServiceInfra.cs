@@ -34,7 +34,7 @@ namespace Manager.Core.Interfaces
     string AddSkills(List<ViewAddSkill> view);
     Schooling AddSchooling(Schooling schooling);
     string AddAxis(Axis view);
-    string AddGroup(ViewAddGroup view);
+    Group AddGroup(ViewAddGroup view);
     string AddMapGroupSkill(ViewAddMapGroupSkill view);
     string AddMapGroupScope(ViewAddMapGroupScope view);
     string AddMapGroupSchooling(ViewAddMapGroupSchooling view);
