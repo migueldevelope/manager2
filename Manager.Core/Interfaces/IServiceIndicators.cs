@@ -14,5 +14,6 @@ namespace Manager.Core.Interfaces
     bool VerifyAccount(string id);
     void SetUser(BaseUser baseUser);
     Task SendMessages(string link);
+    List<ViewTagsCloud> ListTagsCloud(string idmanager);
   }
 }

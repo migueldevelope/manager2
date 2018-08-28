@@ -95,6 +95,26 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewTagsCloud> ListTagsCloud(string idmanager)
+    {
+      try
+      {
+        List<ViewTagsCloud> result = new List<ViewTagsCloud>();
+        var plan = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
+          Select(p => p.Activities.Where(u => u.Plans.Count() > 0).Select(x => x.Plans.Where(t => t.Skills.Count() > 0).Select(o => o.Skills).ToList())).ToList();
+                    //group sk by sk.FirstOrDefault().FirstOrDefault().FirstOrDefault().Name into g
+                    //select new ViewTagsCloud { Name = g.Key, Qtd = g.Count() }).ToList();
+
+        //result.Add(new ViewTagsCloud() { Name = "Monitoring", Qtd = monitorings });
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewIndicatorsNotes> GetNotesPerson(string id)
     {
       try
@@ -187,7 +207,7 @@ namespace Manager.Services.Specific
           }
           await Task.Delay(1000);
         }
-        
+
       }
       catch (Exception e)
       {

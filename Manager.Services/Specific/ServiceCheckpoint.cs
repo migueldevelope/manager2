@@ -23,6 +23,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Questions> questionsService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
+    private readonly ServiceGeneric<Parameter> parameterService;
     public string path;
 
     public ServiceCheckpoint(DataContext context, string pathToken)
@@ -37,6 +38,7 @@ namespace Manager.Services.Specific
         questionsService = new ServiceGeneric<Questions>(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
+        parameterService = new ServiceGeneric<Parameter>(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -116,8 +118,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
-
     public Checkpoint GetCheckpoints(string id)
     {
       try
@@ -132,8 +132,7 @@ namespace Manager.Services.Specific
             DateBegin = p.DateBegin,
             DateEnd = p.DateEnd,
             Comments = p.Comments,
-            Skill = p.Skill.OrderBy(x => x.Skill.Name).ToList(),
-            Questions = p.Questions.OrderBy(x => x.Quesntion.Name).ToList(),
+            Questions = p.Questions.OrderBy(x => x.Question.Order).ToList(),
             StatusCheckpoint = p.StatusCheckpoint,
             TypeCheckpoint = p.TypeCheckpoint
           })
@@ -149,16 +148,32 @@ namespace Manager.Services.Specific
     {
       try
       {
-        checkpoint.Skill = new List<CheckpointSkill>();
+        checkpoint.Questions = new List<CheckpointQuestions>();
         foreach (var item in checkpoint.Person.Company.Skills)
         {
-          checkpoint.Skill.Add(new CheckpointSkill() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
+          checkpoint.Questions.Add(new CheckpointQuestions()
+          {
+            Question = new Questions()
+            {
+              Name = item.Name,
+              Content = item.Concept,
+              Order = 0,
+              Company = checkpoint.Person.Company,
+              Status = EnumStatus.Enabled,
+              TypeQuestion = EnumTypeQuestion.Skill,
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = _user._idAccount
+            }
+            ,
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          });
         }
 
-        checkpoint.Questions = new List<CheckpointQuestions>();
+
         foreach (var item in questionsService.GetAll().ToList())
         {
-          checkpoint.Questions.Add(new CheckpointQuestions() { Quesntion = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
+          checkpoint.Questions.Add(new CheckpointQuestions() { Question = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         return checkpoint;
@@ -174,10 +189,11 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(checkpoint.Person._id, "Checkpoint Process");
-        checkpoint.StatusCheckpoint = EnumStatusCheckpoint.InProgressManager;
+        checkpoint.StatusCheckpoint = EnumStatusCheckpoint.Wait;
         checkpoint.DateBegin = DateTime.Now;
+        checkpoint = loadMap(checkpoint);
 
-        return checkpoint;
+        return checkpointService.Insert(checkpoint);
       }
       catch (Exception e)
       {
@@ -321,6 +337,30 @@ namespace Manager.Services.Specific
         checkpoint.Status = EnumStatus.Disabled;
         checkpointService.Update(checkpoint, null);
         return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public int Deadline()
+    {
+      try
+      {
+        var parameter = parameterService.GetAll(p => p.Name == "DeadlineAdm").FirstOrDefault();
+        if (parameter == null)
+        {
+          return int.Parse(parameterService.Insert(new Parameter()
+          {
+            Name = "DeadlineAdm",
+            Status = EnumStatus.Enabled,
+            Content = "90"
+          }).Content);
+
+        }
+        else
+          return int.Parse(parameter.Content);
       }
       catch (Exception e)
       {

@@ -175,6 +175,15 @@ namespace Manager.Controllers
     }
 
     [Authorize]
+    [HttpPost]
+    [Route("addtextdefault")]
+    public string AddTextDefault([FromBody]TextDefault textDefault)
+    {
+      service.AddTextDefault(textDefault);
+      return "ok";
+    }
+
+    [Authorize]
     [HttpDelete]
     [Route("deletearea/{id}")]
     public string DeleteArea(string id)
@@ -190,6 +199,15 @@ namespace Manager.Controllers
     {
       return service.DeleteQuestion(id);
     }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deletetextdefault/{id}")]
+    public string DeleteTextDefault(string id)
+    {
+      return service.DeleteTextDefault(id);
+    }
+
 
     [Authorize]
     [HttpDelete]
@@ -306,10 +324,43 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getquestions")]
-    public List<Questions> GetQuestions()
+    [Route("listquestions/{idcompany}")]
+    public List<Questions> GetQuestions(string idcompany)
     {
-      return service.GetQuestions();
+      return service.ListQuestions(idcompany);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getquestions/{id}")]
+    public Questions GetQuestionsId(string id)
+    {
+      return service.GetQuestions(id);
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("gettextdefault/{idcompany}/{name}")]
+    public TextDefault GetTextDefault(string idcompany, string name)
+    {
+      return service.GetTextDefault(idcompany, name);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("gettextdefault/{id}")]
+    public TextDefault GetTextDefault(string id)
+    {
+      return service.GetTextDefault(id);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listtextdefault/{idcompany}")]
+    public List<TextDefault> ListTextDefault(string idcompany)
+    {
+      return service.ListTextDefault(idcompany);
     }
 
 
@@ -554,6 +605,14 @@ namespace Manager.Controllers
     public string UpdateQuestions([FromBody]Questions questions)
     {
       return service.UpdateQuestions(questions);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatetextdefault")]
+    public string UpdateTextDefault([FromBody]TextDefault textDefault)
+    {
+      return service.UpdateTextDefault(textDefault);
     }
 
     [Authorize]

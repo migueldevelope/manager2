@@ -38,14 +38,15 @@ namespace Manager.Test.Commons
         //this.context = new DataContext("mongodb://analisa:x14r53p5!a@52.170.151.68:27017/analisainfra", "analisainfra");
         this.service = new ServiceGeneric<Person>(context);
 
-        var user = this.service.GetAuthentication(p => p.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
+        //var user = this.service.GetAuthentication(p => p.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
+        var user = this.service.GetAuthentication(p => p.Mail == "gestor@jmsoft.com.br").FirstOrDefault();
         baseUser = new BaseUser()
         {
           NamePerson = user.Name,
           _idAccount = user._idAccount,
           _idPerson = user._id,
           Mail = user.Mail,
-          NameAccount = "Suportt"
+          NameAccount = "Suport"
         };
 
         this.contextAccessor = new HttpContextAccessor();

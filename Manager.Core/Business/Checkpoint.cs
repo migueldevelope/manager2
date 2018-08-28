@@ -12,7 +12,6 @@ namespace Manager.Core.Business
     public DateTime? DateEnd { get; set; }
     public string Comments { get; set; }
     public List<CheckpointQuestions> Questions { get; set; }
-    public List<CheckpointSkill> Skill { get; set; }
     public EnumStatusCheckpoint StatusCheckpoint { get; set; }
     public EnumCheckpoint TypeCheckpoint { get; set; }
   }

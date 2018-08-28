@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -28,7 +29,7 @@ namespace Manager.Core.Interfaces
     string AlterPassword(ViewAlterPass resetPass, string idPerson);
     string AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
     List<ViewPersonList> GetPersons(string filter);
-    List<Person> GetPersonsCrud(ref long total, string filter, int count, int page);
+    List<Person> GetPersonsCrud(EnumTypeUser type, ref long total, string filter, int count, int page);
     Person GetPersonCrud(string idperson);
     Person GetPerson(string id);
     Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid);

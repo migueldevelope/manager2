@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Authorization;
@@ -105,11 +106,11 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("list")]
-    public List<Person> List(int count = 10, int page = 1, string filter = "")
+    [Route("list/{type}")]
+    public List<Person> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetPersonsCrud(ref total, filter, count, page);
+      var result = service.GetPersonsCrud(type, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

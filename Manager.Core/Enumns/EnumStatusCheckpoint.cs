@@ -2,6 +2,6 @@
 {
   public enum EnumStatusCheckpoint : byte
   {
-    Open = 0, InProgressManager = 1, End = 2
+    Open = 0, Wait = 1, End = 2
   }
 }

@@ -29,6 +29,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<ProcessLevelOne> processLevelOneService;
     private readonly ServiceGeneric<ProcessLevelTwo> processLevelTwoService;
     private readonly ServiceGeneric<Questions> questionsService;
+    private readonly ServiceGeneric<TextDefault> textDefaultService;
 
 
     public ServiceInfra(DataContext context)
@@ -50,6 +51,7 @@ namespace Manager.Services.Specific
         processLevelOneService = new ServiceGeneric<ProcessLevelOne>(context);
         processLevelTwoService = new ServiceGeneric<ProcessLevelTwo>(context);
         questionsService = new ServiceGeneric<Questions>(context);
+        textDefaultService = new ServiceGeneric<TextDefault>(context);
       }
       catch (Exception e)
       {
@@ -445,7 +447,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
 
     public string DeleteArea(string idarea)
     {
@@ -903,11 +904,23 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Questions> GetQuestions()
+    public List<Questions> ListQuestions(string idcompany)
     {
       try
       {
-        return questionsService.GetAll().OrderBy(p => p.Name).ToList();
+        return questionsService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Order).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public Questions GetQuestions(string id)
+    {
+      try
+      {
+        return questionsService.GetAll(p => p._id == id).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -1010,7 +1023,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
 
     public Occupation GetOccupation(string id)
     {
@@ -1721,6 +1733,45 @@ namespace Manager.Services.Specific
 
         }
 
+        //text default
+        foreach (var item in textDefaultService.GetAuthentication(p => p._idAccount == idresolution).ToList())
+        {
+          var textDefault = new TextDefault();
+          item._idAccount = _idAccount;
+          textDefault = item;
+          textDefault.Template = new TextDefault()
+          {
+            _id = item._id,
+            _idAccount = _idAccount,
+            Name = item.Name,
+            Content = item.Content,
+            Status = item.Status,
+          };
+          textDefaultService.InsertAccount(textDefault);
+
+        }
+
+        //questions
+        foreach (var item in questionsService.GetAuthentication(p => p._idAccount == idresolution).ToList())
+        {
+          var questions = new Questions();
+          item._idAccount = _idAccount;
+          questions = item;
+          questions.Template = new Questions()
+          {
+            _id = item._id,
+            _idAccount = _idAccount,
+            Name = item.Name,
+            Content = item.Content,
+            TypeQuestion = item.TypeQuestion,
+            Status = item.Status,
+            Order = item.Order
+          };
+          questionsService.InsertAccount(questions);
+
+        }
+
+
         //schooling
         foreach (var item in schoolingService.GetAuthentication(p => p._idAccount == idresolution).ToList())
         {
@@ -1734,7 +1785,8 @@ namespace Manager.Services.Specific
             Name = item.Name,
             Complement = item.Complement,
             Type = item.Type,
-            Status = item.Status
+            Status = item.Status,
+            Order = item.Order
           };
           schoolingService.InsertAccount(schooling);
         }
@@ -1754,7 +1806,8 @@ namespace Manager.Services.Specific
             _idAccount = _idAccount,
             Name = itemAxis.Name,
             TypeAxis = itemAxis.TypeAxis,
-            Status = itemAxis.Status
+            Status = itemAxis.Status,
+            Sphere = itemAxis.Sphere
           };
           axisService.InsertAccount(axis);
         }
@@ -1808,7 +1861,7 @@ namespace Manager.Services.Specific
                 Scope = itemGroup.Scope,
                 Sphere = itemGroup.Sphere,
                 Skills = itemGroup.Skills,
-                Status = itemGroup.Status
+                Status = itemGroup.Status,
               };
               groupService.InsertAccount(group);
             }
@@ -1909,6 +1962,19 @@ namespace Manager.Services.Specific
 
         model.Process = new List<ProcessLevelTwo>();
         processLevelOneService.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddTextDefault(TextDefault model)
+    {
+      try
+      {
+        textDefaultService.Insert(model);
         return "ok";
       }
       catch (Exception e)
@@ -2177,5 +2243,68 @@ namespace Manager.Services.Specific
       }
     }
 
+    public TextDefault GetTextDefault(string idcompany, string name)
+    {
+      try
+      {
+        return textDefaultService.GetAll(p => p.Company._id == idcompany & p.Name == name).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public TextDefault GetTextDefault(string id)
+    {
+      try
+      {
+        return textDefaultService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<TextDefault> ListTextDefault(string idcompany)
+    {
+      try
+      {
+        return textDefaultService.GetAll(p => p.Company._id == idcompany).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string DeleteTextDefault(string id)
+    {
+      try
+      {
+        var textDefault = textDefaultService.GetAll(p => p._id == id).FirstOrDefault();
+        textDefault.Status = EnumStatus.Disabled;
+        textDefaultService.Update(textDefault, null);
+        return "delete";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateTextDefault(TextDefault textDefault)
+    {
+      try
+      {
+        textDefaultService.Update(textDefault, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
   }
 }

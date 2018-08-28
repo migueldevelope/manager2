@@ -135,7 +135,8 @@ namespace Manager.Services.Auth
           Password = EncryptServices.GetMD5Hash(person.Document),
           StatusUser = person.StatusUser,
           TypeJourney = person.TypeJourney,
-          Status = EnumStatus.Enabled
+          Status = EnumStatus.Enabled,
+          Schooling = person.Schooling
         };
 
         if (person.Manager != null)
@@ -446,15 +447,23 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<Person> GetPersonsCrud(ref long total, string filter, int count, int page)
+    public List<Person> GetPersonsCrud(EnumTypeUser typeUser, ref long total, string filter, int count, int page)
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = personService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        List<Person> detail = null;
+        if (typeUser == EnumTypeUser.Support)
+          detail = personService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        else if (typeUser == EnumTypeUser.Administrator)
+          detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        else
+          detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+
+
         total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -522,7 +531,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAuthentication(p => p.Status!= EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled).ToList();
+        return personService.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled).ToList();
       }
       catch (Exception e)
       {
