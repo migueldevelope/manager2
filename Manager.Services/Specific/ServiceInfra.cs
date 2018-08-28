@@ -815,6 +815,7 @@ namespace Manager.Services.Specific
       try
       {
         var questions = questionsService.GetAll(p => p._id == idquestion).FirstOrDefault();
+        questions.Status = EnumStatus.Disabled;
         questionsService.Update(questions, null);
         return "update";
       }
