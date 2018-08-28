@@ -15,5 +15,6 @@ namespace Manager.Core.Business
     public DateTime? DateInclude { get; set; }
     public EnumTypePlan TypePlan { get; set; }
     public EnumSourcePlan SourcePlan { get; set; }
+    public EnumTypeAction TypeAction { get; set; }
   }
 }
