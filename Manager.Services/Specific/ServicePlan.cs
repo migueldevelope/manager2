@@ -57,8 +57,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
-
     public List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page)
     {
       try
@@ -66,13 +64,13 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
 
         var detail = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person }).ToList();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
         var detailSchool = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person }).ToList();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
         var detailSkills = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person }).ToList();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
         List<ViewPlan> result = new List<ViewPlan>();
 
@@ -92,7 +90,9 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id
               });
             }
           }
@@ -114,7 +114,9 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id
               });
             }
           }
@@ -136,7 +138,9 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id
               });
             }
           }
@@ -144,7 +148,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return result.Skip(skip).Take(count).OrderBy(p => p.Deadline).ToList();
+        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
       }
       catch (Exception e)
       {
@@ -159,13 +163,13 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
 
         var detail = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person }).ToList();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
         var detailSchool = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person }).ToList();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
         var detailSkills = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person }).ToList();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
 
         List<ViewPlan> result = new List<ViewPlan>();
@@ -186,7 +190,9 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id
               });
             }
           }
@@ -208,7 +214,9 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id
               });
             }
           }
@@ -230,7 +238,9 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id
               });
             }
           }
@@ -238,7 +248,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return result.Skip(skip).Take(count).OrderBy(p => p.Deadline).ToList();
+        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
       }
       catch (Exception e)
       {

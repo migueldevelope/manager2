@@ -16,5 +16,7 @@ namespace Manager.Core.Views
     public EnumTypePlan TypePlan { get; set; }
     public string IdPerson { get; set; }
     public string NamePerson { get; set; }
+    public EnumSourcePlan SourcePlan { get; set; }
+    public string IdMonitoring { get; set; }
   }
 }

@@ -16,5 +16,9 @@ namespace Manager.Core.Business
     public EnumTypePlan TypePlan { get; set; }
     public EnumSourcePlan SourcePlan { get; set; }
     public EnumTypeAction TypeAction { get; set; }
+    public EnumStatusPlan StatusPlan { get; set; }
+    public string TextEnd { get; set; }
+    public DateTime? DateEnd { get; set; }
+    public long Evaluation { get; set; }
   }
 }

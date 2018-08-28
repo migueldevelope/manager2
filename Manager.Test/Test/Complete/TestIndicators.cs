@@ -39,7 +39,7 @@ namespace Manager.Test.Test.Complete
     }
 
     [Fact]
-    public void indicatorssTest()
+    public void IndicatorssTest()
     {
       try
       {
