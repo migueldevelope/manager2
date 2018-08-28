@@ -11,5 +11,6 @@ namespace Manager.Core.Business
     public EnumTypeQuestion TypeQuestion { get; set; }
     public long Order { get; set; }
     public Questions Template { get; set; }
+    public EnumTypeRotine TypeRotine { get; set; }
   }
 }

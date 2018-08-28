@@ -99,13 +99,34 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewTagsCloud> result = new List<ViewTagsCloud>();
-        var plan = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
-          Select(p => p.Activities.Where(u => u.Plans.Count() > 0).Select(x => x.Plans.Where(t => t.Skills.Count() > 0).Select(o => o.Skills).ToList())).ToList();
-                    //group sk by sk.FirstOrDefault().FirstOrDefault().FirstOrDefault().Name into g
-                    //select new ViewTagsCloud { Name = g.Key, Qtd = g.Count() }).ToList();
+        /*var list = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
+          Select(p => p.Activities.Where(u => u.Plans.Count() > 0).Select(
+            x => x.Plans.Select(u => u.Skills))).ToList();*/
 
-        //result.Add(new ViewTagsCloud() { Name = "Monitoring", Qtd = monitorings });
+        var list = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+
+        List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.Activities)
+          {
+            foreach (var skill in row.Plans)
+            {
+              foreach (var view in skill.Skills)
+              {
+                listResult.Add(new ViewTagsCloud() { Name = view.Name });
+              }
+            }
+          }
+        }
+
+
+        var result = listResult.GroupBy(x => x.Name)
+            .Select(x => new ViewTagsCloud()
+            {
+              Name = x.Key,
+              Qtd = x.Count()
+            }).ToList();
 
         return result;
       }
