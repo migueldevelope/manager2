@@ -20,5 +20,6 @@ namespace Manager.Core.Views
     public string IdMonitoring { get; set; }
     public byte Evaluation { get; set; }
     public EnumStatusPlan StatusPlan { get; set; }
+    public byte Bomb { get; set; }
   }
 }

@@ -57,6 +57,27 @@ namespace Manager.Services.Specific
       }
     }
 
+    private byte GetBomb(int days)
+    {
+      try
+      {
+        if (days > 30)
+          return 0;
+        else if (days > 10)
+          return 1;
+        else if (days > 5)
+          return 2;
+        else if (days == 0)
+          return 3;
+        else
+          return 4;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page)
     {
       try
@@ -94,7 +115,8 @@ namespace Manager.Services.Specific
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan
+                StatusPlan = res.StatusPlan,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
               });
             }
           }
@@ -120,7 +142,8 @@ namespace Manager.Services.Specific
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan
+                StatusPlan = res.StatusPlan,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
               });
             }
           }
@@ -146,7 +169,8 @@ namespace Manager.Services.Specific
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan
+                StatusPlan = res.StatusPlan,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
               });
             }
           }
@@ -200,7 +224,8 @@ namespace Manager.Services.Specific
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan
+                StatusPlan = res.StatusPlan,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
               });
             }
           }
@@ -226,7 +251,8 @@ namespace Manager.Services.Specific
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan
+                StatusPlan = res.StatusPlan,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
               });
             }
           }
@@ -252,7 +278,8 @@ namespace Manager.Services.Specific
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan
+                StatusPlan = res.StatusPlan,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
               });
             }
           }

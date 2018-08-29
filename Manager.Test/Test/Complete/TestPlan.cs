@@ -43,9 +43,9 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var person = servicePerson.GetAll(p => p.Name.Contains("Morgana")).FirstOrDefault();
+        var person = servicePerson.GetAll(p => p.Name.Contains("gestor")).FirstOrDefault();
         long total = 0;
-        var plans = servicePlan.ListPlansPerson(ref total, person._id, "", 100, 1);
+        var plans = servicePlan.ListPlans(ref total, person._id, "", 100, 1);
 
       }
 

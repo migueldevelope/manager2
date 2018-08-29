@@ -38,5 +38,13 @@ namespace Manager.Controllers
       return service.GetNotesPerson(idperson);
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("listtagscloud/{idmanager}")]
+    public List<ViewTagsCloud> ListTagsCloud(string idmanager)
+    {
+      return service.ListTagsCloud(idmanager);
+    }
+
   }
 }
