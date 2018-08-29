@@ -7,6 +7,7 @@ namespace Manager.Core.Views
 {
   public class ViewPlan
   {
+    public string _idAccount { get; set; }
     public string _id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -21,6 +22,7 @@ namespace Manager.Core.Views
     public string IdMonitoring { get; set; }
     public byte Evaluation { get; set; }
     public EnumStatusPlan StatusPlan { get; set; }
+    public EnumTypeAction TypeAction { get; set; }
     public byte Bomb { get; set; }
   }
 }

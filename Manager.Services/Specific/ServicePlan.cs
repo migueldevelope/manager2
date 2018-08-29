@@ -40,7 +40,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       try
@@ -100,6 +99,7 @@ namespace Manager.Services.Specific
                 result.Add(new ViewPlan()
                 {
                   _id = res._id,
+                  _idAccount = res._idAccount,
                   Name = res.Name,
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
@@ -113,6 +113,7 @@ namespace Manager.Services.Specific
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -133,6 +134,7 @@ namespace Manager.Services.Specific
                 result.Add(new ViewPlan()
                 {
                   _id = res._id,
+                  _idAccount = res._idAccount,
                   Name = res.Name,
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
@@ -146,6 +148,7 @@ namespace Manager.Services.Specific
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -167,6 +170,7 @@ namespace Manager.Services.Specific
                 result.Add(new ViewPlan()
                 {
                   _id = res._id,
+                  _idAccount = res._idAccount,
                   Name = res.Name,
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
@@ -180,6 +184,7 @@ namespace Manager.Services.Specific
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -229,6 +234,7 @@ namespace Manager.Services.Specific
                 result.Add(new ViewPlan()
                 {
                   _id = res._id,
+                  _idAccount = res._idAccount,
                   Name = res.Name,
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
@@ -242,6 +248,7 @@ namespace Manager.Services.Specific
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -262,6 +269,7 @@ namespace Manager.Services.Specific
                 result.Add(new ViewPlan()
                 {
                   _id = res._id,
+                  _idAccount = res._idAccount,
                   Name = res.Name,
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
@@ -275,6 +283,7 @@ namespace Manager.Services.Specific
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -296,6 +305,7 @@ namespace Manager.Services.Specific
                 result.Add(new ViewPlan()
                 {
                   _id = res._id,
+                  _idAccount = res._idAccount,
                   Name = res.Name,
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
@@ -309,6 +319,7 @@ namespace Manager.Services.Specific
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
