@@ -44,5 +44,21 @@ namespace Manager.Controllers
       return result;
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("getplan/{idmonitoring}/{idplan}")]
+    public Plan GetPlan(string idmonitoring, string idplan)
+    {
+      return service.GetPlan(idmonitoring, idplan);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updateplan/{idmonitoring}")]
+    public string UpdatePlan([FromBody]Plan plan, string idmonitoring)
+    {
+      return service.UpdatePlan(idmonitoring, plan);
+    }
+
   }
 }

@@ -10,5 +10,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page);
     List<ViewPlan> ListPlansPerson(ref long total, string id, string filter, int count, int page);
+    Plan GetPlan(string idmonitoring, string idplan);
+    string UpdatePlan(string idmonitoring, Plan viewPlan);
   }
 }

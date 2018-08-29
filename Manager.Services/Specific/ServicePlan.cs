@@ -92,7 +92,9 @@ namespace Manager.Services.Specific
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.Name,
                 SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan
               });
             }
           }
@@ -116,7 +118,9 @@ namespace Manager.Services.Specific
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.Name,
                 SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan
               });
             }
           }
@@ -140,7 +144,9 @@ namespace Manager.Services.Specific
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.Name,
                 SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan
               });
             }
           }
@@ -192,7 +198,9 @@ namespace Manager.Services.Specific
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.Name,
                 SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan
               });
             }
           }
@@ -216,7 +224,9 @@ namespace Manager.Services.Specific
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.Name,
                 SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan
               });
             }
           }
@@ -240,7 +250,9 @@ namespace Manager.Services.Specific
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.Name,
                 SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan
               });
             }
           }
@@ -255,6 +267,140 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
 
+    }
+
+    public string UpdatePlan(string idmonitoring, Plan viewPlan)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        //verify plan;
+        if (viewPlan.SourcePlan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            var listActivities = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == viewPlan._id)
+              {
+                UpdatePlan(viewPlan);
+                listActivities.Add(viewPlan);
+              }
+              listActivities.Add(plan);
+            }
+            item.Plans = listActivities;
+          }
+        }
+        else if (viewPlan.SourcePlan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            var listSchoolings = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == viewPlan._id)
+              {
+                UpdatePlan(viewPlan);
+                listSchoolings.Add(viewPlan);
+              }
+              listSchoolings.Add(plan);
+            }
+            item.Plans = listSchoolings;
+          }
+        }
+        else
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            var listSkillsCompany = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == viewPlan._id)
+              {
+                UpdatePlan(viewPlan);
+                listSkillsCompany.Add(viewPlan);
+              }
+              else
+                listSkillsCompany.Add(plan);
+            }
+            item.Plans = listSkillsCompany;
+          }
+        }
+
+
+        monitoringService.Update(monitoring, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private string UpdatePlan(Plan plan)
+    {
+      try
+      {
+        planService.Update(plan, null);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public Plan GetPlan(string idmonitoring, string idplan)
+    {
+      try
+      {
+        var detail = monitoringService.GetAll(p => p._id == idmonitoring)
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+
+        var detailSchoolings = monitoringService.GetAll(p => p._id == idmonitoring)
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+
+        var detailSkillsCompany = monitoringService.GetAll(p => p._id == idmonitoring)
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+
+
+        List<ViewPlan> result = new List<ViewPlan>();
+
+        foreach (var plan in detail.Plans)
+        {
+          foreach (var res in plan)
+          {
+            if (res._id == idplan)
+              return res;
+          }
+        }
+
+        foreach (var plan in detailSchoolings.Plans)
+        {
+          foreach (var res in plan)
+          {
+            if (res._id == idplan)
+              return res;
+          }
+        }
+
+        foreach (var plan in detailSkillsCompany.Plans)
+        {
+          foreach (var res in plan)
+          {
+            if (res._id == idplan)
+              return res;
+          }
+        }
+
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
     }
 
   }
