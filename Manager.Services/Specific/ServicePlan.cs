@@ -67,7 +67,7 @@ namespace Manager.Services.Specific
           return 1;
         else if (days > 5)
           return 2;
-        else if (days == 0)
+        else if (days >= 0)
           return 3;
         else
           return 4;
@@ -78,103 +78,124 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page)
+    public List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end)
     {
       try
       {
         int skip = (count * (page - 1));
-
-        var detail = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
-
-        var detailSchool = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
-
-        var detailSkills = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
-
         List<ViewPlan> result = new List<ViewPlan>();
 
-        foreach (var item in detail)
+        if (activities == 1)
         {
-          foreach (var plan in item.Plans)
+          var detail = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+
+          foreach (var item in detail)
           {
-            foreach (var res in plan)
+            foreach (var plan in item.Plans)
             {
-              result.Add(new ViewPlan()
+              foreach (var res in plan)
               {
-                Name = res.Name,
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Description = res.Description,
-                Skills = res.Skills,
-                UserInclude = res.UserInclude,
-                TypePlan = res.TypePlan,
-                IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
-                SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id,
-                Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan,
-                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
-              });
+                result.Add(new ViewPlan()
+                {
+                  _id = res._id,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+                });
+              }
             }
           }
         }
 
-        foreach (var item in detailSchool)
+        if (schooling == 1)
         {
-          foreach (var plan in item.Plans)
+          var detailSchool = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          foreach (var item in detailSchool)
           {
-            foreach (var res in plan)
+            foreach (var plan in item.Plans)
             {
-              result.Add(new ViewPlan()
+              foreach (var res in plan)
               {
-                Name = res.Name,
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Description = res.Description,
-                Skills = res.Skills,
-                UserInclude = res.UserInclude,
-                TypePlan = res.TypePlan,
-                IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
-                SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id,
-                Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan,
-                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
-              });
+                result.Add(new ViewPlan()
+                {
+                  _id = res._id,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+                });
+              }
             }
           }
         }
 
-        foreach (var item in detailSkills)
+        if (skillcompany == 1)
         {
-          foreach (var plan in item.Plans)
+          var detailSkills = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+          foreach (var item in detailSkills)
           {
-            foreach (var res in plan)
+            foreach (var plan in item.Plans)
             {
-              result.Add(new ViewPlan()
+              foreach (var res in plan)
               {
-                Name = res.Name,
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Description = res.Description,
-                Skills = res.Skills,
-                UserInclude = res.UserInclude,
-                TypePlan = res.TypePlan,
-                IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
-                SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id,
-                Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan,
-                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
-              });
+                result.Add(new ViewPlan()
+                {
+                  _id = res._id,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+                });
+              }
             }
           }
         }
+
+        if (open == 0)
+          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline >= DateTime.Now)).ToList();
+
+        if (expired == 0)
+          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline < DateTime.Now)).ToList();
+
+        if (end == 0)
+          result = result.Where(p => p.StatusPlan != EnumStatusPlan.Realized & p.StatusPlan != EnumStatusPlan.NoRealized).ToList();
+
 
         total = result.Count();
 
@@ -186,104 +207,123 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewPlan> ListPlansPerson(ref long total, string id, string filter, int count, int page)
+    public List<ViewPlan> ListPlansPerson(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end)
     {
       try
       {
         int skip = (count * (page - 1));
-
-        var detail = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
-
-        var detailSchool = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
-
-        var detailSkills = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
-
-
         List<ViewPlan> result = new List<ViewPlan>();
 
-        foreach (var item in detail)
+        if (activities == 1)
         {
-          foreach (var plan in item.Plans)
+          var detail = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+
+          foreach (var item in detail)
           {
-            foreach (var res in plan)
+            foreach (var plan in item.Plans)
             {
-              result.Add(new ViewPlan()
+              foreach (var res in plan)
               {
-                Name = res.Name,
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Description = res.Description,
-                Skills = res.Skills,
-                UserInclude = res.UserInclude,
-                TypePlan = res.TypePlan,
-                IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
-                SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id,
-                Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan,
-                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
-              });
+                result.Add(new ViewPlan()
+                {
+                  _id = res._id,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+                });
+              }
             }
           }
         }
 
-        foreach (var item in detailSchool)
+        if (schooling == 1)
         {
-          foreach (var plan in item.Plans)
+          var detailSchool = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          foreach (var item in detailSchool)
           {
-            foreach (var res in plan)
+            foreach (var plan in item.Plans)
             {
-              result.Add(new ViewPlan()
+              foreach (var res in plan)
               {
-                Name = res.Name,
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Description = res.Description,
-                Skills = res.Skills,
-                UserInclude = res.UserInclude,
-                TypePlan = res.TypePlan,
-                IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
-                SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id,
-                Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan,
-                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
-              });
+                result.Add(new ViewPlan()
+                {
+                  _id = res._id,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+                });
+              }
             }
           }
         }
 
-        foreach (var item in detailSkills)
+        if (skillcompany == 1)
         {
-          foreach (var plan in item.Plans)
+          var detailSkills = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+          foreach (var item in detailSkills)
           {
-            foreach (var res in plan)
+            foreach (var plan in item.Plans)
             {
-              result.Add(new ViewPlan()
+              foreach (var res in plan)
               {
-                Name = res.Name,
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Description = res.Description,
-                Skills = res.Skills,
-                UserInclude = res.UserInclude,
-                TypePlan = res.TypePlan,
-                IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
-                SourcePlan = res.SourcePlan,
-                IdMonitoring = item._id,
-                Evaluation = res.Evaluation,
-                StatusPlan = res.StatusPlan,
-                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now ).Days)
-              });
+                result.Add(new ViewPlan()
+                {
+                  _id = res._id,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+                });
+              }
             }
           }
         }
+
+        if (open == 0)
+          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline >= DateTime.Now)).ToList();
+
+        if (expired == 0)
+          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline < DateTime.Now) ).ToList();
+
+        if (end == 0)
+          result = result.Where(p => p.StatusPlan != EnumStatusPlan.Realized & p.StatusPlan != EnumStatusPlan.NoRealized).ToList();
 
         total = result.Count();
 
