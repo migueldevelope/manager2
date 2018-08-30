@@ -46,5 +46,13 @@ namespace Manager.Controllers
       return service.ListTagsCloud(idmanager);
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("listtagscloudcompany/{idmanager}")]
+    public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
+    {
+      return service.ListTagsCloudCompany(idmanager);
+    }
+
   }
 }

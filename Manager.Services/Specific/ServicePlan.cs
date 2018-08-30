@@ -114,6 +114,7 @@ namespace Manager.Services.Specific
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
                   TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -149,6 +150,7 @@ namespace Manager.Services.Specific
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
                   TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -185,6 +187,7 @@ namespace Manager.Services.Specific
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
                   TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -249,6 +252,7 @@ namespace Manager.Services.Specific
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
                   TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -284,6 +288,7 @@ namespace Manager.Services.Specific
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
                   TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -320,6 +325,7 @@ namespace Manager.Services.Specific
                   Evaluation = res.Evaluation,
                   StatusPlan = res.StatusPlan,
                   TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }

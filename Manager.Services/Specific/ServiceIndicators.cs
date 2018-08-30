@@ -95,6 +95,37 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
+    {
+      try
+      {
+        var list = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+
+        List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.SkillsCompany)
+          {
+            listResult.Add(new ViewTagsCloud() { text = row.Skill.Name });
+          }
+        }
+
+
+        var result = listResult.GroupBy(x => x.text)
+            .Select(x => new ViewTagsCloud()
+            {
+              text = x.Key,
+              weight = x.Count()
+            }).ToList();
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewTagsCloud> ListTagsCloud(string idmanager)
     {
       try
