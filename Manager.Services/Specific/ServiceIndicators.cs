@@ -114,18 +114,18 @@ namespace Manager.Services.Specific
             {
               foreach (var view in skill.Skills)
               {
-                listResult.Add(new ViewTagsCloud() { Name = view.Name });
+                listResult.Add(new ViewTagsCloud() { text = view.Name });
               }
             }
           }
         }
 
 
-        var result = listResult.GroupBy(x => x.Name)
+        var result = listResult.GroupBy(x => x.text)
             .Select(x => new ViewTagsCloud()
             {
-              Name = x.Key,
-              Qtd = x.Count()
+              text = x.Key,
+              weight = x.Count()
             }).ToList();
 
         return result;

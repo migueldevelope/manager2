@@ -6,7 +6,7 @@ namespace Manager.Core.Views
 {
   public class ViewTagsCloud
   {
-    public string Name { get; set; }
-    public long Qtd { get; set; }
+    public string text { get; set; }
+    public long weight { get; set; }
   }
 }
