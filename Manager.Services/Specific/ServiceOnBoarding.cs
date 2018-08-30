@@ -292,6 +292,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(onboarding.Person._id, "OnBoarding Process Update");
+
         if (onboarding.Person._id != idperson)
         {
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Wait)
