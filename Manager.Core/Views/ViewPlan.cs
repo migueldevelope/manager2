@@ -25,5 +25,8 @@ namespace Manager.Core.Views
     public EnumTypeAction TypeAction { get; set; }
     public long Bomb { get; set; }
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
+    public string TextEnd { get; set; }
+    public DateTime? DateEnd { get; set; }
+    public EnumStatus Status { get; set; }
   }
 }

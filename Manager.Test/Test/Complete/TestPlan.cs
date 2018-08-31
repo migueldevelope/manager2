@@ -23,7 +23,7 @@ namespace Manager.Test.Test.Complete
       try
       {
         base.Init();
-        servicePlan = new ServicePlan(base.context);
+        servicePlan = new ServicePlan(base.context, "");
         servicePerson = new ServiceGeneric<Person>(base.context);
 
 

@@ -47,7 +47,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getplan/{idmonitoring}/{idplan}")]
-    public Plan GetPlan(string idmonitoring, string idplan)
+    public ViewPlan GetPlan(string idmonitoring, string idplan)
     {
       return service.GetPlan(idmonitoring, idplan);
     }
