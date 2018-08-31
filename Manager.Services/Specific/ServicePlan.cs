@@ -95,7 +95,7 @@ namespace Manager.Services.Specific
 
         if (activities == 1)
         {
-          var detail = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
 
@@ -136,7 +136,7 @@ namespace Manager.Services.Specific
 
         if (schooling == 1)
         {
-          var detailSchool = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
             .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
           foreach (var item in detailSchool)
           {
@@ -175,7 +175,7 @@ namespace Manager.Services.Specific
 
         if (skillcompany == 1)
         {
-          var detailSkills = monitoringService.GetAll(p => p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
             .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
           foreach (var item in detailSkills)
@@ -214,14 +214,13 @@ namespace Manager.Services.Specific
         }
 
         if (open == 0)
-          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline >= DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline >= DateTime.Now)).ToList();
 
         if (expired == 0)
-          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline < DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline < DateTime.Now)).ToList();
 
         if (end == 0)
-          result = result.Where(p => p.StatusPlan != EnumStatusPlan.Realized & p.StatusPlan != EnumStatusPlan.NoRealized).ToList();
-
+          result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList();
 
         total = result.Count();
 
@@ -242,7 +241,7 @@ namespace Manager.Services.Specific
 
         if (activities == 1)
         {
-          var detail = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
 
@@ -283,7 +282,7 @@ namespace Manager.Services.Specific
 
         if (schooling == 1)
         {
-          var detailSchool = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
             .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
           foreach (var item in detailSchool)
           {
@@ -322,7 +321,7 @@ namespace Manager.Services.Specific
 
         if (skillcompany == 1)
         {
-          var detailSkills = monitoringService.GetAll(p => p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
             .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
           foreach (var item in detailSkills)
@@ -361,13 +360,13 @@ namespace Manager.Services.Specific
         }
 
         if (open == 0)
-          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline >= DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline >= DateTime.Now)).ToList();
 
         if (expired == 0)
-          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline < DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline < DateTime.Now)).ToList();
 
         if (end == 0)
-          result = result.Where(p => p.StatusPlan != EnumStatusPlan.Realized & p.StatusPlan != EnumStatusPlan.NoRealized).ToList();
+          result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList();
 
         total = result.Count();
 
@@ -470,9 +469,11 @@ namespace Manager.Services.Specific
               if (plan._id == idplanold)
               {
                 AddPlan(viewPlan, monitoring.Person);
+                listActivities.Add(plan);
                 listActivities.Add(viewPlan);
               }
-              listActivities.Add(plan);
+              else
+                listActivities.Add(plan);
             }
             item.Plans = listActivities;
           }
@@ -487,9 +488,11 @@ namespace Manager.Services.Specific
               if (plan._id == idplanold)
               {
                 AddPlan(viewPlan, monitoring.Person);
+                listSchoolings.Add(plan);
                 listSchoolings.Add(viewPlan);
               }
-              listSchoolings.Add(plan);
+              else
+                listSchoolings.Add(plan);
             }
             item.Plans = listSchoolings;
           }
@@ -504,6 +507,7 @@ namespace Manager.Services.Specific
               if (plan._id == idplanold)
               {
                 AddPlan(viewPlan, monitoring.Person);
+                listSkillsCompany.Add(plan);
                 listSkillsCompany.Add(viewPlan);
               }
               else
@@ -513,6 +517,80 @@ namespace Manager.Services.Specific
           }
         }
 
+
+        monitoringService.Update(monitoring, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string NewPlanView(string idmonitoring, Plan planOld, Plan viewPlan)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        //verify plan;
+        if (viewPlan.SourcePlan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            var listActivities = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == planOld._id)
+              {
+                AddPlan(viewPlan, monitoring.Person);
+                listActivities.Add(planOld);
+                listActivities.Add(viewPlan);
+              }
+              else
+                listActivities.Add(plan);
+            }
+            item.Plans = listActivities;
+          }
+        }
+        else if (viewPlan.SourcePlan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            var listSchoolings = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == planOld._id)
+              {
+                AddPlan(viewPlan, monitoring.Person);
+                listSchoolings.Add(planOld);
+                listSchoolings.Add(viewPlan);
+              }
+              else
+                listSchoolings.Add(plan);
+            }
+            item.Plans = listSchoolings;
+          }
+        }
+        else
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            var listSkillsCompany = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == planOld._id)
+              {
+                AddPlan(viewPlan, monitoring.Person);
+                listSkillsCompany.Add(planOld);
+                listSkillsCompany.Add(viewPlan);
+              }
+              else
+                listSkillsCompany.Add(plan);
+            }
+            item.Plans = listSkillsCompany;
+          }
+        }
 
         monitoringService.Update(monitoring, null);
         return "update";
@@ -578,8 +656,7 @@ namespace Manager.Services.Specific
             };
         }
 
-        UpdatePlan(idmonitoring, planUpdate);
-        NewPlan(idmonitoring, planUpdate._id, planNew);
+        NewPlanView(idmonitoring, planUpdate, planNew);
 
         return "newupdate";
       }
