@@ -71,20 +71,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    private byte GetBomb(int days)
+    private long GetBomb(int days)
     {
       try
       {
-        if (days > 30)
+        if (days < 0)
           return 0;
-        else if (days > 10)
-          return 1;
-        else if (days > 5)
-          return 2;
-        else if (days >= 0)
-          return 3;
         else
-          return 4;
+          return days;
       }
       catch (Exception e)
       {
@@ -352,7 +346,7 @@ namespace Manager.Services.Specific
           result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline >= DateTime.Now)).ToList();
 
         if (expired == 0)
-          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline < DateTime.Now) ).ToList();
+          result = result.Where(p => !(p.StatusPlan == EnumStatusPlan.Open & p.Deadline < DateTime.Now)).ToList();
 
         if (end == 0)
           result = result.Where(p => p.StatusPlan != EnumStatusPlan.Realized & p.StatusPlan != EnumStatusPlan.NoRealized).ToList();
@@ -373,7 +367,7 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
-        
+
         //verify plan;
         if (viewPlan.SourcePlan == EnumSourcePlan.Activite)
         {
@@ -431,6 +425,90 @@ namespace Manager.Services.Specific
 
         monitoringService.Update(monitoring, null);
         return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string NewPlan(string idmonitoring, string idplanold, Plan viewPlan)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        //verify plan;
+        if (viewPlan.SourcePlan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            var listActivities = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplanold)
+              {
+                AddPlan(viewPlan, monitoring.Person);
+                listActivities.Add(viewPlan);
+              }
+              listActivities.Add(plan);
+            }
+            item.Plans = listActivities;
+          }
+        }
+        else if (viewPlan.SourcePlan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            var listSchoolings = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplanold)
+              {
+                AddPlan(viewPlan, monitoring.Person);
+                listSchoolings.Add(viewPlan);
+              }
+              listSchoolings.Add(plan);
+            }
+            item.Plans = listSchoolings;
+          }
+        }
+        else
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            var listSkillsCompany = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplanold)
+              {
+                AddPlan(viewPlan, monitoring.Person);
+                listSkillsCompany.Add(viewPlan);
+              }
+              else
+                listSkillsCompany.Add(plan);
+            }
+            item.Plans = listSkillsCompany;
+          }
+        }
+
+
+        monitoringService.Update(monitoring, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private Plan AddPlan(Plan plan, Person person)
+    {
+      try
+      {
+        plan.DateInclude = DateTime.Now;
+        plan.UserInclude = person;
+        return planService.Insert(plan);
       }
       catch (Exception e)
       {
@@ -506,7 +584,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    
+
     public async void LogSave(string iduser, string local)
     {
       try

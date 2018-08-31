@@ -23,7 +23,7 @@ namespace Manager.Core.Views
     public byte Evaluation { get; set; }
     public EnumStatusPlan StatusPlan { get; set; }
     public EnumTypeAction TypeAction { get; set; }
-    public byte Bomb { get; set; }
+    public long Bomb { get; set; }
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
   }
 }

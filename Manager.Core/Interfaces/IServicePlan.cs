@@ -14,5 +14,6 @@ namespace Manager.Core.Interfaces
       int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end);
     Plan GetPlan(string idmonitoring, string idplan);
     string UpdatePlan(string idmonitoring, Plan viewPlan);
+    string NewPlan(string idmonitoring, string idplanold, Plan viewPlan);
   }
 }

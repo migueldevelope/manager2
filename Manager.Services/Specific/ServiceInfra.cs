@@ -1433,6 +1433,7 @@ namespace Manager.Services.Specific
         groupService.Update(groupnew, null);
 
         UpdateGroupAll(groupnew);
+        UpdateGroupOccupationAll(groupnew, groupOld);
         return "update";
       }
       catch (Exception e)
@@ -1440,6 +1441,26 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    private async Task UpdateGroupOccupationAll(Group groupnew, Group groupold)
+    {
+      try
+      {
+        foreach (var item in occupationService.GetAll(p => p.Group._id == groupold._id).ToList())
+        {
+          item.Group = groupnew;
+          occupationService.Update(item, null);
+          UpdateOccupationAll(item);
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
 
     public string UpdateOccupation(Occupation occupation)
     {

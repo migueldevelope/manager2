@@ -60,5 +60,13 @@ namespace Manager.Controllers
       return service.UpdatePlan(idmonitoring, plan);
     }
 
+    [Authorize]
+    [HttpPost]
+    [Route("newplan/{idmonitoring}/{idplanold}")]
+    public string UpdatePlan([FromBody]Plan plan, string idmonitoring, string idplanold)
+    {
+      return service.NewPlan(idmonitoring, idplanold, plan);
+    }
+
   }
 }
