@@ -15,5 +15,7 @@ namespace Manager.Core.Interfaces
     ViewPlan GetPlan(string idmonitoring, string idplan);
     string UpdatePlan(string idmonitoring, Plan viewPlan);
     string NewPlan(string idmonitoring, string idplanold, Plan viewPlan);
+
+    string NewUpdatePlan(string idmonitoring, List<ViewPlanNewUp> viewPlan);
   }
 }

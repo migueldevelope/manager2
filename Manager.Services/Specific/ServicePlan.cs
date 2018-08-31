@@ -523,6 +523,73 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string NewUpdatePlan(string idmonitoring, List<ViewPlanNewUp> viewPlan)
+    {
+      try
+      {
+        Plan planNew = new Plan();
+        Plan planUpdate = new Plan();
+
+        foreach (var item in viewPlan)
+        {
+          if (item.TypeViewPlan == EnumTypeViewPlan.New)
+            planNew = new Plan()
+            {
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Name = item.Name,
+              Description = item.Description,
+              Deadline = item.Deadline,
+              Skills = item.Skills,
+              UserInclude = item.UserInclude,
+              DateInclude = item.DateInclude,
+              TypePlan = item.TypePlan,
+              SourcePlan = item.SourcePlan,
+              TypeAction = item.TypeAction,
+              StatusPlan = item.StatusPlan,
+              TextEnd = item.TextEnd,
+              DateEnd = item.DateEnd,
+              Evaluation = item.Evaluation,
+              Result = item.Result,
+              StatusPlanApproved = item.StatusPlanApproved,
+              Status = item.Status
+            };
+          else
+            planUpdate = new Plan()
+            {
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Name = item.Name,
+              Description = item.Description,
+              Deadline = item.Deadline,
+              Skills = item.Skills,
+              UserInclude = item.UserInclude,
+              DateInclude = item.DateInclude,
+              TypePlan = item.TypePlan,
+              SourcePlan = item.SourcePlan,
+              TypeAction = item.TypeAction,
+              StatusPlan = item.StatusPlan,
+              TextEnd = item.TextEnd,
+              DateEnd = item.DateEnd,
+              Evaluation = item.Evaluation,
+              Result = item.Result,
+              StatusPlanApproved = item.StatusPlanApproved,
+              Status = item.Status
+            };
+        }
+
+        UpdatePlan(idmonitoring, planUpdate);
+        NewPlan(idmonitoring, planUpdate._id, planNew);
+
+        return "newupdate";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
     private Plan AddPlan(Plan plan, Person person)
     {
       try
