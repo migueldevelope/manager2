@@ -28,12 +28,12 @@ namespace EdeskIntegration.Controllers
     private readonly ServiceGeneric<Attachments> service;
     private readonly IServicePerson personService;
     private readonly IServiceCompany companyService;
-    //private readonly IServiceLogbook logbookService;
+    private readonly IServicePlan planService;
     private readonly DataContext context;
     private readonly ObjectId account;
     private readonly string blobKey;
 
-    public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _companyService, IServicePerson _personService)
+    public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _companyService, IServicePerson _personService, IServicePlan _planService)
     {
       BaseUser baseUser = new BaseUser();
       var user = contextAccessor.HttpContext.User;
@@ -61,10 +61,10 @@ namespace EdeskIntegration.Controllers
       service = new ServiceGeneric<Attachments>(context, baseUser);
       personService = _personService;
       companyService = _companyService;
-      //logbookService = _logbookService;
+      planService = _planService;
       personService.SetUser(contextAccessor);
       companyService.SetUser(contextAccessor);
-      //logbookService.SetUser(contextAccessor);
+      planService.SetUser(contextAccessor);
     }
 
     [Authorize]
@@ -115,8 +115,7 @@ namespace EdeskIntegration.Controllers
       }
       return Ok(listAttachments);
     }
-
-
+    
 
     [Authorize]
     [HttpPost("{idcompany}/logocompany")]
@@ -170,64 +169,61 @@ namespace EdeskIntegration.Controllers
       }
       return Ok(listAttachments);
     }
+    
 
+    [Authorize]
+    [HttpPost("{id}/plan")]
+    public async Task<ObjectResult> PostPlan(string id)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return BadRequest("Bad file type.");
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      var url = "";
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        this.service.Insert(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
+          if (await cloudBlobContainer.CreateIfNotExistsAsync())
+          {
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          url = blockBlob.Uri.ToString();
+        }
+        catch (Exception)
+        {
+          attachment.Saved = false;
+          service.Update(attachment, null);
+          throw;
+        }
 
-
-    //[Authorize]
-    //[HttpPost("{id}/logbook")]
-    //public async Task<ObjectResult> PostLogbook(string id)
-    //{
-    //  foreach (var file in HttpContext.Request.Form.Files)
-    //  {
-    //    var ext = Path.GetExtension(file.FileName).ToLower();
-    //    if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
-    //      return BadRequest("Bad file type.");
-    //  }
-    //  List<Attachments> listAttachments = new List<Attachments>();
-    //  var url = "";
-    //  foreach (var file in HttpContext.Request.Form.Files)
-    //  {
-    //    Attachments attachment = new Attachments()
-    //    {
-    //      Extension = Path.GetExtension(file.FileName).ToLower(),
-    //      LocalName = file.FileName,
-    //      Lenght = file.Length,
-    //      Status = EnumStatus.Enabled,
-    //      Saved = true
-    //    };
-    //    this.service.Insert(attachment);
-    //    try
-    //    {
-    //      CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
-    //      CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-    //      CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
-    //      if (await cloudBlobContainer.CreateIfNotExistsAsync())
-    //      {
-    //        await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
-    //        {
-    //          PublicAccess = BlobContainerPublicAccessType.Blob
-    //        });
-    //      }
-    //      CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
-    //      blockBlob.Properties.ContentType = file.ContentType;
-    //      await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
-    //      url = blockBlob.Uri.ToString();
-    //    }
-    //    catch (Exception)
-    //    {
-    //      attachment.Saved = false;
-    //      service.Update(attachment, null);
-    //      throw;
-    //    }
-
-    //    logbookService.SetAttachment(id, url, file.FileName, attachment._id);
-    //    listAttachments.Add(attachment);
-    //  }
-    //  return Ok(listAttachments);
-    //}
-
-
-
+        planService.SetAttachment(id, url, file.FileName, attachment._id);
+        listAttachments.Add(attachment);
+      }
+      return Ok(listAttachments);
+    }
+    
     [Authorize]
     [HttpPost("{idperson}/photoperson")]
     public async Task<ObjectResult> PostPhoto(string idperson)
@@ -282,7 +278,7 @@ namespace EdeskIntegration.Controllers
     }
 
     //[Authorize]
-    //[HttpDelete("logbook/{iddp}/delete/{id}")]
+    //[HttpDelete("plan/{iddp}/delete/{id}")]
     //public async Task<ObjectResult> DeleteLogbbook(string id, string iddp)
     //{
     //  var attachment = this.service.GetAll(p => p._id == id).FirstOrDefault();
@@ -293,7 +289,7 @@ namespace EdeskIntegration.Controllers
     //  await blockBlob.DeleteIfExistsAsync();
     //  attachment.Status = EnumStatus.Disabled;
     //  service.Update(attachment, null);
-    //  logbookService.DeleteAttachment(iddp, id);
+    //  planService.DeleteAttachment(iddp, id);
 
     //  return Ok("Attachment deleted!");
     //}

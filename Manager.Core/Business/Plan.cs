@@ -22,5 +22,6 @@ namespace Manager.Core.Business
     public byte Evaluation { get; set; }
     public string Result { get; set; }
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
+    public List<AttachmentField> Attachments { get; set; }
   }
 }

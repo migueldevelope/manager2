@@ -589,7 +589,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
     private Plan AddPlan(Plan plan, Person person)
     {
       try
@@ -822,5 +821,24 @@ namespace Manager.Services.Specific
       }
     }
 
+    public void SetAttachment(string id, string url, string fileName, string attachmentid)
+    {
+      try
+      {
+        Plan plan = planService.GetAll(p => p._id == id).FirstOrDefault();
+        if (plan.Attachments == null)
+        {
+          plan.Attachments = new List<AttachmentField>();
+        }
+
+        plan.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = id });
+
+        planService.Update(plan, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
   }
 }
