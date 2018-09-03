@@ -48,6 +48,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listtagscloudperson/{idperson}")]
+    public List<ViewTagsCloud> ListTagsCloudPerson(string idperson)
+    {
+      return service.ListTagsCloudPerson(idperson);
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("listtagscloudcompany/{idmanager}")]
     public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
     {

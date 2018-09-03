@@ -16,5 +16,6 @@ namespace Manager.Core.Interfaces
     Task SendMessages(string link);
     List<ViewTagsCloud> ListTagsCloud(string idmanager);
     List<ViewTagsCloud> ListTagsCloudCompany(string idmanager);
+    List<ViewTagsCloud> ListTagsCloudPerson(string idperson);
   }
 }

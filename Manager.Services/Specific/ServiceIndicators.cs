@@ -106,7 +106,8 @@ namespace Manager.Services.Specific
         {
           foreach (var row in item.SkillsCompany)
           {
-            listResult.Add(new ViewTagsCloud() { text = row.Skill.Name });
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloud() { text = row.Skill.Name });
           }
         }
 
@@ -135,6 +136,44 @@ namespace Manager.Services.Specific
             x => x.Plans.Select(u => u.Skills))).ToList();*/
 
         var list = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+
+        List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.Activities)
+          {
+            foreach (var skill in row.Plans)
+            {
+              foreach (var view in skill.Skills)
+              {
+                listResult.Add(new ViewTagsCloud() { text = view.Name });
+              }
+            }
+          }
+        }
+
+
+        var result = listResult.GroupBy(x => x.text)
+            .Select(x => new ViewTagsCloud()
+            {
+              text = x.Key,
+              weight = x.Count()
+            }).ToList();
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewTagsCloud> ListTagsCloudPerson(string idperson)
+    {
+      try
+      {
+
+        var list = monitoringService.GetAll(p => p.Person._id == idperson & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
