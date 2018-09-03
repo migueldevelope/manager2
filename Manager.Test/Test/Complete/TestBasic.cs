@@ -17,6 +17,7 @@ namespace Manager.Test.Test.Complete
   {
     private readonly IServiceAccount serviceAccount;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<Occupation> serviceOccupation;
     private IServiceIntegration serviceIntegration;
 
     public TestBasic()
@@ -26,6 +27,7 @@ namespace Manager.Test.Test.Complete
         base.InitOffAccount();
         serviceAccount = new ServiceAccount(base.context);
         servicePerson = new ServiceGeneric<Person>(base.context);
+        serviceOccupation = new ServiceGeneric<Occupation>(base.context);
       }
       catch (Exception e)
       {
@@ -40,13 +42,111 @@ namespace Manager.Test.Test.Complete
       {
         var view = new ViewNewAccount()
         {
-          Mail = "suporte@jmsoft.com.br",
-          NameAccount = "Analisa",
-          NameCompany = "Analisa",
-          Password = "x14r53p5!a",
-          Document = "01050376056"
+          Mail = "test@jmsoft.com.br",
+          NameAccount = "Test",
+          NameCompany = "Test",
+          Password = "123",
+          Document = "123"
         };
         this.serviceAccount.NewAccount(view);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    [Fact]
+    public void IntegrationBigTest()
+    {
+      try
+      {
+        base.Init();
+
+        var account = this.serviceAccount.GeAccount(p => p.Name == "TestBig")._id;
+        var baseUser = new BaseUser()
+        {
+          _idAccount = account
+        };
+        base.Init();
+        serviceIntegration = new ServiceIntegration(base.context);
+        serviceIntegration.SetUser(baseUser);
+
+        var list = new List<ViewPersonImport>();
+
+        //Person 1
+
+        for (var row = 0; row <= 100000; row++)
+        {
+          var view = new ViewPersonImport()
+          {
+            Mail = "func" + row + "@jmsoft.com.br",
+            Name = "func" + row,
+            NameCompany = "Test",
+            NameManager = "Test",
+            NameSchooling = "Posgraduate",
+            Password = "123",
+            Phone = "05432025412",
+            Registration = 1,
+            StatusUser = EnumStatusUser.Enabled,
+            DateAdm = DateTime.Parse("2012-01-01"),
+            DateBirth = DateTime.Parse("1993-05-11"),
+            Document = "a" + row,
+            DocumentManager = "a123",
+            TypeUser = EnumTypeUser.Employee
+          };
+          list.Add(view);
+        }
+
+
+
+        var result = this.serviceIntegration.ImportPerson(list);
+
+        this.serviceIntegration.UpdateManager();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    [Fact]
+    public void SetManagerTest()
+    {
+      try
+      {
+        base.Init();
+        servicePerson._user = base.baseUser;
+        var manager = servicePerson.GetAll(p => p.Mail == "testbig@jmsoft.com.br").FirstOrDefault();
+        foreach (var item in servicePerson.GetAll().ToList())
+        {
+          item.Manager = manager;
+          servicePerson.Update(item, null);
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    [Fact]
+    public void SetOccupation()
+    {
+      try
+      {
+        base.Init();
+        servicePerson._user = base.baseUser;
+        serviceOccupation._user = base.baseUser;
+
+        var occ = serviceOccupation.GetAll().FirstOrDefault();
+        foreach (var item in servicePerson.GetAll().ToList())
+        {
+          item.Occupation = occ;
+          servicePerson.Update(item, null);
+        }
+
       }
       catch (Exception e)
       {
