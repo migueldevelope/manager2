@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
@@ -6,5 +7,6 @@ namespace Manager.Core.Business
   {
     public Questions Question { get; set; }
     public byte Mark { get; set; }
+    public List<CheckpointQuestions> Itens { get; set; }
   }
 }

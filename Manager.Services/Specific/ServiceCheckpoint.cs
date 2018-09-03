@@ -149,9 +149,12 @@ namespace Manager.Services.Specific
       try
       {
         checkpoint.Questions = new List<CheckpointQuestions>();
+
+        var itens = new List<CheckpointQuestions>();
+
         foreach (var item in checkpoint.Person.Company.Skills)
         {
-          checkpoint.Questions.Add(new CheckpointQuestions()
+          itens.Add(new CheckpointQuestions()
           {
             Question = new Questions()
             {
@@ -170,10 +173,38 @@ namespace Manager.Services.Specific
           });
         }
 
-
-        foreach (var item in questionsService.GetAll().ToList())
+        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Skill).ToList())
         {
-          checkpoint.Questions.Add(new CheckpointQuestions() { Question = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
+          checkpoint.Questions.Add(new CheckpointQuestions()
+          {
+            Question = item,
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString(),
+            Itens = itens
+          });
+        }
+
+        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Default).ToList())
+        {
+          checkpoint.Questions.Add(new CheckpointQuestions()
+          {
+            Question =
+            new Questions()
+            {
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Company = item.Company,
+              Content = item.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.Name),
+              Name = item.Name,
+              Order = item.Order,
+              Status = item.Status,
+              Template = item.Template,
+              TypeQuestion = item.TypeQuestion,
+              TypeRotine = item.TypeRotine
+            },
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          });
         }
 
         return checkpoint;
@@ -253,6 +284,8 @@ namespace Manager.Services.Specific
       mailModelService._user = _user;
       mailMessageService._user = _user;
       mailService._user = _user;
+      questionsService._user = _user;
+
     }
 
     // send mail
