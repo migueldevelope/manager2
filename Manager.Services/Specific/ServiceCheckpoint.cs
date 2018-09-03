@@ -24,6 +24,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
     private readonly ServiceGeneric<Parameter> parameterService;
+    private readonly ServiceGeneric<TextDefault> textDefaultService;
     public string path;
 
     public ServiceCheckpoint(DataContext context, string pathToken)
@@ -32,6 +33,7 @@ namespace Manager.Services.Specific
       try
       {
         checkpointService = new ServiceGeneric<Checkpoint>(context);
+        textDefaultService = new ServiceGeneric<TextDefault>(context);
         personService = new ServiceGeneric<Person>(context);
         logService = new ServiceLog(_context);
         mailModelService = new ServiceMailModel(context);
@@ -134,7 +136,8 @@ namespace Manager.Services.Specific
             Comments = p.Comments,
             Questions = p.Questions.OrderBy(x => x.Question.Order).ToList(),
             StatusCheckpoint = p.StatusCheckpoint,
-            TypeCheckpoint = p.TypeCheckpoint
+            TypeCheckpoint = p.TypeCheckpoint,
+            TextDefault = p.TextDefault
           })
           .FirstOrDefault();
       }
@@ -177,7 +180,20 @@ namespace Manager.Services.Specific
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
-            Question = item,
+            Question =
+             new Questions()
+             {
+               _id = item._id,
+               _idAccount = item._idAccount,
+               Company = item.Company,
+               Content = item.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.Name),
+               Name = item.Name,
+               Order = item.Order,
+               Status = item.Status,
+               Template = item.Template,
+               TypeQuestion = item.TypeQuestion,
+               TypeRotine = item.TypeRotine
+             },
             _idAccount = item._idAccount,
             _id = ObjectId.GenerateNewId().ToString(),
             Itens = itens
@@ -207,6 +223,10 @@ namespace Manager.Services.Specific
           });
         }
 
+        var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.Checkpoint).FirstOrDefault();
+        if (text != null)
+          checkpoint.TextDefault = text.Content;
+
         return checkpoint;
       }
       catch (Exception e)
@@ -223,8 +243,15 @@ namespace Manager.Services.Specific
         checkpoint.StatusCheckpoint = EnumStatusCheckpoint.Wait;
         checkpoint.DateBegin = DateTime.Now;
         checkpoint = loadMap(checkpoint);
+        if (checkpoint.Person.DateAdm != null)
+          checkpoint.DataAccess = DateTime.Parse(checkpoint.Person.DateAdm.ToString()).AddDays(Deadline());
+        else
+          checkpoint.DataAccess = DateTime.Now;
 
-        return checkpointService.Insert(checkpoint);
+        if (checkpoint._id != null)
+          return checkpoint;
+        else
+          return checkpointService.Insert(checkpoint);
       }
       catch (Exception e)
       {
@@ -285,6 +312,7 @@ namespace Manager.Services.Specific
       mailMessageService._user = _user;
       mailService._user = _user;
       questionsService._user = _user;
+      textDefaultService._user = _user;
 
     }
 

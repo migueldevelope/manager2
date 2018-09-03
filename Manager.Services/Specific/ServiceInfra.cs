@@ -1355,6 +1355,7 @@ namespace Manager.Services.Specific
       processLevelOneService._user = _user;
       processLevelTwoService._user = _user;
       questionsService._user = _user;
+      textDefaultService._user = _user;
     }
 
     public string UpdateArea(Area area)
