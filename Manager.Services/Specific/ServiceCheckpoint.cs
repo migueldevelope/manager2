@@ -137,7 +137,8 @@ namespace Manager.Services.Specific
             Questions = p.Questions.OrderBy(x => x.Question.Order).ToList(),
             StatusCheckpoint = p.StatusCheckpoint,
             TypeCheckpoint = p.TypeCheckpoint,
-            TextDefault = p.TextDefault
+            TextDefault = p.TextDefault,
+            DataAccess = p.DataAccess
           })
           .FirstOrDefault();
       }
