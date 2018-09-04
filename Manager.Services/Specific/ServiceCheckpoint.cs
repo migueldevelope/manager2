@@ -281,10 +281,23 @@ namespace Manager.Services.Specific
         if (checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End)
         {
           checkpoint.DateEnd = DateTime.Now;
+          var person = personService.GetAll(p => p.TypeUser == EnumTypeUser.HR || p.TypeUser == EnumTypeUser.ManagerHR).ToList();
           if (checkpoint.TypeCheckpoint == EnumCheckpoint.Approved)
           {
             checkpoint.Person.TypeJourney = EnumTypeJourney.Monitoring;
             personService.Update(checkpoint.Person, null);
+            foreach(var item in person)
+            {
+              MailRH(item, "Aprovado");
+            }
+            
+          }
+          else
+          {
+            foreach (var item in person)
+            {
+              MailRH(item, "Reprovado");
+            }
           }
         }
 
@@ -331,7 +344,7 @@ namespace Manager.Services.Specific
     }
 
     // send mail
-    public void Mail(Person person)
+    public async void Mail(Person person)
     {
       try
       {
@@ -339,6 +352,48 @@ namespace Manager.Services.Specific
         var model = mailModelService.CheckpointApproval(path);
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Suporte"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Mail, person.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailRH(Person person, string result)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.CheckpointResult(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Result}", result);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,

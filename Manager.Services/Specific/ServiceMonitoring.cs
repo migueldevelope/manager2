@@ -428,7 +428,7 @@ namespace Manager.Services.Specific
 
 
     // send mail
-    public void Mail(Person person)
+    public async void Mail(Person person)
     {
       try
       {
