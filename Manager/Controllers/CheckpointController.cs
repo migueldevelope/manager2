@@ -87,6 +87,14 @@ namespace Manager.Controllers
       return service.RemoveCheckpoint(idperson);
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("personcheckpointend/{idperson}")]
+    public Checkpoint PersonCheckpointEnd(string idperson)
+    {
+      return service.PersonCheckpointEnd(idperson);
+    }
+
 
   }
 }

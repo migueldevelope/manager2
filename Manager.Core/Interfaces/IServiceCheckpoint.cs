@@ -14,5 +14,6 @@ namespace Manager.Core.Interfaces
     string RemoveCheckpoint(string idperson);
     List<Checkpoint> GetListExclud(ref long total, string filter, int count, int page);
     void SetUser(IHttpContextAccessor contextAccessor);
+    Checkpoint PersonCheckpointEnd(string idperson);
   }
 }

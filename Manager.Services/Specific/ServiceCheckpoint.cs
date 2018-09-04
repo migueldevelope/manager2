@@ -67,6 +67,19 @@ namespace Manager.Services.Specific
       }
     }
 
+    public Checkpoint PersonCheckpointEnd(string idperson)
+    {
+      try
+      {
+        LogSave(idperson, "PersonEnd");
+        return checkpointService.GetAll(p => p.Person._id == idperson & p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     private void newOnZero()
     {
       try
@@ -396,6 +409,9 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "RemoveOnboarding:" + idperson);
         var checkpoint = checkpointService.GetAll(p => p.Person._id == idperson).FirstOrDefault();
+        if (checkpoint == null)
+          return "deleted";
+
         checkpoint.Status = EnumStatus.Disabled;
         checkpointService.Update(checkpoint, null);
         return "deleted";
