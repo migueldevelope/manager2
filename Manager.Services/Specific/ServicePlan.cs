@@ -737,7 +737,8 @@ namespace Manager.Services.Specific
                 IdMonitoring = detail._id,
                 TextEnd = res.TextEnd,
                 Status = res.Status,
-                DateEnd = res.DateEnd
+                DateEnd = res.DateEnd,
+                Attachments = res.Attachments
               };
           }
         }
@@ -766,7 +767,8 @@ namespace Manager.Services.Specific
                 IdMonitoring = detail._id,
                 TextEnd = res.TextEnd,
                 Status = res.Status,
-                DateEnd = res.DateEnd
+                DateEnd = res.DateEnd,
+                Attachments = res.Attachments
               };
           }
         }
@@ -795,7 +797,8 @@ namespace Manager.Services.Specific
                 IdMonitoring = detail._id,
                 TextEnd = res.TextEnd,
                 Status = res.Status,
-                DateEnd = res.DateEnd
+                DateEnd = res.DateEnd,
+                Attachments = res.Attachments
               };
           }
         }

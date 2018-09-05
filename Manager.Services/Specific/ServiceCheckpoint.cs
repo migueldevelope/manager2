@@ -286,11 +286,11 @@ namespace Manager.Services.Specific
           {
             checkpoint.Person.TypeJourney = EnumTypeJourney.Monitoring;
             personService.Update(checkpoint.Person, null);
-            foreach(var item in person)
+            foreach (var item in person)
             {
               MailRH(item, "Aprovado");
             }
-            
+
           }
           else
           {
@@ -386,14 +386,35 @@ namespace Manager.Services.Specific
       }
     }
 
+    private string MailDefault()
+    {
+      try
+      {
+        var par = parameterService.GetAll(p => p.Name == "mailcheckpoint").FirstOrDefault();
+        if (par == null)
+          return parameterService.Insert(new Parameter()
+          {
+            Name = "mailcheckpoint",
+            Content = "suporte@jmsoft.com.br",
+            Status = EnumStatus.Enabled
+          }).Content;
+        else
+          return par.Content;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public async void MailRH(Person person, string result)
     {
       try
       {
+        var mailDefault = MailDefault();
         //searsh model mail database
         var model = mailModelService.CheckpointResult(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Result}", result);
+        var body = model.Message.Replace("{Link}", model.Link).Replace("{Result}", result);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -401,16 +422,20 @@ namespace Manager.Services.Specific
           Url = url,
           Body = body
         };
+
+        List<MailLogAddress> listMail = new List<MailLogAddress>();
+        foreach(var item in mailDefault.Split(";"))
+        {
+          listMail.Add(new MailLogAddress(item, item));
+        }
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Suporte"),
-          To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Mail, person.Name)
-                    },
+          To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = mailDefault,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,

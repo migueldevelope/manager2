@@ -28,5 +28,6 @@ namespace Manager.Core.Views
     public string TextEnd { get; set; }
     public DateTime? DateEnd { get; set; }
     public EnumStatus Status { get; set; }
+    public List<AttachmentField> Attachments { get; set; }
   }
 }
