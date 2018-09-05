@@ -29,5 +29,6 @@ namespace Manager.Core.Views
     public DateTime? DateEnd { get; set; }
     public EnumStatus Status { get; set; }
     public List<AttachmentField> Attachments { get; set; }
+    public Plan PlanNew { get; set; }
   }
 }

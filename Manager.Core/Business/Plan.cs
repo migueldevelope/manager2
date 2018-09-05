@@ -23,5 +23,6 @@ namespace Manager.Core.Business
     public string Result { get; set; }
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
     public List<AttachmentField> Attachments { get; set; }
+    public EnumNewAction NewAction { get; set; }
   }
 }

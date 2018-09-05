@@ -30,7 +30,6 @@ namespace EdeskIntegration.Controllers
     private readonly IServiceCompany companyService;
     private readonly IServicePlan planService;
     private readonly DataContext context;
-    private readonly ObjectId account;
     private readonly string blobKey;
 
     public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _companyService, IServicePerson _personService, IServicePlan _planService)
@@ -93,7 +92,7 @@ namespace EdeskIntegration.Controllers
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
           CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
           if (await cloudBlobContainer.CreateIfNotExistsAsync())
           {
             await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
@@ -144,7 +143,7 @@ namespace EdeskIntegration.Controllers
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
           CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
           if (await cloudBlobContainer.CreateIfNotExistsAsync())
           {
             await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
@@ -198,7 +197,7 @@ namespace EdeskIntegration.Controllers
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
           CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
           if (await cloudBlobContainer.CreateIfNotExistsAsync())
           {
             await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
@@ -211,11 +210,11 @@ namespace EdeskIntegration.Controllers
           await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
           url = blockBlob.Uri.ToString();
         }
-        catch (Exception)
+        catch (Exception e)
         {
           attachment.Saved = false;
           service.Update(attachment, null);
-          throw;
+          throw e;
         }
 
         planService.SetAttachment(id, url, file.FileName, attachment._id);
@@ -251,7 +250,7 @@ namespace EdeskIntegration.Controllers
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
           CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
           if (await cloudBlobContainer.CreateIfNotExistsAsync())
           {
             await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
@@ -284,7 +283,7 @@ namespace EdeskIntegration.Controllers
     //  var attachment = this.service.GetAll(p => p._id == id).FirstOrDefault();
     //  CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
     //  CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-    //  CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
+    //  CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
     //  CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}.{1}", attachment._id.ToString(), attachment.Extension));
     //  await blockBlob.DeleteIfExistsAsync();
     //  attachment.Status = EnumStatus.Disabled;
@@ -301,7 +300,7 @@ namespace EdeskIntegration.Controllers
       var attachment = this.service.GetAll(p => p._id == id).FirstOrDefault();
       CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
       CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-      CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
+      CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
       CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}.{1}", attachment._id.ToString(), attachment.Extension));
       await blockBlob.DeleteIfExistsAsync();
       attachment.Status = EnumStatus.Disabled;

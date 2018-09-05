@@ -163,7 +163,7 @@ namespace Manager.Services.Specific
           body = body.Replace("{Disapproved}", model.Link + "/" + idMessageDis.ToString());
           var sendMail = new MailLog
           {
-            From = new MailLogAddress("suporte@jmsoft.com.br", "Suporte"),
+            From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
             To = new List<MailLogAddress>(){
                   new MailLogAddress(requestor.Mail, requestor.Name)
               },

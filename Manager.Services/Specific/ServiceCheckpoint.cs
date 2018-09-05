@@ -362,7 +362,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Suporte"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -414,7 +414,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.CheckpointResult(path);
         var url = "";
-        var body = model.Message.Replace("{Link}", model.Link).Replace("{Result}", result);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Result}", result);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -431,7 +431,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Suporte"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,

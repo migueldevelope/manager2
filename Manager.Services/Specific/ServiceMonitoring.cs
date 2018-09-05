@@ -446,7 +446,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Suporte"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },

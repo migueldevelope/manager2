@@ -64,6 +64,7 @@ namespace Manager.Services.Specific
         mailModelService._user = _user;
         mailMessageService._user = _user;
         mailService._user = _user;
+        planService._user = _user;
       }
       catch (Exception e)
       {
@@ -213,6 +214,8 @@ namespace Manager.Services.Specific
           }
         }
 
+        result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
+
         if (open == 0)
           result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline >= DateTime.Now)).ToList();
 
@@ -221,6 +224,7 @@ namespace Manager.Services.Specific
 
         if (end == 0)
           result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList();
+
 
         total = result.Count();
 
@@ -359,6 +363,8 @@ namespace Manager.Services.Specific
           }
         }
 
+        result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
+
         if (open == 0)
           result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline >= DateTime.Now)).ToList();
 
@@ -398,6 +404,12 @@ namespace Manager.Services.Specific
                 UpdatePlan(viewPlan, monitoring.Person.Manager);
                 listActivities.Add(viewPlan);
               }
+              else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
+              {
+                plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+                UpdatePlan(plan, monitoring.Person.Manager);
+                listActivities.Add(plan);
+              }
               else
                 listActivities.Add(plan);
             }
@@ -415,6 +427,12 @@ namespace Manager.Services.Specific
               {
                 UpdatePlan(viewPlan, monitoring.Person.Manager);
                 listSchoolings.Add(viewPlan);
+              }
+              else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
+              {
+                plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+                UpdatePlan(plan, monitoring.Person.Manager);
+                listSchoolings.Add(plan);
               }
               else
                 listSchoolings.Add(plan);
@@ -434,6 +452,12 @@ namespace Manager.Services.Specific
               {
                 UpdatePlan(viewPlan, monitoring.Person.Manager);
                 listSkillsCompany.Add(viewPlan);
+              }
+              else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
+              {
+                plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+                UpdatePlan(plan, monitoring.Person.Manager);
+                listSkillsCompany.Add(plan);
               }
               else
                 listSkillsCompany.Add(plan);
@@ -608,6 +632,8 @@ namespace Manager.Services.Specific
         Plan planNew = new Plan();
         Plan planUpdate = new Plan();
 
+        planNew.StatusPlanApproved = EnumStatusPlanApproved.Invisible;
+
         foreach (var item in viewPlan)
         {
           if (item.TypeViewPlan == EnumTypeViewPlan.New)
@@ -711,14 +737,13 @@ namespace Manager.Services.Specific
         var detailSkillsCompany = monitoringService.GetAll(p => p._id == idmonitoring)
           .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
 
-
-
+        ViewPlan view = new ViewPlan();
         foreach (var plan in detail.Plans)
         {
-          foreach (var res in plan)
+          foreach (var res in plan.OrderBy(p => p.DateInclude).ToList())
           {
             if (res._id == idplan)
-              return new ViewPlan()
+              view = new ViewPlan()
               {
                 DateInclude = res.DateInclude,
                 Deadline = res.Deadline,
@@ -738,17 +763,19 @@ namespace Manager.Services.Specific
                 TextEnd = res.TextEnd,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
-                Attachments = res.Attachments
+                Attachments = res.Attachments,
               };
+            else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
+              view.PlanNew = res;
           }
         }
 
         foreach (var plan in detailSchoolings.Plans)
         {
-          foreach (var res in plan)
+          foreach (var res in plan.OrderBy(p => p.DateInclude).ToList())
           {
             if (res._id == idplan)
-              return new ViewPlan()
+              view = new ViewPlan()
               {
                 DateInclude = res.DateInclude,
                 Deadline = res.Deadline,
@@ -768,17 +795,19 @@ namespace Manager.Services.Specific
                 TextEnd = res.TextEnd,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
-                Attachments = res.Attachments
+                Attachments = res.Attachments,
               };
+            else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
+              view.PlanNew = res;
           }
         }
 
         foreach (var plan in detailSkillsCompany.Plans)
         {
-          foreach (var res in plan)
+          foreach (var res in plan.OrderBy(p => p.DateInclude).ToList())
           {
             if (res._id == idplan)
-              return new ViewPlan()
+              view = new ViewPlan()
               {
                 DateInclude = res.DateInclude,
                 Deadline = res.Deadline,
@@ -798,8 +827,10 @@ namespace Manager.Services.Specific
                 TextEnd = res.TextEnd,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
-                Attachments = res.Attachments
+                Attachments = res.Attachments,
               };
+            else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
+              view.PlanNew = res;
           }
         }
 
@@ -848,7 +879,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Suporte"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
