@@ -737,34 +737,37 @@ namespace Manager.Services.Specific
         var detailSkillsCompany = monitoringService.GetAll(p => p._id == idmonitoring)
           .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
 
+        if (detail == null)
+          return new ViewPlan(){ _idAccount = monitoringService._user._idAccount, _id = idmonitoring};
+
         ViewPlan view = new ViewPlan();
+
         foreach (var plan in detail.Plans)
         {
-          foreach (var res in plan.OrderBy(p => p.DateInclude).ToList())
+          foreach (var res in plan)
           {
             if (res._id == idplan)
-              view = new ViewPlan()
-              {
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Name = res.Name,
-                Description = res.Description,
-                SourcePlan = res.SourcePlan,
-                StatusPlan = res.StatusPlan,
-                StatusPlanApproved = res.StatusPlanApproved,
-                UserInclude = res.UserInclude,
-                TypeAction = res.TypeAction,
-                TypePlan = res.TypePlan,
-                Evaluation = res.Evaluation,
-                Skills = res.Skills,
-                _id = res._id,
-                _idAccount = res._idAccount,
-                IdMonitoring = detail._id,
-                TextEnd = res.TextEnd,
-                Status = res.Status,
-                DateEnd = res.DateEnd,
-                Attachments = res.Attachments,
-              };
+            {
+              view.DateInclude = res.DateInclude;
+              view.Deadline = res.Deadline;
+              view.Name = res.Name;
+              view.Description = res.Description;
+              view.SourcePlan = res.SourcePlan;
+              view.StatusPlan = res.StatusPlan;
+              view.StatusPlanApproved = res.StatusPlanApproved;
+              view.UserInclude = res.UserInclude;
+              view.TypeAction = res.TypeAction;
+              view.TypePlan = res.TypePlan;
+              view.Evaluation = res.Evaluation;
+              view.Skills = res.Skills;
+              view._id = res._id;
+              view._idAccount = res._idAccount;
+              view.IdMonitoring = detail._id;
+              view.TextEnd = res.TextEnd;
+              view.Status = res.Status;
+              view.DateEnd = res.DateEnd;
+              view.Attachments = res.Attachments;
+            }
             else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
               view.PlanNew = res;
           }
@@ -772,31 +775,30 @@ namespace Manager.Services.Specific
 
         foreach (var plan in detailSchoolings.Plans)
         {
-          foreach (var res in plan.OrderBy(p => p.DateInclude).ToList())
+          foreach (var res in plan)
           {
             if (res._id == idplan)
-              view = new ViewPlan()
-              {
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Name = res.Name,
-                Description = res.Description,
-                SourcePlan = res.SourcePlan,
-                StatusPlan = res.StatusPlan,
-                StatusPlanApproved = res.StatusPlanApproved,
-                UserInclude = res.UserInclude,
-                TypeAction = res.TypeAction,
-                TypePlan = res.TypePlan,
-                Evaluation = res.Evaluation,
-                Skills = res.Skills,
-                _id = res._id,
-                _idAccount = res._idAccount,
-                IdMonitoring = detail._id,
-                TextEnd = res.TextEnd,
-                Status = res.Status,
-                DateEnd = res.DateEnd,
-                Attachments = res.Attachments,
-              };
+            {
+              view.DateInclude = res.DateInclude;
+              view.Deadline = res.Deadline;
+              view.Name = res.Name;
+              view.Description = res.Description;
+              view.SourcePlan = res.SourcePlan;
+              view.StatusPlan = res.StatusPlan;
+              view.StatusPlanApproved = res.StatusPlanApproved;
+              view.UserInclude = res.UserInclude;
+              view.TypeAction = res.TypeAction;
+              view.TypePlan = res.TypePlan;
+              view.Evaluation = res.Evaluation;
+              view.Skills = res.Skills;
+              view._id = res._id;
+              view._idAccount = res._idAccount;
+              view.IdMonitoring = detail._id;
+              view.TextEnd = res.TextEnd;
+              view.Status = res.Status;
+              view.DateEnd = res.DateEnd;
+              view.Attachments = res.Attachments;
+            }
             else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
               view.PlanNew = res;
           }
@@ -804,31 +806,30 @@ namespace Manager.Services.Specific
 
         foreach (var plan in detailSkillsCompany.Plans)
         {
-          foreach (var res in plan.OrderBy(p => p.DateInclude).ToList())
+          foreach (var res in plan)
           {
             if (res._id == idplan)
-              view = new ViewPlan()
-              {
-                DateInclude = res.DateInclude,
-                Deadline = res.Deadline,
-                Name = res.Name,
-                Description = res.Description,
-                SourcePlan = res.SourcePlan,
-                StatusPlan = res.StatusPlan,
-                StatusPlanApproved = res.StatusPlanApproved,
-                UserInclude = res.UserInclude,
-                TypeAction = res.TypeAction,
-                TypePlan = res.TypePlan,
-                Evaluation = res.Evaluation,
-                Skills = res.Skills,
-                _id = res._id,
-                _idAccount = res._idAccount,
-                IdMonitoring = detail._id,
-                TextEnd = res.TextEnd,
-                Status = res.Status,
-                DateEnd = res.DateEnd,
-                Attachments = res.Attachments,
-              };
+            {
+              view.DateInclude = res.DateInclude;
+              view.Deadline = res.Deadline;
+              view.Name = res.Name;
+              view.Description = res.Description;
+              view.SourcePlan = res.SourcePlan;
+              view.StatusPlan = res.StatusPlan;
+              view.StatusPlanApproved = res.StatusPlanApproved;
+              view.UserInclude = res.UserInclude;
+              view.TypeAction = res.TypeAction;
+              view.TypePlan = res.TypePlan;
+              view.Evaluation = res.Evaluation;
+              view.Skills = res.Skills;
+              view._id = res._id;
+              view._idAccount = res._idAccount;
+              view.IdMonitoring = detail._id;
+              view.TextEnd = res.TextEnd;
+              view.Status = res.Status;
+              view.DateEnd = res.DateEnd;
+              view.Attachments = res.Attachments;
+            }
             else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
               view.PlanNew = res;
           }
