@@ -465,7 +465,7 @@ namespace Manager.Services.Specific
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible))
               {
-                if(viewPlan.NewAction == EnumNewAction.Yes)
+                if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
                 UpdatePlan(plan, monitoring.Person.Manager);
@@ -579,6 +579,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person);
+                UpdatePlan(planOld, monitoring.Person);
                 listActivities.Add(planOld);
                 listActivities.Add(viewPlan);
               }
@@ -598,6 +599,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person);
+                UpdatePlan(planOld, monitoring.Person);
                 listSchoolings.Add(planOld);
                 listSchoolings.Add(viewPlan);
               }
@@ -617,6 +619,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person);
+                UpdatePlan(planOld, monitoring.Person);
                 listSkillsCompany.Add(planOld);
                 listSkillsCompany.Add(viewPlan);
               }
@@ -667,7 +670,8 @@ namespace Manager.Services.Specific
               Evaluation = item.Evaluation,
               Result = item.Result,
               StatusPlanApproved = EnumStatusPlanApproved.Open,
-              Status = item.Status
+              Status = item.Status,
+              NewAction = item.NewAction
             };
           else
             planUpdate = new Plan()
@@ -689,15 +693,25 @@ namespace Manager.Services.Specific
               Evaluation = item.Evaluation,
               Result = item.Result,
               StatusPlanApproved = item.StatusPlanApproved,
-              Status = item.Status
+              Status = item.Status,
+              NewAction = item.NewAction
             };
         }
 
         if (_user._idPerson == person._id)
+        {
           planNew.StatusPlanApproved = EnumStatusPlanApproved.Invisible;
-
-        NewPlanView(idmonitoring, planUpdate, planNew);
-
+          NewPlanView(idmonitoring, planUpdate, planNew);
+        }
+        else
+        {
+          if (planUpdate.StatusPlanApproved != EnumStatusPlanApproved.Open)
+          {
+            UpdatePlan(idmonitoring, planUpdate);
+          }
+          else
+            NewPlanView(idmonitoring, planUpdate, planNew);
+        }
         return "newupdate";
       }
       catch (Exception e)
@@ -705,7 +719,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
     private Plan AddPlan(Plan plan, Person person)
     {
       try
@@ -785,7 +798,7 @@ namespace Manager.Services.Specific
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
             }
-            else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
+            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
           }
         }
@@ -821,7 +834,7 @@ namespace Manager.Services.Specific
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
             }
-            else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
+            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
           }
         }
@@ -857,7 +870,7 @@ namespace Manager.Services.Specific
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
             }
-            else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
+            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
           }
         }

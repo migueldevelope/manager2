@@ -26,5 +26,6 @@ namespace Manager.Core.Views
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
     public EnumStatus Status { get; set; }
     public EnumTypeViewPlan TypeViewPlan { get; set; }
+    public EnumNewAction NewAction { get; set; }
   }
 }

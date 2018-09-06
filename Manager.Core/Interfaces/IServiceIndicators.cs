@@ -17,5 +17,6 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloud(string idmanager);
     List<ViewTagsCloud> ListTagsCloudCompany(string idmanager);
     List<ViewTagsCloud> ListTagsCloudPerson(string idperson);
+    List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
   }
 }

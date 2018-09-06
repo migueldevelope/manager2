@@ -206,6 +206,38 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson)
+    {
+      try
+      {
+        var list = monitoringService.GetAll(p => p.Person._id == idperson & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+
+        List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloud() { text = row.Skill.Name });
+          }
+        }
+
+
+        var result = listResult.GroupBy(x => x.text)
+            .Select(x => new ViewTagsCloud()
+            {
+              text = x.Key,
+              weight = x.Count()
+            }).ToList();
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewIndicatorsNotes> GetNotesPerson(string id)
     {
       try

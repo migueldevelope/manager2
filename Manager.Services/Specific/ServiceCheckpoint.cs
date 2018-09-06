@@ -281,23 +281,17 @@ namespace Manager.Services.Specific
         if (checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End)
         {
           checkpoint.DateEnd = DateTime.Now;
-          var person = personService.GetAll(p => p.TypeUser == EnumTypeUser.HR || p.TypeUser == EnumTypeUser.ManagerHR).ToList();
           if (checkpoint.TypeCheckpoint == EnumCheckpoint.Approved)
           {
             checkpoint.Person.TypeJourney = EnumTypeJourney.Monitoring;
             personService.Update(checkpoint.Person, null);
-            foreach (var item in person)
-            {
-              MailRH(item, "Aprovado");
-            }
+            MailRH(checkpoint.Person, "Aprovado");
 
           }
           else
           {
-            foreach (var item in person)
-            {
-              MailRH(item, "Reprovado");
-            }
+            MailRH(checkpoint.Person, "Reprovado");
+
           }
         }
 
@@ -424,7 +418,7 @@ namespace Manager.Services.Specific
         };
 
         List<MailLogAddress> listMail = new List<MailLogAddress>();
-        foreach(var item in mailDefault.Split(";"))
+        foreach (var item in mailDefault.Split(";"))
         {
           listMail.Add(new MailLogAddress(item, item));
         }
