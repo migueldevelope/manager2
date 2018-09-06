@@ -189,7 +189,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>O resultado do chekcpoint foi {Result}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola <strong>Recursos Humanos</strong>,</br></br>O resultado do chekcpoint para <strong>{Person}</strong> foi {Result}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Restulado do chekcpoint",
           Name = "checkpointresult",
           Link = path
