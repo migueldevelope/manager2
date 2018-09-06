@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace Manager.Core.Interfaces
 {
@@ -19,5 +20,10 @@ namespace Manager.Core.Interfaces
     MailModel OnBoardingPendingEmployee(string path);
     MailModel DefaultExpectationsPendingEmployee(string path);
 
+    string New(MailModel view);
+    string Update(MailModel view);
+    string Remove(string id);
+    MailModel Get(string id);
+    List<MailModel> List(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

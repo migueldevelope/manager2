@@ -15,7 +15,7 @@ namespace Manager.Core.Interfaces
     ViewPlan GetPlan(string idmonitoring, string idplan);
     string UpdatePlan(string idmonitoring, Plan viewPlan);
     string NewPlan(string idmonitoring, string idplanold, Plan viewPlan);
-    void SetAttachment(string id, string url, string fileName, string attachmentid);
+    void SetAttachment(string idplan, string idmonitoring,string url, string fileName, string attachmentid);
     string NewUpdatePlan(string idmonitoring, List<ViewPlanNewUp> viewPlan);
   }
 }

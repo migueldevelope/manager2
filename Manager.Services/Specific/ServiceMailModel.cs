@@ -6,6 +6,7 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Manager.Services.Specific
@@ -100,7 +101,7 @@ namespace Manager.Services.Specific
       {
         throw new ServiceException(_user, e, this._context);
       }
-    }   
+    }
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
@@ -135,14 +136,13 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
     public MailModel CheckpointResult(string path)
     {
       try
       {
         var model = mailModelService.GetAll(p => p.Name == "checkpointresult");
         if (model.Count() == 0)
-          return DefaultCheckpointResult (path);
+          return DefaultCheckpointResult(path);
         else
           return model.FirstOrDefault();
       }
@@ -151,7 +151,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
     public MailModel MonitoringApproval(string path)
     {
       try
@@ -359,5 +358,77 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+    public string New(MailModel view)
+    {
+      try
+      {
+        mailModelService.Insert(view);
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string Update(MailModel view)
+    {
+      try
+      {
+        mailModelService.Update(view, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string Remove(string id)
+    {
+      try
+      {
+        var item = mailModelService.GetAll(p => p._id == id).FirstOrDefault();
+        item.Status = EnumStatus.Disabled;
+        mailModelService.Update(item, null);
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel Get(string id)
+    {
+      try
+      {
+        return mailModelService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public List<MailModel> List(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        try
+        {
+          int skip = (count * (page - 1));
+          var detail = mailModelService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+          total = detail.Count();
+
+          return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        }
+        catch (Exception e)
+        {
+          throw new ServiceException(_user, e, this._context);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
   }
 }
+

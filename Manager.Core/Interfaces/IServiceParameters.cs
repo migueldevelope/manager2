@@ -5,17 +5,16 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Interfaces
 {
-  public interface IServiceCompany
+  public interface IServiceParameters
   {
     BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
-    void SetLogo(string idCompany, string url);
-    string GetLogo(string idCompany);
-    string New(Company view);
-    string Update(Company view);
+    string New(Parameter view);
+    string Update(Parameter view);
     string Remove(string id);
-    Company Get(string id);
-    List<Company> List(ref long total, int count = 10, int page = 1, string filter = "");
+    Parameter Get(string id);
+    List<Parameter> List(ref long total, int count = 10, int page = 1, string filter = "");
+    
   }
 }

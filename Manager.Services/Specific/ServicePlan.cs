@@ -976,19 +976,62 @@ namespace Manager.Services.Specific
       }
     }
 
-    public void SetAttachment(string id, string url, string fileName, string attachmentid)
+    public void SetAttachment(string idplan, string idmonitoring, string url, string fileName, string attachmentid)
     {
       try
       {
-        Plan plan = planService.GetAll(p => p._id == id).FirstOrDefault();
-        if (plan.Attachments == null)
+
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        foreach (var plan in monitoring.Activities)
         {
-          plan.Attachments = new List<AttachmentField>();
+          foreach (var res in plan.Plans)
+          {
+            if (res._id == idplan)
+            {
+              if (res.Attachments == null)
+              {
+                res.Attachments = new List<AttachmentField>();
+              }
+              res.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              planService.Update(res, null);
+            }
+          }
         }
 
-        plan.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = id });
+        foreach (var plan in monitoring.SkillsCompany)
+        {
+          foreach (var res in plan.Plans)
+          {
+            if (res._id == idplan)
+            {
+              if (res.Attachments == null)
+              {
+                res.Attachments = new List<AttachmentField>();
+              }
+              res.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              planService.Update(res, null);
+            }
+          }
+        }
 
-        planService.Update(plan, null);
+        foreach (var plan in monitoring.Schoolings)
+        {
+          foreach (var res in plan.Plans)
+          {
+            if (res._id == idplan)
+            {
+              if (res.Attachments == null)
+              {
+                res.Attachments = new List<AttachmentField>();
+              }
+              res.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              planService.Update(res, null);
+            }
+          }
+        }
+
+        monitoringService.Update(monitoring, null);
       }
       catch (Exception e)
       {

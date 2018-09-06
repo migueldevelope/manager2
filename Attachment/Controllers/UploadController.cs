@@ -172,8 +172,8 @@ namespace EdeskIntegration.Controllers
     
 
     [Authorize]
-    [HttpPost("{id}/plan")]
-    public async Task<ObjectResult> PostPlan(string id)
+    [HttpPost("{idmonitoring}/plan/{idplan}")]
+    public async Task<ObjectResult> PostPlan(string idmonitoring, string idplan)
     {
       foreach (var file in HttpContext.Request.Form.Files)
       {
@@ -218,7 +218,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        planService.SetAttachment(id, url, file.FileName, attachment._id);
+        planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
