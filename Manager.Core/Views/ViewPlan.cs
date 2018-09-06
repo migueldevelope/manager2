@@ -30,5 +30,6 @@ namespace Manager.Core.Views
     public EnumStatus Status { get; set; }
     public List<AttachmentField> Attachments { get; set; }
     public Plan PlanNew { get; set; }
+    public EnumNewAction NewAction { get; set; }
   }
 }

@@ -128,6 +128,7 @@ namespace Manager.Services.Specific
                   TextEnd = res.TextEnd,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -167,6 +168,7 @@ namespace Manager.Services.Specific
                   TextEnd = res.TextEnd,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -207,6 +209,7 @@ namespace Manager.Services.Specific
                   TextEnd = res.TextEnd,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -277,6 +280,7 @@ namespace Manager.Services.Specific
                   TextEnd = res.TextEnd,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -316,6 +320,7 @@ namespace Manager.Services.Specific
                   TextEnd = res.TextEnd,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -356,6 +361,7 @@ namespace Manager.Services.Specific
                   TextEnd = res.TextEnd,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
                   Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
                 });
               }
@@ -406,7 +412,9 @@ namespace Manager.Services.Specific
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
               {
-                plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+                if (viewPlan.NewAction == EnumNewAction.Yes)
+                  plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+
                 UpdatePlan(plan, monitoring.Person.Manager);
                 listActivities.Add(plan);
               }
@@ -430,7 +438,9 @@ namespace Manager.Services.Specific
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
               {
-                plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+                if (viewPlan.NewAction == EnumNewAction.Yes)
+                  plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+
                 UpdatePlan(plan, monitoring.Person.Manager);
                 listSchoolings.Add(plan);
               }
@@ -453,9 +463,11 @@ namespace Manager.Services.Specific
                 UpdatePlan(viewPlan, monitoring.Person.Manager);
                 listSkillsCompany.Add(viewPlan);
               }
-              else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
+              else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible))
               {
-                plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+                if(viewPlan.NewAction == EnumNewAction.Yes)
+                  plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+
                 UpdatePlan(plan, monitoring.Person.Manager);
                 listSkillsCompany.Add(plan);
               }
@@ -465,7 +477,6 @@ namespace Manager.Services.Specific
             item.Plans = listSkillsCompany;
           }
         }
-
 
         monitoringService.Update(monitoring, null);
         return "update";
@@ -632,7 +643,7 @@ namespace Manager.Services.Specific
         Plan planNew = new Plan();
         Plan planUpdate = new Plan();
 
-        planNew.StatusPlanApproved = EnumStatusPlanApproved.Invisible;
+        var person = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault().Person;
 
         foreach (var item in viewPlan)
         {
@@ -655,7 +666,7 @@ namespace Manager.Services.Specific
               DateEnd = item.DateEnd,
               Evaluation = item.Evaluation,
               Result = item.Result,
-              StatusPlanApproved = item.StatusPlanApproved,
+              StatusPlanApproved = EnumStatusPlanApproved.Open,
               Status = item.Status
             };
           else
@@ -681,6 +692,9 @@ namespace Manager.Services.Specific
               Status = item.Status
             };
         }
+
+        if (_user._idPerson == person._id)
+          planNew.StatusPlanApproved = EnumStatusPlanApproved.Invisible;
 
         NewPlanView(idmonitoring, planUpdate, planNew);
 
@@ -738,9 +752,10 @@ namespace Manager.Services.Specific
           .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
 
         if (detail == null)
-          return new ViewPlan(){ _idAccount = monitoringService._user._idAccount, _id = idmonitoring};
+          return new ViewPlan() { _idAccount = monitoringService._user._idAccount, _id = idmonitoring };
 
         ViewPlan view = new ViewPlan();
+        bool exists = false;
 
         foreach (var plan in detail.Plans)
         {
@@ -748,6 +763,7 @@ namespace Manager.Services.Specific
           {
             if (res._id == idplan)
             {
+              exists = true;
               view.DateInclude = res.DateInclude;
               view.Deadline = res.Deadline;
               view.Name = res.Name;
@@ -767,11 +783,15 @@ namespace Manager.Services.Specific
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
+              view.NewAction = res.NewAction;
             }
             else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
               view.PlanNew = res;
           }
         }
+
+        if (exists)
+          return view;
 
         foreach (var plan in detailSchoolings.Plans)
         {
@@ -779,6 +799,7 @@ namespace Manager.Services.Specific
           {
             if (res._id == idplan)
             {
+              exists = true;
               view.DateInclude = res.DateInclude;
               view.Deadline = res.Deadline;
               view.Name = res.Name;
@@ -798,11 +819,15 @@ namespace Manager.Services.Specific
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
+              view.NewAction = res.NewAction;
             }
             else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
               view.PlanNew = res;
           }
         }
+
+        if (exists)
+          return view;
 
         foreach (var plan in detailSkillsCompany.Plans)
         {
@@ -810,6 +835,7 @@ namespace Manager.Services.Specific
           {
             if (res._id == idplan)
             {
+              exists = true;
               view.DateInclude = res.DateInclude;
               view.Deadline = res.Deadline;
               view.Name = res.Name;
@@ -829,11 +855,15 @@ namespace Manager.Services.Specific
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
+              view.NewAction = res.NewAction;
             }
             else if (res.StatusPlanApproved == EnumStatusPlanApproved.Invisible)
               view.PlanNew = res;
           }
         }
+
+        if (exists)
+          return view;
 
         return null;
       }
