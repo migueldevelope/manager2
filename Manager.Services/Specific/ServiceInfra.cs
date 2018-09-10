@@ -1761,12 +1761,15 @@ namespace Manager.Services.Specific
         {
           var textDefault = new TextDefault();
           item._idAccount = _idAccount;
+          item.Company = company;
           textDefault = item;
           textDefault.Template = new TextDefault()
           {
             _id = item._id,
             _idAccount = _idAccount,
+            Company = company,
             Name = item.Name,
+            TypeText = item.TypeText,
             Content = item.Content,
             Status = item.Status,
           };
@@ -1779,6 +1782,7 @@ namespace Manager.Services.Specific
         {
           var questions = new Questions();
           item._idAccount = _idAccount;
+          item.Company = company;
           questions = item;
           questions.Template = new Questions()
           {
@@ -1786,6 +1790,8 @@ namespace Manager.Services.Specific
             _idAccount = _idAccount,
             Name = item.Name,
             Content = item.Content,
+            Company = company,
+            TypeRotine = item.TypeRotine,
             TypeQuestion = item.TypeQuestion,
             Status = item.Status,
             Order = item.Order
