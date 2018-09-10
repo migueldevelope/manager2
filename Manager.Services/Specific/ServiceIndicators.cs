@@ -339,5 +339,111 @@ namespace Manager.Services.Specific
     }
 
 
+    public string[] ExportStatusOnboarding(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding
+        & p.Name.ToUpper().Contains(filter.ToUpper()))
+        .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Skip(skip).Take(count).ToList();
+
+        string head = "Name;NameManager;Status;";
+        string[] rel = new string[1];
+        rel[0] = head;
+
+        foreach (var item in list)
+        {
+          string itemView = item.Person.Name + ";";
+          if (item.Person.Manager == null)
+            itemView += "Sem Gestor;";
+          else
+            itemView += item.Person.Manager.Name + ";";
+          if (item.OnBoarding == null)
+            itemView += EnumStatusOnBoarding.Open.ToString() + ";";
+          else
+            itemView += item.OnBoarding.StatusOnBoarding + ";";
+
+
+          rel = Export(rel, itemView);
+        }
+
+        return rel;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string[] Export(string[] rel, string message)
+    {
+      try
+      {
+        string[] text = rel;
+        string[] lines = null;
+        try
+        {
+          lines = new string[text.Count() + 1];
+          var count = 0;
+          foreach (var item in text)
+          {
+            lines.SetValue(item, count);
+            count += 1;
+          }
+          lines.SetValue(message, text.Count());
+        }
+        catch (Exception)
+        {
+          lines = new string[1];
+          lines.SetValue(message, 0);
+        }
+
+        return lines;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string[] FileNew(string name, string message)
+    {
+      try
+      {
+        string[] text = { message };
+        string[] lines = null;
+        try
+        {
+          text = System.IO.File.ReadAllLines(name + ".csv");
+          lines = new string[text.Count() + 1];
+          var count = 0;
+          foreach (var item in text)
+          {
+            lines.SetValue(item, count);
+            count += 1;
+          }
+          lines.SetValue(message, text.Count());
+        }
+        catch (Exception)
+        {
+          lines = new string[1];
+          lines.SetValue(message, 0);
+        }
+
+        System.IO.File.WriteAllLines(name + ".csv", lines);
+
+        return lines;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+
   }
 }

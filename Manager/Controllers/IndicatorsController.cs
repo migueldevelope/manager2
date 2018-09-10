@@ -56,6 +56,18 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("exportonboarding")]
+    public string[] ExportStatusOnboarding(int count = 999999, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ExportStatusOnboarding(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+
+    [Authorize]
+    [HttpGet]
     [Route("listtagscloudcompany/{idmanager}")]
     public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
     {
