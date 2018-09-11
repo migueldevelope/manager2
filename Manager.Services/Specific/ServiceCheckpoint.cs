@@ -239,7 +239,7 @@ namespace Manager.Services.Specific
 
         var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.Checkpoint).FirstOrDefault();
         if (text != null)
-          checkpoint.TextDefault = text.Content;
+          checkpoint.TextDefault = text.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.Name).Replace("{manager_name}", checkpoint.Person.Manager.Name);
 
         return checkpoint;
       }
