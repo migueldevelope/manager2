@@ -18,6 +18,10 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudCompany(string idmanager);
     List<ViewTagsCloud> ListTagsCloudPerson(string idperson);
     List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
-    string[] ExportStatusOnboarding(ref long total, string filter, int count, int page);
+    //string[] ExportStatusOnboarding(ref long total, string filter, int count, int page);
+    List<dynamic> ExportStatusOnboarding();
+    List<dynamic> ExportStatusMonitoring();
+    List<dynamic> ExportStatusCheckpoint();
+    List<dynamic> ExportStatusPlan();
   }
 }

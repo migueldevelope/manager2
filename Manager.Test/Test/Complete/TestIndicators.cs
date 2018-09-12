@@ -47,7 +47,7 @@ namespace Manager.Test.Test.Complete
         long total = 0;
         //var indicators = serviceIndicators.ListTagsCloud(idmanager);
 
-        var export = serviceIndicators.ExportStatusOnboarding(ref total, "", 9999999, 1);
+        //var export = serviceIndicators.ExportStatusOnboarding(ref total, "", 9999999, 1);
 
       }
 

@@ -23,6 +23,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly ServiceGeneric<OnBoarding> onboardingService;
+    private readonly ServiceGeneric<Checkpoint> checkpointService;
     private readonly ServiceGeneric<Workflow> workflowService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Plan> planService;
@@ -43,6 +44,7 @@ namespace Manager.Services.Specific
         onboardingService = new ServiceGeneric<OnBoarding>(context);
         personService = new ServiceGeneric<Person>(context);
         planService = new ServiceGeneric<Plan>(context);
+        checkpointService = new ServiceGeneric<Checkpoint>(context);
         logService = new ServiceLog(_context);
         mailModelService = new ServiceMailModel(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
@@ -69,6 +71,7 @@ namespace Manager.Services.Specific
       mailMessageService._user = _user;
       workflowService._user = _user;
       mailService._user = _user;
+      checkpointService._user = _user;
     }
 
     public List<ViewIndicatorsNotes> GetNotes(string id)
@@ -338,45 +341,207 @@ namespace Manager.Services.Specific
       }
     }
 
-
-    public string[] ExportStatusOnboarding(ref long total, string filter, int count, int page)
+    public List<dynamic> ExportStatusOnboarding()
     {
       try
       {
-        int skip = (count * (page - 1));
 
-        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding
-        & p.Name.ToUpper().Contains(filter.ToUpper()))
+        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding)
         .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-        .ToList().Skip(skip).Take(count).ToList();
-
-        string head = "Name;NameManager;Status;";
-        string[] rel = new string[1];
-        rel[0] = head;
+        .ToList();
+        List<dynamic> result = new List<dynamic>();
 
         foreach (var item in list)
         {
-          string itemView = item.Person.Name + ";";
-          if (item.Person.Manager == null)
-            itemView += "Sem Gestor;";
-          else
-            itemView += item.Person.Manager.Name + ";";
-          if (item.OnBoarding == null)
-            itemView += EnumStatusOnBoarding.Open.ToString() + ";";
-          else
-            itemView += item.OnBoarding.StatusOnBoarding + ";";
-
-
-          rel = Export(rel, itemView);
+          result.Add(new
+          {
+            Name = item.Person.Name,
+            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+            Status = item.OnBoarding == null ? EnumStatusOnBoarding.Open.ToString() : item.OnBoarding.StatusOnBoarding.ToString(),
+            Date = item.OnBoarding == null ? null : item.OnBoarding.DateEndEnd
+          });
         }
 
-        return rel;
+        return result;
       }
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public List<dynamic> ExportStatusCheckpoint()
+    {
+      try
+      {
+
+        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint)
+        .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList();
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          result.Add(new
+          {
+            Name = item.Person.Name,
+            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+            Status = item.Checkpoint == null ? EnumStatusCheckpoint.Open.ToString() : item.Checkpoint.StatusCheckpoint.ToString(),
+            Date = item.Checkpoint == null ? null : item.Checkpoint.DateEnd
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<dynamic> ExportStatusMonitoring()
+    {
+      try
+      {
+
+        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring)
+        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList();
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          result.Add(new
+          {
+            Name = item.Person.Name,
+            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+            Status = item.Monitoring == null ? EnumStatusOnBoarding.Open.ToString() : item.Monitoring.StatusMonitoring.ToString(),
+            Date = item.Monitoring == null ? null : item.Monitoring.DateEndEnd
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<dynamic> ExportStatusPlan()
+    {
+      try
+      {
+
+        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring)
+        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList();
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          if (item.Monitoring != null)
+          {
+            foreach (var rows in item.Monitoring.Schoolings)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+                  Description = plan == null ? null : plan.Description,
+                  Evalutions = plan == null ? 0 : plan.Evaluation,
+                  Approved = plan == null ? null : plan.StatusPlanApproved.ToString(),
+                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
+                  Date = plan == null ? null : plan.DateEnd
+                });
+              }
+            }
+
+            foreach (var rows in item.Monitoring.SkillsCompany)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+                  Description = plan == null ? null : plan.Description,
+                  Evalutions = plan == null ? 0 : plan.Evaluation,
+                  Approved = plan == null ? null : plan.StatusPlanApproved.ToString(),
+                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
+                  Date = plan == null ? null : plan.DateEnd
+                });
+              }
+            }
+
+            foreach (var rows in item.Monitoring.Activities)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+                  Description = plan == null ? null : plan.Description,
+                  Evalutions = plan == null ? 0 : plan.Evaluation,
+                  Approved = plan == null ? null : plan.StatusPlanApproved.ToString(),
+                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
+                  Date = plan == null ? null : plan.DateEnd
+                });
+              }
+            }
+          }
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    //public string[] ExportStatusOnboarding(ref long total, string filter, int count, int page)
+    //{
+    //  try
+    //  {
+    //    int skip = (count * (page - 1));
+
+    //    var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding
+    //    & p.Name.ToUpper().Contains(filter.ToUpper()))
+    //    .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+    //    .ToList().Skip(skip).Take(count).ToList();
+
+    //    string head = "Name;NameManager;Status;";
+    //    string[] rel = new string[1];
+    //    rel[0] = head;
+
+    //    foreach (var item in list)
+    //    {
+    //      string itemView = item.Person.Name + ";";
+    //      if (item.Person.Manager == null)
+    //        itemView += "Sem Gestor;";
+    //      else
+    //        itemView += item.Person.Manager.Name + ";";
+    //      if (item.OnBoarding == null)
+    //        itemView += EnumStatusOnBoarding.Open.ToString() + ";";
+    //      else
+    //        itemView += item.OnBoarding.StatusOnBoarding + ";";
+
+
+    //      rel = Export(rel, itemView);
+    //    }
+
+    //    return rel;
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw new ServiceException(_user, e, this._context);
+    //  }
+    //}
 
     public string[] Export(string[] rel, string message)
     {

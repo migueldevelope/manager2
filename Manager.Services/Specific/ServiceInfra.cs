@@ -940,7 +940,7 @@ namespace Manager.Services.Specific
           Status = p.Status,
           Name = p.Name,
           Logo = p.Logo,
-          Skills = p.Skills.OrderBy(x => x.Name).ToList(),
+          Skills = p.Skills == null ? null : p.Skills.OrderBy(x => x.Name).ToList(),
           Template = p.Template
         }).OrderBy(p => p.Name).ToList();
       }

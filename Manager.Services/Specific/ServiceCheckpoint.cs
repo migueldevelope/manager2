@@ -334,7 +334,7 @@ namespace Manager.Services.Specific
       mailService._user = _user;
       questionsService._user = _user;
       textDefaultService._user = _user;
-
+      parameterService._user = _user;
     }
 
     // send mail

@@ -54,17 +54,48 @@ namespace Manager.Controllers
       return service.ListTagsCloudPerson(idperson);
     }
 
+    //[Authorize]
+    //[HttpGet]
+    //[Route("exportonboarding")]
+    //public string[] ExportStatusOnboarding(int count = 999999, int page = 1, string filter = "")
+    //{
+    //  long total = 0;
+    //  var result = service.ExportStatusOnboarding(ref total, filter, count, page);
+    //  Response.Headers.Add("x-total-count", total.ToString());
+    //  return result;
+    //}
+
     [Authorize]
     [HttpGet]
     [Route("exportonboarding")]
-    public string[] ExportStatusOnboarding(int count = 999999, int page = 1, string filter = "")
+    public List<dynamic> ExportStatusOnboarding()
     {
-      long total = 0;
-      var result = service.ExportStatusOnboarding(ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+     return service.ExportStatusOnboarding();
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("exportmonitoring")]
+    public List<dynamic> ExportStatusMonitoring()
+    {
+      return service.ExportStatusMonitoring();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("exportcheckpoint")]
+    public List<dynamic> ExportStatusCheckpoint()
+    {
+      return service.ExportStatusCheckpoint();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("exportplan")]
+    public List<dynamic> ExportStatusPlan()
+    {
+      return service.ExportStatusPlan();
+    }
 
     [Authorize]
     [HttpGet]
