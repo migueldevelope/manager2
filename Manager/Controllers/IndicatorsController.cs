@@ -99,6 +99,22 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("chartonboarding")]
+    public IEnumerable<dynamic> ChartOnboarding()
+    {
+      return service.ChartOnboarding();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("chartonboardingrealized")]
+    public IEnumerable<dynamic> ChartOnboardingRealized()
+    {
+      return service.ChartOnboardingRealized();
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("listtagscloudcompany/{idmanager}")]
     public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
     {

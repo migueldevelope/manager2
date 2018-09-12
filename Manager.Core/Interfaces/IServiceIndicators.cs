@@ -23,5 +23,9 @@ namespace Manager.Core.Interfaces
     List<dynamic> ExportStatusMonitoring();
     List<dynamic> ExportStatusCheckpoint();
     List<dynamic> ExportStatusPlan();
+
+    IEnumerable<dynamic> ChartOnboarding();
+
+    IEnumerable<dynamic> ChartOnboardingRealized();
   }
 }

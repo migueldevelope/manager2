@@ -609,6 +609,45 @@ namespace Manager.Services.Specific
     }
 
 
+    public IEnumerable<dynamic> ChartOnboarding()
+    {
+      try
+      {
+
+        var list = onboardingService.GetAll()
+        .GroupBy(p => p.StatusOnBoarding).Select(x => new
+        {
+          Status = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public IEnumerable<dynamic> ChartOnboardingRealized()
+    {
+      try
+      {
+
+        var list = onboardingService.GetAll()
+        .GroupBy(p => p.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado").Select(x => new
+        {
+          Status = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
 
   }
 }
