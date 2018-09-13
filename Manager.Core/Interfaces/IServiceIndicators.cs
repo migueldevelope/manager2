@@ -27,5 +27,17 @@ namespace Manager.Core.Interfaces
     IEnumerable<dynamic> ChartOnboarding();
 
     IEnumerable<dynamic> ChartOnboardingRealized();
+
+    IEnumerable<dynamic> ChartMonitoring();
+
+    IEnumerable<dynamic> ChartCheckpoint();
+
+    IEnumerable<dynamic> ChartPlan();
+
+    IEnumerable<dynamic> ChartMonitoringRealized();
+
+    IEnumerable<dynamic> ChartCheckpointRealized();
+
+    IEnumerable<dynamic> ChartPlanRealized();
   }
 }

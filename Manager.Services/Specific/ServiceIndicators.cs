@@ -346,7 +346,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding)
+        var list = personService.GetAll()
         .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
@@ -375,7 +375,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint)
+        var list = personService.GetAll()
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
@@ -404,7 +404,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring)
+        var list = personService.GetAll()
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
@@ -433,7 +433,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring)
+        var list = personService.GetAll()
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
@@ -614,8 +614,9 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = onboardingService.GetAll()
-        .GroupBy(p => p.StatusOnBoarding).Select(x => new
+        var list = personService.GetAll()
+        .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .GroupBy(p => p.OnBoarding == null ? EnumStatusOnBoarding.Open : p.OnBoarding.StatusOnBoarding).Select(x => new
         {
           Status = x.Key,
           Count = x.Count()
@@ -634,14 +635,229 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = onboardingService.GetAll()
-        .GroupBy(p => p.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado").Select(x => new
+        var list = personService.GetAll()
+       .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+       .GroupBy(p => p.OnBoarding == null ? "Não Realizado" : (p.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado")).Select(x => new
+       {
+         Status = x.Key,
+         Count = x.Count()
+       }).ToList();
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public IEnumerable<dynamic> ChartMonitoring()
+    {
+      try
+      {
+
+        var list = personService.GetAll()
+        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .GroupBy(p => p.Monitoring == null ? EnumStatusMonitoring.Open : p.Monitoring.StatusMonitoring).Select(x => new
         {
           Status = x.Key,
           Count = x.Count()
         }).ToList();
 
         return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public IEnumerable<dynamic> ChartMonitoringRealized()
+    {
+      try
+      {
+
+        var list = personService.GetAll()
+       .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+       .GroupBy(p => p.Monitoring == null ? "Não Realizado" : (p.Monitoring.StatusMonitoring == EnumStatusMonitoring.End ? "Realizado" : "Não Realizado")).Select(x => new
+       {
+         Status = x.Key,
+         Count = x.Count()
+       }).ToList();
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public IEnumerable<dynamic> ChartCheckpoint()
+    {
+      try
+      {
+
+        var list = personService.GetAll()
+        .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .GroupBy(p => p.Checkpoint == null ? EnumStatusCheckpoint.Open : p.Checkpoint.StatusCheckpoint).Select(x => new
+        {
+          Status = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public IEnumerable<dynamic> ChartCheckpointRealized()
+    {
+      try
+      {
+
+        var list = personService.GetAll()
+       .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+       .GroupBy(p => p.Checkpoint == null ? "Não Realizado" : (p.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End ? "Realizado" : "Não Realizado")).Select(x => new
+       {
+         Status = x.Key,
+         Count = x.Count()
+       }).ToList();
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public IEnumerable<dynamic> ChartPlan()
+    {
+      try
+      {
+
+        var list = personService.GetAll()
+        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() }).ToList();
+
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          if (item.Monitoring != null)
+          {
+            foreach (var rows in item.Monitoring.Schoolings)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
+                });
+              }
+            }
+
+            foreach (var rows in item.Monitoring.SkillsCompany)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
+                });
+              }
+            }
+
+            foreach (var rows in item.Monitoring.Activities)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
+                });
+              }
+            }
+          }
+        }
+
+        return result.GroupBy(p => p.Status).Select(x => new
+        {
+          Status = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public IEnumerable<dynamic> ChartPlanRealized()
+    {
+      try
+      {
+
+        var list = personService.GetAll()
+        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() }).ToList();
+
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          if (item.Monitoring != null)
+          {
+            foreach (var rows in item.Monitoring.Schoolings)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
+                });
+              }
+            }
+
+            foreach (var rows in item.Monitoring.SkillsCompany)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
+                });
+              }
+            }
+
+            foreach (var rows in item.Monitoring.Activities)
+            {
+              foreach (var plan in rows.Plans)
+              {
+                result.Add(new
+                {
+                  Name = item.Person.Name,
+                  Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
+                });
+              }
+            }
+          }
+        }
+
+        return result.GroupBy(p => p.Status).Select(x => new
+        {
+          Status = x.Key,
+          Count = x.Count()
+        }).ToList();
+
       }
       catch (Exception e)
       {

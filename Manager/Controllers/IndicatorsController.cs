@@ -107,6 +107,54 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("chartmonitoring")]
+    public IEnumerable<dynamic> ChartMonitoring()
+    {
+      return service.ChartMonitoring();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("chartcheckpoint")]
+    public IEnumerable<dynamic> ChartCheckpoint()
+    {
+      return service.ChartCheckpoint();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("chartplan")]
+    public IEnumerable<dynamic> ChartPlan()
+    {
+      return service.ChartPlan();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("chartmonitoringrealized")]
+    public IEnumerable<dynamic> ChartMonitoringRealized()
+    {
+      return service.ChartMonitoringRealized();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("chartcheckpointrealized")]
+    public IEnumerable<dynamic> ChartCheckpointRealized()
+    {
+      return service.ChartCheckpointRealized();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("chartplanrealized")]
+    public IEnumerable<dynamic> ChartPlanRealized()
+    {
+      return service.ChartPlanRealized();
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("chartonboardingrealized")]
     public IEnumerable<dynamic> ChartOnboardingRealized()
     {
