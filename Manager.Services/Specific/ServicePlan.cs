@@ -705,12 +705,12 @@ namespace Manager.Services.Specific
         }
         else
         {
-          if (planUpdate.StatusPlanApproved != EnumStatusPlanApproved.Open)
+          if (planUpdate.NewAction == EnumNewAction.Yes)
           {
-            UpdatePlan(idmonitoring, planUpdate);
+            NewPlanView(idmonitoring, planUpdate, planNew);
           }
           else
-            NewPlanView(idmonitoring, planUpdate, planNew);
+            UpdatePlan(idmonitoring, planUpdate);
         }
         return "newupdate";
       }
