@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
@@ -30,6 +31,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<ProcessLevelTwo> processLevelTwoService;
     private readonly ServiceGeneric<Questions> questionsService;
     private readonly ServiceGeneric<TextDefault> textDefaultService;
+    private readonly ServiceGeneric<CBO> cboService;
 
 
     public ServiceInfra(DataContext context)
@@ -52,6 +54,7 @@ namespace Manager.Services.Specific
         processLevelTwoService = new ServiceGeneric<ProcessLevelTwo>(context);
         questionsService = new ServiceGeneric<Questions>(context);
         textDefaultService = new ServiceGeneric<TextDefault>(context);
+        cboService = new ServiceGeneric<CBO>(context);
       }
       catch (Exception e)
       {
@@ -69,6 +72,19 @@ namespace Manager.Services.Specific
 
 
         areaService.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddCBO(CBO view)
+    {
+      try
+      {
+        cboService.InsertAccount(view);
         return "ok";
       }
       catch (Exception e)
@@ -597,6 +613,41 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async Task UpdateCBOAll(CBO cbo)
+    {
+      try
+      {
+        foreach (var item in occupationService.GetAuthentication(p => p.CBO._id == cbo._id).ToList())
+        {
+          item.CBO = cbo;
+          occupationService.UpdateAccount(item, null);
+          UpdateOccupationAllCBO(item);
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private async Task UpdateOccupationAllCBO(Occupation occupation)
+    {
+      try
+      {
+        foreach (var item in personService.GetAuthentication(p => p.Occupation._id == occupation._id).ToList())
+        {
+          item.Occupation = occupation;
+          personService.UpdateAccount(item, null);
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     private async Task UpdateOccupationAll(Occupation occupation)
     {
       try
@@ -825,6 +876,21 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string DeleteCBO(string id)
+    {
+      try
+      {
+        var cbo = cboService.GetAuthentication(p => p._id == id).FirstOrDefault();
+        cbo.Status = EnumStatus.Disabled;
+        cboService.UpdateAccount(cbo, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Area> GetAreas()
     {
       try
@@ -982,6 +1048,32 @@ namespace Manager.Services.Specific
           }).FirstOrDefault();
         group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
         return group;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public CBO GetCBO(string id)
+    {
+      try
+      {
+        var cbo = cboService.GetAuthentication(p => p._id == id).FirstOrDefault();
+        return cbo;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<CBO> ListCBO()
+    {
+      try
+      {
+        var cbo = cboService.GetAuthentication().ToList();
+        return cbo;
       }
       catch (Exception e)
       {
@@ -1386,6 +1478,19 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string UpdateCBO(CBO model)
+    {
+      try
+      {
+        cboService.UpdateAccount(model, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public string UpdateGroup(Group group)
     {
       try
@@ -1460,8 +1565,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-
 
     public string UpdateOccupation(Occupation occupation)
     {
@@ -1659,7 +1762,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
 
     public string UpdateMapGroupSchooling(string idgroup, Schooling schooling)
     {

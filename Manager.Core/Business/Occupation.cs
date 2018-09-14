@@ -14,5 +14,6 @@ namespace Manager.Core.Business
     public List<Activitie> Activities { get; set; }
     public Occupation Template { get; set; }
     public ProcessLevelTwo ProcessLevelTwo { get; set; }
+    public CBO CBO { get; set; }
   }
 }

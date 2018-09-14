@@ -103,24 +103,17 @@ namespace Manager.Services.Specific
     {
       try
       {
-        try
-        {
-          int skip = (count * (page - 1));
-          var detail = parameterService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-          total = detail.Count();
+        int skip = (count * (page - 1));
+        var detail = parameterService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
 
-          return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        }
-        catch (Exception e)
-        {
-          throw new ServiceException(_user, e, this._context);
-        }
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
-        throw e;
+        throw new ServiceException(_user, e, this._context);
       }
     }
-
   }
+
 }

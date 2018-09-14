@@ -18,6 +18,8 @@ namespace Manager.Core.Interfaces
     List<Sphere> GetSpheres();
     List<Sphere> GetSpheres(string idcompany);
     List<Axis> GetAxis();
+    List<CBO> ListCBO();
+    CBO GetCBO(string id);
     List<Axis> GetAxis(string idcompany);
     List<Area> GetAreas();
     List<Area> GetAreas(string idcompany);
@@ -35,6 +37,7 @@ namespace Manager.Core.Interfaces
     List<Occupation> GetOccupations(string idcompany, string idarea);
     List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
     string AddTextDefault(TextDefault model);
+    string AddCBO(CBO model);
     string AddEssential(ViewAddEssential view);
     Skill AddSkill(ViewAddSkill view);
     string AddSkills(List<ViewAddSkill> view);
@@ -69,6 +72,7 @@ namespace Manager.Core.Interfaces
     string DeleteProcessLevelOne(string id);
     string DeleteProcessLevelTwo(string id);
     string DeleteTextDefault(string id);
+    string DeleteCBO(string id);
     string UpdateTextDefault(TextDefault textDefault);
     string UpdateSkill(Skill skill);
     string UpdateSphere(Sphere sphere);
@@ -84,6 +88,7 @@ namespace Manager.Core.Interfaces
     string UpdateSchooling(Schooling schooling);
     string UpdateProcessLevelOne(ProcessLevelOne model);
     string UpdateProcessLevelTwo(ProcessLevelTwo model);
+    string UpdateCBO(CBO model);
     string AreaOrder(string idcompany, string idarea, long order, bool sum);
     string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum);
     string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum);
