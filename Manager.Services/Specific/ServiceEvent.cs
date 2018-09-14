@@ -18,8 +18,9 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Course> courseService;
     private readonly ServiceGeneric<CourseESocial> courseESocialService;
     private readonly ServiceGeneric<Person> personService;
+    private string path;
 
-    public ServiceEvent(DataContext context)
+    public ServiceEvent(DataContext context, string pathToken)
      : base(context)
     {
       try
@@ -28,6 +29,7 @@ namespace Manager.Services.Specific
         courseService = new ServiceGeneric<Course>(context);
         courseESocialService = new ServiceGeneric<CourseESocial>(context);
         personService = new ServiceGeneric<Person>(context);
+        path = pathToken;
       }
       catch (Exception e)
       {

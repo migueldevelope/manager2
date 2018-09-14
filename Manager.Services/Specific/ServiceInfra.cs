@@ -1072,7 +1072,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var cbo = cboService.GetAuthentication().ToList();
+        var cbo = cboService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
         return cbo;
       }
       catch (Exception e)

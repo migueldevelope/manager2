@@ -39,6 +39,15 @@ namespace Manager.Controllers
       return service.AddArea(view);
     }
 
+
+    [Authorize]
+    [HttpPost]
+    [Route("addcbo")]
+    public string AddCbo([FromBody]CBO view)
+    {
+      return service.AddCBO(view);
+    }
+
     [Authorize]
     [HttpPost]
     [Route("addaxis")]
@@ -267,6 +276,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
+    [Route("deletecbo/{id}")]
+    public string DeleteCBO(string id)
+    {
+      return service.DeleteCBO(id);
+    }
+
+    [Authorize]
+    [HttpDelete]
     [Route("deleteoccupationactivities/{idoccupation}/{activitie}")]
     public string DeleteOccupationActivities(string idoccupation, string activitie)
     {
@@ -328,6 +345,22 @@ namespace Manager.Controllers
     public List<Questions> GetQuestions(string idcompany)
     {
       return service.ListQuestions(idcompany);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listcbo")]
+    public List<CBO> ListCBO()
+    {
+      return service.ListCBO();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getcbo/{id}")]
+    public CBO GetCBO(string id)
+    {
+      return service.GetCBO(id);
     }
 
     [Authorize]
@@ -669,6 +702,14 @@ namespace Manager.Controllers
     public string UpdateProcessLevelTwo([FromBody]ProcessLevelTwo processLevelTwo)
     {
       return service.UpdateProcessLevelTwo(processLevelTwo);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatecbo")]
+    public string UpdateCBO([FromBody]CBO model)
+    {
+      return service.UpdateCBO(model);
     }
 
     [Authorize]
