@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mail.Controllers
 {
-    [Produces("application/json")]
-    [Route("mailmodel")]
-    public class MailModelController : Controller
-    {
+  [Produces("application/json")]
+  [Route("mailmodel")]
+  public class MailModelController : Controller
+  {
     private readonly IServiceMailModel service;
 
     public MailModelController(IServiceMailModel _service, IHttpContextAccessor contextAccessor)
