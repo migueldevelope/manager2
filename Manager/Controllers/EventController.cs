@@ -64,6 +64,48 @@ namespace Manager.Controllers
       return service.Remove(id);
     }
 
+    [HttpPost]
+    [Route("neweventhistoric")]
+    public string PostEventHistoric([FromBody]EventHistoric view)
+    {
+      return service.NewEventHistoric(view);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listeventhistoric")]
+    public List<EventHistoric> ListEventHistoric(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoric(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("geteventhistoric")]
+    public EventHistoric ListEventHistoric(string id)
+    {
+      return service.GetEventHistoric(id);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updateeventhistoric")]
+    public string UpdateEventHistoric([FromBody]EventHistoric view)
+    {
+      return service.UpdateEventHistoric(view);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteeventhistoric/{id}")]
+    public string DeleteEventHistoric(string id)
+    {
+      return service.RemoveEventHistoric(id);
+    }
+
 
     [HttpPost]
     [Route("newcourse")]

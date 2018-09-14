@@ -17,6 +17,8 @@ namespace Manager.Core.Business
     public bool OpenSubscription { get; set; }
     public byte DaysSubscription { get; set; }
     public decimal Workload { get; set; }
+    public DateTime? Begin { get; set; }
+    public DateTime? End { get; set; }
     public List<Instructor> Instructors { get; set; }
     public List<DaysEvent> Days { get; set; }
     public List<Participant> Participants { get; set; }

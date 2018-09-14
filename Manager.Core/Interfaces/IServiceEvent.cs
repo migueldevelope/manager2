@@ -27,5 +27,11 @@ namespace Manager.Core.Interfaces
     CourseESocial GetCourseESocial(string id);
     List<CourseESocial> ListCourseESocial(ref long total, int count = 10, int page = 1, string filter = "");
 
+    string NewEventHistoric(EventHistoric view);
+    string UpdateEventHistoric(EventHistoric view);
+    string RemoveEventHistoric(string id);
+    EventHistoric GetEventHistoric(string id);
+    List<EventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "");
+
   }
 }
