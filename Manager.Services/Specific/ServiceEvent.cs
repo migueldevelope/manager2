@@ -221,6 +221,7 @@ namespace Manager.Services.Specific
         days.Status = EnumStatus.Enabled;
         events.Days.Add(days);
         eventService.Update(events, null);
+        MathWorkload(idevent);
         UpdateAddDaysParticipant(idevent, days);
         return "add success";
       }
@@ -283,6 +284,7 @@ namespace Manager.Services.Specific
         events.Days.Remove(days);
         eventService.Update(events, null);
         UpdateAddDaysParticipant(idevent, days);
+        MathWorkload(idevent);
         return "remove success";
       }
       catch (Exception e)
@@ -291,6 +293,26 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async void MathWorkload(string idevent)
+    {
+      try
+      {
+        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+        events.Begin = events.Days.Min(p => p.Begin);
+        events.End = events.Days.Max(p => p.End);
+        decimal workload = 0;
+        foreach (var item in events.Days)
+        {
+          workload += decimal.Parse((item.End - item.Begin).TotalMinutes.ToString());
+        }
+        events.Workload = workload;
+        eventService.Update(events, null);
+      }
+      catch(Exception e)
+      {
+        throw e;
+      }
+    }
     public string AddParticipant(string idevent, Person person)
     {
       try
