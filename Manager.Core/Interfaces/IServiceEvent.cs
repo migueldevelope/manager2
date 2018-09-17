@@ -32,6 +32,10 @@ namespace Manager.Core.Interfaces
     string RemoveEventHistoric(string id);
     EventHistoric GetEventHistoric(string id);
     List<EventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "");
+    string RemoveParticipant(string idevent, string idperson);
+    string AddParticipant(string idevent, Person person);
+    string RemoveDays(string idevent, DaysEvent days);
+    string AddDays(string idevent, DaysEvent days);
 
   }
 }

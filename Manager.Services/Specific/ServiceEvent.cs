@@ -178,6 +178,7 @@ namespace Manager.Services.Specific
       {
         view.Participants = new List<Participant>();
         view.Instructors = new List<Instructor>();
+        view.Attachments = new List<AttachmentField>();
         view.UserInclude = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
         view.DateInclude = DateTime.Now;
         view.Days = new List<DaysEvent>();

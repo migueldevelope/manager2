@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -190,5 +191,39 @@ namespace Manager.Controllers
     {
       return service.RemoveCourseESocial(id);
     }
+
+    [HttpPost]
+    [Route("addparticipant/{idevent}")]
+    public string AddParticipant([FromBody]Person person, string idevent)
+    {
+      return service.AddParticipant(idevent, person);
+    }
+
+    [HttpPost]
+    [Route("adddays/{idevent}")]
+    public string AddDays([FromBody]DaysEvent days, string idevent)
+    {
+      return service.AddDays(idevent, days);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("removeparticipant/{idevent}/{idperson}")]
+    public string RemoveParticipant(string idevent, string idperson)
+    {
+      return service.RemoveParticipant(idevent, idperson);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("removedays/{idevent}/{begin}/{end}/{idday}")]
+    public string RemoveDays(string idevent, string begin, string end, string idday)
+    {
+      return service.RemoveDays(idevent, new DaysEvent() { Begin = DateTime.Parse(begin), End = DateTime.Parse(end), Status = EnumStatus.Enabled, _id = idday });
+    }
+
+
+
+
   }
 }
