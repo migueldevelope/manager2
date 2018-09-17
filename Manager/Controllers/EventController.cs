@@ -222,6 +222,20 @@ namespace Manager.Controllers
       return service.RemoveDays(idevent, new DaysEvent() { Begin = DateTime.Parse(begin), End = DateTime.Parse(end), Status = EnumStatus.Enabled, _id = idday });
     }
 
+    [HttpPost]
+    [Route("addinstructor/{idevent}")]
+    public string AddDays([FromBody]Instructor view, string idevent)
+    {
+      return service.AddInstructor(idevent, view);
+    }
+
+    [HttpDelete]
+    [Route("removeinstructor/{idevent}/{id}")]
+    public string RemoveInstructor(string idevent, string id)
+    {
+      return service.RemoveInstructor(idevent, id);
+    }
+
 
 
 

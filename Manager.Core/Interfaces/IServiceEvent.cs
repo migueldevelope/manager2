@@ -36,6 +36,7 @@ namespace Manager.Core.Interfaces
     string AddParticipant(string idevent, Person person);
     string RemoveDays(string idevent, DaysEvent days);
     string AddDays(string idevent, DaysEvent days);
-
+    string AddInstructor(string idevent, Instructor instructor);
+    string RemoveInstructor(string idevent, string id);
   }
 }

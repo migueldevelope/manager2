@@ -5,6 +5,7 @@ using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -192,11 +193,32 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string AddInstructor(string idevent, Instructor instructor)
+    {
+      try
+      {
+        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+        instructor._idAccount = _user._idAccount;
+        instructor._id = ObjectId.GenerateNewId().ToString();
+        instructor.Status = EnumStatus.Enabled;
+        events.Instructors.Add(instructor);
+        eventService.Update(events, null);
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string AddDays(string idevent, DaysEvent days)
     {
       try
       {
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+        days._idAccount = _user._idAccount;
+        days._id = ObjectId.GenerateNewId().ToString();
+        days.Status = EnumStatus.Enabled;
         events.Days.Add(days);
         eventService.Update(events, null);
         UpdateAddDaysParticipant(idevent, days);
@@ -214,12 +236,12 @@ namespace Manager.Services.Specific
       try
       {
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
-        foreach(var item in events.Participants)
+        foreach (var item in events.Participants)
         {
-        
+
         }
         eventService.Update(events, null);
-        
+
       }
       catch (Exception e)
       {
@@ -257,6 +279,7 @@ namespace Manager.Services.Specific
       try
       {
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+        days._idAccount = _user._idAccount;
         events.Days.Remove(days);
         eventService.Update(events, null);
         UpdateAddDaysParticipant(idevent, days);
@@ -275,6 +298,8 @@ namespace Manager.Services.Specific
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
         var participant = new Participant()
         {
+          _id = ObjectId.GenerateNewId().ToString(),
+          _idAccount = _user._idAccount,
           Person = person,
           Approved = false,
           FrequencyEvent = new List<FrequencyEvent>(),
@@ -286,7 +311,16 @@ namespace Manager.Services.Specific
         {
           participant.FrequencyEvent.Add(new FrequencyEvent()
           {
-            DaysEvent = new DaysEvent() { Begin = days.Begin, End = days.End, Status = EnumStatus.Enabled },
+            _id = ObjectId.GenerateNewId().ToString(),
+            _idAccount = _user._idAccount,
+            DaysEvent = new DaysEvent()
+            {
+              Begin = days.Begin,
+              End = days.End,
+              Status = EnumStatus.Enabled,
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = _user._idAccount,
+            },
             Present = false,
             Status = EnumStatus.Enabled
           });
@@ -311,6 +345,30 @@ namespace Manager.Services.Specific
           if (item.Person._id == idperson)
           {
             events.Participants.Remove(item);
+            eventService.Update(events, null);
+            return "remove success";
+          }
+
+        }
+
+        return "remove success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string RemoveInstructor(string idevent, string id)
+    {
+      try
+      {
+        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+        foreach (var item in events.Instructors)
+        {
+          if (item._id == id)
+          {
+            events.Instructors.Remove(item);
             eventService.Update(events, null);
             return "remove success";
           }
