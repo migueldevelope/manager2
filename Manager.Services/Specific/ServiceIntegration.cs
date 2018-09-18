@@ -61,7 +61,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = personService.GetAll(p => p.Document == document);
+        var item = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Document == document);
         var retorno = item.FirstOrDefault();
         return retorno;
       }

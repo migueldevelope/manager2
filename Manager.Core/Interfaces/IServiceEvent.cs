@@ -38,5 +38,8 @@ namespace Manager.Core.Interfaces
     string AddDays(string idevent, DaysEvent days);
     string AddInstructor(string idevent, Instructor instructor);
     string RemoveInstructor(string idevent, string id);
+    List<Entity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "");
+    List<Person> ListPersonInstructor(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Person> ListPersonParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

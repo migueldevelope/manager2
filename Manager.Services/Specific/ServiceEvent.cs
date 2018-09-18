@@ -109,6 +109,72 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Entity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = entityService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Person> ListPersonParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = new List<Person>();
+        var participants = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Select(p => p.Person).ToList();
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
+        ).ToList();
+        foreach (var item in list)
+        {
+          if (!participants.Contains(item))
+            detail.Add(item);
+        }
+
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Person> ListPersonInstructor(string idevent, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = new List<Person>();
+        var instructors = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Instructors.Select(p => p.Person).ToList();
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
+        ).ToList();
+        foreach (var item in list)
+        {
+          if (!instructors.Contains(item))
+            detail.Add(item);
+        }
+
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Event> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -308,7 +374,7 @@ namespace Manager.Services.Specific
         events.Workload = workload;
         eventService.Update(events, null);
       }
-      catch(Exception e)
+      catch (Exception e)
       {
         throw e;
       }

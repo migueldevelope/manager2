@@ -85,7 +85,7 @@ namespace Manager.Services.Specific
         LogSave(idmanager, "List");
         newOnZero();
         int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.Manager._id == idmanager
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator &  p.TypeJourney == EnumTypeJourney.OnBoarding & p.Manager._id == idmanager
         & p.Name.ToUpper().Contains(filter.ToUpper()))
         .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();

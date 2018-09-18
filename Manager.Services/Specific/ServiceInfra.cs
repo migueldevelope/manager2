@@ -540,7 +540,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in personService.GetAll(p => p.Company._id == company._id).ToList())
+        foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == company._id).ToList())
         {
           item.Company = company;
           personService.Update(item, null);
@@ -599,7 +599,7 @@ namespace Manager.Services.Specific
         }
 
 
-        foreach (var item in personService.GetAll(p => p.Occupation.Group._id == group._id).ToList())
+        foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).ToList())
         {
           item.Occupation.Group = group;
           item.Occupation.Schooling = group.Schooling;
@@ -652,7 +652,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in personService.GetAll(p => p.Occupation._id == occupation._id).ToList())
+        foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
         {
           item.Occupation = occupation;
           personService.Update(item, null);
@@ -671,7 +671,7 @@ namespace Manager.Services.Specific
       {
         var group = groupService.GetAll(p => p._id == idgroup).FirstOrDefault();
 
-        foreach (var item in personService.GetAll(p => p.Occupation.Group._id == group._id).ToList())
+        foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).ToList())
         {
           return "error_exists_register";
         }
@@ -752,7 +752,7 @@ namespace Manager.Services.Specific
       {
         var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
 
-        foreach (var item in personService.GetAll(p => p.Occupation._id == occupation._id).ToList())
+        foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
         {
           return "error_exists_register";
         }
