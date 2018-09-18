@@ -39,7 +39,7 @@ namespace Manager.Core.Interfaces
     string AddInstructor(string idevent, Instructor instructor);
     string RemoveInstructor(string idevent, string id);
     List<Entity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "");
-    List<Person> ListPersonInstructor(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
-    List<Person> ListPersonParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Person> ListPersonInstructor(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Person> ListPersonParticipants(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

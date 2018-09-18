@@ -125,14 +125,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Person> ListPersonParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<Person> ListPersonParticipants(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = new List<Person>();
         var participants = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Select(p => p.Person).ToList();
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
+        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
         ).ToList();
         foreach (var item in list)
         {
@@ -150,14 +150,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Person> ListPersonInstructor(string idevent, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<Person> ListPersonInstructor(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = new List<Person>();
         var instructors = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Instructors.Select(p => p.Person).ToList();
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
+        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
         ).ToList();
         foreach (var item in list)
         {

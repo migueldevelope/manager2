@@ -43,22 +43,22 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listpersoninstructor/{idevent}")]
-    public List<Person> ListPersonInstructor(string idevent, int count = 10, int page = 1, string filter = "")
+    [Route("listpersoninstructor/{idevent}/{idcompany}")]
+    public List<Person> ListPersonInstructor(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPersonInstructor(idevent, ref total, count, page, filter);
+      var result = service.ListPersonInstructor(idevent, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpGet]
-    [Route("listpersonparticipants/{idevent}")]
-    public List<Person> ListPersonParticipants(string idevent, int count = 10, int page = 1, string filter = "")
+    [Route("listpersonparticipants/{idevent}/{idcompany}")]
+    public List<Person> ListPersonParticipants(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPersonParticipants(idevent, ref total, count, page, filter);
+      var result = service.ListPersonParticipants(idevent, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

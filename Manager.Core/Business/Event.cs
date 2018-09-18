@@ -11,7 +11,7 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Content { get; set; }
     public Entity Entity { get; set; }
-    public byte MinimumFrequency { get; set; }
+    public decimal MinimumFrequency { get; set; }
     public byte LimitParticipants { get; set; }
     public decimal Grade { get; set; }
     public bool OpenSubscription { get; set; }
