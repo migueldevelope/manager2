@@ -87,6 +87,149 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewPlanShort> ListPlans(ref long total, string id, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        List<ViewPlan> result = new List<ViewPlan>();
+
+        var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+
+        foreach (var item in detail)
+        {
+          foreach (var plan in item.Plans)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(new ViewPlan()
+              {
+                _id = res._id,
+                _idAccount = res._idAccount,
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan,
+                TypeAction = res.TypeAction,
+                StatusPlanApproved = res.StatusPlanApproved,
+                TextEnd = res.TextEnd,
+                Status = res.Status,
+                DateEnd = res.DateEnd,
+                NewAction = res.NewAction,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+              });
+            }
+          }
+        }
+
+
+        var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+        foreach (var item in detailSchool)
+        {
+          foreach (var plan in item.Plans)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(new ViewPlan()
+              {
+                _id = res._id,
+                _idAccount = res._idAccount,
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan,
+                TypeAction = res.TypeAction,
+                StatusPlanApproved = res.StatusPlanApproved,
+                TextEnd = res.TextEnd,
+                Status = res.Status,
+                DateEnd = res.DateEnd,
+                NewAction = res.NewAction,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+              });
+            }
+          }
+        }
+
+
+        var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+        foreach (var item in detailSkills)
+        {
+          foreach (var plan in item.Plans)
+          {
+            foreach (var res in plan)
+            {
+              result.Add(new ViewPlan()
+              {
+                _id = res._id,
+                _idAccount = res._idAccount,
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills,
+                UserInclude = res.UserInclude,
+                TypePlan = res.TypePlan,
+                IdPerson = item.Person._id,
+                NamePerson = item.Person.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = item._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan,
+                TypeAction = res.TypeAction,
+                StatusPlanApproved = res.StatusPlanApproved,
+                TextEnd = res.TextEnd,
+                Status = res.Status,
+                DateEnd = res.DateEnd,
+                NewAction = res.NewAction,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+              });
+            }
+          }
+        }
+
+
+        result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
+
+
+        total = result.Count();
+        result = result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        var viewReturn = result.GroupBy(i => i.Name).Select(g => new ViewPlanShort
+        {
+          Name = g.Key,
+          LastAction = g.Max(row => row.Deadline)
+        }).ToList();
+
+        return viewReturn;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end)
     {
       try
@@ -824,7 +967,7 @@ namespace Manager.Services.Specific
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
-              view.Skills = res.Skills.OrderBy(p => p.Name).ToList();
+              view.Skills = res.Skills;
               view._id = res._id;
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
@@ -860,7 +1003,7 @@ namespace Manager.Services.Specific
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
-              view.Skills = res.Skills.OrderBy(p => p.Name).ToList();
+              view.Skills = res.Skills;
               view._id = res._id;
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
