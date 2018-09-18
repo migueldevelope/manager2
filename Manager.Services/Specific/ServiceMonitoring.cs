@@ -418,7 +418,7 @@ namespace Manager.Services.Specific
         {
           list.Add(item);
         }
-        return list;
+        return list.OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {

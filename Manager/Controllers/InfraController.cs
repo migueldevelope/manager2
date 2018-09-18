@@ -58,6 +58,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
+    [Route("addspecificrequirements/{idoccupation}")]
+    public string AddSpecificRequirements([FromBody]ViewAddSpecificRequirements view, string idoccupation)
+    {
+      return service.AddSpecificRequirements(idoccupation, view);
+    }
+
+    [Authorize]
+    [HttpPost]
     [Route("addessential")]
     public string AddEssential([FromBody]ViewAddEssential view)
     {
@@ -459,6 +467,14 @@ namespace Manager.Controllers
     public List<Group> GetGroups(string idcompany)
     {
       return service.GetGroups(idcompany);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getgroupsprint/{idcompany}")]
+    public List<Group> GetGroupsPrint(string idcompany)
+    {
+      return service.GetGroupsPrint(idcompany);
     }
 
 

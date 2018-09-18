@@ -55,6 +55,7 @@ namespace Manager.Core.Interfaces
     string AddProcessLevelOne(ProcessLevelOne model);
     string AddProcessLevelTwo(ProcessLevelTwo model);
     string AddQuestions(Questions view);
+    string AddSpecificRequirements(string idoccupation, ViewAddSpecificRequirements view);
     string DeleteEssential(string idcompany, string id);
     string DeleteSkill(string idskill);
     string DeleteSphere(string idsphere);
@@ -95,5 +96,6 @@ namespace Manager.Core.Interfaces
 
     string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order);
     string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order);
+    List<Group> GetGroupsPrint(string idcompany);
   }
 }

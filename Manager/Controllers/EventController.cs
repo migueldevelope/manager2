@@ -30,6 +30,7 @@ namespace Manager.Controllers
       return service.New(view);
     }
 
+
     [Authorize]
     [HttpGet]
     [Route("list")]

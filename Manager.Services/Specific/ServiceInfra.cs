@@ -380,6 +380,23 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string AddSpecificRequirements(string idoccupation, ViewAddSpecificRequirements view)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        occupation.SpecificRequirements = view.Name;
+        occupationService.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string AddOccupationSkill(ViewAddOccupationSkill view)
     {
       try
@@ -1117,6 +1134,24 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Group> GetGroupsPrint(string idcompany)
+    {
+      try
+      {
+        List<Group> groups = new List<Group>();
+        foreach (var item in groupService.GetAll(p => p.Company._id == idcompany))
+        {
+          item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
+          groups.Add(item);
+        }
+        return groups.OrderByDescending(p => p.Sphere.TypeSphere).ThenByDescending(p => p.Axis.TypeAxis).ThenByDescending(p => p.Line).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public Occupation GetOccupation(string id)
     {
       try
@@ -1159,7 +1194,8 @@ namespace Manager.Services.Specific
             Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
             Activities = p.Activities.OrderBy(x => x.Order).ToList(),
             Template = p.Template,
-            ProcessLevelTwo = p.ProcessLevelTwo
+            ProcessLevelTwo = p.ProcessLevelTwo,
+            SpecificRequirements = p.SpecificRequirements
           }).FirstOrDefault();
       }
       catch (Exception e)

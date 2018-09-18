@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mail", "Mail\Mail.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Attachment", "Attachment\Attachment.csproj", "{38AC6C5B-0A73-41EF-83A7-016283095792}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportClient", "ImportClient\ImportClient.csproj", "{403E8B96-CBC0-46CD-9058-9021111658E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImportClient", "ImportClient\ImportClient.csproj", "{403E8B96-CBC0-46CD-9058-9021111658E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -788,7 +788,7 @@ namespace Manager.Services.Specific
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
-              view.Skills = res.Skills;
+              view.Skills = res.Skills.OrderBy(p => p.Name).ToList();
               view._id = res._id;
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
@@ -824,7 +824,7 @@ namespace Manager.Services.Specific
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
-              view.Skills = res.Skills;
+              view.Skills = res.Skills.OrderBy(p => p.Name).ToList();
               view._id = res._id;
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
@@ -860,7 +860,7 @@ namespace Manager.Services.Specific
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
-              view.Skills = res.Skills;
+              view.Skills = res.Skills.OrderBy(p => p.Name).ToList();
               view._id = res._id;
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
