@@ -77,7 +77,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("get")]
+    [Route("get/{id}")]
     public Event List(string id)
     {
       return service.Get(id);
