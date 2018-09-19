@@ -18,5 +18,6 @@ namespace Manager.Core.Interfaces
     void SetAttachment(string idplan, string idmonitoring,string url, string fileName, string attachmentid);
     string NewUpdatePlan(string idmonitoring, List<ViewPlanNewUp> viewPlan);
     List<ViewPlanShort> ListPlans(ref long total, string id, string filter, int count, int page);
+    List<ViewPlanShort> ListPlansPerson(ref long total, string id, string filter, int count, int page);
   }
 }

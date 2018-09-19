@@ -45,6 +45,17 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listplansperson/{id}")]
+    public List<ViewPlanShort> ListPlansPerson(string id, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListPlansPerson(ref total, id, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("listplansperson/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}")]
     public List<ViewPlan> ListPlansPerson(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, int count = 10, int page = 1, string filter = "")
     {

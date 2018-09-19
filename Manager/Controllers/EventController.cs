@@ -25,7 +25,7 @@ namespace Manager.Controllers
 
     [HttpPost]
     [Route("new")]
-    public string Post([FromBody]Event view)
+    public Event Post([FromBody]Event view)
     {
       return service.New(view);
     }

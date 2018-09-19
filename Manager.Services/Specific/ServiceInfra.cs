@@ -337,7 +337,8 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Activities = new List<Activitie>(),
           Schooling = view.Group.Schooling,
-          Skills = new List<Skill>()
+          Skills = new List<Skill>(),
+          Process = view.Process
         };
         occupationService.Insert(occupation);
         return "ok";
@@ -1195,7 +1196,8 @@ namespace Manager.Services.Specific
             Activities = p.Activities.OrderBy(x => x.Order).ToList(),
             Template = p.Template,
             ProcessLevelTwo = p.ProcessLevelTwo,
-            SpecificRequirements = p.SpecificRequirements
+            SpecificRequirements = p.SpecificRequirements,
+            Process = p.Process
           }).FirstOrDefault();
       }
       catch (Exception e)
@@ -1240,12 +1242,62 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async void AdjustOccuptaions()
+    {
+      try
+      {
+        var list = occupationService.GetAuthentication(p => p.Process == null).ToList();
+        foreach (var item in list)
+        {
+          item.Process = new List<ProcessLevelTwo>();
+          if (item.ProcessLevelTwo != null)
+          {
+            item.Process.Add(item.ProcessLevelTwo);
+            occupationService.UpdateAccount(item, null);
+          }
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<Occupation> GetOccupations(string idcompany, string idarea)
     {
       try
       {
-        return occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany)
-          .OrderBy(p => p.Name).ToList();
+        AdjustOccuptaions();
+        //return occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var itens = occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        List<Occupation> list = new List<Occupation>();
+        foreach (var item in itens)
+        {
+          foreach (var proc in item.Process)
+          {
+            item.ProcessLevelTwo = proc;
+            list.Add(new Occupation()
+            {
+              Name = item.Name,
+              Group = item.Group,
+              Area = item.Area,
+              Line = item.Line,
+              Skills = item.Skills,
+              Schooling = item.Schooling,
+              Activities = item.Activities,
+              Template = item.Template,
+              ProcessLevelTwo = proc,
+              CBO = item.CBO,
+              SpecificRequirements = item.SpecificRequirements,
+              Process = item.Process,
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Status = item.Status
+            });
+          }
+        }
+        return list.OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {

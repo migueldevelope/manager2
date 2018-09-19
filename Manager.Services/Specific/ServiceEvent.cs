@@ -239,7 +239,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string New(Event view)
+    public Event New(Event view)
     {
       try
       {
@@ -250,8 +250,7 @@ namespace Manager.Services.Specific
         view.DateInclude = DateTime.Now;
         view.Days = new List<DaysEvent>();
         view.Entity = AddEntity(view.Entity.Name);
-        eventService.Insert(view);
-        return "add success";
+        return eventService.Insert(view);
       }
       catch (Exception e)
       {

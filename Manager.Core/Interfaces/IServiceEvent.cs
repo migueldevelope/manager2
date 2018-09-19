@@ -11,7 +11,7 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
-    string New(Event view);
+    Event New(Event view);
     string Update(Event view);
     string Remove(string id);
     Event Get(string id);

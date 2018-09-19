@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Business;
+using System.Collections.Generic;
 
 namespace Manager.Core.Views
 {
@@ -9,5 +10,6 @@ namespace Manager.Core.Views
     public long Line { get; set; }
     public Area Area { get; set; }
     public ProcessLevelTwo ProcessLevelTwo { get; set; }
+    public List<ProcessLevelTwo> Process { get; set; }
   }
 }
