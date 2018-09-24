@@ -599,7 +599,7 @@ namespace Manager.Services.Specific
       entityService._user = _user;
     }
 
-    public string Update(Event view)
+    public Event Update(Event view)
     {
       try
       {
@@ -611,8 +611,7 @@ namespace Manager.Services.Specific
           GenerateHistoric(view);
         }
         eventService.Update(view, null);
-
-        return "update";
+        return view;
       }
       catch (Exception e)
       {

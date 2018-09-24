@@ -86,7 +86,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string Update([FromBody]Event view)
+    public Event Update([FromBody]Event view)
     {
       return service.Update(view);
     }

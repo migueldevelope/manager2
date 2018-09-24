@@ -12,7 +12,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
     Event New(Event view);
-    string Update(Event view);
+    Event Update(Event view);
     string Remove(string id);
     Event Get(string id);
     List<Event> List(ref long total, int count = 10, int page = 1, string filter = "");
