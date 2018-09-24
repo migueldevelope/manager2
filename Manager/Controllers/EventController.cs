@@ -250,10 +250,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
-    [Route("removedays/{idevent}/{begin}/{end}/{idday}")]
+    [Route("removedays/{idevent}/{idday}")]
     public string RemoveDays(string idevent, string begin, string end, string idday)
     {
-      return service.RemoveDays(idevent, new DaysEvent() { Begin = DateTime.Parse(begin), End = DateTime.Parse(end), Status = EnumStatus.Enabled, _id = idday });
+      return service.RemoveDays(idevent, idday);
     }
 
     [HttpPost]

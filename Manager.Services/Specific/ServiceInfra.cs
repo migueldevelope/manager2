@@ -2352,16 +2352,16 @@ namespace Manager.Services.Specific
       try
       {
         //var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
-        var result = processLevelOneService.GetAll();
+        var result = processLevelOneService.GetAll().OrderBy(p => p.Order).ToList();
         var list = new List<ProcessLevelTwo>();
         foreach (var item in result)
         {
-          foreach (var row in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == item._id).ToList())
+          foreach (var row in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == item._id).OrderBy(p => p.Order).ToList())
           {
             list.Add(row);
           }
         }
-        return list.OrderBy(p => p.ProcessLevelOne.Order).ToList();
+        return list.OrderBy(p => p.ProcessLevelOne.Area.Name).ToList();
       }
       catch (Exception e)
       {

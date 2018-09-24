@@ -340,16 +340,22 @@ namespace Manager.Services.Specific
 
     }
 
-    public string RemoveDays(string idevent, DaysEvent days)
+    public string RemoveDays(string idevent, string iddays)
     {
       try
       {
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
-        days._idAccount = _user._idAccount;
-        events.Days.Remove(days);
-        eventService.Update(events, null);
-        UpdateAddDaysParticipant(idevent, days);
-        MathWorkload(idevent);
+        foreach (var item in events.Days)
+        {
+          if (item._id == iddays)
+          {
+            events.Days.Remove(item);
+            eventService.Update(events, null);
+            UpdateAddDaysParticipant(idevent, item);
+            MathWorkload(idevent);
+            return "remove success";
+          }
+        }
         return "remove success";
       }
       catch (Exception e)
