@@ -13,10 +13,12 @@ namespace Manager.Controllers
   public class AccountController : Controller
   {
     private readonly IServiceAccount service;
+    private readonly IServiceLog serviceLog;
 
-    public AccountController(IServiceAccount _service)
+    public AccountController(IServiceAccount _service, IServiceLog _serviceLog)
     {
       service = _service;
+      serviceLog = _serviceLog;
     }
 
     [HttpPost]
@@ -56,7 +58,16 @@ namespace Manager.Controllers
       return service.AlterAccountPerson(idperson, conn.TokenServer);
     }
 
-
+    [Authorize]
+    [HttpGet]
+    [Route("getlogs")]
+    public List<Log> GetLogs(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = serviceLog.GetLogs(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
 
   }
 }

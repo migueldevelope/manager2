@@ -7,6 +7,8 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Manager.Services.Specific
 {
@@ -58,6 +60,22 @@ namespace Manager.Services.Specific
     public void SetUser(BaseUser baseUser)
     {
       logsService._user = baseUser;
+    }
+
+    public List<Log> GetLogs(ref long total, int count, int page, string filter)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = logsService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderByDescending(p => p.DataLog).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
     }
   }
 }
