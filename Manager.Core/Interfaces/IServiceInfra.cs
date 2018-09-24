@@ -35,7 +35,8 @@ namespace Manager.Core.Interfaces
     List<TextDefault> ListTextDefault(string idcompany);
     List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page);
     List<Occupation> GetOccupations(string idcompany, string idarea);
-    List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
+    //List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
+    List<ProcessLevelTwo> GetProcessLevelTwo();
     string AddTextDefault(TextDefault model);
     string AddCBO(CBO model);
     string AddEssential(ViewAddEssential view);

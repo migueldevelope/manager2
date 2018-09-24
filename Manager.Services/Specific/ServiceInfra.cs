@@ -328,7 +328,8 @@ namespace Manager.Services.Specific
         //  return "error_line";
 
         var areas = new List<Area>();
-        areas.Add(view.Area);
+        foreach (var item in view.Process)
+          areas.Add(item.ProcessLevelOne.Area);
 
         var occupation = new Occupation()
         {
@@ -627,6 +628,14 @@ namespace Manager.Services.Specific
             _idAccount = group._idAccount,
             Status = group.Status
           };
+          foreach (var school in group.Schooling)
+          {
+            foreach (var schoolOccupation in item.Schooling)
+            {
+              if (school._id == schoolOccupation._id)
+                school.Complement = schoolOccupation.Complement;
+            }
+          }
           item.Schooling = group.Schooling;
           occupationService.Update(item, null);
           UpdateOccupationAll(item);
@@ -636,6 +645,14 @@ namespace Manager.Services.Specific
         foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).ToList())
         {
           item.Occupation.Group = group;
+          foreach (var school in group.Schooling)
+          {
+            foreach (var schoolOccupation in item.Occupation.Schooling)
+            {
+              if (school._id == schoolOccupation._id)
+                school.Complement = schoolOccupation.Complement;
+            }
+          }
           item.Occupation.Schooling = group.Schooling;
           personService.Update(item, null);
         }
@@ -1299,32 +1316,36 @@ namespace Manager.Services.Specific
         AdjustOccuptaions();
         var area = areaService.GetAll(p => p._id == idarea).FirstOrDefault();
         //return occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
-        var itens = occupationService.GetAll(p => p.Areas.Contains(area) & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var itens = occupationService.GetAll(p => p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
         List<Occupation> list = new List<Occupation>();
         foreach (var item in itens)
         {
           foreach (var proc in item.Process)
           {
-            item.ProcessLevelTwo = proc;
-            list.Add(new Occupation()
-            {
-              Name = item.Name,
-              Group = item.Group,
-              Area = item.Area,
-              Line = item.Line,
-              Skills = item.Skills,
-              Schooling = item.Schooling,
-              Activities = item.Activities,
-              Template = item.Template,
-              ProcessLevelTwo = proc,
-              CBO = item.CBO,
-              SpecificRequirements = item.SpecificRequirements,
-              Process = item.Process,
-              _id = item._id,
-              _idAccount = item._idAccount,
-              Status = item.Status,
-              Areas = item.Areas
-            });
+            if (proc.ProcessLevelOne.Area != null)
+              if (proc.ProcessLevelOne.Area._id == area._id)
+              {
+                item.ProcessLevelTwo = proc;
+                list.Add(new Occupation()
+                {
+                  Name = item.Name,
+                  Group = item.Group,
+                  Area = proc.ProcessLevelOne.Area,
+                  Line = item.Line,
+                  Skills = item.Skills,
+                  Schooling = item.Schooling,
+                  Activities = item.Activities,
+                  Template = item.Template,
+                  ProcessLevelTwo = proc,
+                  CBO = item.CBO,
+                  SpecificRequirements = item.SpecificRequirements,
+                  Process = item.Process,
+                  _id = item._id,
+                  _idAccount = item._idAccount,
+                  Status = item.Status,
+                  Areas = item.Areas
+                });
+              }
           }
         }
         return list.OrderBy(p => p.Name).ToList();
@@ -1688,6 +1709,10 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var areas = new List<Area>();
+        foreach (var item in occupation.Process)
+          areas.Add(item.ProcessLevelOne.Area);
+
         occupationService.Update(occupation, null);
         UpdateOccupationAll(occupation);
         return "update";
@@ -2317,11 +2342,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ProcessLevelTwo> GetProcessLevelTwo(string idarea)
+    public List<ProcessLevelTwo> GetProcessLevelTwo()
     {
       try
       {
-        var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
+        //var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
+        var result = processLevelOneService.GetAll();
         var list = new List<ProcessLevelTwo>();
         foreach (var item in result)
         {
