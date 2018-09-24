@@ -2302,10 +2302,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        if (occupationService.GetAll(p => p.ProcessLevelTwo._id == id).Count() > 0)
+        //if (occupationService.GetAll(p => p.ProcessLevelTwo._id == id).Count() > 0)
+        //return "error_occupation_exists";
+        var item = processLevelTwoService.GetAll(p => p._id == id).FirstOrDefault();
+
+        if (occupationService.GetAll(p => p.Process.Contains(item)).Count() > 0)
           return "error_occupation_exists";
 
-        var item = processLevelTwoService.GetAll(p => p._id == id).FirstOrDefault();
+
+
         item.Status = EnumStatus.Disabled;
         processLevelTwoService.Update(item, null);
         return "ok";
