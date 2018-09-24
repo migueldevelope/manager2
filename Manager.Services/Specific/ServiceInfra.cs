@@ -327,6 +327,9 @@ namespace Manager.Services.Specific
         //if (item > 0)
         //  return "error_line";
 
+        var areas = new List<Area>();
+        areas.Add(view.Area);
+
         var occupation = new Occupation()
         {
           Name = view.Name,
@@ -338,7 +341,8 @@ namespace Manager.Services.Specific
           Activities = new List<Activitie>(),
           Schooling = view.Group.Schooling,
           Skills = new List<Skill>(),
-          Process = view.Process
+          Process = view.Process,
+          Areas = areas
         };
         occupationService.Insert(occupation);
         return "ok";
@@ -606,11 +610,23 @@ namespace Manager.Services.Specific
     {
       try
       {
-
-
         foreach (var item in occupationService.GetAll(p => p.Group._id == group._id).ToList())
         {
-          item.Group = group;
+          item.Group = new Group()
+          {
+            Name = group.Name,
+            Company = group.Company,
+            Axis = group.Axis,
+            Sphere = group.Sphere,
+            Line = group.Line,
+            Skills = group.Skills,
+            Schooling = group.Schooling,
+            Scope = group.Scope,
+            Template = group.Template,
+            _id = group._id,
+            _idAccount = group._idAccount,
+            Status = group.Status
+          };
           item.Schooling = group.Schooling;
           occupationService.Update(item, null);
           UpdateOccupationAll(item);
@@ -1190,6 +1206,7 @@ namespace Manager.Services.Specific
               Occupations = p.Group.Occupations
             },
             Area = p.Area,
+            Areas = p.Areas,
             Line = p.Line,
             Skills = p.Skills.OrderBy(x => x.Name).ToList(),
             Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
@@ -1257,6 +1274,17 @@ namespace Manager.Services.Specific
           }
         }
 
+        var listAreas = occupationService.GetAuthentication(p => p.Areas == null).ToList();
+        foreach (var item in listAreas)
+        {
+          item.Areas = new List<Area>();
+          if (item.Areas != null)
+          {
+            item.Areas.Add(item.Area);
+            occupationService.UpdateAccount(item, null);
+          }
+        }
+
       }
       catch (Exception e)
       {
@@ -1269,8 +1297,9 @@ namespace Manager.Services.Specific
       try
       {
         AdjustOccuptaions();
+        var area = areaService.GetAll(p => p._id == idarea).FirstOrDefault();
         //return occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
-        var itens = occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var itens = occupationService.GetAll(p => p.Areas.Contains(area) & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
         List<Occupation> list = new List<Occupation>();
         foreach (var item in itens)
         {
@@ -1293,7 +1322,8 @@ namespace Manager.Services.Specific
               Process = item.Process,
               _id = item._id,
               _idAccount = item._idAccount,
-              Status = item.Status
+              Status = item.Status,
+              Areas = item.Areas
             });
           }
         }
