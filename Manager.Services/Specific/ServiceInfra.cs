@@ -1190,7 +1190,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return occupationService.GetAll(p => p._id == id).ToList().Select(p =>
+        var occupation = occupationService.GetAll(p => p._id == id).ToList().Select(p =>
           new Occupation()
           {
             _id = p._id,
@@ -1231,8 +1231,10 @@ namespace Manager.Services.Specific
             Template = p.Template,
             ProcessLevelTwo = p.ProcessLevelTwo,
             SpecificRequirements = p.SpecificRequirements,
-            Process = p.Process
+            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList() : null
           }).FirstOrDefault();
+
+        return occupation;
       }
       catch (Exception e)
       {
