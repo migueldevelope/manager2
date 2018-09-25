@@ -44,6 +44,28 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listeventopen")]
+    public List<Event> ListEventOpen(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventOpen(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listeventend")]
+    public List<Event> ListEventEnd(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventEnd(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("listpersoninstructor/{idevent}/{idcompany}")]
     public List<Person> ListPersonInstructor(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
     {
@@ -280,10 +302,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("setgrade/{idevent}/{idparticipant}/{idday}/{grade}")]
-    public string SetGrade(string idevent, string idparticipant, string idday, decimal grade)
+    [Route("setgrade/{idevent}/{idparticipant}/{grade}")]
+    public string SetGrade(string idevent, string idparticipant, decimal grade)
     {
-      return service.SetGrade(idevent, idparticipant, idday, grade);
+      return service.SetGrade(idevent, idparticipant, grade);
     }
 
     [Authorize]

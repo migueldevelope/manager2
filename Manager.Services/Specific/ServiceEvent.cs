@@ -192,6 +192,38 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Event> ListEventOpen(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = eventService.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Event> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = eventService.GetAll(p => p.StatusEvent == EnumStatusEvent.Realized & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<EventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -299,7 +331,7 @@ namespace Manager.Services.Specific
 
     }
 
-    public async void UpdateAddDaysParticipant(string idevent, DaysEvent days)
+    public void UpdateAddDaysParticipant(string idevent, DaysEvent days)
     {
       try
       {
@@ -308,9 +340,11 @@ namespace Manager.Services.Specific
         {
           item.FrequencyEvent.Add(new FrequencyEvent()
           {
-            DaysEvent = new DaysEvent() { Begin = days.Begin, End = days.End, Status = EnumStatus.Enabled },
-            Present = false,
-            Status = EnumStatus.Enabled
+            DaysEvent = days,
+            Present = true,
+            Status = EnumStatus.Enabled,
+            _id = ObjectId.GenerateNewId().ToString(),
+            _idAccount  = _user._idAccount
           });
         }
         eventService.Update(events, null);
@@ -347,7 +381,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async void MathWorkload(string idevent)
+    private void MathWorkload(string idevent)
     {
       try
       {
@@ -410,7 +444,7 @@ namespace Manager.Services.Specific
               _id = ObjectId.GenerateNewId().ToString(),
               _idAccount = _user._idAccount,
             },
-            Present = false,
+            Present = true,
             Status = EnumStatus.Enabled
           });
         }
@@ -452,7 +486,7 @@ namespace Manager.Services.Specific
           {
             foreach (var freq in participant.FrequencyEvent)
             {
-              if (freq.DaysEvent._id == idday)
+              if (freq._id == idday)
               {
                 freq.Present = present;
               }
@@ -469,7 +503,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string SetGrade(string idevent, string idparticipant, string idday, decimal grade)
+    public string SetGrade(string idevent, string idparticipant, decimal grade)
     {
       try
       {
@@ -491,7 +525,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
 
     public string RemoveParticipant(string idevent, string idperson)
     {
