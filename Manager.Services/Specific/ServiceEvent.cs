@@ -97,6 +97,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
     public EventHistoric GetEventHistoric(string id)
     {
       try
@@ -394,7 +395,7 @@ namespace Manager.Services.Specific
         participant._id = ObjectId.GenerateNewId().ToString();
         participant._idAccount = _user._idAccount;
         participant.FrequencyEvent = new List<FrequencyEvent>();
-     
+
         foreach (var days in events.Days)
         {
           participant.FrequencyEvent.Add(new FrequencyEvent()
@@ -423,6 +424,75 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Participant> ListParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Where(p => p.Name.ToUpper().Contains(filter.ToUpper()));
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string Present(string idevent, string idparticipant, string idday, bool present)
+    {
+      try
+      {
+        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+
+        foreach (var participant in events.Participants)
+        {
+          if (participant._id == idparticipant)
+          {
+            foreach (var freq in participant.FrequencyEvent)
+            {
+              if (freq.DaysEvent._id == idday)
+              {
+                freq.Present = present;
+              }
+            }
+            eventService.Update(events, null);
+          }
+        }
+
+        return "success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string SetGrade(string idevent, string idparticipant, string idday, decimal grade)
+    {
+      try
+      {
+        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+
+        foreach (var participant in events.Participants)
+        {
+          if (participant._id == idparticipant)
+          {
+            participant.Grade = grade;
+            eventService.Update(events, null);
+          }
+        }
+
+        return "success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     public string RemoveParticipant(string idevent, string idperson)
     {
       try
@@ -430,7 +500,7 @@ namespace Manager.Services.Specific
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
         foreach (var item in events.Participants)
         {
-          if (item.Person._id == idperson)
+          if (item._id == idperson)
           {
             events.Participants.Remove(item);
             eventService.Update(events, null);
@@ -546,6 +616,10 @@ namespace Manager.Services.Specific
       try
       {
         var item = courseService.GetAll(p => p._id == id).FirstOrDefault();
+        var exists = eventService.GetAll(p => p.Course == item & p.StatusEvent == EnumStatusEvent.Open);
+        if (exists.Count() > 0)
+          return "error_exists";
+
         item.Status = EnumStatus.Disabled;
         courseService.Update(item, null);
         return "deleted";

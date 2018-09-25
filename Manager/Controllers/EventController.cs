@@ -270,7 +270,32 @@ namespace Manager.Controllers
       return service.RemoveInstructor(idevent, id);
     }
 
+    [Authorize]
+    [HttpPut]
+    [Route("present/{idevent}/{idparticipant}/{idday}/{present}")]
+    public string Present(string idevent, string idparticipant, string idday, bool present)
+    {
+      return service.Present(idevent, idparticipant, idday, present);
+    }
 
+    [Authorize]
+    [HttpPut]
+    [Route("setgrade/{idevent}/{idparticipant}/{idday}/{grade}")]
+    public string SetGrade(string idevent, string idparticipant, string idday, decimal grade)
+    {
+      return service.SetGrade(idevent, idparticipant, idday, grade);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listparticipants/{idevent}")]
+    public List<Participant> ListParticipants(string idevent, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListParticipants(idevent, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
 
 
   }

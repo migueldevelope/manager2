@@ -41,5 +41,8 @@ namespace Manager.Core.Interfaces
     List<Entity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "");
     List<Person> ListPersonInstructor(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
     List<Person> ListPersonParticipants(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Participant> ListParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
+    string Present(string idevent, string idparticipant, string idday, bool present);
+    string SetGrade(string idevent, string idparticipant, string idday, decimal grade);
   }
 }
