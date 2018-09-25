@@ -258,24 +258,6 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddInstructor(string idevent, Instructor instructor)
-    {
-      try
-      {
-        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
-        instructor._idAccount = _user._idAccount;
-        instructor._id = ObjectId.GenerateNewId().ToString();
-        instructor.Status = EnumStatus.Enabled;
-        events.Instructors.Add(instructor);
-        eventService.Update(events, null);
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     public string AddDays(string idevent, DaysEvent days)
     {
       try
@@ -384,22 +366,35 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string AddParticipant(string idevent, Person person)
+
+    public string AddInstructor(string idevent, Instructor instructor)
     {
       try
       {
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
-        var participant = new Participant()
-        {
-          _id = ObjectId.GenerateNewId().ToString(),
-          _idAccount = _user._idAccount,
-          Person = person,
-          Approved = false,
-          FrequencyEvent = new List<FrequencyEvent>(),
-          Grade = 0,
-          Status = EnumStatus.Enabled
-        };
+        instructor._idAccount = _user._idAccount;
+        instructor._id = ObjectId.GenerateNewId().ToString();
+        instructor.Status = EnumStatus.Enabled;
+        events.Instructors.Add(instructor);
+        eventService.Update(events, null);
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
+    public string AddParticipant(string idevent, Participant participant)
+    {
+      try
+      {
+        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+
+        participant._id = ObjectId.GenerateNewId().ToString();
+        participant._idAccount = _user._idAccount;
+        participant.FrequencyEvent = new List<FrequencyEvent>();
+     
         foreach (var days in events.Days)
         {
           participant.FrequencyEvent.Add(new FrequencyEvent()

@@ -33,7 +33,7 @@ namespace Manager.Core.Interfaces
     EventHistoric GetEventHistoric(string id);
     List<EventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "");
     string RemoveParticipant(string idevent, string idperson);
-    string AddParticipant(string idevent, Person person);
+    string AddParticipant(string idevent, Participant participant);
     string RemoveDays(string idevent, string idday);
     string AddDays(string idevent, DaysEvent days);
     string AddInstructor(string idevent, Instructor instructor);

@@ -9,5 +9,7 @@ namespace Manager.Core.Business
     public List<FrequencyEvent> FrequencyEvent { get; set; }
     public bool Approved { get; set; }
     public decimal Grade { get; set; }
+    public string Name { get; set; }
+
   }
 }

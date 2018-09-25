@@ -228,9 +228,9 @@ namespace Manager.Controllers
 
     [HttpPost]
     [Route("addparticipant/{idevent}")]
-    public string AddParticipant([FromBody]Person person, string idevent)
+    public string AddParticipant([FromBody]Participant participant, string idevent)
     {
-      return service.AddParticipant(idevent, person);
+      return service.AddParticipant(idevent, participant);
     }
 
     [HttpPost]

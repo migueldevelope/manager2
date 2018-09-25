@@ -1597,6 +1597,7 @@ namespace Manager.Services.Specific
       {
         areaService.Update(area, null);
         UpdateAreaAll(area);
+        UpdateAreaProcessAll(area);
         return "update";
       }
       catch (Exception e)
@@ -1810,11 +1811,85 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in occupationService.GetAll(p => p.Area._id == area._id).ToList())
+        //foreach (var item in occupationService.GetAll(p => p.Area._id == area._id).ToList())
+        //{
+        //  item.Area = area;
+        //  this.occupationService.Update(item, null);
+        //  UpdateOccupationAll(item);
+        //}
+        foreach (var item in occupationService.GetAll().ToList())
         {
-          item.Area = area;
-          this.occupationService.Update(item, null);
-          UpdateOccupationAll(item);
+          foreach (var ar in item.Areas)
+          {
+            if (ar != null)
+            {
+              if (ar._id == area._id)
+              {
+                item.Areas.Remove(ar);
+                item.Areas.Add(area);
+                this.occupationService.Update(item, null);
+                UpdateOccupationAll(item);
+                break;
+              }
+            }
+          }
+        }
+
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private async Task UpdateAreaProcessAll(Area area)
+    {
+      try
+      {
+        foreach (var item in occupationService.GetAll().ToList())
+        {
+          foreach (var proc in item.Process)
+          {
+            if (proc.ProcessLevelOne != null)
+            {
+              if (proc.ProcessLevelOne.Area != null)
+              {
+                if (proc.ProcessLevelOne.Area._id == area._id)
+                {
+                  proc.ProcessLevelOne.Area = area;
+                  this.occupationService.Update(item, null);
+                  UpdateOccupationAll(item);
+                }
+              }
+            }
+
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private async Task UpdateProcessLevelTwoAll(ProcessLevelTwo processLevelTwo)
+    {
+      try
+      {
+        foreach (var item in occupationService.GetAll(p => p.Areas.Contains(processLevelTwo.ProcessLevelOne.Area)).ToList())
+        {
+          foreach (var proc in item.Process)
+          {
+            if (proc._id == processLevelTwo._id)
+            {
+              item.Process.Remove(proc);
+              item.Process.Add(processLevelTwo);
+              this.occupationService.Update(item, null);
+              UpdateOccupationAll(item);
+              break;
+            }
+          }
         }
       }
       catch (Exception e)
@@ -2341,6 +2416,7 @@ namespace Manager.Services.Specific
       try
       {
         processLevelTwoService.Update(model, null);
+        UpdateProcessLevelTwoAll(model);
         return "update";
       }
       catch (Exception e)

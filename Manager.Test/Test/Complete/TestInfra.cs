@@ -210,6 +210,37 @@ namespace Manager.Test.Test.Complete
     }
 
 
+    [Fact]
+    public void TestEdiSubProcess()
+    {
+      try
+      {
+        var item = serviceInfra.GetProcessLevelTwo().Where(p => p._id == "5ba912282aacd866424e566f").FirstOrDefault();
+        item.Name = "test sub novo 2";
+        serviceInfra.UpdateProcessLevelTwo(item);
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    [Fact]
+    public void TestEdiArea()
+    {
+      try
+      {
+        var item = serviceInfra.GetAreas().Where(p => p._id == "5ba8d349ea4b69b2d3e2408d").FirstOrDefault();
+        item.Name = "nv area 51 v5";
+        serviceInfra.UpdateArea(item);
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     [Fact]
     public void TestUpdateBasicVersion0()
