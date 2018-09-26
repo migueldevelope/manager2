@@ -60,11 +60,11 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getlogs")]
-    public List<Log> GetLogs(int count = 10, int page = 1, string filter = "")
+    [Route("getlogs/{idaccount}")]
+    public List<Log> GetLogs(string idaccount, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = serviceLog.GetLogs(ref total, count, page, filter);
+      var result = serviceLog.GetLogs(idaccount, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

@@ -46,7 +46,50 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return eventService.GetAll(p => p._id == id).FirstOrDefault();
+        var events = eventService.GetAll(p => p._id == id).FirstOrDefault();
+
+        return new Event()
+        {
+          _id = events._id,
+          _idAccount = events._idAccount,
+          Status = events.Status,
+          Course = events.Course,
+          Name = events.Name,
+          Content = events.Content,
+          Entity = events.Entity,
+          MinimumFrequency = events.MinimumFrequency,
+          LimitParticipants = events.LimitParticipants,
+          Grade = events.Grade,
+          OpenSubscription = events.OpenSubscription,
+          DaysSubscription = events.DaysSubscription,
+          Workload = events.Workload,
+          Begin = events.Begin,
+          End = events.End,
+          Instructors = events.Instructors,
+          Days = events.Days.OrderBy(p => p.Begin).ToList(),
+          Participants = events.Participants.Select(x => new Participant()
+          {
+            _id = x._id,
+            _idAccount = x._idAccount,
+            Status = x.Status,
+            Person = x.Person,
+            FrequencyEvent = x.FrequencyEvent.OrderBy(k => k.DaysEvent.Begin).ToList(),
+            Approved = x.Approved,
+            Grade = x.Grade,
+            Name = x.Name,
+            TypeParticipant = x.TypeParticipant
+          }).ToList(),
+          StatusEvent = events.StatusEvent,
+          Observation = events.Observation,
+          Evalution = events.Evalution,
+          Attachments = events.Attachments,
+          UserInclude = events.UserInclude,
+          DateInclude = events.DateInclude,
+          UserEdit = events.UserEdit,
+          DateEnd = events.DateEnd,
+          Modality = events.Modality,
+          TypeESocial = events.TypeESocial
+        };
       }
       catch (Exception e)
       {
@@ -299,10 +342,13 @@ namespace Manager.Services.Specific
         days._idAccount = _user._idAccount;
         days._id = ObjectId.GenerateNewId().ToString();
         days.Status = EnumStatus.Enabled;
+        if (events.Days == null)
+          events.Days = new List<DaysEvent>();
+
         events.Days.Add(days);
+        MathWorkload(ref events);
+        UpdateAddDaysParticipant(ref events, days);
         eventService.Update(events, null);
-        MathWorkload(idevent);
-        UpdateAddDaysParticipant(idevent, days);
         return "add success";
       }
       catch (Exception e)
@@ -331,11 +377,10 @@ namespace Manager.Services.Specific
 
     }
 
-    public void UpdateAddDaysParticipant(string idevent, DaysEvent days)
+    public void UpdateAddDaysParticipant(ref Event events, DaysEvent days)
     {
       try
       {
-        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
         foreach (var item in events.Participants)
         {
           item.FrequencyEvent.Add(new FrequencyEvent()
@@ -344,10 +389,10 @@ namespace Manager.Services.Specific
             Present = true,
             Status = EnumStatus.Enabled,
             _id = ObjectId.GenerateNewId().ToString(),
-            _idAccount  = _user._idAccount
+            _idAccount = _user._idAccount
           });
         }
-        eventService.Update(events, null);
+        //eventService.Update(events, null);
 
       }
       catch (Exception e)
@@ -367,9 +412,9 @@ namespace Manager.Services.Specific
           if (item._id == iddays)
           {
             events.Days.Remove(item);
+            UpdateAddDaysParticipant(ref events, item);
+            MathWorkload(ref events);
             eventService.Update(events, null);
-            UpdateAddDaysParticipant(idevent, item);
-            MathWorkload(idevent);
             return "remove success";
           }
         }
@@ -381,11 +426,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void MathWorkload(string idevent)
+    private void MathWorkload(ref Event events)
     {
       try
       {
-        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
         events.Begin = events.Days.Min(p => p.Begin);
         events.End = events.Days.Max(p => p.End);
         decimal workload = 0;
@@ -394,7 +438,7 @@ namespace Manager.Services.Specific
           workload += decimal.Parse((item.End - item.Begin).TotalMinutes.ToString());
         }
         events.Workload = workload;
-        eventService.Update(events, null);
+        //eventService.Update(events, null);
       }
       catch (Exception e)
       {

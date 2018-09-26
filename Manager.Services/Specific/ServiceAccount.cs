@@ -95,6 +95,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = accountService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        
         total = detail.Count();
 
         return detail.Skip(skip).Take(count).ToList();
