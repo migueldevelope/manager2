@@ -21,5 +21,17 @@ namespace Manager.Core.Views
     public Person Manager { get; set; }
     public long Registration { get; set; }
     public EnumTypeUser TypeUser { get; set; }
+    public EnumTypeJourney TypeJourney { get; set; }
+    public Establishment Establishment { get; set; }
+    public string PhoneFixed { get; set; }
+    public string DocumentID { get; set; }
+    public string DocumentCTPF { get; set; }
+    public EnumSex Sex { get; set; }
+    public DateTime? HolidayReturn { get; set; }
+    public string MotiveAside { get; set; }
+    public DateTime? DateLastOccupation { get; set; }
+    public decimal Salary { get; set; }
+    public DateTime? DateLastReadjust { get; set; }
+    public DateTime? DateResignation { get; set; }
   }
 }

@@ -29,6 +29,17 @@ namespace Manager.Core.Business
     public EnumChangePassword ChangePassword { get; set; }
     public string ForeignForgotPassword { get; set; }
     public EnumTypeJourney TypeJourney { get; set; }
+    public Establishment Establishment { get; set; }
+    public string PhoneFixed { get; set; }
+    public string DocumentID { get; set; }
+    public string DocumentCTPF { get; set; }
+    public EnumSex Sex { get; set; }
+    public DateTime? HolidayReturn { get; set; }
+    public string MotiveAside { get; set; }
+    public DateTime? DateLastOccupation { get; set; }
+    public decimal Salary { get; set; }
+    public DateTime? DateLastReadjust { get; set; }
+    public DateTime? DateResignation { get; set; }
 
   }
 }

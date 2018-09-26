@@ -94,11 +94,11 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = accountService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        var detail = accountService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
         
-        total = detail.Count();
+        total = accountService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail;
       }
       catch (Exception e)
       {

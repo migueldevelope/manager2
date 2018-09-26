@@ -1267,10 +1267,10 @@ namespace Manager.Services.Specific
           idresolution = parameter.FirstOrDefault().Content;
 
         int skip = (count * (page - 1));
-        var detail = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
+        var detail = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return detail;
       }
       catch (Exception e)
       {
@@ -1375,10 +1375,10 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
+        var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return detail;
       }
       catch (Exception e)
       {
@@ -1411,11 +1411,11 @@ namespace Manager.Services.Specific
                         Status = p.Status,
                         TypeSkill = p.TypeSkill,
                         Exists = skills.Contains(p.Name)
-                      }).ToList();
+                      }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        total = detail.Count();
+        total = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return detail;
       }
       catch (Exception e)
       {
@@ -1457,11 +1457,11 @@ namespace Manager.Services.Specific
                         TypeSkill = p.TypeSkill,
                         Exists = skills.Contains(p.Name),
                         ExistsGroup = skillsGroup.Contains(p.Name)
-                      }).ToList();
+                      }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        total = detail.Count();
+        total = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return detail;
       }
       catch (Exception e)
       {
@@ -1512,11 +1512,11 @@ namespace Manager.Services.Specific
                         Exists = skills.Contains(p.Name),
                         ExistsGroup = skillsGroup.Contains(p.Name),
                         ExistsOccupation = skillsOccupation.Contains(p.Name)
-                      }).ToList();
+                      }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        total = detail.Count();
+        total = skillService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return detail;
       }
       catch (Exception e)
       {
@@ -1561,10 +1561,10 @@ namespace Manager.Services.Specific
           idresolution = parameter.FirstOrDefault().Content;
 
         int skip = (count * (page - 1));
-        var detail = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
+        var detail = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return detail;
       }
       catch (Exception e)
       {
