@@ -30,8 +30,8 @@ namespace IntegrationClient
 
     private void BtOk_Click(object sender, EventArgs e)
     {
-      var login = new IntegrationService.Api.Authentication;
-      login.ValidAuthentication(txtUrl.Text, txtEma.Text, txtSen.Text);
+      //var login = new IntegrationService.Api.Authentication;
+      //login.ValidAuthentication(txtUrl.Text, txtEma.Text, txtSen.Text);
     }
   }
 }
