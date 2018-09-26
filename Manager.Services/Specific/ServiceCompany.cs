@@ -213,8 +213,8 @@ namespace Manager.Services.Specific
         try
         {
           int skip = (count * (page - 1));
-          var detail = establishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = establishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          var detail = establishmentService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = establishmentService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
           return detail.ToList();
         }
