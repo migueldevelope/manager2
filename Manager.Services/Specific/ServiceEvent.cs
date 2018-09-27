@@ -544,6 +544,10 @@ namespace Manager.Services.Specific
             Status = EnumStatus.Enabled
           });
         }
+        participant.Approved = true;
+        if (events.Grade > 0)
+          participant.ApprovedGrade = false;
+
         events.Participants.Add(participant);
         eventService.Update(events, null);
         return "add success";
@@ -575,6 +579,8 @@ namespace Manager.Services.Specific
       try
       {
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+        decimal total = 0;
+        decimal count = 0;
 
         foreach (var participant in events.Participants)
         {
@@ -586,7 +592,17 @@ namespace Manager.Services.Specific
               {
                 freq.Present = present;
               }
+              if (freq.Present)
+                count += 1;
+
+              total += 1;
             }
+
+            if (((count * 100) / total) >= events.MinimumFrequency)
+              participant.Approved = true;
+            else
+              participant.Approved = false;
+
             eventService.Update(events, null);
           }
         }
@@ -610,6 +626,11 @@ namespace Manager.Services.Specific
           if (participant._id == idparticipant)
           {
             participant.Grade = grade;
+            if (events.Grade < participant.Grade)
+              participant.ApprovedGrade = false;
+            else
+              participant.ApprovedGrade = true;
+
             eventService.Update(events, null);
           }
         }
@@ -835,7 +856,7 @@ namespace Manager.Services.Specific
       {
         foreach (var item in view.Participants)
         {
-          if (item.Approved)
+          if (item.Approved & item.ApprovedGrade)
             NewEventHistoric(new EventHistoric()
             {
               Name = view.Name,
