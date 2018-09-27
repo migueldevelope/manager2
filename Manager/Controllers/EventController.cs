@@ -139,9 +139,19 @@ namespace Manager.Controllers
       return result;
     }
 
+    [HttpGet]
+    [Route("listeventhistoricperson/{id}")]
+    public List<EventHistoric> ListEventHistoricPerson(string id, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoricPerson(id, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
     [Authorize]
     [HttpGet]
-    [Route("geteventhistoric")]
+    [Route("geteventhistoric/{id}")]
     public EventHistoric ListEventHistoric(string id)
     {
       return service.GetEventHistoric(id);

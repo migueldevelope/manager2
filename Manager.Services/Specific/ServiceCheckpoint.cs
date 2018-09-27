@@ -55,7 +55,7 @@ namespace Manager.Services.Specific
       {
         LogSave(idmanager, "ListEnd");
         int skip = (count * (page - 1));
-        var detail = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+        var detail = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
         total = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
@@ -104,7 +104,7 @@ namespace Manager.Services.Specific
         newOnZero();
         int skip = (count * (page - 1));
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
-        & p.Name.ToUpper().Contains(filter.ToUpper()))
+        & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
 
@@ -525,7 +525,7 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "ListExclud");
         int skip = (count * (page - 1));
-        var detail = checkpointService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+        var detail = checkpointService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
         total = checkpointService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;

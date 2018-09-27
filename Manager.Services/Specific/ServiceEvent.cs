@@ -2,6 +2,7 @@
 using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Course> courseService;
     private readonly ServiceGeneric<CourseESocial> courseESocialService;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceLog logService;
     private string path;
 
     public ServiceEvent(DataContext context, string pathToken)
@@ -34,6 +36,7 @@ namespace Manager.Services.Specific
         personService = new ServiceGeneric<Person>(context);
         entityService = new ServiceGeneric<Entity>(context);
         eventHistoricService = new ServiceGeneric<EventHistoric>(context);
+        logService = new ServiceLog(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -46,6 +49,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "Get Event by ID");
         var events = eventService.GetAll(p => p._id == id).FirstOrDefault();
 
         return new Event()
@@ -121,6 +125,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "Get Course by ID");
         return courseService.GetAll(p => p._id == id).FirstOrDefault();
       }
       catch (Exception e)
@@ -145,6 +150,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "Get Historic by ID");
         return eventHistoricService.GetAll(p => p._id == id).FirstOrDefault();
       }
       catch (Exception e)
@@ -223,8 +229,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "List Event");
         int skip = (count * (page - 1));
-        var detail = eventService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        var detail = eventService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
         total = eventService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
@@ -239,6 +246,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "List Open Events");
         int skip = (count * (page - 1));
         var detail = eventService.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = eventService.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -255,6 +263,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "List Realized Events");
         int skip = (count * (page - 1));
         var detail = eventService.GetAll(p => p.StatusEvent == EnumStatusEvent.Realized & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = eventService.GetAll(p => p.StatusEvent == EnumStatusEvent.Realized & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -271,9 +280,28 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "List Historic Events");
+
         int skip = (count * (page - 1));
-        var detail = eventHistoricService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = eventHistoricService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = eventHistoricService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = eventHistoricService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<EventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        LogSave(_user._idPerson, "List Historic Person");
+        int skip = (count * (page - 1));
+        var detail = eventHistoricService.GetAll(p => p.Person._id == id & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = eventHistoricService.GetAll(p => p.Person._id == id & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }
@@ -287,6 +315,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "List Course");
+
         int skip = (count * (page - 1));
         var detail = courseService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = courseService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -319,6 +349,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         view.Participants = new List<Participant>();
         view.Instructors = new List<Instructor>();
         view.Attachments = new List<AttachmentField>();
@@ -326,7 +357,10 @@ namespace Manager.Services.Specific
         view.DateInclude = DateTime.Now;
         view.Days = new List<DaysEvent>();
         view.Entity = AddEntity(view.Entity.Name);
-        return eventService.Insert(view);
+
+        var events = eventService.Insert(view);
+        LogSave(_user._idPerson, "Insert Event" + events._id);
+        return events;
       }
       catch (Exception e)
       {
@@ -338,6 +372,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
         days._idAccount = _user._idAccount;
         days._id = ObjectId.GenerateNewId().ToString();
@@ -349,6 +384,8 @@ namespace Manager.Services.Specific
         MathWorkload(ref events);
         UpdateAddDaysParticipant(ref events, days);
         eventService.Update(events, null);
+
+        LogSave(_user._idPerson, "Insert Days Event: " + " | day :" + days._id);
         return "add success";
       }
       catch (Exception e)
@@ -406,6 +443,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+
+        LogSave(_user._idPerson, "Remove Days Event: " + idevent + " | day: " + iddays);
+
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
         foreach (var item in events.Days)
         {
@@ -430,8 +470,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        events.Begin = events.Days.Min(p => p.Begin);
-        events.End = events.Days.Max(p => p.End);
+        if (events.Days.Count() > 0)
+        {
+          events.Begin = events.Days.Min(p => p.Begin);
+          events.End = events.Days.Max(p => p.End);
+        }
+        else
+        {
+          events.Begin = null;
+          events.End = null;
+        }
         decimal workload = 0;
         foreach (var item in events.Days)
         {
@@ -468,9 +516,13 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
 
         participant._id = ObjectId.GenerateNewId().ToString();
+
+        LogSave(_user._idPerson, "Add participant Event: " + idevent + " | participant: " + participant._id);
+
         participant._idAccount = _user._idAccount;
         participant.FrequencyEvent = new List<FrequencyEvent>();
 
@@ -636,7 +688,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        courseService.Insert(view);
+        var course = courseService.Insert(view);
+        LogSave(_user._idPerson, "New Course " + course._id);
+
         return "add success";
       }
       catch (Exception e)
@@ -662,6 +716,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "Delete Event " + id);
+
         var item = eventService.GetAll(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
         eventService.Update(item, null);
@@ -677,6 +733,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "Delete Event Historic " + id);
+
         var item = eventHistoricService.GetAll(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
         eventHistoricService.Update(item, null);
@@ -692,6 +750,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "Delete Course " + id);
+
         var item = courseService.GetAll(p => p._id == id).FirstOrDefault();
         var exists = eventService.GetAll(p => p.Course == item & p.StatusEvent == EnumStatusEvent.Open);
         if (exists.Count() > 0)
@@ -732,6 +792,7 @@ namespace Manager.Services.Specific
       courseESocialService._user = _user;
       personService._user = _user;
       entityService._user = _user;
+      logService._user = _user;
     }
 
     public void SetUser(BaseUser baseUser)
@@ -743,12 +804,15 @@ namespace Manager.Services.Specific
       courseESocialService._user = _user;
       personService._user = _user;
       entityService._user = _user;
+      logService._user = _user;
     }
 
     public Event Update(Event view)
     {
       try
       {
+        LogSave(_user._idPerson, "Update Event " + view._id);
+
         view.UserEdit = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
         view.Entity = AddEntity(view.Entity.Name);
         if (view.StatusEvent == EnumStatusEvent.Realized)
@@ -796,6 +860,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "Update Event Historic " + view._id);
+
         view.Entity = AddEntity(view.Entity.Name);
         eventHistoricService.Update(view, null);
         return "update";
@@ -810,6 +876,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "Update Course " + view._id);
+
         courseService.Update(view, null);
         return "update";
       }
@@ -832,5 +900,24 @@ namespace Manager.Services.Specific
       }
     }
 
+
+    public async void LogSave(string iduser, string local)
+    {
+      try
+      {
+        var user = personService.GetAll(p => p._id == iduser).FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Access Event ",
+          Local = local,
+          Person = user
+        };
+        logService.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
   }
 }

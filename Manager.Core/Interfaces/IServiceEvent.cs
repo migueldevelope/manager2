@@ -16,6 +16,7 @@ namespace Manager.Core.Interfaces
     string Remove(string id);
     Event Get(string id);
     List<Event> List(ref long total, int count = 10, int page = 1, string filter = "");
+    List<EventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "");
     string NewCourse(Course view);
     string UpdateCourse(Course view);
     string RemoveCourse(string id);
