@@ -48,5 +48,6 @@ namespace Manager.Core.Interfaces
     List<Event> ListEventOpen(ref long total, int count = 10, int page = 1, string filter = "");
     List<Event> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
     string ReopeningEvent(string idevent);
+    void SetAttachment(string idevent, string url, string fileName, string idattachmentid);
   }
 }

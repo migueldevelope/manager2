@@ -962,5 +962,26 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+    public void SetAttachment(string idevent, string url, string fileName, string attachmentid)
+    {
+      try
+      {
+        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+
+        if (events.Attachments == null)
+        {
+          events.Attachments = new List<AttachmentField>();
+        }
+        events.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+        eventService.Update(events, null);
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
   }
 }
