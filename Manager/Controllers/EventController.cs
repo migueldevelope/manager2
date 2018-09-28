@@ -329,6 +329,14 @@ namespace Manager.Controllers
       return result;
     }
 
+    [Authorize]
+    [HttpPut]
+    [Route("reopeningevent/{idevent}")]
+    public string ReopeningEvent(string idevent)
+    {
+      return service.ReopeningEvent(idevent);
+    }
+
 
   }
 }

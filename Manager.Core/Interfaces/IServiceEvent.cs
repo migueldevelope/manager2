@@ -47,5 +47,6 @@ namespace Manager.Core.Interfaces
     string SetGrade(string idevent, string idparticipant, decimal grade);
     List<Event> ListEventOpen(ref long total, int count = 10, int page = 1, string filter = "");
     List<Event> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
+    string ReopeningEvent(string idevent);
   }
 }

@@ -547,6 +547,8 @@ namespace Manager.Services.Specific
         participant.Approved = true;
         if (events.Grade > 0)
           participant.ApprovedGrade = false;
+        else
+          participant.ApprovedGrade = true;
 
         events.Participants.Add(participant);
         eventService.Update(events, null);
@@ -626,7 +628,7 @@ namespace Manager.Services.Specific
           if (participant._id == idparticipant)
           {
             participant.Grade = grade;
-            if (events.Grade < participant.Grade)
+            if (participant.Grade < events.Grade)
               participant.ApprovedGrade = false;
             else
               participant.ApprovedGrade = true;
@@ -856,7 +858,7 @@ namespace Manager.Services.Specific
       {
         foreach (var item in view.Participants)
         {
-          if (item.Approved & item.ApprovedGrade)
+          if (item.Approved & (item.Grade >= view.Grade))
             NewEventHistoric(new EventHistoric()
             {
               Name = view.Name,
@@ -934,6 +936,26 @@ namespace Manager.Services.Specific
           Person = user
         };
         logService.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string ReopeningEvent(string idevent)
+    {
+      try
+      {
+        var events = eventService.GetAll(p => p._id == idevent).FirstOrDefault();
+        foreach (var item in eventHistoricService.GetAll(p => p.Event == events).ToList())
+        {
+          eventHistoricService.Delete(item._id);
+        }
+        events.StatusEvent = EnumStatusEvent.Open;
+        eventService.Update(events, null);
+
+        return "reopening";
       }
       catch (Exception e)
       {
