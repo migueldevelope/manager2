@@ -21,7 +21,7 @@ namespace Manager.Services.Auth
     private IServiceLog logService;
     private DataContext _context;
 
-    public ServiceAuthentication(DataContext context, IServiceLog _logService, 
+    public ServiceAuthentication(DataContext context, IServiceLog _logService,
       IServicePerson _servicePerson, IServiceCompany _companyService)
     {
       try
@@ -37,6 +37,91 @@ namespace Manager.Services.Auth
         //throw new ServiceException(null, e);
       }
     }
+
+
+
+
+    public ViewPerson AuthenticationMaristas(string mail, string password)
+    {
+      try
+      {
+        var user = servicePerson.GetAuthentication(mail, EncryptServices.GetMD5Hash(password));
+        if (user == null)
+          throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
+
+
+        var _user = new BaseUser { _idAccount = user._idAccount };
+        companyService.SetUser(_user);
+        ViewPerson person = new ViewPerson()
+        {
+          IdPerson = user._id,
+          Name = user.Name,
+          IdAccount = user._idAccount,
+          ChangePassword = user.ChangePassword,
+          Photo = user.PhotoUrl,
+          TypeUser = user.TypeUser,
+          NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
+          Logo = companyService.GetLogo(user.Company._id.ToString())
+        };
+
+        LogSave(user);
+
+        return person;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewPerson AuthenticationEncryptMaristas(string mail, string password)
+    {
+      try
+      {
+        var user = servicePerson.GetAuthentication(mail, password);
+        if (user == null)
+          throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
+
+
+
+        ViewPerson person = new ViewPerson()
+        {
+          IdPerson = user._id,
+          Name = user.Name,
+          IdAccount = user._idAccount,
+          ChangePassword = user.ChangePassword,
+          Photo = user.PhotoUrl,
+          TypeUser = user.TypeUser,
+          NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name
+        };
+
+        var _user = new BaseUser()
+        {
+          _idAccount = user._idAccount,
+          NamePerson = user.Name,
+          Mail = user.Mail,
+          _idPerson = user._id,
+          NameAccount = person.NameAccount
+        };
+
+        logService = new ServiceLog(_context);
+
+        var log = new ViewLog()
+        {
+          Description = "Login",
+          Local = "Authentication",
+          Person = user
+        };
+        logService.NewLog(log);
+
+        return person;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
 
     public ViewPerson Authentication(string mail, string password)

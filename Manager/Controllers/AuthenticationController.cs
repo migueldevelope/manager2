@@ -35,7 +35,14 @@ namespace Manager.Controllers
       if (String.IsNullOrEmpty(user.Password))
         return BadRequest("MSG2");
 
-      var person = this.service.Authentication(user.Mail, user.Password);
+      ViewPerson person;
+      var authMaristas = user.Mail == "@redemaristas.org.br" ? true : false;
+
+      if (authMaristas)
+        person = this.service.AuthenticationMaristas(user.Mail, user.Password);
+      else
+        person = this.service.Authentication(user.Mail, user.Password);
+
 
 
       var claims = new[]
@@ -74,8 +81,13 @@ namespace Manager.Controllers
       if (String.IsNullOrEmpty(user.Password))
         return BadRequest("MSG2");
 
-      var person = this.service.AuthenticationEncrypt(user.Mail, user.Password);
+      ViewPerson person;
+      var authMaristas = user.Mail == "@redemaristas.org.br" ? true : false;
 
+      if (authMaristas)
+        person = this.service.AuthenticationEncryptMaristas(user.Mail, user.Password);
+      else
+        person = this.service.AuthenticationEncrypt(user.Mail, user.Password);
 
       var claims = new[]
       {
