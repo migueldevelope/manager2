@@ -62,7 +62,7 @@ namespace IntegrationClient
           skills = cnn.ExecuteQuery(txtCmd.Text);
           cnn.Close();
         }
-        SkillIntegration skillIntegration = new SkillIntegration(Person);
+        InfraIntegration skillIntegration = new InfraIntegration(Person);
         ViewIntegrationSkill trabalho;
         for (int i = 0; i < skills.Rows.Count; i++)
         {
@@ -79,7 +79,7 @@ namespace IntegrationClient
             {
               ViewIntegrationSkill newSkill = new ViewIntegrationSkill()
               {
-                Name = skills.Rows[i]["nome_competencia"].ToString(),
+                Name = skills.Rows[i]["nome_competencia"].ToString().ToUpper(),
                 Concept= skills.Rows[i]["conceito"].ToString(),
                 TypeSkill= Int16.Parse(skills.Rows[i]["tipo"].ToString())
               };
@@ -90,7 +90,7 @@ namespace IntegrationClient
             }
             else
             {
-              string registro = string.Format("Erro;{0};{1};{2};{3}{4}", skills.Rows[i]["nome_competencia"].ToString(), skills.Rows[i]["codigo"].ToString(), skills.Rows[i]["tipo"].ToString(), ex.Message, Environment.NewLine);
+              string registro = string.Format("Erro;{0};{1};{2};{3}{4}", skills.Rows[i]["nome_competencia"].ToString(), skills.Rows[i]["codigo"].ToString(), skills.Rows[i]["tipo"].ToString(), ex.Message.Split('\n')[0], Environment.NewLine);
               txtLog.Text = string.Concat(txtLog.Text, registro);
             }
           }

@@ -1297,7 +1297,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return occupationService.GetAll(p => p.ProcessLevelTwo.ProcessLevelOne.Area.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).ToList().Select(p =>
+        return occupationService.GetAll(p => p.ProcessLevelTwo.ProcessLevelOne.Area.Company._id == idCompany && p.Name.ToUpper() == filterName.ToUpper()).ToList().Select(p =>
           new Occupation()
           {
             _id = p._id,
@@ -1479,9 +1479,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filterName.ToUpper())).ToList();
+        var detail = skillService.GetAll(p => p.Name.ToUpper() == filterName.ToUpper()).ToList();
         if (detail.Count == 1)
           return detail[0];
+        detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filterName.ToUpper())).ToList();
+        if (detail.Count == 1)
+          return detail[0];
+        if (detail.Count > 1)
+          throw new Exception("Mais de uma skill!");
         return null;
       }
       catch (Exception e)

@@ -9,29 +9,29 @@ using System.Threading.Tasks;
 
 namespace IntegrationService.Api
 {
-  public class SkillIntegration
+  public class InfraIntegration
   {
+    private HttpClient clientSkill;
     private readonly ViewPersonLogin Person;
 
-    public SkillIntegration(ViewPersonLogin person)
+    public InfraIntegration(ViewPersonLogin person)
     {
       Person = person;
+      clientSkill = new HttpClient() {
+        BaseAddress = new Uri(string.Format("{0}/integrationserver/", Person.Url))
+      };
+      clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
+      clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
     }
 
     public ViewIntegrationSkill GetSkillByName(string name)
     {
       try
       {
-        HttpClient clientSkill = new HttpClient()
-        {
-          BaseAddress = new Uri(string.Format("{0}/integrationserver/", Person.Url))
-        };
-        clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
-        clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
-
-        StringContent content = new StringContent(JsonConvert.SerializeObject(name));
+        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { Name = name }));
         content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("skill", content).Result;
+
+        var result = clientSkill.PostAsync("infra/skill", content).Result;
         if (result.IsSuccessStatusCode == false)
         {
           string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
@@ -52,16 +52,9 @@ namespace IntegrationService.Api
     {
       try
       {
-        HttpClient clientSkill = new HttpClient()
-        {
-          BaseAddress = new Uri(string.Format("{0}/integrationserver/", Person.Url))
-        };
-        clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
-        clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
-
         StringContent content = new StringContent(JsonConvert.SerializeObject(newSkill));
         content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("skill/new", content).Result;
+        var result = clientSkill.PostAsync("infra/skill/new", content).Result;
         if (result.IsSuccessStatusCode == false)
         {
           string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);

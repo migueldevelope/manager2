@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Authentication.cs" />
-    <Compile Include="Api\SkillIntegration.cs" />
+    <Compile Include="Api\InfraIntegration.cs" />
     <Compile Include="Core\ConnectionString.cs" />
     <Compile Include="Core\CorePersonData.cs" />
     <Compile Include="Core\GetPersonSystem.cs" />
@@ -85,6 +85,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\FileClass.cs" />
+    <Compile Include="Views\ViewIntegrationFilterName.cs" />
+    <Compile Include="Views\ViewIntegrationOccupation.cs" />
     <Compile Include="Views\ViewIntegrationSkill.cs" />
     <Compile Include="Views\ViewPersonLogin.cs" />
   </ItemGroup>

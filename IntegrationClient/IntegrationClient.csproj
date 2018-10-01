@@ -50,16 +50,6 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Oracle.DataAccess, Version=2.112.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\app\product\11.2.0\client_2\ODP.NET\bin\2.x\Oracle.DataAccess.dll</HintPath>
-    </Reference>
-    <Reference Include="OracleTools">
-      <HintPath>..\..\DatabaseTools\OracleTools\bin\Debug\OracleTools.dll</HintPath>
-    </Reference>
-    <Reference Include="SqlServerTools">
-      <HintPath>..\..\DatabaseTools\SqlServerTools\bin\Debug\SqlServerTools.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -135,6 +125,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DatabaseTools\DatabaseTools.csproj">
+      <Project>{6f01a93c-cb02-4de1-ac2d-ea5fc7dfbc13}</Project>
+      <Name>DatabaseTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IntegrationService\IntegrationService.csproj">
       <Project>{98d502d9-363e-4cc1-a1d0-7231d52a191a}</Project>
       <Name>IntegrationService</Name>

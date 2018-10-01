@@ -35,12 +35,12 @@ namespace IntegrationServer.InfraController
     }
     [Authorize]
     [HttpPost]
-    [Route("findskill")]
-    public IActionResult FindSkill([FromBody]string name)
+    [Route("skill")]
+    public IActionResult FindSkill([FromBody]ViewIntegrationFilterName filter)
     {
       try
       {
-        Skill skill = service.GetSkill(name);
+        Skill skill = service.GetSkill(filter.Name);
         if (skill == null)
           return NotFound("Skill não encontrada!");
         return Ok(new ViewIntegrationSkill()
@@ -58,7 +58,7 @@ namespace IntegrationServer.InfraController
     }
     [Authorize]
     [HttpPost]
-    [Route("addskill")]
+    [Route("skill/new")]
     public Skill AddSkill([FromBody]ViewIntegrationSkill view)
     {
 
@@ -72,12 +72,12 @@ namespace IntegrationServer.InfraController
     }
     [Authorize]
     [HttpPost]
-    [Route("findoccupation")]
-    public IActionResult FindOccupation([FromBody]ViewIntegrationFindOccupation view)
+    [Route("occupation")]
+    public IActionResult FindOccupation([FromBody]ViewIntegrationFilterName filter)
     {
       try
       {
-        Occupation occupation = service.GetOccupation(view.IdCompany, view.Name);
+        Occupation occupation = service.GetOccupation(filter.IdCompany, filter.Name);
         if (occupation == null)
           return NotFound("Cargo não encontrado!");
         return Ok(new ViewIntegrationOccupation()
@@ -102,7 +102,7 @@ namespace IntegrationServer.InfraController
     }
     [Authorize]
     [HttpPost]
-    [Route("addoccupation")]
+    [Route("occupation/new")]
     public IActionResult AddOccupation([FromBody]ViewIntegrationOccupation view)
     {
       try
