@@ -17,5 +17,11 @@ namespace Manager.Core.Interfaces
     string Remove(string id);
     Company Get(string id);
     List<Company> List(ref long total, int count = 10, int page = 1, string filter = "");
+
+    string NewEstablishment(Establishment view);
+    string UpdateEstablishment(Establishment view);
+    string RemoveEstablishment(string id);
+    Establishment GetEstablishment(string id);
+    List<Establishment> ListEstablishment(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

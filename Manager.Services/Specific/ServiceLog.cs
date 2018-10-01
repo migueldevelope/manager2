@@ -62,15 +62,18 @@ namespace Manager.Services.Specific
       logsService._user = baseUser;
     }
 
-    public List<Log> GetLogs(ref long total, int count, int page, string filter)
+    public List<Log> GetLogs(string idaccount, ref long total, int count, int page, string filter)
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = logsService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
+        //var detail = logsService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        var detail = logsService.GetAuthentication(p => p.Person._idAccount == idaccount & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderByDescending(p => p.DataLog).Skip(skip).Take(count);
+        //total = detail.Count();
+        total = logsService.GetAll(p => p.Person._idAccount == idaccount & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).OrderByDescending(p => p.DataLog).ToList();
+        //return detail.Skip(skip).Take(count).OrderByDescending(p => p.DataLog).ToList();
+        return detail.OrderByDescending(p => p.DataLog).ToList();
       }
       catch (Exception e)
       {

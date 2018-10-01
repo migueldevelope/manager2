@@ -16,6 +16,7 @@ namespace Manager.Core.Interfaces
     string Remove(string id);
     Event Get(string id);
     List<Event> List(ref long total, int count = 10, int page = 1, string filter = "");
+    List<EventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "");
     string NewCourse(Course view);
     string UpdateCourse(Course view);
     string RemoveCourse(string id);
@@ -41,5 +42,12 @@ namespace Manager.Core.Interfaces
     List<Entity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "");
     List<Person> ListPersonInstructor(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
     List<Person> ListPersonParticipants(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Participant> ListParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
+    string Present(string idevent, string idparticipant, string idday, bool present);
+    string SetGrade(string idevent, string idparticipant, decimal grade);
+    List<Event> ListEventOpen(ref long total, int count = 10, int page = 1, string filter = "");
+    List<Event> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
+    string ReopeningEvent(string idevent);
+    void SetAttachment(string idevent, string url, string fileName, string idattachmentid);
   }
 }

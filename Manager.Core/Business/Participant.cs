@@ -9,6 +9,7 @@ namespace Manager.Core.Business
     public Person Person { get; set; }
     public List<FrequencyEvent> FrequencyEvent { get; set; }
     public bool Approved { get; set; }
+    public bool ApprovedGrade { get; set; }
     public decimal Grade { get; set; }
     public string Name { get; set; }
     public EnumTypeParticipant TypeParticipant { get; set; }

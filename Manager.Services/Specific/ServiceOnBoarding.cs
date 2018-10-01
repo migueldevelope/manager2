@@ -48,12 +48,11 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(idmanager, "ListEnd");
-        //var manager = personService.GetAll(p => p._id == idmanager).FirstOrDefault();
         int skip = (count * (page - 1));
-        var detail = onBoardingService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
+        var detail = onBoardingService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = onBoardingService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail;
       }
       catch (Exception e)
       {
@@ -86,7 +85,7 @@ namespace Manager.Services.Specific
         newOnZero();
         int skip = (count * (page - 1));
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator &  p.TypeJourney == EnumTypeJourney.OnBoarding & p.Manager._id == idmanager
-        & p.Name.ToUpper().Contains(filter.ToUpper()))
+        & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
         .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
 
@@ -450,10 +449,10 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "ListExclud");
         int skip = (count * (page - 1));
-        var detail = onBoardingService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
+        var detail = onBoardingService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = onBoardingService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail;
       }
       catch (Exception e)
       {

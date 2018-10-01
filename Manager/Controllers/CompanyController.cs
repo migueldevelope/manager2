@@ -64,5 +64,47 @@ namespace Manager.Controllers
     {
       return service.Remove(id);
     }
+
+    [HttpPost]
+    [Route("newestablishment")]
+    public string PostEstablishment([FromBody]Establishment view)
+    {
+      return service.NewEstablishment(view);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listestablishment/{idcompany}")]
+    public List<Establishment> ListEstablishment(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEstablishment(idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getestablishment")]
+    public Establishment ListEstablishment(string id)
+    {
+      return service.GetEstablishment(id);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updateestablishment")]
+    public string UpdateEstablishment([FromBody]Establishment view)
+    {
+      return service.UpdateEstablishment(view);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteestablishment/{id}")]
+    public string DeleteEstablishment(string id)
+    {
+      return service.RemoveEstablishment(id);
+    }
   }
 }

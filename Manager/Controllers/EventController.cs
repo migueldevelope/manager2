@@ -44,6 +44,28 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listeventopen")]
+    public List<Event> ListEventOpen(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventOpen(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listeventend")]
+    public List<Event> ListEventEnd(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventEnd(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("listpersoninstructor/{idevent}/{idcompany}")]
     public List<Person> ListPersonInstructor(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
     {
@@ -117,9 +139,19 @@ namespace Manager.Controllers
       return result;
     }
 
+    [HttpGet]
+    [Route("listeventhistoricperson/{id}")]
+    public List<EventHistoric> ListEventHistoricPerson(string id, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoricPerson(id, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
     [Authorize]
     [HttpGet]
-    [Route("geteventhistoric")]
+    [Route("geteventhistoric/{id}")]
     public EventHistoric ListEventHistoric(string id)
     {
       return service.GetEventHistoric(id);
@@ -270,7 +302,40 @@ namespace Manager.Controllers
       return service.RemoveInstructor(idevent, id);
     }
 
+    [Authorize]
+    [HttpPut]
+    [Route("present/{idevent}/{idparticipant}/{idday}/{present}")]
+    public string Present(string idevent, string idparticipant, string idday, bool present)
+    {
+      return service.Present(idevent, idparticipant, idday, present);
+    }
 
+    [Authorize]
+    [HttpPut]
+    [Route("setgrade/{idevent}/{idparticipant}/{grade}")]
+    public string SetGrade(string idevent, string idparticipant, decimal grade)
+    {
+      return service.SetGrade(idevent, idparticipant, grade);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listparticipants/{idevent}")]
+    public List<Participant> ListParticipants(string idevent, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListParticipants(idevent, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("reopeningevent/{idevent}")]
+    public string ReopeningEvent(string idevent)
+    {
+      return service.ReopeningEvent(idevent);
+    }
 
 
   }

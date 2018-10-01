@@ -52,10 +52,10 @@ namespace Manager.Services.Specific
       {
         LogSave(idmanager, "ListEnd");
         int skip = (count * (page - 1));
-        var detail = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
+        var detail = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+        total = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail;
       }
       catch (Exception e)
       {
@@ -88,7 +88,7 @@ namespace Manager.Services.Specific
         newOnZero();
         int skip = (count * (page - 1));
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
-        & p.Name.ToUpper().Contains(filter.ToUpper()))
+        & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
         .ToList();
 
@@ -121,7 +121,7 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(idmanager, "PersonEnd");
-        return monitoringService.GetAll(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+        return monitoringService.GetAll(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).OrderBy(p => p.Person.Name).ToList();
       }
       catch (Exception e)
       {
@@ -558,10 +558,10 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "ListExclud");
         int skip = (count * (page - 1));
-        var detail = monitoringService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        total = detail.Count();
+        var detail = monitoringService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = monitoringService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail;
       }
       catch (Exception e)
       {
