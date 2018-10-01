@@ -63,6 +63,7 @@
       this.txtSen.Name = "txtSen";
       this.txtSen.Size = new System.Drawing.Size(254, 22);
       this.txtSen.TabIndex = 2;
+      this.txtSen.Text = "x14r53p5!a";
       // 
       // txtUrl
       // 
@@ -70,6 +71,7 @@
       this.txtUrl.Name = "txtUrl";
       this.txtUrl.Size = new System.Drawing.Size(254, 22);
       this.txtUrl.TabIndex = 0;
+      this.txtUrl.Text = "http://10.0.0.15";
       // 
       // txtEma
       // 
@@ -77,6 +79,7 @@
       this.txtEma.Name = "txtEma";
       this.txtEma.Size = new System.Drawing.Size(254, 22);
       this.txtEma.TabIndex = 1;
+      this.txtEma.Text = "suporte@jmsoft.com.br";
       // 
       // lblUrl
       // 
