@@ -36,7 +36,7 @@ namespace Manager.Controllers
         return BadRequest("MSG2");
 
       ViewPerson person;
-      var authMaristas = user.Mail == "@redemaristas.org.br" ? true : false;
+      var authMaristas = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length) == "@maristas.org.br" ? true : false;
 
       if (authMaristas)
         person = this.service.AuthenticationMaristas(user.Mail, user.Password);
