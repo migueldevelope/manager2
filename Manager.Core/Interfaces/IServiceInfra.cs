@@ -9,6 +9,7 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     List<Company> GetCompanies();
+    Skill GetSkill(string filterName);
     List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page);
     List<Skill> GetSkills(ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkills(string company, ref long total, string filter, int count, int page);
@@ -26,7 +27,9 @@ namespace Manager.Core.Interfaces
     List<Questions> ListQuestions(string idcompany);
     Questions GetQuestions(string id);
     Group GetGroup(string id);
+    Group GetGroup(string idcompany, string filterName);
     Occupation GetOccupation(string id);
+    Occupation GetOccupation(string idcompany, string filterName);
     List<Group> GetGroups();
     List<Group> GetGroups(string idcompany);
     List<Occupation> GetOccupations();
@@ -36,6 +39,7 @@ namespace Manager.Core.Interfaces
     List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page);
     List<Occupation> GetOccupations(string idcompany, string idarea);
     //List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
+    ProcessLevelTwo GetProcessLevelTwo(string id);
     List<ProcessLevelTwo> GetProcessLevelTwo();
     string AddTextDefault(TextDefault model);
     string AddCBO(CBO model);
@@ -51,6 +55,7 @@ namespace Manager.Core.Interfaces
     string AddArea(Area view);
     string AddSphere(Sphere view);
     string AddOccupation(ViewAddOccupation view);
+    string AddOccupation(Occupation occupation);
     string AddOccupationSkill(ViewAddOccupationSkill view);
     string AddOccupationActivities(ViewAddOccupationActivities view);
     string AddProcessLevelOne(ProcessLevelOne model);

@@ -157,7 +157,7 @@ namespace IntegrationServer.InfraController
           Skills = skills,
           Schooling = schoolings 
         };
-        return Ok(service.InsertOccupation(newOccupation));
+        return Ok(service.AddOccupation(newOccupation));
       }
       catch (Exception ex)
       {

@@ -319,6 +319,18 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string AddOccupation(Occupation occupation)
+    {
+      try
+      {
+        occupationService.Insert(occupation);
+        return "ok";
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     public string AddOccupation(ViewAddOccupation view)
     {
       try
@@ -1106,6 +1118,45 @@ namespace Manager.Services.Specific
       }
     }
 
+    public Group GetGroup(string idCompany, string filterName)
+    {
+      try
+      {
+        var group = groupService.GetAll(p => p.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).ToList().Select(
+          p => new Group()
+          {
+            _id = p._id,
+            _idAccount = p._idAccount,
+            Status = p.Status,
+            Name = p.Name,
+            Company = new Company()
+            {
+              _id = p.Company._id,
+              _idAccount = p.Company._idAccount,
+              Status = p.Company.Status,
+              Name = p.Company.Name,
+              Logo = p.Company.Logo,
+              Skills = p.Company.Skills.OrderBy(x => x.Name).ToList(),
+              Template = p.Company.Template
+            },
+            Axis = p.Axis,
+            Sphere = p.Sphere,
+            Line = p.Line,
+            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
+            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
+            Scope = p.Scope.OrderBy(x => x.Order).ToList(),
+            Template = p.Template,
+            Occupations = p.Occupations
+          }).FirstOrDefault();
+        group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
+        return group;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public CBO GetCBO(string id)
     {
       try
@@ -1242,6 +1293,60 @@ namespace Manager.Services.Specific
       }
     }
 
+    public Occupation GetOccupation(string idCompany, string filterName)
+    {
+      try
+      {
+        return occupationService.GetAll(p => p.ProcessLevelTwo.ProcessLevelOne.Area.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).ToList().Select(p =>
+          new Occupation()
+          {
+            _id = p._id,
+            _idAccount = p._idAccount,
+            Status = p.Status,
+            Name = p.Name,
+            Group = new Group()
+            {
+              _id = p.Group._id,
+              _idAccount = p.Group._idAccount,
+              Status = p.Group.Status,
+              Name = p.Name,
+              Company = new Company()
+              {
+                _id = p.Group.Company._id,
+                _idAccount = p.Group.Company._idAccount,
+                Status = p.Group.Company.Status,
+                Name = p.Group.Company.Name,
+                Logo = p.Group.Company.Logo,
+                Skills = p.Group.Company.Skills.OrderBy(x => x.Name).ToList(),
+                Template = p.Group.Company.Template
+              },
+              Axis = p.Group.Axis,
+              Sphere = p.Group.Sphere,
+              Line = p.Group.Line,
+              Skills = p.Group.Skills.OrderBy(x => x.Name).ToList(),
+              Schooling = p.Group.Schooling.OrderBy(x => x.Order).ToList(),
+              Scope = p.Group.Scope.OrderBy(x => x.Order).ToList(),
+              Template = p.Group.Template,
+              Occupations = p.Group.Occupations
+            },
+            Area = p.Area,
+            Areas = p.Areas,
+            Line = p.Line,
+            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
+            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
+            Activities = p.Activities.OrderBy(x => x.Order).ToList(),
+            Template = p.Template,
+            ProcessLevelTwo = p.ProcessLevelTwo,
+            SpecificRequirements = p.SpecificRequirements,
+            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList() : null
+          }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Occupation> GetOccupations()
     {
       try
@@ -1363,6 +1468,21 @@ namespace Manager.Services.Specific
       try
       {
         return schoolingService.GetAll().OrderBy(p => p.Order).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public Skill GetSkill(string filterName)
+    {
+      try
+      {
+        var detail = skillService.GetAll(p => p.Name.ToUpper().Contains(filterName.ToUpper())).ToList();
+        if (detail.Count == 1)
+          return detail[0];
+        return null;
       }
       catch (Exception e)
       {
@@ -2418,6 +2538,21 @@ namespace Manager.Services.Specific
         processLevelTwoService.Update(model, null);
         UpdateProcessLevelTwoAll(model);
         return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ProcessLevelTwo GetProcessLevelTwo(string id)
+    {
+      try
+      {
+        var detail = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id== id).ToList();
+        if (detail.Count == 1)
+          return detail[0];
+        return null;
       }
       catch (Exception e)
       {
