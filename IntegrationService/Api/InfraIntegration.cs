@@ -91,7 +91,29 @@ namespace IntegrationService.Api
         throw;
       }
     }
+    public ViewIntegrationGroup GetGroupByName(string idCompany, string name)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { IdCompany = idCompany, Name = name }));
+        content.Headers.ContentType.MediaType = "application/json";
 
+        var result = clientSkill.PostAsync("infra/group", content).Result;
+        if (result.IsSuccessStatusCode == false)
+        {
+          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
+          if (messageResult == null)
+            throw new Exception("Grupo de cargo não encontrado!");
+          else
+            throw new Exception(messageResult);
+        }
+        return JsonConvert.DeserializeObject<ViewIntegrationGroup>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     public ViewIntegrationOccupation GetOccupationByName(string name)
     {
       try
@@ -107,6 +129,25 @@ namespace IntegrationService.Api
             throw new Exception("Cargo não encontrado!");
           else
             throw new Exception(messageResult);
+        }
+        return JsonConvert.DeserializeObject<ViewIntegrationOccupation>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public ViewIntegrationOccupation AddOccupation(ViewIntegrationOccupation newOccupation)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(newOccupation));
+        content.Headers.ContentType.MediaType = "application/json";
+        var result = clientSkill.PostAsync("infra/occupation/new", content).Result;
+        if (result.IsSuccessStatusCode == false)
+        {
+          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
+          throw new Exception(messageResult);
         }
         return JsonConvert.DeserializeObject<ViewIntegrationOccupation>(result.Content.ReadAsStringAsync().Result);
       }

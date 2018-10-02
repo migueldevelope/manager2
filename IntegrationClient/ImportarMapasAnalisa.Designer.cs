@@ -37,6 +37,7 @@
       this.prb = new System.Windows.Forms.ProgressBar();
       this.label1 = new System.Windows.Forms.Label();
       this.txtLog = new System.Windows.Forms.TextBox();
+      this.lblGrpCar = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // btImp
@@ -118,11 +119,21 @@
       this.txtLog.Size = new System.Drawing.Size(979, 331);
       this.txtLog.TabIndex = 27;
       // 
+      // lblGrpCar
+      // 
+      this.lblGrpCar.AutoSize = true;
+      this.lblGrpCar.BackColor = System.Drawing.SystemColors.Highlight;
+      this.lblGrpCar.Location = new System.Drawing.Point(208, 222);
+      this.lblGrpCar.Name = "lblGrpCar";
+      this.lblGrpCar.Size = new System.Drawing.Size(0, 17);
+      this.lblGrpCar.TabIndex = 29;
+      // 
       // ImportarMapasAnalisa
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1003, 585);
+      this.Controls.Add(this.lblGrpCar);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.txtLog);
       this.Controls.Add(this.prb);
@@ -151,5 +162,6 @@
     private System.Windows.Forms.ProgressBar prb;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox txtLog;
+    private System.Windows.Forms.Label lblGrpCar;
   }
 }

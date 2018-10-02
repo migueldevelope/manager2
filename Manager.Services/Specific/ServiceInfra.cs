@@ -2554,7 +2554,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var detail = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == id).ToList();
+        var detail = processLevelTwoService.GetAll(p => p._id == id).ToList();
         if (detail.Count == 1)
           return detail[0];
         return null;

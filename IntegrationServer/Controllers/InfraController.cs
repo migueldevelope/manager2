@@ -77,7 +77,7 @@ namespace IntegrationServer.InfraController
     {
       try
       {
-        ProcessLevelTwo process = service.GetProcessLevelTwo(filter.Name);
+        ProcessLevelTwo process = service.GetProcessLevelTwo(filter.Id);
         if (process == null)
           return NotFound("Sub processo não encontrado!");
         return Ok(new ViewIntegrationProcessLevelTwo(){
@@ -90,6 +90,31 @@ namespace IntegrationServer.InfraController
           IdCompany = process.ProcessLevelOne.Area.Company._id,
           NameCompany = process.ProcessLevelOne.Area.Company.Name 
         });
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(ex.ToString());
+      }
+    }
+    [Authorize]
+    [HttpPost]
+    [Route("group")]
+    public IActionResult FindGroup([FromBody]ViewIntegrationFilterName filter)
+    {
+      try
+      {
+        Group group = service.GetGroup(filter.IdCompany,filter.Name);
+        if (group == null)
+          return NotFound("Grupo de cargo não encontrado!");
+        ViewIntegrationGroup view =new ViewIntegrationGroup()
+        {
+          Id = group._id,
+          Name = group.Name,
+          Schooling = new List<string>()
+        };
+        foreach (var item in group.Schooling)
+          view.Schooling.Add(item.Name);
+        return Ok(view);
       }
       catch (Exception ex)
       {
@@ -160,15 +185,10 @@ namespace IntegrationServer.InfraController
             return BadRequest("Skill não encontrada");
           skills.Add(skill);
         }
-        List<Schooling> schoolings = new List<Schooling>();
-        foreach (var item in group.Schooling)
-        {
-          if (item.Name == view.Schooling[0])
-            item.Complement = view.SchoolingComplement[0];
-          if (item.Name == view.Schooling[1])
-            item.Complement = view.SchoolingComplement[1];
-          schoolings.Add(item);
-        }
+        List<Schooling> schoolings = group.Schooling;
+        for (int i = 0; i < view.Schooling.Count; i++)
+          schoolings[i].Complement = view.SchoolingComplement[i];
+
         Occupation newOccupation = new Occupation()
         {
           Name = view.Name,
