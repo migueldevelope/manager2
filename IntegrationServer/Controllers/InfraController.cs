@@ -72,6 +72,32 @@ namespace IntegrationServer.InfraController
     }
     [Authorize]
     [HttpPost]
+    [Route("processleveltwo")]
+    public IActionResult FindProcessLevelTwo([FromBody]ViewIntegrationFilterName filter)
+    {
+      try
+      {
+        ProcessLevelTwo process = service.GetProcessLevelTwo(filter.Name);
+        if (process == null)
+          return NotFound("Sub processo não encontrado!");
+        return Ok(new ViewIntegrationProcessLevelTwo(){
+          Id = process._id,
+          Name = process.Name,
+          IdProcessLevelOne = process.ProcessLevelOne._id,
+          NameProcessLevelOne = process.ProcessLevelOne.Name,
+          IdArea = process.ProcessLevelOne.Area._id,
+          NameArea = process.ProcessLevelOne.Area.Name,
+          IdCompany = process.ProcessLevelOne.Area.Company._id,
+          NameCompany = process.ProcessLevelOne.Area.Company.Name 
+        });
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(ex.ToString());
+      }
+    }
+    [Authorize]
+    [HttpPost]
     [Route("occupation")]
     public IActionResult FindOccupation([FromBody]ViewIntegrationFilterName filter)
     {

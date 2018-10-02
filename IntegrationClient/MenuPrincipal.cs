@@ -88,15 +88,17 @@ namespace IntegrationClient
 
     private void BtImpMap_Click(object sender, EventArgs e)
     {
-      ImportarMapas form = new ImportarMapas();
+      ImportarMapasAnalisa form = new ImportarMapasAnalisa(){
+        Person = Person,
+        Conn = string.Format("{0};{1};{2};{3};{4}", chkOra.Checked, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text)
+      };
       form.ShowDialog();
       form.Close();
     }
 
     private void BtSyncSkill_Click(object sender, EventArgs e)
     {
-      SincronizarCompetencia form = new SincronizarCompetencia
-      {
+      SincronizarCompetencia form = new SincronizarCompetencia(){
         Person = Person,
         Conn = string.Format("{0};{1};{2};{3};{4}", chkOra.Checked, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text)
       };

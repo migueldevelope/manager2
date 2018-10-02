@@ -23,7 +23,7 @@ namespace IntegrationService.Tools
 
     public static void SaveLog(string filePath, string register)
     {
-      using (TextWriter stream = new StreamWriter(filePath))
+      using (TextWriter stream = new StreamWriter(filePath,true))
       {
         stream.WriteLine(register);
       }

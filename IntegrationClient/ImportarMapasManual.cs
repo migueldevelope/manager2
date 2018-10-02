@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace IntegrationClient
 {
-  public partial class ImportarMapas : Form
+  public partial class ImportarMapasManual : Form
   {
-    public ImportarMapas()
+    public ImportarMapasManual()
     {
       InitializeComponent();
     }

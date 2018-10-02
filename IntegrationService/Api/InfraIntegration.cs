@@ -67,5 +67,53 @@ namespace IntegrationService.Api
         throw;
       }
     }
+
+    public ViewIntegrationProcessLevelTwo GetProcessByName(string name)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { Name = name }));
+        content.Headers.ContentType.MediaType = "application/json";
+
+        var result = clientSkill.PostAsync("infra/processleveltwo", content).Result;
+        if (result.IsSuccessStatusCode == false)
+        {
+          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
+          if (messageResult == null)
+            throw new Exception("Sub processo não encontrado!");
+          else
+            throw new Exception(messageResult);
+        }
+        return JsonConvert.DeserializeObject<ViewIntegrationProcessLevelTwo>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    public ViewIntegrationOccupation GetOccupationByName(string name)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { Name = name }));
+        content.Headers.ContentType.MediaType = "application/json";
+
+        var result = clientSkill.PostAsync("infra/occupation", content).Result;
+        if (result.IsSuccessStatusCode == false)
+        {
+          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
+          if (messageResult == null)
+            throw new Exception("Cargo não encontrado!");
+          else
+            throw new Exception(messageResult);
+        }
+        return JsonConvert.DeserializeObject<ViewIntegrationOccupation>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
   }
 }

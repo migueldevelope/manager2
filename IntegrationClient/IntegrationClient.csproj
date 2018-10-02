@@ -63,11 +63,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImportarMapas.cs">
+    <Compile Include="ImportarMapasAnalisa.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImportarMapas.Designer.cs">
-      <DependentUpon>ImportarMapas.cs</DependentUpon>
+    <Compile Include="ImportarMapasAnalisa.Designer.cs">
+      <DependentUpon>ImportarMapasAnalisa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportarMapasManual.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportarMapasManual.Designer.cs">
+      <DependentUpon>ImportarMapasManual.cs</DependentUpon>
     </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
@@ -89,8 +95,11 @@
     <Compile Include="SincronizarCompetencia.Designer.cs">
       <DependentUpon>SincronizarCompetencia.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ImportarMapas.resx">
-      <DependentUpon>ImportarMapas.cs</DependentUpon>
+    <EmbeddedResource Include="ImportarMapasAnalisa.resx">
+      <DependentUpon>ImportarMapasAnalisa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportarMapasManual.resx">
+      <DependentUpon>ImportarMapasManual.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>

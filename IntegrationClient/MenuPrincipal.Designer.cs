@@ -108,7 +108,7 @@
       // 
       // btImpMap
       // 
-      this.btImpMap.Location = new System.Drawing.Point(510, 271);
+      this.btImpMap.Location = new System.Drawing.Point(16, 300);
       this.btImpMap.Name = "btImpMap";
       this.btImpMap.Size = new System.Drawing.Size(254, 23);
       this.btImpMap.TabIndex = 11;

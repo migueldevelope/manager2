@@ -1,6 +1,6 @@
 ﻿namespace IntegrationClient
 {
-  partial class ImportarMapas
+  partial class ImportarMapasManual
   {
     /// <summary>
     /// Required designer variable.
@@ -183,7 +183,7 @@
       // 
       // textBox7
       // 
-      this.textBox7.Location = new System.Drawing.Point(12, 432);
+      this.textBox7.Location = new System.Drawing.Point(12, 486);
       this.textBox7.Name = "textBox7";
       this.textBox7.Size = new System.Drawing.Size(1009, 22);
       this.textBox7.TabIndex = 16;
@@ -191,7 +191,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(12, 412);
+      this.label7.Location = new System.Drawing.Point(12, 466);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(155, 17);
       this.label7.TabIndex = 15;
@@ -251,7 +251,7 @@
       // 
       // button6
       // 
-      this.button6.Location = new System.Drawing.Point(820, 460);
+      this.button6.Location = new System.Drawing.Point(820, 514);
       this.button6.Name = "button6";
       this.button6.Size = new System.Drawing.Size(201, 23);
       this.button6.TabIndex = 24;
@@ -262,7 +262,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1031, 488);
+      this.ClientSize = new System.Drawing.Size(1031, 573);
       this.Controls.Add(this.button6);
       this.Controls.Add(this.button5);
       this.Controls.Add(this.button4);

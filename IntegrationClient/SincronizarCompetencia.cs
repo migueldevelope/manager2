@@ -4,14 +4,8 @@ using IntegrationService.Views;
 using OracleTools;
 using SqlServerTools;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IntegrationClient
@@ -44,10 +38,10 @@ namespace IntegrationClient
         FileClass.WriteToBinaryFile<string>(string.Format("{0}/Skill_cmd.txt", this.Person.IdAccount), txtCmd.Text, false);
 
         string file = string.Format("{0}/SyncSkill.csv", this.Person.IdAccount);
-        if (!File.Exists(file))
+        if (File.Exists(file))
           File.Delete(file);
 
-        txtLog.Text = string.Format("Status;Skill;Code;Type;IdSkill or Message{0}", Environment.NewLine);
+        txtLog.Text = "Status;Skill;Code;Type;IdSkill or Message";
         FileClass.SaveLog(file, txtLog.Text);
         DataTable skills;
         if (Boolean.Parse(Conn.Split(';')[0]))
@@ -64,14 +58,14 @@ namespace IntegrationClient
         }
         InfraIntegration skillIntegration = new InfraIntegration(Person);
         ViewIntegrationSkill trabalho;
-        for (int i = 0; i < skills.Rows.Count; i++)
+        foreach (DataRow item in skills.Rows)
         {
           try
           {
-            trabalho = skillIntegration.GetSkillByName(skills.Rows[i]["nome_competencia"].ToString());
-            string registro = string.Format("Ok;{0};{1};{2};{3}{4}", skills.Rows[i]["nome_competencia"].ToString(), skills.Rows[i]["codigo"].ToString(), skills.Rows[i]["tipo"].ToString(), trabalho.IdSkill, Environment.NewLine);
+            trabalho = skillIntegration.GetSkillByName(item["nome_competencia"].ToString());
+            string registro = string.Format("Ok;{0};{1};{2};{3}", item["nome_competencia"].ToString(), item["codigo"].ToString(), item["tipo"].ToString(), trabalho.IdSkill);
             FileClass.SaveLog(file, registro);
-            txtLog.Text = string.Concat(txtLog.Text, registro);
+            txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
           }
           catch (Exception ex)
           {
@@ -79,19 +73,19 @@ namespace IntegrationClient
             {
               ViewIntegrationSkill newSkill = new ViewIntegrationSkill()
               {
-                Name = skills.Rows[i]["nome_competencia"].ToString().ToUpper(),
-                Concept= skills.Rows[i]["conceito"].ToString(),
-                TypeSkill= Int16.Parse(skills.Rows[i]["tipo"].ToString())
+                Name = item["nome_competencia"].ToString().ToUpper(),
+                Concept = item["conceito"].ToString(),
+                TypeSkill = Int16.Parse(item["tipo"].ToString())
               };
               newSkill = skillIntegration.AddSkill(newSkill);
-              string registro = string.Format("Ok;{0};{1};{2};{3}{4}", skills.Rows[i]["nome_competencia"].ToString(), skills.Rows[i]["codigo"].ToString(), skills.Rows[i]["tipo"].ToString(), newSkill.IdSkill, Environment.NewLine);
+              string registro = string.Format("Ok;{0};{1};{2};{3}", item["nome_competencia"].ToString(), item["codigo"].ToString(), item["tipo"].ToString(), newSkill.IdSkill);
               FileClass.SaveLog(file, registro);
-              txtLog.Text = string.Concat(txtLog.Text, registro);
+              txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
             }
             else
             {
-              string registro = string.Format("Erro;{0};{1};{2};{3}{4}", skills.Rows[i]["nome_competencia"].ToString(), skills.Rows[i]["codigo"].ToString(), skills.Rows[i]["tipo"].ToString(), ex.Message.Split('\n')[0], Environment.NewLine);
-              txtLog.Text = string.Concat(txtLog.Text, registro);
+              string registro = string.Format("Erro;{0};{1};{2};{3}", item["nome_competencia"].ToString(), item["codigo"].ToString(), item["tipo"].ToString(), ex.Message.Split('\n')[0]);
+              txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
             }
           }
         }
