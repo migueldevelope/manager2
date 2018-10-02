@@ -10,12 +10,14 @@ using System;
 using MongoDB.Bson;
 using Manager.Services.Specific;
 using Tools;
+using System.Net.Http;
 
 namespace Manager.Services.Auth
 {
   public class ServiceAuthentication : IServiceAuthentication
   {
     private readonly IServicePerson servicePerson;
+    private readonly ServiceGeneric<Person> personService;
     private ServiceGeneric<Account> accountService;
     private IServiceCompany companyService;
     private IServiceLog logService;
@@ -30,6 +32,7 @@ namespace Manager.Services.Auth
         accountService = new ServiceGeneric<Account>(context);
         companyService = _companyService;
         logService = _logService;
+        personService = new ServiceGeneric<Person>(context);
         _context = context;
       }
       catch (Exception)
@@ -45,7 +48,10 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = servicePerson.GetAuthentication(mail, EncryptServices.GetMD5Hash(password));
+        Person user = null;
+        if (GetMaristas(mail, password) == "ok")
+          user = personService.GetAuthentication(p => p.Mail == mail).FirstOrDefault();
+
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
@@ -78,11 +84,12 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = servicePerson.GetAuthentication(mail, password);
+        Person user = null;
+        //if (GetMaristas(mail, password) == "ok")
+        user = personService.GetAuthentication(p => p.Mail == mail).FirstOrDefault();
+
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
-
-
 
         ViewPerson person = new ViewPerson()
         {
@@ -121,8 +128,6 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-
-
 
     public ViewPerson Authentication(string mail, string password)
     {
@@ -261,6 +266,29 @@ namespace Manager.Services.Auth
           Person = user
         };
         logService.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string GetMaristas(string login, string senha)
+    {
+      try
+      {
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri("http://integracoes.maristas.org.br");
+          var content = new StringContent("login=" + login + "&senha=" + senha);
+          content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
+          client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
+          var result = client.PostAsync("wspucsede/WService.asmx/ValidateUser", content).Result;
+          if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            return "ok";
+          else
+            return "error";
+        }
       }
       catch (Exception e)
       {
