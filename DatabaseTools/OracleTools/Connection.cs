@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Oracle.DataAccess.Client;
+using Oracle.ManagedDataAccess.Client;
 using System.Globalization;
 using System.Text;
 
