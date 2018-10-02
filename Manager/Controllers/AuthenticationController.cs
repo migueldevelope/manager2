@@ -35,7 +35,15 @@ namespace Manager.Controllers
       if (String.IsNullOrEmpty(user.Password))
         return BadRequest("MSG2");
 
-      var person = this.service.Authentication(user.Mail, user.Password);
+      ViewPerson person;
+      var authMaristas = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+      var authPUC = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+
+      if ((authMaristas) || (authPUC))
+        person = this.service.AuthenticationMaristas(user.Mail, user.Password);
+      else
+        person = this.service.Authentication(user.Mail, user.Password);
+
 
 
       var claims = new[]
@@ -74,8 +82,14 @@ namespace Manager.Controllers
       if (String.IsNullOrEmpty(user.Password))
         return BadRequest("MSG2");
 
-      var person = this.service.AuthenticationEncrypt(user.Mail, user.Password);
+      ViewPerson person;
+      var authMaristas = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+      var authPUC = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
 
+      if ((authMaristas) || (authPUC))
+        person = this.service.AuthenticationEncryptMaristas(user.Mail, user.Password);
+      else
+        person = this.service.AuthenticationEncrypt(user.Mail, user.Password);
 
       var claims = new[]
       {
