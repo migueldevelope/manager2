@@ -56,12 +56,6 @@
     <Reference Include="Oracle.DataAccess, Version=4.112.3.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=AMD64">
       <HintPath>..\packages\odp.net.x64.112.3.20\lib\net40\Oracle.DataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="OracleTools">
-      <HintPath>..\..\DatabaseTools\OracleTools\bin\Debug\OracleTools.dll</HintPath>
-    </Reference>
-    <Reference Include="SqlServerTools">
-      <HintPath>..\..\DatabaseTools\SqlServerTools\bin\Debug\SqlServerTools.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -114,6 +108,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DatabaseTools\DatabaseTools.csproj">
+      <Project>{6f01a93c-cb02-4de1-ac2d-ea5fc7dfbc13}</Project>
+      <Name>DatabaseTools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
