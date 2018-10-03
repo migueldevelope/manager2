@@ -38,7 +38,9 @@ namespace Manager.Test.Test.Complete
         long total = 0;
         var person = servicePerson.GetAll(p => p.Name.Contains("Analisa")).FirstOrDefault();
 
+        
         var course = serviceEvent.ListCourse(ref total, 1, 1, "").FirstOrDefault();
+        var listperson = serviceMandatoryTraining.ListPerson(course._id, person.Company._id, ref total, 10, 1, "");
 
         var view = new ViewAddPersonMandatory()
         {

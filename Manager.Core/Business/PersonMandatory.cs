@@ -1,9 +1,10 @@
-﻿using Manager.Core.Enumns;
+﻿using Manager.Core.Base;
+using Manager.Core.Enumns;
 using System;
 
 namespace Manager.Core.Business
 {
-  public class PersonMandatory
+  public class PersonMandatory : BaseEntity
   {
     public Person Person { get; set; }
     public DateTime? BeginDate { get; set; }

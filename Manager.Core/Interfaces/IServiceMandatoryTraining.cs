@@ -18,6 +18,9 @@ namespace Manager.Core.Interfaces
     string RemovePerson(string idcourse, string idperson);
     string RemoveCompany(string idcourse, string idcompany);
     List<MandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "");
+    List<Occupation> ListOccupation(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Person> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Company> ListCompany(string idcourse, ref long total, int count = 10, int page = 1, string filter = "");
     string NewTrainingPlan(TrainingPlan view);
     string UpdateTrainingPlan(TrainingPlan view);
     string RemoveTrainingPlan(string id);
