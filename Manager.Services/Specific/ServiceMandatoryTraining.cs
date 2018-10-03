@@ -101,10 +101,28 @@ namespace Manager.Services.Specific
       }
     }
 
+    private void newOnZero(Course course)
+    {
+      try
+      {
+        var on = trainingPlanService.GetAuthentication(p => p.Status == EnumStatus.Disabled).Count();
+        if (on == 0)
+        {
+          var person = personService.GetAll().FirstOrDefault();
+          var zero = trainingPlanService.Insert(new TrainingPlan() { Person = person, Status = EnumStatus.Disabled, Course = course });
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
     public async void UpdateTrainingPlanPerson(Course course, Person person, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
+        newOnZero(course);
         var listPlans = trainingPlanService.GetAll(p => p.Course._id == course._id & p.Person._id == person._id).ToList();
 
         // VERITY DATE LAST COURSE REALIZED
@@ -132,7 +150,7 @@ namespace Manager.Services.Specific
           proxDate = maxHis.Value.AddMonths(course.Periodicity);
         }
 
-        if(listPlans.Where(p => p.Deadline == proxDate).Count() == 0)
+        if (listPlans.Where(p => p.Deadline == proxDate).Count() == 0)
         {
           trainingPlanService.Insert(new TrainingPlan()
           {
@@ -143,7 +161,7 @@ namespace Manager.Services.Specific
             Status = EnumStatus.Enabled,
             Origin = (typeMandatoryTraining == EnumTypeMandatoryTraining.Mandatory) ? EnumOrigin.Mandatory : EnumOrigin.Optional,
             StatusTrainingPlan = status,
-            Deadline = proxDate.Value.AddMonths(course.Periodicity)
+            Deadline = proxDate
           });
         }
 

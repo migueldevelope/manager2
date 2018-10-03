@@ -13,5 +13,6 @@ namespace Manager.Core.Business
     public DateTime? Include { get; set; }
     public EnumStatusTrainingPlan StatusTrainingPlan { get; set; }
     public string Observartion { get; set; }
+    public Event Event { get; set; }
   }
 }

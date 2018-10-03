@@ -22,6 +22,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Course> courseService;
     private readonly ServiceGeneric<CourseESocial> courseESocialService;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<TrainingPlan> trainingPlanService;
     private readonly ServiceLog logService;
     private string path;
 
@@ -36,6 +37,7 @@ namespace Manager.Services.Specific
         personService = new ServiceGeneric<Person>(context);
         entityService = new ServiceGeneric<Entity>(context);
         eventHistoricService = new ServiceGeneric<EventHistoric>(context);
+        trainingPlanService = new ServiceGeneric<TrainingPlan>(context);
         logService = new ServiceLog(context);
         path = pathToken;
       }
@@ -698,7 +700,12 @@ namespace Manager.Services.Specific
       try
       {
         view.Entity = AddEntity(view.Entity.Name);
-        eventHistoricService.Insert(view);
+        var events = eventHistoricService.Insert(view);
+        var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
+        & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
+        plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
+        plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
+        trainingPlanService.Update(plan, null);
         return "add success";
       }
       catch (Exception e)
@@ -816,6 +823,7 @@ namespace Manager.Services.Specific
       personService._user = _user;
       entityService._user = _user;
       logService._user = _user;
+      trainingPlanService._user = _user;
     }
 
     public void SetUser(BaseUser baseUser)
@@ -828,6 +836,7 @@ namespace Manager.Services.Specific
       personService._user = _user;
       entityService._user = _user;
       logService._user = _user;
+      trainingPlanService._user = _user;
     }
 
     public Event Update(Event view)
@@ -859,6 +868,7 @@ namespace Manager.Services.Specific
         foreach (var item in view.Participants)
         {
           if (item.Approved & (item.Grade >= view.Grade))
+          {
             NewEventHistoric(new EventHistoric()
             {
               Name = view.Name,
@@ -871,6 +881,8 @@ namespace Manager.Services.Specific
               Begin = DateTime.Parse(view.Begin.ToString()),
               End = DateTime.Parse(view.End.ToString())
             });
+          }
+
         }
       }
       catch (Exception e)
