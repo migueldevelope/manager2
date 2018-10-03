@@ -2027,7 +2027,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in groupService.GetAll(p => p.Schooling.Where(x => x._id == schooling._id).Count() > 0).ToList())
+        foreach (var item in groupService.GetAll().ToList())
         {
           foreach (var row in item.Schooling)
           {
