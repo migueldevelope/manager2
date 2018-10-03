@@ -36,7 +36,7 @@ namespace IntegrationClient
       if (File.Exists(file))
         File.Delete(file);
 
-      txtLog.Text = "Status;Occupation;Code;IdOccupation or Message";
+      txtLog.Text = string.Format("Status;Occupation;Code;IdOccupation or Message{0}",Environment.NewLine);
       FileClass.SaveLog(file, txtLog.Text);
       DataTable occupations;
       if (Boolean.Parse(Conn.Split(';')[0]))
@@ -59,6 +59,7 @@ namespace IntegrationClient
       this.Refresh();
       string salvaGrupoCargo = string.Empty;
       string salvaCargo = string.Empty;
+      string salvaCargoCodigo = string.Empty;
       ViewIntegrationGroup grupoCargo = null;
       ViewIntegrationOccupation cargo = null;
       Boolean novoCargo = false;
@@ -72,6 +73,9 @@ namespace IntegrationClient
             {
               // gravar cargo
               cargo = infraIntegration.AddOccupation(cargo);
+              string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}", cargo.IdOccupation));
+              FileClass.SaveLog(file, registro);
+              txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
               novoCargo = false;
             }
             lblGrpCar.Text = item["nome_grupo_cargo"].ToString();
@@ -87,9 +91,12 @@ namespace IntegrationClient
               {
                 // gravar cargo
                 cargo = infraIntegration.AddOccupation(cargo);
+                string registroNovo = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}", cargo.IdOccupation));
+                FileClass.SaveLog(file, registroNovo);
+                txtLog.Text = string.Concat(txtLog.Text, registroNovo, Environment.NewLine);
                 novoCargo = false;
               }
-              cargo = infraIntegration.GetOccupationByName(item["nome_cargo"].ToString().Trim());
+              cargo = infraIntegration.GetOccupationByName(ProcessLevelTwo.IdCompany, item["nome_cargo"].ToString().Trim());
               string registro = string.Format("Ok;{0};{1};{2}", item["nome_cargo"].ToString(), item["cargo"].ToString(), cargo.IdOccupation);
               FileClass.SaveLog(file, registro);
               txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
@@ -100,6 +107,7 @@ namespace IntegrationClient
               cargo = null;
             }
             salvaCargo = item["nome_cargo"].ToString().Trim().ToUpper();
+            salvaCargoCodigo = item["cargo"].ToString();
           }
           if (novoCargo)
           {
@@ -127,25 +135,26 @@ namespace IntegrationClient
               for (int i = 0; i < grupoCargo.Schooling.Count; i++)
                 cargo.SchoolingComplement.Add(string.Empty);
             }
-            if (Int16.Parse(item["tipo"].ToString()) == 0) // responsabilidades
+            switch (Int16.Parse(item["tipo"].ToString()))
             {
-              cargo.Activities.Add(item["conteudo"].ToString());
-            }
-            if (Int16.Parse(item["tipo"].ToString()) == 1) // comportamental
-            {
-              cargo.Skills.Add(item["nome_compor"].ToString());
-            }
-            if (Int16.Parse(item["tipo"].ToString()) == 2) // técnica]       
-            {
-              cargo.Skills.Add(item["nome_tecnica"].ToString());
-            }
-            if (Int16.Parse(item["tipo"].ToString()) == 3) // escolaridade
-            {
-              for (int i = 0; i < cargo.Schooling.Count; i++)
-              {
-                if (cargo.Schooling[i].ToUpper().Equals(item["nome_escolaridade"].ToString().ToUpper()))
-                  cargo.SchoolingComplement[i] = item["escolacompl"].ToString();
-              }
+              case 0: // responsabilidades
+                cargo.Activities.Add(item["conteudo"].ToString());
+                break;
+              case 1: // comportamental
+                cargo.Skills.Add(item["nome_compor"].ToString());
+                break;
+              case 2: // tecnica
+                cargo.Skills.Add(item["nome_tecnica"].ToString());
+                break;
+              case 3: // escolaridade
+                for (int i = 0; i < cargo.Schooling.Count; i++)
+                {
+                  if (cargo.Schooling[i].Trim().ToUpper().Equals(item["nome_escolaridade"].ToString().Trim().ToUpper()))
+                    cargo.SchoolingComplement[i] = item["escolacompl"].ToString();
+                }
+                break;
+              default:
+                break;
             }
           }
           prb.Value++;
@@ -161,6 +170,9 @@ namespace IntegrationClient
       {
         // gravar cargo
         cargo = infraIntegration.AddOccupation(cargo);
+        string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}",cargo.IdOccupation));
+        FileClass.SaveLog(file, registro);
+        txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
         novoCargo = false;
       }
     }

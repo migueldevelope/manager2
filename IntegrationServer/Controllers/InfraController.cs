@@ -203,7 +203,37 @@ namespace IntegrationServer.InfraController
           Skills = skills,
           Schooling = schoolings 
         };
-        return Ok(service.AddOccupation(newOccupation));
+        service.AddOccupation(newOccupation);
+        var retorno = new ViewIntegrationOccupation()
+        {
+          IdOccupation = newOccupation._id,
+          Name = newOccupation.Name,
+          NameGroup = newOccupation.Group.Name,
+          IdProcessLevelTwo = newOccupation.Process[0]._id,
+          NameProcessLevelTwo = newOccupation.Process[0].Name,
+          IdProcessLevelOne = newOccupation.Process[0].ProcessLevelOne._id,
+          NameProcessLevelOne = newOccupation.Process[0].ProcessLevelOne.Name,
+          IdArea = newOccupation.Process[0].ProcessLevelOne.Area._id,
+          NameArea = newOccupation.Process[0].ProcessLevelOne.Area.Name,
+          IdCompany = newOccupation.Process[0].ProcessLevelOne.Area.Company._id,
+          NameCompany = newOccupation.Process[0].ProcessLevelOne.Area.Company.Name,
+          SpecificRequirements = newOccupation.SpecificRequirements,
+          Activities = new List<string>(),
+          Schooling = new List<string>(),
+          SchoolingComplement = new List<string>(),
+          Skills = new List<string>()
+        };
+        foreach (var item in newOccupation.Activities)
+          retorno.Activities.Add(item.Name);
+
+        foreach (var item in newOccupation.Schooling)
+        {
+          retorno.Schooling.Add(item.Name);
+          retorno.SchoolingComplement.Add(item.Complement);
+        }
+        foreach (var item in newOccupation.Skills)
+          retorno.Skills.Add(item.Name);
+        return Ok(retorno);
       }
       catch (Exception ex)
       {

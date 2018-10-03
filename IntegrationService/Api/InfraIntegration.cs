@@ -68,11 +68,11 @@ namespace IntegrationService.Api
       }
     }
 
-    public ViewIntegrationProcessLevelTwo GetProcessByName(string name)
+    public ViewIntegrationProcessLevelTwo GetProcessByName(string id)
     {
       try
       {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { Name = name }));
+        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { Id = id }));
         content.Headers.ContentType.MediaType = "application/json";
 
         var result = clientSkill.PostAsync("infra/processleveltwo", content).Result;
@@ -114,11 +114,11 @@ namespace IntegrationService.Api
         throw;
       }
     }
-    public ViewIntegrationOccupation GetOccupationByName(string name)
+    public ViewIntegrationOccupation GetOccupationByName(string idCompany, string name)
     {
       try
       {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { Name = name }));
+        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { IdCompany = idCompany, Name = name }));
         content.Headers.ContentType.MediaType = "application/json";
 
         var result = clientSkill.PostAsync("infra/occupation", content).Result;
