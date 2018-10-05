@@ -703,9 +703,12 @@ namespace Manager.Services.Specific
         var events = eventHistoricService.Insert(view);
         var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
-        plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
-        plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
-        trainingPlanService.Update(plan, null);
+        if(plan != null)
+        {
+          plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
+          plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
+          trainingPlanService.Update(plan, null);
+        }
         return "add success";
       }
       catch (Exception e)
