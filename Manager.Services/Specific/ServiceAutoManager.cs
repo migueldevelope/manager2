@@ -81,7 +81,7 @@ namespace Manager.Services.Specific
       {
         var result = new List<ViewAutoManagerPerson>();
 
-        foreach (var item in personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.StatusUser != EnumStatusUser.Disabled & p.Name.ToUpper().Contains(filter.ToUpper()) & p.StatusUser != EnumStatusUser.Disabled & p._id != idManager & p.Manager._id != idManager).ToList())
+        foreach (var item in personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.Name.ToUpper().Contains(filter.ToUpper()) & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p._id != idManager & p.Manager._id != idManager).ToList())
         {
           var view = new ViewAutoManagerPerson();
           var exists = autoManagerService.GetAll(p => p.Person._id == item._id & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).Count();
