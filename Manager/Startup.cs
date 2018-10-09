@@ -55,6 +55,7 @@ namespace Manager
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
+      IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
 
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceCompany);
@@ -71,6 +72,8 @@ namespace Manager
       services.AddSingleton(_ => serviceCheckpoint);
       services.AddSingleton(_ => serviceParameters);
       services.AddSingleton(_ => serviceEvent);
+      services.AddSingleton(_ => serviceMandatoryTraining);
+
 
       serviceIndicators.SendMessages(conn.SignalRService);
 
