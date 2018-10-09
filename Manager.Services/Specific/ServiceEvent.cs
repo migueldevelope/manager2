@@ -700,9 +700,11 @@ namespace Manager.Services.Specific
       try
       {
         view.Entity = AddEntity(view.Entity.Name);
-        view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
+        if (view.Workload.ToString().Contains(","))
+          view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
+        else
+          view.Workload = view.Workload * 60;
 
-        
         //TimeSpan span = TimeSpan.FromHours(double.Parse(view.Workload.ToString()));
         //view.Workload = decimal.Parse(span.TotalMinutes.ToString());
         //string time = view.Workload.ToString().Replace(",",":");
@@ -736,7 +738,7 @@ namespace Manager.Services.Specific
         var events = eventHistoricService.Insert(view);
         var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
-        if(plan != null)
+        if (plan != null)
         {
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
           plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
@@ -915,7 +917,8 @@ namespace Manager.Services.Specific
               Person = item.Person,
               Status = EnumStatus.Enabled,
               Begin = DateTime.Parse(view.Begin.ToString()),
-              End = DateTime.Parse(view.End.ToString())
+              End = DateTime.Parse(view.End.ToString()),
+              Attachments = view.Attachments
             });
           }
 
@@ -949,7 +952,10 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "Update Event Historic " + view._id);
 
-        view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
+        if (view.Workload.ToString().Contains(","))
+          view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
+        else
+          view.Workload = view.Workload * 60;
 
         view.Entity = AddEntity(view.Entity.Name);
         eventHistoricService.Update(view, null);
