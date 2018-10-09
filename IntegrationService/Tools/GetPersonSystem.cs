@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using OracleTools;
 using SqlServerTools;
 
-namespace IntegrationService.Core
+namespace IntegrationService.Tools
 {
   public class GetPersonSystem
   {

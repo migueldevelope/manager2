@@ -129,7 +129,17 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
+    public Company GetByName(string name)
+    {
+      try
+      {
+        return companyService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public List<Company> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -193,6 +203,18 @@ namespace Manager.Services.Specific
       try
       {
         return establishmentService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public Establishment GetEstablishmentByName(string idCompany, string name)
+    {
+      try
+      {
+        return establishmentService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
       }
       catch (Exception e)
       {

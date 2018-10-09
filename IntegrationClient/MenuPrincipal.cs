@@ -13,6 +13,8 @@ using Newtonsoft.Json;
 using System.Threading;
 using IntegrationService.Core;
 using IntegrationService.Tools;
+using IntegrationService.Data;
+using IntegrationService.Service;
 
 namespace IntegrationClient
 {
@@ -115,6 +117,46 @@ namespace IntegrationClient
       FileClass.WriteToBinaryFile<string>(string.Format("{0}/conn.txt",Person.IdAccount), person, false);
 
       MessageBox.Show("Configuração atualizada!");
+    }
+
+    private void Button2_Click(object sender, EventArgs e)
+    {
+      List<Colaborador> lista = new List<Colaborador>();
+      Colaborador colaborador = new Colaborador()
+      {
+        Empresa = "100",
+        NomeEmpresa = "Analisa",
+        Estabelecimento = "1",
+        NomeEstabelecimento = "Analisa",
+        Documento ="57763771020",
+        Matricula = "1",
+        Nome = "Juremir Milani",
+        Email = "juremir@jmsoft.com.br",
+        DataNascimento = new DateTime(1971,07,01),
+        Celular = "54 991089092",
+        Telefone = "54 32025412",
+        Identidade = "8049471331",
+        CarteiraProfissional = "cart_prof",
+        Sexo = "Masculino",
+        DataAdmissao = new DateTime(1994,12,15),
+        Situacao = "Ativo",
+        DataRetornoFerias = null,
+        MotivoAfastamento =  string.Empty,
+        DataDemissao = null,
+        Cargo = "2043",
+        NomeCargo  = "Analista de Sistemas",
+        DataUltimaTrocaCargo = null,
+        GrauInstrucao = "15",
+        NomeGrauInstrucao = "Superior Incompleto",
+        SalarioNominal = 4130,
+        DataUltimoReajuste = null,
+        DocumentoChefe = string.Empty,
+        EmpresaChefe = string.Empty,
+        MatriculaChefe = string.Empty,
+        NomeChefe = string.Empty
+      };
+      lista.Add(colaborador);
+      ImportService import = new ImportService(Person, lista);
     }
   }
 }
