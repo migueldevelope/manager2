@@ -29,7 +29,9 @@ namespace Manager.Core.Interfaces
     List<CourseESocial> ListCourseESocial(ref long total, int count = 10, int page = 1, string filter = "");
 
     string NewEventHistoric(EventHistoric view);
+    string NewEventHistoricFrontEnd(EventHistoric view);
     string UpdateEventHistoric(EventHistoric view);
+    string UpdateEventHistoricFrontEnd(EventHistoric view);
     string RemoveEventHistoric(string id);
     EventHistoric GetEventHistoric(string id);
     List<EventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "");
@@ -49,5 +51,6 @@ namespace Manager.Core.Interfaces
     List<Event> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
     string ReopeningEvent(string idevent);
     void SetAttachment(string idevent, string url, string fileName, string idattachmentid);
+    void SetAttachmentHistoric(string idevent, string url, string fileName, string idattachmentid);
   }
 }

@@ -125,7 +125,7 @@ namespace Manager.Controllers
     [Route("neweventhistoric")]
     public string PostEventHistoric([FromBody]EventHistoric view)
     {
-      return service.NewEventHistoric(view);
+      return service.NewEventHistoricFrontEnd(view);
     }
 
     [Authorize]
@@ -162,7 +162,7 @@ namespace Manager.Controllers
     [Route("updateeventhistoric")]
     public string UpdateEventHistoric([FromBody]EventHistoric view)
     {
-      return service.UpdateEventHistoric(view);
+      return service.UpdateEventHistoricFrontEnd(view);
     }
 
     [Authorize]

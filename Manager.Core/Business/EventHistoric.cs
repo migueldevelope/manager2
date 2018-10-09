@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using System;
+using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
@@ -13,5 +14,6 @@ namespace Manager.Core.Business
     public DateTime Begin { get; set; }
     public DateTime End { get; set; }
     public string Name { get; set; }
+    public List<AttachmentField> Attachments { get; set; }
   }
 }

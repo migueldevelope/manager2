@@ -695,6 +695,31 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string NewEventHistoricFrontEnd(EventHistoric view)
+    {
+      try
+      {
+        view.Entity = AddEntity(view.Entity.Name);
+        TimeSpan span = TimeSpan.FromHours(double.Parse(view.Workload.ToString()));
+        view.Workload = decimal.Parse(span.TotalMinutes.ToString());
+
+        var events = eventHistoricService.Insert(view);
+        var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
+        & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
+        if (plan != null)
+        {
+          plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
+          plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
+          trainingPlanService.Update(plan, null);
+        }
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string NewEventHistoric(EventHistoric view)
     {
       try
@@ -910,6 +935,25 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string UpdateEventHistoricFrontEnd(EventHistoric view)
+    {
+      try
+      {
+        LogSave(_user._idPerson, "Update Event Historic " + view._id);
+
+        TimeSpan span = TimeSpan.FromHours(double.Parse(view.Workload.ToString()));
+        view.Workload = decimal.Parse(span.TotalMinutes.ToString());
+
+        view.Entity = AddEntity(view.Entity.Name);
+        eventHistoricService.Update(view, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string UpdateCourse(Course view)
     {
       try
@@ -998,5 +1042,26 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public void SetAttachmentHistoric(string idevent, string url, string fileName, string attachmentid)
+    {
+      try
+      {
+        var eventsHistoric = eventHistoricService.GetAll(p => p._id == idevent).FirstOrDefault();
+
+        if (eventsHistoric.Attachments == null)
+        {
+          eventsHistoric.Attachments = new List<AttachmentField>();
+        }
+        eventsHistoric.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+        eventHistoricService.Update(eventsHistoric, null);
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
   }
 }
