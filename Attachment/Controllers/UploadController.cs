@@ -64,6 +64,7 @@ namespace EdeskIntegration.Controllers
       companyService = _companyService;
       planService = _planService;
       service._user = baseUser;
+      eventService = _serviceEvent;
       eventService.SetUser(baseUser);
       eventService.SetUser(contextAccessor);
       personService.SetUser(contextAccessor);

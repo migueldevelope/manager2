@@ -700,8 +700,16 @@ namespace Manager.Services.Specific
       try
       {
         view.Entity = AddEntity(view.Entity.Name);
-        TimeSpan span = TimeSpan.FromHours(double.Parse(view.Workload.ToString()));
-        view.Workload = decimal.Parse(span.TotalMinutes.ToString());
+        view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
+
+        
+        //TimeSpan span = TimeSpan.FromHours(double.Parse(view.Workload.ToString()));
+        //view.Workload = decimal.Parse(span.TotalMinutes.ToString());
+        //string time = view.Workload.ToString().Replace(",",":");
+        //string[] pieces = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+        //TimeSpan difference2 = new TimeSpan(Convert.ToInt32(pieces[0]), Convert.ToInt32(pieces[1]), 0);
+        //double minutes2 = difference2.TotalMinutes; 
+        //view.Workload = decimal.Parse(minutes2.ToString());
 
         var events = eventHistoricService.Insert(view);
         var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
@@ -941,8 +949,7 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "Update Event Historic " + view._id);
 
-        TimeSpan span = TimeSpan.FromHours(double.Parse(view.Workload.ToString()));
-        view.Workload = decimal.Parse(span.TotalMinutes.ToString());
+        view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
 
         view.Entity = AddEntity(view.Entity.Name);
         eventHistoricService.Update(view, null);

@@ -47,6 +47,7 @@ namespace Attachment
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, conn.TokenServer);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
       IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer);
+      IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
 
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
 
@@ -61,6 +62,7 @@ namespace Attachment
       services.AddSingleton(_ => serviceOnBoarding);
       services.AddSingleton(_ => serviceMonitoring);
       services.AddSingleton(_ => servicePlan);
+      services.AddSingleton(_ => serviceEvent);
 
     }
 
