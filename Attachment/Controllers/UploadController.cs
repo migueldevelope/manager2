@@ -64,6 +64,7 @@ namespace EdeskIntegration.Controllers
       companyService = _companyService;
       planService = _planService;
       service._user = baseUser;
+      eventService = _serviceEvent;
       eventService.SetUser(baseUser);
       eventService.SetUser(contextAccessor);
       personService.SetUser(contextAccessor);
@@ -177,59 +178,6 @@ namespace EdeskIntegration.Controllers
 
     [Authorize]
     [HttpPost("{idevent}/event")]
-    public async Task<ObjectResult> PostPlan(string idmonitoring, string idplan)
-    {
-      foreach (var file in HttpContext.Request.Form.Files)
-      {
-        var ext = Path.GetExtension(file.FileName).ToLower();
-        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
-          return BadRequest("Bad file type.");
-      }
-      List<Attachments> listAttachments = new List<Attachments>();
-      var url = "";
-      foreach (var file in HttpContext.Request.Form.Files)
-      {
-        Attachments attachment = new Attachments()
-        {
-          Extension = Path.GetExtension(file.FileName).ToLower(),
-          LocalName = file.FileName,
-          Lenght = file.Length,
-          Status = EnumStatus.Enabled,
-          Saved = true
-        };
-        this.service.Insert(attachment);
-        try
-        {
-          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
-          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
-          if (await cloudBlobContainer.CreateIfNotExistsAsync())
-          {
-            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
-            {
-              PublicAccess = BlobContainerPublicAccessType.Blob
-            });
-          }
-          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
-          blockBlob.Properties.ContentType = file.ContentType;
-          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
-          url = blockBlob.Uri.ToString();
-        }
-        catch (Exception e)
-        {
-          attachment.Saved = false;
-          service.Update(attachment, null);
-          throw e;
-        }
-
-        planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
-        listAttachments.Add(attachment);
-      }
-      return Ok(listAttachments);
-    }
-
-    [Authorize]
-    [HttpPost("{idmonitoring}/plan/{idplan}")]
     public async Task<ObjectResult> PostEvent(string idevent)
     {
       foreach (var file in HttpContext.Request.Form.Files)
@@ -276,6 +224,112 @@ namespace EdeskIntegration.Controllers
         }
 
         eventService.SetAttachment(idevent, url, file.FileName, attachment._id);
+        listAttachments.Add(attachment);
+      }
+      return Ok(listAttachments);
+    }
+
+    [Authorize]
+    [HttpPost("{ideventhistoric}/eventhistoric")]
+    public async Task<ObjectResult> PostEventHistoric(string ideventhistoric)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return BadRequest("Bad file type.");
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      var url = "";
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        this.service.Insert(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+          if (await cloudBlobContainer.CreateIfNotExistsAsync())
+          {
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          url = blockBlob.Uri.ToString();
+        }
+        catch (Exception e)
+        {
+          attachment.Saved = false;
+          service.Update(attachment, null);
+          throw e;
+        }
+
+        eventService.SetAttachmentHistoric(ideventhistoric, url, file.FileName, attachment._id);
+        listAttachments.Add(attachment);
+      }
+      return Ok(listAttachments);
+    }
+
+    [Authorize]
+    [HttpPost("{idmonitoring}/plan/{idplan}")]
+    public async Task<ObjectResult> PostPlan(string idmonitoring, string idplan)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return BadRequest("Bad file type.");
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      var url = "";
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        this.service.Insert(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+          if (await cloudBlobContainer.CreateIfNotExistsAsync())
+          {
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          url = blockBlob.Uri.ToString();
+        }
+        catch (Exception e)
+        {
+          attachment.Saved = false;
+          service.Update(attachment, null);
+          throw e;
+        }
+
+        planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);

@@ -184,7 +184,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         var detail = new List<Person>();
         var participants = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Select(p => p.Person).ToList();
-        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
+        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
         ).ToList();
         foreach (var item in list)
         {
@@ -209,7 +209,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         var detail = new List<Person>();
         var instructors = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Instructors.Select(p => p.Person).ToList();
-        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
+        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())
         ).ToList();
         foreach (var item in list)
         {
@@ -695,6 +695,41 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string NewEventHistoricFrontEnd(EventHistoric view)
+    {
+      try
+      {
+        view.Entity = AddEntity(view.Entity.Name);
+        if (view.Workload.ToString().Contains(","))
+          view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
+        else
+          view.Workload = view.Workload * 60;
+
+        //TimeSpan span = TimeSpan.FromHours(double.Parse(view.Workload.ToString()));
+        //view.Workload = decimal.Parse(span.TotalMinutes.ToString());
+        //string time = view.Workload.ToString().Replace(",",":");
+        //string[] pieces = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+        //TimeSpan difference2 = new TimeSpan(Convert.ToInt32(pieces[0]), Convert.ToInt32(pieces[1]), 0);
+        //double minutes2 = difference2.TotalMinutes; 
+        //view.Workload = decimal.Parse(minutes2.ToString());
+
+        var events = eventHistoricService.Insert(view);
+        var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
+        & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
+        if (plan != null)
+        {
+          plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
+          plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
+          trainingPlanService.Update(plan, null);
+        }
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string NewEventHistoric(EventHistoric view)
     {
       try
@@ -703,9 +738,12 @@ namespace Manager.Services.Specific
         var events = eventHistoricService.Insert(view);
         var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
-        plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
-        plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
-        trainingPlanService.Update(plan, null);
+        if (plan != null)
+        {
+          plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
+          plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
+          trainingPlanService.Update(plan, null);
+        }
         return "add success";
       }
       catch (Exception e)
@@ -879,7 +917,8 @@ namespace Manager.Services.Specific
               Person = item.Person,
               Status = EnumStatus.Enabled,
               Begin = DateTime.Parse(view.Begin.ToString()),
-              End = DateTime.Parse(view.End.ToString())
+              End = DateTime.Parse(view.End.ToString()),
+              Attachments = view.Attachments
             });
           }
 
@@ -896,6 +935,27 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(_user._idPerson, "Update Event Historic " + view._id);
+
+        view.Entity = AddEntity(view.Entity.Name);
+        eventHistoricService.Update(view, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateEventHistoricFrontEnd(EventHistoric view)
+    {
+      try
+      {
+        LogSave(_user._idPerson, "Update Event Historic " + view._id);
+
+        if (view.Workload.ToString().Contains(","))
+          view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
+        else
+          view.Workload = view.Workload * 60;
 
         view.Entity = AddEntity(view.Entity.Name);
         eventHistoricService.Update(view, null);
@@ -995,5 +1055,26 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public void SetAttachmentHistoric(string idevent, string url, string fileName, string attachmentid)
+    {
+      try
+      {
+        var eventsHistoric = eventHistoricService.GetAll(p => p._id == idevent).FirstOrDefault();
+
+        if (eventsHistoric.Attachments == null)
+        {
+          eventsHistoric.Attachments = new List<AttachmentField>();
+        }
+        eventsHistoric.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+        eventHistoricService.Update(eventsHistoric, null);
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
   }
 }
