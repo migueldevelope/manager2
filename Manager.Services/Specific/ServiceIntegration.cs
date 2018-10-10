@@ -91,7 +91,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public Person GetPersonByKey(string document, string idcompany, string registration)
+    public Person GetPersonByKey(string document, string idcompany, long registration)
     {
       try
       {

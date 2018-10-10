@@ -19,7 +19,7 @@ namespace Manager.Core.Views
     public DateTime? DateAdm { get; set; }
     public EnumStatusUser StatusUser { get; set; }
     public Person Manager { get; set; }
-    public string Registration { get; set; }
+    public long Registration { get; set; }
     public EnumTypeUser TypeUser { get; set; }
     public EnumTypeJourney TypeJourney { get; set; }
     public Establishment Establishment { get; set; }

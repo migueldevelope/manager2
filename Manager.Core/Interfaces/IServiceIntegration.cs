@@ -19,7 +19,7 @@ namespace Manager.Core.Interfaces
     List<Company> GetCompanyByName(string name);
     List<Establishment> GetEstablishmentByName(string idcompany, string name);
     List<Occupation> GetOccupationByName(string idcompany, string name);
-    Person GetPersonByKey(string document, string idcompany, string registration);
+    Person GetPersonByKey(string document, string idcompany, long registration);
     //Company CompanyGet(string name);
     //Person ManagerGet(string document);
     //string NewAccount(string name);

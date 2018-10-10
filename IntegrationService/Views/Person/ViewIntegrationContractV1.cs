@@ -7,7 +7,7 @@ namespace IntegrationService.Views.Person
     public string _id { get; set; }
     public string Document { get; set; }
     public ViewIntegrationMapOfV1 Company { get; set; }
-    public string Registration { get; set; }
+    public long Registration { get; set; }
     public ViewIntegrationMapOfV1 Establishment { get; set; }
     public DateTime? AdmissionDate { get; set; }
     // Enabled = 0, Disabled = 1, Away = 2, Vacation = 3
