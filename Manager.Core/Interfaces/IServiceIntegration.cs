@@ -15,10 +15,14 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    List<Schooling> GetSchoolingByName(string name);
-    List<Company> GetCompanyByName(string name);
-    List<Establishment> GetEstablishmentByName(string idcompany, string name);
-    List<Occupation> GetOccupationByName(string idcompany, string name);
+    List<Schooling> GetIntegrationSchooling(string code, string name);
+    List<Company> GetIntegrationCompany(string code, string name);
+    List<Establishment> GetIntegrationEstablishment(string idcompany, string code, string name);
+    List<Occupation> GetIntegrationOccupation(string idcompany, string code, string name);
+    Schooling GetSchooling(string id);
+    Company GetCompany(string id);
+    Establishment GetEstablishment(string id);
+    Occupation GetOccupation(string id);
     Person GetPersonByKey(string document, string idcompany, long registration);
     //Company CompanyGet(string name);
     //Person ManagerGet(string document);

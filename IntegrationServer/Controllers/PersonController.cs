@@ -21,13 +21,17 @@ namespace IntegrationServer.InfraController
   public class PersonController : Controller
   {
     private readonly IServiceIntegration service;
+    private readonly IServicePerson servicePerson;
 
-    public PersonController(IServiceIntegration _service, IHttpContextAccessor contextAccessor)
+    public PersonController(IServiceIntegration _service, IServicePerson _servicePerson, IServiceCompany _serviceCompany,
+      IHttpContextAccessor contextAccessor)
     {
       try
       {
         service = _service;
+        servicePerson = _servicePerson;
         service.SetUser(contextAccessor);
+        servicePerson.SetUser(contextAccessor);
       }
       catch (Exception)
       {
@@ -102,25 +106,71 @@ namespace IntegrationServer.InfraController
 
     [Authorize]
     [HttpPost]
+    [Route("new")]
+    public IActionResult PostNewPerson([FromBody]ViewIntegrationPersonV1 view)
+    {
+      try
+      {
+        Person newPerson = new Person()
+        {
+          Name = view.Name,
+          Document = view.Document,
+          Mail = view.Mail,
+          Phone = view.CellPhone,
+          TypeUser = (EnumTypeUser)view.Contract.TypeUser,
+          StatusUser = (EnumStatusUser)view.Contract.StatusUser,
+          Company = service.GetCompany(view.Contract.Company.Id),
+          Occupation = service.GetOccupation(view.Contract.Occupation.Id),
+          Registration = view.Contract.Registration,
+          DateBirth = view.DateBirth,
+          DateAdm = view.Contract.AdmissionDate,
+          Schooling = service.GetSchooling(view.Schooling.Id),
+          TypeJourney = (EnumTypeJourney)view.Contract.TypeJourney,
+          Establishment = service.GetEstablishment(view.Contract.Establishment.Id),
+          PhoneFixed = view.Phone,
+          DocumentID = view.DocumentId,
+          DocumentCTPF = view.DocumentProfessional,
+          Sex = view.Sex.Substring(0, 1).ToUpper() == "M" ? EnumSex.Male : view.Sex.Substring(0, 1).ToUpper() == "F" ? EnumSex.Female : EnumSex.Others,
+          HolidayReturn = view.Contract.VacationReturn,
+          MotiveAside = view.Contract.ReasonForRemoval,
+          DateLastOccupation =  view.Contract.DateLastOccupation,
+          Salary = view.Contract.Salary,
+          DateLastReadjust = view.Contract.DateLastReadjust,
+          DateResignation = view.Contract.ResignationDate,
+          //Person Manager
+          //DocumentManager
+        };
+        string result = servicePerson.NewPersonView(newPerson);
+        return Ok(view);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(ex.ToString());
+      }
+    }
+
+    [Authorize]
+    [HttpPost]
     [Route("schooling")]
     public IActionResult GetSchoolingByName([FromBody]ViewIntegrationMapOfV1 view)
     {
       try
       {
-        List<Schooling> schoolings = service.GetSchoolingByName(view.Name);
-        if (schoolings == null)
+        List<Schooling> schoolings = service.GetIntegrationSchooling(view.Code, view.Name);
+        switch (schoolings.Count)
         {
-          view.Id = string.Empty;
-          view.Message = "Schooling not found!";
-        }
-        else if (schoolings.Count == 1)
-        {
-          view.Id = schoolings[0]._id;
-          view.Message = string.Empty;
-        }
-        {
-          view.Id = string.Empty;
-          view.Message = "Schooling duplicated!";
+          case 0:
+            view.Id = string.Empty;
+            view.Message = "Schooling not found!";
+            break;
+          case 1:
+            view.Id = schoolings[0]._id;
+            view.Message = string.Empty;
+            break;
+          default:
+            view.Id = string.Empty;
+            view.Message = "Schooling duplicated!";
+            break;
         }
         return Ok(view);
       }
@@ -138,20 +188,21 @@ namespace IntegrationServer.InfraController
     {
       try
       {
-        List<Company> companys = service.GetCompanyByName(view.Name);
-        if (companys == null)
+        List<Company> companys = service.GetIntegrationCompany(view.Code, view.Name);
+        switch (companys.Count)
         {
-          view.Id = string.Empty;
-          view.Message = "Company not found!";
-        }
-        else if (companys.Count == 1)
-        {
-          view.Id = companys[0]._id;
-          view.Message = string.Empty;
-        }
-        {
-          view.Id = string.Empty;
-          view.Message = "Company duplicated!";
+          case 0:
+            view.Id = string.Empty;
+            view.Message = "Company not found!";
+            break;
+          case 1:
+            view.Id = companys[0]._id;
+            view.Message = string.Empty;
+            break;
+          default:
+            view.Id = string.Empty;
+            view.Message = "Company duplicated!";
+            break;
         }
         return Ok(view);
       }
@@ -169,20 +220,21 @@ namespace IntegrationServer.InfraController
     {
       try
       {
-        List<Establishment> establishments = service.GetEstablishmentByName(view.IdCompany, view.Name);
-        if (establishments == null)
+        List<Establishment> establishments = service.GetIntegrationEstablishment(view.IdCompany, view.Code, view.Name);
+        switch (establishments.Count)
         {
-          view.Id = string.Empty;
-          view.Message = "Establishment not found!";
-        }
-        else if (establishments.Count == 1)
-        {
-          view.Id = establishments[0]._id;
-          view.Message = string.Empty;
-        }
-        {
-          view.Id = string.Empty;
-          view.Message = "Establishment duplicated!";
+          case 0:
+            view.Id = string.Empty;
+            view.Message = "Establishment not found!";
+            break;
+          case 1:
+            view.Id = establishments[0]._id;
+            view.Message = string.Empty;
+            break;
+          default:
+            view.Id = string.Empty;
+            view.Message = "Establishment duplicated!";
+            break;
         }
         return Ok(view);
       }
@@ -200,20 +252,21 @@ namespace IntegrationServer.InfraController
     {
       try
       {
-        List<Occupation> occupations = service.GetOccupationByName(view.IdCompany, view.Name);
-        if (occupations == null)
+        List<Occupation> occupations = service.GetIntegrationOccupation(view.IdCompany, view.Code, view.Name);
+        switch (occupations.Count)
         {
-          view.Id = string.Empty;
-          view.Message = "Occupation not found!";
-        }
-        else if (occupations.Count == 1)
-        {
-          view.Id = occupations[0]._id;
-          view.Message = string.Empty;
-        }
-        {
-          view.Id = string.Empty;
-          view.Message = "Occupation duplicated!";
+          case 0:
+            view.Id = string.Empty;
+            view.Message = "Occupation not found!";
+            break;
+          case 1:
+            view.Id = occupations[0]._id;
+            view.Message = string.Empty;
+            break;
+          default:
+            view.Id = string.Empty;
+            view.Message = "Occupation duplicated!";
+            break;
         }
         return Ok(view);
       }

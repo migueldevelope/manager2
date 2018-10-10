@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.Business.Integration;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
@@ -24,6 +25,10 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Establishment> establishmentService;
     private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceGeneric<Occupation> occupationService;
+    private readonly ServiceGeneric<IntegrationSchooling> integrationSchoolingService;
+    private readonly ServiceGeneric<IntegrationCompany> integrationCompanyService;
+    private readonly ServiceGeneric<IntegrationEstablishment> integrationEstablishmentService;
+    private readonly ServiceGeneric<IntegrationOccupation> integrationOccupationService;
     private readonly IServiceLog logService;
 
     public ServiceIntegration(DataContext context)
@@ -37,6 +42,10 @@ namespace Manager.Services.Specific
         establishmentService = new ServiceGeneric<Establishment>(context);
         accountService = new ServiceGeneric<Account>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
+        integrationSchoolingService = new ServiceGeneric<IntegrationSchooling>(context);
+        integrationCompanyService = new ServiceGeneric<IntegrationCompany>(context);
+        integrationEstablishmentService = new ServiceGeneric<IntegrationEstablishment>(context);
+        integrationOccupationService = new ServiceGeneric<IntegrationOccupation>(context);
         logService = new ServiceLog(context);
       }
       catch (Exception e)
@@ -44,11 +53,30 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public List<Schooling> GetSchoolingByName(string name)
+    public List<Schooling> GetIntegrationSchooling(string code, string name)
     {
       try
       {
-        return schoolingService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList();
+        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+        if (item != null)
+          if (item.Schooling == null)
+            return new List<Schooling>();
+          else
+            return new List<Schooling>() { item.Schooling };
+        List<Schooling> list = schoolingService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList();
+        item = new IntegrationSchooling()
+        {
+          Code = code,
+          Name = name,
+          Schooling = null,
+          Status = EnumStatus.Enabled
+        };
+
+        if (list.Count == 1)
+          item.Schooling = list[0];
+
+        integrationSchoolingService.Insert(item);
+        return list;
       }
       catch (Exception e)
       {
@@ -56,11 +84,30 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Company> GetCompanyByName(string name)
+    public List<Company> GetIntegrationCompany(string code, string name)
     {
       try
       {
-        return companyService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList();
+        IntegrationCompany item = integrationCompanyService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+        if (item != null)
+          if (item.Company == null)
+            return new List<Company>();
+          else
+            return new List<Company>() { item.Company };
+        List<Company> list = companyService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList();
+        item = new IntegrationCompany()
+        {
+          Code = code,
+          Name = name,
+          Company = null,
+          Status = EnumStatus.Enabled
+        };
+
+        if (list.Count == 1)
+          item.Company = list[0];
+
+        integrationCompanyService.Insert(item);
+        return list;
       }
       catch (Exception e)
       {
@@ -68,11 +115,31 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Establishment> GetEstablishmentByName(string idcompany, string name)
+    public List<Establishment> GetIntegrationEstablishment(string idcompany, string code, string name)
     {
       try
       {
-        return establishmentService.GetAll(p => p.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList();
+        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p._idCompany == idcompany && p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+        if (item != null)
+          if (item.Establishment == null)
+            return new List<Establishment>();
+          else
+            return new List<Establishment>() { item.Establishment };
+        List<Establishment> list = establishmentService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList();
+        item = new IntegrationEstablishment()
+        {
+          Code = code,
+          Name = name,
+          _idCompany = idcompany,
+          Establishment = null,
+          Status = EnumStatus.Enabled
+        };
+
+        if (list.Count == 1)
+          item.Establishment = list[0];
+
+        integrationEstablishmentService.Insert(item);
+        return list;
       }
       catch (Exception e)
       {
@@ -80,11 +147,31 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Occupation> GetOccupationByName(string idcompany, string name)
+    public List<Occupation> GetIntegrationOccupation(string idcompany, string code, string name)
     {
       try
       {
-        return occupationService.GetAll(p => p.ProcessLevelTwo.ProcessLevelOne.Area.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList();
+        IntegrationOccupation item = integrationOccupationService.GetAll(p => p._idCompany == idcompany && p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+        if (item != null)
+          if (item.Occupation == null)
+            return new List<Occupation>();
+          else
+            return new List<Occupation>() { item.Occupation };
+        List<Occupation> list = occupationService.GetAll(p => p.ProcessLevelTwo.ProcessLevelOne.Area.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList();
+        item = new IntegrationOccupation()
+        {
+          Code = code,
+          Name = name,
+          _idCompany = idcompany,
+          Occupation = null,
+          Status = EnumStatus.Enabled
+        };
+
+        if (list.Count == 1)
+          item.Occupation = list[0];
+
+        integrationOccupationService.Insert(item);
+        return list;
       }
       catch (Exception e)
       {
@@ -103,6 +190,50 @@ namespace Manager.Services.Specific
       }
     }
 
+    public Schooling GetSchooling(string id)
+    {
+      try
+      {
+        return schoolingService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public Company GetCompany(string id)
+    {
+      try
+      {
+        return companyService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public Establishment GetEstablishment(string id)
+    {
+      try
+      {
+        return establishmentService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public Occupation GetOccupation(string id)
+    {
+      try
+      {
+        return occupationService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     //public Company CompanyGet(string name)
     //{
     //  try
@@ -370,7 +501,11 @@ namespace Manager.Services.Specific
       schoolingService._user = _user;
       companyService._user = _user;
       accountService._user = _user;
-      logService.user = _user;
+      integrationSchoolingService._user = _user;
+      integrationCompanyService._user = _user;
+      integrationEstablishmentService._user = _user;
+      integrationOccupationService._user = _user;
+      logService.SetUser(contextAccessor);
     }
 
     public void SetUser(BaseUser user)
@@ -380,6 +515,10 @@ namespace Manager.Services.Specific
       schoolingService._user = user;
       companyService._user = user;
       accountService._user = user;
+      integrationSchoolingService._user = _user;
+      integrationCompanyService._user = _user;
+      integrationEstablishmentService._user = _user;
+      integrationOccupationService._user = _user;
     }
   }
 }

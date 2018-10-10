@@ -10,7 +10,7 @@ namespace IntegrationService.Service
   public class ValidMapCollaborator
   {
     public MapPerson Map { get; private set; }
-    public ValidMapCollaborator(ViewPersonLogin person, string document, ViewIntegrationMapOfV1 company, string registration, string name)
+    public ValidMapCollaborator(ViewPersonLogin person, string document, ViewIntegrationMapOfV1 company, long registration, string name)
     {
       try
       {
@@ -29,7 +29,6 @@ namespace IntegrationService.Service
           Empresa = company.Code,
           Matricula = view.Registration,
           Person = view.Person,
-          Contract = view.Contract,
           Mensagem = string.Empty
         };
       }
@@ -41,7 +40,6 @@ namespace IntegrationService.Service
           Empresa = company.Code,
           Matricula = registration,
           Person = null,
-          Contract = null,
           Mensagem = ex.Message
         };
       }

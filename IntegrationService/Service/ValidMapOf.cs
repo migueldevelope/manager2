@@ -20,7 +20,7 @@ namespace IntegrationService.Service
           IdCompany = idCompany
         };
         PersonIntegration personIntegration = new PersonIntegration(person);
-        personIntegration.GetByName(key, Map);
+        Map = personIntegration.GetByName(key, Map);
       }
       catch (Exception)
       {

@@ -21,7 +21,7 @@ namespace IntegrationService.Views.Person
     public DateTime? DateLastReadjust { get; set; }
     public string _IdManager { get; set; }
     public string DocumentManager { get; set; }
-    public ViewIntegrationMapOfV1 ComanyManager { get; set; }
+    public ViewIntegrationMapOfV1 CompanyManager { get; set; }
     public string RegistrationManager { get; set; }
     public string NameManager { get; set; }
     // Support = 0, Administrator = 1, Manager = 2, Employee = 3, Anonymous = 4, HR = 5, ManagerHR = 6

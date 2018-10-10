@@ -1,4 +1,5 @@
-﻿using IntegrationService.Core;
+﻿using IntegrationService.Api;
+using IntegrationService.Core;
 using IntegrationService.Data;
 using IntegrationService.Tools;
 using IntegrationService.Views;
@@ -20,7 +21,6 @@ namespace IntegrationService.Service
     private List<ViewIntegrationMapOfV1> Establishments;
     private List<ViewIntegrationMapOfV1> Occupations;
     private List<MapPerson> Collaborators;
-    private List<ViewIntegrationMapManagerV1> Managers;
     public ImportService(ViewPersonLogin person, List<Colaborador> lista)
     {
       try
@@ -30,9 +30,8 @@ namespace IntegrationService.Service
         LoadLists();
         Import();
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-
         throw;
       }
     }
@@ -41,23 +40,20 @@ namespace IntegrationService.Service
       try
       {
         Companys = new List<ViewIntegrationMapOfV1>();
-        if (File.Exists(string.Format("{0}/empresa.txt", Person.IdAccount)))
-         Companys = FileClass.ReadFromBinaryFile<List<ViewIntegrationMapOfV1>>(string.Format("{0}/empresa.txt", Person.IdAccount));
+        if (File.Exists(string.Format("{0}/integration/empresa.txt", Person.IdAccount)))
+          Companys = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/empresa.txt", Person.IdAccount)));
         Schoolings = new List<ViewIntegrationMapOfV1>();
-        if (File.Exists(string.Format("{0}/grau.txt", Person.IdAccount)))
-          Schoolings = FileClass.ReadFromBinaryFile<List<ViewIntegrationMapOfV1>>(string.Format("{0}/grau.txt", Person.IdAccount));
+        if (File.Exists(string.Format("{0}/integration/grau.txt", Person.IdAccount)))
+          Schoolings = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/grau.txt", Person.IdAccount)));
         Establishments = new List<ViewIntegrationMapOfV1>();
-        if (File.Exists(string.Format("{0}/estabelecimento.txt", Person.IdAccount)))
-          Establishments = FileClass.ReadFromBinaryFile<List<ViewIntegrationMapOfV1>>(string.Format("{0}/estabelecimento.txt", Person.IdAccount));
+        if (File.Exists(string.Format("{0}/integration/estabelecimento.txt", Person.IdAccount)))
+          Establishments = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/estabelecimento.txt", Person.IdAccount)));
         Occupations = new List<ViewIntegrationMapOfV1>();
-        if (File.Exists(string.Format("{0}/cargo.txt", Person.IdAccount)))
-          Occupations = FileClass.ReadFromBinaryFile<List<ViewIntegrationMapOfV1>>(string.Format("{0}/cargo.txt", Person.IdAccount));
+        if (File.Exists(string.Format("{0}/integration/cargo.txt", Person.IdAccount)))
+          Occupations = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/cargo.txt", Person.IdAccount)));
         Collaborators = new List<MapPerson>();
-        if (File.Exists(string.Format("{0}/colaborador.txt", Person.IdAccount)))
-          Collaborators = FileClass.ReadFromBinaryFile<List<MapPerson>>(string.Format("{0}/colaborador.txt", Person.IdAccount));
-        Managers = new List<ViewIntegrationMapManagerV1>();
-        if (File.Exists(string.Format("{0}/gestor.txt", Person.IdAccount)))
-          Managers = FileClass.ReadFromBinaryFile<List<ViewIntegrationMapManagerV1>>(string.Format("{0}/gestor.txt", Person.IdAccount));
+        if (File.Exists(string.Format("{0}/integration/colaborador.txt", Person.IdAccount)))
+          Collaborators = JsonConvert.DeserializeObject<List<MapPerson>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount)));
       }
       catch (Exception)
       {
@@ -75,37 +71,31 @@ namespace IntegrationService.Service
         ViewIntegrationMapOfV1 occupation = VerifyMapOf(Occupations, EnumValidKey.Occupation, colaborador.Cargo, colaborador.NomeCargo, company.Id);
 
         // Validar Colaborador
-        MapPerson search = Collaborators.Find(p => p.Documento == colaborador.Documento && p.Empresa == colaborador.Empresa && p.Matricula == colaborador.Matricula);
-        if (search == null)
+        int search = Collaborators.FindIndex(p => p.Documento == colaborador.Documento && p.Empresa == colaborador.Empresa && p.Matricula == colaborador.Matricula);
+        if (search == -1)
         {
-          ValidMapCollaborator validMapCollaborator = new ValidMapCollaborator(Person, colaborador.Documento, company, colaborador.Matricula, colaborador.Nome);
+          ValidMapCollaborator validMapCollaborator = new ValidMapCollaborator(Person, colaborador.Documento, company, Convert.ToInt64(colaborador.Matricula), colaborador.Nome);
+          validMapCollaborator.Map.Colaborador = colaborador;
           Collaborators.Add(validMapCollaborator.Map);
         }
-        // Testar se tem gestor
-        if (!string.IsNullOrEmpty(colaborador.DocumentoChefe) && !string.IsNullOrEmpty(colaborador.EmpresaChefe) && !string.IsNullOrEmpty(colaborador.MatriculaChefe))
+        else
         {
-          ViewIntegrationMapManagerV1 manager = Managers.Find(p => p.Document == colaborador.DocumentoChefe && p.CompanyCode == colaborador.EmpresaChefe && p.Registration == colaborador.MatriculaChefe);
-          if (manager == null)
-          {
-            // Não tem esta matricula como gestor
-            ValidMapManager validMapManager = new ValidMapManager(Person, colaborador.DocumentoChefe, colaborador.EmpresaChefe, colaborador.MatriculaChefe, colaborador.NomeChefe);
-            Managers.Add(validMapManager.Map);
-          }
+          Collaborators[search].Colaborador = colaborador;
         }
       }
 
       string saveObject = JsonConvert.SerializeObject(Schoolings);
-      FileClass.WriteToBinaryFile<string>(string.Format("{0}/grau.txt", Person.IdAccount), saveObject, false);
+      if (!Directory.Exists(string.Format("{0}/integration", Person.IdAccount)))
+        Directory.CreateDirectory(string.Format("{0}/integration", Person.IdAccount));
+      FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/grau.txt", Person.IdAccount), saveObject, false);
       saveObject = JsonConvert.SerializeObject(Companys);
-      FileClass.WriteToBinaryFile<string>(string.Format("{0}/empresa.txt", Person.IdAccount), saveObject, false);
+      FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/empresa.txt", Person.IdAccount), saveObject, false);
       saveObject = JsonConvert.SerializeObject(Establishments);
-      FileClass.WriteToBinaryFile<string>(string.Format("{0}/estabelecimentos.txt", Person.IdAccount), saveObject, false);
+      FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/estabelecimentos.txt", Person.IdAccount), saveObject, false);
       saveObject = JsonConvert.SerializeObject(Occupations);
-      FileClass.WriteToBinaryFile<string>(string.Format("{0}/cargo.txt", Person.IdAccount), saveObject, false);
-      saveObject = JsonConvert.SerializeObject(Managers);
-      FileClass.WriteToBinaryFile<string>(string.Format("{0}/gestor.txt", Person.IdAccount), saveObject, false);
+      FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/cargo.txt", Person.IdAccount), saveObject, false);
       saveObject = JsonConvert.SerializeObject(Collaborators);
-      FileClass.WriteToBinaryFile<string>(string.Format("{0}/colaborador.txt", Person.IdAccount), saveObject, false);
+      FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount), saveObject, false);
 
       Message = string.Empty;
       foreach (ViewIntegrationMapOfV1 item in Schoolings)
@@ -140,7 +130,10 @@ namespace IntegrationService.Service
         {
           validMapOf = new ValidMapOf(Person, key, code, name, string.Empty);
           lista.Find(p => p.Name == name).Id = validMapOf.Map.Id;
+          lista.Find(p => p.Name == name).Message = string.Empty;
         }
+        else
+          return search;
       }
       return validMapOf.Map;
     }
@@ -161,15 +154,76 @@ namespace IntegrationService.Service
           validMapOf = new ValidMapOf(Person, key, code, name, idCompany);
           lista.Find(p => p.Name == name).Id = validMapOf.Map.Id;
         }
+        else
+          return search;
       }
       return validMapOf.Map;
     }
     private void UpdatePerson()
     {
-      foreach (Colaborador colaborador in Lista)
+      foreach (MapPerson collaborator in Collaborators)
       {
-
+        // Novo Colaborador
+        if (collaborator.Person == null)
+        {
+          PersonIntegration personIntegration = new PersonIntegration(Person);
+          int situacao = 0;
+          switch (collaborator.Colaborador.Situacao.ToLower())
+          {
+            case "férias":
+              situacao = 3;
+              break;
+            case "afastado":
+              situacao = 2;
+              break;
+            case "demitido":
+              situacao = 2;
+              break;
+            default:
+              situacao = 0;
+              break;
+          }
+          ViewIntegrationPersonV1 newPerson = new ViewIntegrationPersonV1()
+          {
+            Name = collaborator.Colaborador.Nome,
+            Mail = collaborator.Colaborador.Email,
+            Document = collaborator.Colaborador.Documento,
+            DateBirth = collaborator.Colaborador.DataNascimento,
+            CellPhone = collaborator.Colaborador.Celular,
+            Phone = collaborator.Colaborador.Telefone,
+            DocumentId = collaborator.Colaborador.Identidade,
+            DocumentProfessional = collaborator.Colaborador.CarteiraProfissional,
+            Sex = collaborator.Colaborador.Sexo,
+            Schooling = collaborator.Schooling,
+            Contract = new ViewIntegrationContractV1()
+            {
+              Document = collaborator.Colaborador.Documento,
+              Company  = collaborator.Company,
+              Registration = collaborator.Colaborador.Matricula,
+              Establishment = collaborator.Establishment,
+              AdmissionDate = collaborator.Colaborador.DataAdmissao,
+              StatusUser = situacao,
+              VacationReturn = collaborator.Colaborador.DataRetornoFerias,
+              ReasonForRemoval = collaborator.Colaborador.MotivoAfastamento,
+              ResignationDate =  collaborator.Colaborador.DataDemissao,
+              Occupation = collaborator.Occupation,
+              DateLastOccupation =  collaborator.Colaborador.DataUltimaTrocaCargo,
+              Salary = collaborator.Colaborador.SalarioNominal,
+              DateLastReadjust = collaborator.Colaborador.DataUltimoReajuste,
+              TypeUser = 3,
+              TypeJourney = 0,
+              _IdManager = string.Empty,
+              DocumentManager = collaborator.Colaborador.DocumentoChefe,
+              CompanyManager = collaborator.CompanyManager,
+              RegistrationManager = collaborator.Colaborador.MatriculaChefe,
+              NameManager = collaborator.Colaborador.NomeChefe
+            }
+          };
+          collaborator.Person = personIntegration.PostNewPerson(newPerson);
+        }
       }
+      string saveObject = JsonConvert.SerializeObject(Collaborators);
+      FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount), saveObject, false);
     }
   }
 }

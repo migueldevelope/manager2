@@ -9,7 +9,7 @@ namespace IntegrationService.Data
     public string Estabelecimento { get; set; }
     public string NomeEstabelecimento { get; set; }
     public string Documento { get; set; }
-    public string Matricula { get; set; }
+    public long Matricula { get; set; }
     public string Nome { get; set; }
     public string Email { get; set; }
     public DateTime? DataNascimento { get; set; }
@@ -28,10 +28,11 @@ namespace IntegrationService.Data
     public DateTime? DataUltimaTrocaCargo { get; set; }
     public string GrauInstrucao { get; set; }
     public string NomeGrauInstrucao { get; set; }
-    public Double SalarioNominal { get; set; }
+    public Decimal SalarioNominal { get; set; }
     public DateTime? DataUltimoReajuste { get; set; }
     public string DocumentoChefe { get; set; }
     public string EmpresaChefe { get; set; }
+    public string NomeEmpresaChefe { get; set; }
     public string MatriculaChefe { get; set; }
     public string NomeChefe { get; set; }
   }

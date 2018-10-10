@@ -9,15 +9,14 @@ namespace IntegrationService.Core
   {
     public string Documento { get; set; }
     public string Empresa { get; set; }
-    public string Matricula { get; set; }
+    public long Matricula { get; set; }
     public string Mensagem { get; set; }
     public Colaborador Colaborador { get; set; }
-    public ViewIntegrationPersonV1 MyProperty { get; set; }
     public ViewIntegrationMapOfV1 Schooling { get; set; }
     public ViewIntegrationMapOfV1 Company { get; set; }
     public ViewIntegrationMapOfV1 Establishment { get; set; }
     public ViewIntegrationMapOfV1 Occupation{ get; set; }
+    public ViewIntegrationMapOfV1 CompanyManager { get; set; }
     public ViewIntegrationPersonV1 Person { get; set; }
-    public ViewIntegrationContractV1 Contract { get; set; }
   }
 }

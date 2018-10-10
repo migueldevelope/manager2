@@ -10,7 +10,7 @@ namespace IntegrationService.Service
   public class ValidMapManager
   {
     public ViewIntegrationMapManagerV1 Map { get; private set; }
-    public ValidMapManager(ViewPersonLogin person, string document, string company, string registration, string name)
+    public ValidMapManager(ViewPersonLogin person, string document, string company, long registration, string name)
     {
       try
       {

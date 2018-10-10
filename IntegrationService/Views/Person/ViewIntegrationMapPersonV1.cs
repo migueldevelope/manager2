@@ -8,6 +8,5 @@
     public string Name { get; set; }
     public string Id { get; set; }
     public ViewIntegrationPersonV1 Person { get; set; }
-    public ViewIntegrationContractV1 Contract { get; set; }
   }
 }

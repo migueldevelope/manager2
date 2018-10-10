@@ -71,5 +71,20 @@ namespace IntegrationService.Api
         throw;
       }
     }
+
+    public ViewIntegrationPersonV1 PostNewPerson(ViewIntegrationPersonV1 view)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
+        content.Headers.ContentType.MediaType = "application/json";
+        var result = clientSkill.PostAsync("person/new", content).Result;
+        return JsonConvert.DeserializeObject<ViewIntegrationPersonV1>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
   }
 }
