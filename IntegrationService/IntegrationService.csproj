@@ -89,7 +89,7 @@
     <Compile Include="Views\Person\ViewIntegrationMapManagerV1.cs" />
     <Compile Include="Views\Person\ViewIntegrationContractV1.cs" />
     <Compile Include="Views\Person\ViewIntegrationPersonV1.cs" />
-    <Compile Include="Views\Person\ViewIntegrationMapCollaboratorV1.cs" />
+    <Compile Include="Views\Person\ViewIntegrationMapPersonV1.cs" />
     <Compile Include="Views\ViewIntegrationGroup.cs" />
     <Compile Include="Views\ViewIntegrationProcessLevelTwo.cs" />
     <Compile Include="Views\ViewIntegrationFilterName.cs" />

@@ -15,16 +15,21 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Company CompanyGet(string name);
-    Person ManagerGet(string document);
-    string NewAccount(string name);
-    Company NewCompany(string name);
-    string AccountGet(string name);
-    Schooling SchoolingGet(string name);
-    Schooling NewSchooling(string name);
-    void UpdateManager();
-    List<ViewPersonImport> ListPersonJson(StreamReader file);
-    Task<string> SetItem(ViewPersonImport item);
-    Task<string> ImportPerson(List<ViewPersonImport> list);
+    List<Schooling> GetSchoolingByName(string name);
+    List<Company> GetCompanyByName(string name);
+    List<Establishment> GetEstablishmentByName(string idcompany, string name);
+    List<Occupation> GetOccupationByName(string idcompany, string name);
+    Person GetPersonByKey(string document, string idcompany, string registration);
+    //Company CompanyGet(string name);
+    //Person ManagerGet(string document);
+    //string NewAccount(string name);
+    //Company NewCompany(string name);
+    //string AccountGet(string name);
+    //Schooling SchoolingGet(string name);
+    //Schooling NewSchooling(string name);
+    //void UpdateManager();
+    //List<ViewPersonImport> ListPersonJson(StreamReader file);
+    //Task<string> SetItem(ViewPersonImport item);
+    //Task<string> ImportPerson(List<ViewPersonImport> list);
   }
 }

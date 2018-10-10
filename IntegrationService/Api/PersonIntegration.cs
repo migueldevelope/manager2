@@ -41,23 +41,15 @@ namespace IntegrationService.Api
       }
     }
 
-    public ViewIntegrationMapCollaboratorV1 GetCollaboratorByKey(ViewIntegrationMapCollaboratorV1 map)
+    public ViewIntegrationMapPersonV1 GetCollaboratorByKey(ViewIntegrationMapPersonV1 map)
     {
       try
       {
         StringContent content = new StringContent(JsonConvert.SerializeObject(map));
         content.Headers.ContentType.MediaType = "application/json";
 
-        var result = clientSkill.PostAsync("person/collaborator", content).Result;
-        if (result.IsSuccessStatusCode == false)
-        {
-          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
-          if (messageResult == null)
-            throw new Exception("Collaborator not found!");
-          else
-            throw new Exception(messageResult);
-        }
-        return JsonConvert.DeserializeObject<ViewIntegrationMapCollaboratorV1>(result.Content.ReadAsStringAsync().Result);
+        var result = clientSkill.PostAsync("person", content).Result;
+        return JsonConvert.DeserializeObject<ViewIntegrationMapPersonV1>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {
@@ -72,14 +64,6 @@ namespace IntegrationService.Api
         content.Headers.ContentType.MediaType = "application/json";
 
         var result = clientSkill.PostAsync("person/manager", content).Result;
-        if (result.IsSuccessStatusCode == false)
-        {
-          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
-          if (messageResult == null)
-            throw new Exception("Manager not found!");
-          else
-            throw new Exception(messageResult);
-        }
         return JsonConvert.DeserializeObject<ViewIntegrationMapManagerV1>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)

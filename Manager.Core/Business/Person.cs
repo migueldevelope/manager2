@@ -17,7 +17,7 @@ namespace Manager.Core.Business
     public EnumStatusUser StatusUser { get; set; }
     public Company Company { get; set; }
     public Occupation Occupation { get; set; }
-    public long Registration { get; set; }
+    public string Registration { get; set; }
     public Person Manager { get; set; }
     public DateTime? DateBirth { get; set; }
     public DateTime? DateAdm { get; set; }

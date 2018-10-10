@@ -1,6 +1,6 @@
-﻿namespace Manager.Core.Views.Integration
+﻿namespace IntegrationService.Views.Person
 {
-  public class ViewIntegrationMapCollaboratorV1
+  public class ViewIntegrationMapPersonV1
   {
     public string Document { get; set; }
     public string IdCompany { get; set; }

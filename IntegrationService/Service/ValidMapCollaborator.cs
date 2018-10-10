@@ -14,7 +14,7 @@ namespace IntegrationService.Service
     {
       try
       {
-        ViewIntegrationMapCollaboratorV1 view = new ViewIntegrationMapCollaboratorV1()
+        ViewIntegrationMapPersonV1 view = new ViewIntegrationMapPersonV1()
         {
           Document = document,
           IdCompany = company.Id,
