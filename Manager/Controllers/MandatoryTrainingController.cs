@@ -59,6 +59,15 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("getmandatorytraining/{idcourse}")]
+    public MandatoryTraining GetMandatoryTraining(string idcourse)
+    {
+      return service.GetMandatoryTraining(idcourse);
+    }
+
+
+    [Authorize]
+    [HttpGet]
     [Route("list")]
     public List<MandatoryTraining> List(int count = 10, int page = 1, string filter = "")
     {

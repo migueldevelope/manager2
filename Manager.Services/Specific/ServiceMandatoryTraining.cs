@@ -488,6 +488,19 @@ namespace Manager.Services.Specific
       }
     }
 
+    public MandatoryTraining GetMandatoryTraining(string idcourse)
+    {
+      try
+      {
+        return mandatoryTrainingService.GetAll(p => p.Course._id == idcourse).FirstOrDefault();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string NewTrainingPlan(TrainingPlan view)
     {
       try

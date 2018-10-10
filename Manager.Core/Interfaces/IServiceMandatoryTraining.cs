@@ -17,6 +17,7 @@ namespace Manager.Core.Interfaces
     string RemoveOccupation(string idcourse, string idoccupation);
     string RemovePerson(string idcourse, string idperson);
     string RemoveCompany(string idcourse, string idcompany);
+    MandatoryTraining GetMandatoryTraining(string idcourse);
     List<MandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "");
     List<Occupation> ListOccupation(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
     List<Person> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
