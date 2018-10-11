@@ -106,11 +106,45 @@ namespace IntegrationServer.InfraController
 
     [Authorize]
     [HttpPost]
+    [Route("manager")]
+    public IActionResult GetManagerByKey([FromBody]ViewIntegrationMapManagerV1 view)
+    {
+      try
+      {
+        view.IdPerson = string.Empty;
+        view.IdContract = string.Empty;
+        view.Name = string.Empty;
+        view.Message = string.Empty;
+        Person person = service.GetPersonByKey(view.Document, view.CompanyId, view.Registration);
+        if (person == null)
+        {
+          view.Message = "Person not found!";
+        }
+        else
+        {
+          view.IdPerson = person._id;
+          view.Name = person.Name;
+        }
+        return Ok(view);
+      }
+      catch (Exception ex)
+      {
+        view.Message = ex.Message;
+        return Ok(view);
+      }
+    }
+
+    [Authorize]
+    [HttpPost]
     [Route("new")]
     public IActionResult PostNewPerson([FromBody]ViewIntegrationPersonV1 view)
     {
       try
       {
+        Person personManager = null;
+        if (!string.IsNullOrEmpty(view.Contract._IdManager))
+          personManager = servicePerson.GetPerson(view.Contract._IdManager);
+
         Person newPerson = new Person()
         {
           Name = view.Name,
@@ -137,8 +171,8 @@ namespace IntegrationServer.InfraController
           Salary = view.Contract.Salary,
           DateLastReadjust = view.Contract.DateLastReadjust,
           DateResignation = view.Contract.DateResignation,
-          //Person Manager
-          //DocumentManager
+          Manager = personManager,
+          DocumentManager = personManager?.Document
         };
         Person person = servicePerson.NewPersonView(newPerson);
         if (person == null)
@@ -205,12 +239,16 @@ namespace IntegrationServer.InfraController
     {
       try
       {
+        Person personManager = null;
+        if (!string.IsNullOrEmpty(view.Contract._IdManager))
+          personManager = servicePerson.GetPerson(view.Contract._IdManager);
+
         Person changePerson = servicePerson.GetPerson(view._id);
         changePerson.Name = view.Name;
         changePerson.Document = view.Document;
         changePerson.Mail = view.Mail;
         changePerson.Phone = view.Phone;
-        //changePerson.TypeUser = (EnumTypeUser)view.Contract.TypeUser;
+        changePerson.TypeUser = (EnumTypeUser)view.Contract.TypeUser;
         changePerson.StatusUser = (EnumStatusUser)view.Contract.StatusUser;
         changePerson.Company = service.GetCompany(view.Contract.Company.Id);
         changePerson.Occupation = service.GetOccupation(view.Contract.Occupation.Id);
@@ -230,8 +268,8 @@ namespace IntegrationServer.InfraController
         changePerson.Salary = view.Contract.Salary;
         changePerson.DateLastReadjust = view.Contract.DateLastReadjust;
         changePerson.DateResignation = view.Contract.DateResignation;
-        //Person Manager
-        //DocumentManager
+        changePerson.Manager = personManager;
+        changePerson.DocumentManager = personManager?.Document;
         Person person = servicePerson.UpdatePersonView(changePerson);
         ViewIntegrationMapPersonV1 viewReturn = new ViewIntegrationMapPersonV1()
         {

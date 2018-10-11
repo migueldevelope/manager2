@@ -88,14 +88,14 @@ namespace IntegrationService.Api
         throw;
       }
     }
-    public ViewIntegrationPersonV1 PutPerson(ViewIntegrationPersonV1 view)
+    public ViewIntegrationMapPersonV1 PutPerson(ViewIntegrationPersonV1 view)
     {
       try
       {
         StringContent content = new StringContent(JsonConvert.SerializeObject(view));
         content.Headers.ContentType.MediaType = "application/json";
         var result = clientSkill.PutAsync("person/update", content).Result;
-        return JsonConvert.DeserializeObject<ViewIntegrationPersonV1>(result.Content.ReadAsStringAsync().Result);
+        return JsonConvert.DeserializeObject<ViewIntegrationMapPersonV1>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {

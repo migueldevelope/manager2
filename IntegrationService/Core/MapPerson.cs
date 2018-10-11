@@ -20,6 +20,7 @@ namespace IntegrationService.Core
     public ViewIntegrationMapOfV1 Establishment { get; set; }
     public ViewIntegrationMapOfV1 Occupation{ get; set; }
     public ViewIntegrationMapOfV1 CompanyManager { get; set; }
+    public ViewIntegrationMapManagerV1  Manager { get; set; }
     public ViewIntegrationPersonV1 Person { get; set; }
   }
 }

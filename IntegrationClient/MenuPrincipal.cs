@@ -157,6 +157,47 @@ namespace IntegrationClient
         NomeChefe = string.Empty
       };
       lista.Add(colaborador);
+      colaborador = new Colaborador()
+      {
+        Empresa = "100",
+        NomeEmpresa = "Analisa",
+        Estabelecimento = "1",
+        NomeEstabelecimento = "Analisa",
+        Documento = "99999999999",
+        Matricula = 2,
+        Nome = "Colaborador 1",
+        Email = "colaborador1@jmsoft.com.br",
+        DataNascimento = new DateTime(2001, 07, 14),
+        Celular = "54 991089092",
+        Telefone = "54 32025412",
+        Identidade = "8049471331",
+        CarteiraProfissional = "cart_prof",
+        Sexo = "Feminino",
+        DataAdmissao = new DateTime(2007, 06, 30),
+        Situacao = "Ativo",
+        DataRetornoFerias = null,
+        MotivoAfastamento = string.Empty,
+        DataDemissao = null,
+        Cargo = "2043",
+        NomeCargo = "Analista de Sistemas",
+        DataUltimaTrocaCargo = null,
+        GrauInstrucao = "15",
+        NomeGrauInstrucao = "Superior Incompleto",
+        SalarioNominal = 4130,
+        DataUltimoReajuste = null,
+        //DocumentoChefe = string.Empty,
+        //EmpresaChefe = string.Empty,
+        //NomeEmpresaChefe = string.Empty,
+        //MatriculaChefe = 0,
+        //NomeChefe = string.Empty
+        DocumentoChefe = "57763771020",
+        EmpresaChefe = "100",
+        NomeEmpresaChefe = "Analisa",
+        MatriculaChefe = 1,
+        NomeChefe = "Juremir Milani"
+      };
+      lista.Add(colaborador);
+
       ImportService import = new ImportService(Person, lista);
       MessageBox.Show(import.Message);
     }
