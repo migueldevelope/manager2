@@ -140,7 +140,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return courseESocialService.GetAll(p => p._id == id).FirstOrDefault();
+        return courseESocialService.GetAuthentication(p => p._id == id).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -336,8 +336,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = courseESocialService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = courseESocialService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = courseESocialService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = courseESocialService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }
@@ -771,7 +771,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        courseESocialService.Insert(view);
+        courseESocialService.InsertAccount(view);
         return "add success";
       }
       catch (Exception e)
@@ -839,9 +839,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = courseESocialService.GetAll(p => p._id == id).FirstOrDefault();
+        var item = courseESocialService.GetAuthentication(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-        courseESocialService.Update(item, null);
+        courseESocialService.UpdateAccount(item, null);
         return "deleted";
       }
       catch (Exception e)
@@ -986,7 +986,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        courseESocialService.Update(view, null);
+        courseESocialService.UpdateAccount(view, null);
         return "update";
       }
       catch (Exception e)
