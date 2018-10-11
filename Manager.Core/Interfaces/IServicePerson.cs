@@ -18,7 +18,7 @@ namespace Manager.Core.Interfaces
     void SetUser(BaseUser baseUser);
     ViewPersonHead Head(string idperson);
     Person NewPerson(Person person);
-    string NewPersonView(Person person);
+    Person NewPersonView(Person person);
     string UpdatePerson(string id, ViewPersonsCrud person);
     Person UpdatePerson(Person person);
     Person UpdatePersonView(Person person);

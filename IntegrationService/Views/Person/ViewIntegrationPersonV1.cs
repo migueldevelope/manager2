@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntegrationService.Views.Person
 {
@@ -13,10 +9,10 @@ namespace IntegrationService.Views.Person
     public string Mail { get; set; }
     public string Document { get; set; }
     public DateTime? DateBirth { get; set; }
-    public string CellPhone { get; set; }
     public string Phone { get; set; }
-    public string DocumentId { get; set; }
-    public string DocumentProfessional { get; set; }
+    public string PhoneFixed { get; set; }
+    public string DocumentID { get; set; }
+    public string DocumentCTPF { get; set; }
     public string Sex { get; set; }
     public ViewIntegrationMapOfV1 Schooling { get; set; }
     public ViewIntegrationContractV1 Contract { get; set; }

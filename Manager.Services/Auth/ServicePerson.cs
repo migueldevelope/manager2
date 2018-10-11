@@ -114,7 +114,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public string NewPersonView(Person person)
+    public Person NewPersonView(Person person)
     {
       try
       {
@@ -154,8 +154,7 @@ namespace Manager.Services.Auth
         if (person.Manager != null)
           model.DocumentManager = person.Manager.Document;
 
-        personService.Insert(model);
-        return "ok";
+        return personService.Insert(model);
       }
       catch (Exception e)
       {

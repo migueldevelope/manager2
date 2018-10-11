@@ -7,6 +7,7 @@
     public long Registration { get; set; }
     public string Name { get; set; }
     public string Id { get; set; }
+    public string Message { get; set; }
     public ViewIntegrationPersonV1 Person { get; set; }
   }
 }

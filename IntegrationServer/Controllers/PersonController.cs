@@ -63,33 +63,33 @@ namespace IntegrationServer.InfraController
             Mail = person.Mail,
             Document = person.Document,
             DateBirth = person.DateBirth,
-            CellPhone = person.Phone,
-            Phone = person.PhoneFixed,
-            DocumentId = person.DocumentID,
-            DocumentProfessional = person.DocumentCTPF,
+            Phone = person.Phone,
+            PhoneFixed = person.PhoneFixed,
+            DocumentID = person.DocumentID,
+            DocumentCTPF = person.DocumentCTPF,
             Sex = person.Sex.ToString(),
             Schooling = new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
             Contract = new ViewIntegrationContractV1()
             {
               _id = string.Empty,
               Document = person.Document,
-              Company = new ViewIntegrationMapOfV1() { Id = person.Company._id, Name = person.Company.Name },
+              Company = person.Company == null ? null : new ViewIntegrationMapOfV1() { Id = person.Company._id, Name = person.Company.Name },
               Registration = person.Registration,
-              Establishment = new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
-              AdmissionDate = person.DateAdm,
+              Establishment = person.Establishment == null ? null : new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
+              DateAdm = person.DateAdm,
               StatusUser = (int)person.StatusUser,
-              VacationReturn = person.HolidayReturn,
-              ReasonForRemoval = person.MotiveAside,
-              ResignationDate = person.DateResignation,
-              Occupation = new ViewIntegrationMapOfV1() { Id = person.Occupation._id, IdCompany = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
+              HolidayReturn = person.HolidayReturn,
+              MotiveAside = person.MotiveAside,
+              DateResignation = person.DateResignation,
+              Occupation = person.Occupation == null ? null : new ViewIntegrationMapOfV1() { Id = person.Occupation._id, IdCompany = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
               DateLastOccupation = person.DateLastOccupation,
               Salary  = person.Salary,
               DateLastReadjust = person.DateLastReadjust,
-              _IdManager = person.Manager._id,
-              DocumentManager = person.Manager.Document,
-              ComanyManager = new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
-              RegistrationManager = person.Manager.Registration,
-              NameManager = person.Manager.Name,
+              _IdManager = person.Manager?._id,
+              DocumentManager = person.Manager?.Document,
+              CompanyManager = person.Manager == null ? null : new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
+              RegistrationManager = person.Manager == null ? 0 : person.Manager.Registration,
+              NameManager = person.Manager?.Name,
               TypeUser = (int)person.TypeUser,
               TypeJourney = (int)person.TypeJourney
             },
@@ -116,32 +116,170 @@ namespace IntegrationServer.InfraController
           Name = view.Name,
           Document = view.Document,
           Mail = view.Mail,
-          Phone = view.CellPhone,
+          Phone = view.Phone,
           TypeUser = (EnumTypeUser)view.Contract.TypeUser,
           StatusUser = (EnumStatusUser)view.Contract.StatusUser,
           Company = service.GetCompany(view.Contract.Company.Id),
           Occupation = service.GetOccupation(view.Contract.Occupation.Id),
           Registration = view.Contract.Registration,
           DateBirth = view.DateBirth,
-          DateAdm = view.Contract.AdmissionDate,
+          DateAdm = view.Contract.DateAdm,
           Schooling = service.GetSchooling(view.Schooling.Id),
           TypeJourney = (EnumTypeJourney)view.Contract.TypeJourney,
           Establishment = service.GetEstablishment(view.Contract.Establishment.Id),
-          PhoneFixed = view.Phone,
-          DocumentID = view.DocumentId,
-          DocumentCTPF = view.DocumentProfessional,
+          PhoneFixed = view.PhoneFixed,
+          DocumentID = view.DocumentID,
+          DocumentCTPF = view.DocumentCTPF,
           Sex = view.Sex.Substring(0, 1).ToUpper() == "M" ? EnumSex.Male : view.Sex.Substring(0, 1).ToUpper() == "F" ? EnumSex.Female : EnumSex.Others,
-          HolidayReturn = view.Contract.VacationReturn,
-          MotiveAside = view.Contract.ReasonForRemoval,
+          HolidayReturn = view.Contract.HolidayReturn,
+          MotiveAside = view.Contract.MotiveAside,
           DateLastOccupation =  view.Contract.DateLastOccupation,
           Salary = view.Contract.Salary,
           DateLastReadjust = view.Contract.DateLastReadjust,
-          DateResignation = view.Contract.ResignationDate,
+          DateResignation = view.Contract.DateResignation,
           //Person Manager
           //DocumentManager
         };
-        string result = servicePerson.NewPersonView(newPerson);
-        return Ok(view);
+        Person person = servicePerson.NewPersonView(newPerson);
+        if (person == null)
+          return BadRequest("Person not saved!!!");
+
+        ViewIntegrationMapPersonV1 viewReturn = new ViewIntegrationMapPersonV1()
+        {
+          Id = person._id,
+          Document = person.Document,
+          IdCompany = person.Company._id,
+          Registration = person.Registration,
+          Name = person.Name,
+          Person = new ViewIntegrationPersonV1()
+          {
+            _id = person._id,
+            Name = person.Name,
+            Mail = person.Mail,
+            Document = person.Document,
+            DateBirth = person.DateBirth,
+            Phone = person.Phone,
+            PhoneFixed = person.PhoneFixed,
+            DocumentID = person.DocumentID,
+            DocumentCTPF = person.DocumentCTPF,
+            Sex = person.Sex.ToString(),
+            Schooling = person.Schooling == null ? null : new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
+            Contract = new ViewIntegrationContractV1()
+            {
+              _id = string.Empty,
+              Document = person.Document,
+              Company = person.Company == null ? null : new ViewIntegrationMapOfV1() { Id = person.Company._id, Name = person.Company.Name },
+              Registration = person.Registration,
+              Establishment = person.Establishment == null ? null : new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
+              DateAdm = person.DateAdm,
+              StatusUser = (int)person.StatusUser,
+              HolidayReturn = person.HolidayReturn,
+              MotiveAside = person.MotiveAside,
+              DateResignation = person.DateResignation,
+              Occupation = person.Occupation == null ? null : new ViewIntegrationMapOfV1() { Id = person.Occupation._id, IdCompany = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
+              DateLastOccupation = person.DateLastOccupation,
+              Salary = person.Salary,
+              DateLastReadjust = person.DateLastReadjust,
+              _IdManager = person.Manager?._id,
+              DocumentManager = person.Manager?.Document,
+              CompanyManager = person.Manager == null ? null : new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
+              RegistrationManager = person.Manager == null ? 0 : person.Manager.Registration,
+              NameManager = person.Manager?.Name,
+              TypeUser = (int)person.TypeUser,
+              TypeJourney = (int)person.TypeJourney
+            }
+          }
+        };
+        return Ok(viewReturn);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(ex.ToString());
+      }
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("update")]
+    public IActionResult PutPerson([FromBody]ViewIntegrationPersonV1 view)
+    {
+      try
+      {
+        Person changePerson = servicePerson.GetPerson(view._id);
+        changePerson.Name = view.Name;
+        changePerson.Document = view.Document;
+        changePerson.Mail = view.Mail;
+        changePerson.Phone = view.Phone;
+        //changePerson.TypeUser = (EnumTypeUser)view.Contract.TypeUser;
+        changePerson.StatusUser = (EnumStatusUser)view.Contract.StatusUser;
+        changePerson.Company = service.GetCompany(view.Contract.Company.Id);
+        changePerson.Occupation = service.GetOccupation(view.Contract.Occupation.Id);
+        changePerson.Registration = view.Contract.Registration;
+        changePerson.DateBirth = view.DateBirth;
+        changePerson.DateAdm = view.Contract.DateAdm;
+        changePerson.Schooling = service.GetSchooling(view.Schooling.Id);
+        //changePerson.TypeJourney = (EnumTypeJourney)view.Contract.TypeJourney;
+        changePerson.Establishment = service.GetEstablishment(view.Contract.Establishment.Id);
+        changePerson.PhoneFixed = view.PhoneFixed;
+        changePerson.DocumentID = view.DocumentID;
+        changePerson.DocumentCTPF = view.DocumentCTPF;
+        changePerson.Sex = view.Sex.Substring(0, 1).ToUpper() == "M" ? EnumSex.Male : view.Sex.Substring(0, 1).ToUpper() == "F" ? EnumSex.Female : EnumSex.Others;
+        changePerson.HolidayReturn = view.Contract.HolidayReturn;
+        changePerson.MotiveAside = view.Contract.MotiveAside;
+        changePerson.DateLastOccupation = view.Contract.DateLastOccupation;
+        changePerson.Salary = view.Contract.Salary;
+        changePerson.DateLastReadjust = view.Contract.DateLastReadjust;
+        changePerson.DateResignation = view.Contract.DateResignation;
+        //Person Manager
+        //DocumentManager
+        Person person = servicePerson.UpdatePersonView(changePerson);
+        ViewIntegrationMapPersonV1 viewReturn = new ViewIntegrationMapPersonV1()
+        {
+          Id = person._id,
+          Document = person.Document,
+          IdCompany = person.Company._id,
+          Registration = person.Registration,
+          Name = person.Name,
+          Person = new ViewIntegrationPersonV1()
+          {
+            _id = person._id,
+            Name = person.Name,
+            Mail = person.Mail,
+            Document = person.Document,
+            DateBirth = person.DateBirth,
+            Phone = person.Phone,
+            PhoneFixed = person.PhoneFixed,
+            DocumentID = person.DocumentID,
+            DocumentCTPF = person.DocumentCTPF,
+            Sex = person.Sex.ToString(),
+            Schooling = new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
+            Contract = new ViewIntegrationContractV1()
+            {
+              _id = string.Empty,
+              Document = person.Document,
+              Company = new ViewIntegrationMapOfV1() { Id = person.Company._id, Name = person.Company.Name },
+              Registration = person.Registration,
+              Establishment = new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
+              DateAdm = person.DateAdm,
+              StatusUser = (int)person.StatusUser,
+              HolidayReturn = person.HolidayReturn,
+              MotiveAside = person.MotiveAside,
+              DateResignation = person.DateResignation,
+              Occupation = new ViewIntegrationMapOfV1() { Id = person.Occupation._id, IdCompany = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
+              DateLastOccupation = person.DateLastOccupation,
+              Salary = person.Salary,
+              DateLastReadjust = person.DateLastReadjust,
+              _IdManager = person.Manager._id,
+              DocumentManager = person.Manager.Document,
+              CompanyManager = new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
+              RegistrationManager = person.Manager.Registration,
+              NameManager = person.Manager.Name,
+              TypeUser = (int)person.TypeUser,
+              TypeJourney = (int)person.TypeJourney
+            }
+          }
+        };
+        return Ok(viewReturn);
       }
       catch (Exception ex)
       {

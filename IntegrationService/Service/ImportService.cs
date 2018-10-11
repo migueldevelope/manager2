@@ -76,11 +76,41 @@ namespace IntegrationService.Service
         {
           ValidMapCollaborator validMapCollaborator = new ValidMapCollaborator(Person, colaborador.Documento, company, Convert.ToInt64(colaborador.Matricula), colaborador.Nome);
           validMapCollaborator.Map.Colaborador = colaborador;
+          validMapCollaborator.Map.ColaboradorAnterior = colaborador;
+          validMapCollaborator.Map.Schooling = schooling;
+          validMapCollaborator.Map.Company = company;
+          validMapCollaborator.Map.Establishment = establishment;
+          validMapCollaborator.Map.Occupation = occupation;
+          // Verificar se a pessoa já existe
+          PersonIntegration personIntegration = new PersonIntegration(Person);
+          ViewIntegrationMapPersonV1 view = new ViewIntegrationMapPersonV1()
+          {
+            Document = colaborador.Documento,
+            IdCompany = company.Id,
+            Registration = colaborador.Matricula,
+            Name = colaborador.Nome,
+            Id = string.Empty,
+            Person = null,
+            Message = string.Empty
+          };
+          view = personIntegration.GetCollaboratorByKey(view);
+          if (view.Person != null)
+            validMapCollaborator.Map.Person = view.Person;
+
           Collaborators.Add(validMapCollaborator.Map);
         }
         else
         {
+          Collaborators[search].Schooling = schooling;
+          Collaborators[search].Company = company;
+          Collaborators[search].Establishment = establishment;
+          Collaborators[search].Occupation = occupation;
           Collaborators[search].Colaborador = colaborador;
+          if (Collaborators[search].Person == null)
+          {
+            // Verificar se a pessoa já existe
+
+          }
         }
       }
 
@@ -164,35 +194,35 @@ namespace IntegrationService.Service
       foreach (MapPerson collaborator in Collaborators)
       {
         // Novo Colaborador
+        int situacao = 0;
+        switch (collaborator.Colaborador.Situacao.ToLower())
+        {
+          case "férias":
+            situacao = 3;
+            break;
+          case "afastado":
+            situacao = 2;
+            break;
+          case "demitido":
+            situacao = 2;
+            break;
+          default:
+            situacao = 0;
+            break;
+        }
         if (collaborator.Person == null)
         {
           PersonIntegration personIntegration = new PersonIntegration(Person);
-          int situacao = 0;
-          switch (collaborator.Colaborador.Situacao.ToLower())
-          {
-            case "férias":
-              situacao = 3;
-              break;
-            case "afastado":
-              situacao = 2;
-              break;
-            case "demitido":
-              situacao = 2;
-              break;
-            default:
-              situacao = 0;
-              break;
-          }
           ViewIntegrationPersonV1 newPerson = new ViewIntegrationPersonV1()
           {
             Name = collaborator.Colaborador.Nome,
             Mail = collaborator.Colaborador.Email,
             Document = collaborator.Colaborador.Documento,
             DateBirth = collaborator.Colaborador.DataNascimento,
-            CellPhone = collaborator.Colaborador.Celular,
-            Phone = collaborator.Colaborador.Telefone,
-            DocumentId = collaborator.Colaborador.Identidade,
-            DocumentProfessional = collaborator.Colaborador.CarteiraProfissional,
+            Phone = collaborator.Colaborador.Celular,
+            PhoneFixed = collaborator.Colaborador.Telefone,
+            DocumentID = collaborator.Colaborador.Identidade,
+            DocumentCTPF = collaborator.Colaborador.CarteiraProfissional,
             Sex = collaborator.Colaborador.Sexo,
             Schooling = collaborator.Schooling,
             Contract = new ViewIntegrationContractV1()
@@ -201,11 +231,11 @@ namespace IntegrationService.Service
               Company  = collaborator.Company,
               Registration = collaborator.Colaborador.Matricula,
               Establishment = collaborator.Establishment,
-              AdmissionDate = collaborator.Colaborador.DataAdmissao,
+              DateAdm = collaborator.Colaborador.DataAdmissao,
               StatusUser = situacao,
-              VacationReturn = collaborator.Colaborador.DataRetornoFerias,
-              ReasonForRemoval = collaborator.Colaborador.MotivoAfastamento,
-              ResignationDate =  collaborator.Colaborador.DataDemissao,
+              HolidayReturn = collaborator.Colaborador.DataRetornoFerias,
+              MotiveAside = collaborator.Colaborador.MotivoAfastamento,
+              DateResignation =  collaborator.Colaborador.DataDemissao,
               Occupation = collaborator.Occupation,
               DateLastOccupation =  collaborator.Colaborador.DataUltimaTrocaCargo,
               Salary = collaborator.Colaborador.SalarioNominal,
@@ -219,11 +249,59 @@ namespace IntegrationService.Service
               NameManager = collaborator.Colaborador.NomeChefe
             }
           };
-          collaborator.Person = personIntegration.PostNewPerson(newPerson);
+          ViewIntegrationMapPersonV1 viewReturn = personIntegration.PostNewPerson(newPerson);
+          int search = Collaborators.FindIndex(p => p.Documento == collaborator.Colaborador.Documento && p.Empresa == collaborator.Colaborador.Empresa && p.Matricula == collaborator.Colaborador.Matricula);
+          Collaborators[search].Person = viewReturn.Person;
+        }
+        if (!collaborator.Colaborador.TestarMudanca(collaborator.ColaboradorAnterior))
+        {
+          PersonIntegration personIntegration = new PersonIntegration(Person);
+          ViewIntegrationPersonV1 changePerson = new ViewIntegrationPersonV1()
+          {
+            _id = collaborator.Person._id,
+            Name = collaborator.Colaborador.Nome,
+            Mail = collaborator.Colaborador.Email,
+            Document = collaborator.Colaborador.Documento,
+            DateBirth = collaborator.Colaborador.DataNascimento,
+            Phone = collaborator.Colaborador.Celular,
+            PhoneFixed = collaborator.Colaborador.Telefone,
+            DocumentID = collaborator.Colaborador.Identidade,
+            DocumentCTPF = collaborator.Colaborador.CarteiraProfissional,
+            Sex = collaborator.Colaborador.Sexo,
+            Schooling = collaborator.Schooling,
+            Contract = new ViewIntegrationContractV1()
+            {
+              Document = collaborator.Colaborador.Documento,
+              Company = collaborator.Company,
+              Registration = collaborator.Colaborador.Matricula,
+              Establishment = collaborator.Establishment,
+              DateAdm = collaborator.Colaborador.DataAdmissao,
+              StatusUser = situacao,
+              HolidayReturn = collaborator.Colaborador.DataRetornoFerias,
+              MotiveAside = collaborator.Colaborador.MotivoAfastamento,
+              DateResignation = collaborator.Colaborador.DataDemissao,
+              Occupation = collaborator.Occupation,
+              DateLastOccupation = collaborator.Colaborador.DataUltimaTrocaCargo,
+              Salary = collaborator.Colaborador.SalarioNominal,
+              DateLastReadjust = collaborator.Colaborador.DataUltimoReajuste,
+              TypeUser = 3,
+              TypeJourney = 0,
+              _IdManager = string.Empty,
+              DocumentManager = collaborator.Colaborador.DocumentoChefe,
+              CompanyManager = collaborator.CompanyManager,
+              RegistrationManager = collaborator.Colaborador.MatriculaChefe,
+              NameManager = collaborator.Colaborador.NomeChefe
+            }
+          };
+          ViewIntegrationMapPersonV1 viewReturn = personIntegration.PostNewPerson(changePerson);
+          int search = Collaborators.FindIndex(p => p.Documento == collaborator.Colaborador.Documento && p.Empresa == collaborator.Colaborador.Empresa && p.Matricula == collaborator.Colaborador.Matricula);
+          Collaborators[search].Person = viewReturn.Person;
+          Collaborators[search].ColaboradorAnterior = Collaborators[search].Colaborador;
         }
       }
       string saveObject = JsonConvert.SerializeObject(Collaborators);
       FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount), saveObject, false);
+      Message = "Fim de integração!";
     }
   }
 }

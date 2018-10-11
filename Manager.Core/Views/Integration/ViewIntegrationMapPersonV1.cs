@@ -9,6 +9,5 @@
     public string Id { get; set; }
     public string Message { get; set; }
     public ViewIntegrationPersonV1 Person { get; set; }
-    public ViewIntegrationContractV1 Contract { get; set; }
   }
 }

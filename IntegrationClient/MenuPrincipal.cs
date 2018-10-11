@@ -130,7 +130,7 @@ namespace IntegrationClient
         NomeEstabelecimento = "Analisa",
         Documento ="57763771020",
         Matricula = 1,
-        Nome = "Juremir Milani",
+        Nome = "Juremir Milani Novo",
         Email = "juremir@jmsoft.com.br",
         DataNascimento = new DateTime(1971,07,01),
         Celular = "54 991089092",
@@ -153,7 +153,7 @@ namespace IntegrationClient
         DocumentoChefe = string.Empty,
         EmpresaChefe = string.Empty,
         NomeEmpresaChefe = string.Empty,
-        MatriculaChefe = string.Empty,
+        MatriculaChefe = 0,
         NomeChefe = string.Empty
       };
       lista.Add(colaborador);

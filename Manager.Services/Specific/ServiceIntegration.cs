@@ -501,6 +501,8 @@ namespace Manager.Services.Specific
       schoolingService._user = _user;
       companyService._user = _user;
       accountService._user = _user;
+      occupationService._user = _user;
+      establishmentService._user = _user;
       integrationSchoolingService._user = _user;
       integrationCompanyService._user = _user;
       integrationEstablishmentService._user = _user;
@@ -515,6 +517,8 @@ namespace Manager.Services.Specific
       schoolingService._user = user;
       companyService._user = user;
       accountService._user = user;
+      occupationService._user = _user;
+      establishmentService._user = _user;
       integrationSchoolingService._user = _user;
       integrationCompanyService._user = _user;
       integrationEstablishmentService._user = _user;

@@ -2,6 +2,8 @@
 using IntegrationService.Views.Person;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace IntegrationService.Core
 {
@@ -12,6 +14,7 @@ namespace IntegrationService.Core
     public long Matricula { get; set; }
     public string Mensagem { get; set; }
     public Colaborador Colaborador { get; set; }
+    public Colaborador ColaboradorAnterior { get; set; }
     public ViewIntegrationMapOfV1 Schooling { get; set; }
     public ViewIntegrationMapOfV1 Company { get; set; }
     public ViewIntegrationMapOfV1 Establishment { get; set; }

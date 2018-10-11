@@ -126,10 +126,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public string Post([FromBody] Person person)
+    public Person Post([FromBody] Person person)
     {
-      service.NewPersonView(person);
-      return "ok";
+      return service.NewPersonView(person);
     }
 
     [Authorize]

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 
 namespace IntegrationService.Data
 {
@@ -33,7 +35,30 @@ namespace IntegrationService.Data
     public string DocumentoChefe { get; set; }
     public string EmpresaChefe { get; set; }
     public string NomeEmpresaChefe { get; set; }
-    public string MatriculaChefe { get; set; }
+    public long MatriculaChefe { get; set; }
     public string NomeChefe { get; set; }
+
+    public bool TestarMudanca(Colaborador testar)
+    {
+      try
+      {
+        if (this != null && testar != null)
+        {
+          var type = typeof(Colaborador);
+          var unequalProperties =
+              from pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+              let selfValue = type.GetProperty(pi.Name).GetValue(this, null)
+              let toValue = type.GetProperty(pi.Name).GetValue(testar, null)
+              where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
+              select selfValue;
+          return !unequalProperties.Any();
+        }
+        return false;
+      }
+      catch (Exception)
+      {
+        return false;
+      }
+    }
   }
 }
