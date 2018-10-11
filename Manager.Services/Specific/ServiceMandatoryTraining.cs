@@ -145,10 +145,20 @@ namespace Manager.Services.Specific
 
         // VERITY DATE LAST COURSE REALIZED
         var realized = eventHistoricService.GetAll(p => p.Course._id == course._id & p.Person._id == person._id).ToList();
+        var equivalents = Equivalents(course._id, person._id);
 
         DateTime? dateMax = null;
         if (realized.Count() > 0)
           dateMax = realized.Max(p => p.End);
+
+        if (equivalents.Count() > 0)
+        {
+          var dateequ = equivalents.Max(p => p.End);
+          if (dateequ > dateMax)
+            dateMax = dateequ;
+        }
+
+
 
         if ((dateMax != null) & (Prerequeriments(course._id) == true))
           return;
@@ -201,6 +211,25 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<EventHistoric> Equivalents(string idcourse, string idperson)
+    {
+      try
+      {
+        var list = eventHistoricService.GetAll(p => p.Person._id == idperson).ToList();
+        List<EventHistoric> result = new List<EventHistoric>();
+        foreach (var item in list)
+        {
+          if (item.Course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
+            result.Add(item);
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private bool Prerequeriments(string idcourse)
     {
       try
@@ -492,8 +521,21 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return mandatoryTrainingService.GetAll(p => p.Course._id == idcourse).FirstOrDefault();
+        var list = mandatoryTrainingService.GetAll(p => p.Course._id == idcourse).ToList();
 
+        var model = list.Select(p => new MandatoryTraining()
+        {
+          Occupations = p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
+          Companys = p.Companys.OrderBy(x => x.Company).ToList(),
+          Course = p.Course,
+          Persons = p.Persons.OrderBy(x => x.Person.Name).ToList(),
+          Status = p.Status,
+          _id = p._id,
+          _idAccount = p._idAccount
+        })
+        .FirstOrDefault();
+
+        return model;
       }
       catch (Exception e)
       {
