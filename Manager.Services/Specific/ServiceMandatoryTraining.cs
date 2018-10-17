@@ -6,13 +6,13 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Manager.Services.Specific
 {
+#pragma warning disable 1998
   public class ServiceMandatoryTraining : Repository<MandatoryTraining>, IServiceMandatoryTraining
   {
     private readonly ServiceGeneric<Company> companyService;
@@ -83,13 +83,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = new List<OccupationMandatory>();
-        list.Add(AddOccupationMandatory(new OccupationMandatory()
+        var list = new List<OccupationMandatory>
         {
-          Occupation = view.Occupation,
-          BeginDate = view.BeginDate,
-          TypeMandatoryTraining = view.TypeMandatoryTraining
-        }));
+          AddOccupationMandatory(new OccupationMandatory()
+          {
+            Occupation = view.Occupation,
+            BeginDate = view.BeginDate,
+            TypeMandatoryTraining = view.TypeMandatoryTraining
+          })
+        };
         var mandatory = mandatoryTrainingService.GetAll(p => p.Course == view.Course).FirstOrDefault();
         if (mandatory == null)
         {
@@ -116,7 +118,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void newOnZero(Course course)
+    private void NewOnZero(Course course)
     {
       try
       {
@@ -140,7 +142,7 @@ namespace Manager.Services.Specific
         if (beginDate == null)
           beginDate = DateTime.Now;
 
-        newOnZero(course);
+        NewOnZero(course);
         var listPlans = trainingPlanService.GetAll(p => p.Course._id == course._id & p.Person._id == person._id).ToList();
 
         // VERITY DATE LAST COURSE REALIZED
@@ -312,13 +314,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = new List<PersonMandatory>();
-        list.Add(AddPersonMandatory(new PersonMandatory()
+        var list = new List<PersonMandatory>
         {
-          Person = view.Person,
-          BeginDate = view.BeginDate,
-          TypeMandatoryTraining = view.TypeMandatoryTraining
-        }));
+          AddPersonMandatory(new PersonMandatory()
+          {
+            Person = view.Person,
+            BeginDate = view.BeginDate,
+            TypeMandatoryTraining = view.TypeMandatoryTraining
+          })
+        };
         var mandatory = mandatoryTrainingService.GetAll(p => p.Course == view.Course).FirstOrDefault();
         if (mandatory == null)
         {
@@ -350,13 +354,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = new List<CompanyMandatory>();
-        list.Add(AddCompanyMandatory(new CompanyMandatory()
+        var list = new List<CompanyMandatory>
         {
-          Company = view.Company,
-          BeginDate = view.BeginDate,
-          TypeMandatoryTraining = view.TypeMandatoryTraining
-        }));
+          AddCompanyMandatory(new CompanyMandatory()
+          {
+            Company = view.Company,
+            BeginDate = view.BeginDate,
+            TypeMandatoryTraining = view.TypeMandatoryTraining
+          })
+        };
         var mandatory = mandatoryTrainingService.GetAll(p => p.Course == view.Course).FirstOrDefault();
         if (mandatory == null)
         {
@@ -781,4 +787,5 @@ namespace Manager.Services.Specific
       }
     }
   }
+#pragma warning restore 1998
 }

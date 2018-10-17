@@ -7,18 +7,14 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
-using MongoDB.Bson;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
+  #pragma warning disable 4014
   public class ServiceIndicators : Repository<Monitoring>, IServiceIndicators
   {
     private readonly ServiceGeneric<Monitoring> monitoringService;
@@ -355,10 +351,10 @@ namespace Manager.Services.Specific
         {
           result.Add(new
           {
-            Name = item.Person.Name,
+            item.Person.Name,
             NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
             Status = item.OnBoarding == null ? EnumStatusOnBoarding.Open.ToString() : item.OnBoarding.StatusOnBoarding.ToString(),
-            Date = item.OnBoarding == null ? null : item.OnBoarding.DateEndEnd
+            Date = item.OnBoarding?.DateEndEnd
           });
         }
 
@@ -384,10 +380,10 @@ namespace Manager.Services.Specific
         {
           result.Add(new
           {
-            Name = item.Person.Name,
+            item.Person.Name,
             NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
             Status = item.Checkpoint == null ? EnumStatusCheckpoint.Open.ToString() : item.Checkpoint.StatusCheckpoint.ToString(),
-            Date = item.Checkpoint == null ? null : item.Checkpoint.DateEnd
+            Date = item.Checkpoint?.DateEnd
           });
         }
 
@@ -413,10 +409,10 @@ namespace Manager.Services.Specific
         {
           result.Add(new
           {
-            Name = item.Person.Name,
+            item.Person.Name,
             NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
             Status = item.Monitoring == null ? EnumStatusOnBoarding.Open.ToString() : item.Monitoring.StatusMonitoring.ToString(),
-            Date = item.Monitoring == null ? null : item.Monitoring.DateEndEnd
+            Date = item.Monitoring?.DateEndEnd
           });
         }
 
@@ -448,13 +444,13 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  Description = plan == null ? null : plan.Description,
+                  plan?.Description,
                   Evalutions = plan == null ? 0 : plan.Evaluation,
-                  Approved = plan == null ? null : plan.StatusPlanApproved.ToString(),
+                  Approved = plan?.StatusPlanApproved.ToString(),
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
-                  Date = plan == null ? null : plan.DateEnd
+                  Date = plan?.DateEnd
                 });
               }
             }
@@ -465,13 +461,13 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  Description = plan == null ? null : plan.Description,
+                  plan?.Description,
                   Evalutions = plan == null ? 0 : plan.Evaluation,
-                  Approved = plan == null ? null : plan.StatusPlanApproved.ToString(),
+                  Approved = plan?.StatusPlanApproved.ToString(),
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
-                  Date = plan == null ? null : plan.DateEnd
+                  Date = plan?.DateEnd
                 });
               }
             }
@@ -482,13 +478,13 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  Description = plan == null ? null : plan.Description,
+                  plan?.Description,
                   Evalutions = plan == null ? 0 : plan.Evaluation,
-                  Approved = plan == null ? null : plan.StatusPlanApproved.ToString(),
+                  Approved = plan?.StatusPlanApproved.ToString(),
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
-                  Date = plan == null ? null : plan.DateEnd
+                  Date = plan?.DateEnd
                 });
               }
             }
@@ -755,7 +751,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
@@ -767,7 +763,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
@@ -779,7 +775,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
@@ -820,7 +816,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }
@@ -832,7 +828,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }
@@ -844,7 +840,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.Person.Name,
+                  item.Person.Name,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }
@@ -864,6 +860,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
   }
+  #pragma warning restore 4014
 }

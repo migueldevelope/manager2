@@ -14,7 +14,6 @@ namespace Manager.Web
 
     private readonly IServiceIndicators service;
     private readonly IServicePerson servicePerson;
-    private Timer _timer;
 
     public MessagesHub(IServiceIndicators _service, IServicePerson _servicePerson)
     {

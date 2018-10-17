@@ -10,10 +10,10 @@ using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Manager.Services.Specific
 {
+  #pragma warning disable 1998
   public class ServiceEvent : Repository<Event>, IServiceEvent
   {
     private readonly ServiceGeneric<Event> eventService;
@@ -24,7 +24,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<TrainingPlan> trainingPlanService;
     private readonly ServiceLog logService;
-    private string path;
+    private readonly string Path;
 
     public ServiceEvent(DataContext context, string pathToken)
      : base(context)
@@ -39,7 +39,7 @@ namespace Manager.Services.Specific
         eventHistoricService = new ServiceGeneric<EventHistoric>(context);
         trainingPlanService = new ServiceGeneric<TrainingPlan>(context);
         logService = new ServiceLog(context);
-        path = pathToken;
+        Path = pathToken;
       }
       catch (Exception e)
       {
@@ -1075,6 +1075,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
   }
+  #pragma warning restore 1998
 }

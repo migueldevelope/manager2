@@ -14,6 +14,7 @@ using System.Net.Http;
 
 namespace Manager.Services.Specific
 {
+  #pragma warning disable 1998
   public class ServiceOnBoarding : Repository<OnBoarding>, IServiceOnBoarding
   {
     private readonly ServiceGeneric<OnBoarding> onBoardingService;
@@ -60,7 +61,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void newOnZero()
+    private void NewOnZero()
     {
       try
       {
@@ -82,7 +83,7 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(idmanager, "List");
-        newOnZero();
+        NewOnZero();
         int skip = (count * (page - 1));
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator &  p.TypeJourney == EnumTypeJourney.OnBoarding & p.Manager._id == idmanager
         & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
@@ -200,7 +201,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private OnBoarding loadMap(OnBoarding onBoarding)
+    private OnBoarding LoadMap(OnBoarding onBoarding)
     {
       try
       {
@@ -255,7 +256,7 @@ namespace Manager.Services.Specific
         LogSave(onBoarding.Person._id, "OnBoarding Process");
         if (onBoarding._id == null)
         {
-          loadMap(onBoarding);
+          LoadMap(onBoarding);
 
           if (onBoarding.Person._id == idperson)
           {
@@ -460,4 +461,5 @@ namespace Manager.Services.Specific
       }
     }
   }
+  #pragma warning restore 1998
 }

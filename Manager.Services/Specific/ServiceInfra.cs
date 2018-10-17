@@ -1,5 +1,4 @@
-﻿using Manager.Core.Base;
-using Manager.Core.Business;
+﻿using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
@@ -14,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
+#pragma warning disable 1998
+#pragma warning disable 4014
   public class ServiceInfra : Repository<Group>, IServiceInfra
   {
     private readonly ServiceGeneric<Sphere> sphereService;
@@ -1069,7 +1070,7 @@ namespace Manager.Services.Specific
           Status = p.Status,
           Name = p.Name,
           Logo = p.Logo,
-          Skills = p.Skills == null ? null : p.Skills.OrderBy(x => x.Name).ToList(),
+          Skills = p.Skills?.OrderBy(x => x.Name).ToList(),
           Template = p.Template
         }).OrderBy(p => p.Name).ToList();
       }
@@ -2430,7 +2431,7 @@ namespace Manager.Services.Specific
           var order = processLevelOneService.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
           model.Order = order;
         }
-        catch (Exception e)
+        catch (Exception)
         {
           model.Order = 1;
         }
@@ -2468,7 +2469,7 @@ namespace Manager.Services.Specific
           var order = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
           model.Order = order;
         }
-        catch (Exception e)
+        catch (Exception)
         {
           model.Order = 1;
         }
@@ -2805,4 +2806,6 @@ namespace Manager.Services.Specific
       }
     }
   }
+#pragma warning restore 1998
+#pragma warning restore 4014
 }

@@ -14,6 +14,7 @@ using System.Net.Http;
 
 namespace Manager.Services.Specific
 {
+  #pragma warning disable 1998
   public class ServiceCheckpoint : Repository<Checkpoint>, IServiceCheckpoint
   {
     private readonly ServiceGeneric<Checkpoint> checkpointService;
@@ -79,7 +80,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void newOnZero()
+    private void NewOnZero()
     {
       try
       {
@@ -101,7 +102,7 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(idmanager, "List");
-        newOnZero();
+        NewOnZero();
         int skip = (count * (page - 1));
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
         & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
@@ -160,7 +161,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private Checkpoint loadMap(Checkpoint checkpoint)
+    private Checkpoint LoadMap(Checkpoint checkpoint)
     {
       try
       {
@@ -255,7 +256,7 @@ namespace Manager.Services.Specific
         LogSave(checkpoint.Person._id, "Checkpoint Process");
         checkpoint.StatusCheckpoint = EnumStatusCheckpoint.Wait;
         checkpoint.DateBegin = DateTime.Now;
-        checkpoint = loadMap(checkpoint);
+        checkpoint = LoadMap(checkpoint);
         if (checkpoint.Person.DateAdm != null)
           checkpoint.DataAccess = DateTime.Parse(checkpoint.Person.DateAdm.ToString()).AddDays(Deadline());
         else
@@ -536,4 +537,5 @@ namespace Manager.Services.Specific
       }
     }
   }
+  #pragma warning restore 1998
 }

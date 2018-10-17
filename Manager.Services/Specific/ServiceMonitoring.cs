@@ -11,10 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 
 namespace Manager.Services.Specific
 {
+#pragma warning disable 1998
   public class ServiceMonitoring : Repository<Monitoring>, IServiceMonitoring
   {
     private readonly ServiceGeneric<Monitoring> monitoringService;
@@ -63,7 +63,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void newOnZero()
+    private void NewOnZero()
     {
       try
       {
@@ -85,7 +85,7 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(idmanager, "List");
-        newOnZero();
+        NewOnZero();
         int skip = (count * (page - 1));
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
         & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
@@ -193,7 +193,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private Monitoring loadMap(Monitoring monitoring)
+    private Monitoring LoadMap(Monitoring monitoring)
     {
       try
       {
@@ -230,7 +230,7 @@ namespace Manager.Services.Specific
         LogSave(monitoring.Person._id, "Monitoring Process");
         if (monitoring._id == null)
         {
-          loadMap(monitoring);
+          LoadMap(monitoring);
 
           if (monitoring.Person._id == idperson)
           {
@@ -569,4 +569,5 @@ namespace Manager.Services.Specific
       }
     }
   }
+#pragma warning restore 1998
 }

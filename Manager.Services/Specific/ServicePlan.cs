@@ -5,20 +5,16 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
-using Manager.Services.Specific;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http;
-using System.Threading.Tasks;
-using Tools;
 
 namespace Manager.Services.Specific
 {
+  #pragma warning disable 1998
   public class ServicePlan : Repository<Plan>, IServicePlan
   {
     private ServiceGeneric<Person> personService;
@@ -1325,4 +1321,5 @@ namespace Manager.Services.Specific
       }
     }
   }
+  #pragma warning restore 1998
 }

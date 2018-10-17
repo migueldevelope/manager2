@@ -1,19 +1,18 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using System.Linq;
 using System;
-using MongoDB.Bson;
 using Manager.Services.Specific;
 using Tools;
 using System.Net.Http;
 
 namespace Manager.Services.Auth
 {
+  #pragma warning disable 1998
   public class ServiceAuthentication : IServiceAuthentication
   {
     private readonly IServicePerson servicePerson;
@@ -295,6 +294,6 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-
   }
+  #pragma warning restore 1998
 }

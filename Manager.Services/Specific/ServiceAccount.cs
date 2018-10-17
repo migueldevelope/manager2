@@ -15,6 +15,8 @@ using Tools;
 
 namespace Manager.Services.Specific
 {
+  #pragma warning disable 1998
+  #pragma warning disable 4014
   public class ServiceAccount : Repository<Account>, IServiceAccount
   {
     private readonly ServiceGeneric<Account> accountService;
@@ -121,8 +123,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            Mail = user.Mail,
-            Password = user.Password
+            user.Mail,
+            user.Password
           };
           var json = JsonConvert.SerializeObject(data);
           var content = new StringContent(json);
@@ -155,8 +157,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            Mail = user.Mail,
-            Password = user.Password
+            user.Mail,
+            user.Password
           };
 
           var json = JsonConvert.SerializeObject(data);
@@ -205,6 +207,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
   }
+  #pragma warning restore 1998
+  #pragma warning restore 4014
 }
