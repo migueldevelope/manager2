@@ -58,6 +58,7 @@ namespace Manager.Core.Interfaces
     string AddOccupation(Occupation occupation);
     string AddOccupationSkill(ViewAddOccupationSkill view);
     string AddOccupationActivities(ViewAddOccupationActivities view);
+    string AddOccupationActivitiesList(List<ViewAddOccupationActivities> list);
     string AddProcessLevelOne(ProcessLevelOne model);
     string AddProcessLevelTwo(ProcessLevelTwo model);
     string AddQuestions(Questions view);

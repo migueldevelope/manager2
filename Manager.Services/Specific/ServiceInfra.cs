@@ -399,6 +399,23 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string AddOccupationActivitiesList(List<ViewAddOccupationActivities> list)
+    {
+      try
+      {
+        foreach(var view in list)
+        {
+          AddOccupationActivities(view);
+        }
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public string AddSpecificRequirements(string idoccupation, ViewAddSpecificRequirements view)
     {
       try
@@ -1839,8 +1856,24 @@ namespace Manager.Services.Specific
       try
       {
         var areas = new List<Area>();
+        var groupOld = occupationService.GetAll(p => p._id == occupation._id).FirstOrDefault().Group;
+
         foreach (var item in occupation.Process)
           areas.Add(item.ProcessLevelOne.Area);
+        if (groupOld != occupation.Group)
+        {
+          foreach (var school in occupation.Group.Schooling)
+          {
+            foreach (var schoolOccupation in groupOld.Schooling)
+            {
+              if (school._id == schoolOccupation._id)
+                school.Complement = schoolOccupation.Complement;
+            }
+          }
+
+          occupation.Schooling = occupation.Group.Schooling;
+        }
+
 
         occupationService.Update(occupation, null);
         UpdateOccupationAll(occupation);
@@ -2805,6 +2838,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
   }
 #pragma warning restore 1998
 #pragma warning restore 4014

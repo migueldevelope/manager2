@@ -123,6 +123,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
+    [Route("addoccupationactivitieslist")]
+    public string AddOccupationActivitiesList([FromBody]List<ViewAddOccupationActivities> list)
+    {
+      return service.AddOccupationActivitiesList(list);
+    }
+
+    [Authorize]
+    [HttpPost]
     [Route("addoccupationskill")]
     public string AddOccupationSkill([FromBody]ViewAddOccupationSkill view)
     {
