@@ -101,11 +101,11 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listplansstruct/{id}/{filter}/{count}/{page}/{activities}/{skillcompany}/{schooling}/{structplan}")]
-    List<ViewPlanStruct> ListPlansStruct(string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
+    [Route("listplansstruct/{activities}/{skillcompany}/{schooling}/{structplan}")]
+    public List<ViewPlanStruct> ListPlansStruct(byte activities, byte skillcompany, byte schooling, byte structplan, int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListPlansStruct(ref total, id, filter, count, page, activities, skillcompany, schooling, structplan);
+      var result = service.ListPlansStruct(ref total, "", count, page, activities, skillcompany, schooling, structplan);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -113,7 +113,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newstructplan/{idmonitoring}/{idplan}/{sourceplan}")]
-    string NewStructPlan([FromBody] StructPlan structplan, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
+    public string NewStructPlan([FromBody] StructPlan structplan, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
     {
       return service.NewStructPlan(idmonitoring, idplan, sourceplan, structplan);
     }
@@ -121,7 +121,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("removestructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
-    string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    public string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       return service.RemoveStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
@@ -129,7 +129,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getstructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
-    StructPlan GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    public StructPlan GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       return service.GetStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
@@ -138,7 +138,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getplanstruct/{idmonitoring}/{idplan}")]
-    ViewPlanStruct GetPlanStruct(string idmonitoring, string idplan)
+    public ViewPlanStruct GetPlanStruct(string idmonitoring, string idplan)
     {
       return service.GetPlanStruct(idmonitoring, idplan);
     }
@@ -146,18 +146,18 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatestructplan/{idmonitoring}/{idplan}/{sourceplan}")]
-    string UpdateStructPlan([FromBody]StructPlan structplanedit, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
+    public string UpdateStructPlan([FromBody]StructPlan structplanedit, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
     {
       return service.UpdateStructPlan(idmonitoring, idplan, sourceplan, structplanedit);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("listplanactivity/{id}/{filter}/{count}/{page}")]
-    List<PlanActivity> ListPlanActivity(string id, string filter, int count, int page)
+    [Route("listplanactivity/{filter}/{count}/{page}")]
+    public List<PlanActivity> ListPlanActivity(string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListPlanActivity(ref total, id, filter, count, page);
+      var result = service.ListPlanActivity(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -165,7 +165,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getplanactivity/{id}")]
-    PlanActivity GetPlanActivity(string id)
+    public PlanActivity GetPlanActivity(string id)
     {
       return service.GetPlanActivity(id);
     }
@@ -173,7 +173,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newplanactivity")]
-    string NewPlanActivity(PlanActivity model)
+    public string NewPlanActivity(PlanActivity model)
     {
       return service.NewPlanActivity(model);
     }
@@ -181,7 +181,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateplanactivity")]
-    string UpdatePlanActivity(PlanActivity model)
+    public string UpdatePlanActivity(PlanActivity model)
     {
       return service.UpdatePlanActivity(model);
     }
@@ -189,7 +189,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("removeplanactivity/{id}")]
-    string RemovePlanActivity(string id)
+    public string RemovePlanActivity(string id)
     {
       return service.RemovePlanActivity(id);
     }

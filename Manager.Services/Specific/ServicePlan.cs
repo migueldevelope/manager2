@@ -14,7 +14,7 @@ using System.Net.Http;
 
 namespace Manager.Services.Specific
 {
-  #pragma warning disable 1998
+#pragma warning disable 1998
   public class ServicePlan : Repository<Plan>, IServicePlan
   {
     private ServiceGeneric<Person> personService;
@@ -527,7 +527,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewPlanStruct> ListPlansStruct(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
+    public List<ViewPlanStruct> ListPlansStruct(ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
     {
       try
       {
@@ -536,7 +536,7 @@ namespace Manager.Services.Specific
 
         if (activities == 1)
         {
-          var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detail = monitoringService.GetAll()
           .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
 
@@ -578,7 +578,7 @@ namespace Manager.Services.Specific
 
         if (schooling == 1)
         {
-          var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detailSchool = monitoringService.GetAll()
             .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
           foreach (var item in detailSchool)
           {
@@ -618,7 +618,7 @@ namespace Manager.Services.Specific
 
         if (skillcompany == 1)
         {
-          var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detailSkills = monitoringService.GetAll()
             .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
           foreach (var item in detailSkills)
@@ -658,7 +658,17 @@ namespace Manager.Services.Specific
         }
 
         if (structplan == 0)
-          result = result.Where(p => p.StructPlans.Count() == 0).ToList();
+        {
+          try
+          {
+            result = result.Where(p => p.StructPlans.Count() == 0).ToList();
+          }
+          catch (Exception)
+          {
+            result = result.Where(p => p.StructPlans == null).ToList();
+          }
+        }
+
 
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
@@ -1930,7 +1940,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<PlanActivity> ListPlanActivity(ref long total, string id, string filter, int count, int page)
+    public List<PlanActivity> ListPlanActivity(ref long total, string filter, int count, int page)
     {
       try
       {
@@ -2002,5 +2012,5 @@ namespace Manager.Services.Specific
     }
 
   }
-  #pragma warning restore 1998
+#pragma warning restore 1998
 }

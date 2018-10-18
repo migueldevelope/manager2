@@ -515,6 +515,17 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listoccupationedit/{idcompany}")]
+    public List<ViewOccupationListEdit> ListOccupationEdit(string idcompany, int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    {
+      long total = 0;
+      var result = service.ListOccupationsEdit(idcompany, ref total, filter, count, page, filterGroup);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("getoccupations/{idcompany}/{idarea}")]
     public List<Occupation> GetOccupations(string idcompany, string idarea)
     {
@@ -774,6 +785,14 @@ namespace Manager.Controllers
     public string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
     {
       return service.ReorderOccupationActivitieManual(idcompany, idoccupation, idactivitie, order);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getcsvcomparegroup/{idcompany}")]
+    public string[] GetCSVCompareGroup(string idcompany)
+    {
+      return service.GetCSVCompareGroup(idcompany);
     }
 
   }

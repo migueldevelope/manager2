@@ -215,10 +215,11 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var item = serviceInfra.GetProcessLevelTwo().Where(p => p._id == "5ba912282aacd866424e566f").FirstOrDefault();
-        item.Name = "test sub novo 2";
-        serviceInfra.UpdateProcessLevelTwo(item);
+        //var item = serviceInfra.GetProcessLevelTwo().Where(p => p._id == "5ba912282aacd866424e566f").FirstOrDefault();
+        //item.Name = "test sub novo 2";
+        //serviceInfra.UpdateProcessLevelTwo(item);
 
+        serviceInfra.GetCSVCompareGroup("5b6c4f54d9090156f08775ab");
       }
       catch (Exception e)
       {

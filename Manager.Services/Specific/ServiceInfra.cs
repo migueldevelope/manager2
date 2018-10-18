@@ -403,7 +403,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach(var view in list)
+        foreach (var view in list)
         {
           AddOccupationActivities(view);
         }
@@ -1474,6 +1474,34 @@ namespace Manager.Services.Specific
           }
         }
         return list.OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var itens = occupationService.GetAll(p => p.Group.Company._id == idcompany
+        & p.Name.ToUpper().Contains(filter.ToUpper())).
+          Skip(skip).Take(count)
+          .OrderBy(p => p.Name).ToList().Select(p => new ViewOccupationListEdit
+          {
+            _id = p._id,
+            Name = p.Name,
+            NameGroup = p.Group.Name,
+            Company = p.Group.Company.Skills.Count(),
+            Group = p.Group.Scope.Count(),
+            Occupation = p.Activities.Count()
+          });
+
+        total = occupationService.GetAll(p => p.Group.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return null;
       }
       catch (Exception e)
       {
@@ -2838,6 +2866,183 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string[] GetCSVCompareGroup(string idcompany)
+    {
+      try
+      {
+
+        var groups = groupService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ToList();
+
+        var head = string.Empty;
+        var sphere = string.Empty;
+        var axis = string.Empty;
+
+        foreach (var item in groups)
+        {
+          head += item.Name + ";";
+          sphere += item.Sphere.Name + ";";
+          axis += item.Axis.Name + ";";
+        }
+
+
+        string[] rel = new string[3];
+        rel[0] = head;
+        rel[1] = sphere;
+        rel[2] = axis;
+
+        List<ViewCSVLO> list = new List<ViewCSVLO>();
+        //List<string[]> listFinal = new List<string[]>();
+
+        long line = 0;
+        long maxLine = 0;
+        long maxLineSkill = 0;
+        long maxLineSchooling = 0;
+
+        foreach (var item in groups)
+        {
+          line = 0;
+          foreach (var scope in item.Scope)
+          {
+            if (line > maxLine)
+              maxLine = line;
+
+            var result = new ViewCSVLO();
+            result.Name = scope.Name;
+            result.Line = line;
+            result.Type = EnumTypeLO.Scope;
+
+            list.Add(result);
+            line += 1;
+          }
+
+          line = 0;
+          foreach (var skill in item.Skills)
+          {
+            if (line > maxLineSkill)
+              maxLineSkill = line;
+
+            var result = new ViewCSVLO();
+            result.Name = skill.Name + ":" + skill.Concept;
+            result.Line = line;
+            result.Type = EnumTypeLO.Skill;
+
+            list.Add(result);
+            line += 1;
+          }
+
+          line = 0;
+          foreach (var scholling in item.Schooling)
+          {
+            if (line > maxLineSchooling)
+              maxLineSchooling = line = 0; ;
+
+            var result = new ViewCSVLO();
+            result.Name = scholling.Name;
+            result.Line = line;
+            result.Type = EnumTypeLO.Schooling;
+
+            list.Add(result);
+            line += 1;
+          }
+
+
+        }
+
+        for (var row = 0; row <= maxLine; row++)
+        {
+          var itemView = string.Empty;
+          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Scope & p.Line == row).ToList())
+          {
+            try
+            {
+              itemView += item.Name + ";";
+            }
+            catch (Exception)
+            {
+              itemView += " ;";
+            }
+          }
+          rel = Export(rel, itemView);
+        }
+
+        for (var row = 0; row <= maxLineSkill; row++)
+        {
+          var itemView = string.Empty;
+          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Skill & p.Line == row).ToList())
+          {
+            try
+            {
+              itemView += item.Name + ";";
+            }
+            catch (Exception)
+            {
+              itemView += " ;";
+            }
+          }
+          rel = Export(rel, itemView);
+        }
+
+        for (var row = 0; row <= maxLineSchooling; row++)
+        {
+          var itemView = string.Empty;
+          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Schooling & p.Line == row).ToList())
+          {
+            try
+            {
+              itemView += item.Name + ";";
+            }
+            catch (Exception)
+            {
+              itemView += " ;";
+            }
+          }
+          rel = Export(rel, itemView);
+        }
+
+        System.IO.File.WriteAllLines("LO.csv", rel);
+
+        return rel;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+
+    }
+
+
+    public string[] Export(string[] rel, string message)
+    {
+      try
+      {
+        string[] text = rel;
+        string[] lines = null;
+        try
+        {
+          lines = new string[text.Count() + 1];
+          var count = 0;
+          foreach (var item in text)
+          {
+            lines.SetValue(item, count);
+            count += 1;
+          }
+          lines.SetValue(message, text.Count());
+        }
+        catch (Exception)
+        {
+          lines = new string[1];
+          lines.SetValue(message, 0);
+        }
+
+        return lines;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
   }
 #pragma warning restore 1998
