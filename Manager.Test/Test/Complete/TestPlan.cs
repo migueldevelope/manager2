@@ -44,7 +44,7 @@ namespace Manager.Test.Test.Complete
       try
       {
         var person = servicePerson.GetAll(p => p.Name.Contains("gestor")).FirstOrDefault();
-        long total = 0;
+        //long total = 0;
         //var plans = servicePlan.ListPlans(ref total, person._id, "", 100, 1, 1, 1, 1, 1, 1, 1);
         var idmonitoring = "5b912f42840add76dccd4801";
         var idplan = "5b912f5a840add76dccd4808";

@@ -6,9 +6,11 @@ using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Tools;
 
 namespace Manager.Controllers
 {
@@ -790,9 +792,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getcsvcomparegroup/{idcompany}")]
-    public string[] GetCSVCompareGroup(string idcompany)
+    public string GetCSVCompareGroup(string idcompany)
     {
-      return service.GetCSVCompareGroup(idcompany);
+      var conn = ConnectionNoSqlService.GetConnetionServer();
+      return service.GetCSVCompareGroup(idcompany, conn.TokenServer);
     }
 
   }

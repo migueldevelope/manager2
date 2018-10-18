@@ -6,9 +6,13 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
@@ -33,7 +37,6 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Questions> questionsService;
     private readonly ServiceGeneric<TextDefault> textDefaultService;
     private readonly ServiceGeneric<CBO> cboService;
-
 
     public ServiceInfra(DataContext context)
       : base(context)
@@ -1487,7 +1490,8 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var itens = occupationService.GetAll(p => p.Group.Company._id == idcompany
-        & p.Name.ToUpper().Contains(filter.ToUpper())).
+        & p.Name.ToUpper().Contains(filter.ToUpper())
+        & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).
           Skip(skip).Take(count)
           .OrderBy(p => p.Name).ToList().Select(p => new ViewOccupationListEdit
           {
@@ -1495,13 +1499,14 @@ namespace Manager.Services.Specific
             Name = p.Name,
             NameGroup = p.Group.Name,
             Company = p.Group.Company.Skills.Count(),
-            Group = p.Group.Scope.Count(),
-            Occupation = p.Activities.Count()
-          });
+            Group = p.Group.Scope.Count() + p.Group.Skills.Count(),
+            Occupation = p.Activities.Count() + p.Skills.Count()
+          }).ToList();
 
-        total = occupationService.GetAll(p => p.Group.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = occupationService.GetAll(p => p.Group.Company._id == idcompany
+        & p.Name.ToUpper().Contains(filter.ToUpper()) & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).Count();
 
-        return null;
+        return itens;
       }
       catch (Exception e)
       {
@@ -2867,11 +2872,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string[] GetCSVCompareGroup(string idcompany)
+    public string GetCSVCompareGroup(string idcompany, string link)
     {
       try
       {
-
         var groups = groupService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ToList();
 
         var head = string.Empty;
@@ -2892,7 +2896,6 @@ namespace Manager.Services.Specific
         rel[2] = axis;
 
         List<ViewCSVLO> list = new List<ViewCSVLO>();
-        //List<string[]> listFinal = new List<string[]>();
 
         long line = 0;
         long maxLine = 0;
@@ -3000,9 +3003,55 @@ namespace Manager.Services.Specific
           rel = Export(rel, itemView);
         }
 
-        System.IO.File.WriteAllLines("LO.csv", rel);
+        var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMdd") + _user._idPerson + ".csv";
+        File.WriteAllLines(filename, rel);
 
-        return rel;
+        FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+        Stream fileStream = null;
+        using (FileStream fs = File.OpenRead(filename))
+        {
+          byte[] b = new byte[1024];
+          UTF8Encoding temp = new UTF8Encoding(true);
+          while (fs.Read(b, 0, b.Length) > 0)
+          {
+            fileStream = fs;
+            Console.WriteLine(temp.GetString(b));
+          }
+        }
+
+        var person = personService.GetAll(p => p.Mail == _user.Mail).FirstOrDefault();
+
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri(link);
+          var data = new
+          {
+            mail = person.Mail,
+            password = person.Password
+          };
+          var json = JsonConvert.SerializeObject(data);
+          var content = new StringContent(json);
+          content.Headers.ContentType.MediaType = "application/json";
+          var contentAttachment = new StreamContent(stream);
+          //contentAttachment.Headers.Add("Content-Type", "multipart/form-data;boundary=-------------------------acebdf13572468");
+
+          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+          var resultContent = result.Content.ReadAsStringAsync().Result;
+          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+          var clientAtt = new HttpClient();
+          //clientAtt.BaseAddress = new Uri("http://localhost:53255/");
+          clientAtt.BaseAddress = new Uri(link);
+          clientAtt.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
+          var resultLink = clientAtt.PostAsync("attachment/upload/link", contentAttachment).Result;
+
+
+          var linkReturn = resultLink.Content.ReadAsStringAsync().Result;
+
+
+          return linkReturn;
+        }
+
       }
       catch (Exception e)
       {

@@ -105,7 +105,7 @@ namespace Manager.Core.Interfaces
     string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order);
     List<Group> GetGroupsPrint(string idcompany);
 
-    string[] GetCSVCompareGroup(string idcompany);
+    string GetCSVCompareGroup(string idcompany, string link);
     List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup);
   }
 }
