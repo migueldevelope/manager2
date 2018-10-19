@@ -3006,11 +3006,6 @@ namespace Manager.Services.Specific
         }
 
 
-        var defaults = Security.AuthorizationFlags.Defaults;
-        using (var auth = Security.Authorization.Create(defaults))
-        {
-          auth.ExecuteWithPrivileges("/bin/cat", defaults, new[] { fi.FullName + " > /etc/hosts" });
-        }
 
         var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMdd") + _user._idPerson + ".csv";
         File.WriteAllLines(filename, rel);
