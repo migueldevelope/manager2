@@ -3008,20 +3008,25 @@ namespace Manager.Services.Specific
 
         FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-        Stream fileStream = null;
-        using (FileStream fs = File.OpenRead(filename))
-        {
-          byte[] b = new byte[1024];
-          UTF8Encoding temp = new UTF8Encoding(true);
-          while (fs.Read(b, 0, b.Length) > 0)
-          {
-            fileStream = fs;
-            Console.WriteLine(temp.GetString(b));
-          }
-        }
 
         var person = personService.GetAll(p => p.Mail == _user.Mail).FirstOrDefault();
 
+        //CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+        //CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+        //CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+        //if (cloudBlobContainer.CreateIfNotExistsAsync().Result)
+        //{
+        //  cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+        //  {
+        //    PublicAccess = BlobContainerPublicAccessType.Blob
+        //  });
+        //}
+        //CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+        //blockBlob.Properties.ContentType = file.ContentType;
+        //blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+        //return blockBlob.Uri.ToString();
+
+        /*
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
@@ -3034,7 +3039,7 @@ namespace Manager.Services.Specific
           var content = new StringContent(json);
           content.Headers.ContentType.MediaType = "application/json";
           var contentAttachment = new StreamContent(stream);
-          //contentAttachment.Headers.Add("Content-Type", "multipart/form-data;boundary=-------------------------acebdf13572468");
+          contentAttachment.Headers.ContentType.MediaType = "multipart/form-data";
 
           var result = client.PostAsync("manager/authentication/encrypt", content).Result;
           var resultContent = result.Content.ReadAsStringAsync().Result;
@@ -3051,7 +3056,7 @@ namespace Manager.Services.Specific
 
           return linkReturn;
         }
-
+        */
       }
       catch (Exception e)
       {
