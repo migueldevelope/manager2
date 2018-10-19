@@ -1,4 +1,4 @@
-﻿namespace IntegrationServer.Views
+﻿namespace Manager.Core.Views.Integration
 {
   public class ViewIntegrationFilterName
   {

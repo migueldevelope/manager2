@@ -4,6 +4,7 @@ using Manager.Core.Business.Integration;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Core.Views.Integration;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +30,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<IntegrationCompany> integrationCompanyService;
     private readonly ServiceGeneric<IntegrationEstablishment> integrationEstablishmentService;
     private readonly ServiceGeneric<IntegrationOccupation> integrationOccupationService;
+    private readonly ServiceGeneric<IntegrationParameter> parameterService;
     private readonly IServiceLog logService;
 
     public ServiceIntegration(DataContext context)
@@ -46,6 +48,7 @@ namespace Manager.Services.Specific
         integrationCompanyService = new ServiceGeneric<IntegrationCompany>(context);
         integrationEstablishmentService = new ServiceGeneric<IntegrationEstablishment>(context);
         integrationOccupationService = new ServiceGeneric<IntegrationOccupation>(context);
+        parameterService= new ServiceGeneric<IntegrationParameter>(context);
         logService = new ServiceLog(context);
       }
       catch (Exception e)
@@ -234,265 +237,87 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    //public Company CompanyGet(string name)
-    //{
-    //  try
-    //  {
-    //    var item = companyService.GetAll(p => p.Name == name);
-    //    if (item.Count() > 0)
-    //      return item.FirstOrDefault();
-    //    else
-    //      return NewCompany(name);
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
 
-    //public Person ManagerGet(string document)
-    //{
-    //  try
-    //  {
-    //    var item = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Document == document);
-    //    var retorno = item.FirstOrDefault();
-    //    return retorno;
-    //  }
-    //  catch (ServiceException)
-    //  {
-    //    return null;
-    //  }
-    //}
+    public IntegrationParameter GetIntegrationParameter()
+    {
+      try
+      {
+        var param = parameterService.GetAll().FirstOrDefault();
+        if (param == null)
+        {
+          param = parameterService.Insert(new IntegrationParameter()
+          {
+            Mode = EnumIntegrationMode.DataBaseV1,
+            Type = EnumIntegrationType.Complete,
+            Status = EnumStatus.Enabled
+          });
+        }
+        return param;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
-    //public string NewAccount(string name)
-    //{
-    //  try
-    //  {
-    //    var item = new Account()
-    //    {
-    //      Name = name,
-    //      Status = EnumStatus.Enabled
-    //    };
-    //    return accountService.Insert(item)._id;
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
+    public IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterMode view)
+    {
+      try
+      {
+        IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
+        param.Mode = view.Mode;
+        param.Type = view.Type;
+        param.ConnectionString = view.ConnectionString;
+        param.SqlCommand = view.SqlCommand;
+        param.FilePathLocal = view.FilePathLocal;
+        parameterService.Update(param, null);
+        return param;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
-    //public Company NewCompany(string name)
-    //{
-    //  try
-    //  {
-    //    var item = new Company()
-    //    {
-    //      Name = name,
-    //      Status = EnumStatus.Enabled,
-    //      Skills = new List<Skill>()
-    //    };
-    //    return companyService.Insert(item);
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
+    public IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterPack view)
+    {
+      try
+      {
+        IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
+        param.VersionPackProgram = view.VersionPackProgram;
+        param.LinkPackProgram = view.LinkPackProgram;
+        param.VersionPackCustom = view.VersionPackCustom;
+        param.LinkPackCustom = view.LinkPackCustom;
+        param.MessageAtualization = view.MessageAtualization;
+        parameterService.Update(param, null);
+        return param;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
-    //public string AccountGet(string name)
-    //{
-    //  try
-    //  {
-    //    var item = accountService.GetAll(p => p.Name == name);
-    //    if (item.Count() > 0)
-    //      return item.FirstOrDefault()._id;
-    //    else
-    //      return NewAccount(name);
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-    //public Schooling SchoolingGet(string name)
-    //{
-    //  try
-    //  {
-    //    var item = schoolingService.GetAll(p => p.Name == name);
-    //    if (item.Count() > 0)
-    //      return item.FirstOrDefault();
-    //    else
-    //      return NewSchooling(name);
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-    //public Schooling NewSchooling(string name)
-    //{
-    //  try
-    //  {
-    //    var item = new Schooling()
-    //    {
-    //      Name = name,
-    //      Status = EnumStatus.Enabled
-    //    };
-    //    return schoolingService.Insert(item);
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-    //public void UpdateManager()
-    //{
-    //  var list = personService.GetAll();
-    //  try
-    //  {
-    //    foreach (var item in list)
-    //    {
-    //      var manager = ManagerGet(item.DocumentManager);
-    //      if (manager != null)
-    //      {
-    //        item.Manager = manager;
-    //        personService.Update(item, null);
-    //      }
-    //    }
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-    //public List<ViewPersonImport> ListPersonJson(StreamReader file)
-    //{
-    //  try
-    //  {
-    //    string row = null;
-    //    string[] itemArray = null;
-    //    var list = new List<ViewPersonImport>();
-    //    var head = 0;
-    //    while ((row = file.ReadLine()) != null)
-    //    {
-    //      itemArray = row.Split(';');
-    //      //File.WriteAllText("", itemArray.ToString(), Encoding.UTF8);
-    //      if (head != 0)
-    //      {
-    //        var item = new ViewPersonImport()
-    //        {
-    //          Name = itemArray[0].ToString(),
-    //          Document = itemArray[1].ToString(),
-    //          Mail = itemArray[2].ToString(),
-    //          Phone = itemArray[3].ToString(),
-    //          TypeUser = (EnumTypeUser)byte.Parse(itemArray[4].ToString()),
-    //          StatusUser = (EnumStatusUser)byte.Parse(itemArray[5].ToString()),
-    //          NameCompany = itemArray[6].ToString(),
-    //          Registration = long.Parse(itemArray[9].ToString()),
-    //          NameManager = itemArray[10].ToString(),
-    //          DateBirth = DateTime.Parse(itemArray[11].ToString()),
-    //          DateAdm = DateTime.Parse(itemArray[12].ToString()),
-    //          DocumentManager = itemArray[13].ToString(),
-    //          NameSchooling = itemArray[15].ToString(),
-    //        };
-    //        list.Add(item);
-    //      }
-    //      else
-    //      {
-    //        head = 1;
-    //      }
-    //    }
-    //    file.Close();
-    //    return list;
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-    //public async Task<string> SetItem(ViewPersonImport item)
-    //{
-    //  try
-    //  {
-    //    var person = new Person();
-    //    var exists = personService.GetAll(p => p.Document == item.Document);
-    //    var bopExists = false;
-    //    if (exists.Count() > 0)
-    //    {
-    //      person = exists.FirstOrDefault();
-    //      bopExists = true;
-    //    }
-    //    else
-    //    {
-    //      person.Password = EncryptServices.GetMD5Hash(item.Document);
-    //      person.StatusUser = EnumStatusUser.Enabled;
-    //      person.Status = EnumStatus.Enabled;
-    //      bopExists = false;
-    //    }
-    //    person.Company = CompanyGet(item.NameCompany.Trim());
-    //    person.Schooling = SchoolingGet(item.NameSchooling.Trim());
-    //    person.Name = item.Name.Trim();
-    //    person.DocumentManager = item.DocumentManager.Trim();
-    //    person.Phone = item.Phone.Trim();
-    //    person.Mail = item.Mail.Trim();
-    //    person.Registration = item.Registration;
-    //    person.DateAdm = item.DateAdm;
-    //    person.DateBirth = item.DateBirth;
-    //    person.Document = item.Document.Trim();
-    //    person.TypeUser = item.TypeUser;
-    //    if (bopExists == false)
-    //      personService.Insert(person);
-    //    else
-    //      personService.Update(person, null);
-    //    return "ok";
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-    //public async Task<string> ImportPerson(List<ViewPersonImport> list)
-    //{
-    //  try
-    //  {
-
-    //    foreach (var item in list)
-    //    {
-    //      SetItem(item);
-    //    }
-    //    //UpdateManager();
-    //    return "ok";
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-    //public async void Log()
-    //{
-    //  try
-    //  {
-    //    var user = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
-    //    var log = new ViewLog()
-    //    {
-    //      Description = "Import",
-    //      Local = "ImportPerson",
-    //      Person = user
-    //    };
-    //    logService.NewLog(log);
-    //  }
-    //  catch (Exception)
-    //  {
-    //    throw;
-    //  }
-    //}
+    public IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterExecution view)
+    {
+      try
+      {
+        IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
+        param.StatusExecution = view.StatusExecution;
+        param.ProgramVersionExecution = view.ProgramVersionExecution;
+        param.CustomVersionExecution = view.CustomVersionExecution;
+        param.CriticalError = view.CriticalError;
+        param.MachineIdentity = view.MachineIdentity;
+        param.UploadNextLog = view.UploadNextLog;
+        param.LinkLogExecution = view.LinkLogExecution;
+        parameterService.Update(param, null);
+        return param;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
@@ -507,6 +332,7 @@ namespace Manager.Services.Specific
       integrationCompanyService._user = _user;
       integrationEstablishmentService._user = _user;
       integrationOccupationService._user = _user;
+      parameterService._user = _user;
       logService.SetUser(contextAccessor);
     }
 
@@ -523,6 +349,7 @@ namespace Manager.Services.Specific
       integrationCompanyService._user = _user;
       integrationEstablishmentService._user = _user;
       integrationOccupationService._user = _user;
+      parameterService._user = _user;
     }
   }
 }

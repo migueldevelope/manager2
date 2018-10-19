@@ -1,7 +1,7 @@
-﻿namespace IntegrationServer.Views
+﻿namespace Manager.Core.Views.Integration
 {
-    public class ViewIntegrationSkill
-    {
+  public class ViewIntegrationSkill
+  {
     public string IdSkill { get; set; }
     public string Name { get; set; }
     public string Concept { get; set; }

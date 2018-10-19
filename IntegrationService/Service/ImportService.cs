@@ -1,19 +1,21 @@
 ﻿using IntegrationService.Api;
 using IntegrationService.Core;
 using IntegrationService.Data;
+using IntegrationService.Enumns;
 using IntegrationService.Tools;
 using IntegrationService.Views;
 using IntegrationService.Views.Person;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 
 namespace IntegrationService.Service
 {
   public class ImportService
   {
-    private readonly List<Colaborador> Lista;
+    private List<Colaborador> Lista;
     private readonly ViewPersonLogin Person;
     public string Message { get; set; }
     private List<ViewIntegrationMapOfV1> Schoolings;
@@ -22,16 +24,219 @@ namespace IntegrationService.Service
     private List<ViewIntegrationMapOfV1> Occupations;
     private List<ViewIntegrationMapManagerV1> Managers;
     private List<MapPerson> Collaborators;
-    public ImportService(ViewPersonLogin person, List<Colaborador> lista)
+    private ViewIntegrationParameter Param;
+    public ImportService(ViewPersonLogin person)
     {
       try
       {
         Person = person;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    #region Preparação Banco de Dados V1
+    public void DatabaseV1(ViewIntegrationParameter param)
+    {
+      try
+      {
+        Param = param;
+        // Validar parâmetros
+        if (string.IsNullOrEmpty(Param.ConnectionString))
+          throw new Exception("Sem string de conexão!!!");
+
+        if (string.IsNullOrEmpty(Param.SqlCommand))
+          throw new Exception("Sem comando de leitura do banco de dados!!!");
+
+        if (param.Type == EnumIntegrationType.Custom)
+          throw new Exception("Rotina deve ser do tipo customizada!!!");
+
+        // Ler banco de dados
+        DataTable readData = ReadData();
+        if (readData.Rows.Count == 0)
+          throw new Exception("Não tem nenhum colaborador como retorno da consulta!!!");
+
+        // Tratar os dados
+        string columnsOk = string.Empty;
+        switch (param.Type)
+        {
+          case EnumIntegrationType.Basic:
+            columnsOk = ValidColumnBasicV1(readData.Columns);
+            break;
+          case EnumIntegrationType.Complete:
+            columnsOk = ValidColumnCompleteV1(readData.Columns);
+            break;
+        }
+        if (!string.IsNullOrEmpty(columnsOk))
+          throw new Exception(columnsOk);
+        // Carregar Lista de Colaboradores
+        List<Colaborador> lista = new List<Colaborador>();
+        Colaborador colaborador;
+        foreach (DataRow row in readData.Rows)
+        {
+          DateTime.TryParse(row["data_nascimento"].ToString().Trim(), out DateTime dataNascimento);
+          DateTime.TryParse(row["data_admissao"].ToString().Trim(), out DateTime dataAdmissao);
+          colaborador = new Colaborador()
+          {
+            Empresa = row["empresa"].ToString().Trim(),
+            NomeEmpresa = row["nome_empresa"].ToString().Trim(),
+            Estabelecimento = row["empresa"].ToString().Trim(),
+            NomeEstabelecimento = row["nome_empresa"].ToString().Trim(),
+            Documento = row["cpf"].ToString().Trim().Replace(".",string.Empty).Replace("-",string.Empty),
+            Matricula = Convert.ToInt64(row["empresa"].ToString().Trim()),
+            Nome = row["nome"].ToString().Trim(),
+            Email = row["email"].ToString().Trim(),
+            DataNascimento = dataNascimento,
+            Celular = row["celular"].ToString().Trim(),
+            Telefone = row["telefone"].ToString().Trim(),
+            Identidade = string.Empty,
+            CarteiraProfissional = string.Empty,
+            Sexo = row["sexo"].ToString().Trim(),
+            DataAdmissao = dataAdmissao,
+            Situacao = row["situacao"].ToString().Trim(),
+            DataRetornoFerias = null,
+            MotivoAfastamento = string.Empty,
+            DataDemissao = null,
+            Cargo = string.Empty,
+            NomeCargo = row["nome_cargo"].ToString().Trim(),
+            DataUltimaTrocaCargo = null,
+            GrauInstrucao = string.Empty,
+            NomeGrauInstrucao = row["nome_grau_instrucao"].ToString().Trim(),
+            SalarioNominal = 0,
+            DataUltimoReajuste = null,
+            DocumentoChefe = row["cpf_chefe"].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty),
+            EmpresaChefe = row["empresa_chefe"].ToString().Trim(),
+            NomeEmpresaChefe = string.Empty,
+            MatriculaChefe = Convert.ToInt64(row["matricula_chefe"].ToString().Trim()),
+            NomeChefe = row["nome_chefe"].ToString().Trim(),
+          };
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    private DataTable ReadData()
+    {
+      try
+      {
+        Boolean oracle = Param.ConnectionString.Split(';')[0].Equals("Oracle");
+        string hostname = Param.ConnectionString.Split(';')[1];
+        string user = Param.ConnectionString.Split(';')[2];
+        string password = Param.ConnectionString.Split(';')[3];
+        string baseDefault = Param.ConnectionString.Split(';')[4];
+        ConnectionString conn;
+        if (oracle)
+          conn = new ConnectionString(hostname, user, password)
+          {
+            Sql = Param.SqlCommand
+          };
+        else
+          conn = new ConnectionString(hostname, user, password, baseDefault)
+          {
+            Sql = Param.SqlCommand
+          };
+        GetPersonSystem gps = new GetPersonSystem(conn);
+        return gps.GetPerson();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    private string ValidColumnBasicV1(DataColumnCollection columns)
+    {
+      try
+      {
+        List<string> columnValids = new List<string>()
+        {
+          "empresa", "nome_empresa", "cpf", "matricula", "nome", "email", "data_nascimento", "celular",
+          "telefone", "sexo", "data_admissão", "situacao", "data_demissao", "cargo", "nome_cargo",
+          "grau_instrucao", "nome_grau_instrucao", "empresa_chefe", "cpf_chefe", "matricula_chefe", "nome_chefe"
+        };
+        if (columns.Count != 21)
+          return "Não tem 21 colunas!!!";
+        return ValidColumns(columns, columnValids);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    private string ValidColumnCompleteV1(DataColumnCollection columns)
+    {
+      try
+      {
+        List<string> columnValids = new List<string>()
+        {
+          "empresa", "nome_empresa", "estabelecimento", "nome_estabelecimento", "cpf", "matricula", "nome", "email",
+          "data_nascimento", "celular", "telefone", "identidade", "carteira_profissional", "sexo", "data_admissão",
+          "situacao", "retorno_ferias", "motivo_afastamento", "data_demissao", "cargo", "nome_cargo",
+          "data_ultima_troca_cargo", "grau_instrucao", "nome_grau_instrucao", "salario", "data_ultimo_reajuste",
+          "empresa_chefe", "cpf_chefe", "matricula_chefe", "nome_chefe"
+
+        };
+        if (columns.Count != 30)
+          return "Não tem 21 colunas!!!";
+        return ValidColumns(columns, columnValids);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    private string ValidColumns(DataColumnCollection columns, List<string> columnValids)
+    {
+      try
+      {
+        List<string> wrongNames = new List<string>();
+        foreach (DataColumn column in columns)
+        {
+          if (!columnValids.Contains(column.Caption.ToLower()))
+            wrongNames.Add(column.Caption);
+        }
+        List<string> missingNames = new List<string>();
+        foreach (string columnNameValid in columnValids)
+        {
+          if (!columns.Contains(columnNameValid))
+            missingNames.Add(columnNameValid);
+        }
+        string messageReturn = string.Empty;
+        if (wrongNames.Count > 0)
+          messageReturn = string.Concat(Environment.NewLine, string.Format("Nomes de colunas errados ({0}) !!!", string.Join(",", wrongNames)));
+
+        if (missingNames.Count > 0)
+          messageReturn = string.Concat(messageReturn, Environment.NewLine, string.Format("Nomes de colunas faltantes ({0}) !!!", string.Join(",", missingNames)));
+
+        return messageReturn;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    #endregion
+
+    #region Preparação Arquivo CSV V1
+    #endregion
+
+    #region Preparação Arquivo Excel V1
+    #endregion
+
+    #region Importação Final Completa
+    public void FinalImport(List<Colaborador> lista)
+    {
+      try
+      {
         Lista = lista;
         LoadLists();
         Import();
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         throw;
       }
@@ -379,5 +584,7 @@ namespace IntegrationService.Service
       FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount), saveObject, false);
       Message = "Fim de integração!";
     }
+    #endregion
+
   }
 }

@@ -1,6 +1,8 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.Business.Integration;
 using Manager.Core.Views;
+using Manager.Core.Views.Integration;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;
@@ -35,5 +37,10 @@ namespace Manager.Core.Interfaces
     //List<ViewPersonImport> ListPersonJson(StreamReader file);
     //Task<string> SetItem(ViewPersonImport item);
     //Task<string> ImportPerson(List<ViewPersonImport> list);
+    IntegrationParameter GetIntegrationParameter();
+    IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterMode view);
+    IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterPack view);
+    IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterExecution view);
+
   }
 }

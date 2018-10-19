@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IntegrationServer.Views;
 using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;

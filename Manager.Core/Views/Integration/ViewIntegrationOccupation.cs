@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace IntegrationServer.Views
+namespace Manager.Core.Views.Integration
 {
-    public class ViewIntegrationOccupation
-    {
+  public class ViewIntegrationOccupation
+  {
     public string IdOccupation { get; set; }
     public string Name { get; set; }
     public string NameGroup { get; set; }

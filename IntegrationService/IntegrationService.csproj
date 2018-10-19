@@ -66,11 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Authentication.cs" />
+    <Compile Include="Api\ConfigurationIntegration.cs" />
     <Compile Include="Api\InfraIntegration.cs" />
     <Compile Include="Api\PersonIntegration.cs" />
     <Compile Include="Core\EnumValidKey.cs" />
     <Compile Include="Core\MapPerson.cs" />
     <Compile Include="Data\Colaborador.cs" />
+    <Compile Include="Enumns\EnumIntegrationType.cs" />
+    <Compile Include="Enumns\EnumIntegrationMode.cs" />
     <Compile Include="Service1.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -79,6 +82,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\ConfigurationService.cs" />
     <Compile Include="Service\ValidMapManager.cs" />
     <Compile Include="Service\ValidMapCollaborator.cs" />
     <Compile Include="Service\ImportService.cs" />
@@ -86,6 +90,10 @@
     <Compile Include="Tools\ConnectionString.cs" />
     <Compile Include="Tools\FileClass.cs" />
     <Compile Include="Tools\GetPersonSystem.cs" />
+    <Compile Include="Views\ViewIntegrationParameterPack.cs" />
+    <Compile Include="Views\ViewIntegrationParameterMode.cs" />
+    <Compile Include="Views\ViewIntegrationParameterExecution.cs" />
+    <Compile Include="Views\ViewIntegrationParameter.cs" />
     <Compile Include="Views\Person\ViewIntegrationMapManagerV1.cs" />
     <Compile Include="Views\Person\ViewIntegrationContractV1.cs" />
     <Compile Include="Views\Person\ViewIntegrationPersonV1.cs" />
