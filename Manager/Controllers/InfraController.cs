@@ -6,9 +6,11 @@ using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Tools;
 
 namespace Manager.Controllers
 {
@@ -119,6 +121,14 @@ namespace Manager.Controllers
     public string AddOccupationActivities([FromBody]ViewAddOccupationActivities view)
     {
       return service.AddOccupationActivities(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addoccupationactivitieslist")]
+    public string AddOccupationActivitiesList([FromBody]List<ViewAddOccupationActivities> list)
+    {
+      return service.AddOccupationActivitiesList(list);
     }
 
     [Authorize]
@@ -507,6 +517,17 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listoccupationedit/{idcompany}")]
+    public List<ViewOccupationListEdit> ListOccupationEdit(string idcompany, int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    {
+      long total = 0;
+      var result = service.ListOccupationsEdit(idcompany, ref total, filter, count, page, filterGroup);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("getoccupations/{idcompany}/{idarea}")]
     public List<Occupation> GetOccupations(string idcompany, string idarea)
     {
@@ -766,6 +787,15 @@ namespace Manager.Controllers
     public string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
     {
       return service.ReorderOccupationActivitieManual(idcompany, idoccupation, idactivitie, order);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getcsvcomparegroup/{idcompany}")]
+    public string GetCSVCompareGroup(string idcompany)
+    {
+      var conn = ConnectionNoSqlService.GetConnetionServer();
+      return service.GetCSVCompareGroup(idcompany, conn.TokenServer);
     }
 
   }

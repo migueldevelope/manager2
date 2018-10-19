@@ -67,6 +67,7 @@ namespace Manager.Controllers
       var result = serviceLog.GetLogs(idaccount, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
+
     }
 
   }

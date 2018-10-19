@@ -14,12 +14,14 @@ using System.Net.Http;
 
 namespace Manager.Services.Specific
 {
-  #pragma warning disable 1998
+#pragma warning disable 1998
   public class ServicePlan : Repository<Plan>, IServicePlan
   {
     private ServiceGeneric<Person> personService;
     private ServiceGeneric<Monitoring> monitoringService;
     private ServiceGeneric<Plan> planService;
+    private ServiceGeneric<StructPlan> structPlanService;
+    private ServiceGeneric<PlanActivity> planActivityService;
     private readonly ServiceLog logService;
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
@@ -40,6 +42,8 @@ namespace Manager.Services.Specific
         mailModelService = new ServiceMailModel(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
+        structPlanService = new ServiceGeneric<StructPlan>(context);
+        planActivityService = new ServiceGeneric<PlanActivity>(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -61,6 +65,8 @@ namespace Manager.Services.Specific
         mailMessageService._user = _user;
         mailService._user = _user;
         planService._user = _user;
+        structPlanService._user = _user;
+        planActivityService._user = _user;
       }
       catch (Exception e)
       {
@@ -521,6 +527,161 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewPlanStruct> ListPlansStruct(ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        List<ViewPlanStruct> result = new List<ViewPlanStruct>();
+
+        if (activities == 1)
+        {
+          var detail = monitoringService.GetAll()
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+
+          foreach (var item in detail)
+          {
+            foreach (var plan in item.Plans)
+            {
+              foreach (var res in plan)
+              {
+                result.Add(new ViewPlanStruct()
+                {
+                  _id = res._id,
+                  _idAccount = res._idAccount,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
+                  TextEnd = res.TextEnd,
+                  Status = res.Status,
+                  DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
+                  StructPlans = res.StructPlans
+                });
+              }
+            }
+          }
+        }
+
+        if (schooling == 1)
+        {
+          var detailSchool = monitoringService.GetAll()
+            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          foreach (var item in detailSchool)
+          {
+            foreach (var plan in item.Plans)
+            {
+              foreach (var res in plan)
+              {
+                result.Add(new ViewPlanStruct()
+                {
+                  _id = res._id,
+                  _idAccount = res._idAccount,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
+                  TextEnd = res.TextEnd,
+                  Status = res.Status,
+                  DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
+                  StructPlans = res.StructPlans
+                });
+              }
+            }
+          }
+        }
+
+        if (skillcompany == 1)
+        {
+          var detailSkills = monitoringService.GetAll()
+            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+          foreach (var item in detailSkills)
+          {
+            foreach (var plan in item.Plans)
+            {
+              foreach (var res in plan)
+              {
+                result.Add(new ViewPlanStruct()
+                {
+                  _id = res._id,
+                  _idAccount = res._idAccount,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
+                  TextEnd = res.TextEnd,
+                  Status = res.Status,
+                  DateEnd = res.DateEnd,
+                  NewAction = res.NewAction,
+                  StructPlans = res.StructPlans
+                });
+              }
+            }
+          }
+        }
+
+        if (structplan == 0)
+        {
+          try
+          {
+            result = result.Where(p => p.StructPlans.Count() == 0).ToList();
+          }
+          catch (Exception)
+          {
+            result = result.Where(p => p.StructPlans == null).ToList();
+          }
+        }
+
+
+        result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
+
+        total = result.Count();
+
+        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<ViewPlan> ListPlansPerson(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end)
     {
       try
@@ -844,6 +1005,313 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string NewStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, StructPlan structplan)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        //verify plan;
+        if (sourceplan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                if (plan.StructPlans == null)
+                  plan.StructPlans = new List<StructPlan>();
+
+                plan.StructPlans.Add(AddStructPlan(structplan));
+              }
+            }
+          }
+        }
+        else if (sourceplan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            var listSchoolings = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                if (plan.StructPlans == null)
+                  plan.StructPlans = new List<StructPlan>();
+
+                plan.StructPlans.Add(AddStructPlan(structplan));
+              }
+            }
+          }
+        }
+        else
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            var listSkillsCompany = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                if (plan.StructPlans == null)
+                  plan.StructPlans = new List<StructPlan>();
+
+                plan.StructPlans.Add(AddStructPlan(structplan));
+              }
+            }
+          }
+        }
+
+        monitoringService.Update(monitoring, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        //verify plan;
+        if (sourceplan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == idstructplan)
+                  {
+                    plan.StructPlans.Remove(structplan);
+                    monitoringService.Update(monitoring, null);
+                    return "update";
+                  }
+                }
+              }
+            }
+          }
+        }
+        else if (sourceplan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            var listSchoolings = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == idstructplan)
+                  {
+                    plan.StructPlans.Remove(structplan);
+                    monitoringService.Update(monitoring, null);
+                    return "update";
+                  }
+                }
+              }
+            }
+          }
+        }
+        else
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            var listSkillsCompany = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == idstructplan)
+                  {
+                    plan.StructPlans.Remove(structplan);
+                    monitoringService.Update(monitoring, null);
+                    return "update";
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public StructPlan GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        //verify plan;
+        if (sourceplan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == idstructplan)
+                  {
+                    return structplan;
+                  }
+                }
+              }
+            }
+          }
+        }
+        else if (sourceplan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            var listSchoolings = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == idstructplan)
+                  {
+                    return structplan;
+                  }
+                }
+              }
+            }
+          }
+        }
+        else
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            var listSkillsCompany = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == idstructplan)
+                  {
+                    return structplan;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, StructPlan structplanedit)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        //verify plan;
+        if (sourceplan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == structplanedit._id)
+                  {
+                    plan.StructPlans.Remove(structplan);
+                    plan.StructPlans.Add(structplanedit);
+                    monitoringService.Update(monitoring, null);
+                    return "update";
+                  }
+                }
+              }
+            }
+          }
+        }
+        else if (sourceplan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            var listSchoolings = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == structplanedit._id)
+                  {
+                    plan.StructPlans.Remove(structplan);
+                    plan.StructPlans.Add(structplanedit);
+                    monitoringService.Update(monitoring, null);
+                    return "update";
+                  }
+                }
+              }
+            }
+          }
+        }
+        else
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            var listSkillsCompany = new List<Plan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplan)
+              {
+                foreach (var structplan in plan.StructPlans)
+                {
+                  if (structplan._id == structplanedit._id)
+                  {
+                    plan.StructPlans.Remove(structplan);
+                    plan.StructPlans.Add(structplanedit);
+                    monitoringService.Update(monitoring, null);
+                    return "update";
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public string NewPlanView(string idmonitoring, Plan planOld, Plan viewPlan)
     {
       try
@@ -1001,6 +1469,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
     private Plan AddPlan(Plan plan, Person person)
     {
       try
@@ -1008,6 +1477,18 @@ namespace Manager.Services.Specific
         plan.DateInclude = DateTime.Now;
         plan.UserInclude = person;
         return planService.Insert(plan);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private StructPlan AddStructPlan(StructPlan structPlan)
+    {
+      try
+      {
+        return structPlanService.Insert(structPlan);
       }
       catch (Exception e)
       {
@@ -1151,6 +1632,144 @@ namespace Manager.Services.Specific
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
+            }
+            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+              view.PlanNew = res;
+          }
+        }
+
+        if (exists)
+          return view;
+
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewPlanStruct GetPlanStruct(string idmonitoring, string idplan)
+    {
+      try
+      {
+        var detail = monitoringService.GetAll(p => p._id == idmonitoring)
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+
+        var detailSchoolings = monitoringService.GetAll(p => p._id == idmonitoring)
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+
+        var detailSkillsCompany = monitoringService.GetAll(p => p._id == idmonitoring)
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+
+        if (detail == null)
+          return new ViewPlanStruct() { _idAccount = monitoringService._user._idAccount, _id = idmonitoring };
+
+        ViewPlanStruct view = new ViewPlanStruct();
+        bool exists = false;
+
+        foreach (var plan in detail.Plans)
+        {
+          foreach (var res in plan)
+          {
+            if (res._id == idplan)
+            {
+              exists = true;
+              view.DateInclude = res.DateInclude;
+              view.Deadline = res.Deadline;
+              view.Name = res.Name;
+              view.Description = res.Description;
+              view.SourcePlan = res.SourcePlan;
+              view.StatusPlan = res.StatusPlan;
+              view.StatusPlanApproved = res.StatusPlanApproved;
+              view.UserInclude = res.UserInclude;
+              view.TypeAction = res.TypeAction;
+              view.TypePlan = res.TypePlan;
+              view.Evaluation = res.Evaluation;
+              view.Skills = res.Skills.OrderBy(p => p.Name).ToList();
+              view._id = res._id;
+              view._idAccount = res._idAccount;
+              view.IdMonitoring = detail._id;
+              view.TextEnd = res.TextEnd;
+              view.Status = res.Status;
+              view.DateEnd = res.DateEnd;
+              view.Attachments = res.Attachments;
+              view.NewAction = res.NewAction;
+              view.StructPlans = res.StructPlans;
+            }
+            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+              view.PlanNew = res;
+          }
+        }
+
+        if (exists)
+          return view;
+
+        foreach (var plan in detailSchoolings.Plans)
+        {
+          foreach (var res in plan)
+          {
+            if (res._id == idplan)
+            {
+              exists = true;
+              view.DateInclude = res.DateInclude;
+              view.Deadline = res.Deadline;
+              view.Name = res.Name;
+              view.Description = res.Description;
+              view.SourcePlan = res.SourcePlan;
+              view.StatusPlan = res.StatusPlan;
+              view.StatusPlanApproved = res.StatusPlanApproved;
+              view.UserInclude = res.UserInclude;
+              view.TypeAction = res.TypeAction;
+              view.TypePlan = res.TypePlan;
+              view.Evaluation = res.Evaluation;
+              view.Skills = res.Skills;
+              view._id = res._id;
+              view._idAccount = res._idAccount;
+              view.IdMonitoring = detail._id;
+              view.TextEnd = res.TextEnd;
+              view.Status = res.Status;
+              view.DateEnd = res.DateEnd;
+              view.Attachments = res.Attachments;
+              view.NewAction = res.NewAction;
+              view.StructPlans = res.StructPlans;
+            }
+            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+              view.PlanNew = res;
+          }
+        }
+
+        if (exists)
+          return view;
+
+        foreach (var plan in detailSkillsCompany.Plans)
+        {
+          foreach (var res in plan)
+          {
+            if (res._id == idplan)
+            {
+              exists = true;
+              view.DateInclude = res.DateInclude;
+              view.Deadline = res.Deadline;
+              view.Name = res.Name;
+              view.Description = res.Description;
+              view.SourcePlan = res.SourcePlan;
+              view.StatusPlan = res.StatusPlan;
+              view.StatusPlanApproved = res.StatusPlanApproved;
+              view.UserInclude = res.UserInclude;
+              view.TypeAction = res.TypeAction;
+              view.TypePlan = res.TypePlan;
+              view.Evaluation = res.Evaluation;
+              view.Skills = res.Skills;
+              view._id = res._id;
+              view._idAccount = res._idAccount;
+              view.IdMonitoring = detail._id;
+              view.TextEnd = res.TextEnd;
+              view.Status = res.Status;
+              view.DateEnd = res.DateEnd;
+              view.Attachments = res.Attachments;
+              view.NewAction = res.NewAction;
+              view.StructPlans = res.StructPlans;
             }
             else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
@@ -1320,6 +1939,78 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public List<PlanActivity> ListPlanActivity(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        List<ViewPlan> result = new List<ViewPlan>();
+
+        var detail = planActivityService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        total = planActivityService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public PlanActivity GetPlanActivity(string id)
+    {
+      try
+      {
+        return planActivityService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string NewPlanActivity(PlanActivity model)
+    {
+      try
+      {
+        planActivityService.Insert(model);
+        return "add plan activity";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdatePlanActivity(PlanActivity model)
+    {
+      try
+      {
+        planActivityService.Update(model, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string RemovePlanActivity(string id)
+    {
+      try
+      {
+        var model = planActivityService.GetAll(p => p._id == id).FirstOrDefault();
+        model.Status = EnumStatus.Disabled;
+        planActivityService.Update(model, null);
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
   }
-  #pragma warning restore 1998
+#pragma warning restore 1998
 }

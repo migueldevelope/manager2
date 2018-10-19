@@ -58,6 +58,7 @@ namespace Manager.Core.Interfaces
     string AddOccupation(Occupation occupation);
     string AddOccupationSkill(ViewAddOccupationSkill view);
     string AddOccupationActivities(ViewAddOccupationActivities view);
+    string AddOccupationActivitiesList(List<ViewAddOccupationActivities> list);
     string AddProcessLevelOne(ProcessLevelOne model);
     string AddProcessLevelTwo(ProcessLevelTwo model);
     string AddQuestions(Questions view);
@@ -103,5 +104,8 @@ namespace Manager.Core.Interfaces
     string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order);
     string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order);
     List<Group> GetGroupsPrint(string idcompany);
+
+    string GetCSVCompareGroup(string idcompany, string link);
+    List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup);
   }
 }

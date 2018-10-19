@@ -120,7 +120,57 @@ namespace EdeskIntegration.Controllers
       }
       return Ok(listAttachments);
     }
-    
+
+    [Authorize]
+    [HttpPost("link")]
+    public async Task<string> PostLink()
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return "Bad file type.";
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        this.service.Insert(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+          if (cloudBlobContainer.CreateIfNotExistsAsync().Result)
+          {
+            cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          return blockBlob.Uri.ToString();
+        }
+        catch (Exception)
+        {
+          attachment.Saved = false;
+          service.Update(attachment, null);
+          throw;
+        }
+        //listAttachments.Add(attachment);
+      }
+      return "";
+    }
+
 
     [Authorize]
     [HttpPost("{idcompany}/logocompany")]

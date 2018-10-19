@@ -6,9 +6,13 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
@@ -33,7 +37,6 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Questions> questionsService;
     private readonly ServiceGeneric<TextDefault> textDefaultService;
     private readonly ServiceGeneric<CBO> cboService;
-
 
     public ServiceInfra(DataContext context)
       : base(context)
@@ -391,6 +394,23 @@ namespace Manager.Services.Specific
         view.Occupation.Activities.Add(view.Activities);
         occupationService.Update(view.Occupation, null);
         UpdateOccupationAll(view.Occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupationActivitiesList(List<ViewAddOccupationActivities> list)
+    {
+      try
+      {
+        foreach (var view in list)
+        {
+          AddOccupationActivities(view);
+        }
+
         return "ok";
       }
       catch (Exception e)
@@ -1464,6 +1484,36 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var itens = occupationService.GetAll(p => p.Group.Company._id == idcompany
+        & p.Name.ToUpper().Contains(filter.ToUpper())
+        & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).
+          Skip(skip).Take(count)
+          .OrderBy(p => p.Name).ToList().Select(p => new ViewOccupationListEdit
+          {
+            _id = p._id,
+            Name = p.Name,
+            NameGroup = p.Group.Name,
+            Company = p.Group.Company.Skills.Count(),
+            Group = p.Group.Scope.Count() + p.Group.Skills.Count(),
+            Occupation = p.Activities.Count() + p.Skills.Count()
+          }).ToList();
+
+        total = occupationService.GetAll(p => p.Group.Company._id == idcompany
+        & p.Name.ToUpper().Contains(filter.ToUpper()) & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).Count();
+
+        return itens;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Schooling> GetSchooling()
     {
       try
@@ -1839,8 +1889,24 @@ namespace Manager.Services.Specific
       try
       {
         var areas = new List<Area>();
+        var groupOld = occupationService.GetAll(p => p._id == occupation._id).FirstOrDefault().Group;
+
         foreach (var item in occupation.Process)
           areas.Add(item.ProcessLevelOne.Area);
+        if (groupOld != occupation.Group)
+        {
+          foreach (var school in occupation.Group.Schooling)
+          {
+            foreach (var schoolOccupation in groupOld.Schooling)
+            {
+              if (school._id == schoolOccupation._id)
+                school.Complement = schoolOccupation.Complement;
+            }
+          }
+
+          occupation.Schooling = occupation.Group.Schooling;
+        }
+
 
         occupationService.Update(occupation, null);
         UpdateOccupationAll(occupation);
@@ -2805,6 +2871,228 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string GetCSVCompareGroup(string idcompany, string link)
+    {
+      try
+      {
+        var groups = groupService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ToList();
+
+        var head = string.Empty;
+        var sphere = string.Empty;
+        var axis = string.Empty;
+
+        foreach (var item in groups)
+        {
+          head += item.Name + ";";
+          sphere += item.Sphere.Name + ";";
+          axis += item.Axis.Name + ";";
+        }
+
+
+        string[] rel = new string[3];
+        rel[0] = head;
+        rel[1] = sphere;
+        rel[2] = axis;
+
+        List<ViewCSVLO> list = new List<ViewCSVLO>();
+
+        long line = 0;
+        long maxLine = 0;
+        long maxLineSkill = 0;
+        long maxLineSchooling = 0;
+
+        foreach (var item in groups)
+        {
+          line = 0;
+          foreach (var scope in item.Scope)
+          {
+            if (line > maxLine)
+              maxLine = line;
+
+            var result = new ViewCSVLO();
+            result.Name = scope.Name;
+            result.Line = line;
+            result.Type = EnumTypeLO.Scope;
+
+            list.Add(result);
+            line += 1;
+          }
+
+          line = 0;
+          foreach (var skill in item.Skills)
+          {
+            if (line > maxLineSkill)
+              maxLineSkill = line;
+
+            var result = new ViewCSVLO();
+            result.Name = skill.Name + ":" + skill.Concept;
+            result.Line = line;
+            result.Type = EnumTypeLO.Skill;
+
+            list.Add(result);
+            line += 1;
+          }
+
+          line = 0;
+          foreach (var scholling in item.Schooling)
+          {
+            if (line > maxLineSchooling)
+              maxLineSchooling = line = 0; ;
+
+            var result = new ViewCSVLO();
+            result.Name = scholling.Name;
+            result.Line = line;
+            result.Type = EnumTypeLO.Schooling;
+
+            list.Add(result);
+            line += 1;
+          }
+
+
+        }
+
+        for (var row = 0; row <= maxLine; row++)
+        {
+          var itemView = string.Empty;
+          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Scope & p.Line == row).ToList())
+          {
+            try
+            {
+              itemView += item.Name + ";";
+            }
+            catch (Exception)
+            {
+              itemView += " ;";
+            }
+          }
+          rel = Export(rel, itemView);
+        }
+
+        for (var row = 0; row <= maxLineSkill; row++)
+        {
+          var itemView = string.Empty;
+          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Skill & p.Line == row).ToList())
+          {
+            try
+            {
+              itemView += item.Name + ";";
+            }
+            catch (Exception)
+            {
+              itemView += " ;";
+            }
+          }
+          rel = Export(rel, itemView);
+        }
+
+        for (var row = 0; row <= maxLineSchooling; row++)
+        {
+          var itemView = string.Empty;
+          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Schooling & p.Line == row).ToList())
+          {
+            try
+            {
+              itemView += item.Name + ";";
+            }
+            catch (Exception)
+            {
+              itemView += " ;";
+            }
+          }
+          rel = Export(rel, itemView);
+        }
+
+        var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMdd") + _user._idPerson + ".csv";
+        File.WriteAllLines(filename, rel);
+
+        FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+        Stream fileStream = null;
+        using (FileStream fs = File.OpenRead(filename))
+        {
+          byte[] b = new byte[1024];
+          UTF8Encoding temp = new UTF8Encoding(true);
+          while (fs.Read(b, 0, b.Length) > 0)
+          {
+            fileStream = fs;
+            Console.WriteLine(temp.GetString(b));
+          }
+        }
+
+        var person = personService.GetAll(p => p.Mail == _user.Mail).FirstOrDefault();
+
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri(link);
+          var data = new
+          {
+            mail = person.Mail,
+            password = person.Password
+          };
+          var json = JsonConvert.SerializeObject(data);
+          var content = new StringContent(json);
+          content.Headers.ContentType.MediaType = "application/json";
+          var contentAttachment = new StreamContent(stream);
+          //contentAttachment.Headers.Add("Content-Type", "multipart/form-data;boundary=-------------------------acebdf13572468");
+
+          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+          var resultContent = result.Content.ReadAsStringAsync().Result;
+          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+          var clientAtt = new HttpClient();
+          //clientAtt.BaseAddress = new Uri("http://localhost:53255/");
+          clientAtt.BaseAddress = new Uri(link);
+          clientAtt.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
+          var resultLink = clientAtt.PostAsync("attachment/upload/link", contentAttachment).Result;
+
+
+          var linkReturn = resultLink.Content.ReadAsStringAsync().Result;
+
+
+          return linkReturn;
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+
+    }
+
+
+    public string[] Export(string[] rel, string message)
+    {
+      try
+      {
+        string[] text = rel;
+        string[] lines = null;
+        try
+        {
+          lines = new string[text.Count() + 1];
+          var count = 0;
+          foreach (var item in text)
+          {
+            lines.SetValue(item, count);
+            count += 1;
+          }
+          lines.SetValue(message, text.Count());
+        }
+        catch (Exception)
+        {
+          lines = new string[1];
+          lines.SetValue(message, 0);
+        }
+
+        return lines;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
   }
 #pragma warning restore 1998
 #pragma warning restore 4014

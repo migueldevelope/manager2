@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Authorization;
@@ -96,6 +97,103 @@ namespace Manager.Controllers
     {
       return service.NewUpdatePlan(idmonitoring, plan);
     }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("listplansstruct/{activities}/{skillcompany}/{schooling}/{structplan}")]
+    public List<ViewPlanStruct> ListPlansStruct(byte activities, byte skillcompany, byte schooling, byte structplan, int count = 10, int page = 1)
+    {
+      long total = 0;
+      var result = service.ListPlansStruct(ref total, "", count, page, activities, skillcompany, schooling, structplan);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("newstructplan/{idmonitoring}/{idplan}/{sourceplan}")]
+    public string NewStructPlan([FromBody] StructPlan structplan, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
+    {
+      return service.NewStructPlan(idmonitoring, idplan, sourceplan, structplan);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("removestructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
+    public string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    {
+      return service.RemoveStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getstructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
+    public StructPlan GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    {
+      return service.GetStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("getplanstruct/{idmonitoring}/{idplan}")]
+    public ViewPlanStruct GetPlanStruct(string idmonitoring, string idplan)
+    {
+      return service.GetPlanStruct(idmonitoring, idplan);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatestructplan/{idmonitoring}/{idplan}/{sourceplan}")]
+    public string UpdateStructPlan([FromBody]StructPlan structplanedit, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
+    {
+      return service.UpdateStructPlan(idmonitoring, idplan, sourceplan, structplanedit);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listplanactivity/{filter}/{count}/{page}")]
+    public List<PlanActivity> ListPlanActivity(string filter = "", int count = 10, int page = 1)
+    {
+      long total = 0;
+      var result = service.ListPlanActivity(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getplanactivity/{id}")]
+    public PlanActivity GetPlanActivity(string id)
+    {
+      return service.GetPlanActivity(id);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("newplanactivity")]
+    public string NewPlanActivity(PlanActivity model)
+    {
+      return service.NewPlanActivity(model);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updateplanactivity")]
+    public string UpdatePlanActivity(PlanActivity model)
+    {
+      return service.UpdatePlanActivity(model);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("removeplanactivity/{id}")]
+    public string RemovePlanActivity(string id)
+    {
+      return service.RemovePlanActivity(id);
+    }
+
 
   }
 }
