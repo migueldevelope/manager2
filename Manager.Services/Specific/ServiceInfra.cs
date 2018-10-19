@@ -3057,6 +3057,7 @@ namespace Manager.Services.Specific
           return linkReturn;
         }
         */
+        return "";
       }
       catch (Exception e)
       {
