@@ -795,7 +795,7 @@ namespace Manager.Controllers
     public string GetCSVCompareGroup(string idcompany)
     {
       var conn = ConnectionNoSqlService.GetConnetionServer();
-      return service.GetCSVCompareGroup(idcompany, conn.TokenServer);
+      return service.GetCSVCompareGroup(idcompany, conn.BlobKey);
     }
 
   }

@@ -219,7 +219,7 @@ namespace Manager.Test.Test.Complete
         //item.Name = "test sub novo 2";
         //serviceInfra.UpdateProcessLevelTwo(item);
 
-        serviceInfra.GetCSVCompareGroup("5b6c4f54d9090156f08775ab");
+        serviceInfra.GetCSVCompareGroup("5b6c4f54d9090156f08775ab", "");
       }
       catch (Exception e)
       {

