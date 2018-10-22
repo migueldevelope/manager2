@@ -3018,7 +3018,7 @@ namespace Manager.Services.Specific
         CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(link);
         CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
         CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("reports");
-        if (cloudBlobContainer.CreateIfNotExistsAsync().Result)
+        if (cloudBlobContainer.CreateIfNotExistsAsync().Result) 
         {
           cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
           {
