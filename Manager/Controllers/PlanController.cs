@@ -153,7 +153,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listplanactivity/{filter}/{count}/{page}")]
+    [Route("listplanactivity")]
     public List<PlanActivity> ListPlanActivity(string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
@@ -173,7 +173,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newplanactivity")]
-    public string NewPlanActivity(PlanActivity model)
+    public string NewPlanActivity([FromBody]PlanActivity model)
     {
       return service.NewPlanActivity(model);
     }
@@ -181,7 +181,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateplanactivity")]
-    public string UpdatePlanActivity(PlanActivity model)
+    public string UpdatePlanActivity([FromBody]PlanActivity model)
     {
       return service.UpdatePlanActivity(model);
     }
