@@ -517,11 +517,11 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listoccupationedit/{idcompany}")]
-    public List<ViewOccupationListEdit> ListOccupationEdit(string idcompany, int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    [Route("listoccupationedit/{idcompany}/{idarea}")]
+    public List<ViewOccupationListEdit> ListOccupationEdit(string idcompany, string idarea, int count = 10, int page = 1, string filter = "", string filterGroup = "")
     {
       long total = 0;
-      var result = service.ListOccupationsEdit(idcompany, ref total, filter, count, page, filterGroup);
+      var result = service.ListOccupationsEdit(idcompany, idarea, ref total, filter, count, page, filterGroup);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

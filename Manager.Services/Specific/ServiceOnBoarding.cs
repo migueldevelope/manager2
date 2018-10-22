@@ -14,7 +14,7 @@ using System.Net.Http;
 
 namespace Manager.Services.Specific
 {
-  #pragma warning disable 1998
+#pragma warning disable 1998
   public class ServiceOnBoarding : Repository<OnBoarding>, IServiceOnBoarding
   {
     private readonly ServiceGeneric<OnBoarding> onBoardingService;
@@ -85,7 +85,7 @@ namespace Manager.Services.Specific
         LogSave(idmanager, "List");
         NewOnZero();
         int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator &  p.TypeJourney == EnumTypeJourney.OnBoarding & p.Manager._id == idmanager
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p.Manager._id == idmanager
         & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
         .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
@@ -132,7 +132,7 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(idmanager, "ListWait");
-        var item = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p._id == idmanager)
+        var item = personService.GetAll(p => (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p._id == idmanager)
         .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .FirstOrDefault();
 
@@ -307,7 +307,11 @@ namespace Manager.Services.Specific
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
           {
             onboarding.DateEndEnd = DateTime.Now;
-            onboarding.Person.TypeJourney = EnumTypeJourney.Checkpoint;
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              onboarding.Person.TypeJourney = EnumTypeJourney.Monitoring;
+            else
+              onboarding.Person.TypeJourney = EnumTypeJourney.Checkpoint;
+
             personService.Update(onboarding.Person, null);
           }
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
@@ -461,5 +465,5 @@ namespace Manager.Services.Specific
       }
     }
   }
-  #pragma warning restore 1998
+#pragma warning restore 1998
 }

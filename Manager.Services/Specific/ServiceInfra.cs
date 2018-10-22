@@ -376,10 +376,11 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var occupation = occupationService.GetAll(p => p._id == view.Occupation._id).FirstOrDefault();
         long order = 1;
         try
         {
-          order = occupationService.GetAll(p => p._id == view.Occupation._id).FirstOrDefault().Activities.Max(p => p.Order) + 1;
+          order = occupation.Activities.Max(p => p.Order) + 1;
           if (order == 0)
           {
             order = 1;
@@ -393,9 +394,9 @@ namespace Manager.Services.Specific
         view.Activities.Order = order;
         view.Activities._id = ObjectId.GenerateNewId().ToString();
         view.Activities._idAccount = view.Occupation._idAccount;
-        view.Occupation.Activities.Add(view.Activities);
-        occupationService.Update(view.Occupation, null);
-        UpdateOccupationAll(view.Occupation);
+        occupation.Activities.Add(view.Activities);
+        occupationService.Update(occupation, null);
+        UpdateOccupationAll(occupation);
         return "ok";
       }
       catch (Exception e)
@@ -1486,12 +1487,48 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup)
+    public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref long total, string filter, int count, int page, string filterGroup)
     {
       try
       {
+        var area = areaService.GetAll(p => p._id == idarea).FirstOrDefault();
+        var itens = occupationService.GetAll(p => p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        List<Occupation> list = new List<Occupation>();
+        foreach (var item in itens)
+        {
+          foreach (var proc in item.Process)
+          {
+            if (proc.ProcessLevelOne.Area != null)
+              if (proc.ProcessLevelOne.Area._id == area._id)
+              {
+                item.ProcessLevelTwo = proc;
+                list.Add(new Occupation()
+                {
+                  Name = item.Name,
+                  Group = item.Group,
+                  Area = proc.ProcessLevelOne.Area,
+                  Line = item.Line,
+                  Skills = item.Skills,
+                  Schooling = item.Schooling,
+                  Activities = item.Activities,
+                  Template = item.Template,
+                  ProcessLevelTwo = proc,
+                  CBO = item.CBO,
+                  SpecificRequirements = item.SpecificRequirements,
+                  Process = item.Process,
+                  _id = item._id,
+                  _idAccount = item._idAccount,
+                  Status = item.Status,
+                  Areas = item.Areas
+                });
+              }
+          }
+        }
+        list.OrderBy(p => p.Name).ToList();
+
         int skip = (count * (page - 1));
-        var itens = occupationService.GetAll(p => p.Group.Company._id == idcompany
+
+        var itensResult = list.Where(p => p.Group.Company._id == idcompany
         & p.Name.ToUpper().Contains(filter.ToUpper())
         & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).
           Skip(skip).Take(count)
@@ -1505,10 +1542,9 @@ namespace Manager.Services.Specific
             Occupation = p.Activities.Count() + p.Skills.Count()
           }).ToList();
 
-        total = occupationService.GetAll(p => p.Group.Company._id == idcompany
-        & p.Name.ToUpper().Contains(filter.ToUpper()) & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).Count();
+        total = itensResult.Count();
 
-        return itens;
+        return itensResult;
       }
       catch (Exception e)
       {

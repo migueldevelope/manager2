@@ -106,6 +106,6 @@ namespace Manager.Core.Interfaces
     List<Group> GetGroupsPrint(string idcompany);
 
     string GetCSVCompareGroup(string idcompany, string link);
-    List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup);
+    List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref long total, string filter, int count, int page, string filterGroup);
   }
 }
