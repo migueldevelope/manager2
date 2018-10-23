@@ -87,24 +87,17 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p.Manager._id == idmanager
         & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
-        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
         .ToList();
 
         var detail = new List<OnBoarding>();
         foreach (var item in list)
         {
-          if (item.OnBoarding == null)
-            detail.Add(new OnBoarding
-            {
-              Person = item.Person,
-              _id = null,
-              StatusOnBoarding = EnumStatusOnBoarding.Open
-            });
-          else
-            if (item.OnBoarding.StatusOnBoarding != EnumStatusOnBoarding.End)
-            detail.Add(item.OnBoarding);
+
+
+          if ((item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation) || (item.Person.TypeJourney == EnumTypeJourney.OnBoarding))
           {
-            if (item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            if (item.OnBoarding == null)
               detail.Add(new OnBoarding
               {
                 Person = item.Person,
@@ -112,7 +105,7 @@ namespace Manager.Services.Specific
                 StatusOnBoarding = EnumStatusOnBoarding.Open
               });
             else
-              return null;
+              detail.Add(item.OnBoarding);
           }
         }
 
@@ -144,30 +137,20 @@ namespace Manager.Services.Specific
       {
         LogSave(idmanager, "ListWait");
         var item = personService.GetAll(p => (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p._id == idmanager)
-        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
         .FirstOrDefault();
 
         if (item == null)
         {
           item = personService.GetAll(p => (p.TypeJourney == null) & p._id == idmanager)
-        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
         .FirstOrDefault();
           return null;
         }
 
-        if (item.OnBoarding == null)
-          return new OnBoarding
-          {
-            Person = item.Person,
-            _id = null,
-            StatusOnBoarding = EnumStatusOnBoarding.Open
-          };
-        else
-         if (item.OnBoarding.StatusOnBoarding != EnumStatusOnBoarding.End)
-          return item.OnBoarding;
-        else
+        if ((item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation) || (item.Person.TypeJourney == EnumTypeJourney.OnBoarding))
         {
-          if (item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+          if (item.OnBoarding == null)
             return new OnBoarding
             {
               Person = item.Person,
@@ -175,8 +158,10 @@ namespace Manager.Services.Specific
               StatusOnBoarding = EnumStatusOnBoarding.Open
             };
           else
-            return null;
+            return item.OnBoarding;
         }
+        else
+          return null;
 
       }
       catch (Exception e)
