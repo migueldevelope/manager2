@@ -1496,23 +1496,21 @@ namespace Manager.Services.Specific
         List<Occupation> list = new List<Occupation>();
         foreach (var item in itens)
         {
-          foreach (var proc in item.Process)
+          if (item.Areas != null)
           {
-            if (proc.ProcessLevelOne.Area != null)
-              if (proc.ProcessLevelOne.Area._id == area._id)
+            if(item.Areas.FirstOrDefault() != null)
+            {
+              if (item.Areas.Where(p => p._id == idarea).Count() > 0)
               {
-                item.ProcessLevelTwo = proc;
                 list.Add(new Occupation()
                 {
                   Name = item.Name,
                   Group = item.Group,
-                  Area = proc.ProcessLevelOne.Area,
                   Line = item.Line,
                   Skills = item.Skills,
                   Schooling = item.Schooling,
                   Activities = item.Activities,
                   Template = item.Template,
-                  ProcessLevelTwo = proc,
                   CBO = item.CBO,
                   SpecificRequirements = item.SpecificRequirements,
                   Process = item.Process,
@@ -1522,6 +1520,8 @@ namespace Manager.Services.Specific
                   Areas = item.Areas
                 });
               }
+            
+            }
           }
         }
         list.OrderBy(p => p.Name).ToList();
@@ -1542,7 +1542,7 @@ namespace Manager.Services.Specific
             Occupation = p.Activities.Count() + p.Skills.Count()
           }).ToList();
 
-        total = itensResult.Count();
+        total = list.Count();
 
         return itensResult;
       }
@@ -3054,7 +3054,7 @@ namespace Manager.Services.Specific
         CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(link);
         CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
         CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("reports");
-        if (cloudBlobContainer.CreateIfNotExistsAsync().Result) 
+        if (cloudBlobContainer.CreateIfNotExistsAsync().Result)
         {
           cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
           {
