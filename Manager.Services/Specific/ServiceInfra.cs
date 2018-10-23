@@ -3044,13 +3044,12 @@ namespace Manager.Services.Specific
 
 
 
-        var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMdd") + _user._idPerson + ".csv";
+        var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMddHHmmss") + _user._idPerson + ".csv";
 
-        //MemoryStream memoryStream = new MemoryStream();
+        
         File.WriteAllLines(filename, rel);
-
-        FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-
+        var stream = new StreamReader(File.OpenText(filename).BaseStream);
+        
 
         var person = personService.GetAll(p => p.Mail == _user.Mail).FirstOrDefault();
 
@@ -3065,8 +3064,8 @@ namespace Manager.Services.Specific
           });
         }
         CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", _user._idPerson.ToString(), ".csv"));
-        blockBlob.Properties.ContentType = "CSV";
-        blockBlob.UploadFromStreamAsync(stream);
+        blockBlob.Properties.ContentType = "text/csv";
+        blockBlob.UploadFromStreamAsync(stream.BaseStream).Wait();
         return blockBlob.Uri.ToString();
 
         /*
