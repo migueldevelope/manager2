@@ -1931,6 +1931,7 @@ namespace Manager.Services.Specific
 
         foreach (var item in occupation.Process)
           areas.Add(item.ProcessLevelOne.Area);
+
         if (groupOld != occupation.Group)
         {
           foreach (var school in occupation.Group.Schooling)
@@ -1945,7 +1946,7 @@ namespace Manager.Services.Specific
           occupation.Schooling = occupation.Group.Schooling;
         }
 
-
+        occupation.Areas = areas;
         occupationService.Update(occupation, null);
         UpdateOccupationAll(occupation);
         return "update";

@@ -103,6 +103,17 @@ namespace Manager.Services.Specific
           else
             if (item.OnBoarding.StatusOnBoarding != EnumStatusOnBoarding.End)
             detail.Add(item.OnBoarding);
+          {
+            if (item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              detail.Add(new OnBoarding
+              {
+                Person = item.Person,
+                _id = null,
+                StatusOnBoarding = EnumStatusOnBoarding.Open
+              });
+            else
+              return null;
+          }
         }
 
         total = detail.Count();
@@ -155,8 +166,17 @@ namespace Manager.Services.Specific
          if (item.OnBoarding.StatusOnBoarding != EnumStatusOnBoarding.End)
           return item.OnBoarding;
         else
-          return null;
-
+        {
+          if (item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            return new OnBoarding
+            {
+              Person = item.Person,
+              _id = null,
+              StatusOnBoarding = EnumStatusOnBoarding.Open
+            };
+          else
+            return null;
+        }
 
       }
       catch (Exception e)
