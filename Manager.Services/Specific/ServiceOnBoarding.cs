@@ -118,12 +118,16 @@ namespace Manager.Services.Specific
       }
     }
 
-    public OnBoarding PersonOnBoardingsEnd(string idmanager)
+    public List<OnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
-        LogSave(idmanager, "PersonEnd");
-        return onBoardingService.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
+        LogSave(idmanager, "ListPersonEnd");
+        int skip = (count * (page - 1));
+        var detail = onBoardingService.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = onBoardingService.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail;
       }
       catch (Exception e)
       {

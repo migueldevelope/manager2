@@ -60,12 +60,13 @@ namespace Manager.Controllers
       return result;
     }
 
-    [Authorize]
-    [HttpGet]
     [Route("personend/{idmanager}")]
-    public OnBoarding ListEndPerson(string idmanager)
+    public List<OnBoarding> PersonOnBoardingsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
-      return service.PersonOnBoardingsEnd(idmanager);
+      long total = 0;
+      var result = service.PersonOnBoardingsEnd(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
     [Authorize]

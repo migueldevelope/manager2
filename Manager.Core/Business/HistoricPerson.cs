@@ -9,12 +9,10 @@ namespace Manager.Core.Business
   {
     public string _idPerson { get; set; }
     public string Name { get; set; }
+    public string Old { get; set; }
+    public string New { get; set; }
     public DateTime? Date { get; set; }
     public EnumTypeHistoric TypeHistoric { get; set; }
-    public Occupation OccuationOld { get; set; }
-    public Occupation OccuationNew { get; set; }
-    public EnumStatusUser StatusUser { get; set; }
-
 
   }
 }

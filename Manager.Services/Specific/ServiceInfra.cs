@@ -3045,9 +3045,11 @@ namespace Manager.Services.Specific
 
 
         var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMdd") + _user._idPerson + ".csv";
+
+        //MemoryStream memoryStream = new MemoryStream();
         File.WriteAllLines(filename, rel);
 
-        FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
 
 
         var person = personService.GetAll(p => p.Mail == _user.Mail).FirstOrDefault();

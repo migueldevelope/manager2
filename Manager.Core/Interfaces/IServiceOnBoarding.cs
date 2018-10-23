@@ -10,7 +10,7 @@ namespace Manager.Core.Interfaces
     List<OnBoarding> ListOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
     OnBoarding GetOnBoardings(string id);
     OnBoarding PersonOnBoardingsWait(string idmanager);
-    OnBoarding PersonOnBoardingsEnd(string idmanager);
+    List<OnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
     OnBoarding NewOnBoarding(OnBoarding onboarding, string idperson);
     string UpdateOnBoarding(OnBoarding onboarding, string idperson);
     string RemoveOnBoarding(string idperson);
