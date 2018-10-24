@@ -2,6 +2,6 @@
 {
   public enum EnumTypeAction : byte
   {
-    None = 0, DevelopmentAuto = 1, Trainning = 2, Coaching = 4, JobRotation = 5, OnTheJob = 6, Project = 7, Group = 8, Benchmarking = 9
+    DevelopmentAuto = 0, Trainning = 1, Coaching = 2, JobRotation = 3, OnTheJob = 4, Project = 5, Group = 6, Benchmarking = 7, Task = 8
   }
 }
