@@ -3068,38 +3068,6 @@ namespace Manager.Services.Specific
         blockBlob.UploadFromStreamAsync(stream.BaseStream).Wait();
         return blockBlob.Uri.ToString();
 
-        /*
-        using (var client = new HttpClient())
-        {
-          client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            mail = person.Mail,
-            password = person.Password
-          };
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          var contentAttachment = new StreamContent(stream);
-          contentAttachment.Headers.ContentType.MediaType = "multipart/form-data";
-
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-          var clientAtt = new HttpClient();
-          //clientAtt.BaseAddress = new Uri("http://localhost:53255/");
-          clientAtt.BaseAddress = new Uri(link);
-          clientAtt.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
-          var resultLink = clientAtt.PostAsync("attachment/upload/link", contentAttachment).Result;
-
-
-          var linkReturn = resultLink.Content.ReadAsStringAsync().Result;
-
-
-          return linkReturn;
-        }
-        */
-        return "";
       }
       catch (Exception e)
       {
