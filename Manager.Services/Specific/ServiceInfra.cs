@@ -1498,7 +1498,7 @@ namespace Manager.Services.Specific
         {
           if (item.Areas != null)
           {
-            if(item.Areas.FirstOrDefault() != null)
+            if (item.Areas.FirstOrDefault() != null)
             {
               if (item.Areas.Where(p => p._id == idarea).Count() > 0)
               {
@@ -1520,7 +1520,7 @@ namespace Manager.Services.Specific
                   Areas = item.Areas
                 });
               }
-            
+
             }
           }
         }
@@ -3046,10 +3046,10 @@ namespace Manager.Services.Specific
 
         var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMddHHmmss") + _user._idPerson + ".csv";
 
-        
-        File.WriteAllLines(filename, rel);
-        var stream = new StreamReader(File.OpenText(filename).BaseStream);
-        
+
+        File.WriteAllLines(filename, rel, Encoding.GetEncoding("iso-8859-1"));
+        var stream = new StreamReader(File.OpenText(filename).BaseStream, Encoding.GetEncoding("iso-8859-1"));
+
 
         var person = personService.GetAll(p => p.Mail == _user.Mail).FirstOrDefault();
 
