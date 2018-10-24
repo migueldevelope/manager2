@@ -2977,7 +2977,7 @@ namespace Manager.Services.Specific
           foreach (var scholling in item.Schooling)
           {
             if (line > maxLineSchooling)
-              maxLineSchooling = line = 0; ;
+              maxLineSchooling = line;
 
             var result = new ViewCSVLO();
             result.Name = scholling.Name;
