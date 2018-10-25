@@ -1,14 +1,7 @@
-﻿using System.ComponentModel;
-
-namespace IntegrationService.Enumns
+﻿namespace IntegrationService.Enumns
 {
   public enum EnumIntegrationType : byte
   {
-    [Description("Básico")]
-    Basic = 0,
-    [Description("Completo")]
-    Complete = 1,
-    [Description("Customizado")]
-    Custom = 2
+    Basic = 0, Complete = 1, Custom = 2
   }
 }

@@ -50,11 +50,17 @@ namespace IntegrationClient
 
         serviceConfiguration = new ConfigurationService(Person);
 
+        cboProc.DataSource = Enum.GetValues(typeof(EnumIntegrationProcess));
         cboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
         cboType.DataSource = Enum.GetValues(typeof(EnumIntegrationType));
 
-        cboMode.SelectedItem = Enum.GetName(typeof(EnumIntegrationMode), serviceConfiguration.Param.Mode);
-        cboType.SelectedItem = Enum.GetName(typeof(EnumIntegrationType), serviceConfiguration.Param.Type);
+        cboProc.SelectedIndex = cboProc.FindStringExact(serviceConfiguration.Param.Process.ToString());
+        cboMode.SelectedIndex = cboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
+        cboType.SelectedIndex = cboType.FindStringExact(serviceConfiguration.Param.Type.ToString());
+
+        //cboProc.SelectedItem = Enum.GetName(typeof(EnumIntegrationMode), serviceConfiguration.Param.Process);
+        //cboMode.SelectedItem = Enum.GetName(typeof(EnumIntegrationMode), serviceConfiguration.Param.Mode);
+        //cboType.SelectedItem = Enum.GetName(typeof(EnumIntegrationType), serviceConfiguration.Param.Type);
       }
       catch (Exception ex)
       {
@@ -89,86 +95,84 @@ namespace IntegrationClient
 
     private void Button2_Click(object sender, EventArgs e)
     {
-      List<Colaborador> lista = new List<Colaborador>();
-      Colaborador colaborador = new Colaborador()
-      {
-        Empresa = "100",
-        NomeEmpresa = "Analisa",
-        Estabelecimento = "1",
-        NomeEstabelecimento = "Analisa",
-        Documento ="57763771020",
-        Matricula = 1,
-        Nome = "Juremir Milani Novo",
-        Email = "juremir@jmsoft.com.br",
-        DataNascimento = new DateTime(1971,07,01),
-        Celular = "54 991089092",
-        Telefone = "54 32025412",
-        Identidade = "8049471331",
-        CarteiraProfissional = "cart_prof",
-        Sexo = "Masculino",
-        DataAdmissao = new DateTime(1994,12,15),
-        Situacao = "Ativo",
-        DataRetornoFerias = null,
-        MotivoAfastamento =  string.Empty,
-        DataDemissao = null,
-        Cargo = "2043",
-        NomeCargo  = "Analista de Sistemas",
-        DataUltimaTrocaCargo = null,
-        GrauInstrucao = "15",
-        NomeGrauInstrucao = "Superior Incompleto",
-        SalarioNominal = 4130,
-        DataUltimoReajuste = null,
-        DocumentoChefe = string.Empty,
-        EmpresaChefe = string.Empty,
-        NomeEmpresaChefe = string.Empty,
-        MatriculaChefe = 0,
-        NomeChefe = string.Empty
-      };
-      lista.Add(colaborador);
-      colaborador = new Colaborador()
-      {
-        Empresa = "100",
-        NomeEmpresa = "Analisa",
-        Estabelecimento = "1",
-        NomeEstabelecimento = "Analisa",
-        Documento = "99999999999",
-        Matricula = 2,
-        Nome = "Colaborador 1",
-        Email = "colaborador1@jmsoft.com.br",
-        DataNascimento = new DateTime(2001, 07, 14),
-        Celular = "54 991089092",
-        Telefone = "54 32025412",
-        Identidade = "8049471331",
-        CarteiraProfissional = "cart_prof",
-        Sexo = "Feminino",
-        DataAdmissao = new DateTime(2007, 06, 30),
-        Situacao = "Ativo",
-        DataRetornoFerias = null,
-        MotivoAfastamento = string.Empty,
-        DataDemissao = null,
-        Cargo = "2043",
-        NomeCargo = "Analista de Sistemas",
-        DataUltimaTrocaCargo = null,
-        GrauInstrucao = "15",
-        NomeGrauInstrucao = "Superior Incompleto",
-        SalarioNominal = 4130,
-        DataUltimoReajuste = null,
-        //DocumentoChefe = string.Empty,
-        //EmpresaChefe = string.Empty,
-        //NomeEmpresaChefe = string.Empty,
-        //MatriculaChefe = 0,
-        //NomeChefe = string.Empty
-        DocumentoChefe = "57763771020",
-        EmpresaChefe = "100",
-        NomeEmpresaChefe = "Analisa",
-        MatriculaChefe = 1,
-        NomeChefe = "Juremir Milani"
-      };
-      lista.Add(colaborador);
-
-      ImportService import = new ImportService(Person);
-      import.FinalImport(lista);
-      MessageBox.Show(import.Message);
+      //ImportService import = new ImportService(Person);
+      //Colaborador colaborador = new Colaborador()
+      //{
+      //  NomeEmpresa = "Analisa",
+      //  NomeEstabelecimento = "Analisa",
+      //  Documento ="57763771020",
+      //  Matricula = 1,
+      //  Nome = "Juremir Milani Novo",
+      //  Email = "juremir@jmsoft.com.br",
+      //  DataNascimento = new DateTime(1971,07,01),
+      //  Celular = "54 991089092",
+      //  Telefone = "54 32025412",
+      //  Identidade = "8049471331",
+      //  CarteiraProfissional = "cart_prof",
+      //  Sexo = "Masculino",
+      //  DataAdmissao = new DateTime(1994,12,15),
+      //  Situacao = "Ativo",
+      //  DataRetornoFerias = null,
+      //  MotivoAfastamento =  string.Empty,
+      //  DataDemissao = null,
+      //  NomeCargo  = "Analista de Sistemas",
+      //  DataUltimaTrocaCargo = null,
+      //  NomeGrauInstrucao = "Superior Incompleto",
+      //  SalarioNominal = 4130,
+      //  DataUltimoReajuste = null,
+      //  DocumentoChefe = string.Empty,
+      //  NomeEmpresaChefe = string.Empty,
+      //  MatriculaChefe = 0,
+      //  NomeChefe = string.Empty
+      //};
+      //import.AddColaborador(colaborador);
+      //if (import.Status == EnumStatusService.Error)
+      //{
+      //  MessageBox.Show(import.Message);
+      //  return;
+      //}
+      //colaborador = new Colaborador()
+      //{
+      //  NomeEmpresa = "Analisa",
+      //  NomeEstabelecimento = "Analisa",
+      //  Documento = "99999999999",
+      //  Matricula = 2,
+      //  Nome = "Colaborador 1",
+      //  Email = "colaborador1@jmsoft.com.br",
+      //  DataNascimento = new DateTime(2001, 07, 14),
+      //  Celular = "54 991089092",
+      //  Telefone = "54 32025412",
+      //  Identidade = "8049471331",
+      //  CarteiraProfissional = "cart_prof",
+      //  Sexo = "Feminino",
+      //  DataAdmissao = new DateTime(2007, 06, 30),
+      //  Situacao = "Ativo",
+      //  DataRetornoFerias = null,
+      //  MotivoAfastamento = string.Empty,
+      //  DataDemissao = null,
+      //  NomeCargo = "Analista de Sistemas",
+      //  DataUltimaTrocaCargo = null,
+      //  NomeGrauInstrucao = "Superior Incompleto",
+      //  SalarioNominal = 4130,
+      //  DataUltimoReajuste = null,
+      //  //DocumentoChefe = string.Empty,
+      //  //EmpresaChefe = string.Empty,
+      //  //NomeEmpresaChefe = string.Empty,
+      //  //MatriculaChefe = 0,
+      //  //NomeChefe = string.Empty
+      //  DocumentoChefe = "57763771020",
+      //  NomeEmpresaChefe = "Analisa",
+      //  MatriculaChefe = 1,
+      //  NomeChefe = "Juremir Milani"
+      //};
+      //import.AddColaborador(colaborador);
+      //if (import.Status == EnumStatusService.Error)
+      //{
+      //  MessageBox.Show(import.Message);
+      //  return;
+      //}
+      //import.FinalImport();
+      //MessageBox.Show(import.Message);
     }
 
     private void CboMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -198,6 +202,7 @@ namespace IntegrationClient
         txtPassword.Text = string.Empty;
         txtDefault.Text = string.Empty;
         txtSql.Text = string.Empty;
+        txtFileName.Text = serviceConfiguration.Param.FilePathLocal;
         grpArq.Text = "Arquivo Csv";
       }
       if (cboMode.SelectedItem.ToString().StartsWith("FileExcel"))
@@ -210,6 +215,7 @@ namespace IntegrationClient
         txtPassword.Text = string.Empty;
         txtDefault.Text = string.Empty;
         txtSql.Text = string.Empty;
+        txtFileName.Text = serviceConfiguration.Param.FilePathLocal;
         grpArq.Text = "Arquivo Microsoft Excel";
       }
     }
@@ -252,6 +258,7 @@ namespace IntegrationClient
         {
           ConnectionString = string.Format("{0};{1};{2};{3};{4}", chkOra.Checked ? "Oracle" : "SqlServer", txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text),
           FilePathLocal = txtFileName.Text,
+          Process = (EnumIntegrationProcess)cboProc.SelectedItem,
           Mode = (EnumIntegrationMode)cboMode.SelectedItem,
           Type = (EnumIntegrationType)cboType.SelectedItem,
           SqlCommand = txtSql.Text
@@ -268,11 +275,55 @@ namespace IntegrationClient
     {
       try
       {
-        if ((EnumIntegrationMode)cboMode.SelectedItem == EnumIntegrationMode.DataBaseV1)
+        ImportService import = new ImportService(Person);
+        switch ((EnumIntegrationProcess)cboProc.SelectedItem)
         {
-          ImportService import = new ImportService(Person);
-          import.DatabaseV1(serviceConfiguration.Param);
-          MessageBox.Show(import.Message);
+          case EnumIntegrationProcess.Manual:
+            switch ((EnumIntegrationMode)cboMode.SelectedItem)
+            {
+              case EnumIntegrationMode.DataBaseV1:
+                MessageBox.Show("Modo banco de dados não suportado no processo manual!");
+                return;
+              case EnumIntegrationMode.FileCsvV1:
+                import.FileCsvV1(serviceConfiguration);
+                break;
+              case EnumIntegrationMode.FileExcelV1:
+                break;
+              case EnumIntegrationMode.Custom:
+                MessageBox.Show("Modo customizado não suportado no processo manual!");
+                return;
+            }
+            break;
+          case EnumIntegrationProcess.System:
+            switch ((EnumIntegrationMode)cboMode.SelectedItem)
+            {
+              case EnumIntegrationMode.DataBaseV1:
+                import.DatabaseV1(serviceConfiguration);
+                break;
+              case EnumIntegrationMode.FileCsvV1:
+                import.FileCsvV1(serviceConfiguration);
+                break;
+              case EnumIntegrationMode.FileExcelV1:
+                break;
+              case EnumIntegrationMode.Custom:
+                MessageBox.Show("Modo customizado não suportado no processo manual!");
+                return;
+            }
+            break;
+          case EnumIntegrationProcess.Executable:
+            break;
+          default:
+            break;
+        }
+        if (import.Status == EnumStatusService.Error)
+          MessageBox.Show(import.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        else
+        {
+          import.FinalImport(serviceConfiguration);
+          if (import.Status == EnumStatusService.Error)
+            MessageBox.Show(import.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          else
+            MessageBox.Show(import.Message, "Ok", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
       }
       catch (Exception ex) 
@@ -303,5 +354,55 @@ namespace IntegrationClient
       }
     }
 
+    [STAThread]
+    private void BtSearchFile_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        txtFileName.Text = @"E:\Analisa2018\Clientes\Layout_Manual_Completo_v1.csv";
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    private void BtSaveFile_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (string.IsNullOrEmpty(txtFileName.Text))
+        {
+          MessageBox.Show("O nome do arquivo deve ser informado.");
+          txtFileName.Focus();
+          return;
+        }
+        if (!File.Exists(txtFileName.Text))
+        {
+          MessageBox.Show("O arquivo informado deve existir.");
+          txtFileName.Focus();
+          return;
+        }
+        serviceConfiguration.SetParameter(new ViewIntegrationParameterMode()
+        {
+          ConnectionString = string.Empty,
+          FilePathLocal = txtFileName.Text,
+          Process = (EnumIntegrationProcess)cboProc.SelectedItem,
+          Mode = (EnumIntegrationMode)cboMode.SelectedItem,
+          Type = (EnumIntegrationType)cboType.SelectedItem,
+          SqlCommand = string.Empty
+        });
+        MessageBox.Show("Parâmetro atualizado!");
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.ToString());
+      }
+    }
+
+    private void CboProc_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+    }
   }
 }

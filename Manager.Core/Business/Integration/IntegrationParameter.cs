@@ -7,6 +7,7 @@ namespace Manager.Core.Business.Integration
     public class IntegrationParameter : BaseEntity
   {
     public EnumIntegrationType Type { get; set; }
+    public EnumIntegrationProcess Process { get; set; }
     public EnumIntegrationMode Mode { get; set; }
     // =========== Pack Version ===========
     public string VersionPackProgram { get; set; }

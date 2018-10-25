@@ -18,7 +18,7 @@ namespace IntegrationService.Service
         {
           Document = document,
           CompanyCode = company,
-          CompanyId = string.Empty,
+          CompanyName = string.Empty,
           Registration = registration,
           Name = name
         };
@@ -31,7 +31,7 @@ namespace IntegrationService.Service
         {
           Document = document,
           CompanyCode = company,
-          CompanyId = string.Empty,
+          CompanyName = string.Empty,
           Registration = registration,
           Name = name,
           IdPerson = string.Empty,

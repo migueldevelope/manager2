@@ -266,6 +266,7 @@ namespace Manager.Services.Specific
       {
         IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
         param.Mode = view.Mode;
+        param.Process = view.Process;
         param.Type = view.Type;
         param.ConnectionString = view.ConnectionString;
         param.SqlCommand = view.SqlCommand;

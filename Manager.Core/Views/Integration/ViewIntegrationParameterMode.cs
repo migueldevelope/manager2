@@ -4,6 +4,7 @@ namespace Manager.Core.Views.Integration
 {
   public class ViewIntegrationParameterMode
   {
+    public EnumIntegrationProcess Process { get; set; }
     public EnumIntegrationType Type { get; set; }
     public EnumIntegrationMode Mode { get; set; }
     public string ConnectionString { get; set; }

@@ -4,7 +4,7 @@
   {
     public string Document { get; set; }
     public string CompanyCode { get; set; }
-    public string CompanyId { get; set; }
+    public string CompanyName { get; set; }
     public long Registration { get; set; }
     public string Name { get; set; }
     public string IdPerson { get; set; }

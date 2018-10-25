@@ -59,8 +59,9 @@
       this.btSearchFile = new System.Windows.Forms.Button();
       this.txtFileName = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
-      this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
       this.btImp = new System.Windows.Forms.Button();
+      this.cboProc = new System.Windows.Forms.ComboBox();
+      this.label12 = new System.Windows.Forms.Label();
       this.grpBD.SuspendLayout();
       this.grpArq.SuspendLayout();
       this.SuspendLayout();
@@ -68,9 +69,9 @@
       // txtEma
       // 
       this.txtEma.Enabled = false;
-      this.txtEma.Location = new System.Drawing.Point(466, 33);
+      this.txtEma.Location = new System.Drawing.Point(553, 33);
       this.txtEma.Name = "txtEma";
-      this.txtEma.Size = new System.Drawing.Size(241, 22);
+      this.txtEma.Size = new System.Drawing.Size(254, 22);
       this.txtEma.TabIndex = 7;
       // 
       // lblUrl
@@ -93,7 +94,7 @@
       // lblEma
       // 
       this.lblEma.AutoSize = true;
-      this.lblEma.Location = new System.Drawing.Point(413, 36);
+      this.lblEma.Location = new System.Drawing.Point(500, 36);
       this.lblEma.Name = "lblEma";
       this.lblEma.Size = new System.Drawing.Size(47, 17);
       this.lblEma.TabIndex = 6;
@@ -101,7 +102,7 @@
       // 
       // btChange
       // 
-      this.btChange.Location = new System.Drawing.Point(713, 33);
+      this.btChange.Location = new System.Drawing.Point(818, 33);
       this.btChange.Name = "btChange";
       this.btChange.Size = new System.Drawing.Size(75, 23);
       this.btChange.TabIndex = 9;
@@ -121,7 +122,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(13, 64);
+      this.label2.Location = new System.Drawing.Point(413, 64);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(134, 17);
       this.label2.TabIndex = 14;
@@ -130,7 +131,7 @@
       // cboMode
       // 
       this.cboMode.FormattingEnabled = true;
-      this.cboMode.Location = new System.Drawing.Point(153, 61);
+      this.cboMode.Location = new System.Drawing.Point(553, 61);
       this.cboMode.Name = "cboMode";
       this.cboMode.Size = new System.Drawing.Size(254, 24);
       this.cboMode.TabIndex = 15;
@@ -170,7 +171,7 @@
       this.grpBD.Controls.Add(this.txtUser);
       this.grpBD.Location = new System.Drawing.Point(16, 121);
       this.grpBD.Name = "grpBD";
-      this.grpBD.Size = new System.Drawing.Size(780, 498);
+      this.grpBD.Size = new System.Drawing.Size(877, 498);
       this.grpBD.TabIndex = 20;
       this.grpBD.TabStop = false;
       this.grpBD.Text = "Banco de Dados";
@@ -178,7 +179,7 @@
       // 
       // btSave
       // 
-      this.btSave.Location = new System.Drawing.Point(724, 469);
+      this.btSave.Location = new System.Drawing.Point(815, 469);
       this.btSave.Name = "btSave";
       this.btSave.Size = new System.Drawing.Size(56, 23);
       this.btSave.TabIndex = 58;
@@ -201,7 +202,7 @@
       this.txtSql.Location = new System.Drawing.Point(106, 114);
       this.txtSql.Multiline = true;
       this.txtSql.Name = "txtSql";
-      this.txtSql.Size = new System.Drawing.Size(612, 378);
+      this.txtSql.Size = new System.Drawing.Size(703, 378);
       this.txtSql.TabIndex = 56;
       // 
       // label6
@@ -228,7 +229,7 @@
       this.txtDefault.Font = new System.Drawing.Font("Tahoma", 8.25F);
       this.txtDefault.Location = new System.Drawing.Point(464, 84);
       this.txtDefault.Name = "txtDefault";
-      this.txtDefault.Size = new System.Drawing.Size(254, 24);
+      this.txtDefault.Size = new System.Drawing.Size(345, 24);
       this.txtDefault.TabIndex = 53;
       // 
       // label8
@@ -286,7 +287,7 @@
       // 
       this.txtUser.Location = new System.Drawing.Point(464, 54);
       this.txtUser.Name = "txtUser";
-      this.txtUser.Size = new System.Drawing.Size(254, 22);
+      this.txtUser.Size = new System.Drawing.Size(345, 22);
       this.txtUser.TabIndex = 49;
       // 
       // grpArq
@@ -299,7 +300,7 @@
       this.grpArq.Controls.Add(this.label10);
       this.grpArq.Location = new System.Drawing.Point(16, 121);
       this.grpArq.Name = "grpArq";
-      this.grpArq.Size = new System.Drawing.Size(780, 498);
+      this.grpArq.Size = new System.Drawing.Size(877, 498);
       this.grpArq.TabIndex = 21;
       this.grpArq.TabStop = false;
       this.grpArq.Text = "Arquivo CSV";
@@ -313,6 +314,7 @@
       this.btSaveFile.TabIndex = 20;
       this.btSaveFile.Text = "Salvar";
       this.btSaveFile.UseVisualStyleBackColor = true;
+      this.btSaveFile.Click += new System.EventHandler(this.BtSaveFile_Click);
       // 
       // textBox2
       // 
@@ -340,6 +342,7 @@
       this.btSearchFile.TabIndex = 17;
       this.btSearchFile.Text = "...";
       this.btSearchFile.UseVisualStyleBackColor = true;
+      this.btSearchFile.Click += new System.EventHandler(this.BtSearchFile_Click);
       // 
       // txtFileName
       // 
@@ -358,27 +361,42 @@
       this.label10.TabIndex = 15;
       this.label10.Text = "Arquivo";
       // 
-      // openFileDialog1
-      // 
-      this.openFileDialog1.FileName = "openFileDialog1";
-      // 
       // btImp
       // 
-      this.btImp.Location = new System.Drawing.Point(466, 64);
+      this.btImp.Location = new System.Drawing.Point(553, 88);
       this.btImp.Name = "btImp";
-      this.btImp.Size = new System.Drawing.Size(241, 23);
+      this.btImp.Size = new System.Drawing.Size(254, 23);
       this.btImp.TabIndex = 31;
       this.btImp.Text = "Importar Colaborador";
       this.btImp.UseVisualStyleBackColor = true;
       this.btImp.Click += new System.EventHandler(this.BtImp_Click);
       // 
+      // cboProc
+      // 
+      this.cboProc.FormattingEnabled = true;
+      this.cboProc.Location = new System.Drawing.Point(153, 61);
+      this.cboProc.Name = "cboProc";
+      this.cboProc.Size = new System.Drawing.Size(254, 24);
+      this.cboProc.TabIndex = 33;
+      this.cboProc.SelectedIndexChanged += new System.EventHandler(this.CboProc_SelectedIndexChanged);
+      // 
+      // label12
+      // 
+      this.label12.AutoSize = true;
+      this.label12.Location = new System.Drawing.Point(13, 64);
+      this.label12.Name = "label12";
+      this.label12.Size = new System.Drawing.Size(119, 17);
+      this.label12.TabIndex = 32;
+      this.label12.Text = "Tipo de Processo";
+      // 
       // MenuPrincipal
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(804, 631);
+      this.ClientSize = new System.Drawing.Size(899, 631);
+      this.Controls.Add(this.cboProc);
+      this.Controls.Add(this.label12);
       this.Controls.Add(this.btImp);
-      this.Controls.Add(this.grpBD);
       this.Controls.Add(this.cboType);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.cboMode);
@@ -390,6 +408,7 @@
       this.Controls.Add(this.txtUrl);
       this.Controls.Add(this.lblEma);
       this.Controls.Add(this.grpArq);
+      this.Controls.Add(this.grpBD);
       this.Name = "MenuPrincipal";
       this.Text = "MenuPrincipal";
       this.Load += new System.EventHandler(this.MenuPrincipal_Load);
@@ -432,10 +451,11 @@
     private System.Windows.Forms.Button btSearchFile;
     private System.Windows.Forms.TextBox txtFileName;
     private System.Windows.Forms.Label label10;
-    private System.Windows.Forms.OpenFileDialog openFileDialog1;
     private System.Windows.Forms.Button btSaveFile;
     private System.Windows.Forms.TextBox textBox2;
     private System.Windows.Forms.Button btSave;
     private System.Windows.Forms.Button btImp;
+    private System.Windows.Forms.ComboBox cboProc;
+    private System.Windows.Forms.Label label12;
   }
 }

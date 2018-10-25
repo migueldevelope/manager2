@@ -27,6 +27,7 @@ namespace IntegrationService.Service
         {
           Documento = view.Document,
           Empresa = company.Code,
+          NomeEmpresa = company.Name,
           Matricula = view.Registration,
           Person = view.Person,
           Mensagem = string.Empty
@@ -37,7 +38,7 @@ namespace IntegrationService.Service
         Map = new MapPerson()
         {
           Documento = document,
-          Empresa = company.Code,
+          NomeEmpresa = company.Name,
           Matricula = registration,
           Person = null,
           Mensagem = ex.Message

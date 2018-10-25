@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager.Core.Enumns;
+using System;
 
 namespace Manager.Core.Views.Integration
 {
@@ -13,7 +14,7 @@ namespace Manager.Core.Views.Integration
     public string PhoneFixed { get; set; }
     public string DocumentID { get; set; }
     public string DocumentCTPF { get; set; }
-    public string Sex { get; set; }
+    public EnumSex Sex { get; set; }
     public ViewIntegrationMapOfV1 Schooling { get; set; }
     public ViewIntegrationContractV1 Contract { get; set; }
   }

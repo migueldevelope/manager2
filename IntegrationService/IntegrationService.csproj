@@ -72,8 +72,18 @@
     <Compile Include="Core\EnumValidKey.cs" />
     <Compile Include="Core\MapPerson.cs" />
     <Compile Include="Data\Colaborador.cs" />
+    <Compile Include="Enumns\EnumLayoutManualCompleteV1.cs" />
+    <Compile Include="Enumns\EnumLayoutManualBasicV1.cs" />
+    <Compile Include="Enumns\EnumIntegrationProcess.cs" />
+    <Compile Include="Enumns\EnumLayoutSystemCompleteV1.cs" />
+    <Compile Include="Enumns\EnumLayoutSystemBasicV1.cs" />
     <Compile Include="Enumns\EnumIntegrationType.cs" />
     <Compile Include="Enumns\EnumIntegrationMode.cs" />
+    <Compile Include="Enumns\EnumSex.cs" />
+    <Compile Include="Enumns\EnumStatusService.cs" />
+    <Compile Include="Enumns\EnumStatusUser.cs" />
+    <Compile Include="Enumns\EnumTypeJourney.cs" />
+    <Compile Include="Enumns\EnumTypeUser.cs" />
     <Compile Include="Service1.cs">
       <SubType>Component</SubType>
     </Compile>

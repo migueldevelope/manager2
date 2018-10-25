@@ -15,8 +15,8 @@ namespace IntegrationService.Service
       {
         Map = new ViewIntegrationMapOfV1()
         {
-          Code = code,
           Name = name,
+          Code = code,
           IdCompany = idCompany
         };
         PersonIntegration personIntegration = new PersonIntegration(person);

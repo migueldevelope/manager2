@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager.Core.Enumns;
+using System;
 
 namespace Manager.Core.Views.Integration
 {
@@ -10,8 +11,7 @@ namespace Manager.Core.Views.Integration
     public long Registration { get; set; }
     public ViewIntegrationMapOfV1 Establishment { get; set; }
     public DateTime? DateAdm { get; set; }
-    // Enabled = 0, Disabled = 1, Away = 2, Vacation = 3
-    public int StatusUser { get; set; }
+    public EnumStatusUser StatusUser { get; set; }
     public DateTime? HolidayReturn { get; set; }
     public string MotiveAside { get; set; }
     public DateTime? DateResignation { get; set; }
@@ -25,8 +25,8 @@ namespace Manager.Core.Views.Integration
     public long RegistrationManager { get; set; }
     public string NameManager { get; set; }
     // Support = 0, Administrator = 1, Manager = 2, Employee = 3, Anonymous = 4, HR = 5, ManagerHR = 6
-    public int TypeUser { get; set; }
-    // OnBoarding = 0, Monitoring = 1, Checkpoint = 2
-    public int TypeJourney { get; set; }
+    public EnumTypeUser TypeUser { get; set; }
+    // OnBoarding = 0, Monitoring = 1, Checkpoint = 2, OnBoardingOccupation = 3
+    public EnumTypeJourney TypeJourney { get; set; }
   }
 }

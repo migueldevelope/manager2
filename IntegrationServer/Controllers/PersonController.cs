@@ -66,7 +66,7 @@ namespace IntegrationServer.InfraController
             PhoneFixed = person.PhoneFixed,
             DocumentID = person.DocumentID,
             DocumentCTPF = person.DocumentCTPF,
-            Sex = person.Sex.ToString(),
+            Sex = person.Sex,
             Schooling = new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
             Contract = new ViewIntegrationContractV1()
             {
@@ -76,7 +76,7 @@ namespace IntegrationServer.InfraController
               Registration = person.Registration,
               Establishment = person.Establishment == null ? null : new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
               DateAdm = person.DateAdm,
-              StatusUser = (int)person.StatusUser,
+              StatusUser = person.StatusUser,
               HolidayReturn = person.HolidayReturn,
               MotiveAside = person.MotiveAside,
               DateResignation = person.DateResignation,
@@ -89,8 +89,8 @@ namespace IntegrationServer.InfraController
               CompanyManager = person.Manager == null ? null : new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
               RegistrationManager = person.Manager == null ? 0 : person.Manager.Registration,
               NameManager = person.Manager?.Name,
-              TypeUser = (int)person.TypeUser,
-              TypeJourney = (int)person.TypeJourney
+              TypeUser = person.TypeUser,
+              TypeJourney = person.TypeJourney
             },
           };
         }
@@ -163,7 +163,7 @@ namespace IntegrationServer.InfraController
           PhoneFixed = view.PhoneFixed,
           DocumentID = view.DocumentID,
           DocumentCTPF = view.DocumentCTPF,
-          Sex = view.Sex.Substring(0, 1).ToUpper() == "M" ? EnumSex.Male : view.Sex.Substring(0, 1).ToUpper() == "F" ? EnumSex.Female : EnumSex.Others,
+          Sex = view.Sex,
           HolidayReturn = view.Contract.HolidayReturn,
           MotiveAside = view.Contract.MotiveAside,
           DateLastOccupation =  view.Contract.DateLastOccupation,
@@ -195,7 +195,7 @@ namespace IntegrationServer.InfraController
             PhoneFixed = person.PhoneFixed,
             DocumentID = person.DocumentID,
             DocumentCTPF = person.DocumentCTPF,
-            Sex = person.Sex.ToString(),
+            Sex = person.Sex,
             Schooling = person.Schooling == null ? null : new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
             Contract = new ViewIntegrationContractV1()
             {
@@ -205,7 +205,7 @@ namespace IntegrationServer.InfraController
               Registration = person.Registration,
               Establishment = person.Establishment == null ? null : new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
               DateAdm = person.DateAdm,
-              StatusUser = (int)person.StatusUser,
+              StatusUser = person.StatusUser,
               HolidayReturn = person.HolidayReturn,
               MotiveAside = person.MotiveAside,
               DateResignation = person.DateResignation,
@@ -218,8 +218,8 @@ namespace IntegrationServer.InfraController
               CompanyManager = person.Manager == null ? null : new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
               RegistrationManager = person.Manager == null ? 0 : person.Manager.Registration,
               NameManager = person.Manager?.Name,
-              TypeUser = (int)person.TypeUser,
-              TypeJourney = (int)person.TypeJourney
+              TypeUser = person.TypeUser,
+              TypeJourney = person.TypeJourney
             }
           }
         };
@@ -260,7 +260,7 @@ namespace IntegrationServer.InfraController
         changePerson.PhoneFixed = view.PhoneFixed;
         changePerson.DocumentID = view.DocumentID;
         changePerson.DocumentCTPF = view.DocumentCTPF;
-        changePerson.Sex = view.Sex.Substring(0, 1).ToUpper() == "M" ? EnumSex.Male : view.Sex.Substring(0, 1).ToUpper() == "F" ? EnumSex.Female : EnumSex.Others;
+        changePerson.Sex = view.Sex;
         changePerson.HolidayReturn = view.Contract.HolidayReturn;
         changePerson.MotiveAside = view.Contract.MotiveAside;
         changePerson.DateLastOccupation = view.Contract.DateLastOccupation;
@@ -288,7 +288,7 @@ namespace IntegrationServer.InfraController
             PhoneFixed = person.PhoneFixed,
             DocumentID = person.DocumentID,
             DocumentCTPF = person.DocumentCTPF,
-            Sex = person.Sex.ToString(),
+            Sex = person.Sex,
             Schooling = new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
             Contract = new ViewIntegrationContractV1()
             {
@@ -298,7 +298,7 @@ namespace IntegrationServer.InfraController
               Registration = person.Registration,
               Establishment = new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
               DateAdm = person.DateAdm,
-              StatusUser = (int)person.StatusUser,
+              StatusUser = person.StatusUser,
               HolidayReturn = person.HolidayReturn,
               MotiveAside = person.MotiveAside,
               DateResignation = person.DateResignation,
@@ -311,8 +311,8 @@ namespace IntegrationServer.InfraController
               CompanyManager = new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
               RegistrationManager = person.Manager.Registration,
               NameManager = person.Manager.Name,
-              TypeUser = (int)person.TypeUser,
-              TypeJourney = (int)person.TypeJourney
+              TypeUser = person.TypeUser,
+              TypeJourney = person.TypeJourney
             }
           }
         };

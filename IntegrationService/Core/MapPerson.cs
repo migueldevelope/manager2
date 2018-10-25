@@ -1,9 +1,5 @@
 ﻿using IntegrationService.Data;
 using IntegrationService.Views.Person;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace IntegrationService.Core
 {
@@ -11,7 +7,9 @@ namespace IntegrationService.Core
   {
     public string Documento { get; set; }
     public string Empresa { get; set; }
+    public string NomeEmpresa { get; set; }
     public long Matricula { get; set; }
+    public ViewIntegrationPersonV1 Person { get; set; }
     public string Mensagem { get; set; }
     public Colaborador Colaborador { get; set; }
     public Colaborador ColaboradorAnterior { get; set; }
@@ -20,7 +18,6 @@ namespace IntegrationService.Core
     public ViewIntegrationMapOfV1 Establishment { get; set; }
     public ViewIntegrationMapOfV1 Occupation{ get; set; }
     public ViewIntegrationMapOfV1 CompanyManager { get; set; }
-    public ViewIntegrationMapManagerV1  Manager { get; set; }
-    public ViewIntegrationPersonV1 Person { get; set; }
+    public ViewIntegrationMapManagerV1 Manager { get; set; }
   }
 }

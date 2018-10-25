@@ -6,9 +6,8 @@ namespace IntegrationService.Views
   public class ViewIntegrationParameter
   {
     public string _id { get; set; }
-    // Basic = 0, Complete = 1, Custom = 2
     public EnumIntegrationType Type { get; set; }
-    // DataBaseV1 = 0, FileCsvV1 = 1, FileExcelV1 = 2
+    public EnumIntegrationProcess Process { get; set; }
     public EnumIntegrationMode Mode { get; set; }
     // =========== Pack Version ===========
     public string VersionPackProgram { get; set; }
