@@ -293,6 +293,9 @@ namespace Manager.Services.Specific
         //verify plan;
         foreach (var item in monitoring.Activities)
         {
+          if (item._id == null)
+            item._id = ObjectId.GenerateNewId().ToString();
+
           var listActivities = new List<Plan>();
           foreach (var plan in item.Plans)
           {

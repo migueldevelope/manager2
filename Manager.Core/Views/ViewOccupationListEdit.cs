@@ -5,8 +5,8 @@
     public string _id { get; set; }
     public string Name { get; set; }
     public string NameGroup { get; set; }
-    public long Company { get; set; }
-    public long Group { get; set; }
-    public long Occupation { get; set; }
+    public long Activities { get; set; }
+    public long Skills { get; set; }
+    public long Schooling { get; set; }
   }
 }

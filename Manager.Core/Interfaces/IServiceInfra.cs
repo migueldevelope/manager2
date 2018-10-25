@@ -32,7 +32,7 @@ namespace Manager.Core.Interfaces
     Occupation GetOccupation(string id);
     Occupation GetOccupation(string idcompany, string filterName);
     List<Group> GetGroups();
-    List<Group> GetGroups(string idcompany);
+    List<ViewGroupList> GetGroups(string idcompany);
     List<Occupation> GetOccupations();
     TextDefault GetTextDefault(string idcompany, string name);
     TextDefault GetTextDefault(string id);

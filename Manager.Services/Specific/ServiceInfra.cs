@@ -63,6 +63,7 @@ namespace Manager.Services.Specific
         textDefaultService = new ServiceGeneric<TextDefault>(context);
         cboService = new ServiceGeneric<CBO>(context);
         occupationMandatoryService = new ServiceGeneric<OccupationMandatory>(context);
+        occupationService = new ServiceGeneric<Occupation>(context);
         companyMandatoryService = new ServiceGeneric<CompanyMandatory>(context);
       }
       catch (Exception e)
@@ -1214,7 +1215,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<Group> groups = new List<Group>();
+
+        var groups = new List<Group>();
         foreach (var item in groupService.GetAll())
         {
           item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
@@ -1228,15 +1230,28 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Group> GetGroups(string idcompany)
+    public List<ViewGroupList> GetGroups(string idcompany)
     {
       try
       {
-        List<Group> groups = new List<Group>();
+        List<ViewGroupList> groups = new List<ViewGroupList>();
         foreach (var item in groupService.GetAll(p => p.Company._id == idcompany))
         {
-          item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
-          groups.Add(item);
+          var view = new ViewGroupList();
+          view.Name = item.Name;
+          view.Company = item.Company;
+          view.Axis = item.Axis;
+          view.Sphere = item.Sphere;
+          view.Line = item.Line;
+          view.Skills = item.Skills;
+          view.Schooling = item.Schooling;
+          view.Scope = item.Scope;
+          view.Template = item.Template;
+          view.Occupations = occupationService.GetAll(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
+          view.ScopeCount = item.Scope.Count();
+          view.SchollingCount = item.Schooling.Count();
+          view.SkillCount = item.Skills.Count();
+          groups.Add(view);
         }
         return groups.OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ThenBy(p => p.Line).ToList();
       }
@@ -1566,9 +1581,9 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name,
             NameGroup = p.Group.Name,
-            Company = p.Group.Company.Skills.Count(),
-            Group = p.Group.Scope.Count() + p.Group.Skills.Count(),
-            Occupation = p.Activities.Count() + p.Skills.Count()
+            Activities = p.Activities.Count(),
+            Skills = p.Skills.Count(),
+            Schooling = p.Schooling.Where(x=> x.Complement != null).Count()
           }).ToList();
 
         total = list.Count();
@@ -2946,7 +2961,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var groups = groupService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ToList();
+        var groups = groupService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ThenBy(p => p.Line).ToList();
 
         var head = string.Empty;
         var sphere = string.Empty;
@@ -3075,7 +3090,9 @@ namespace Manager.Services.Specific
 
 
 
-        var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMddHHmmss") + _user._idPerson + ".csv";
+        var guid = Guid.NewGuid().ToString();
+
+        var filename = "reports/LO" + DateTime.Now.ToString("yyyyMMddHHmmss") + guid + ".csv";
 
 
         File.WriteAllLines(filename, rel, Encoding.GetEncoding("iso-8859-1"));

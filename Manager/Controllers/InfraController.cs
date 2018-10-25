@@ -474,7 +474,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgroups/{idcompany}")]
-    public List<Group> GetGroups(string idcompany)
+    public List<ViewGroupList> GetGroups(string idcompany)
     {
       return service.GetGroups(idcompany);
     }
