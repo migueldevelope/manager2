@@ -2999,7 +2999,7 @@ namespace Manager.Services.Specific
               maxLine = line;
 
             var result = new ViewCSVLO();
-            result.Name = scope.Name;
+            result.Name = scope.Name.Replace("\n","").Replace(";",".");
             result.Line = line;
             result.Type = EnumTypeLO.Scope;
 
@@ -3014,7 +3014,7 @@ namespace Manager.Services.Specific
               maxLineSkill = line;
 
             var result = new ViewCSVLO();
-            result.Name = skill.Name + ":" + skill.Concept;
+            result.Name = skill.Name.Replace("\n", "").Replace(";", ".") + ":" + skill.Concept.Replace("\n", "").Replace(";", ".");
             result.Line = line;
             result.Type = EnumTypeLO.Skill;
 
@@ -3029,7 +3029,7 @@ namespace Manager.Services.Specific
               maxLineSchooling = line;
 
             var result = new ViewCSVLO();
-            result.Name = scholling.Name;
+            result.Name = scholling.Name.Replace("\n", "").Replace(";", ".");
             result.Line = line;
             result.Type = EnumTypeLO.Schooling;
 
