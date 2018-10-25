@@ -87,6 +87,7 @@ namespace Manager.Services.Specific
         {
           AddOccupationMandatory(new OccupationMandatory()
           {
+            Course = view.Course,
             Occupation = view.Occupation,
             BeginDate = view.BeginDate,
             TypeMandatoryTraining = view.TypeMandatoryTraining
@@ -318,6 +319,7 @@ namespace Manager.Services.Specific
         {
           AddPersonMandatory(new PersonMandatory()
           {
+            Course = view.Course,
             Person = view.Person,
             BeginDate = view.BeginDate,
             TypeMandatoryTraining = view.TypeMandatoryTraining
@@ -358,6 +360,7 @@ namespace Manager.Services.Specific
         {
           AddCompanyMandatory(new CompanyMandatory()
           {
+            Course = view.Course,
             Company = view.Company,
             BeginDate = view.BeginDate,
             TypeMandatoryTraining = view.TypeMandatoryTraining

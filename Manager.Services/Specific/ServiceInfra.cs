@@ -39,6 +39,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Questions> questionsService;
     private readonly ServiceGeneric<TextDefault> textDefaultService;
     private readonly ServiceGeneric<CBO> cboService;
+    private readonly ServiceGeneric<OccupationMandatory> occupationMandatoryService;
+    private readonly ServiceGeneric<CompanyMandatory> companyMandatoryService;
 
     public ServiceInfra(DataContext context)
       : base(context)
@@ -49,7 +51,6 @@ namespace Manager.Services.Specific
         dictionarySphereService = new ServiceGeneric<DictionarySphere>(context);
         axisService = new ServiceGeneric<Axis>(context);
         groupService = new ServiceGeneric<Group>(context);
-        occupationService = new ServiceGeneric<Occupation>(context);
         areaService = new ServiceGeneric<Area>(context);
         companyService = new ServiceGeneric<Company>(context);
         skillService = new ServiceGeneric<Skill>(context);
@@ -61,6 +62,8 @@ namespace Manager.Services.Specific
         questionsService = new ServiceGeneric<Questions>(context);
         textDefaultService = new ServiceGeneric<TextDefault>(context);
         cboService = new ServiceGeneric<CBO>(context);
+        occupationMandatoryService = new ServiceGeneric<OccupationMandatory>(context);
+        companyMandatoryService = new ServiceGeneric<CompanyMandatory>(context);
       }
       catch (Exception e)
       {
@@ -1317,6 +1320,32 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Course> GetCourseOccupation(string idoccuation, string idcompany, EnumTypeMandatoryTraining type)
+    {
+      try
+      {
+
+        var list = new List<Course>();
+        var occupations = occupationMandatoryService.GetAll(p => p.Occupation._id == idoccuation & p.TypeMandatoryTraining == type).ToList();
+        var company = companyMandatoryService.GetAll(p => p.Company._id == idcompany & p.TypeMandatoryTraining == type).ToList();
+
+        foreach (var item in occupations)
+        {
+          list.Add(item.Course);
+        }
+        foreach (var item in company)
+        {
+          list.Add(item.Course);
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public Occupation GetOccupation(string idCompany, string filterName)
     {
       try
@@ -1803,6 +1832,8 @@ namespace Manager.Services.Specific
       processLevelTwoService._user = _user;
       questionsService._user = _user;
       textDefaultService._user = _user;
+      occupationMandatoryService._user = _user;
+      companyMandatoryService._user = _user;
     }
 
     public string UpdateArea(Area area)

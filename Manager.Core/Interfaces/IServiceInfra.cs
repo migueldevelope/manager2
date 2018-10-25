@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -107,5 +108,6 @@ namespace Manager.Core.Interfaces
 
     string GetCSVCompareGroup(string idcompany, string link);
     List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref long total, string filter, int count, int page, string filterGroup);
+    List<Course> GetCourseOccupation(string idoccuation, string idcompany, EnumTypeMandatoryTraining type);
   }
 }

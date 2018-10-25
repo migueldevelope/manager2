@@ -798,5 +798,14 @@ namespace Manager.Controllers
       return service.GetCSVCompareGroup(idcompany, conn.BlobKey);
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("getcourseoccupation/{idcompany}/{idoccupation}/{type}")]
+    public List<Course> GetCourseOccupation(string idcompany, string idoccupation, EnumTypeMandatoryTraining type)
+    {
+      return service.GetCourseOccupation(idcompany, idoccupation, type);
+    }
+
+
   }
 }
