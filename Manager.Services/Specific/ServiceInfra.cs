@@ -1238,6 +1238,9 @@ namespace Manager.Services.Specific
         foreach (var item in groupService.GetAll(p => p.Company._id == idcompany))
         {
           var view = new ViewGroupList();
+          view._id = item._id;
+          view._idAccount = item._idAccount;
+          view.Status = item.Status;
           view.Name = item.Name;
           view.Company = item.Company;
           view.Axis = item.Axis;
