@@ -536,7 +536,7 @@ namespace Manager.Services.Specific
 
         if (activities == 1)
         {
-          var detail = monitoringService.GetAll()
+          var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
           .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
 
@@ -578,7 +578,7 @@ namespace Manager.Services.Specific
 
         if (schooling == 1)
         {
-          var detailSchool = monitoringService.GetAll()
+          var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
             .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
           foreach (var item in detailSchool)
           {
@@ -618,7 +618,7 @@ namespace Manager.Services.Specific
 
         if (skillcompany == 1)
         {
-          var detailSkills = monitoringService.GetAll()
+          var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
             .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
           foreach (var item in detailSkills)
