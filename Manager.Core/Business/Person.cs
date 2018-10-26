@@ -1,7 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Enumns;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using Manager.Views.Enumns;
 using System;
 
 namespace Manager.Core.Business

@@ -1,4 +1,4 @@
-﻿using IntegrationService.Views;
+﻿using Manager.Views.Integration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

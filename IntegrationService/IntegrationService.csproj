@@ -74,16 +74,9 @@
     <Compile Include="Data\Colaborador.cs" />
     <Compile Include="Enumns\EnumLayoutManualCompleteV1.cs" />
     <Compile Include="Enumns\EnumLayoutManualBasicV1.cs" />
-    <Compile Include="Enumns\EnumIntegrationProcess.cs" />
     <Compile Include="Enumns\EnumLayoutSystemCompleteV1.cs" />
     <Compile Include="Enumns\EnumLayoutSystemBasicV1.cs" />
-    <Compile Include="Enumns\EnumIntegrationType.cs" />
-    <Compile Include="Enumns\EnumIntegrationMode.cs" />
-    <Compile Include="Enumns\EnumSex.cs" />
     <Compile Include="Enumns\EnumStatusService.cs" />
-    <Compile Include="Enumns\EnumStatusUser.cs" />
-    <Compile Include="Enumns\EnumTypeJourney.cs" />
-    <Compile Include="Enumns\EnumTypeUser.cs" />
     <Compile Include="Service1.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -100,21 +93,6 @@
     <Compile Include="Tools\ConnectionString.cs" />
     <Compile Include="Tools\FileClass.cs" />
     <Compile Include="Tools\GetPersonSystem.cs" />
-    <Compile Include="Views\ViewIntegrationParameterPack.cs" />
-    <Compile Include="Views\ViewIntegrationParameterMode.cs" />
-    <Compile Include="Views\ViewIntegrationParameterExecution.cs" />
-    <Compile Include="Views\ViewIntegrationParameter.cs" />
-    <Compile Include="Views\Person\ViewIntegrationMapManagerV1.cs" />
-    <Compile Include="Views\Person\ViewIntegrationContractV1.cs" />
-    <Compile Include="Views\Person\ViewIntegrationPersonV1.cs" />
-    <Compile Include="Views\Person\ViewIntegrationMapPersonV1.cs" />
-    <Compile Include="Views\ViewIntegrationGroup.cs" />
-    <Compile Include="Views\ViewIntegrationProcessLevelTwo.cs" />
-    <Compile Include="Views\ViewIntegrationFilterName.cs" />
-    <Compile Include="Views\ViewIntegrationOccupation.cs" />
-    <Compile Include="Views\ViewIntegrationSkill.cs" />
-    <Compile Include="Views\Person\ViewIntegrationMapOfV1.cs" />
-    <Compile Include="Views\ViewPersonLogin.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -141,6 +119,10 @@
     <ProjectReference Include="..\DatabaseTools\DatabaseTools.csproj">
       <Project>{6f01a93c-cb02-4de1-ac2d-ea5fc7dfbc13}</Project>
       <Name>DatabaseTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Manager.Views\Manager.Views.csproj">
+      <Project>{d83a6eb3-11a2-4ca1-be09-ff56f3e94198}</Project>
+      <Name>Manager.Views</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

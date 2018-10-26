@@ -1,4 +1,4 @@
-﻿using Manager.Core.Enumns;
+﻿using Manager.Views.Enumns;
 using System;
 
 namespace Manager.Core.Views

@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using IntegrationService.Views;
 using Newtonsoft.Json;
 using System.Threading;
 using IntegrationService.Tools;

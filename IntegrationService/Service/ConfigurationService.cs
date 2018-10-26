@@ -1,5 +1,5 @@
 ﻿using IntegrationService.Api;
-using IntegrationService.Views;
+using Manager.Views.Integration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

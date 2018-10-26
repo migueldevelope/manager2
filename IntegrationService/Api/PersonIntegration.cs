@@ -1,9 +1,8 @@
-﻿using IntegrationService.Views;
-using IntegrationService.Core;
+﻿using IntegrationService.Core;
 using System;
 using System.Net.Http;
 using Newtonsoft.Json;
-using IntegrationService.Views.Person;
+using Manager.Views.Integration;
 
 namespace IntegrationService.Api
 {

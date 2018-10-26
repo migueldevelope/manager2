@@ -6,6 +6,7 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;

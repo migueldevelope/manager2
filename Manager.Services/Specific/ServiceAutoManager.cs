@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Manager.Core.Base;
 using Manager.Services.Auth;
+using Manager.Views.Enumns;
 
 namespace Manager.Services.Specific
 {

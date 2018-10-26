@@ -1,5 +1,5 @@
 ﻿using IntegrationService.Data;
-using IntegrationService.Views.Person;
+using Manager.Views.Integration;
 
 namespace IntegrationService.Core
 {

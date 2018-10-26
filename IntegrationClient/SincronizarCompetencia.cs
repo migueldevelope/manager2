@@ -1,6 +1,6 @@
 ﻿using IntegrationService.Api;
 using IntegrationService.Tools;
-using IntegrationService.Views;
+using Manager.Views.Integration;
 using OracleTools;
 using SqlServerTools;
 using System;

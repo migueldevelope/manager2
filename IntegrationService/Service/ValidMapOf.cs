@@ -1,7 +1,6 @@
 ﻿using IntegrationService.Api;
 using IntegrationService.Core;
-using IntegrationService.Views;
-using IntegrationService.Views.Person;
+using Manager.Views.Integration;
 using System;
 
 namespace IntegrationService.Service

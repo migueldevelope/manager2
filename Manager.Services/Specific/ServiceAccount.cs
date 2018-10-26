@@ -5,6 +5,7 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.Enumns;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

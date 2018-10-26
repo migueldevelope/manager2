@@ -1,7 +1,8 @@
 ﻿using Manager.Core.Business.Integration;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
-using Manager.Core.Views.Integration;
+using Manager.Views.Enumns;
+using Manager.Views.Integration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

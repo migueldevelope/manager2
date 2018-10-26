@@ -151,6 +151,10 @@
       <Project>{98d502d9-363e-4cc1-a1d0-7231d52a191a}</Project>
       <Name>IntegrationService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Manager.Views\Manager.Views.csproj">
+      <Project>{d83a6eb3-11a2-4ca1-be09-ff56f3e94198}</Project>
+      <Name>Manager.Views</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

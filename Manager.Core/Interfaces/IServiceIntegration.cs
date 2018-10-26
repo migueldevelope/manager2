@@ -1,8 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Business.Integration;
-using Manager.Core.Views;
-using Manager.Core.Views.Integration;
+using Manager.Views.Integration;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;

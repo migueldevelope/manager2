@@ -1,5 +1,4 @@
-﻿using IntegrationService.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +16,8 @@ using IntegrationService.Data;
 using IntegrationService.Service;
 using IntegrationService.Enumns;
 using System.Reflection;
+using Manager.Views.Integration;
+using Manager.Views.Enumns;
 
 namespace IntegrationClient
 {

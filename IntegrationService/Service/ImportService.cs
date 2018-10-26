@@ -3,8 +3,8 @@ using IntegrationService.Core;
 using IntegrationService.Data;
 using IntegrationService.Enumns;
 using IntegrationService.Tools;
-using IntegrationService.Views;
-using IntegrationService.Views.Person;
+using Manager.Views.Enumns;
+using Manager.Views.Integration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -777,7 +777,7 @@ namespace IntegrationService.Service
             PhoneFixed = collaborator.Colaborador.Telefone,
             DocumentID = collaborator.Colaborador.Identidade,
             DocumentCTPF = collaborator.Colaborador.CarteiraProfissional,
-            Sex = collaborator.Colaborador.Sexo,
+            Sex = collaborator.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : collaborator.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
             Schooling = collaborator.Schooling,
             Contract = new ViewIntegrationContractV1()
             {
@@ -828,7 +828,7 @@ namespace IntegrationService.Service
             PhoneFixed = collaborator.Colaborador.Telefone,
             DocumentID = collaborator.Colaborador.Identidade,
             DocumentCTPF = collaborator.Colaborador.CarteiraProfissional,
-            Sex = collaborator.Colaborador.Sexo,
+            Sex = collaborator.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : collaborator.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
             Schooling = collaborator.Schooling,
             Contract = new ViewIntegrationContractV1()
             {

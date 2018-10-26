@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationClient", "Integr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseTools", "DatabaseTools\DatabaseTools.csproj", "{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager.Views", "Manager.Views\Manager.Views.csproj", "{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
