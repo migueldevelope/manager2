@@ -1239,6 +1239,9 @@ namespace Manager.Services.Specific
         foreach (var item in groupService.GetAll(p => p.Company._id == idcompany))
         {
           var view = new ViewGroupList();
+          view._id = item._id;
+          view._idAccount = item._idAccount;
+          view.Status = item.Status;
           view.Name = item.Name;
           view.Company = item.Company;
           view.Axis = item.Axis;
@@ -2997,7 +3000,7 @@ namespace Manager.Services.Specific
               maxLine = line;
 
             var result = new ViewCSVLO();
-            result.Name = scope.Name;
+            result.Name = scope.Name.Replace("\n","").Replace(";",".");
             result.Line = line;
             result.Type = EnumTypeLO.Scope;
 
@@ -3012,7 +3015,7 @@ namespace Manager.Services.Specific
               maxLineSkill = line;
 
             var result = new ViewCSVLO();
-            result.Name = skill.Name + ":" + skill.Concept;
+            result.Name = skill.Name.Replace("\n", "").Replace(";", ".") + ":" + skill.Concept.Replace("\n", "").Replace(";", ".");
             result.Line = line;
             result.Type = EnumTypeLO.Skill;
 
@@ -3027,7 +3030,7 @@ namespace Manager.Services.Specific
               maxLineSchooling = line;
 
             var result = new ViewCSVLO();
-            result.Name = scholling.Name;
+            result.Name = scholling.Name.Replace("\n", "").Replace(";", ".");
             result.Line = line;
             result.Type = EnumTypeLO.Schooling;
 
