@@ -20,5 +20,9 @@ namespace Manager.Core.Interfaces
     string RemoveMonitoring(string idmonitoring);
     List<Monitoring> GetListExclud(ref long total, string filter, int count, int page);
     string RemoveLastMonitoring(string idperson);
+    MonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie);
+    string RemoveMonitoringActivities(string idmonitoring, string idactivitie);
+    string UpdateMonitoringActivities(string idmonitoring, MonitoringActivities activitie);
+    string AddMonitoringActivities(string idmonitoring, Activitie activitie);
   }
 }

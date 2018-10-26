@@ -24,6 +24,7 @@ namespace Manager.Services.Specific
     private readonly ServiceLog logService;
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
+    private readonly ServiceGeneric<MonitoringActivities> monitoringActivitiesService;
     private readonly ServiceGeneric<MailLog> mailService;
     public string path;
 
@@ -38,6 +39,7 @@ namespace Manager.Services.Specific
         logService = new ServiceLog(_context);
         mailModelService = new ServiceMailModel(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
+        monitoringActivitiesService = new ServiceGeneric<MonitoringActivities>(context);
         mailService = new ServiceGeneric<MailLog>(context);
         path = pathToken;
       }
@@ -187,6 +189,80 @@ namespace Manager.Services.Specific
           Activities = p.Activities.OrderBy(x => x.Activities.Order).ToList(),
           StatusMonitoring = p.StatusMonitoring
         }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public MonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
+    {
+      try
+      {
+        return monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault().
+          Activities.Where(p => p._id == idactivitie).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string RemoveMonitoringActivities(string idmonitoring, string idactivitie)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoringActivitie = monitoring.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
+        monitoring.Activities.Remove(monitoringActivitie);
+        monitoringService.Update(monitoring, null);
+        return "remove";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateMonitoringActivities(string idmonitoring, MonitoringActivities activitie)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        foreach (var item in monitoring.Activities)
+        {
+          if (item._id == activitie._id)
+          {
+            monitoring.Activities.Remove(item);
+            monitoring.Activities.Add(activitie);
+            monitoringService.Update(monitoring, null);
+            return "update";
+          }
+
+        }
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+
+    public string AddMonitoringActivities(string idmonitoring, Activitie activitie)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoringActivitie = new MonitoringActivities();
+        monitoringActivitie.Activities = activitie;
+        monitoringActivitie.Plans = new List<Plan>();
+        monitoring.Activities.Add(monitoringActivitie);
+        monitoringService.Update(monitoring, null);
+        return "add sucess";
       }
       catch (Exception e)
       {
@@ -390,6 +466,7 @@ namespace Manager.Services.Specific
       mailModelService._user = _user;
       mailMessageService._user = _user;
       mailService._user = _user;
+      monitoringActivitiesService._user = _user;
     }
 
     public async void LogSave(string iduser, string local)
