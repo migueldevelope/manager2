@@ -256,9 +256,42 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         var monitoringActivitie = new MonitoringActivities();
+
+        var activities = new List<Activitie>();
+
+        foreach (var item in monitoring.Activities)
+        {
+          activities.Add(item.Activities);
+        }
+
+        long order = 1;
+        try
+        {
+          order = activities.Max(p => p.Order) + 1;
+          if (order == 0)
+          {
+            order = 1;
+          }
+        }
+        catch (Exception)
+        {
+          order = 1;
+        }
+
+
+        activitie.Status = EnumStatus.Enabled;
+        activitie._id = ObjectId.GenerateNewId().ToString();
+        activitie._idAccount = _user._idAccount;
+        activitie.Order = order;
+
         monitoringActivitie.Activities = activitie;
+        monitoringActivitie.Status = EnumStatus.Enabled;
+        monitoringActivitie._id = ObjectId.GenerateNewId().ToString();
+        monitoringActivitie._idAccount = _user._idAccount;
+        monitoringActivitie.TypeAtivitie = EnumTypeAtivitie.Individual;
         monitoringActivitie.Plans = new List<Plan>();
         monitoring.Activities.Add(monitoringActivitie);
         monitoringService.Update(monitoring, null);
