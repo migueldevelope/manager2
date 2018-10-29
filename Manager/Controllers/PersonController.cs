@@ -100,9 +100,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersons/{idcompany}")]
-    public List<ViewPersonList> ListPersons(string idcompany, string filter = "")
+    public List<Person> ListPersons(string idcompany, string filter = "")
     {
-      return service.GetPersons(filter, idcompany);
+      return service.GetPersons(idcompany, filter);
     }
 
     [Authorize]

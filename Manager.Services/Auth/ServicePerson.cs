@@ -288,16 +288,11 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<ViewPersonList> GetPersons(string idcompany, string filter)
+    public List<Person> GetPersons(string idcompany, string filter)
     {
       try
       {
-        return personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).ToList()
-          .Select(item => new ViewPersonList()
-          {
-            IdPerson = item._id,
-            NamePerson = item.Name
-          }).ToList();
+        return personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
       }
       catch (Exception e)
       {
