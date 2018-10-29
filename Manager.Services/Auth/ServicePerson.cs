@@ -288,6 +288,23 @@ namespace Manager.Services.Auth
       }
     }
 
+    public List<ViewPersonList> GetPersons(string idcompany, string filter)
+    {
+      try
+      {
+        return personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).ToList()
+          .Select(item => new ViewPersonList()
+          {
+            IdPerson = item._id,
+            NamePerson = item.Name
+          }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<ViewPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page)
     {
       try

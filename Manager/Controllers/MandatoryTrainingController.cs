@@ -122,6 +122,18 @@ namespace Manager.Controllers
     }
 
     [Authorize]
+    [HttpGet]
+    [Route("listtrainingplan/{idcompany}/{idperson}")]
+    public List<TrainingPlan> ListTrainingPlan(string idcompany, string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlan(idcompany, idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+
+    [Authorize]
     [HttpPost]
     [Route("newtrainingplan")]
     public string NewTrainingPlan([FromBody]TrainingPlan view)

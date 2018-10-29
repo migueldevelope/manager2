@@ -621,6 +621,22 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<TrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = trainingPlanService.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = trainingPlanService.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail.ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public CompanyMandatory AddCompanyMandatory(CompanyMandatory model)
     {
       try

@@ -99,6 +99,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listpersons/{idcompany}")]
+    public List<ViewPersonList> ListPersons(string idcompany, string filter = "")
+    {
+      return service.GetPersons(filter, idcompany);
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("{idperson}/head")]
     public ViewPersonHead Head(string idperson)
     {
