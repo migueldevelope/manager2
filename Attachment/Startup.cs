@@ -46,11 +46,13 @@ namespace Attachment
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, conn.TokenServer);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
-      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer);
+      IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
+      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer, serviceMandatoryTraining);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
 
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
 
+      services.AddSingleton(_ => serviceMandatoryTraining);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceCompany);
       services.AddSingleton(_ => serviceAuthentication);
