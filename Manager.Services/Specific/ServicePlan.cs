@@ -1772,7 +1772,10 @@ namespace Manager.Services.Specific
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
-              view.StructPlans = res.StructPlans;
+              if (res.StructPlans.Count() == 0)
+                view.StructPlans = null;
+              else
+                view.StructPlans = res.StructPlans;
             }
             else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
@@ -1809,7 +1812,10 @@ namespace Manager.Services.Specific
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
-              view.StructPlans = res.StructPlans;
+              if (res.StructPlans.Count() == 0)
+                view.StructPlans = null;
+              else
+                view.StructPlans = res.StructPlans;
             }
             else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
@@ -1846,7 +1852,10 @@ namespace Manager.Services.Specific
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
-              view.StructPlans = res.StructPlans;
+              if (res.StructPlans.Count() == 0)
+                view.StructPlans = null;
+              else
+                view.StructPlans = res.StructPlans;
             }
             else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;

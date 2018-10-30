@@ -39,7 +39,7 @@ namespace Manager.Test.Commons
         this.service = new ServiceGeneric<Person>(context);
 
         //var user = this.service.GetAuthentication(p => p.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
-        var user = this.service.GetAuthentication(p => p.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
+        var user = this.service.GetAuthentication(p => p.Mail == "analisa@suporte.maristas.org.br").FirstOrDefault();
         baseUser = new BaseUser()
         {
           NamePerson = user.Name,

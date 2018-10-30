@@ -667,8 +667,12 @@ namespace Manager.Services.Specific
           list.Add(view);
         }
 
-        list.FirstOrDefault().PercentRealized = ((countRealized * 100) / total);
-        list.FirstOrDefault().PercentNo = ((countNo * 100) / total);
+        if(total > 0 )
+        {
+          list.FirstOrDefault().PercentRealized = ((countRealized * 100) / total);
+          list.FirstOrDefault().PercentNo = ((countNo * 100) / total);
+        }
+        
 
         return list;
       }

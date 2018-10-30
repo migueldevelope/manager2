@@ -149,6 +149,24 @@ namespace Manager.Test.Test.Complete
       }
     }
 
+
+    [Fact]
+    public void ScriptArea()
+    {
+      try
+      {
+        var occupations = serviceOccupation.GetAll(p => p.Status == EnumStatus.Enabled).ToList();
+        foreach(var item in occupations)
+        {
+          serviceInfra.UpdateOccupation(item);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     [Fact]
     public void TestGroupNewAndReorder()
     {
