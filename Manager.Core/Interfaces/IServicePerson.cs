@@ -29,6 +29,7 @@ namespace Manager.Core.Interfaces
     string AlterPassword(ViewAlterPass resetPass, string idPerson);
     string AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
     List<ViewPersonList> GetPersons(string filter);
+    List<Person> GetPersons(string idcompany, string filter);
     List<Person> GetPersonsCrud(EnumTypeUser type, ref long total, string filter, int count, int page);
     Person GetPersonCrud(string idperson);
     Person GetPerson(string id);

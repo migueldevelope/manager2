@@ -127,5 +127,37 @@ namespace Manager.Controllers
       return service.RemoveLastMonitoring(idperson);
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("getmonitoringactivities/{idmonitoring}/{idactivitie}")]
+    public MonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
+    {
+      return service.GetMonitoringActivities(idmonitoring, idactivitie);
+    }
+
+    [Authorize]
+    [HttpDelete]
+    [Route("removemonitoringactivities/{idmonitoring}/{idactivitie}")]
+    public string RemoveMonitoringActivities(string idmonitoring, string idactivitie)
+    {
+      return service.RemoveMonitoringActivities(idmonitoring, idactivitie);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatemonitoringactivities/{idmonitoring}")]
+    public string UpdateMonitoringActivities([FromBody]MonitoringActivities activitie, string idmonitoring)
+    {
+      return service.UpdateMonitoringActivities(idmonitoring, activitie);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addmonitoringactivities/{idmonitoring}")]
+    public string AddMonitoringActivities([FromBody] Activitie activitie, string idmonitoring)
+    {
+      return service.AddMonitoringActivities(idmonitoring, activitie);
+    }
+
   }
 }

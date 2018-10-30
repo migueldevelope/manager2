@@ -26,19 +26,23 @@ namespace Manager.Services.Specific
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
+    private readonly ServiceGeneric<TrainingPlan> trainingPlanService;
+    IServiceMandatoryTraining serviceMandatoryTraining;
     public string path;
 
     public BaseUser user { get => _user; set => user = _user; }
 
-    public ServicePlan(DataContext context, string pathToken)
+    public ServicePlan(DataContext context, string pathToken, IServiceMandatoryTraining _serviceMandatoryTraining)
       : base(context)
     {
       try
       {
+        serviceMandatoryTraining = _serviceMandatoryTraining;
         monitoringService = new ServiceGeneric<Monitoring>(context);
         personService = new ServiceGeneric<Person>(context);
         planService = new ServiceGeneric<Plan>(context);
         logService = new ServiceLog(_context);
+        trainingPlanService = new ServiceGeneric<TrainingPlan>(context);
         mailModelService = new ServiceMailModel(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
@@ -67,6 +71,8 @@ namespace Manager.Services.Specific
         planService._user = _user;
         structPlanService._user = _user;
         planActivityService._user = _user;
+        trainingPlanService._user = _user;
+        serviceMandatoryTraining.SetUser(_user);
       }
       catch (Exception e)
       {
@@ -536,7 +542,7 @@ namespace Manager.Services.Specific
 
         if (activities == 1)
         {
-          var detail = monitoringService.GetAll()
+          var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
           .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
 
@@ -578,7 +584,7 @@ namespace Manager.Services.Specific
 
         if (schooling == 1)
         {
-          var detailSchool = monitoringService.GetAll()
+          var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
             .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
           foreach (var item in detailSchool)
           {
@@ -618,7 +624,7 @@ namespace Manager.Services.Specific
 
         if (skillcompany == 1)
         {
-          var detailSkills = monitoringService.GetAll()
+          var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
             .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
           foreach (var item in detailSkills)
@@ -1010,6 +1016,7 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        DateTime? deadline = DateTime.Now;
 
         //verify plan;
         if (sourceplan == EnumSourcePlan.Activite)
@@ -1020,6 +1027,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplan)
               {
+                deadline = plan.Deadline;
+
                 if (plan.StructPlans == null)
                   plan.StructPlans = new List<StructPlan>();
 
@@ -1037,6 +1046,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplan)
               {
+                deadline = plan.Deadline;
+
                 if (plan.StructPlans == null)
                   plan.StructPlans = new List<StructPlan>();
 
@@ -1054,6 +1065,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplan)
               {
+                deadline = plan.Deadline;
+
                 if (plan.StructPlans == null)
                   plan.StructPlans = new List<StructPlan>();
 
@@ -1061,6 +1074,18 @@ namespace Manager.Services.Specific
               }
             }
           }
+        }
+
+        if (structplan.Course != null)
+        {
+          var trainingPlan = new TrainingPlan();
+          trainingPlan.Course = structplan.Course;
+          trainingPlan.Deadline = deadline;
+          trainingPlan.Origin = EnumOrigin.Monitoring;
+          trainingPlan.Person = monitoring.Person;
+          trainingPlan.Include = DateTime.Now;
+          trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+          serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
         }
 
         monitoringService.Update(monitoring, null);
@@ -1247,6 +1272,23 @@ namespace Manager.Services.Specific
                 {
                   if (structplan._id == structplanedit._id)
                   {
+
+                    if ((structplan.Course == null) & (structplanedit.Course != null))
+                    {
+                      var trainingPlan = new TrainingPlan();
+                      trainingPlan.Course = structplan.Course;
+                      trainingPlan.Deadline = plan.Deadline;
+                      trainingPlan.Origin = EnumOrigin.Monitoring;
+                      trainingPlan.Person = monitoring.Person;
+                      trainingPlan.Include = DateTime.Now;
+                      trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+                      if (trainingPlanService.GetAll(p => p.Person == trainingPlan.Person
+                       & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
+                      {
+                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                      }
+                    }
+
                     plan.StructPlans.Remove(structplan);
                     plan.StructPlans.Add(structplanedit);
                     monitoringService.Update(monitoring, null);
@@ -1270,6 +1312,23 @@ namespace Manager.Services.Specific
                 {
                   if (structplan._id == structplanedit._id)
                   {
+
+                    if ((structplan.Course == null) & (structplanedit.Course != null))
+                    {
+                      var trainingPlan = new TrainingPlan();
+                      trainingPlan.Course = structplan.Course;
+                      trainingPlan.Deadline = plan.Deadline;
+                      trainingPlan.Origin = EnumOrigin.Monitoring;
+                      trainingPlan.Person = monitoring.Person;
+                      trainingPlan.Include = DateTime.Now;
+                      trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+                      if (trainingPlanService.GetAll(p => p.Person == trainingPlan.Person
+                       & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
+                      {
+                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                      }
+                    }
+
                     plan.StructPlans.Remove(structplan);
                     plan.StructPlans.Add(structplanedit);
                     monitoringService.Update(monitoring, null);
@@ -1293,6 +1352,24 @@ namespace Manager.Services.Specific
                 {
                   if (structplan._id == structplanedit._id)
                   {
+
+                    if ((structplan.Course == null) & (structplanedit.Course != null))
+                    {
+                      var trainingPlan = new TrainingPlan();
+                      trainingPlan.Course = structplan.Course;
+                      trainingPlan.Deadline = plan.Deadline;
+                      trainingPlan.Origin = EnumOrigin.Monitoring;
+                      trainingPlan.Person = monitoring.Person;
+                      trainingPlan.Include = DateTime.Now;
+                      trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+                      if (trainingPlanService.GetAll(p => p.Person == trainingPlan.Person
+                       & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
+                      {
+                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                      }
+
+                    }
+
                     plan.StructPlans.Remove(structplan);
                     plan.StructPlans.Add(structplanedit);
                     monitoringService.Update(monitoring, null);

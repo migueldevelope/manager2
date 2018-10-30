@@ -27,5 +27,7 @@ namespace Manager.Core.Interfaces
     string RemoveTrainingPlan(string id);
     TrainingPlan GetTrainingPlan(string id);
     List<TrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<TrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewTrainingPlan> ListTrainingPlanPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }
