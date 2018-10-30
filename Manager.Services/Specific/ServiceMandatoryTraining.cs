@@ -640,6 +640,42 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewTrainingPlan> ListTrainingPlanPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._id == idperson & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._id == idperson & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var list = new List<ViewTrainingPlan>();
+        var countRealized = 0;
+        var countNo = 0;
+
+        foreach (var item in detail)
+        {
+          var view = new ViewTrainingPlan();
+          view.Person = item.Person.Name;
+          view.Course = item.Course.Name;
+          if (item.StatusTrainingPlan == EnumStatusTrainingPlan.Realized)
+            countRealized += 1;
+          else
+            countNo += 1;
+          view.Origin = item.Origin;
+          view.StatusTrainingPlan = item.StatusTrainingPlan;
+          list.Add(view);
+        }
+
+        list.FirstOrDefault().PercentRealized = ((countRealized * 100) / total);
+        list.FirstOrDefault().PercentNo = ((countNo * 100) / total);
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public CompanyMandatory AddCompanyMandatory(CompanyMandatory model)
     {
       try

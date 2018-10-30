@@ -26,15 +26,17 @@ namespace Manager.Services.Specific
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
+    IServiceMandatoryTraining serviceMandatoryTraining;
     public string path;
 
     public BaseUser user { get => _user; set => user = _user; }
 
-    public ServicePlan(DataContext context, string pathToken)
+    public ServicePlan(DataContext context, string pathToken, IServiceMandatoryTraining _serviceMandatoryTraining)
       : base(context)
     {
       try
       {
+        serviceMandatoryTraining = _serviceMandatoryTraining;
         monitoringService = new ServiceGeneric<Monitoring>(context);
         personService = new ServiceGeneric<Person>(context);
         planService = new ServiceGeneric<Plan>(context);
@@ -67,6 +69,7 @@ namespace Manager.Services.Specific
         planService._user = _user;
         structPlanService._user = _user;
         planActivityService._user = _user;
+        serviceMandatoryTraining.SetUser(_user);
       }
       catch (Exception e)
       {
@@ -1010,6 +1013,7 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        DateTime? deadline = DateTime.Now;
 
         //verify plan;
         if (sourceplan == EnumSourcePlan.Activite)
@@ -1020,6 +1024,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplan)
               {
+                deadline = plan.Deadline;
+
                 if (plan.StructPlans == null)
                   plan.StructPlans = new List<StructPlan>();
 
@@ -1037,6 +1043,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplan)
               {
+                deadline = plan.Deadline;
+
                 if (plan.StructPlans == null)
                   plan.StructPlans = new List<StructPlan>();
 
@@ -1054,6 +1062,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplan)
               {
+                deadline = plan.Deadline;
+
                 if (plan.StructPlans == null)
                   plan.StructPlans = new List<StructPlan>();
 
@@ -1061,6 +1071,17 @@ namespace Manager.Services.Specific
               }
             }
           }
+        }
+
+        if (structplan.Course != null)
+        {
+          var trainingPlan = new TrainingPlan();
+          trainingPlan.Course = structplan.Course;
+          trainingPlan.Deadline = deadline;
+          trainingPlan.Origin = EnumOrigin.Monitoring;
+          trainingPlan.Include = DateTime.Now;
+          trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+          serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
         }
 
         monitoringService.Update(monitoring, null);
