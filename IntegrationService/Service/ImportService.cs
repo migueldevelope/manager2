@@ -22,14 +22,14 @@ namespace IntegrationService.Service
     public string Message { get; set; }
     public EnumStatusService Status { get; private set; }
 
-    private List<Colaborador> Lista;
+    private List<Colaborador> Colaboradores;
+    private List<ControleColaborador> ControleColaboradores;
     private readonly ViewPersonLogin Person;
     private List<ViewIntegrationMapOfV1> Schoolings;
     private List<ViewIntegrationMapOfV1> Companys;
     private List<ViewIntegrationMapOfV1> Establishments;
     private List<ViewIntegrationMapOfV1> Occupations;
     private List<ViewIntegrationMapManagerV1> Managers;
-    private List<MapPerson> Collaborators;
 //    private ViewIntegrationParameter Param;
     private readonly string LogFileName;
     private readonly Version VersionProgram;
@@ -40,8 +40,18 @@ namespace IntegrationService.Service
         Person = person;
         Message = string.Empty;
         Status = EnumStatusService.Ok;
-        Lista = new List<Colaborador>();
-        LogFileName = string.Format("{0}.log", DateTime.Now.ToString("yyyyMMdd_hhmmss"));
+        Colaboradores = new List<Colaborador>();
+        if (!Directory.Exists(string.Format("{0}/integration", Person.IdAccount)))
+          Directory.CreateDirectory(string.Format("{0}/integration", Person.IdAccount));
+        // Limpeza de arquivos LOG
+
+        DirectoryInfo diretorio = new DirectoryInfo(string.Format("{0}/integration", Person.IdAccount));
+        List<FileInfo> Arquivos = diretorio.GetFiles("*.log").Where(p => p.CreationTime.Date < DateTime.Now.Date).ToList();
+        //Comea a listar o(s) arquivo(s)
+        foreach (FileInfo fileinfo in Arquivos)
+          File.Delete(fileinfo.FullName);
+
+        LogFileName = string.Format("{0}/integration/{1}.log", Person.IdAccount, DateTime.Now.ToString("yyyyMMdd_hhmmss"));
         Assembly assem = Assembly.GetEntryAssembly();
         AssemblyName assemName = assem.GetName();
         VersionProgram = assemName.Version;
@@ -51,6 +61,7 @@ namespace IntegrationService.Service
         throw;
       }
     }
+
     #region Preparação Banco de Dados V1
     public void DatabaseV1(ConfigurationService service)
     {
@@ -88,7 +99,7 @@ namespace IntegrationService.Service
         if (!string.IsNullOrEmpty(columnsOk))
           throw new Exception(columnsOk);
         // Carregar Lista de Colaboradores
-        Lista = new List<Colaborador>();
+        Colaboradores = new List<Colaborador>();
         Colaborador colaborador = null;
         foreach (DataRow row in readData.Rows)
         {
@@ -102,7 +113,7 @@ namespace IntegrationService.Service
               colaborador = new Colaborador(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutSystemCompleteV1());
               break;
           }
-          Lista.Add(ValidDataColaborator(colaborador));
+          Colaboradores.Add(ValidDataColaborator(colaborador));
         }
       }
       catch (Exception ex)
@@ -120,7 +131,6 @@ namespace IntegrationService.Service
         Message = ex.ToString();
       }
     }
-
     private DataTable ReadData(ConfigurationService service)
     {
       try
@@ -204,7 +214,7 @@ namespace IntegrationService.Service
           throw new Exception(columnsOk);
 
         // Carregar Lista de Colaboradores
-        Lista = new List<Colaborador>();
+        Colaboradores = new List<Colaborador>();
         Colaborador colaborador = null;
         string register;
         while ((register = rd.ReadLine()) != null)
@@ -216,10 +226,16 @@ namespace IntegrationService.Service
               switch (service.Param.Type)
               {
                 case EnumIntegrationType.Basic:
-                  colaborador = new Colaborador(readLine, new EnumLayoutManualBasicV1());
+                  if (readLine.Count == Enum.GetNames(typeof(EnumLayoutManualBasicV1)).Length)
+                    colaborador = new Colaborador(readLine, new EnumLayoutManualBasicV1());
+                  else
+                    colaborador = null;
                   break;
                 case EnumIntegrationType.Complete:
-                  colaborador = new Colaborador(readLine, new EnumLayoutManualCompleteV1());
+                  if (readLine.Count == Enum.GetNames(typeof(EnumLayoutManualCompleteV1)).Length)
+                    colaborador = new Colaborador(readLine, new EnumLayoutManualCompleteV1());
+                  else
+                    colaborador = null;
                   break;
               }
               break;
@@ -237,7 +253,8 @@ namespace IntegrationService.Service
             default:
               break;
           }
-          Lista.Add(ValidDataColaborator(colaborador));
+          if (colaborador != null)
+            Colaboradores.Add(ValidDataColaborator(colaborador));
         }
         rd.Close();
       }
@@ -259,21 +276,6 @@ namespace IntegrationService.Service
     #endregion
 
     #region Preparação Arquivo Excel V1
-    #endregion
-
-    #region Adicionar colaborador customizado
-    public void AddColaborador(Colaborador colaborador)
-    {
-      try
-      {
-        Lista.Add(ValidDataColaborator(colaborador));
-      }
-      catch (Exception ex)
-      {
-        Status = EnumStatusService.Error;
-        Message = ex.ToString();
-      }
-    }
     #endregion
 
     #region Validação de Colunas
@@ -386,44 +388,44 @@ namespace IntegrationService.Service
       {
         // Nome da Empresa
         if (string.IsNullOrEmpty(colaborador.NomeEmpresa))
-          colaborador.Message = string.Concat(colaborador.Message, "Nome da empresa vazia!;");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Nome da empresa vazia!;");
         // Valid Cpf
         if (string.IsNullOrEmpty(colaborador.Documento))
-          colaborador.Message = string.Concat(colaborador.Message, "CPF vazio!");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "CPF vazio!");
         else
           if (!IsValidCPF(colaborador.Documento))
-            colaborador.Message = string.Concat(colaborador.Message, "CPF inválido!");
+            colaborador.Mensagem = string.Concat(colaborador.Mensagem, "CPF inválido!");
         // Matricula obrigatória
         if (colaborador.Matricula == 0)
-          colaborador.Message = string.Concat(colaborador.Message, "Matricula não informada!;");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Matricula não informada!;");
         // Nome
         if (string.IsNullOrEmpty(colaborador.Nome))
-          colaborador.Message = string.Concat(colaborador.Message, "Nome não informado!");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Nome não informado!");
         // E-mail
         if (string.IsNullOrEmpty(colaborador.Email))
-          colaborador.Message = string.Concat(colaborador.Message, "E-mail não informado!");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "E-mail não informado!");
         // Data admissão
         if (colaborador.DataAdmissao == null)
-          colaborador.Message = string.Concat(colaborador.Message, "Data de admissão inválida!");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Data de admissão inválida!");
         // Situação
         if (!colaborador.Situacao.Equals("Ativo", StringComparison.InvariantCultureIgnoreCase) &&
             !colaborador.Situacao.Equals("Férias", StringComparison.InvariantCultureIgnoreCase) &&
             !colaborador.Situacao.Equals("Ferias", StringComparison.InvariantCultureIgnoreCase) &&
             !colaborador.Situacao.Equals("Afastado", StringComparison.InvariantCultureIgnoreCase) &&
             !colaborador.Situacao.Equals("Demitido", StringComparison.InvariantCultureIgnoreCase))
-          colaborador.Message = string.Concat(colaborador.Message, "Situação diferente de Ativo/Férias/Afastado/Demitido!");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Situação diferente de Ativo/Férias/Afastado/Demitido!");
         if (colaborador.Situacao.Equals("Demitido") && colaborador.DataDemissao == null)
-          colaborador.Message = string.Concat(colaborador.Message, "Data de demissão deve ser informada!;");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Data de demissão deve ser informada!;");
         // Nome do Cargo
         if (string.IsNullOrEmpty(colaborador.NomeCargo))
-          colaborador.Message = string.Concat(colaborador.Message, "Nome do cargo vazio!;");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Nome do cargo vazio!;");
         // Grau de Instrução, Nome do Grau de Instrução
         if (string.IsNullOrEmpty(colaborador.NomeGrauInstrucao))
-          colaborador.Message = string.Concat(colaborador.Message, "Nome do grau de instrução vazio!;");
+          colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Nome do grau de instrução vazio!;");
         // Valid Cpf chefe
-        if (!string.IsNullOrEmpty(colaborador.DocumentoChefe))
-          if (!IsValidCPF(colaborador.DocumentoChefe))
-            colaborador.Message = string.Concat(colaborador.Message, "Documento do gestor é inválido!");
+        if (!string.IsNullOrEmpty(colaborador.DocumentoGestor))
+          if (!IsValidCPF(colaborador.DocumentoGestor))
+            colaborador.Mensagem = string.Concat(colaborador.Mensagem, "Documento do gestor é inválido!");
         return colaborador;
       }
       catch (Exception)
@@ -431,8 +433,30 @@ namespace IntegrationService.Service
         throw;
       }
     }
+    private bool VerficarSeTodosOsDigitosSaoIdenticos(string cpf)
+    {
+      var previous = -1;
+      for (var i = 0; i < cpf.Length; i++)
+      {
+        if (char.IsDigit(cpf[i]))
+        {
+          var digito = cpf[i] - '0';
+          if (previous == -1)
+            previous = digito;
+          else
+            if (previous != digito)
+              return false;
+        }
+      }
+      return true;
+    }
     private bool IsValidCPF(string cpf)
     {
+      if (cpf.Length != 11)
+        return false;
+      if (VerficarSeTodosOsDigitosSaoIdenticos(cpf))
+        return false;
+
       int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
       int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
       string tempCpf;
@@ -441,8 +465,7 @@ namespace IntegrationService.Service
       int resto;
       cpf = cpf.Trim();
       cpf = cpf.Replace(".", "").Replace("-", "");
-      if (cpf.Length != 11)
-        return false;
+
       tempCpf = cpf.Substring(0, 9);
       soma = 0;
       for (int i = 0; i < 9; i++)
@@ -474,7 +497,7 @@ namespace IntegrationService.Service
       {
         if (Status == EnumStatusService.Error)
           return;
-        if (Lista.Count == 0)
+        if (Colaboradores.Count == 0)
           throw new Exception("Lista de colaboradores vazia!");
         LoadLists();
         ImportExecute();
@@ -503,6 +526,8 @@ namespace IntegrationService.Service
         Message = ex.ToString();
       }
     }
+
+    #region Preparação e Validação
     private void LoadLists()
     {
       try
@@ -510,172 +535,217 @@ namespace IntegrationService.Service
         Companys = new List<ViewIntegrationMapOfV1>();
         if (File.Exists(string.Format("{0}/integration/empresa.txt", Person.IdAccount)))
           Companys = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/empresa.txt", Person.IdAccount)));
-        Schoolings = new List<ViewIntegrationMapOfV1>();
-        if (File.Exists(string.Format("{0}/integration/grau.txt", Person.IdAccount)))
-          Schoolings = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/grau.txt", Person.IdAccount)));
         Establishments = new List<ViewIntegrationMapOfV1>();
         if (File.Exists(string.Format("{0}/integration/estabelecimento.txt", Person.IdAccount)))
           Establishments = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/estabelecimento.txt", Person.IdAccount)));
         Occupations = new List<ViewIntegrationMapOfV1>();
         if (File.Exists(string.Format("{0}/integration/cargo.txt", Person.IdAccount)))
           Occupations = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/cargo.txt", Person.IdAccount)));
-        Collaborators = new List<MapPerson>();
-        if (File.Exists(string.Format("{0}/integration/colaborador.txt", Person.IdAccount)))
-          Collaborators = JsonConvert.DeserializeObject<List<MapPerson>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount)));
+        Schoolings = new List<ViewIntegrationMapOfV1>();
+        if (File.Exists(string.Format("{0}/integration/grau.txt", Person.IdAccount)))
+          Schoolings = JsonConvert.DeserializeObject<List<ViewIntegrationMapOfV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/grau.txt", Person.IdAccount)));
         Managers = new List<ViewIntegrationMapManagerV1>();
         if (File.Exists(string.Format("{0}/integration/gestor.txt", Person.IdAccount)))
           Managers = JsonConvert.DeserializeObject<List<ViewIntegrationMapManagerV1>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/gestor.txt", Person.IdAccount)));
+        ControleColaboradores = new List<ControleColaborador>();
+        if (File.Exists(string.Format("{0}/integration/colaborador.txt", Person.IdAccount)))
+          ControleColaboradores = JsonConvert.DeserializeObject<List<ControleColaborador>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount)));
       }
       catch (Exception)
       {
         throw;
       }
     }
+    private void SaveLists()
+    {
+      try
+      {
+        string saveObject = JsonConvert.SerializeObject(Companys);
+        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/empresa.txt", Person.IdAccount), saveObject, false);
+        saveObject = JsonConvert.SerializeObject(Establishments);
+        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/estabelecimento.txt", Person.IdAccount), saveObject, false);
+        saveObject = JsonConvert.SerializeObject(Occupations);
+        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/cargo.txt", Person.IdAccount), saveObject, false);
+        saveObject = JsonConvert.SerializeObject(Schoolings);
+        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/grau.txt", Person.IdAccount), saveObject, false);
+        saveObject = JsonConvert.SerializeObject(Managers);
+        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/gestor.txt", Person.IdAccount), saveObject, false);
+        saveObject = JsonConvert.SerializeObject(ControleColaboradores);
+        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount), saveObject, false);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    private ViewIntegrationMapOfV1 VerifyMapOf(List<ViewIntegrationMapOfV1> listMap, EnumValidKey key, string keySearch, string name, string idCompany)
+    {
+      if (string.IsNullOrEmpty(keySearch.Replace(";", string.Empty)))
+        return null;
+      // Validar Empresa
+      ViewIntegrationMapOfV1 search = listMap.Find(p => p.Key == keySearch);
+      if (search == null || string.IsNullOrEmpty(search.Id))
+      {
+        ViewIntegrationMapOfV1 searchNew = new ViewIntegrationMapOfV1()
+        {
+          Key = keySearch,
+          Name = name,
+          IdCompany = idCompany,
+          Id = string.Empty,
+          Message = string.Empty
+        };
+        PersonIntegration personIntegration = new PersonIntegration(Person);
+        searchNew = personIntegration.GetByKey(key, searchNew);
+        if (search == null)
+          listMap.Add(searchNew);
+        else
+          listMap.Find(p => p.Key == keySearch).Id = searchNew.Id;
+        return searchNew;
+      }
+      return search;
+    }
+    private ViewIntegrationMapPersonV1 VerifyMapPerson(string idCompany, string document, long registration)
+    {
+      // Validar Empresa
+      ViewIntegrationMapPersonV1 search = new ViewIntegrationMapPersonV1()
+      {
+        IdCompany = idCompany,
+        Document = document,
+        Registration = registration,
+        IdPerson = string.Empty,
+        IdContract = string.Empty,
+        Message = string.Empty
+      };
+      PersonIntegration personIntegration = new PersonIntegration(Person);
+      return personIntegration.GetPersonByKey(search);
+    }
+    private ViewIntegrationMapManagerV1 VerifyMapManager(List<ViewIntegrationMapManagerV1> listMap, ViewIntegrationMapOfV1 company, string keySearch, string document, long registration)
+    {
+      if (company == null)
+          return null;
+      if (string.IsNullOrEmpty(keySearch.Replace(";", string.Empty).Replace("0",string.Empty)))
+        return null;
+      // Validar Empresa
+      ViewIntegrationMapManagerV1 search = listMap.Find(p => p.Key == keySearch);
+      if (search == null || string.IsNullOrEmpty(search.IdPerson))
+      {
+        ViewIntegrationMapManagerV1 searchNew = new ViewIntegrationMapManagerV1()
+        {
+          Key = keySearch,
+          IdCompany = company.Id,
+          Document = document,
+          Registration = registration,
+          IdPerson = string.Empty,
+          IdContract = string.Empty,
+          Message = string.Empty
+        };
+        PersonIntegration personIntegration = new PersonIntegration(Person);
+        searchNew = personIntegration.GetManagerByKey(searchNew);
+        if (search == null)
+          listMap.Add(searchNew);
+        else
+          listMap.Find(p => p.Key == keySearch).IdPerson = searchNew.IdPerson;
+        return searchNew;
+      }
+      return search;
+    }
+    #endregion
     private void ImportExecute()
     {
       try
       {
-        ViewIntegrationMapOfV1 establishment = null;
-        foreach (var colaborador in Lista)
+        PersonIntegration personIntegration = new PersonIntegration(Person);
+        foreach (var colaborador in Colaboradores.Where(p => string.IsNullOrEmpty(p.Mensagem)))
         {
-          PersonIntegration personIntegration = new PersonIntegration(Person);
-          // Validar Grau Instrução, Empresa, Estabelecimento, Cargo
-          ViewIntegrationMapOfV1 schooling = VerifyMapOf(Schoolings, EnumValidKey.Schooling, colaborador.GrauInstrucao, colaborador.NomeGrauInstrucao);
-          ViewIntegrationMapOfV1 company = VerifyMapOf(Companys, EnumValidKey.Company, colaborador.Empresa, colaborador.NomeEmpresa);
-          if (!string.IsNullOrEmpty(colaborador.NomeEstabelecimento))
-            establishment = VerifyMapOf(Establishments, EnumValidKey.Establishment, colaborador.Estabelecimento, colaborador.NomeEstabelecimento, company.Id);
-          ViewIntegrationMapOfV1 occupation = VerifyMapOf(Occupations, EnumValidKey.Occupation, colaborador.Cargo, colaborador.NomeCargo, company.Id);
-          ViewIntegrationMapOfV1 companyManager = null;
-          ViewIntegrationMapManagerV1 manager = null;
-          // Validar chefe (manager)
-          if (colaborador.DocumentoChefe != null && colaborador.NomeEmpresaChefe != null && colaborador.MatriculaChefe != 0)
-          {
-            companyManager = VerifyMapOf(Companys, EnumValidKey.Company, string.Empty, colaborador.NomeEmpresaChefe);
-            ViewIntegrationMapManagerV1 viewManager = new ViewIntegrationMapManagerV1()
-            {
-              Document = colaborador.DocumentoChefe,
-              CompanyName = companyManager.Name,
-              Registration = colaborador.MatriculaChefe,
-              IdContract = null,
-              IdPerson = null,
-              Name = string.Empty,
-              Message = string.Empty
-            };
-            int searchManager = Managers.FindIndex(p => p.Document == colaborador.DocumentoChefe && p.CompanyName == colaborador.NomeEmpresaChefe && p.Registration == colaborador.MatriculaChefe);
-            if (searchManager == -1)
-            {
-              manager = personIntegration.GetManagerByKey(viewManager);
-              if (manager != null)
-                Managers.Add(manager);
-            }
-            else
-            {
-              if (string.IsNullOrEmpty(Managers[searchManager].IdPerson))
-              {
-                viewManager = new ViewIntegrationMapManagerV1()
-                {
-                  Document = colaborador.DocumentoChefe,
-                  CompanyName = companyManager.Name,
-                  Registration = colaborador.MatriculaChefe,
-                  IdContract = null,
-                  IdPerson = null,
-                  Name = string.Empty,
-                  Message = string.Empty
-                };
-                manager = personIntegration.GetManagerByKey(viewManager);
-                if (manager != null)
-                  Managers[searchManager] = manager;
-              }
-            }
-          }
-          // Validar Colaborador
-          int search = Collaborators.FindIndex(p => p.Documento == colaborador.Documento && p.NomeEmpresa == colaborador.NomeEmpresa && p.Matricula == colaborador.Matricula);
+          int search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
           if (search == -1)
           {
-            ValidMapCollaborator validMapCollaborator = new ValidMapCollaborator(Person, colaborador.Documento, company, Convert.ToInt64(colaborador.Matricula), colaborador.Nome);
-            validMapCollaborator.Map.Colaborador = colaborador;
-            validMapCollaborator.Map.ColaboradorAnterior = colaborador;
-            validMapCollaborator.Map.Schooling = schooling;
-            validMapCollaborator.Map.Company = company;
-            validMapCollaborator.Map.Establishment = establishment;
-            validMapCollaborator.Map.Occupation = occupation;
-            validMapCollaborator.Map.CompanyManager = companyManager;
-            validMapCollaborator.Map.Manager = manager;
-            // Verificar se a pessoa já existe
-            ViewIntegrationMapPersonV1 view = personIntegration.GetCollaboratorByKey(new ViewIntegrationMapPersonV1()
+            ControleColaboradores.Add(new ControleColaborador()
             {
+              ChaveColaborador = colaborador.ChaveColaborador,
+              Colaborador = null,
+              Company = null,
+              CompanyManager = null,
+              Establishment = null,
+              Manager = null,
+              Occupation = null,
+              Schooling = null,
+              IdPerson = string.Empty,
+              IdContract = string.Empty
+            });
+            search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
+          }
+          // Validar Empresa
+          if (ControleColaboradores[search].Company == null || string.IsNullOrEmpty(ControleColaboradores[search].Company.Id) || !ControleColaboradores[search].Company.Key.Equals(colaborador.ChaveEmpresa))
+            ControleColaboradores[search].Company = VerifyMapOf(Companys, EnumValidKey.Company, colaborador.ChaveEmpresa, colaborador.NomeEmpresa, string.Empty);
+          // Validar Estabelecimento
+          if (!string.IsNullOrEmpty(colaborador.NomeEstabelecimento))
+            if (ControleColaboradores[search].Establishment == null || string.IsNullOrEmpty(ControleColaboradores[search].Establishment.Id) || !ControleColaboradores[search].Establishment.Key.Equals(colaborador.ChaveEstabelecimento))
+              ControleColaboradores[search].Establishment = VerifyMapOf(Establishments, EnumValidKey.Establishment, colaborador.ChaveEstabelecimento, colaborador.NomeEstabelecimento, ControleColaboradores[search].Company.Id);
+          // Validar Grau Instrução
+          if (ControleColaboradores[search].Schooling == null || string.IsNullOrEmpty(ControleColaboradores[search].Schooling.Id) || !ControleColaboradores[search].Schooling.Key.Equals(colaborador.ChaveGrauInstrucao))
+            ControleColaboradores[search].Schooling = VerifyMapOf(Schoolings, EnumValidKey.Schooling, colaborador.ChaveGrauInstrucao, colaborador.NomeGrauInstrucao, string.Empty);
+          // Validar Cargo
+          if (ControleColaboradores[search].Occupation == null || string.IsNullOrEmpty(ControleColaboradores[search].Occupation.Id) || !ControleColaboradores[search].Occupation.Key.Equals(colaborador.ChaveCargo))
+            ControleColaboradores[search].Occupation = VerifyMapOf(Occupations, EnumValidKey.Occupation, colaborador.ChaveCargo, colaborador.NomeCargo, ControleColaboradores[search].Company.Id);
+          // Validar Empresa Gestor
+          if (ControleColaboradores[search].CompanyManager == null || string.IsNullOrEmpty(ControleColaboradores[search].CompanyManager.Id) || !ControleColaboradores[search].CompanyManager.Key.Equals(colaborador.ChaveEmpresaGestor))
+            ControleColaboradores[search].CompanyManager = VerifyMapOf(Companys, EnumValidKey.Company, colaborador.ChaveEmpresaGestor, colaborador.NomeEmpresaGestor, string.Empty);
+          // Validar Gestor
+          if (ControleColaboradores[search].Manager == null || string.IsNullOrEmpty(ControleColaboradores[search].Manager.IdPerson) || !ControleColaboradores[search].Manager.Key.Equals(colaborador.ChaveGestor))
+            ControleColaboradores[search].Manager = VerifyMapManager(Managers, ControleColaboradores[search].CompanyManager, colaborador.ChaveGestor, colaborador.DocumentoGestor, colaborador.MatriculaGestor);
+
+          // Validar Colaborador (Pessoa)
+          if (string.IsNullOrEmpty(ControleColaboradores[search].IdPerson))
+          {
+            // Verificar se a pessoa já existe
+            ViewIntegrationMapPersonV1 view = personIntegration.GetPersonByKey(new ViewIntegrationMapPersonV1()
+            {
+              IdCompany = ControleColaboradores[search].Company.Id,
               Document = colaborador.Documento,
-              IdCompany = company.Id,
               Registration = colaborador.Matricula,
-              Name = colaborador.Nome,
-              Id = string.Empty,
-              Person = null,
+              IdPerson = string.Empty,
+              IdContract = string.Empty,
               Message = string.Empty
             });
-            if (view.Person != null)
-              validMapCollaborator.Map.Person = view.Person;
-            Collaborators.Add(validMapCollaborator.Map);
-          }
-          else
-          {
-            Collaborators[search].Schooling = schooling;
-            Collaborators[search].Company = company;
-            Collaborators[search].Establishment = establishment;
-            Collaborators[search].Occupation = occupation;
-            Collaborators[search].Colaborador = colaborador;
-            Collaborators[search].CompanyManager = companyManager;
-            Collaborators[search].Manager = manager;
-            if (Collaborators[search].Person == null)
-            {
-              // Verificar se a pessoa já existe
-              ViewIntegrationMapPersonV1 view = personIntegration.GetCollaboratorByKey(new ViewIntegrationMapPersonV1()
-              {
-                Document = colaborador.Documento,
-                IdCompany = company.Id,
-                Registration = colaborador.Matricula,
-                Name = colaborador.Nome,
-                Id = string.Empty,
-                Person = null,
-                Message = string.Empty
-              });
-              if (view.Person != null)
-                Collaborators[search].Person = view.Person;
-            }
+            ControleColaboradores[search].IdPerson = view.IdPerson;
+            ControleColaboradores[search].IdContract = view.IdContract;
           }
         }
 
-        string saveObject = JsonConvert.SerializeObject(Schoolings);
-        if (!Directory.Exists(string.Format("{0}/integration", Person.IdAccount)))
-          Directory.CreateDirectory(string.Format("{0}/integration", Person.IdAccount));
-        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/grau.txt", Person.IdAccount), saveObject, false);
-        saveObject = JsonConvert.SerializeObject(Companys);
-        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/empresa.txt", Person.IdAccount), saveObject, false);
-        saveObject = JsonConvert.SerializeObject(Establishments);
-        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/estabelecimentos.txt", Person.IdAccount), saveObject, false);
-        saveObject = JsonConvert.SerializeObject(Occupations);
-        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/cargo.txt", Person.IdAccount), saveObject, false);
-        saveObject = JsonConvert.SerializeObject(Collaborators);
-        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount), saveObject, false);
-        saveObject = JsonConvert.SerializeObject(Managers);
-        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/gestor.txt", Person.IdAccount), saveObject, false);
+        SaveLists();
 
         Message = string.Empty;
-        foreach (ViewIntegrationMapOfV1 item in Schoolings)
-          if (string.IsNullOrEmpty(item.Id))
-            Message = string.Format("{0}{1}Grau de instrução {2}", Message, Environment.NewLine, item.Name);
         foreach (ViewIntegrationMapOfV1 item in Companys)
           if (string.IsNullOrEmpty(item.Id))
-            Message = string.Format("{0}{1}Empresa {2}", Message, Environment.NewLine, item.Name);
+          {
+            FileClass.SaveLog(LogFileName, string.Format("Falta Integração da Empresa {0}", item.Key));
+            Message = "Log de integração!!!";
+          }
         foreach (ViewIntegrationMapOfV1 item in Establishments)
           if (string.IsNullOrEmpty(item.Id))
-            Message = string.Format("{0}{1}Estabelecimento {2}", Message, Environment.NewLine, item.Name);
+          {
+            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Estabelecimentos {0}", item.Key));
+            Message = "Log de integração!!!";
+          }
         foreach (ViewIntegrationMapOfV1 item in Occupations)
           if (string.IsNullOrEmpty(item.Id))
-            Message = string.Format("{0}{1}Cargo {2}", Message, Environment.NewLine, item.Name);
+          {
+            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Cargo {0}", item.Key));
+            Message = "Log de integração!!!";
+          }
+        foreach (ViewIntegrationMapOfV1 item in Schoolings)
+          if (string.IsNullOrEmpty(item.Id))
+          {
+            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Grau de Instrução {0}", item.Key));
+            Message = "Log de integração!!!";
+          }
 
         if (!string.IsNullOrEmpty(Message))
-          throw new Exception(Message);
-
+        {
+          Status = EnumStatusService.Error;
+          return;
+        }
         UpdatePerson();
       }
       catch (Exception)
@@ -683,68 +753,25 @@ namespace IntegrationService.Service
         throw;
       }
     }
-    private ViewIntegrationMapOfV1 VerifyMapOf(List<ViewIntegrationMapOfV1> lista, EnumValidKey key, string code, string name)
-    {
-      // Validar Empresa
-      ViewIntegrationMapOfV1 search;
-      if (!string.IsNullOrEmpty(code))
-        search = lista.Find(p => p.Code == code);
-      else
-        search = lista.Find(p => p.Name == name);
 
-      ValidMapOf validMapOf = null;
-      if (search == null)
-      {
-        validMapOf = new ValidMapOf(Person, key, code, name, string.Empty);
-        lista.Add(validMapOf.Map);
-      }
-      else
-      {
-        if (string.IsNullOrEmpty(search.Id))
-        {
-          validMapOf = new ValidMapOf(Person, key, code, name, string.Empty);
-          lista.Find(p => p.Name == name).Id = validMapOf.Map.Id;
-          lista.Find(p => p.Name == name).Message = string.Empty;
-        }
-        else
-          return search;
-      }
-      return validMapOf.Map;
-    }
-    private ViewIntegrationMapOfV1 VerifyMapOf(List<ViewIntegrationMapOfV1> lista, EnumValidKey key, string code, string name, string idCompany)
-    {
-      // Validar Empresa
-      ViewIntegrationMapOfV1 search;
-      if (!string.IsNullOrEmpty(code))
-        search = lista.Find(p => p.Code == code && p.IdCompany == idCompany);
-      else
-        search = lista.Find(p => p.Name == name && p.IdCompany == idCompany);
-
-      ValidMapOf validMapOf = null;
-      if (search == null)
-      {
-        validMapOf = new ValidMapOf(Person, key, code, name, idCompany);
-        lista.Add(validMapOf.Map);
-      }
-      else
-      {
-        if (string.IsNullOrEmpty(search.Id))
-        {
-          validMapOf = new ValidMapOf(Person, key, code, name, idCompany);
-          lista.Find(p => p.Name == name).Id = validMapOf.Map.Id;
-        }
-        else
-          return search;
-      }
-      return validMapOf.Map;
-    }
+    #region Atualizar Pessoas
     private void UpdatePerson()
     {
-      foreach (MapPerson collaborator in Collaborators)
+      bool hasLogFile = false;
+      foreach (var colaborador in Colaboradores.Where(p => !string.IsNullOrEmpty(p.Mensagem)))
       {
-        // Novo Colaborador
-        EnumStatusUser situacao = 0;
-        switch (collaborator.Colaborador.Situacao.ToLower())
+        // Gravar LOG de colaboradores com mensagem
+        FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, colaborador.Mensagem));
+        hasLogFile = true;
+      }
+
+      int search = -1;
+      int searchManager = -1;
+      foreach (var colaborador in Colaboradores.Where(p => string.IsNullOrEmpty(p.Mensagem)))
+      {
+        search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
+        EnumStatusUser situacao = EnumStatusUser.Enabled;
+        switch (colaborador.Situacao.ToLower())
         {
           case "férias":
             situacao = EnumStatusUser.Vacation;
@@ -760,110 +787,115 @@ namespace IntegrationService.Service
             break;
         }
         EnumTypeUser typeUser = EnumTypeUser.Employee;
-        int searchManager = Managers.FindIndex(p => p.Document == collaborator.Documento && p.CompanyName == collaborator.NomeEmpresa && p.Registration == collaborator.Matricula);
+        searchManager = Managers.FindIndex(p => p.Key == colaborador.ChaveColaborador);
         if (searchManager != -1)
           typeUser = EnumTypeUser.Manager;
 
-        if (collaborator.Person == null)
+        if (ControleColaboradores[search].Colaborador != null)
+            ControleColaboradores[search].Colaborador.TypeUser = typeUser;
+
+        // Testar diferença de colaboradores
+        if (string.IsNullOrEmpty(ControleColaboradores[search].IdPerson))
         {
+          // Novo Colaborador
           PersonIntegration personIntegration = new PersonIntegration(Person);
           ViewIntegrationPersonV1 newPerson = new ViewIntegrationPersonV1()
           {
-            Name = collaborator.Colaborador.Nome,
-            Mail = collaborator.Colaborador.Email,
-            Document = collaborator.Colaborador.Documento,
-            DateBirth = collaborator.Colaborador.DataNascimento,
-            Phone = collaborator.Colaborador.Celular,
-            PhoneFixed = collaborator.Colaborador.Telefone,
-            DocumentID = collaborator.Colaborador.Identidade,
-            DocumentCTPF = collaborator.Colaborador.CarteiraProfissional,
-            Sex = collaborator.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : collaborator.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
-            Schooling = collaborator.Schooling,
+            Name = colaborador.Nome,
+            Mail = colaborador.Email,
+            Document = colaborador.Documento,
+            DateBirth = colaborador.DataNascimento,
+            Phone = colaborador.Celular,
+            PhoneFixed = colaborador.Telefone,
+            DocumentID = colaborador.Identidade,
+            DocumentCTPF = colaborador.CarteiraProfissional,
+            Sex = colaborador.Sexo.StartsWith("M") ? EnumSex.Male : colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
+            Schooling = ControleColaboradores[search].Schooling,
             Contract = new ViewIntegrationContractV1()
             {
-              Document = collaborator.Colaborador.Documento,
-              Company  = collaborator.Company,
-              Registration = collaborator.Colaborador.Matricula,
-              Establishment = collaborator.Establishment,
-              DateAdm = collaborator.Colaborador.DataAdmissao,
+              Document = colaborador.Documento,
+              Company = ControleColaboradores[search].Company,
+              Registration = colaborador.Matricula,
+              Establishment = ControleColaboradores[search].Establishment,
+              DateAdm = colaborador.DataAdmissao,
               StatusUser = situacao,
-              HolidayReturn = collaborator.Colaborador.DataRetornoFerias,
-              MotiveAside = collaborator.Colaborador.MotivoAfastamento,
-              DateResignation =  collaborator.Colaborador.DataDemissao,
-              Occupation = collaborator.Occupation,
-              DateLastOccupation =  collaborator.Colaborador.DataUltimaTrocaCargo,
-              Salary = collaborator.Colaborador.SalarioNominal,
-              DateLastReadjust = collaborator.Colaborador.DataUltimoReajuste,
+              HolidayReturn = colaborador.DataRetornoFerias,
+              MotiveAside = colaborador.MotivoAfastamento,
+              DateResignation = colaborador.DataDemissao,
+              Occupation = ControleColaboradores[search].Occupation,
+              DateLastOccupation = colaborador.DataUltimaTrocaCargo,
+              Salary = colaborador.SalarioNominal,
+              DateLastReadjust = colaborador.DataUltimoReajuste,
               TypeUser = typeUser,
-              TypeJourney = 0,
-              _IdManager = collaborator.Manager?.IdPerson,
-              DocumentManager = collaborator.Colaborador.DocumentoChefe,
-              CompanyManager = collaborator.CompanyManager,
-              RegistrationManager = collaborator.Colaborador.MatriculaChefe
+              TypeJourney = EnumTypeJourney.OnBoarding,
+              _IdManager = ControleColaboradores[search].Manager?.IdPerson,
+              DocumentManager = colaborador.DocumentoGestor,
+              CompanyManager = ControleColaboradores[search].CompanyManager,
+              RegistrationManager = colaborador.MatriculaGestor
             }
           };
           ViewIntegrationMapPersonV1 viewReturn = personIntegration.PostNewPerson(newPerson);
-          int search = Collaborators.FindIndex(p => p.Documento == collaborator.Colaborador.Documento && p.NomeEmpresa == collaborator.Colaborador.NomeEmpresa && p.Matricula == collaborator.Colaborador.Matricula);
-          Collaborators[search].Person = viewReturn.Person;
+          ControleColaboradores[search].IdPerson = viewReturn.IdPerson;
+          ControleColaboradores[search].IdContract = viewReturn.IdContract;
+          ControleColaboradores[search].Colaborador = colaborador;
         }
-        // Forçar troca de gestor se não estiver marcado
-        bool forceChange = false;
-        if (searchManager != -1)
+        else
         {
-          if (collaborator.Person.Contract.TypeUser != typeUser)
-            forceChange = true;
-        }
-        if (!collaborator.Colaborador.TestarMudanca(collaborator.ColaboradorAnterior) || forceChange)
-        {
-          // Testar troca de gestor
-          PersonIntegration personIntegration = new PersonIntegration(Person);
-          ViewIntegrationPersonV1 changePerson = new ViewIntegrationPersonV1()
+          // Alteração de colaborador
+          if (ControleColaboradores[search].Colaborador == null || ControleColaboradores[search].Colaborador.TestarMudanca(colaborador))
           {
-            _id = collaborator.Person._id,
-            Name = collaborator.Colaborador.Nome,
-            Mail = collaborator.Colaborador.Email,
-            Document = collaborator.Colaborador.Documento,
-            DateBirth = collaborator.Colaborador.DataNascimento,
-            Phone = collaborator.Colaborador.Celular,
-            PhoneFixed = collaborator.Colaborador.Telefone,
-            DocumentID = collaborator.Colaborador.Identidade,
-            DocumentCTPF = collaborator.Colaborador.CarteiraProfissional,
-            Sex = collaborator.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : collaborator.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
-            Schooling = collaborator.Schooling,
-            Contract = new ViewIntegrationContractV1()
+            PersonIntegration personIntegration = new PersonIntegration(Person);
+            ViewIntegrationPersonV1 changePerson = new ViewIntegrationPersonV1()
             {
-              Document = collaborator.Colaborador.Documento,
-              Company = collaborator.Company,
-              Registration = collaborator.Colaborador.Matricula,
-              Establishment = collaborator.Establishment,
-              DateAdm = collaborator.Colaborador.DataAdmissao,
-              StatusUser = situacao,
-              HolidayReturn = collaborator.Colaborador.DataRetornoFerias,
-              MotiveAside = collaborator.Colaborador.MotivoAfastamento,
-              DateResignation = collaborator.Colaborador.DataDemissao,
-              Occupation = collaborator.Occupation,
-              DateLastOccupation = collaborator.Colaborador.DataUltimaTrocaCargo,
-              Salary = collaborator.Colaborador.SalarioNominal,
-              DateLastReadjust = collaborator.Colaborador.DataUltimoReajuste,
-              TypeUser = typeUser,
-              TypeJourney = 0,
-              _IdManager = collaborator.Manager?.IdPerson,
-              DocumentManager = collaborator.Colaborador.DocumentoChefe,
-              CompanyManager = collaborator.CompanyManager,
-              RegistrationManager = collaborator.Colaborador.MatriculaChefe
-            }
-          };
-          ViewIntegrationMapPersonV1 viewReturn = personIntegration.PostNewPerson(changePerson);
-          int search = Collaborators.FindIndex(p => p.Documento == collaborator.Colaborador.Documento && p.NomeEmpresa == collaborator.Colaborador.NomeEmpresa && p.Matricula == collaborator.Colaborador.Matricula);
-          Collaborators[search].Person = viewReturn.Person;
-          Collaborators[search].ColaboradorAnterior = Collaborators[search].Colaborador;
+              _id = ControleColaboradores[search].IdPerson,
+              Name = colaborador.Nome,
+              Mail = colaborador.Email,
+              Document = colaborador.Documento,
+              DateBirth = colaborador.DataNascimento,
+              Phone = colaborador.Celular,
+              PhoneFixed = colaborador.Telefone,
+              DocumentID = colaborador.Identidade,
+              DocumentCTPF = colaborador.CarteiraProfissional,
+              Sex = colaborador.Sexo.StartsWith("M") ? EnumSex.Male : colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
+              Schooling = ControleColaboradores[search].Schooling,
+              Contract = new ViewIntegrationContractV1()
+              {
+                Document = colaborador.Documento,
+                Company = ControleColaboradores[search].Company,
+                Registration = colaborador.Matricula,
+                Establishment = ControleColaboradores[search].Establishment,
+                DateAdm = colaborador.DataAdmissao,
+                StatusUser = situacao,
+                HolidayReturn = colaborador.DataRetornoFerias,
+                MotiveAside = colaborador.MotivoAfastamento,
+                DateResignation = colaborador.DataDemissao,
+                Occupation = ControleColaboradores[search].Occupation,
+                DateLastOccupation = colaborador.DataUltimaTrocaCargo,
+                Salary = colaborador.SalarioNominal,
+                DateLastReadjust = colaborador.DataUltimoReajuste,
+                TypeUser = typeUser,
+                _IdManager = ControleColaboradores[search].Manager?.IdPerson,
+                DocumentManager = colaborador.DocumentoGestor,
+                CompanyManager = ControleColaboradores[search].CompanyManager,
+                RegistrationManager = colaborador.MatriculaGestor
+              }
+            };
+            ViewIntegrationMapPersonV1 viewReturn = personIntegration.PutPerson(changePerson);
+            ControleColaboradores[search].Colaborador = colaborador;
+          }
         }
       }
-      string saveObject = JsonConvert.SerializeObject(Collaborators);
+      string saveObject = JsonConvert.SerializeObject(ControleColaboradores);
       FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount), saveObject, false);
-      Message = "Fim de integração!";
+
+      Status = EnumStatusService.Ok;
+      if (hasLogFile)
+      {
+        Message = "Fim de integração com LOG!";
+        Status = EnumStatusService.Error;
+      }
     }
     #endregion
-
+    #endregion
   }
 }

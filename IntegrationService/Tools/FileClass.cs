@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace IntegrationService.Tools
 {
@@ -21,11 +22,16 @@ namespace IntegrationService.Tools
       }
     }
 
-    public static void SaveLog(string filePath, string register)
+    public static void SaveLog(string file, string register)
     {
-      using (TextWriter stream = new StreamWriter(filePath,true))
+      bool newFile = true;
+      if (File.Exists(file))
+        newFile = false;
+      using (TextWriter stream = new StreamWriter(file,true))
       {
-        stream.WriteLine(register);
+        if (newFile)
+          stream.WriteLine("Data\tMensagem");
+        stream.WriteLine(string.Format("{0}\t{1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), register));
       }
     }
   }

@@ -1,4 +1,5 @@
 ﻿using IntegrationService.Enumns;
+using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -35,12 +36,21 @@ namespace IntegrationService.Data
     public string NomeGrauInstrucao { get; set; }
     public Decimal SalarioNominal { get; set; }
     public DateTime? DataUltimoReajuste { get; set; }
-    public string DocumentoChefe { get; set; }
-    public string EmpresaChefe { get; set; }
-    public string NomeEmpresaChefe { get; set; }
-    public long MatriculaChefe { get; set; }
-    public string Message { get; set; }
+    public string DocumentoGestor { get; set; }
+    public string EmpresaGestor { get; set; }
+    public string NomeEmpresaGestor { get; set; }
+    public long MatriculaGestor { get; set; }
+    public string Mensagem { get; set; }
+    public string ChaveEmpresa { get { return (string.Format("{0};{1}", Empresa, NomeEmpresa).ToLower()); } }
+    public string ChaveEstabelecimento { get { return (string.Format("{0};{1};{2};{3}", Empresa, NomeEmpresa, Estabelecimento, NomeEstabelecimento).ToLower()); } }
+    public string ChaveGrauInstrucao { get { return (string.Format("{0};{1}", GrauInstrucao, NomeGrauInstrucao).ToLower()); } }
+    public string ChaveCargo { get { return (string.Format("{0};{1};{2};{3}", Empresa, NomeEmpresa, Cargo, NomeCargo).ToLower()); } }
+    public string ChaveColaborador { get { return (string.Format("{0};{1};{2};{3}", Documento, Empresa, NomeEmpresa, Matricula).ToLower()); } }
+    public string ChaveEmpresaGestor { get { return (string.Format("{0};{1}", EmpresaGestor, NomeEmpresaGestor).ToLower()); } }
+    public string ChaveGestor { get { return (string.Format("{0};{1};{2};{3}", DocumentoGestor, EmpresaGestor, NomeEmpresaGestor, MatriculaGestor).ToLower()); } }
 
+    public EnumTypeUser TypeUser { get; set; }
+    public Colaborador() {}
     public Colaborador(List<string> list, EnumLayoutManualBasicV1 enumeration)
     {
       try
@@ -74,15 +84,16 @@ namespace IntegrationService.Data
         NomeGrauInstrucao = list[(int)EnumLayoutManualBasicV1.DescricaoGrauInstrucao].ToString().Trim();
         SalarioNominal = 0;
         DataUltimoReajuste = null;
-        EmpresaChefe = string.Empty;
-        DocumentoChefe = list[(int)EnumLayoutManualBasicV1.CpfChefe].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty);
-        if (!string.IsNullOrEmpty(DocumentoChefe))
-          DocumentoChefe = DocumentoChefe.PadLeft(11, '0');
-        NomeEmpresaChefe = list[(int)EnumLayoutManualBasicV1.NomeEmpresaChefe].ToString().Trim();
-        MatriculaChefe = 0;
-        if (!string.IsNullOrEmpty(list[(int)EnumLayoutManualBasicV1.MatriculaChefe].ToString()))
-          MatriculaChefe = Convert.ToInt64(list[(int)EnumLayoutManualBasicV1.MatriculaChefe].ToString().Trim());
-        Message = string.Empty;
+        EmpresaGestor = string.Empty;
+        DocumentoGestor = list[(int)EnumLayoutManualBasicV1.CpfGestor].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty);
+        if (!string.IsNullOrEmpty(DocumentoGestor))
+          DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        NomeEmpresaGestor = list[(int)EnumLayoutManualBasicV1.NomeEmpresaGestor].ToString().Trim();
+        MatriculaGestor = 0;
+        if (!string.IsNullOrEmpty(list[(int)EnumLayoutManualBasicV1.MatriculaGestor].ToString()))
+          MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutManualBasicV1.MatriculaGestor].ToString().Trim());
+        Mensagem = string.Empty;
+        TypeUser = EnumTypeUser.Employee;
       }
       catch (Exception)
       {
@@ -125,15 +136,16 @@ namespace IntegrationService.Data
         SalarioNominal = Convert.ToDecimal(list[(int)EnumLayoutManualCompleteV1.Salario].ToString().Trim());
         DateTime.TryParse(list[(int)EnumLayoutManualCompleteV1.DataUltimoReajuste].ToString(), CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataUltimoReajuste);
         DataUltimoReajuste = dataUltimoReajuste;
-        DocumentoChefe = list[(int)EnumLayoutManualCompleteV1.CpfChefe].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty);
-        if (!string.IsNullOrEmpty(DocumentoChefe))
-          DocumentoChefe = DocumentoChefe.PadLeft(11, '0');
-        EmpresaChefe = string.Empty;
-        NomeEmpresaChefe = list[(int)EnumLayoutManualCompleteV1.NomeEmpresaChefe].ToString().Trim();
-        MatriculaChefe = 0;
-        if (!string.IsNullOrEmpty(list[(int)EnumLayoutManualCompleteV1.MatriculaChefe].ToString()))
-          MatriculaChefe = Convert.ToInt64(list[(int)EnumLayoutManualCompleteV1.MatriculaChefe].ToString().Trim());
-        Message = string.Empty;
+        DocumentoGestor = list[(int)EnumLayoutManualCompleteV1.CpfGestor].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty);
+        if (!string.IsNullOrEmpty(DocumentoGestor))
+          DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        EmpresaGestor = string.Empty;
+        NomeEmpresaGestor = list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor].ToString().Trim();
+        MatriculaGestor = 0;
+        if (!string.IsNullOrEmpty(list[(int)EnumLayoutManualCompleteV1.MatriculaGestor].ToString()))
+          MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutManualCompleteV1.MatriculaGestor].ToString().Trim());
+        Mensagem = string.Empty;
+        TypeUser = EnumTypeUser.Employee;
       }
       catch (Exception)
       {
@@ -173,15 +185,16 @@ namespace IntegrationService.Data
         NomeGrauInstrucao = list[(int)EnumLayoutSystemBasicV1.DescricaoGrauInstrucao].ToString().Trim();
         SalarioNominal = 0;
         DataUltimoReajuste = null;
-        DocumentoChefe = list[(int)EnumLayoutSystemBasicV1.CpfChefe].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty);
-        if (!string.IsNullOrEmpty(DocumentoChefe))
-          DocumentoChefe = DocumentoChefe.PadLeft(11, '0');
-        EmpresaChefe = list[(int)EnumLayoutSystemBasicV1.EmpresaChefe].Trim();
-        NomeEmpresaChefe = list[(int)EnumLayoutSystemBasicV1.NomeEmpresaChefe].ToString().Trim();
-        MatriculaChefe = 0;
-        if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemBasicV1.MatriculaChefe].ToString()))
-          MatriculaChefe = Convert.ToInt64(list[(int)EnumLayoutSystemBasicV1.MatriculaChefe].ToString().Trim());
-        Message = string.Empty;
+        DocumentoGestor = list[(int)EnumLayoutSystemBasicV1.CpfGestor].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty);
+        if (!string.IsNullOrEmpty(DocumentoGestor))
+          DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        EmpresaGestor = list[(int)EnumLayoutSystemBasicV1.EmpresaGestor].Trim();
+        NomeEmpresaGestor = list[(int)EnumLayoutSystemBasicV1.NomeEmpresaGestor].ToString().Trim();
+        MatriculaGestor = 0;
+        if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemBasicV1.MatriculaGestor].ToString()))
+          MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutSystemBasicV1.MatriculaGestor].ToString().Trim());
+        Mensagem = string.Empty;
+        TypeUser = EnumTypeUser.Employee;
       }
       catch (Exception)
       {
@@ -224,15 +237,16 @@ namespace IntegrationService.Data
         SalarioNominal = Convert.ToDecimal(list[(int)EnumLayoutSystemCompleteV1.Salario].ToString().Trim());
         DateTime.TryParse(list[(int)EnumLayoutSystemCompleteV1.DataUltimoReajuste].ToString(), CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataUltimoReajuste);
         DataUltimoReajuste = dataUltimoReajuste;
-        DocumentoChefe = list[(int)EnumLayoutSystemCompleteV1.CpfChefe].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty);
-        if (!string.IsNullOrEmpty(DocumentoChefe))
-          DocumentoChefe = DocumentoChefe.PadLeft(11, '0');
-        EmpresaChefe = list[(int)EnumLayoutSystemCompleteV1.EmpresaChefe].Trim();
-        NomeEmpresaChefe = list[(int)EnumLayoutSystemCompleteV1.NomeEmpresaChefe].ToString().Trim();
-        MatriculaChefe = 0;
-        if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemCompleteV1.MatriculaChefe].ToString()))
-          MatriculaChefe = Convert.ToInt64(list[(int)EnumLayoutSystemCompleteV1.MatriculaChefe].ToString().Trim());
-        Message = string.Empty;
+        DocumentoGestor = list[(int)EnumLayoutSystemCompleteV1.CpfGestor].ToString().Trim().Replace(".", string.Empty).Replace("-", string.Empty);
+        if (!string.IsNullOrEmpty(DocumentoGestor))
+          DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        EmpresaGestor = list[(int)EnumLayoutSystemCompleteV1.EmpresaGestor].Trim();
+        NomeEmpresaGestor = list[(int)EnumLayoutSystemCompleteV1.NomeEmpresaGestor].ToString().Trim();
+        MatriculaGestor = 0;
+        if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor].ToString()))
+          MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor].ToString().Trim());
+        Mensagem = string.Empty;
+        TypeUser = EnumTypeUser.Employee;
       }
       catch (Exception)
       {
@@ -252,7 +266,7 @@ namespace IntegrationService.Data
               let toValue = type.GetProperty(pi.Name).GetValue(testar, null)
               where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
               select selfValue;
-          return !unequalProperties.Any();
+          return unequalProperties.Count() != 0;
         }
         return false;
       }

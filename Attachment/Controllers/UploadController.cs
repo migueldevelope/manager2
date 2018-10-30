@@ -150,7 +150,7 @@ namespace EdeskIntegration.Controllers
           CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
           if (cloudBlobContainer.CreateIfNotExistsAsync().Result)
           {
-            cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
             {
               PublicAccess = BlobContainerPublicAccessType.Blob
             });

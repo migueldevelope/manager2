@@ -7,7 +7,7 @@ namespace Manager.Core.Business.Integration
 {
   public class IntegrationBase : BaseEntity
   {
-    public string Code { get; set; }
+    public string Key { get; set; }
     public string Name { get; set; }
     public string _idCompany { get; set; }
   }

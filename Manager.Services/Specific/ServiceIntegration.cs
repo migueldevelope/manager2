@@ -56,143 +56,157 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public List<Schooling> GetIntegrationSchooling(string code, string name)
+
+    #region Integration Company, Estabilischment, Schooling, Occupation, Person
+    public IntegrationCompany GetIntegrationCompany(string key, string name)
     {
       try
       {
-        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
-        if (item != null)
-          if (item.Schooling == null)
-            return new List<Schooling>();
-          else
-            return new List<Schooling>() { item.Schooling };
-        List<Schooling> list = schoolingService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList();
-        item = new IntegrationSchooling()
+        IntegrationCompany item = integrationCompanyService.GetAll(p => p.Key.ToLower() == key.ToLower()).FirstOrDefault();
+        if (item == null)
         {
-          Code = code,
-          Name = name,
-          Schooling = null,
-          Status = EnumStatus.Enabled
-        };
-
-        if (list.Count == 1)
-          item.Schooling = list[0];
-
-        integrationSchoolingService.Insert(item);
-        return list;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<Company> GetIntegrationCompany(string code, string name)
-    {
-      try
-      {
-        IntegrationCompany item = integrationCompanyService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
-        if (item != null)
-          if (item.Company == null)
-            return new List<Company>();
-          else
-            return new List<Company>() { item.Company };
-        List<Company> list = companyService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList();
-        item = new IntegrationCompany()
+          item = new IntegrationCompany()
+          {
+            Key = key,
+            Name = name,
+            _idCompany = string.Empty,
+            Company = null,
+            Status = EnumStatus.Enabled
+          };
+          integrationCompanyService.Insert(item);
+        }
+        if (item.Company == null)
         {
-          Code = code,
-          Name = name,
-          Company = null,
-          Status = EnumStatus.Enabled
-        };
-
-        if (list.Count == 1)
-          item.Company = list[0];
-
-        integrationCompanyService.Insert(item);
-        return list;
+          List<Company> companies = companyService.GetAll(p => p.Name.ToLower() == name).ToList<Company>();
+          if (companies.Count == 1)
+          {
+            item.Company = companies[0];
+            integrationCompanyService.Update(item, null);
+          }
+        }
+        return item;
       }
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-    public List<Establishment> GetIntegrationEstablishment(string idcompany, string code, string name)
+    public IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany)
     {
       try
       {
-        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p._idCompany == idcompany && p.Name.ToLower() == name.ToLower()).FirstOrDefault();
-        if (item != null)
-          if (item.Establishment == null)
-            return new List<Establishment>();
-          else
-            return new List<Establishment>() { item.Establishment };
-        List<Establishment> list = establishmentService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList();
-        item = new IntegrationEstablishment()
+        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p.Key.ToLower() == key.ToLower()).FirstOrDefault();
+        if (item == null)
         {
-          Code = code,
-          Name = name,
-          _idCompany = idcompany,
-          Establishment = null,
-          Status = EnumStatus.Enabled
-        };
-
-        if (list.Count == 1)
-          item.Establishment = list[0];
-
-        integrationEstablishmentService.Insert(item);
-        return list;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<Occupation> GetIntegrationOccupation(string idcompany, string code, string name)
-    {
-      try
-      {
-        IntegrationOccupation item = integrationOccupationService.GetAll(p => p._idCompany == idcompany && p.Name.ToLower() == name.ToLower()).FirstOrDefault();
-        if (item != null)
-          if (item.Occupation == null)
-            return new List<Occupation>();
-          else
-            return new List<Occupation>() { item.Occupation };
-        List<Occupation> list = occupationService.GetAll(p => p.ProcessLevelTwo.ProcessLevelOne.Area.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList();
-        item = new IntegrationOccupation()
+          item = new IntegrationEstablishment()
+          {
+            Key = key,
+            Name = name,
+            _idCompany = idcompany,
+            Establishment = null,
+            Status = EnumStatus.Enabled
+          };
+          integrationEstablishmentService.Insert(item);
+        }
+        if (item.Establishment == null)
         {
-          Code = code,
-          Name = name,
-          _idCompany = idcompany,
-          Occupation = null,
-          Status = EnumStatus.Enabled
-        };
-
-        if (list.Count == 1)
-          item.Occupation = list[0];
-
-        integrationOccupationService.Insert(item);
-        return list;
+          List<Establishment> establishments = establishmentService.GetAll(p => p.Company._id == idcompany && p.Name.ToLower() == name).ToList<Establishment>();
+          if (establishments.Count == 1)
+          {
+            item.Establishment = establishments[0];
+            integrationEstablishmentService.Update(item, null);
+          }
+        }
+        return item;
       }
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public Person GetPersonByKey(string document, string idcompany, long registration)
+    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany)
     {
       try
       {
-        return personService.GetAll(p => p.Document == document && p.Company._id == idcompany && p.Registration == registration).FirstOrDefault();
+        IntegrationOccupation item = integrationOccupationService.GetAll(p => p.Key.ToLower() == key.ToLower()).FirstOrDefault();
+        if (item == null)
+        {
+          item = new IntegrationOccupation()
+          {
+            Key = key,
+            Name = name,
+            _idCompany = idcompany,
+            Occupation = null,
+            Status = EnumStatus.Enabled
+          };
+          integrationOccupationService.Insert(item);
+        }
+        if (item.Occupation == null)
+        {
+          List<Occupation> occupations = occupationService.GetAll(p => p.ProcessLevelTwo.ProcessLevelOne.Area.Company._id == idcompany && p.Name.ToLower() == name).ToList<Occupation>();
+          if (occupations.Count == 1)
+          {
+            item.Occupation = occupations[0];
+            integrationOccupationService.Update(item, null);
+          }
+        }
+        return item;
       }
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
       }
     }
-
+    public IntegrationSchooling GetIntegrationSchooling(string key, string name)
+    {
+      try
+      {
+        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p.Key.ToLower() == key.ToLower()).FirstOrDefault();
+        if (item == null)
+        {
+          item = new IntegrationSchooling()
+          {
+            Key = key,
+            Name = name,
+            _idCompany = string.Empty,
+            Schooling = null,
+            Status = EnumStatus.Enabled
+          };
+          integrationSchoolingService.Insert(item);
+        }
+        if (item.Schooling == null)
+        {
+          List<Schooling> schoolings = schoolingService.GetAll(p => p.Name.ToLower() == name).ToList<Schooling>();
+          if (schoolings.Count == 1)
+          {
+            item.Schooling = schoolings[0];
+            integrationSchoolingService.Update(item, null);
+          }
+        }
+        return item;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public Person GetPersonByKey(string idcompany, string document, long registration)
+    {
+      try
+      {
+        IQueryable<Person> personsDocument = personService.GetAll(p => p.Document == document);
+        if (personsDocument.Count() == 0)
+          return null;
+        if (personsDocument.Count() == 1)
+          return personsDocument.FirstOrDefault();
+        return personsDocument.Where(p => p.Company._id == idcompany && p.Registration == registration).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    #endregion
     public Schooling GetSchooling(string id)
     {
       try

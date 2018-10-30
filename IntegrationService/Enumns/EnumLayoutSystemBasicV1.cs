@@ -39,12 +39,12 @@ namespace IntegrationService.Enumns
     [Description("nome_grau_instrucao")]
     DescricaoGrauInstrucao = 16,
     [Description("empresa_chefe")]
-    EmpresaChefe = 17,
+    EmpresaGestor = 17,
     [Description("nome_empresa_chefe")]
-    NomeEmpresaChefe = 18,
+    NomeEmpresaGestor = 18,
     [Description("cpf_chefe")]
-    CpfChefe = 19,
+    CpfGestor = 19,
     [Description("matricula_chefe")]
-    MatriculaChefe = 20
+    MatriculaGestor = 20
   }
 }

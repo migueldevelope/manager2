@@ -21,7 +21,7 @@ namespace IntegrationService.Api
       clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
     }
-    public ViewIntegrationMapOfV1 GetByName(EnumValidKey key, ViewIntegrationMapOfV1 map)
+    public ViewIntegrationMapOfV1 GetByKey(EnumValidKey key, ViewIntegrationMapOfV1 map)
     {
       try
       {
@@ -39,22 +39,6 @@ namespace IntegrationService.Api
         return map;
       }
     }
-
-    public ViewIntegrationMapPersonV1 GetCollaboratorByKey(ViewIntegrationMapPersonV1 map)
-    {
-      try
-      {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(map));
-        content.Headers.ContentType.MediaType = "application/json";
-
-        var result = clientSkill.PostAsync("person", content).Result;
-        return JsonConvert.DeserializeObject<ViewIntegrationMapPersonV1>(result.Content.ReadAsStringAsync().Result);
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
     public ViewIntegrationMapManagerV1 GetManagerByKey(ViewIntegrationMapManagerV1 map)
     {
       try
@@ -64,6 +48,21 @@ namespace IntegrationService.Api
 
         var result = clientSkill.PostAsync("person/manager", content).Result;
         return JsonConvert.DeserializeObject<ViewIntegrationMapManagerV1>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public ViewIntegrationMapPersonV1 GetPersonByKey(ViewIntegrationMapPersonV1 map)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(map));
+        content.Headers.ContentType.MediaType = "application/json";
+
+        var result = clientSkill.PostAsync("person", content).Result;
+        return JsonConvert.DeserializeObject<ViewIntegrationMapPersonV1>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Manager.Core.Business;
+using Manager.Core.Business.Integration;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Services.Commons;
@@ -37,84 +38,16 @@ namespace IntegrationServer.InfraController
         throw;
       }
     }
+    #region Person
     [Authorize]
     [HttpPost]
     public IActionResult GetPersonByKey([FromBody]ViewIntegrationMapPersonV1  view)
     {
       try
       {
-        view.Id = string.Empty;
-        view.Name = string.Empty;
-        view.Message = string.Empty;
-        Person person = service.GetPersonByKey(view.Document,view.IdCompany,view.Registration);
-        if (person == null)
-        {
-          view.Message = "Person not found!";
-        }
-        else
-        {
-          view.Id = person._id;
-          view.Name = person.Name;
-          view.Person = new ViewIntegrationPersonV1()
-          {
-            _id = person._id,
-            Name = person.Name,
-            Mail = person.Mail,
-            Document = person.Document,
-            DateBirth = person.DateBirth,
-            Phone = person.Phone,
-            PhoneFixed = person.PhoneFixed,
-            DocumentID = person.DocumentID,
-            DocumentCTPF = person.DocumentCTPF,
-            Sex = person.Sex,
-            Schooling = new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
-            Contract = new ViewIntegrationContractV1()
-            {
-              _id = string.Empty,
-              Document = person.Document,
-              Company = person.Company == null ? null : new ViewIntegrationMapOfV1() { Id = person.Company._id, Name = person.Company.Name },
-              Registration = person.Registration,
-              Establishment = person.Establishment == null ? null : new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
-              DateAdm = person.DateAdm,
-              StatusUser = person.StatusUser,
-              HolidayReturn = person.HolidayReturn,
-              MotiveAside = person.MotiveAside,
-              DateResignation = person.DateResignation,
-              Occupation = person.Occupation == null ? null : new ViewIntegrationMapOfV1() { Id = person.Occupation._id, IdCompany = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
-              DateLastOccupation = person.DateLastOccupation,
-              Salary  = person.Salary,
-              DateLastReadjust = person.DateLastReadjust,
-              _IdManager = person.Manager?._id,
-              DocumentManager = person.Manager?.Document,
-              CompanyManager = person.Manager == null ? null : new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
-              RegistrationManager = person.Manager == null ? 0 : person.Manager.Registration,
-              NameManager = person.Manager?.Name,
-              TypeUser = person.TypeUser,
-              TypeJourney = person.TypeJourney
-            },
-          };
-        }
-        return Ok(view);
-      }
-      catch (Exception ex)
-      {
-        view.Message = ex.Message;
-        return Ok(view);
-      }
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("manager")]
-    public IActionResult GetManagerByKey([FromBody]ViewIntegrationMapManagerV1 view)
-    {
-      try
-      {
         view.IdPerson = string.Empty;
-        view.IdContract = string.Empty;
-        view.Name = string.Empty;
         view.Message = string.Empty;
-        Person person = service.GetPersonByKey(view.Document, view.CompanyId, view.Registration);
+        Person person = service.GetPersonByKey(view.IdCompany, view.Document, view.Registration);
         if (person == null)
         {
           view.Message = "Person not found!";
@@ -122,7 +55,44 @@ namespace IntegrationServer.InfraController
         else
         {
           view.IdPerson = person._id;
-          view.Name = person.Name;
+          //view.Person = new ViewIntegrationPersonV1()
+          //{
+          //  _id = person._id,
+          //  Name = person.Name,
+          //  Mail = person.Mail,
+          //  Document = person.Document,
+          //  DateBirth = person.DateBirth,
+          //  Phone = person.Phone,
+          //  PhoneFixed = person.PhoneFixed,
+          //  DocumentID = person.DocumentID,
+          //  DocumentCTPF = person.DocumentCTPF,
+          //  Sex = person.Sex,
+          //  Schooling = new ViewIntegrationMapOfV1() { IdMapOf = person.Schooling._id, Name = person.Schooling.Name },
+          //  Contract = new ViewIntegrationContractV1()
+          //  {
+          //    _id = string.Empty,
+          //    Document = person.Document,
+          //    Company = person.Company == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Company._id, Name = person.Company.Name },
+          //    Registration = person.Registration,
+          //    Establishment = person.Establishment == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Establishment._id, Name = person.Establishment.Name, IdCompanyKey = person.Establishment.Company._id },
+          //    DateAdm = person.DateAdm,
+          //    StatusUser = person.StatusUser,
+          //    HolidayReturn = person.HolidayReturn,
+          //    MotiveAside = person.MotiveAside,
+          //    DateResignation = person.DateResignation,
+          //    Occupation = person.Occupation == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Occupation._id, IdCompanyKey = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
+          //    DateLastOccupation = person.DateLastOccupation,
+          //    Salary  = person.Salary,
+          //    DateLastReadjust = person.DateLastReadjust,
+          //    _IdManager = person.Manager?._id,
+          //    DocumentManager = person.Manager?.Document,
+          //    CompanyManager = person.Manager == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Manager.Company._id, Name = person.Manager.Company.Name },
+          //    RegistrationManager = person.Manager == null ? 0 : person.Manager.Registration,
+          //    NameManager = person.Manager?.Name,
+          //    TypeUser = person.TypeUser,
+          //    TypeJourney = person.TypeJourney
+          //  },
+          //};
         }
         return Ok(view);
       }
@@ -132,7 +102,6 @@ namespace IntegrationServer.InfraController
         return Ok(view);
       }
     }
-
     [Authorize]
     [HttpPost]
     [Route("new")]
@@ -144,22 +113,26 @@ namespace IntegrationServer.InfraController
         if (!string.IsNullOrEmpty(view.Contract._IdManager))
           personManager = servicePerson.GetPerson(view.Contract._IdManager);
 
+        Establishment establishment = null;
+        if (view.Contract.Establishment != null)
+          establishment = service.GetEstablishment(view.Contract.Establishment.Id);
+
         Person newPerson = new Person()
         {
           Name = view.Name,
           Document = view.Document,
           Mail = view.Mail,
           Phone = view.Phone,
-          TypeUser = (EnumTypeUser)view.Contract.TypeUser,
-          StatusUser = (EnumStatusUser)view.Contract.StatusUser,
+          TypeUser = view.Contract.TypeUser,
+          StatusUser = view.Contract.StatusUser,
           Company = service.GetCompany(view.Contract.Company.Id),
           Occupation = service.GetOccupation(view.Contract.Occupation.Id),
           Registration = view.Contract.Registration,
           DateBirth = view.DateBirth,
           DateAdm = view.Contract.DateAdm,
           Schooling = service.GetSchooling(view.Schooling.Id),
-          TypeJourney = (EnumTypeJourney)view.Contract.TypeJourney,
-          Establishment = service.GetEstablishment(view.Contract.Establishment.Id),
+          TypeJourney = view.Contract.TypeJourney,
+          Establishment = establishment,
           PhoneFixed = view.PhoneFixed,
           DocumentID = view.DocumentID,
           DocumentCTPF = view.DocumentCTPF,
@@ -179,49 +152,48 @@ namespace IntegrationServer.InfraController
 
         ViewIntegrationMapPersonV1 viewReturn = new ViewIntegrationMapPersonV1()
         {
-          Id = person._id,
+          IdPerson = person._id,
           Document = person.Document,
           IdCompany = person.Company._id,
-          Registration = person.Registration,
-          Name = person.Name,
-          Person = new ViewIntegrationPersonV1()
-          {
-            _id = person._id,
-            Name = person.Name,
-            Mail = person.Mail,
-            Document = person.Document,
-            DateBirth = person.DateBirth,
-            Phone = person.Phone,
-            PhoneFixed = person.PhoneFixed,
-            DocumentID = person.DocumentID,
-            DocumentCTPF = person.DocumentCTPF,
-            Sex = person.Sex,
-            Schooling = person.Schooling == null ? null : new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
-            Contract = new ViewIntegrationContractV1()
-            {
-              _id = string.Empty,
-              Document = person.Document,
-              Company = person.Company == null ? null : new ViewIntegrationMapOfV1() { Id = person.Company._id, Name = person.Company.Name },
-              Registration = person.Registration,
-              Establishment = person.Establishment == null ? null : new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
-              DateAdm = person.DateAdm,
-              StatusUser = person.StatusUser,
-              HolidayReturn = person.HolidayReturn,
-              MotiveAside = person.MotiveAside,
-              DateResignation = person.DateResignation,
-              Occupation = person.Occupation == null ? null : new ViewIntegrationMapOfV1() { Id = person.Occupation._id, IdCompany = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
-              DateLastOccupation = person.DateLastOccupation,
-              Salary = person.Salary,
-              DateLastReadjust = person.DateLastReadjust,
-              _IdManager = person.Manager?._id,
-              DocumentManager = person.Manager?.Document,
-              CompanyManager = person.Manager == null ? null : new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
-              RegistrationManager = person.Manager == null ? 0 : person.Manager.Registration,
-              NameManager = person.Manager?.Name,
-              TypeUser = person.TypeUser,
-              TypeJourney = person.TypeJourney
-            }
-          }
+          Registration = person.Registration
+          //Person = new ViewIntegrationPersonV1()
+          //{
+          //  _id = person._id,
+          //  Name = person.Name,
+          //  Mail = person.Mail,
+          //  Document = person.Document,
+          //  DateBirth = person.DateBirth,
+          //  Phone = person.Phone,
+          //  PhoneFixed = person.PhoneFixed,
+          //  DocumentID = person.DocumentID,
+          //  DocumentCTPF = person.DocumentCTPF,
+          //  Sex = person.Sex,
+          //  Schooling = person.Schooling == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Schooling._id, Name = person.Schooling.Name },
+          //  Contract = new ViewIntegrationContractV1()
+          //  {
+          //    _id = string.Empty,
+          //    Document = person.Document,
+          //    Company = person.Company == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Company._id, Name = person.Company.Name },
+          //    Registration = person.Registration,
+          //    Establishment = person.Establishment == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Establishment._id, Name = person.Establishment.Name, IdCompanyKey = person.Establishment.Company._id },
+          //    DateAdm = person.DateAdm,
+          //    StatusUser = person.StatusUser,
+          //    HolidayReturn = person.HolidayReturn,
+          //    MotiveAside = person.MotiveAside,
+          //    DateResignation = person.DateResignation,
+          //    Occupation = person.Occupation == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Occupation._id, IdCompanyKey = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
+          //    DateLastOccupation = person.DateLastOccupation,
+          //    Salary = person.Salary,
+          //    DateLastReadjust = person.DateLastReadjust,
+          //    _IdManager = person.Manager?._id,
+          //    DocumentManager = person.Manager?.Document,
+          //    CompanyManager = person.Manager == null ? null : new ViewIntegrationMapOfV1() { IdMapOf = person.Manager.Company._id, Name = person.Manager.Company.Name },
+          //    RegistrationManager = person.Manager == null ? 0 : person.Manager.Registration,
+          //    NameManager = person.Manager?.Name,
+          //    TypeUser = person.TypeUser,
+          //    TypeJourney = person.TypeJourney
+          //  }
+          //}
         };
         return Ok(viewReturn);
       }
@@ -230,7 +202,6 @@ namespace IntegrationServer.InfraController
         return BadRequest(ex.ToString());
       }
     }
-
     [Authorize]
     [HttpPut]
     [Route("update")]
@@ -238,6 +209,10 @@ namespace IntegrationServer.InfraController
     {
       try
       {
+        Establishment establishment = null;
+        if (view.Contract.Establishment != null)
+          establishment = service.GetEstablishment(view.Contract.Establishment.Id);
+
         Person personManager = null;
         if (!string.IsNullOrEmpty(view.Contract._IdManager))
           personManager = servicePerson.GetPerson(view.Contract._IdManager);
@@ -247,8 +222,8 @@ namespace IntegrationServer.InfraController
         changePerson.Document = view.Document;
         changePerson.Mail = view.Mail;
         changePerson.Phone = view.Phone;
-        changePerson.TypeUser = (EnumTypeUser)view.Contract.TypeUser;
-        changePerson.StatusUser = (EnumStatusUser)view.Contract.StatusUser;
+        changePerson.TypeUser = view.Contract.TypeUser;
+        changePerson.StatusUser = view.Contract.StatusUser;
         changePerson.Company = service.GetCompany(view.Contract.Company.Id);
         changePerson.Occupation = service.GetOccupation(view.Contract.Occupation.Id);
         changePerson.Registration = view.Contract.Registration;
@@ -256,7 +231,7 @@ namespace IntegrationServer.InfraController
         changePerson.DateAdm = view.Contract.DateAdm;
         changePerson.Schooling = service.GetSchooling(view.Schooling.Id);
         //changePerson.TypeJourney = (EnumTypeJourney)view.Contract.TypeJourney;
-        changePerson.Establishment = service.GetEstablishment(view.Contract.Establishment.Id);
+        changePerson.Establishment = establishment;
         changePerson.PhoneFixed = view.PhoneFixed;
         changePerson.DocumentID = view.DocumentID;
         changePerson.DocumentCTPF = view.DocumentCTPF;
@@ -272,49 +247,48 @@ namespace IntegrationServer.InfraController
         Person person = servicePerson.UpdatePersonView(changePerson);
         ViewIntegrationMapPersonV1 viewReturn = new ViewIntegrationMapPersonV1()
         {
-          Id = person._id,
+          IdPerson = person._id,
           Document = person.Document,
           IdCompany = person.Company._id,
           Registration = person.Registration,
-          Name = person.Name,
-          Person = new ViewIntegrationPersonV1()
-          {
-            _id = person._id,
-            Name = person.Name,
-            Mail = person.Mail,
-            Document = person.Document,
-            DateBirth = person.DateBirth,
-            Phone = person.Phone,
-            PhoneFixed = person.PhoneFixed,
-            DocumentID = person.DocumentID,
-            DocumentCTPF = person.DocumentCTPF,
-            Sex = person.Sex,
-            Schooling = new ViewIntegrationMapOfV1() { Id = person.Schooling._id, Name = person.Schooling.Name },
-            Contract = new ViewIntegrationContractV1()
-            {
-              _id = string.Empty,
-              Document = person.Document,
-              Company = new ViewIntegrationMapOfV1() { Id = person.Company._id, Name = person.Company.Name },
-              Registration = person.Registration,
-              Establishment = new ViewIntegrationMapOfV1() { Id = person.Establishment._id, Name = person.Establishment.Name, IdCompany = person.Establishment.Company._id },
-              DateAdm = person.DateAdm,
-              StatusUser = person.StatusUser,
-              HolidayReturn = person.HolidayReturn,
-              MotiveAside = person.MotiveAside,
-              DateResignation = person.DateResignation,
-              Occupation = new ViewIntegrationMapOfV1() { Id = person.Occupation._id, IdCompany = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
-              DateLastOccupation = person.DateLastOccupation,
-              Salary = person.Salary,
-              DateLastReadjust = person.DateLastReadjust,
-              _IdManager = person.Manager._id,
-              DocumentManager = person.Manager.Document,
-              CompanyManager = new ViewIntegrationMapOfV1() { Id = person.Manager.Company._id, Name = person.Manager.Company.Name },
-              RegistrationManager = person.Manager.Registration,
-              NameManager = person.Manager.Name,
-              TypeUser = person.TypeUser,
-              TypeJourney = person.TypeJourney
-            }
-          }
+          //Person = new ViewIntegrationPersonV1()
+          //{
+          //  _id = person._id,
+          //  Name = person.Name,
+          //  Mail = person.Mail,
+          //  Document = person.Document,
+          //  DateBirth = person.DateBirth,
+          //  Phone = person.Phone,
+          //  PhoneFixed = person.PhoneFixed,
+          //  DocumentID = person.DocumentID,
+          //  DocumentCTPF = person.DocumentCTPF,
+          //  Sex = person.Sex,
+          //  Schooling = new ViewIntegrationMapOfV1() { IdMapOf = person.Schooling._id, Name = person.Schooling.Name },
+          //  Contract = new ViewIntegrationContractV1()
+          //  {
+          //    _id = string.Empty,
+          //    Document = person.Document,
+          //    Company = new ViewIntegrationMapOfV1() { IdMapOf = person.Company._id, Name = person.Company.Name },
+          //    Registration = person.Registration,
+          //    Establishment = new ViewIntegrationMapOfV1() { IdMapOf = person.Establishment._id, Name = person.Establishment.Name, IdCompanyKey = person.Establishment.Company._id },
+          //    DateAdm = person.DateAdm,
+          //    StatusUser = person.StatusUser,
+          //    HolidayReturn = person.HolidayReturn,
+          //    MotiveAside = person.MotiveAside,
+          //    DateResignation = person.DateResignation,
+          //    Occupation = new ViewIntegrationMapOfV1() { IdMapOf = person.Occupation._id, IdCompanyKey = person.Occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id, Name = person.Occupation.Name },
+          //    DateLastOccupation = person.DateLastOccupation,
+          //    Salary = person.Salary,
+          //    DateLastReadjust = person.DateLastReadjust,
+          //    _IdManager = person.Manager._id,
+          //    DocumentManager = person.Manager.Document,
+          //    CompanyManager = new ViewIntegrationMapOfV1() { IdMapOf = person.Manager.Company._id, Name = person.Manager.Company.Name },
+          //    RegistrationManager = person.Manager.Registration,
+          //    NameManager = person.Manager.Name,
+          //    TypeUser = person.TypeUser,
+          //    TypeJourney = person.TypeJourney
+          //  }
+          //}
         };
         return Ok(viewReturn);
       }
@@ -323,126 +297,133 @@ namespace IntegrationServer.InfraController
         return BadRequest(ex.ToString());
       }
     }
+    #endregion
 
-    [Authorize]
-    [HttpPost]
-    [Route("schooling")]
-    public IActionResult GetSchoolingByName([FromBody]ViewIntegrationMapOfV1 view)
-    {
-      try
-      {
-        List<Schooling> schoolings = service.GetIntegrationSchooling(view.Code, view.Name);
-        switch (schoolings.Count)
-        {
-          case 0:
-            view.Id = string.Empty;
-            view.Message = "Schooling not found!";
-            break;
-          case 1:
-            view.Id = schoolings[0]._id;
-            view.Message = string.Empty;
-            break;
-          default:
-            view.Id = string.Empty;
-            view.Message = "Schooling duplicated!";
-            break;
-        }
-        return Ok(view);
-      }
-      catch (Exception ex)
-      {
-        view.Message = ex.Message;
-        return Ok(view);
-      }
-    }
-
+    #region Integration De = Para
     [Authorize]
     [HttpPost]
     [Route("company")]
-    public IActionResult GetCompanyByName([FromBody]ViewIntegrationMapOfV1 view)
+    public IActionResult GetCompanyByMap([FromBody]ViewIntegrationMapOfV1 view)
     {
       try
       {
-        List<Company> companys = service.GetIntegrationCompany(view.Code, view.Name);
-        switch (companys.Count)
+        IntegrationCompany company = service.GetIntegrationCompany(view.Key, view.Name);
+        view.Id = string.Empty;
+        if (company.Company == null)
         {
-          case 0:
-            view.Id = string.Empty;
-            view.Message = "Company not found!";
-            break;
-          case 1:
-            view.Id = companys[0]._id;
-            view.Message = string.Empty;
-            break;
-          default:
-            view.Id = string.Empty;
-            view.Message = "Company duplicated!";
-            break;
+          view.Id = string.Empty;
+          view.Message = "Company not found!";
+        }
+        else
+        {
+          view.Id = company.Company._id;
+          view.Message = string.Empty;
         }
         return Ok(view);
       }
       catch (Exception ex)
       {
+        view.Id = string.Empty;
         view.Message = ex.Message;
         return Ok(view);
       }
     }
-
     [Authorize]
     [HttpPost]
     [Route("establishment")]
-    public IActionResult GetEstablishmentByName([FromBody]ViewIntegrationMapOfV1 view)
+    public IActionResult GetEstablishmentByMap([FromBody]ViewIntegrationMapOfV1 view)
     {
       try
       {
-        List<Establishment> establishments = service.GetIntegrationEstablishment(view.IdCompany, view.Code, view.Name);
-        switch (establishments.Count)
+        IntegrationEstablishment establishment = service.GetIntegrationEstablishment(view.Key, view.Name, view.IdCompany);
+        if (establishment.Establishment == null)
         {
-          case 0:
-            view.Id = string.Empty;
-            view.Message = "Establishment not found!";
-            break;
-          case 1:
-            view.Id = establishments[0]._id;
-            view.Message = string.Empty;
-            break;
-          default:
-            view.Id = string.Empty;
-            view.Message = "Establishment duplicated!";
-            break;
+          view.Id = string.Empty;
+          view.Message = "Establishment not found!";
+        }
+        else
+        {
+          view.Id = establishment.Establishment._id;
+          view.Message = string.Empty;
         }
         return Ok(view);
       }
       catch (Exception ex)
       {
         view.Message = ex.Message;
+        view.Id = string.Empty;
         return Ok(view);
       }
     }
-
     [Authorize]
     [HttpPost]
     [Route("occupation")]
-    public IActionResult GetOccupationByName([FromBody]ViewIntegrationMapOfV1 view)
+    public IActionResult GetOccupationByMap([FromBody]ViewIntegrationMapOfV1 view)
     {
       try
       {
-        List<Occupation> occupations = service.GetIntegrationOccupation(view.IdCompany, view.Code, view.Name);
-        switch (occupations.Count)
+        IntegrationOccupation occupation = service.GetIntegrationOccupation(view.Key, view.Name, view.IdCompany);
+        if (occupation.Occupation == null)
         {
-          case 0:
-            view.Id = string.Empty;
-            view.Message = "Occupation not found!";
-            break;
-          case 1:
-            view.Id = occupations[0]._id;
-            view.Message = string.Empty;
-            break;
-          default:
-            view.Id = string.Empty;
-            view.Message = "Occupation duplicated!";
-            break;
+          view.Id = string.Empty;
+          view.Message = "Occupation not found!";
         }
+        else
+        {
+          view.Id = occupation.Occupation._id;
+          view.Message = string.Empty;
+        }
+        return Ok(view);
+      }
+      catch (Exception ex)
+      {
+        view.Id = string.Empty;
+        view.Message = ex.Message;
+        return Ok(view);
+      }
+    }
+    [Authorize]
+    [HttpPost]
+    [Route("schooling")]
+    public IActionResult GetSchoolingByMap([FromBody]ViewIntegrationMapOfV1 view)
+    {
+      try
+      {
+        IntegrationSchooling schooling = service.GetIntegrationSchooling(view.Key, view.Name);
+        if (schooling.Schooling == null)
+        {
+          view.Id = string.Empty;
+          view.Message = "Schooling not found!";
+        }
+        else
+        {
+          view.Id = schooling.Schooling._id;
+          view.Message = string.Empty;
+        }
+        return Ok(view);
+      }
+      catch (Exception ex)
+      {
+        view.Id = string.Empty;
+        view.Message = ex.Message;
+        return Ok(view);
+      }
+    }
+    [Authorize]
+    [HttpPost]
+    [Route("manager")]
+    public IActionResult GetManagerByKey([FromBody]ViewIntegrationMapManagerV1 view)
+    {
+      try
+      {
+        view.IdPerson = string.Empty;
+        view.IdContract = string.Empty;
+        view.Message = string.Empty;
+        Person person = service.GetPersonByKey(view.IdCompany, view.Document, view.Registration);
+        if (person == null)
+          view.Message = "Person not found!";
+        else
+          view.IdPerson = person._id;
         return Ok(view);
       }
       catch (Exception ex)
@@ -451,5 +432,6 @@ namespace IntegrationServer.InfraController
         return Ok(view);
       }
     }
+    #endregion
   }
 }

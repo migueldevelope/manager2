@@ -70,7 +70,7 @@
     <Compile Include="Api\InfraIntegration.cs" />
     <Compile Include="Api\PersonIntegration.cs" />
     <Compile Include="Core\EnumValidKey.cs" />
-    <Compile Include="Core\MapPerson.cs" />
+    <Compile Include="Data\ControleColaborador.cs" />
     <Compile Include="Data\Colaborador.cs" />
     <Compile Include="Enumns\EnumLayoutManualCompleteV1.cs" />
     <Compile Include="Enumns\EnumLayoutManualBasicV1.cs" />
@@ -86,10 +86,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\ConfigurationService.cs" />
-    <Compile Include="Service\ValidMapManager.cs" />
-    <Compile Include="Service\ValidMapCollaborator.cs" />
     <Compile Include="Service\ImportService.cs" />
-    <Compile Include="Service\ValidMapOf.cs" />
     <Compile Include="Tools\ConnectionString.cs" />
     <Compile Include="Tools\FileClass.cs" />
     <Compile Include="Tools\GetPersonSystem.cs" />

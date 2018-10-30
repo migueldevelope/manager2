@@ -57,12 +57,12 @@ namespace IntegrationService.Enumns
     [Description("data_ultimo_reajuste")]
     DataUltimoReajuste = 25,
     [Description("empresa_chefe")]
-    EmpresaChefe = 26,
+    EmpresaGestor = 26,
     [Description("nome_empresa_chefe")]
-    NomeEmpresaChefe = 27,
+    NomeEmpresaGestor = 27,
     [Description("cpf_chefe")]
-    CpfChefe = 28,
+    CpfGestor = 28,
     [Description("matricula_chefe")]
-    MatriculaChefe = 29
+    MatriculaGestor = 29
   }
 }
