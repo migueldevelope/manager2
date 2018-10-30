@@ -50,12 +50,13 @@ namespace Manager
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, conn.TokenServer);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, conn.TokenServer);
-      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer);
+      IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
+      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer, serviceMandatoryTraining);
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, conn.TokenServer);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
-      IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
+      
 
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceCompany);

@@ -556,10 +556,12 @@ namespace Manager.Services.Specific
     {
       try
       {
+        
         if (view.Include == null)
           view.Include = DateTime.Now;
 
         trainingPlanService.Insert(view);
+
         return "add success";
       }
       catch (Exception e)
