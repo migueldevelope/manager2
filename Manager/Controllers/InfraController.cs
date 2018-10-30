@@ -800,10 +800,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getcourseoccupation/{idcompany}/{idoccupation}/{type}")]
-    public List<Course> GetCourseOccupation(string idcompany, string idoccupation, EnumTypeMandatoryTraining type)
+    [Route("getcourseoccupation/{idoccupation}/{type}")]
+    public List<Course> GetCourseOccupation(string idoccupation, EnumTypeMandatoryTraining type)
     {
-      return service.GetCourseOccupation(idcompany, idoccupation, type);
+      return service.GetCourseOccupation(idoccupation, type);
     }
 
 

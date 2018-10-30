@@ -1339,12 +1339,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Course> GetCourseOccupation(string idoccuation, string idcompany, EnumTypeMandatoryTraining type)
+    public List<Course> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type)
     {
       try
       {
 
         var list = new List<Course>();
+        var idcompany = occupationService.GetAll(p => p._id == idoccuation).FirstOrDefault().Group.Company._id;
         var occupations = occupationMandatoryService.GetAll(p => p.Occupation._id == idoccuation & p.TypeMandatoryTraining == type).ToList();
         var company = companyMandatoryService.GetAll(p => p.Company._id == idcompany & p.TypeMandatoryTraining == type).ToList();
 
@@ -1587,7 +1588,7 @@ namespace Manager.Services.Specific
             NameGroup = p.Group.Name,
             Activities = p.Activities.Count(),
             Skills = p.Skills.Count(),
-            Schooling = p.Schooling.Where(x=> x.Complement != null).Count()
+            Schooling = p.Schooling.Where(x => x.Complement != null).Count()
           }).ToList();
 
         total = list.Count();
@@ -3000,7 +3001,7 @@ namespace Manager.Services.Specific
               maxLine = line;
 
             var result = new ViewCSVLO();
-            result.Name = scope.Name.Replace("\n","").Replace(";",".");
+            result.Name = scope.Name.Replace("\n", "").Replace(";", ".");
             result.Line = line;
             result.Type = EnumTypeLO.Scope;
 
