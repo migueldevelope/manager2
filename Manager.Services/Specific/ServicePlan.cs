@@ -552,31 +552,36 @@ namespace Manager.Services.Specific
             {
               foreach (var res in plan)
               {
-                result.Add(new ViewPlanStruct()
+                var view = new ViewPlanStruct();
+                view._id = res._id;
+                view._idAccount = res._idAccount;
+                view.Name = res.Name;
+                view.DateInclude = res.DateInclude;
+                view.Deadline = res.Deadline;
+                view.Description = res.Description;
+                view.Skills = res.Skills;
+                view.UserInclude = res.UserInclude;
+                view.TypePlan = res.TypePlan;
+                view.IdPerson = item.Person._id;
+                view.NamePerson = item.Person.Name;
+                view.SourcePlan = res.SourcePlan;
+                view.IdMonitoring = item._id;
+                view.Evaluation = res.Evaluation;
+                view.StatusPlan = res.StatusPlan;
+                view.TypeAction = res.TypeAction;
+                view.StatusPlanApproved = res.StatusPlanApproved;
+                view.TextEnd = res.TextEnd;
+                view.Status = res.Status;
+                view.DateEnd = res.DateEnd;
+                view.NewAction = res.NewAction;
+                if (res.StructPlans != null)
                 {
-                  _id = res._id,
-                  _idAccount = res._idAccount,
-                  Name = res.Name,
-                  DateInclude = res.DateInclude,
-                  Deadline = res.Deadline,
-                  Description = res.Description,
-                  Skills = res.Skills,
-                  UserInclude = res.UserInclude,
-                  TypePlan = res.TypePlan,
-                  IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
-                  SourcePlan = res.SourcePlan,
-                  IdMonitoring = item._id,
-                  Evaluation = res.Evaluation,
-                  StatusPlan = res.StatusPlan,
-                  TypeAction = res.TypeAction,
-                  StatusPlanApproved = res.StatusPlanApproved,
-                  TextEnd = res.TextEnd,
-                  Status = res.Status,
-                  DateEnd = res.DateEnd,
-                  NewAction = res.NewAction,
-                  StructPlans = res.StructPlans
-                });
+                  if (res.StructPlans.Count() == 0)
+                    view.StructPlans = null;
+                  else
+                    view.StructPlans = res.StructPlans;
+                }
+                result.Add(view);
               }
             }
           }
@@ -592,31 +597,36 @@ namespace Manager.Services.Specific
             {
               foreach (var res in plan)
               {
-                result.Add(new ViewPlanStruct()
+                var view = new ViewPlanStruct();
+                view._id = res._id;
+                view._idAccount = res._idAccount;
+                view.Name = res.Name;
+                view.DateInclude = res.DateInclude;
+                view.Deadline = res.Deadline;
+                view.Description = res.Description;
+                view.Skills = res.Skills;
+                view.UserInclude = res.UserInclude;
+                view.TypePlan = res.TypePlan;
+                view.IdPerson = item.Person._id;
+                view.NamePerson = item.Person.Name;
+                view.SourcePlan = res.SourcePlan;
+                view.IdMonitoring = item._id;
+                view.Evaluation = res.Evaluation;
+                view.StatusPlan = res.StatusPlan;
+                view.TypeAction = res.TypeAction;
+                view.StatusPlanApproved = res.StatusPlanApproved;
+                view.TextEnd = res.TextEnd;
+                view.Status = res.Status;
+                view.DateEnd = res.DateEnd;
+                view.NewAction = res.NewAction;
+                if (res.StructPlans != null)
                 {
-                  _id = res._id,
-                  _idAccount = res._idAccount,
-                  Name = res.Name,
-                  DateInclude = res.DateInclude,
-                  Deadline = res.Deadline,
-                  Description = res.Description,
-                  Skills = res.Skills,
-                  UserInclude = res.UserInclude,
-                  TypePlan = res.TypePlan,
-                  IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
-                  SourcePlan = res.SourcePlan,
-                  IdMonitoring = item._id,
-                  Evaluation = res.Evaluation,
-                  StatusPlan = res.StatusPlan,
-                  TypeAction = res.TypeAction,
-                  StatusPlanApproved = res.StatusPlanApproved,
-                  TextEnd = res.TextEnd,
-                  Status = res.Status,
-                  DateEnd = res.DateEnd,
-                  NewAction = res.NewAction,
-                  StructPlans = res.StructPlans
-                });
+                  if (res.StructPlans.Count() == 0)
+                    view.StructPlans = null;
+                  else
+                    view.StructPlans = res.StructPlans;
+                }
+                result.Add(view);
               }
             }
           }
@@ -633,31 +643,36 @@ namespace Manager.Services.Specific
             {
               foreach (var res in plan)
               {
-                result.Add(new ViewPlanStruct()
+                var view = new ViewPlanStruct();
+                view._id = res._id;
+                view._idAccount = res._idAccount;
+                view.Name = res.Name;
+                view.DateInclude = res.DateInclude;
+                view.Deadline = res.Deadline;
+                view.Description = res.Description;
+                view.Skills = res.Skills;
+                view.UserInclude = res.UserInclude;
+                view.TypePlan = res.TypePlan;
+                view.IdPerson = item.Person._id;
+                view.NamePerson = item.Person.Name;
+                view.SourcePlan = res.SourcePlan;
+                view.IdMonitoring = item._id;
+                view.Evaluation = res.Evaluation;
+                view.StatusPlan = res.StatusPlan;
+                view.TypeAction = res.TypeAction;
+                view.StatusPlanApproved = res.StatusPlanApproved;
+                view.TextEnd = res.TextEnd;
+                view.Status = res.Status;
+                view.DateEnd = res.DateEnd;
+                view.NewAction = res.NewAction;
+                if (res.StructPlans != null)
                 {
-                  _id = res._id,
-                  _idAccount = res._idAccount,
-                  Name = res.Name,
-                  DateInclude = res.DateInclude,
-                  Deadline = res.Deadline,
-                  Description = res.Description,
-                  Skills = res.Skills,
-                  UserInclude = res.UserInclude,
-                  TypePlan = res.TypePlan,
-                  IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
-                  SourcePlan = res.SourcePlan,
-                  IdMonitoring = item._id,
-                  Evaluation = res.Evaluation,
-                  StatusPlan = res.StatusPlan,
-                  TypeAction = res.TypeAction,
-                  StatusPlanApproved = res.StatusPlanApproved,
-                  TextEnd = res.TextEnd,
-                  Status = res.Status,
-                  DateEnd = res.DateEnd,
-                  NewAction = res.NewAction,
-                  StructPlans = res.StructPlans
-                });
+                  if (res.StructPlans.Count() == 0)
+                    view.StructPlans = null;
+                  else
+                    view.StructPlans = res.StructPlans;
+                }
+                result.Add(view);
               }
             }
           }
@@ -1772,10 +1787,13 @@ namespace Manager.Services.Specific
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
-              if (res.StructPlans.Count() == 0)
-                view.StructPlans = null;
-              else
-                view.StructPlans = res.StructPlans;
+              if (res.StructPlans != null)
+              {
+                if (res.StructPlans.Count() == 0)
+                  view.StructPlans = null;
+                else
+                  view.StructPlans = res.StructPlans;
+              }
             }
             else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
@@ -1812,10 +1830,13 @@ namespace Manager.Services.Specific
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
-              if (res.StructPlans.Count() == 0)
-                view.StructPlans = null;
-              else
-                view.StructPlans = res.StructPlans;
+              if (res.StructPlans != null)
+              {
+                if (res.StructPlans.Count() == 0)
+                  view.StructPlans = null;
+                else
+                  view.StructPlans = res.StructPlans;
+              }
             }
             else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
@@ -1852,10 +1873,14 @@ namespace Manager.Services.Specific
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
-              if (res.StructPlans.Count() == 0)
-                view.StructPlans = null;
-              else
-                view.StructPlans = res.StructPlans;
+              if (res.StructPlans != null)
+              {
+                if (res.StructPlans.Count() == 0)
+                  view.StructPlans = null;
+                else
+                  view.StructPlans = res.StructPlans;
+              }
+
             }
             else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
               view.PlanNew = res;
