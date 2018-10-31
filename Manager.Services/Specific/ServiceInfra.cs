@@ -2996,7 +2996,6 @@ namespace Manager.Services.Specific
         foreach (var item in groups)
         {
           line = 0;
-          col = 0;
           foreach (var scope in item.Scope)
           {
             if (line > maxLine)
@@ -3011,11 +3010,9 @@ namespace Manager.Services.Specific
 
             list.Add(result);
             line += 1;
-            col += 1;
           }
 
           line = 0;
-          col = 0;
           foreach (var skill in item.Skills)
           {
             if (line > maxLineSkill)
@@ -3030,11 +3027,9 @@ namespace Manager.Services.Specific
 
             list.Add(result);
             line += 1;
-            col += 1;
           }
 
           line = 0;
-          col = 0;
           foreach (var scholling in item.Schooling)
           {
             if (line > maxLineSchooling)
@@ -3049,12 +3044,14 @@ namespace Manager.Services.Specific
 
             list.Add(result);
             line += 1;
-            col += 1;
           }
+          col += 1;
         }
 
+        
         for (var row = 0; row <= maxLine; row++)
         {
+          col = 0;
           foreach (var group in groups)
           {
             var item = list.Where(p => p.Type == EnumTypeLO.Scope & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
@@ -3063,15 +3060,19 @@ namespace Manager.Services.Specific
               var view = new ViewCSVLO();
               view.IdGroup = group._id;
               view.Type = EnumTypeLO.Scope;
-              view.Name = " ;";
+              view.Name = " ";
               view.Line = row;
+              view.Col = col;
               list.Add(view);
             }
+            col += 1;
           }
         }
 
+        
         for (var row = 0; row <= maxLineSkill; row++)
         {
+          col = 0;
           foreach (var group in groups)
           {
             var item = list.Where(p => p.Type == EnumTypeLO.Skill & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
@@ -3080,15 +3081,19 @@ namespace Manager.Services.Specific
               var view = new ViewCSVLO();
               view.IdGroup = group._id;
               view.Type = EnumTypeLO.Skill;
-              view.Name = " ;";
+              view.Name = " ";
               view.Line = row;
+              view.Col = col;
               list.Add(view);
             }
+            col += 1;
           }
         }
 
+        
         for (var row = 0; row <= maxLineSchooling; row++)
         {
+          col = 0;
           foreach (var group in groups)
           {
             var item = list.Where(p => p.Type == EnumTypeLO.Schooling & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
@@ -3097,10 +3102,12 @@ namespace Manager.Services.Specific
               var view = new ViewCSVLO();
               view.IdGroup = group._id;
               view.Type = EnumTypeLO.Schooling;
-              view.Name = " ;";
+              view.Name = " ";
               view.Line = row;
+              view.Col = col;
               list.Add(view);
             }
+            col += 1;
           }
         }
 
