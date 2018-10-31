@@ -3068,7 +3068,40 @@ namespace Manager.Services.Specific
               list.Add(view);
             }
           }
+        }
 
+        for (var row = 0; row <= maxLineSkill; row++)
+        {
+          foreach (var group in groups)
+          {
+            var item = list.Where(p => p.Type == EnumTypeLO.Skill & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
+            if (item == 0)
+            {
+              var view = new ViewCSVLO();
+              view.IdGroup = group._id;
+              view.Type = EnumTypeLO.Skill;
+              view.Name = " ;";
+              view.Line = row;
+              list.Add(view);
+            }
+          }
+        }
+
+        for (var row = 0; row <= maxLineSchooling; row++)
+        {
+          foreach (var group in groups)
+          {
+            var item = list.Where(p => p.Type == EnumTypeLO.Schooling & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
+            if (item == 0)
+            {
+              var view = new ViewCSVLO();
+              view.IdGroup = group._id;
+              view.Type = EnumTypeLO.Schooling;
+              view.Name = " ;";
+              view.Line = row;
+              list.Add(view);
+            }
+          }
         }
 
         for (var row = 0; row <= maxLine; row++)
