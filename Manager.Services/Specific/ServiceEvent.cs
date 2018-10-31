@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Manager.Services.Specific
 {
-  #pragma warning disable 1998
+#pragma warning disable 1998
   public class ServiceEvent : Repository<Event>, IServiceEvent
   {
     private readonly ServiceGeneric<Event> eventService;
@@ -720,7 +720,7 @@ namespace Manager.Services.Specific
         if (plan != null)
         {
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
-          plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
+          plan.Observartion = "Realized Event: " + events.Name + ", ID_Historic: " + events._id;
           trainingPlanService.Update(plan, null);
         }
         return "add success";
@@ -742,7 +742,8 @@ namespace Manager.Services.Specific
         if (plan != null)
         {
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
-          plan.Observartion = "Realized Event: " + view.Name + ", ID: " + events._id;
+          plan.Observartion = "Realized Event: " + events.Name + ", ID_Historic: " + events._id;
+          plan.Event = view.Event;
           trainingPlanService.Update(plan, null);
         }
         return "add success";
@@ -804,7 +805,17 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "Delete Event Historic " + id);
 
+
         var item = eventHistoricService.GetAll(p => p._id == id).FirstOrDefault();
+        var obs = "Realized Event: " + item.Name + ", ID_Historic: " + item._id;
+        var trainingplan = trainingPlanService.GetAll(p => p.Person._id == item.Person._id
+        & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
+        & p.Observartion == obs).FirstOrDefault();
+        if(trainingplan != null)
+        {
+          trainingplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+          trainingPlanService.Update(trainingplan, null);
+        }
         item.Status = EnumStatus.Disabled;
         eventHistoricService.Update(item, null);
         return "deleted";
@@ -1024,7 +1035,16 @@ namespace Manager.Services.Specific
         foreach (var item in eventHistoricService.GetAll(p => p.Event == events).ToList())
         {
           eventHistoricService.Delete(item._id);
+
         }
+
+        var plans = trainingPlanService.GetAll(p => p.Event._id == events._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized).ToList();
+        foreach (var traningplan in plans)
+        {
+          traningplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+          trainingPlanService.Update(traningplan, null);
+        }
+
         events.StatusEvent = EnumStatusEvent.Open;
         eventService.Update(events, null);
 
@@ -1077,5 +1097,5 @@ namespace Manager.Services.Specific
       }
     }
   }
-  #pragma warning restore 1998
+#pragma warning restore 1998
 }
