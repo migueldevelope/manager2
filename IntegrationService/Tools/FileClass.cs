@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntegrationService.Enumns;
+using System;
 using System.IO;
 
 namespace IntegrationService.Tools
@@ -22,16 +23,24 @@ namespace IntegrationService.Tools
       }
     }
 
-    public static void SaveLog(string file, string register)
+    public static void SaveLog(string file, string register, EnumTypeLog typeLog)
     {
       bool newFile = true;
       if (File.Exists(file))
         newFile = false;
       using (TextWriter stream = new StreamWriter(file,true))
       {
-        if (newFile)
-          stream.WriteLine("Data\tMensagem");
-        stream.WriteLine(string.Format("{0}\t{1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), register));
+        switch (typeLog)
+        {
+          case EnumTypeLog.Register:
+            stream.WriteLine(register);
+            break;
+          default:
+            if (newFile)
+              stream.WriteLine("Data\tTipo\tMensagem");
+            stream.WriteLine(string.Format("{0}\t{1}\t{2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), typeLog, register));
+            break;
+        }
       }
     }
   }

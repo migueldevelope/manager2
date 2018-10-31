@@ -30,14 +30,16 @@ namespace IntegrationService.Service
     private List<ViewIntegrationMapOfV1> Establishments;
     private List<ViewIntegrationMapOfV1> Occupations;
     private List<ViewIntegrationMapManagerV1> Managers;
-//    private ViewIntegrationParameter Param;
+    //    private ViewIntegrationParameter Param;
+    private ConfigurationService service;
     private readonly string LogFileName;
     private readonly Version VersionProgram;
-    public ImportService(ViewPersonLogin person)
+    public ImportService(ViewPersonLogin person, ConfigurationService serviceConfiguration)
     {
       try
       {
         Person = person;
+        service = serviceConfiguration;
         Message = string.Empty;
         Status = EnumStatusService.Ok;
         Colaboradores = new List<Colaborador>();
@@ -62,76 +64,159 @@ namespace IntegrationService.Service
       }
     }
 
+    public void Execute()
+    {
+      try
+      {
+        switch (service.Param.Process)
+        {
+          case EnumIntegrationProcess.Manual:
+            switch (service.Param.Mode)
+            {
+              case EnumIntegrationMode.DataBaseV1:
+                Message = "Modo banco de dados não suportado no processo manual!";
+                throw new Exception(Message);
+              case EnumIntegrationMode.FileCsvV1:
+                FileCsvV1();
+                break;
+              case EnumIntegrationMode.FileExcelV1:
+                break;
+              case EnumIntegrationMode.Custom:
+                Message = "Modo customizado não suportado no processo manual!";
+                throw new Exception(Message);
+            }
+            break;
+          case EnumIntegrationProcess.System:
+            switch (service.Param.Mode)
+            {
+              case EnumIntegrationMode.DataBaseV1:
+                DatabaseV1();
+                break;
+              case EnumIntegrationMode.FileCsvV1:
+                FileCsvV1();
+                break;
+              case EnumIntegrationMode.FileExcelV1:
+                break;
+              case EnumIntegrationMode.Custom:
+                Message = "Modo customizado não suportado no processo manual!";
+                throw new Exception(Message);
+            }
+            break;
+          case EnumIntegrationProcess.Executable:
+            break;
+          default:
+            break;
+        }
+        if (Status == EnumStatusService.CriticalError)
+          throw new Exception(Message);
+
+        if (Colaboradores.Count == 0)
+        {
+          Message = "Lista de colaboradores vazia!";
+          throw new Exception(Message);
+        }
+        LoadLists();
+        FinalImport();
+        service.SetParameter(new ViewIntegrationParameterExecution()
+        {
+          CriticalError = string.Empty,
+          MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME"),
+          StatusExecution = "Ok",
+          CustomVersionExecution = string.Empty,
+          UploadNextLog = false,
+          ProgramVersionExecution = VersionProgram.ToString()
+        });
+
+      }
+      catch (Exception ex)
+      {
+        if (string.IsNullOrEmpty(Message))
+          Message = ex.ToString();
+        service.SetParameter(new ViewIntegrationParameterExecution()
+        {
+          CriticalError = Message,
+          MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME"),
+          StatusExecution = "Critical Error",
+          CustomVersionExecution = string.Empty,
+          UploadNextLog = false,
+          ProgramVersionExecution = VersionProgram.ToString()
+        });
+        throw;
+      }
+    }
+
     #region Preparação Banco de Dados V1
-    public void DatabaseV1(ConfigurationService service)
+    private void DatabaseV1()
     {
       try
       {
         if (service.Param.Type == EnumIntegrationType.Custom)
-          throw new Exception("Rotina deve ser do tipo customizada!!!");
+        {
+          Message = "Rotina deve ser do tipo customizada!!!";
+          throw new Exception(Message);
+        }
 
         //if (service.Param.Process != EnumIntegrationProcess.System)
         //  throw new Exception("Apenas processo de sistema pode utilizar banco de dados!!!");
 
         // Validar parâmetros
         if (string.IsNullOrEmpty(service.Param.ConnectionString))
-          throw new Exception("Sem string de conexão!!!");
+        {
+          Message = "Sem string de conexão!!!";
+          throw new Exception(Message);
+        }
 
         if (string.IsNullOrEmpty(service.Param.SqlCommand))
-          throw new Exception("Sem comando de leitura do banco de dados!!!");
+        {
+          Message = "Sem comando de leitura do banco de dados!!!";
+          throw new Exception(Message);
+        }
 
         // Ler banco de dados
-        DataTable readData = ReadData(service);
+        DataTable readData = ReadData();
         if (readData.Rows.Count == 0)
-          throw new Exception("Não tem nenhum colaborador como retorno da consulta!!!");
+        {
+          Message = "Não tem nenhum colaborador como retorno da consulta!!!";
+          throw new Exception(Message);
+        }
 
         // Tratar os dados
-        string columnsOk = string.Empty;
         switch (service.Param.Type)
         {
           case EnumIntegrationType.Basic:
-            columnsOk = ValidColumnSystemBasicV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+            Message = ValidColumnSystemBasicV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
             break;
           case EnumIntegrationType.Complete:
-            columnsOk = ValidColumnSystemCompleteV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+            Message = ValidColumnSystemCompleteV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
             break;
         }
-        if (!string.IsNullOrEmpty(columnsOk))
-          throw new Exception(columnsOk);
+        if (!string.IsNullOrEmpty(Message))
+        {
+          throw new Exception(Message);
+        }
         // Carregar Lista de Colaboradores
         Colaboradores = new List<Colaborador>();
-        Colaborador colaborador = null;
         foreach (DataRow row in readData.Rows)
         {
           List<string> teste = row.ItemArray.Select(x => x.ToString()).ToList();
           switch (service.Param.Type)
           {
             case EnumIntegrationType.Basic:
-              colaborador = new Colaborador(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutSystemBasicV1());
+              Colaboradores.Add(ValidDataColaborator(new Colaborador(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutSystemBasicV1())));
               break;
             case EnumIntegrationType.Complete:
-              colaborador = new Colaborador(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutSystemCompleteV1());
+              Colaboradores.Add(ValidDataColaborator(new Colaborador(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutSystemCompleteV1())));
               break;
           }
-          Colaboradores.Add(ValidDataColaborator(colaborador));
         }
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        service.SetParameter(new ViewIntegrationParameterExecution()
-        {
-          CriticalError = ex.ToString(),
-          MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME"),
-          StatusExecution = "Error",
-          CustomVersionExecution = string.Empty,
-          UploadNextLog = false,
-          ProgramVersionExecution = VersionProgram.ToString()
-        });
-        Status = EnumStatusService.Error;
-        Message = ex.ToString();
+        Status = EnumStatusService.CriticalError;
+        throw;
       }
     }
-    private DataTable ReadData(ConfigurationService service)
+    private DataTable ReadData()
     {
       try
       {
@@ -156,45 +241,57 @@ namespace IntegrationService.Service
       }
       catch (Exception)
       {
+        Status = EnumStatusService.CriticalError;
         throw;
       }
     }
     #endregion
 
     #region Preparação Arquivo CSV V1
-    public void FileCsvV1(ConfigurationService service)
+    private void FileCsvV1()
     {
       try
       {
         if (service.Param.Process == EnumIntegrationProcess.Executable)
-          throw new Exception("Processo deve ser do tipo executável!!!");
+        {
+          Message = "Processo deve ser do tipo executável!!!";
+          throw new Exception(Message);
+        }
 
         if (service.Param.Type == EnumIntegrationType.Custom)
-          throw new Exception("Rotina deve ser do tipo customizada!!!");
+        {
+          Message = "Rotina deve ser do tipo customizada!!!";
+          throw new Exception(Message);
+        }
 
         // Validar parâmetros
         if (string.IsNullOrEmpty(service.Param.FilePathLocal))
-          throw new Exception("Sem arquivo de importação definido!!!");
+        {
+          Message = "Sem arquivo de importação definido!!!";
+          throw new Exception(Message);
+        }
 
         if (!File.Exists(service.Param.FilePathLocal))
-          throw new Exception(string.Format("Arquivo {0} não encontrado!!!", service.Param.FilePathLocal));
+        {
+          Message = string.Format("Arquivo {0} não encontrado!!!", service.Param.FilePathLocal);
+          throw new Exception(Message);
+        }
 
         // Tratar os dados
         StreamReader rd = new StreamReader(service.Param.FilePathLocal, Encoding.Default, true);
         List<string> readLine = null;
         readLine = rd.ReadLine().Split(';').ToList();
         // Tratar os dados
-        string columnsOk = string.Empty;
         switch (service.Param.Process)
         {
           case EnumIntegrationProcess.Manual:
             switch (service.Param.Type)
             {
               case EnumIntegrationType.Basic:
-                columnsOk = ValidColumnManualBasicV1(readLine);
+                Message = ValidColumnManualBasicV1(readLine);
                 break;
               case EnumIntegrationType.Complete:
-                columnsOk = ValidColumnManualCompleteV1(readLine);
+                Message = ValidColumnManualCompleteV1(readLine);
                 break;
             }
             break;
@@ -202,20 +299,19 @@ namespace IntegrationService.Service
             switch (service.Param.Type)
             {
               case EnumIntegrationType.Basic:
-                columnsOk = ValidColumnSystemBasicV1(readLine);
+                Message = ValidColumnSystemBasicV1(readLine);
                 break;
               case EnumIntegrationType.Complete:
-                columnsOk = ValidColumnSystemCompleteV1(readLine);
+                Message = ValidColumnSystemCompleteV1(readLine);
                 break;
             }
             break;
         }
-        if (!string.IsNullOrEmpty(columnsOk))
-          throw new Exception(columnsOk);
+        if (!string.IsNullOrEmpty(Message))
+          throw new Exception(Message);
 
         // Carregar Lista de Colaboradores
         Colaboradores = new List<Colaborador>();
-        Colaborador colaborador = null;
         string register;
         while ((register = rd.ReadLine()) != null)
         {
@@ -227,15 +323,11 @@ namespace IntegrationService.Service
               {
                 case EnumIntegrationType.Basic:
                   if (readLine.Count == Enum.GetNames(typeof(EnumLayoutManualBasicV1)).Length)
-                    colaborador = new Colaborador(readLine, new EnumLayoutManualBasicV1());
-                  else
-                    colaborador = null;
+                    Colaboradores.Add(ValidDataColaborator(new Colaborador(readLine, new EnumLayoutManualBasicV1())));
                   break;
                 case EnumIntegrationType.Complete:
                   if (readLine.Count == Enum.GetNames(typeof(EnumLayoutManualCompleteV1)).Length)
-                    colaborador = new Colaborador(readLine, new EnumLayoutManualCompleteV1());
-                  else
-                    colaborador = null;
+                    Colaboradores.Add(ValidDataColaborator(new Colaborador(readLine, new EnumLayoutManualCompleteV1())));
                   break;
               }
               break;
@@ -243,34 +335,23 @@ namespace IntegrationService.Service
               switch (service.Param.Type)
               {
                 case EnumIntegrationType.Basic:
-                  colaborador = new Colaborador(readLine, new EnumLayoutSystemBasicV1());
+                  Colaboradores.Add(ValidDataColaborator(new Colaborador(readLine, new EnumLayoutSystemBasicV1())));
                   break;
                 case EnumIntegrationType.Complete:
-                  colaborador = new Colaborador(readLine, new EnumLayoutSystemCompleteV1());
+                  Colaboradores.Add(ValidDataColaborator(new Colaborador(readLine, new EnumLayoutSystemCompleteV1())));
                   break;
               }
               break;
             default:
               break;
           }
-          if (colaborador != null)
-            Colaboradores.Add(ValidDataColaborator(colaborador));
         }
         rd.Close();
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        service.SetParameter(new ViewIntegrationParameterExecution()
-        {
-          CriticalError = ex.ToString(),
-          MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME"),
-          StatusExecution = "Error",
-          CustomVersionExecution = string.Empty,
-          UploadNextLog = false,
-          ProgramVersionExecution = VersionProgram.ToString()
-        });
-        Status = EnumStatusService.Error;
-        Message = ex.ToString();
+        Status = EnumStatusService.CriticalError;
+        throw;
       }
     }
     #endregion
@@ -491,41 +572,6 @@ namespace IntegrationService.Service
     #endregion
 
     #region Importação Final Completa
-    public void FinalImport(ConfigurationService service)
-    {
-      try
-      {
-        if (Status == EnumStatusService.Error)
-          return;
-        if (Colaboradores.Count == 0)
-          throw new Exception("Lista de colaboradores vazia!");
-        LoadLists();
-        ImportExecute();
-        service.SetParameter(new ViewIntegrationParameterExecution()
-        {
-          CriticalError = string.Empty,
-          MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME"),
-          StatusExecution = "Ok",
-          CustomVersionExecution = string.Empty,
-          UploadNextLog = false,
-          ProgramVersionExecution = VersionProgram.ToString()
-        });
-      }
-      catch (Exception ex)
-      {
-        service.SetParameter(new ViewIntegrationParameterExecution()
-        {
-          CriticalError = ex.ToString(),
-          MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME"),
-          StatusExecution = "Error",
-          CustomVersionExecution = string.Empty,
-          UploadNextLog = false,
-          ProgramVersionExecution = VersionProgram.ToString()
-        });
-        Status = EnumStatusService.Error;
-        Message = ex.ToString();
-      }
-    }
 
     #region Preparação e Validação
     private void LoadLists()
@@ -650,7 +696,8 @@ namespace IntegrationService.Service
       return search;
     }
     #endregion
-    private void ImportExecute()
+
+    private void FinalImport()
     {
       try
       {
@@ -719,37 +766,36 @@ namespace IntegrationService.Service
         foreach (ViewIntegrationMapOfV1 item in Companys)
           if (string.IsNullOrEmpty(item.Id))
           {
-            FileClass.SaveLog(LogFileName, string.Format("Falta Integração da Empresa {0}", item.Key));
+            FileClass.SaveLog(LogFileName, string.Format("Falta Integração da Empresa {0}", item.Key), EnumTypeLog.Error);
             Message = "Log de integração!!!";
           }
         foreach (ViewIntegrationMapOfV1 item in Establishments)
           if (string.IsNullOrEmpty(item.Id))
           {
-            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Estabelecimentos {0}", item.Key));
+            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Estabelecimentos {0}", item.Key), EnumTypeLog.Error);
             Message = "Log de integração!!!";
           }
         foreach (ViewIntegrationMapOfV1 item in Occupations)
           if (string.IsNullOrEmpty(item.Id))
           {
-            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Cargo {0}", item.Key));
+            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Cargo {0}", item.Key), EnumTypeLog.Error);
             Message = "Log de integração!!!";
           }
         foreach (ViewIntegrationMapOfV1 item in Schoolings)
           if (string.IsNullOrEmpty(item.Id))
           {
-            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Grau de Instrução {0}", item.Key));
+            FileClass.SaveLog(LogFileName, string.Format("Falta Integração de Grau de Instrução {0}", item.Key), EnumTypeLog.Error);
             Message = "Log de integração!!!";
           }
 
         if (!string.IsNullOrEmpty(Message))
-        {
-          Status = EnumStatusService.Error;
-          return;
-        }
+          throw new Exception(Message);
+
         UpdatePerson();
       }
       catch (Exception)
       {
+        Status = EnumStatusService.CriticalError;
         throw;
       }
     }
@@ -761,7 +807,8 @@ namespace IntegrationService.Service
       foreach (var colaborador in Colaboradores.Where(p => !string.IsNullOrEmpty(p.Mensagem)))
       {
         // Gravar LOG de colaboradores com mensagem
-        FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, colaborador.Mensagem));
+        FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, colaborador.Mensagem), EnumTypeLog.Warning);
+        Status = EnumStatusService.Error;
         hasLogFile = true;
       }
 
@@ -792,7 +839,10 @@ namespace IntegrationService.Service
           typeUser = EnumTypeUser.Manager;
 
         if (ControleColaboradores[search].Colaborador != null)
-            ControleColaboradores[search].Colaborador.TypeUser = typeUser;
+        {
+          ControleColaboradores[search].Colaborador.TypeUser = typeUser;
+          colaborador.TypeUser = typeUser;
+        }
 
         // Testar diferença de colaboradores
         if (string.IsNullOrEmpty(ControleColaboradores[search].IdPerson))
@@ -835,14 +885,22 @@ namespace IntegrationService.Service
             }
           };
           ViewIntegrationMapPersonV1 viewReturn = personIntegration.PostNewPerson(newPerson);
+          if (!string.IsNullOrEmpty(viewReturn.Message))
+            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, string.Format("{0} {1}","Pessoa não incluída.", viewReturn.Message)), EnumTypeLog.Information);
+          else
+            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, string.Format("Pessoa {0} incluída.",viewReturn.IdPerson)), EnumTypeLog.Information);
           ControleColaboradores[search].IdPerson = viewReturn.IdPerson;
           ControleColaboradores[search].IdContract = viewReturn.IdContract;
           ControleColaboradores[search].Colaborador = colaborador;
         }
         else
         {
+          string fieldChange = string.Empty;
+          if (ControleColaboradores[search].Colaborador != null)
+            fieldChange = ControleColaboradores[search].Colaborador.TestarMudanca(colaborador);
+
           // Alteração de colaborador
-          if (ControleColaboradores[search].Colaborador == null || ControleColaboradores[search].Colaborador.TestarMudanca(colaborador))
+          if (ControleColaboradores[search].Colaborador == null || !string.IsNullOrEmpty(fieldChange))
           {
             PersonIntegration personIntegration = new PersonIntegration(Person);
             ViewIntegrationPersonV1 changePerson = new ViewIntegrationPersonV1()
@@ -881,8 +939,14 @@ namespace IntegrationService.Service
               }
             };
             ViewIntegrationMapPersonV1 viewReturn = personIntegration.PutPerson(changePerson);
+            if (!string.IsNullOrEmpty(viewReturn.Message))
+              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, string.Format("{0} {1}", "Pessoa não atualizada.", viewReturn.Message)), EnumTypeLog.Information);
+            else
+              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, string.Format("Pessoa {0} atualizada com as seguintes alterações ({1}).", viewReturn.IdPerson, fieldChange)), EnumTypeLog.Information);
             ControleColaboradores[search].Colaborador = colaborador;
           }
+          else
+            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, "Pessoa sem alterações."), EnumTypeLog.Information);
         }
       }
       string saveObject = JsonConvert.SerializeObject(ControleColaboradores);

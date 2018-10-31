@@ -1,4 +1,5 @@
 ﻿using IntegrationService.Api;
+using IntegrationService.Enumns;
 using IntegrationService.Tools;
 using Manager.Views.Integration;
 using Newtonsoft.Json;
@@ -37,7 +38,7 @@ namespace IntegrationClient
         File.Delete(file);
 
       txtLog.Text = string.Format("Status;Occupation;Code;IdOccupation or Message{0}",Environment.NewLine);
-      FileClass.SaveLog(file, txtLog.Text);
+      FileClass.SaveLog(file, txtLog.Text, EnumTypeLog.Register);
       DataTable occupations;
       if (Boolean.Parse(Conn.Split(';')[0]))
       {
@@ -74,7 +75,7 @@ namespace IntegrationClient
               // gravar cargo
               cargo = infraIntegration.AddOccupation(cargo);
               string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}", cargo.IdOccupation));
-              FileClass.SaveLog(file, registro);
+              FileClass.SaveLog(file, registro, EnumTypeLog.Register);
               txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
               novoCargo = false;
             }
@@ -92,13 +93,13 @@ namespace IntegrationClient
                 // gravar cargo
                 cargo = infraIntegration.AddOccupation(cargo);
                 string registroNovo = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}", cargo.IdOccupation));
-                FileClass.SaveLog(file, registroNovo);
+                FileClass.SaveLog(file, registroNovo, EnumTypeLog.Register);
                 txtLog.Text = string.Concat(txtLog.Text, registroNovo, Environment.NewLine);
                 novoCargo = false;
               }
               cargo = infraIntegration.GetOccupationByName(ProcessLevelTwo.IdCompany, item["nome_cargo"].ToString().Trim());
               string registro = string.Format("Ok;{0};{1};{2}", item["nome_cargo"].ToString(), item["cargo"].ToString(), cargo.IdOccupation);
-              FileClass.SaveLog(file, registro);
+              FileClass.SaveLog(file, registro, EnumTypeLog.Register);
               txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
             }
             catch (Exception)
@@ -171,7 +172,7 @@ namespace IntegrationClient
         // gravar cargo
         cargo = infraIntegration.AddOccupation(cargo);
         string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}",cargo.IdOccupation));
-        FileClass.SaveLog(file, registro);
+        FileClass.SaveLog(file, registro, EnumTypeLog.Register);
         txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
         novoCargo = false;
       }

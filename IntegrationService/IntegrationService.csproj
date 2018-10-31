@@ -70,8 +70,10 @@
     <Compile Include="Api\InfraIntegration.cs" />
     <Compile Include="Api\PersonIntegration.cs" />
     <Compile Include="Core\EnumValidKey.cs" />
+    <Compile Include="Data\MudancaColaborador.cs" />
     <Compile Include="Data\ControleColaborador.cs" />
     <Compile Include="Data\Colaborador.cs" />
+    <Compile Include="Enumns\EnumTypeLog.cs" />
     <Compile Include="Enumns\EnumLayoutManualCompleteV1.cs" />
     <Compile Include="Enumns\EnumLayoutManualBasicV1.cs" />
     <Compile Include="Enumns\EnumLayoutSystemCompleteV1.cs" />

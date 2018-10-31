@@ -253,7 +253,7 @@ namespace IntegrationService.Data
         throw;
       }
     }
-    public bool TestarMudanca(Colaborador testar)
+    public string TestarMudanca(Colaborador testar)
     {
       try
       {
@@ -265,14 +265,26 @@ namespace IntegrationService.Data
               let selfValue = type.GetProperty(pi.Name).GetValue(this, null)
               let toValue = type.GetProperty(pi.Name).GetValue(testar, null)
               where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
-              select selfValue;
-          return unequalProperties.Count() != 0;
+              select new MudancaColaborador() { Campo = pi.Name, ValorAntigo = selfValue.ToString(), ValorNovo = toValue.ToString() };
+          if (unequalProperties.Count() == 0)
+            return string.Empty;
+          bool first = true;
+          string message = string.Empty;
+          foreach (var item in unequalProperties.ToList<MudancaColaborador>())
+          {
+            if (first)
+              message = string.Format("{0}: {1} -> {2}", item.Campo, item.ValorAntigo, item.ValorNovo);
+            else
+              message = string.Format("{0} {1}: {2} -> {3}", message, item.Campo, item.ValorAntigo, item.ValorNovo);
+            first = false;
+          }
+          return message;
         }
-        return false;
+        return string.Empty;
       }
       catch (Exception)
       {
-        return false;
+        return string.Empty;
       }
     }
   }

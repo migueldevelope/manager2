@@ -230,7 +230,6 @@ namespace IntegrationServer.InfraController
         changePerson.DateBirth = view.DateBirth;
         changePerson.DateAdm = view.Contract.DateAdm;
         changePerson.Schooling = service.GetSchooling(view.Schooling.Id);
-        //changePerson.TypeJourney = (EnumTypeJourney)view.Contract.TypeJourney;
         changePerson.Establishment = establishment;
         changePerson.PhoneFixed = view.PhoneFixed;
         changePerson.DocumentID = view.DocumentID;
@@ -242,8 +241,12 @@ namespace IntegrationServer.InfraController
         changePerson.Salary = view.Contract.Salary;
         changePerson.DateLastReadjust = view.Contract.DateLastReadjust;
         changePerson.DateResignation = view.Contract.DateResignation;
-        changePerson.Manager = personManager;
-        changePerson.DocumentManager = personManager?.Document;
+        //changePerson.TypeJourney = (EnumTypeJourney)view.Contract.TypeJourney;
+        if (personManager != null)
+        {
+          changePerson.Manager = personManager;
+          changePerson.DocumentManager = personManager?.Document;
+        }
         Person person = servicePerson.UpdatePersonView(changePerson);
         ViewIntegrationMapPersonV1 viewReturn = new ViewIntegrationMapPersonV1()
         {

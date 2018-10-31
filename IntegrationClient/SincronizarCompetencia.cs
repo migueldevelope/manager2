@@ -1,4 +1,5 @@
 ﻿using IntegrationService.Api;
+using IntegrationService.Enumns;
 using IntegrationService.Tools;
 using Manager.Views.Integration;
 using OracleTools;
@@ -42,7 +43,7 @@ namespace IntegrationClient
           File.Delete(file);
 
         txtLog.Text = "Status;Skill;Code;Type;IdSkill or Message";
-        FileClass.SaveLog(file, txtLog.Text);
+        FileClass.SaveLog(file, txtLog.Text, EnumTypeLog.Register);
         DataTable skills;
         if (Boolean.Parse(Conn.Split(';')[0]))
         {
@@ -64,7 +65,7 @@ namespace IntegrationClient
           {
             trabalho = skillIntegration.GetSkillByName(item["nome_competencia"].ToString());
             string registro = string.Format("Ok;{0};{1};{2};{3}", item["nome_competencia"].ToString(), item["codigo"].ToString(), item["tipo"].ToString(), trabalho.IdSkill);
-            FileClass.SaveLog(file, registro);
+            FileClass.SaveLog(file, registro, EnumTypeLog.Register);
             txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
           }
           catch (Exception ex)
@@ -79,7 +80,7 @@ namespace IntegrationClient
               };
               newSkill = skillIntegration.AddSkill(newSkill);
               string registro = string.Format("Ok;{0};{1};{2};{3}", item["nome_competencia"].ToString(), item["codigo"].ToString(), item["tipo"].ToString(), newSkill.IdSkill);
-              FileClass.SaveLog(file, registro);
+              FileClass.SaveLog(file, registro, EnumTypeLog.Register);
               txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
             }
             else

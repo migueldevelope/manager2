@@ -276,56 +276,12 @@ namespace IntegrationClient
     {
       try
       {
-        ImportService import = new ImportService(Person);
-        switch ((EnumIntegrationProcess)cboProc.SelectedItem)
-        {
-          case EnumIntegrationProcess.Manual:
-            switch ((EnumIntegrationMode)cboMode.SelectedItem)
-            {
-              case EnumIntegrationMode.DataBaseV1:
-                MessageBox.Show("Modo banco de dados não suportado no processo manual!");
-                return;
-              case EnumIntegrationMode.FileCsvV1:
-                import.FileCsvV1(serviceConfiguration);
-                break;
-              case EnumIntegrationMode.FileExcelV1:
-                break;
-              case EnumIntegrationMode.Custom:
-                MessageBox.Show("Modo customizado não suportado no processo manual!");
-                return;
-            }
-            break;
-          case EnumIntegrationProcess.System:
-            switch ((EnumIntegrationMode)cboMode.SelectedItem)
-            {
-              case EnumIntegrationMode.DataBaseV1:
-                import.DatabaseV1(serviceConfiguration);
-                break;
-              case EnumIntegrationMode.FileCsvV1:
-                import.FileCsvV1(serviceConfiguration);
-                break;
-              case EnumIntegrationMode.FileExcelV1:
-                break;
-              case EnumIntegrationMode.Custom:
-                MessageBox.Show("Modo customizado não suportado no processo manual!");
-                return;
-            }
-            break;
-          case EnumIntegrationProcess.Executable:
-            break;
-          default:
-            break;
-        }
+        ImportService import = new ImportService(Person, serviceConfiguration);
+        import.Execute();
         if (import.Status == EnumStatusService.Error)
-          MessageBox.Show(import.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MessageBox.Show(import.Message,"Importação",MessageBoxButtons.OK,MessageBoxIcon.Error);
         else
-        {
-          import.FinalImport(serviceConfiguration);
-          if (import.Status == EnumStatusService.Error)
-            MessageBox.Show(import.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          else
-            MessageBox.Show(import.Message, "Ok", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+          MessageBox.Show(import.Message,"Importação",MessageBoxButtons.OK,MessageBoxIcon.Information);
       }
       catch (Exception ex) 
       {
