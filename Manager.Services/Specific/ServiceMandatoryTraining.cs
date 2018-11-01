@@ -5,6 +5,7 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -556,7 +557,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        
+
         if (view.Include == null)
           view.Include = DateTime.Now;
 
@@ -667,14 +668,118 @@ namespace Manager.Services.Specific
           list.Add(view);
         }
 
-        if(total > 0 )
+        if (total > 0)
         {
           list.FirstOrDefault().PercentRealized = ((countRealized * 100) / total);
           list.FirstOrDefault().PercentNo = ((countNo * 100) / total);
         }
-        
+
 
         return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<ViewTrainingPlanList> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = new List<TrainingPlan>();
+        if (typeUser == EnumTypeUser.Manager)
+        {
+          if (origin == EnumOrigin.Full)
+          {
+            detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+            total = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          }
+          else
+          {
+            detail = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+            total = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          }
+        }
+        else
+        {
+          if (origin == EnumOrigin.Full)
+          {
+            detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+            total = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          }
+          else
+          {
+            detail = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+            total = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          }
+        }
+
+        var list = new List<ViewTrainingPlan>();
+
+        foreach (var item in detail)
+        {
+          var plan = new ViewTrainingPlan();
+          plan.Person = item.Person.Name;
+          plan.Course = item.Course.Name;
+          plan.Origin = item.Origin;
+          plan.StatusTrainingPlan = item.StatusTrainingPlan;
+          list.Add(plan);
+        }
+
+       
+
+        var result = new List<ViewTrainingPlanList>();
+        var view = new ViewTrainingPlanList();
+        var countRealized = 0;
+        var countNo = 0;
+        var totalGeral = 0;
+        view.Person = list.FirstOrDefault().Person;
+        view.TraningPlans = new List<ViewTrainingPlan>();
+        foreach (var item in list)
+        {
+          if (item.Person != view.Person)
+          {
+
+            if (totalGeral > 0)
+            {
+              view.TraningPlans.FirstOrDefault().PercentRealized = ((countRealized * 100) / totalGeral);
+              view.TraningPlans.FirstOrDefault().PercentNo = ((countNo * 100) / totalGeral);
+            }
+            result.Add(view);
+            view = new ViewTrainingPlanList();
+            view.Person = item.Person;
+            view.TraningPlans = new List<ViewTrainingPlan>();
+            totalGeral = 0;
+            countRealized = 0;
+            countNo = 0;
+          }
+          var training = new ViewTrainingPlan();
+          training.Person = view.Person;
+          training.Course = item.Course;
+          training.StatusTrainingPlan = item.StatusTrainingPlan;
+          training.PercentNo = item.PercentNo;
+          training.PercentRealized = item.PercentRealized;
+          totalGeral += 1;
+          if (item.StatusTrainingPlan == EnumStatusTrainingPlan.Realized)
+            countRealized += 1;
+          else
+            countNo += 1;
+          view.TraningPlans.Add(training);
+          if(item == list.Last())
+          {
+            if (totalGeral > 0)
+            {
+              view.TraningPlans.FirstOrDefault().PercentRealized = ((countRealized * 100) / totalGeral);
+              view.TraningPlans.FirstOrDefault().PercentNo = ((countNo * 100) / totalGeral);
+            }
+            view.TraningPlans.Add(training);
+          }
+            
+        }
+
+        return result;
       }
       catch (Exception e)
       {

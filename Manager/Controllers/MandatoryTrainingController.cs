@@ -5,8 +5,10 @@ using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -95,6 +97,17 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.ListOccupation(idcourse, idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("trainingplanlist/{idmanager}/{type}/{origin}")]
+    public List<ViewTrainingPlanList> ListTrainingPlanPersonList(string idmanager, EnumTypeUser type, EnumOrigin origin, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlanPersonList(idmanager, type, origin, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
