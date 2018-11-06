@@ -44,6 +44,28 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listeventopensubscription/{idperson}")]
+    public List<Event> ListEventOpenSubscription(string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventOpenSubscription(idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listeventsubscription/{idperson}")]
+    public List<Event> ListEventSubscription(string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventSubscription(idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("listeventopen")]
     public List<Event> ListEventOpen(int count = 10, int page = 1, string filter = "")
     {

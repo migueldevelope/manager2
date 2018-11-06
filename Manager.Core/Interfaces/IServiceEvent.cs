@@ -52,5 +52,7 @@ namespace Manager.Core.Interfaces
     string ReopeningEvent(string idevent);
     void SetAttachment(string idevent, string url, string fileName, string idattachmentid);
     void SetAttachmentHistoric(string idevent, string url, string fileName, string idattachmentid);
+    List<Event> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Event> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

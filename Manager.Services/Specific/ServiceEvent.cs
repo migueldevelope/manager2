@@ -262,6 +262,77 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<Event> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        LogSave(_user._idPerson, "List Open Events subscrive");
+        DateTime? date = DateTime.Now;
+        int skip = (count * (page - 1));
+        var detail = eventService.GetAll(p => p.OpenSubscription == true &
+        p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+
+        var result = new List<Event>();
+        foreach (var item in detail)
+        {
+          if (item.Begin != null)
+          {
+            if (item.Begin.Value.AddDays(item.DaysSubscription * -1) <= date)
+            {
+              if (item.Participants.Where(p => p.Person._id == idperson).Count() == 0)
+                result.Add(item);
+            }
+          }
+        }
+        total = result.Count();
+
+        return result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Event> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        LogSave(_user._idPerson, "List Open Events subscrive");
+        DateTime? date = DateTime.Now;
+        int skip = (count * (page - 1));
+        var detail = eventService.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+
+        var result = new List<Event>();
+        foreach (var item in detail)
+        {
+          if (item.Begin != null)
+          {
+            if (item.Participants != null)
+            {
+              try
+              {
+                if (item.Participants.Where(p => p.Person._id == idperson).Count() > 0)
+                  result.Add(item);
+              }
+              catch (Exception)
+              {
+                //person null
+              }
+            }
+
+          }
+        }
+        total = result.Count();
+
+        return result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Event> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -811,7 +882,7 @@ namespace Manager.Services.Specific
         var trainingplan = trainingPlanService.GetAll(p => p.Person._id == item.Person._id
         & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
         & p.Observartion == obs).FirstOrDefault();
-        if(trainingplan != null)
+        if (trainingplan != null)
         {
           trainingplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
           trainingPlanService.Update(trainingplan, null);
