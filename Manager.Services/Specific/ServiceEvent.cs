@@ -1053,20 +1053,24 @@ namespace Manager.Services.Specific
       try
       {
         var list = trainingPlanService.GetAll(p => p.Course._id == course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).ToList();
-        foreach (var item in course.Equivalents)
+        if(course.Equivalents != null)
         {
-          foreach (var plan in list)
+          foreach (var item in course.Equivalents)
           {
-            var eventsHis = eventHistoricService.GetAll(p => p.Course._id == item._id & p.Person._id == plan.Person._id);
-            if (eventsHis.Count() > 0)
+            foreach (var plan in list)
             {
-              plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
-              plan.Observartion = "Realized Event: " + eventsHis.LastOrDefault().Name + ", ID_Historic: " + eventsHis.LastOrDefault()._id;
-              trainingPlanService.Update(plan, null);
-            }
+              var eventsHis = eventHistoricService.GetAll(p => p.Course._id == item._id & p.Person._id == plan.Person._id);
+              if (eventsHis.Count() > 0)
+              {
+                plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
+                plan.Observartion = "Realized Event: " + eventsHis.LastOrDefault().Name + ", ID_Historic: " + eventsHis.LastOrDefault()._id;
+                trainingPlanService.Update(plan, null);
+              }
 
+            }
           }
         }
+        
       }
       catch (Exception e)
       {
@@ -1080,8 +1084,9 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "Update Course " + view._id);
 
-        VerifyEquivalent(view);
         courseService.Update(view, null);
+
+        VerifyEquivalent(view);
         return "update";
       }
       catch (Exception e)
