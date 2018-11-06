@@ -277,9 +277,10 @@ namespace Manager.Services.Specific
         {
           if (item.Begin != null)
           {
-            if (item.Begin.Value.AddDays(item.DaysSubscription * -1) <= date)
+            if (date.Value.Date <= item.Begin.Value.AddDays(item.DaysSubscription * -1).Date)
             {
-              if (item.Participants.Where(p => p.Person._id == idperson).Count() == 0)
+              var participants = item.Participants.Where(p => p.Person != null).ToList();
+              if (participants.Where(p => p.Person._id == idperson).Count() == 0)
                 result.Add(item);
             }
           }
@@ -306,21 +307,18 @@ namespace Manager.Services.Specific
         var result = new List<Event>();
         foreach (var item in detail)
         {
-          if (item.Begin != null)
+          if (item.Participants != null)
           {
-            if (item.Participants != null)
+            try
             {
-              try
-              {
-                if (item.Participants.Where(p => p.Person._id == idperson).Count() > 0)
-                  result.Add(item);
-              }
-              catch (Exception)
-              {
-                //person null
-              }
+              var participants = item.Participants.Where(p => p.Person != null).ToList();
+              if (participants.Where(p => p.Person._id == idperson).Count() > 0)
+                result.Add(item);
             }
-
+            catch (Exception)
+            {
+              //person null
+            }
           }
         }
         total = result.Count();
@@ -1050,12 +1048,39 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async void VerifyEquivalent(Course course)
+    {
+      try
+      {
+        var list = trainingPlanService.GetAll(p => p.Course._id == course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).ToList();
+        foreach (var item in course.Equivalents)
+        {
+          foreach (var plan in list)
+          {
+            var eventsHis = eventHistoricService.GetAll(p => p.Course._id == item._id & p.Person._id == plan.Person._id);
+            if (eventsHis.Count() > 0)
+            {
+              plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
+              plan.Observartion = "Realized Event: " + eventsHis.LastOrDefault().Name + ", ID_Historic: " + eventsHis.LastOrDefault()._id;
+              trainingPlanService.Update(plan, null);
+            }
+
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string UpdateCourse(Course view)
     {
       try
       {
         LogSave(_user._idPerson, "Update Course " + view._id);
 
+        VerifyEquivalent(view);
         courseService.Update(view, null);
         return "update";
       }
