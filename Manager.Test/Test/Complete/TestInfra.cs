@@ -8,7 +8,9 @@ using Manager.Services.Specific;
 using Manager.Test.Commons;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Xunit;
 
 namespace Manager.Test.Test.Complete
@@ -156,7 +158,7 @@ namespace Manager.Test.Test.Complete
       try
       {
         var occupations = serviceOccupation.GetAll(p => p.Status == EnumStatus.Enabled).ToList();
-        foreach(var item in occupations)
+        foreach (var item in occupations)
         {
           serviceInfra.UpdateOccupation(item);
         }
@@ -166,6 +168,103 @@ namespace Manager.Test.Test.Complete
         throw e;
       }
     }
+
+    public string[] Export(string[] rel, string message)
+    {
+      try
+      {
+        string[] text = rel;
+        string[] lines = null;
+        try
+        {
+          lines = new string[text.Count() + 1];
+          var count = 0;
+          foreach (var item in text)
+          {
+            lines.SetValue(item, count);
+            count += 1;
+          }
+          lines.SetValue(message, text.Count());
+        }
+        catch (Exception)
+        {
+          lines = new string[1];
+          lines.SetValue(message, 0);
+        }
+
+        return lines;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    [Fact]
+    public void TestComplement()
+    {
+      try
+      {
+        var occupations = serviceOccupation.GetAll(p => p.Status == EnumStatus.Enabled).ToList();
+        var list = new List<Occupation>();
+        string[] rel = new string[1];
+
+        foreach (var item in occupations)
+        {
+          if (item.Schooling.Where(p => p.Complement != null).Count() > 0)
+          {
+            foreach (var school in item.Schooling)
+            {
+              if (school.Complement != null)
+              {
+                string message = item._id + ";" + school._id + ";" + school.Complement;
+                rel = Export(rel, message);
+              }
+            }
+
+          }
+          //list.Add(item);
+        }
+        var filename = "reports/COMP" + DateTime.Now.ToString("yyyyMMddHHmmss") + "a" + ".csv";
+
+
+        File.WriteAllLines(filename, rel, Encoding.GetEncoding("iso-8859-1"));
+        //var test = list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    [Fact]
+    public void TestOccupations()
+    {
+      try
+      {
+        //var list = new List<Occupation>();
+        string[] rel = new string[1];
+        foreach (var item in serviceOccupation.GetAll().ToList())
+        {
+          foreach (var item2 in serviceOccupation.GetAll().ToList())
+          {
+            if((item2._id != item._id)& (item2.Name == item.Name))
+            {
+              string message = item._id + ";" + item.Name;
+              rel = Export(rel, message);
+            }
+            
+          }
+        }
+        var filename = "reports/OCCU" + DateTime.Now.ToString("yyyyMMddHHmmss") + "a" + ".csv";
+        File.WriteAllLines(filename, rel, Encoding.GetEncoding("iso-8859-1"));
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     [Fact]
     public void TestGroupNewAndReorder()

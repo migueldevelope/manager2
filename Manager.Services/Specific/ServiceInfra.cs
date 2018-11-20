@@ -1978,23 +1978,23 @@ namespace Manager.Services.Specific
       try
       {
         var areas = new List<Area>();
-        var groupOld = occupationService.GetAll(p => p._id == occupation._id).FirstOrDefault().Group;
+        var occupationOld = occupationService.GetAll(p => p._id == occupation._id).FirstOrDefault();
 
         foreach (var item in occupation.Process)
           areas.Add(item.ProcessLevelOne.Area);
 
-        if (groupOld != occupation.Group)
+        if (occupationOld.Group != occupation.Group)
         {
           foreach (var school in occupation.Group.Schooling)
           {
-            foreach (var schoolOccupation in groupOld.Schooling)
+            foreach (var schoolOccupation in occupationOld.Schooling)
             {
               if (school._id == schoolOccupation._id)
                 school.Complement = schoolOccupation.Complement;
             }
           }
 
-          occupation.Schooling = occupation.Group.Schooling;
+          occupation.Schooling = occupation.Schooling;
         }
 
         occupation.Areas = areas;
