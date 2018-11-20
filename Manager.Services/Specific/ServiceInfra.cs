@@ -2099,6 +2099,26 @@ namespace Manager.Services.Specific
         //  this.occupationService.Update(item, null);
         //  UpdateOccupationAll(item);
         //}
+
+        foreach (var item in processLevelOneService.GetAll().ToList())
+        {
+          if(item.Area._id == area._id)
+          {
+            item.Area.Name = area.Name;
+            processLevelOneService.Update(item, null);
+          }
+        }
+
+        foreach (var item in processLevelTwoService.GetAll().ToList())
+        {
+          if (item.ProcessLevelOne.Area._id == area._id)
+          {
+            item.ProcessLevelOne.Area.Name = area.Name;
+            processLevelTwoService.Update(item, null);
+          }
+        }
+
+
         foreach (var item in occupationService.GetAll().ToList())
         {
           foreach (var ar in item.Areas)
@@ -2109,6 +2129,8 @@ namespace Manager.Services.Specific
               {
                 item.Areas.Remove(ar);
                 item.Areas.Add(area);
+                item.ProcessLevelTwo.ProcessLevelOne.Area.Name = area.Name;
+                item.Area.Name = area.Name;
                 this.occupationService.Update(item, null);
                 UpdateOccupationAll(item);
                 break;
@@ -2117,6 +2139,7 @@ namespace Manager.Services.Specific
           }
         }
 
+       
 
       }
       catch (Exception e)
@@ -3048,7 +3071,7 @@ namespace Manager.Services.Specific
           col += 1;
         }
 
-        
+
         for (var row = 0; row <= maxLine; row++)
         {
           col = 0;
@@ -3069,7 +3092,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        
+
         for (var row = 0; row <= maxLineSkill; row++)
         {
           col = 0;
@@ -3090,7 +3113,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        
+
         for (var row = 0; row <= maxLineSchooling; row++)
         {
           col = 0;
