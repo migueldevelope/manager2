@@ -43,7 +43,6 @@
       this.label9 = new System.Windows.Forms.Label();
       this.txtSql = new System.Windows.Forms.TextBox();
       this.label6 = new System.Windows.Forms.Label();
-      this.chkOra = new System.Windows.Forms.CheckBox();
       this.txtDefault = new System.Windows.Forms.TextBox();
       this.label8 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
@@ -62,6 +61,7 @@
       this.btImp = new System.Windows.Forms.Button();
       this.cboProc = new System.Windows.Forms.ComboBox();
       this.label12 = new System.Windows.Forms.Label();
+      this.cboDatabaseType = new System.Windows.Forms.ComboBox();
       this.grpBD.SuspendLayout();
       this.grpArq.SuspendLayout();
       this.SuspendLayout();
@@ -156,11 +156,11 @@
       // 
       // grpBD
       // 
+      this.grpBD.Controls.Add(this.cboDatabaseType);
       this.grpBD.Controls.Add(this.btSave);
       this.grpBD.Controls.Add(this.label9);
       this.grpBD.Controls.Add(this.txtSql);
       this.grpBD.Controls.Add(this.label6);
-      this.grpBD.Controls.Add(this.chkOra);
       this.grpBD.Controls.Add(this.txtDefault);
       this.grpBD.Controls.Add(this.label8);
       this.grpBD.Controls.Add(this.label5);
@@ -214,16 +214,6 @@
       this.label6.TabIndex = 54;
       this.label6.Text = "Base Padrão";
       // 
-      // chkOra
-      // 
-      this.chkOra.AutoSize = true;
-      this.chkOra.Location = new System.Drawing.Point(176, 29);
-      this.chkOra.Name = "chkOra";
-      this.chkOra.Size = new System.Drawing.Size(93, 21);
-      this.chkOra.TabIndex = 55;
-      this.chkOra.Text = "É Oracle?";
-      this.chkOra.UseVisualStyleBackColor = true;
-      // 
       // txtDefault
       // 
       this.txtDefault.Font = new System.Drawing.Font("Tahoma", 8.25F);
@@ -237,9 +227,9 @@
       this.label8.AutoSize = true;
       this.label8.Location = new System.Drawing.Point(6, 29);
       this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(164, 17);
+      this.label8.Size = new System.Drawing.Size(36, 17);
       this.label8.TabIndex = 46;
-      this.label8.Text = "Conexão Base de Dados";
+      this.label8.Text = "Tipo";
       // 
       // label5
       // 
@@ -389,6 +379,14 @@
       this.label12.TabIndex = 32;
       this.label12.Text = "Tipo de Processo";
       // 
+      // cboDatabaseType
+      // 
+      this.cboDatabaseType.FormattingEnabled = true;
+      this.cboDatabaseType.Location = new System.Drawing.Point(106, 27);
+      this.cboDatabaseType.Name = "cboDatabaseType";
+      this.cboDatabaseType.Size = new System.Drawing.Size(254, 24);
+      this.cboDatabaseType.TabIndex = 59;
+      // 
       // MenuPrincipal
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -407,8 +405,8 @@
       this.Controls.Add(this.lblUrl);
       this.Controls.Add(this.txtUrl);
       this.Controls.Add(this.lblEma);
-      this.Controls.Add(this.grpArq);
       this.Controls.Add(this.grpBD);
+      this.Controls.Add(this.grpArq);
       this.Name = "MenuPrincipal";
       this.Text = "MenuPrincipal";
       this.Load += new System.EventHandler(this.MenuPrincipal_Load);
@@ -437,7 +435,6 @@
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.TextBox txtSql;
     private System.Windows.Forms.Label label6;
-    private System.Windows.Forms.CheckBox chkOra;
     private System.Windows.Forms.TextBox txtDefault;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label5;
@@ -457,5 +454,6 @@
     private System.Windows.Forms.Button btImp;
     private System.Windows.Forms.ComboBox cboProc;
     private System.Windows.Forms.Label label12;
+    private System.Windows.Forms.ComboBox cboDatabaseType;
   }
 }

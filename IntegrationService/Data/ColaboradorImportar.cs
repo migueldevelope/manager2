@@ -1,57 +1,16 @@
 ﻿using IntegrationService.Enumns;
 using Manager.Views.Enumns;
+using Manager.Views.Integration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
 
 namespace IntegrationService.Data
 {
-  public class Colaborador
+  public class ColaboradorImportar : Colaborador
   {
-    public string Empresa { get; set; }
-    public string NomeEmpresa { get; set; }
-    public string Estabelecimento { get; set; }
-    public string NomeEstabelecimento { get; set; }
-    public string Documento { get; set; }
-    public long Matricula { get; set; }
-    public string Nome { get; set; }
-    public string Email { get; set; }
-    public DateTime? DataNascimento { get; set; }
-    public string Celular { get; set; }
-    public string Telefone { get; set; }
-    public string Identidade { get; set; }
-    public string CarteiraProfissional { get; set; }
-    public string Sexo { get; set; }
-    public DateTime? DataAdmissao { get; set; }
-    public string Situacao { get; set; }
-    public DateTime? DataRetornoFerias { get; set; }
-    public string MotivoAfastamento { get; set; }
-    public DateTime? DataDemissao { get; set; }
-    public string Cargo { get; set; }
-    public string NomeCargo { get; set; }
-    public DateTime? DataUltimaTrocaCargo { get; set; }
-    public string GrauInstrucao { get; set; }
-    public string NomeGrauInstrucao { get; set; }
-    public Decimal SalarioNominal { get; set; }
-    public DateTime? DataUltimoReajuste { get; set; }
-    public string DocumentoGestor { get; set; }
-    public string EmpresaGestor { get; set; }
-    public string NomeEmpresaGestor { get; set; }
-    public long MatriculaGestor { get; set; }
-    public string Mensagem { get; set; }
-    public string ChaveEmpresa { get { return (string.Format("{0};{1}", Empresa, NomeEmpresa).ToLower()); } }
-    public string ChaveEstabelecimento { get { return (string.Format("{0};{1};{2};{3}", Empresa, NomeEmpresa, Estabelecimento, NomeEstabelecimento).ToLower()); } }
-    public string ChaveGrauInstrucao { get { return (string.Format("{0};{1}", GrauInstrucao, NomeGrauInstrucao).ToLower()); } }
-    public string ChaveCargo { get { return (string.Format("{0};{1};{2};{3}", Empresa, NomeEmpresa, Cargo, NomeCargo).ToLower()); } }
-    public string ChaveColaborador { get { return (string.Format("{0};{1};{2};{3}", Documento, Empresa, NomeEmpresa, Matricula).ToLower()); } }
-    public string ChaveEmpresaGestor { get { return (string.Format("{0};{1}", EmpresaGestor, NomeEmpresaGestor).ToLower()); } }
-    public string ChaveGestor { get { return (string.Format("{0};{1};{2};{3}", DocumentoGestor, EmpresaGestor, NomeEmpresaGestor, MatriculaGestor).ToLower()); } }
-
-    public EnumTypeUser TypeUser { get; set; }
-    public Colaborador() {}
-    public Colaborador(List<string> list, EnumLayoutManualBasicV1 enumeration)
+    public ColaboradorImportar() {}
+    public ColaboradorImportar(List<string> list, EnumLayoutManualBasicV1 enumeration)
     {
       try
       {
@@ -92,15 +51,14 @@ namespace IntegrationService.Data
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutManualBasicV1.MatriculaGestor].ToString()))
           MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutManualBasicV1.MatriculaGestor].ToString().Trim());
-        Mensagem = string.Empty;
-        TypeUser = EnumTypeUser.Employee;
+        TypeUser = (int)EnumTypeUser.Employee;
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public Colaborador(List<string> list, EnumLayoutManualCompleteV1 enumeration)
+    public ColaboradorImportar(List<string> list, EnumLayoutManualCompleteV1 enumeration)
     {
       try
       {
@@ -144,15 +102,14 @@ namespace IntegrationService.Data
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutManualCompleteV1.MatriculaGestor].ToString()))
           MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutManualCompleteV1.MatriculaGestor].ToString().Trim());
-        Mensagem = string.Empty;
-        TypeUser = EnumTypeUser.Employee;
+        TypeUser = (int)EnumTypeUser.Employee;
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public Colaborador(List<string> list, EnumLayoutSystemBasicV1 enumeration)
+    public ColaboradorImportar(List<string> list, EnumLayoutSystemBasicV1 enumeration)
     {
       try
       {
@@ -193,15 +150,14 @@ namespace IntegrationService.Data
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemBasicV1.MatriculaGestor].ToString()))
           MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutSystemBasicV1.MatriculaGestor].ToString().Trim());
-        Mensagem = string.Empty;
-        TypeUser = EnumTypeUser.Employee;
+        TypeUser = (int)EnumTypeUser.Employee;
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public Colaborador(List<string> list, EnumLayoutSystemCompleteV1 enumeration)
+    public ColaboradorImportar(List<string> list, EnumLayoutSystemCompleteV1 enumeration)
     {
       try
       {
@@ -245,46 +201,11 @@ namespace IntegrationService.Data
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor].ToString()))
           MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor].ToString().Trim());
-        Mensagem = string.Empty;
-        TypeUser = EnumTypeUser.Employee;
+        TypeUser = (int)EnumTypeUser.Employee;
       }
       catch (Exception)
       {
         throw;
-      }
-    }
-    public string TestarMudanca(Colaborador testar)
-    {
-      try
-      {
-        if (this != null && testar != null)
-        {
-          var type = typeof(Colaborador);
-          var unequalProperties =
-              from pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-              let selfValue = type.GetProperty(pi.Name).GetValue(this, null)
-              let toValue = type.GetProperty(pi.Name).GetValue(testar, null)
-              where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
-              select new MudancaColaborador() { Campo = pi.Name, ValorAntigo = selfValue.ToString(), ValorNovo = toValue.ToString() };
-          if (unequalProperties.Count() == 0)
-            return string.Empty;
-          bool first = true;
-          string message = string.Empty;
-          foreach (var item in unequalProperties.ToList<MudancaColaborador>())
-          {
-            if (first)
-              message = string.Format("{0}: {1} -> {2}", item.Campo, item.ValorAntigo, item.ValorNovo);
-            else
-              message = string.Format("{0} {1}: {2} -> {3}", message, item.Campo, item.ValorAntigo, item.ValorNovo);
-            first = false;
-          }
-          return message;
-        }
-        return string.Empty;
-      }
-      catch (Exception)
-      {
-        return string.Empty;
       }
     }
   }

@@ -2,6 +2,6 @@
 {
   public class IntegrationSchooling : IntegrationBase 
   {
-    public Schooling Schooling { get; set; }
+    public string IdSchooling { get; set; }
   }
 }

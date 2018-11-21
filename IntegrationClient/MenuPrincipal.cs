@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Threading;
-using IntegrationService.Core;
 using IntegrationService.Tools;
 using IntegrationService.Data;
 using IntegrationService.Service;
@@ -51,6 +50,7 @@ namespace IntegrationClient
 
         serviceConfiguration = new ConfigurationService(Person);
 
+        cboDatabaseType.DataSource = Enum.GetValues(typeof(EnumDatabaseType));
         cboProc.DataSource = Enum.GetValues(typeof(EnumIntegrationProcess));
         cboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
         cboType.DataSource = Enum.GetValues(typeof(EnumIntegrationType));
@@ -58,10 +58,6 @@ namespace IntegrationClient
         cboProc.SelectedIndex = cboProc.FindStringExact(serviceConfiguration.Param.Process.ToString());
         cboMode.SelectedIndex = cboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
         cboType.SelectedIndex = cboType.FindStringExact(serviceConfiguration.Param.Type.ToString());
-
-        //cboProc.SelectedItem = Enum.GetName(typeof(EnumIntegrationMode), serviceConfiguration.Param.Process);
-        //cboMode.SelectedItem = Enum.GetName(typeof(EnumIntegrationMode), serviceConfiguration.Param.Mode);
-        //cboType.SelectedItem = Enum.GetName(typeof(EnumIntegrationType), serviceConfiguration.Param.Type);
       }
       catch (Exception ex)
       {
@@ -78,7 +74,7 @@ namespace IntegrationClient
     {
       ImportarMapasAnalisa form = new ImportarMapasAnalisa(){
         Person = Person,
-        Conn = string.Format("{0};{1};{2};{3};{4}", chkOra.Checked, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text)
+        Conn = string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text)
       };
       form.ShowDialog();
       form.Close();
@@ -88,7 +84,7 @@ namespace IntegrationClient
     {
       SincronizarCompetencia form = new SincronizarCompetencia(){
         Person = Person,
-        Conn = string.Format("{0};{1};{2};{3};{4}", chkOra.Checked, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text)
+        Conn = string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text)
       };
       form.ShowDialog();
       form.Close();
@@ -96,84 +92,6 @@ namespace IntegrationClient
 
     private void Button2_Click(object sender, EventArgs e)
     {
-      //ImportService import = new ImportService(Person);
-      //Colaborador colaborador = new Colaborador()
-      //{
-      //  NomeEmpresa = "Analisa",
-      //  NomeEstabelecimento = "Analisa",
-      //  Documento ="57763771020",
-      //  Matricula = 1,
-      //  Nome = "Juremir Milani Novo",
-      //  Email = "juremir@jmsoft.com.br",
-      //  DataNascimento = new DateTime(1971,07,01),
-      //  Celular = "54 991089092",
-      //  Telefone = "54 32025412",
-      //  Identidade = "8049471331",
-      //  CarteiraProfissional = "cart_prof",
-      //  Sexo = "Masculino",
-      //  DataAdmissao = new DateTime(1994,12,15),
-      //  Situacao = "Ativo",
-      //  DataRetornoFerias = null,
-      //  MotivoAfastamento =  string.Empty,
-      //  DataDemissao = null,
-      //  NomeCargo  = "Analista de Sistemas",
-      //  DataUltimaTrocaCargo = null,
-      //  NomeGrauInstrucao = "Superior Incompleto",
-      //  SalarioNominal = 4130,
-      //  DataUltimoReajuste = null,
-      //  DocumentoChefe = string.Empty,
-      //  NomeEmpresaChefe = string.Empty,
-      //  MatriculaChefe = 0,
-      //  NomeChefe = string.Empty
-      //};
-      //import.AddColaborador(colaborador);
-      //if (import.Status == EnumStatusService.Error)
-      //{
-      //  MessageBox.Show(import.Message);
-      //  return;
-      //}
-      //colaborador = new Colaborador()
-      //{
-      //  NomeEmpresa = "Analisa",
-      //  NomeEstabelecimento = "Analisa",
-      //  Documento = "99999999999",
-      //  Matricula = 2,
-      //  Nome = "Colaborador 1",
-      //  Email = "colaborador1@jmsoft.com.br",
-      //  DataNascimento = new DateTime(2001, 07, 14),
-      //  Celular = "54 991089092",
-      //  Telefone = "54 32025412",
-      //  Identidade = "8049471331",
-      //  CarteiraProfissional = "cart_prof",
-      //  Sexo = "Feminino",
-      //  DataAdmissao = new DateTime(2007, 06, 30),
-      //  Situacao = "Ativo",
-      //  DataRetornoFerias = null,
-      //  MotivoAfastamento = string.Empty,
-      //  DataDemissao = null,
-      //  NomeCargo = "Analista de Sistemas",
-      //  DataUltimaTrocaCargo = null,
-      //  NomeGrauInstrucao = "Superior Incompleto",
-      //  SalarioNominal = 4130,
-      //  DataUltimoReajuste = null,
-      //  //DocumentoChefe = string.Empty,
-      //  //EmpresaChefe = string.Empty,
-      //  //NomeEmpresaChefe = string.Empty,
-      //  //MatriculaChefe = 0,
-      //  //NomeChefe = string.Empty
-      //  DocumentoChefe = "57763771020",
-      //  NomeEmpresaChefe = "Analisa",
-      //  MatriculaChefe = 1,
-      //  NomeChefe = "Juremir Milani"
-      //};
-      //import.AddColaborador(colaborador);
-      //if (import.Status == EnumStatusService.Error)
-      //{
-      //  MessageBox.Show(import.Message);
-      //  return;
-      //}
-      //import.FinalImport();
-      //MessageBox.Show(import.Message);
     }
 
     private void CboMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -183,7 +101,7 @@ namespace IntegrationClient
         grpBD.Visible = true;
         if (!string.IsNullOrEmpty(serviceConfiguration.Param.ConnectionString))
         {
-          chkOra.Checked = serviceConfiguration.Param.ConnectionString.Split(';')[0].Equals("Oracle");
+          cboDatabaseType.SelectedIndex = cboDatabaseType.FindStringExact(serviceConfiguration.Param.ConnectionString.Split(';')[0]);
           txtHostName.Text = serviceConfiguration.Param.ConnectionString.Split(';')[1];
           txtUser.Text = serviceConfiguration.Param.ConnectionString.Split(';')[2];
           txtPassword.Text = serviceConfiguration.Param.ConnectionString.Split(';')[3];
@@ -197,7 +115,6 @@ namespace IntegrationClient
       {
         grpArq.Visible = true;
         grpBD.Visible = false;
-        chkOra.Checked = false;
         txtHostName.Text = string.Empty;
         txtUser.Text = string.Empty;
         txtPassword.Text = string.Empty;
@@ -210,7 +127,6 @@ namespace IntegrationClient
       {
         grpArq.Visible = true;
         grpBD.Visible = false;
-        chkOra.Checked = false;
         txtHostName.Text = string.Empty;
         txtUser.Text = string.Empty;
         txtPassword.Text = string.Empty;
@@ -243,7 +159,7 @@ namespace IntegrationClient
           txtPassword.Focus();
           return;
         }
-        if (string.IsNullOrEmpty(txtDefault.Text) && chkOra.Checked == false)
+        if (string.IsNullOrEmpty(txtDefault.Text) && (EnumDatabaseType)cboDatabaseType.SelectedItem == EnumDatabaseType.SqlServer)
         {
           MessageBox.Show("Informe o nome do banco de dados padrão!!");
           txtDefault.Focus();
@@ -257,7 +173,7 @@ namespace IntegrationClient
         }
         serviceConfiguration.SetParameter(new ViewIntegrationParameterMode()
         {
-          ConnectionString = string.Format("{0};{1};{2};{3};{4}", chkOra.Checked ? "Oracle" : "SqlServer", txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text),
+          ConnectionString = string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text),
           FilePathLocal = txtFileName.Text,
           Process = (EnumIntegrationProcess)cboProc.SelectedItem,
           Mode = (EnumIntegrationMode)cboMode.SelectedItem,

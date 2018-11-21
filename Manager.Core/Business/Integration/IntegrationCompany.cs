@@ -2,6 +2,6 @@
 {
   public class IntegrationCompany : IntegrationBase
   {
-    public Company Company { get; set; }
+    public string IdCompany { get; set; }
   }
 }

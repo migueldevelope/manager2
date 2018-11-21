@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntegrationService.Enumns;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace IntegrationService.Tools
 {
   public class ConnectionString
   {
-    public bool Oracle { get; private set; }
+    public EnumDatabaseType DatabaseType { get; private set; }
     public string HostName { get; private set; }
     public string User { get; private set; }
     public string Password { get; private set; }
@@ -21,7 +22,7 @@ namespace IntegrationService.Tools
       User = user;
       Password = password;
       DatabaseDefault = databasedefault;
-      Oracle = false;
+      DatabaseType = EnumDatabaseType.SqlServer;
     }
     public ConnectionString(string hostname, string user, string password)
     {
@@ -29,7 +30,7 @@ namespace IntegrationService.Tools
       User = user;
       Password = password;
       DatabaseDefault = string.Empty;
-      Oracle = true;
+      DatabaseType = EnumDatabaseType.Oracle;
     }
   }
 }

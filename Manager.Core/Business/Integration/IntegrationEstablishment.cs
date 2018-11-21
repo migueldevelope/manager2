@@ -2,6 +2,6 @@
 {
   public class IntegrationEstablishment : IntegrationBase
   {
-    public Establishment Establishment { get; set; }
+    public string IdEstablishment { get; set; }
   }
 }

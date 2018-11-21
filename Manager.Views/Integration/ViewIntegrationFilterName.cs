@@ -1,4 +1,8 @@
-﻿namespace Manager.Views.Integration
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Manager.Views.Integration
 {
   public class ViewIntegrationFilterName
   {

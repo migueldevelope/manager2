@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using OracleTools;
 using SqlServerTools;
 
@@ -19,17 +14,23 @@ namespace IntegrationService.Tools
     public DataTable GetPerson()
     {
       DataTable dados;
-      if (Conn.Oracle)
+      switch (Conn.DatabaseType)
       {
-        OracleConnectionTool conn = new OracleConnectionTool(Conn.HostName, Conn.User, Conn.Password);
-        dados = conn.ExecuteQuery(Conn.Sql);
-        conn.Close();
-      }
-      else
-      {
-        SqlConnectionTool conn = new SqlConnectionTool(Conn.HostName, Conn.User, Conn.Password, Conn.DatabaseDefault);
-        dados = conn.ExecuteQuery(Conn.Sql);
-        conn.Close();
+        case Enumns.EnumDatabaseType.Oracle:
+          OracleConnectionTool connOra = new OracleConnectionTool(Conn.HostName, Conn.User, Conn.Password);
+          dados = connOra.ExecuteQuery(Conn.Sql);
+          connOra.Close();
+          break;
+        case Enumns.EnumDatabaseType.ODBC:
+          SqlConnectionTool connOdbc = new SqlConnectionTool(Conn.HostName, Conn.User, Conn.Password, Conn.DatabaseDefault);
+          dados = connOdbc.ExecuteQuery(Conn.Sql);
+          connOdbc.Close();
+          break;
+        default:
+          SqlConnectionTool connSql = new SqlConnectionTool(Conn.HostName, Conn.User, Conn.Password, Conn.DatabaseDefault);
+          dados = connSql.ExecuteQuery(Conn.Sql);
+          connSql.Close();
+          break;
       }
       return dados;
     }
