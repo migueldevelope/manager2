@@ -121,6 +121,87 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public MailModel OnBoardingSeq1(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingseq1");
+        if (model.Count() == 0)
+          return DefaultOnBoardingSeq1(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel OnBoardingSeq2(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingseq2");
+        if (model.Count() == 0)
+          return DefaultOnBoardingSeq2(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel OnBoardingSeq3(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingseq3");
+        if (model.Count() == 0)
+          return DefaultOnBoardingSeq3(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel OnBoardingSeq4(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingseq4");
+        if (model.Count() == 0)
+          return DefaultOnBoardingSeq4(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel OnBoardingSeq5(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingseq5");
+        if (model.Count() == 0)
+          return DefaultOnBoardingSeq1(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel PlanApproval(string path)
     {
       try
@@ -265,6 +346,127 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public MailModel DefaultOnBoardingSeq1(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
+          "seu subordinado {Person} que irá vencer em 30 dias.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "OnBoarding à vencer",
+          Name = "onboardingseq1",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultOnBoardingSeq2(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+            Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
+          "seu subordinado {Person} que irá vencer em 5 dias.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "OnBoarding à vencer",
+          Name = "onboardingseq2",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultOnBoardingSeq3(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
+          "seu subordinado {Person} que irá vencer hoje.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "OnBoarding vencendo",
+          Name = "onboardingseq3",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultOnBoardingSeq4(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
+          "seu subordinado {Person} que está vencido a 5 dias.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "OnBoarding vencido",
+          Name = "onboardingseq4",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultOnBoardingSeq5(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
+          "seu subordinado {Person} que está vencido a 10 dias.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "OnBoarding vencido",
+          Name = "onboardingseq5",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel DefaultMonitoringApproval(string path)
     {
       try

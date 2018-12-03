@@ -12,6 +12,8 @@ namespace Manager.Core.Business
     public EnumTimeNotification TimeNotification { get; set; }
     public EnumWeek TimeWeek { get; set; }
     public DateTime TimeDay { get; set; }
+    public DateTime LastSend { get; set; }
+    public DateTime NextSend { get; set; }
     public string Parameter { get; set; }
   }
 }
