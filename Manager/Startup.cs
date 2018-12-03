@@ -56,8 +56,9 @@ namespace Manager
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
-      
+      IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
 
+      services.AddSingleton(_ => serviceConfigurationNotifications);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceCompany);
       services.AddSingleton(_ => serviceAuthentication);
