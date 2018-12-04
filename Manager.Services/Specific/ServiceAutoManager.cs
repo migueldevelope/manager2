@@ -47,14 +47,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewAutoManagerPerson> List(string idManager, string filter)
+    public List<ViewAutoManagerPerson> List(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
+        int skip = (count * (page - 1));
+
         if (filter != string.Empty)
-          return ListEnd(idManager, filter);
+        {
+          var listEnd = ListEnd(idManager, filter);
+          total = listEnd.Count();
+          return listEnd.Skip(skip).Take(count).ToList();
+        }
+
         else
-          return ListOpen(idManager);
+          return ListOpen(idManager, ref total, count, page, filter);
       }
       catch (Exception e)
       {
@@ -62,13 +69,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewAutoManagerPerson> ListOpen(string idManager)
+    public List<ViewAutoManagerPerson> ListOpen(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        return (from person in personService.GetAll()
-                where person.TypeUser != EnumTypeUser.Support & person.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
-                select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.Name, Status = EnumStatusAutoManagerView.Open }).ToList();
+        int skip = (count * (page - 1));
+
+        var list = (from person in personService.GetAll()
+                    where person.TypeUser != EnumTypeUser.Support & person.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
+                    select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
+
+        total = (from person in personService.GetAll()
+                 where person.TypeUser != EnumTypeUser.Support & person.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
+                 select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.Name, Status = EnumStatusAutoManagerView.Open }).Count();
+
+        return list;
       }
       catch (Exception e)
       {
@@ -98,6 +113,7 @@ namespace Manager.Services.Specific
             view.Status = EnumStatusAutoManagerView.Open;
           result.Add(view);
         }
+
         return result;
       }
       catch (Exception e)
@@ -215,7 +231,7 @@ namespace Manager.Services.Specific
           //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSnVyZW1pciBNaWxhbmkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9oYXNoIjoiNWI0ZGYwNzNlYzhjOGUwYzYwZWFjZDQ5IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoianVyZW1pckBqbXNvZnQuY29tLmJyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJTdXBwb3J0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy91c2VyZGF0YSI6IjViNGRmMGJmNDc4MTg4MjE2MDAzMzRmZiIsImV4cCI6MTU2MzM3MjgzOCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.icZWGLcjYQ_iK4e3my5EzXY2m5b0kF7USxcn75vLZCQ");
           var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
           return auth.Token;
-          
+
         }
       }
       catch (Exception e)

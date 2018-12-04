@@ -19,7 +19,7 @@ namespace ManagerMessages
 
     public static IWebHost BuildWebHost(string[] args) =>
         WebHost.CreateDefaultBuilder(args)
-           .UseUrls("http://0.0.0.0:5204/")
+           .UseUrls("http://0.0.0.0:5205/")
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
             .UseKestrel()

@@ -41,9 +41,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/list")]
-    public List<ViewAutoManagerPerson> Get(string idmanager, string filter = "")
+    public List<ViewAutoManagerPerson> Get(string idmanager, int count = 10, int page = 1, string filter = "")
     {
-      return service.List(idmanager, filter);
+      long total = 0;
+      var result = service.List(idmanager, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
     [Authorize]
