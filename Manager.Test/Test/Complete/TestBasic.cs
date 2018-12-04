@@ -43,11 +43,11 @@ namespace Manager.Test.Test.Complete
       {
         var view = new ViewNewAccount()
         {
-          Mail = "test@jmsoft.com.br",
-          NameAccount = "Test",
-          NameCompany = "Test",
-          Password = "123",
-          Document = "123"
+          Mail = "suporte@jmsoft.com.br",
+          NameAccount = "Support",
+          NameCompany = "Support",
+          Password = "1234",
+          Document = "1234"
         };
         this.serviceAccount.NewAccount(view);
       }
@@ -185,7 +185,7 @@ namespace Manager.Test.Test.Complete
           Phone = "05432025412",
           Registration = 1,
           StatusUser = EnumStatusUser.Enabled,
-          DateAdm = DateTime.Parse("2012-01-01"),
+          DateAdm = DateTime.Parse("2018-12-01"),
           DateBirth = DateTime.Parse("1993-05-11"),
           Document = "01",
           DocumentManager = "01050376056",
@@ -205,7 +205,7 @@ namespace Manager.Test.Test.Complete
           Phone = "054992655775",
           Registration = 1,
           StatusUser = EnumStatusUser.Enabled,
-          DateAdm = DateTime.Parse("2010-01-01"),
+          DateAdm = DateTime.Parse("2018-12-31"),
           DateBirth = DateTime.Parse("1990-08-06"),
           Document = "01050376056",
           DocumentManager = "02",
@@ -225,7 +225,7 @@ namespace Manager.Test.Test.Complete
           Phone = "",
           Registration = 1,
           StatusUser = EnumStatusUser.Enabled,
-          DateAdm = DateTime.Parse("1990-01-01"),
+          DateAdm = DateTime.Parse("2018-12-04"),
           DateBirth = DateTime.Parse("1990-01-01"),
           Document = "02",
           DocumentManager = "",
@@ -245,7 +245,7 @@ namespace Manager.Test.Test.Complete
           Phone = "05432025412",
           Registration = 1,
           StatusUser = EnumStatusUser.Enabled,
-          DateAdm = DateTime.Parse("2018-01-01"),
+          DateAdm = DateTime.Parse("2018-11-15"),
           DateBirth = DateTime.Parse("1990-01-01"),
           Document = "03",
           DocumentManager = "01050376056",
@@ -265,7 +265,7 @@ namespace Manager.Test.Test.Complete
           Phone = "05432025412",
           Registration = 1,
           StatusUser = EnumStatusUser.Enabled,
-          DateAdm = DateTime.Parse("2000-01-01"),
+          DateAdm = DateTime.Parse("2019-01-01"),
           DateBirth = DateTime.Parse("1990-05-11"),
           Document = "04",
           DocumentManager = "02",
@@ -284,7 +284,7 @@ namespace Manager.Test.Test.Complete
           Phone = "05432025412",
           Registration = 1,
           StatusUser = EnumStatusUser.Enabled,
-          DateAdm = DateTime.Parse("1995-01-01"),
+          DateAdm = DateTime.Parse("2018-12-20"),
           DateBirth = DateTime.Parse("1990-05-11"),
           Document = "05",
           TypeUser = EnumTypeUser.Employee

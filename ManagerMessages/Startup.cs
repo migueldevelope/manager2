@@ -56,7 +56,13 @@ namespace ManagerMessages
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
+      IServiceNotification serviceNotification = new ServiceNotification(_context, conn.TokenServer);
 
+
+      /// Start service
+      serviceNotification.SendMessage();
+
+      services.AddSingleton(_ => serviceNotification);
       services.AddSingleton(_ => serviceConfigurationNotifications);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceCompany);
