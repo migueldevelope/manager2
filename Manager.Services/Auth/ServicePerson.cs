@@ -117,11 +117,18 @@ namespace Manager.Services.Auth
 
     public Person NewPersonView(Person person)
     {
+
       try
       {
+        var authMaristas = person.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+        var authPUC = person.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+
+
+
         Person model = new Person()
         {
           Name = person.Name,
+
           ChangePassword = EnumChangePassword.AccessFirst,
           TypeUser = person.TypeUser,
           DateAdm = person.DateAdm,
@@ -149,11 +156,16 @@ namespace Manager.Services.Auth
           Salary = person.Salary,
           DateLastReadjust = person.DateLastReadjust,
           DateResignation = person.DateResignation
-
         };
+
+        if (person.Password == string.Empty)
+          person.Password = EncryptServices.GetMD5Hash(person.Document);
 
         if (person.Manager != null)
           model.DocumentManager = person.Manager.Document;
+
+        if ((authMaristas) || (authPUC))
+          model.ChangePassword = EnumChangePassword.No;
 
         return personService.Insert(model);
       }
