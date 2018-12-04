@@ -20,11 +20,14 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<ConfigurationNotifications> configurationNotificationsService;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<OnBoarding> onBoardingService;
     private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceLog logService;
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
+    private readonly ServiceGeneric<Checkpoint> checkpointService;
+    private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly string path;
     public BaseUser user { get => _user; set => user = _user; }
 
@@ -41,6 +44,9 @@ namespace Manager.Services.Specific
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
         accountService = new ServiceGeneric<Account>(context);
+        onBoardingService = new ServiceGeneric<OnBoarding>(context);
+        checkpointService = new ServiceGeneric<Checkpoint>(context);
+        monitoringService = new ServiceGeneric<Monitoring>(context);
       }
       catch (Exception e)
       {
@@ -76,6 +82,7 @@ namespace Manager.Services.Specific
         OnboardingSeq3();
         OnboardingSeq4();
         OnboardingSeq5();
+        OnboardingSeq6();
       }
       catch (Exception e)
       {
@@ -92,6 +99,9 @@ namespace Manager.Services.Specific
       mailModelService._user = _user;
       mailMessageService._user = _user;
       mailService._user = _user;
+      onBoardingService._user = _user;
+      checkpointService._user = _user;
+      monitoringService._user = _user;
     }
 
     public async void OnboardingSeq1()
@@ -100,10 +110,14 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-1).Date;
         var nowNext = DateTime.Now.AddDays(1).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
-          MailOnboardingSeq1(item);
+          if (item.Manager != null)
+          {
+            if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
+              MailOnboardingSeq1(item);
+          }
         }
       }
       catch (Exception e)
@@ -118,10 +132,14 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(24).Date;
         var nowNext = DateTime.Now.AddDays(26).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
-          MailOnboardingSeq2(item);
+          if (item.Manager != null)
+          {
+            if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
+              MailOnboardingSeq2(item);
+          }
         }
       }
       catch (Exception e)
@@ -136,10 +154,14 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(29).Date;
         var nowNext = DateTime.Now.AddDays(31).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
-          MailOnboardingSeq3(item);
+          if (item.Manager != null)
+          {
+            if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
+              MailOnboardingSeq3(item);
+          }
         }
       }
       catch (Exception e)
@@ -154,10 +176,14 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(34).Date;
         var nowNext = DateTime.Now.AddDays(35).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
-          MailOnboardingSeq4(item);
+          if (item.Manager != null)
+          {
+            if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
+              MailOnboardingSeq4(item);
+          }
         }
       }
       catch (Exception e)
@@ -172,15 +198,352 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(39).Date;
         var nowNext = DateTime.Now.AddDays(41).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
-          MailOnboardingSeq5(item);
+          if (item.Manager != null)
+          {
+            if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
+              MailOnboardingSeq5(item);
+          }
         }
       }
       catch (Exception e)
       {
         throw e;
+      }
+    }
+
+    public async void OnboardingSeq6()
+    {
+      try
+      {
+        var nowLast = DateTime.Now.AddDays(69).Date;
+        var nowNext = DateTime.Now.AddDays(71).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        foreach (var item in persons)
+        {
+          if (item.Manager != null)
+          {
+            if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
+            {
+              item.TypeJourney = EnumTypeJourney.Checkpoint;
+              personService.Update(item, null);
+            }
+          }
+
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public async void CheckpointSeq1()
+    {
+      try
+      {
+        var nowLast = DateTime.Now.AddDays(54).Date;
+        var nowNext = DateTime.Now.AddDays(56).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        foreach (var item in persons)
+        {
+          if (item.Manager != null)
+          {
+            if (checkpointService.GetAll(p => p.Person._id == item._id & p.StatusCheckpoint == EnumStatusCheckpoint.End).Count() == 0)
+              MailCheckpointSeq1(item);
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public async void MonitoringSeq1()
+    {
+      try
+      {
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring).ToList();
+        foreach (var item in persons)
+        {
+          if (item.Manager != null)
+          {
+            var wait = monitoringService.GetAll(p => p.Person._id == item._id
+            & p.StatusMonitoring == EnumStatusMonitoring.End
+            & p.StatusMonitoring == EnumStatusMonitoring.Disapproved).Count();
+            if (wait == 0)
+            {
+              var maxDate = monitoringService.GetAll(p => p.Person._id == item._id).Max(p => p.DateEndEnd);
+              if (maxDate == null)
+                maxDate = item.DateAdm.Value.Date;
+
+              var totaldays = (DateTime.Parse(DateTime.Now.Date.ToString()) - DateTime.Parse(maxDate.ToString())).TotalDays;
+              if (totaldays == 60)
+                MailMonitoringSeq1(item, totaldays);
+
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public async void MonitoringSeq2()
+    {
+      try
+      {
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring).ToList();
+        foreach (var item in persons)
+        {
+          if (item.Manager != null)
+          {
+            var wait = monitoringService.GetAll(p => p.Person._id == item._id
+            & p.StatusMonitoring == EnumStatusMonitoring.End
+            & p.StatusMonitoring == EnumStatusMonitoring.Disapproved).Count();
+            if (wait == 0)
+            {
+              var maxDate = monitoringService.GetAll(p => p.Person._id == item._id).Max(p => p.DateEndEnd);
+              if (maxDate == null)
+                maxDate = item.DateAdm.Value.Date;
+
+              var totaldays = (DateTime.Parse(DateTime.Now.Date.ToString()) - DateTime.Parse(maxDate.ToString())).TotalDays;
+              if (totaldays > 69)
+              {
+                if ((totaldays % 10) == 0)
+                  MailMonitoringSeq1(item, totaldays);
+              }
+
+
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public async void CheckpointSeq2()
+    {
+      try
+      {
+        var nowLast = DateTime.Now.AddDays(75).Date;
+        var nowNext = DateTime.Now.AddDays(85).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
+        foreach (var item in persons)
+        {
+          if (item.Manager != null)
+          {
+            if (checkpointService.GetAll(p => p.Person._id == item._id & p.StatusCheckpoint == EnumStatusCheckpoint.End).Count() == 0)
+            {
+              var days = (nowNext - DateTime.Parse(item.DateAdm.ToString())).TotalDays;
+              MailCheckpointSeq2(item, byte.Parse(days.ToString()));
+            }
+
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public async void CheckpointSeq3()
+    {
+      try
+      {
+        var nowLast = DateTime.Now.AddDays(174).Date;
+        var nowNext = DateTime.Now.AddDays(176).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        foreach (var item in persons)
+        {
+          if (item.Manager != null)
+          {
+            if (checkpointService.GetAll(p => p.Person._id == item._id & p.StatusCheckpoint == EnumStatusCheckpoint.End).Count() == 0)
+              MailCheckpointSeq3(item);
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public async void MailMonitoringSeq1(Person person, double totaldays)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.MonitoringSeq1(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", totaldays.ToString());
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailCheckpointSeq1(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.CheckpointSeq1(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", "30");
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailCheckpointSeq2(Person person, byte days)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.CheckpointSeq1(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", days.ToString());
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailCheckpointSeq3(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.CheckpointSeq2(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", "90");
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
       }
     }
 

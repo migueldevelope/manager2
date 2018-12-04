@@ -3072,7 +3072,7 @@ namespace Manager.Services.Specific
         }
 
 
-        for (var row = 0; row <= maxLine; row++)
+        for (var row = 0; row < maxLine; row++)
         {
           col = 0;
           foreach (var group in groups)
@@ -3093,7 +3093,7 @@ namespace Manager.Services.Specific
         }
 
 
-        for (var row = 0; row <= maxLineSkill; row++)
+        for (var row = 0; row < maxLineSkill; row++)
         {
           col = 0;
           foreach (var group in groups)
@@ -3114,7 +3114,7 @@ namespace Manager.Services.Specific
         }
 
 
-        for (var row = 0; row <= maxLineSchooling; row++)
+        for (var row = 0; row < maxLineSchooling; row++)
         {
           col = 0;
           foreach (var group in groups)
@@ -3134,7 +3134,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        for (var row = 0; row <= maxLine; row++)
+        for (var row = 0; row < maxLine; row++)
         {
           var itemView = string.Empty;
           foreach (var item in list.Where(p => p.Type == EnumTypeLO.Scope & p.Line == row).OrderBy(p => p.Col).ToList())
@@ -3152,7 +3152,7 @@ namespace Manager.Services.Specific
           rel = Export(rel, itemView);
         }
 
-        for (var row = 0; row <= maxLineSkill; row++)
+        for (var row = 0; row < maxLineSkill; row++)
         {
           var itemView = string.Empty;
           foreach (var item in list.Where(p => p.Type == EnumTypeLO.Skill & p.Line == row).OrderBy(p => p.Col).ToList())
@@ -3170,7 +3170,7 @@ namespace Manager.Services.Specific
           rel = Export(rel, itemView);
         }
 
-        for (var row = 0; row <= maxLineSchooling; row++)
+        for (var row = 0; row < maxLineSchooling; row++)
         {
           var itemView = string.Empty;
           foreach (var item in list.Where(p => p.Type == EnumTypeLO.Schooling & p.Line == row).OrderBy(p => p.Col).ToList())

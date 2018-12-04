@@ -77,7 +77,7 @@ namespace Manager.Test.Test.Complete
 
         //Person 1
 
-        for (var row = 0; row <= 100000; row++)
+        for (var row = 0; row < 100000; row++)
         {
           var view = new ViewPersonImport()
           {

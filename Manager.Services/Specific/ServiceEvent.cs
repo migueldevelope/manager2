@@ -277,7 +277,7 @@ namespace Manager.Services.Specific
         {
           if (item.Begin != null)
           {
-            if (date.Value.Date <= item.Begin.Value.AddDays(item.DaysSubscription * -1).Date)
+            if (date.Value.Date < item.Begin.Value.AddDays(item.DaysSubscription * -1).Date)
             {
               var participants = item.Participants.Where(p => p.Person != null).ToList();
               if (participants.Where(p => p.Person._id == idperson).Count() == 0)
@@ -672,7 +672,7 @@ namespace Manager.Services.Specific
               total += 1;
             }
 
-            if (((count * 100) / total) >= events.MinimumFrequency)
+            if (((count * 100) / total) > events.MinimumFrequency)
               participant.Approved = true;
             else
               participant.Approved = false;
@@ -986,7 +986,7 @@ namespace Manager.Services.Specific
       {
         foreach (var item in view.Participants)
         {
-          if (item.Approved & (item.Grade >= view.Grade))
+          if (item.Approved & (item.Grade > view.Grade))
           {
             NewEventHistoric(new EventHistoric()
             {

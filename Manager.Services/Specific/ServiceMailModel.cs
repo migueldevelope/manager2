@@ -106,6 +106,23 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
     }
+
+    public MailModel MonitoringSeq1(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "monitoringseq1");
+        if (model.Count() == 0)
+          return DefaultMonitoringSeq1(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel OnBoardingApproval(string path)
     {
       try
@@ -122,6 +139,7 @@ namespace Manager.Services.Specific
       }
     }
 
+
     public MailModel OnBoardingSeq1(string path)
     {
       try
@@ -129,6 +147,38 @@ namespace Manager.Services.Specific
         var model = mailModelService.GetAll(p => p.Name == "onboardingseq1");
         if (model.Count() == 0)
           return DefaultOnBoardingSeq1(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel CheckpointSeq1(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "checkpointseq1");
+        if (model.Count() == 0)
+          return DefaultCheckpointSeq1(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel CheckpointSeq2(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "checkpointseq2");
+        if (model.Count() == 0)
+          return DefaultCheckpointSeq2(path);
         else
           return model.FirstOrDefault();
       }
@@ -335,6 +385,103 @@ namespace Manager.Services.Specific
           Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public MailModel DefaultCheckpointSeq1(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o Checkpoint de " +
+          "seu subordinado {Person} que irá vencer em {Days} dias.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Checkpoint à vencer",
+          Name = "checkpointseq1",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultCheckpointSeq2(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o Checkpoint de " +
+          "seu subordinado {Person} que está atrasado em {Days} dias.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Checkpoint atrasado",
+          Name = "checkpointseq2",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultMonitoringSeq1(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Você está a {Days} dias sem " +
+          "realizar um Monitoring do seu subordinao {Person}.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Monitoring",
+          Name = "monitoringseq1",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultMonitoringSeq1_Person(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Você está a {Days} dias sem " +
+          "realizar um Monitoring.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Monitoring",
+          Name = "monitoringseq1_person",
           Link = path
         };
         // Insert

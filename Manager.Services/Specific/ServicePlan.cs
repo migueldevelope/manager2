@@ -514,7 +514,7 @@ namespace Manager.Services.Specific
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
         if (open == 0)
-          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline >= DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline > DateTime.Now)).ToList();
 
         if (expired == 0)
           result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline < DateTime.Now)).ToList();
@@ -836,7 +836,7 @@ namespace Manager.Services.Specific
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
         if (open == 0)
-          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline >= DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline > DateTime.Now)).ToList();
 
         if (expired == 0)
           result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline < DateTime.Now)).ToList();
