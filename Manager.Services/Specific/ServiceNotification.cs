@@ -52,7 +52,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var accounts = accountService.GetAuthentication(p => p.Status == EnumStatus.Disabled).ToList();
+        var accounts = accountService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
         foreach (var item in accounts)
         {
           BaseUser baseUser = new BaseUser();
@@ -98,9 +98,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var now = DateTime.Now.AddDays(1).AddTicks(-1);
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm == now).ToList();
-        foreach(var item in persons)
+        var nowLast = DateTime.Now.AddDays(-1).Date;
+        var nowNext = DateTime.Now.AddDays(1).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
+        foreach (var item in persons)
         {
           MailOnboardingSeq1(item);
         }
@@ -115,8 +116,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var now = DateTime.Now.AddDays(26).AddTicks(-1);
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm == now).ToList();
+        var nowLast = DateTime.Now.AddDays(24).Date;
+        var nowNext = DateTime.Now.AddDays(26).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
         foreach (var item in persons)
         {
           MailOnboardingSeq2(item);
@@ -132,8 +134,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var now = DateTime.Now.AddDays(31).AddTicks(-1);
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm == now).ToList();
+        var nowLast = DateTime.Now.AddDays(29).Date;
+        var nowNext = DateTime.Now.AddDays(31).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
         foreach (var item in persons)
         {
           MailOnboardingSeq3(item);
@@ -149,8 +152,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var now = DateTime.Now.AddDays(36).AddTicks(-1);
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm == now).ToList();
+        var nowLast = DateTime.Now.AddDays(34).Date;
+        var nowNext = DateTime.Now.AddDays(35).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
         foreach (var item in persons)
         {
           MailOnboardingSeq4(item);
@@ -166,8 +170,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var now = DateTime.Now.AddDays(41).AddTicks(-1);
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm == now).ToList();
+        var nowLast = DateTime.Now.AddDays(39).Date;
+        var nowNext = DateTime.Now.AddDays(41).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
         foreach (var item in persons)
         {
           MailOnboardingSeq5(item);
