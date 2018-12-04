@@ -60,7 +60,7 @@ namespace ManagerMessages
 
 
       /// Start service
-      //serviceNotification.SendMessage();
+      serviceNotification.SendMessage();
 
       services.AddSingleton(_ => serviceNotification);
       services.AddSingleton(_ => serviceConfigurationNotifications);

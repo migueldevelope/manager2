@@ -37,10 +37,10 @@ namespace Manager.Test.Test.Complete
         var employee = this.servicePerson.ListPerson(p => p.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
         var origin = this.servicePerson.ListPerson(p => p._id == employee.Manager._id).FirstOrDefault();
         //List Persons
-        var listPersons = this.serviceAutoManager.List(manager._id.ToString(), "");
+        var listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "");
         var listTeam = this.servicePerson.GetPersonTeam(ref total, manager._id.ToString(), "", 10, 1);
         //List Persons Filter
-        listPersons = this.serviceAutoManager.List(manager._id.ToString(), "Ariel");
+        listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "Ariel");
         //Request
         foreach (var item in listPersons)
         {
@@ -68,7 +68,7 @@ namespace Manager.Test.Test.Complete
         }
 
         //Set origin manager
-        listPersons = this.serviceAutoManager.List(manager._id.ToString(), "Ariel");
+        listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "Ariel");
         foreach (var item in listPersons)
         {
           var view = new ViewManager()

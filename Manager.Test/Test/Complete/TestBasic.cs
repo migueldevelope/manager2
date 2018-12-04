@@ -291,9 +291,10 @@ namespace Manager.Test.Test.Complete
         };
         list.Add(view);
 
-//        var result = this.serviceIntegration.ImportPerson(list);
+        // var result = this.serviceIntegration.ImportPerson(list);
+        
 
-  //      this.serviceIntegration.UpdateManager();
+        //      this.serviceIntegration.UpdateManager();
       }
       catch (Exception e)
       {
