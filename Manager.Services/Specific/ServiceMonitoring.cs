@@ -394,9 +394,9 @@ namespace Manager.Services.Specific
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
           {
             logMessagesService.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + monitoring.Person.Name, monitoring.Person);
-            if ((monitoring.Activities.Where(p => p.Praise != "").Count() > 0)
-              || (monitoring.SkillsCompany.Where(p => p.Praise != "").Count() > 0)
-              || (monitoring.Schoolings.Where(p => p.Praise != "").Count() > 0))
+            if ((monitoring.Activities.Where(p => p.Praise != null).Count() > 0)
+              || (monitoring.SkillsCompany.Where(p => p.Praise != null).Count() > 0)
+              || (monitoring.Schoolings.Where(p => p.Praise != null).Count() > 0))
             {
               logMessagesService.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.Name + " foi elogiado pelo gestor", monitoring.Person);
             }
