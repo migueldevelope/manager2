@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Manager.Controllers
 {
   [Produces("application/json")]
-  [Route("ConfigurationNotifications")]
+  [Route("configurationnotifications")]
   public class ConfigurationNotificationsController : Controller
   {
     private readonly IServiceConfigurationNotifications service;

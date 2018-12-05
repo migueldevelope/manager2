@@ -28,6 +28,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> mailService;
     private readonly ServiceGeneric<Checkpoint> checkpointService;
     private readonly ServiceGeneric<Monitoring> monitoringService;
+    private readonly ServiceGeneric<LogMessages> logMessagesService;
     private readonly string path;
     public BaseUser user { get => _user; set => user = _user; }
 
@@ -47,6 +48,7 @@ namespace Manager.Services.Specific
         onBoardingService = new ServiceGeneric<OnBoarding>(context);
         checkpointService = new ServiceGeneric<Checkpoint>(context);
         monitoringService = new ServiceGeneric<Monitoring>(context);
+        logMessagesService = new ServiceGeneric<LogMessages>(context);
       }
       catch (Exception e)
       {
@@ -83,6 +85,12 @@ namespace Manager.Services.Specific
         OnboardingSeq4();
         OnboardingSeq5();
         OnboardingSeq6();
+        CheckpointSeq1();
+        CheckpointSeq2();
+        CheckpointSeq3();
+        MonitoringSeq1();
+        MonitoringSeq2();
+        PlanSeq1();
       }
       catch (Exception e)
       {
@@ -102,6 +110,7 @@ namespace Manager.Services.Specific
       onBoardingService._user = _user;
       checkpointService._user = _user;
       monitoringService._user = _user;
+      logMessagesService._user = _user;
     }
 
     public async void OnboardingSeq1()
@@ -115,6 +124,7 @@ namespace Manager.Services.Specific
         {
           if (item.Manager != null)
           {
+            NewLogMessage("Novo Colaborador", "Colaborador " + item.Name, item);
             if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
               MailOnboardingSeq1(item);
           }
