@@ -282,7 +282,10 @@ namespace Manager.Services.Specific
 
               var totaldays = (DateTime.Parse(DateTime.Now.Date.ToString()) - DateTime.Parse(maxDate.ToString())).TotalDays;
               if (totaldays == 60)
+              {
                 MailMonitoringSeq1(item, totaldays);
+                MailMonitoringSeq1_Person(item, totaldays);
+              }
 
             }
           }
@@ -294,6 +297,104 @@ namespace Manager.Services.Specific
       }
     }
 
+    public async void PlanSeq1()
+    {
+      try
+      {
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring).ToList();
+        foreach (var item in persons)
+        {
+          if (item.Manager != null)
+          {
+            var list = monitoringService.GetAll(p => p.Person._id == item._id
+            & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+
+            foreach (var moni in list)
+            {
+              foreach (var row in moni.Activities)
+              {
+                foreach (var plan in row.Plans)
+                {
+                  var days = (DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays;
+                  var daysExp = (DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays;
+                  if ((days <= 10) & (days >= 1))
+                  {
+                    MailPlanSeq1(item, days);
+                    MailPlanSeq1_Person(item, days);
+                  }
+                  else if (days == 0)
+                  {
+                    MailPlanSeq2(item);
+                    MailPlanSeq2_Person(item);
+                  }
+                  else if ((daysExp % 5) == 0)
+                  {
+                    MailPlanSeq3(item, daysExp);
+                    MailPlanSeq3_Person(item, daysExp);
+                  }
+                }
+
+              }
+
+              foreach (var row in moni.SkillsCompany)
+              {
+                foreach (var plan in row.Plans)
+                {
+                  var days = (DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays;
+                  var daysExp = (DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays;
+                  if ((days <= 10) & (days >= 1))
+                  {
+                    MailPlanSeq1(item, days);
+                    MailPlanSeq1_Person(item, days);
+                  }
+                  else if (days == 0)
+                  {
+                    MailPlanSeq2(item);
+                    MailPlanSeq2_Person(item);
+                  }
+                  else if ((daysExp % 5) == 0)
+                  {
+                    MailPlanSeq3(item, daysExp);
+                    MailPlanSeq3_Person(item, daysExp);
+                  }
+                }
+
+              }
+
+              foreach (var row in moni.Schoolings)
+              {
+                foreach (var plan in row.Plans)
+                {
+                  var days = (DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays;
+                  var daysExp = (DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays;
+                  if ((days <= 10) & (days >= 1))
+                  {
+                    MailPlanSeq1(item, days);
+                    MailPlanSeq1_Person(item, days);
+                  }
+                  else if (days == 0)
+                  {
+                    MailPlanSeq2(item);
+                    MailPlanSeq2_Person(item);
+                  }
+                  else if ((daysExp % 5) == 0)
+                  {
+                    MailPlanSeq3(item, daysExp);
+                    MailPlanSeq3_Person(item, daysExp);
+                  }
+                }
+
+              }
+            }
+
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     public async void MonitoringSeq2()
     {
@@ -317,7 +418,11 @@ namespace Manager.Services.Specific
               if (totaldays > 69)
               {
                 if ((totaldays % 10) == 0)
+                {
                   MailMonitoringSeq1(item, totaldays);
+                  MailMonitoringSeq1_Person(item, totaldays);
+                }
+
               }
 
 
@@ -379,6 +484,258 @@ namespace Manager.Services.Specific
       }
     }
 
+    public async void MailPlanSeq1(Person person, double totaldays)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.PlanSeq1(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", totaldays.ToString());
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailPlanSeq1_Person(Person person, double totaldays)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.PlanSeq1_Person(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", totaldays.ToString());
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Mail, person.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailPlanSeq2(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.PlanSeq2(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailPlanSeq2_Person(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.PlanSeq2_Person(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Mail, person.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailPlanSeq3(Person person, double totaldays)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.PlanSeq3(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", totaldays.ToString());
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailPlanSeq3_Person(Person person, double totaldays)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.PlanSeq3_Person(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", totaldays.ToString());
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Mail, person.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public async void MailMonitoringSeq1(Person person, double totaldays)
     {
       try
@@ -400,6 +757,48 @@ namespace Manager.Services.Specific
           From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailMonitoringSeq1_Person(Person person, double totaldays)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.MonitoringSeq1_Person(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", totaldays.ToString());
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Mail, person.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,

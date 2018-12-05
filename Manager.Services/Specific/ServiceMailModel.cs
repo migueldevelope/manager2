@@ -123,6 +123,118 @@ namespace Manager.Services.Specific
       }
     }
 
+    public MailModel MonitoringSeq1_Person(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "monitoringseq1_person");
+        if (model.Count() == 0)
+          return DefaultMonitoringSeq1_Person(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel PlanSeq1(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "planseq1");
+        if (model.Count() == 0)
+          return DefaultPlanSeq1(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel PlanSeq1_Person(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "planseq1_person");
+        if (model.Count() == 0)
+          return DefaultPlanSeq1_Person(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel PlanSeq2(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "planseq2");
+        if (model.Count() == 0)
+          return DefaultPlanSeq2(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel PlanSeq2_Person(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "planseq2_person");
+        if (model.Count() == 0)
+          return DefaultPlanSeq2_Person(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel PlanSeq3(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "planseq3");
+        if (model.Count() == 0)
+          return DefaultPlanSeq3(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel PlanSeq3_Person(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "planseq3_person");
+        if (model.Count() == 0)
+          return DefaultPlanSeq3_Person(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel OnBoardingApproval(string path)
     {
       try
@@ -138,7 +250,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
 
     public MailModel OnBoardingSeq1(string path)
     {
@@ -397,7 +508,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
     public MailModel DefaultCheckpointSeq1(string path)
     {
       try
@@ -482,6 +592,150 @@ namespace Manager.Services.Specific
           "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Monitoring",
           Name = "monitoringseq1_person",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultPlanSeq1(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
+          " em {Days} dias do seu subordinao {Person}.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Plano à vencer",
+          Name = "planseq1",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultPlanSeq1_Person(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
+          " em {Days} dias.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Plano à vencer",
+          Name = "planseq1_person",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultPlanSeq2(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
+          " hoje do seu subordinao {Person}.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Plano vencendo",
+          Name = "planseq2",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultPlanSeq2_Person(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
+          " hoje.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Plano vencendo",
+          Name = "planseq2_person",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultPlanSeq3(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano vencido" +
+          " à {Days} dias do seu subordinao {Person}.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Plano",
+          Name = "planseq3",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultPlanSeq3_Person(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano vencido" +
+          " à {Days}.</br></br>Para acessar o sistema " +
+          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Plano",
+          Name = "planseq3_person",
           Link = path
         };
         // Insert
