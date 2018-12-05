@@ -28,7 +28,9 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> mailService;
     private readonly ServiceGeneric<Checkpoint> checkpointService;
     private readonly ServiceGeneric<Monitoring> monitoringService;
-    private readonly ServiceGeneric<LogMessages> logMessagesService;
+    private readonly ServiceLogMessages logMessagesService;
+
+
     private readonly string path;
     public BaseUser user { get => _user; set => user = _user; }
 
@@ -48,7 +50,7 @@ namespace Manager.Services.Specific
         onBoardingService = new ServiceGeneric<OnBoarding>(context);
         checkpointService = new ServiceGeneric<Checkpoint>(context);
         monitoringService = new ServiceGeneric<Monitoring>(context);
-        logMessagesService = new ServiceGeneric<LogMessages>(context);
+        logMessagesService = new ServiceLogMessages(context);
       }
       catch (Exception e)
       {
@@ -124,7 +126,7 @@ namespace Manager.Services.Specific
         {
           if (item.Manager != null)
           {
-            NewLogMessage("Novo Colaborador", "Colaborador " + item.Name, item);
+            logMessagesService.NewLogMessage("Novo Colaborador", "Colaborador " + item.Name, item);
             if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
               MailOnboardingSeq1(item);
           }

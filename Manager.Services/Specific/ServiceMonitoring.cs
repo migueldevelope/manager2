@@ -26,6 +26,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MonitoringActivities> monitoringActivitiesService;
     private readonly ServiceGeneric<MailLog> mailService;
+    private readonly ServiceLogMessages logMessagesService;
+
     public string path;
 
     public ServiceMonitoring(DataContext context, string pathToken)
@@ -41,6 +43,7 @@ namespace Manager.Services.Specific
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         monitoringActivitiesService = new ServiceGeneric<MonitoringActivities>(context);
         mailService = new ServiceGeneric<MailLog>(context);
+        logMessagesService = new ServiceLogMessages(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -390,6 +393,7 @@ namespace Manager.Services.Specific
         {
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
           {
+            logMessagesService.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + monitoring.Person.Name, monitoring.Person);
             monitoring.DateEndEnd = DateTime.Now;
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
@@ -410,7 +414,11 @@ namespace Manager.Services.Specific
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
+            {
+              logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
               listActivities.Add(AddPlan(plan, userInclude));
+            }
+
             else
             {
               UpdatePlan(plan);
@@ -426,7 +434,11 @@ namespace Manager.Services.Specific
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
+            {
+              logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
               listSchoolings.Add(AddPlan(plan, userInclude));
+            }
+
             else
             {
               UpdatePlan(plan);
@@ -442,7 +454,11 @@ namespace Manager.Services.Specific
           foreach (var plan in item.Plans)
           {
             if (plan._id == null)
+            {
+              logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
               listSkillsCompany.Add(AddPlan(plan, userInclude));
+            }
+
             else
             {
               UpdatePlan(plan);
@@ -500,6 +516,7 @@ namespace Manager.Services.Specific
       mailMessageService._user = _user;
       mailService._user = _user;
       monitoringActivitiesService._user = _user;
+      logMessagesService._user = _user;
     }
 
     public async void LogSave(string iduser, string local)

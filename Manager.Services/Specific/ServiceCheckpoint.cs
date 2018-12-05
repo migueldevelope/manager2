@@ -15,7 +15,7 @@ using System.Net.Http;
 
 namespace Manager.Services.Specific
 {
-  #pragma warning disable 1998
+#pragma warning disable 1998
   public class ServiceCheckpoint : Repository<Checkpoint>, IServiceCheckpoint
   {
     private readonly ServiceGeneric<Checkpoint> checkpointService;
@@ -27,6 +27,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> mailService;
     private readonly ServiceGeneric<Parameter> parameterService;
     private readonly ServiceGeneric<TextDefault> textDefaultService;
+    private readonly ServiceLogMessages logMessagesService;
     public string path;
 
     public ServiceCheckpoint(DataContext context, string pathToken)
@@ -43,6 +44,7 @@ namespace Manager.Services.Specific
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
         parameterService = new ServiceGeneric<Parameter>(context);
+        logMessagesService = new ServiceLogMessages(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -288,6 +290,7 @@ namespace Manager.Services.Specific
             personService.Update(checkpoint.Person, null);
             MailRH(checkpoint.Person, "Aprovado");
 
+            logMessagesService.NewLogMessage("Checkpoint", " Colaborador " + checkpoint.Person.Name + " aprovado no Checkpoint", checkpoint.Person);
           }
           else
           {
@@ -336,6 +339,7 @@ namespace Manager.Services.Specific
       questionsService._user = _user;
       textDefaultService._user = _user;
       parameterService._user = _user;
+      logMessagesService._user = _user;
     }
 
     // send mail
@@ -538,5 +542,5 @@ namespace Manager.Services.Specific
       }
     }
   }
-  #pragma warning restore 1998
+#pragma warning restore 1998
 }

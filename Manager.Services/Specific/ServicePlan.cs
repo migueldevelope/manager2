@@ -27,6 +27,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
     private readonly ServiceGeneric<TrainingPlan> trainingPlanService;
+    private readonly ServiceLogMessages logMessagesService;
     IServiceMandatoryTraining serviceMandatoryTraining;
     public string path;
 
@@ -48,6 +49,7 @@ namespace Manager.Services.Specific
         mailService = new ServiceGeneric<MailLog>(context);
         structPlanService = new ServiceGeneric<StructPlan>(context);
         planActivityService = new ServiceGeneric<PlanActivity>(context);
+        logMessagesService = new ServiceLogMessages(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -72,6 +74,7 @@ namespace Manager.Services.Specific
         structPlanService._user = _user;
         planActivityService._user = _user;
         trainingPlanService._user = _user;
+        logMessagesService._user = _user;
         serviceMandatoryTraining.SetUser(_user);
       }
       catch (Exception e)
@@ -860,6 +863,8 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        if (viewPlan.StatusPlanApproved == EnumStatusPlanApproved.Approved)
+          logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento dentro do prazo do colaborador " + monitoring.Person.Name, monitoring.Person);
 
         //verify plan;
         if (viewPlan.SourcePlan == EnumSourcePlan.Activite)
@@ -1596,6 +1601,8 @@ namespace Manager.Services.Specific
 
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
           Mail(manager);
+
+        
 
         planService.Update(plan, null);
         return "ok";

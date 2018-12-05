@@ -24,6 +24,7 @@ namespace Manager.Services.Specific
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
+    private readonly ServiceLogMessages logMessagesService;
     public string path;
 
     public ServiceOnBoarding(DataContext context, string pathToken)
@@ -37,6 +38,7 @@ namespace Manager.Services.Specific
         mailModelService = new ServiceMailModel(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
+        logMessagesService = new ServiceLogMessages(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -316,6 +318,8 @@ namespace Manager.Services.Specific
         {
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
           {
+
+            logMessagesService.NewLogMessage("Onboarding", "Gestor e Colaborador realizaram o Onboarding de " + onboarding.Person.Name, onboarding.Person);
             onboarding.DateEndEnd = DateTime.Now;
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
               onboarding.Person.TypeJourney = EnumTypeJourney.Monitoring;
@@ -368,6 +372,7 @@ namespace Manager.Services.Specific
       mailModelService._user = _user;
       mailMessageService._user = _user;
       mailService._user = _user;
+      logMessagesService._user = _user;
     }
 
     // send mail
