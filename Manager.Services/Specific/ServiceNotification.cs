@@ -63,6 +63,24 @@ namespace Manager.Services.Specific
     {
       try
       {
+        Send();
+        var timer = new Timer();
+        //24 hours em milliseconds
+        timer.Interval = 86400000;
+        timer.Elapsed += new ElapsedEventHandler(Timer1_Tick);
+        timer.Enabled = true;
+        timer.Start();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private void Send()
+    {
+      try
+      {
         var log = new ViewLog();
         log.Description = "Service Notification";
         log.Person = new Person()
@@ -73,24 +91,8 @@ namespace Manager.Services.Specific
           Mail = "suporte@jmsoft.com.br"
         };
         log.Local = "ManagerMessages";
+
         logService.NewLog(log);
-
-        var timer = new Timer();
-        //24 hours em milliseconds
-        timer.Interval = 86400000;
-        timer.Elapsed += new ElapsedEventHandler(Timer1_Tick);
-        timer.Enabled = true;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private void Timer1_Tick(object Sender, EventArgs e)
-    {
-      try
-      {
         var accounts = accountService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
         foreach (var item in accounts)
         {
@@ -98,6 +100,17 @@ namespace Manager.Services.Specific
           baseUser._idAccount = item._idAccount;
           SendMessageAccount(baseUser);
         }
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    private void Timer1_Tick(object Sender, EventArgs e)
+    {
+      try
+      {
+        Send();
       }
       catch (Exception ex)
       {
