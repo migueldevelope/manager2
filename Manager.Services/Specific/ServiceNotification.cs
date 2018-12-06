@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Timers;
 
 namespace Manager.Services.Specific
 {
@@ -59,6 +60,34 @@ namespace Manager.Services.Specific
     }
 
     public void SendMessage()
+    {
+      try
+      {
+        var log = new ViewLog();
+        log.Description = "Service Notification";
+        log.Person = new Person()
+        {
+          Name = "Service",
+          Status = EnumStatus.Enabled,
+          StatusUser = EnumStatusUser.Enabled,
+          Mail = "suporte@jmsoft.com.br"
+        };
+        log.Local = "ManagerMessages";
+        logService.NewLog(log);
+
+        var timer = new Timer();
+        //24 hours em milliseconds
+        timer.Interval = 86400000;
+        timer.Elapsed += new ElapsedEventHandler(Timer1_Tick);
+        timer.Enabled = true;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private void Timer1_Tick(object Sender, EventArgs e)
     {
       try
       {
