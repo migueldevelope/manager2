@@ -99,9 +99,9 @@ namespace Manager.Services.Specific
           SendMessageAccount(baseUser);
         }
       }
-      catch (Exception e)
+      catch (Exception ex)
       {
-        throw e;
+        throw ex;
       }
     }
 
