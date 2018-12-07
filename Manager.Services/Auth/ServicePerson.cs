@@ -120,8 +120,18 @@ namespace Manager.Services.Auth
 
       try
       {
-        var authMaristas = person.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
-        var authPUC = person.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+        var authMaristas = false;
+        var authPUC = false;
+        try
+        {
+          authMaristas = person.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+          authPUC = person.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+        }
+        catch (Exception)
+        {
+
+        }
+
 
 
 
