@@ -9,6 +9,8 @@ using System;
 using Manager.Services.Specific;
 using Tools;
 using System.Net.Http;
+using Manager.Core.Enumns;
+using Manager.Views.Enumns;
 
 namespace Manager.Services.Auth
 {
@@ -49,7 +51,8 @@ namespace Manager.Services.Auth
       {
         Person user = null;
         if (GetMaristas(mail, password) == "ok")
-          user = personService.GetAuthentication(p => p.Mail == mail).FirstOrDefault();
+          user = personService.GetAuthentication(p => p.Mail == mail & p.Status == EnumStatus.Enabled & p.StatusUser != EnumStatusUser.Disabled
+          & p.StatusUser != EnumStatusUser.ErrorIntegration).FirstOrDefault();
 
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
@@ -85,7 +88,8 @@ namespace Manager.Services.Auth
       {
         Person user = null;
         //if (GetMaristas(mail, password) == "ok")
-        user = personService.GetAuthentication(p => p.Mail == mail).FirstOrDefault();
+        user = personService.GetAuthentication(p => p.Mail == mail & p.Status == EnumStatus.Enabled & p.StatusUser != EnumStatusUser.Disabled
+          & p.StatusUser != EnumStatusUser.ErrorIntegration).FirstOrDefault();
 
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);

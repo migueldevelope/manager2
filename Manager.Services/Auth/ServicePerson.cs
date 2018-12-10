@@ -361,7 +361,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAuthentication(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.Mail == mail && p.Password == password).SingleOrDefault();
+        return personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.Mail == mail && p.Password == password).SingleOrDefault();
       }
       catch (Exception e)
       {

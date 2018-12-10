@@ -353,7 +353,7 @@ namespace Manager.Services.Specific
       {
         var model = mailModelService.GetAll(p => p.Name == "onboardingseq5");
         if (model.Count() == 0)
-          return DefaultOnBoardingSeq1(path);
+          return DefaultOnBoardingSeq5(path);
         else
           return model.FirstOrDefault();
       }
