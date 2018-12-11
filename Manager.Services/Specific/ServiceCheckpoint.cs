@@ -289,6 +289,7 @@ namespace Manager.Services.Specific
             checkpoint.Person.TypeJourney = EnumTypeJourney.Monitoring;
             personService.Update(checkpoint.Person, null);
             MailRH(checkpoint.Person, "Aprovado");
+            MailPerson(checkpoint.Person, "Aprovado");
 
             logMessagesService.NewLogMessage("Checkpoint", " Colaborador " + checkpoint.Person.Name + " aprovado no Checkpoint", checkpoint.Person);
           }
@@ -435,6 +436,50 @@ namespace Manager.Services.Specific
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
           NamePerson = mailDefault,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailPerson(Person person, string result)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.CheckpointResultPerson(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Result}", result);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+
+        List<MailLogAddress> listMail = new List<MailLogAddress>();
+        listMail.Add(new MailLogAddress(person.Mail, person.Name));
+
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = listMail,
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,

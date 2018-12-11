@@ -59,6 +59,7 @@ namespace Manager.Services.Specific
 
     public void SetUser(BaseUser baseUser)
     {
+      _user = baseUser;
       logMessagesService._user = baseUser;
       personService._user = baseUser;
     }

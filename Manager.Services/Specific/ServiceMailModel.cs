@@ -235,6 +235,22 @@ namespace Manager.Services.Specific
       }
     }
 
+    public MailModel OnBoardingDisapproval(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingdisapproval");
+        if (model.Count() == 0)
+          return DefaultOnBoardingDisapproval(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel OnBoardingApproval(string path)
     {
       try
@@ -393,6 +409,23 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public MailModel CheckpointResultPerson(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "checkpointresultperson");
+        if (model.Count() == 0)
+          return DefaultCheckpointResultPerson(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel MonitoringApproval(string path)
     {
       try
@@ -408,6 +441,24 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public MailModel MonitoringDisApproval(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "monitoringdisapproval");
+        if (model.Count() == 0)
+          return DefaultMonitoringDisapproval(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
     public MailModel CheckpointApproval(string path)
     {
       try
@@ -433,6 +484,28 @@ namespace Manager.Services.Specific
           Message = "Ola <strong>Recursos Humanos</strong>,</br></br>O resultado do chekcpoint para <strong>{Person}</strong> foi {Result}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Restulado do chekcpoint",
           Name = "checkpointresult",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultCheckpointResultPerson(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola,</br></br>O resultado do seu chekcpoint foi {Result}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Restulado do chekcpoint",
+          Name = "checkpointresultperson",
           Link = path
         };
         // Insert
@@ -496,6 +569,28 @@ namespace Manager.Services.Specific
           Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultOnBoardingDisapproval(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>O seu subordinado {Person} não concordou com o OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de OnBoarding",
+          Name = "onboardingdisapproval",
           Link = path
         };
         // Insert
@@ -868,6 +963,30 @@ namespace Manager.Services.Specific
       }
     }
 
+
+
+    public MailModel DefaultMonitoringDisapproval(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>Seu subordinado {Person} não concorda com o seu Monitoring.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de Monitoring",
+          Name = "monitoringdisapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel DefaultMonitoringApproval(string path)
     {
       try
@@ -875,7 +994,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do Monitoring.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necesário acessar o sistema para aprovar o Monitoring.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Aprovação de Monitoring",
           Name = "monitoringapproval",
           Link = path
@@ -889,6 +1008,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
     public MailModel OnBoardingPendingManager(string path)
     {
       try

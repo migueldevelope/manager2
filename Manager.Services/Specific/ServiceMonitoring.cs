@@ -406,9 +406,15 @@ namespace Manager.Services.Specific
           {
             monitoring.DateEndPerson = DateTime.Now;
             Mail(monitoring.Person.Manager);
-          }
 
+          }
+          else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
+          {
+            MailDisApproval(monitoring.Person);
+
+          }
         }
+
 
         //verify plan;
         foreach (var item in monitoring.Activities)
@@ -586,6 +592,48 @@ namespace Manager.Services.Specific
           From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailDisApproval(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.MonitoringApproval(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,

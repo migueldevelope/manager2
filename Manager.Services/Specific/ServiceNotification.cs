@@ -63,7 +63,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //Send();
+        Send();
         var timer = new Timer();
         //24 hours em milliseconds
         timer.Interval = 86400000;
@@ -494,8 +494,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var nowLast = DateTime.Now.AddDays(75).Date;
-        var nowNext = DateTime.Now.AddDays(85).Date;
+        var nowLast = DateTime.Now.AddDays(-85).Date;
+        var nowNext = DateTime.Now.AddDays(-75).Date;
         var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
         foreach (var item in persons)
         {
@@ -504,7 +504,7 @@ namespace Manager.Services.Specific
             if (checkpointService.GetAll(p => p.Person._id == item._id & p.StatusCheckpoint == EnumStatusCheckpoint.End).Count() == 0)
             {
               var days = (nowNext - DateTime.Parse(item.DateAdm.ToString())).TotalDays;
-              MailCheckpointSeq2(item, byte.Parse(days.ToString()));
+              MailCheckpointSeq2(item, byte.Parse(((days < 0) ? 0 : days).ToString()));
             }
 
           }
@@ -520,8 +520,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var nowLast = DateTime.Now.AddDays(174).Date;
-        var nowNext = DateTime.Now.AddDays(176).Date;
+        var nowLast = DateTime.Now.AddDays(-91).Date;
+        var nowNext = DateTime.Now.AddDays(-89).Date;
         var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
@@ -545,7 +545,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq1(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", int.Parse(totaldays.ToString()).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -587,7 +587,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq1_Person(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", int.Parse(totaldays.ToString()).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -713,7 +713,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq3(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", int.Parse(totaldays.ToString()).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -755,7 +755,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq3_Person(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", int.Parse(totaldays.ToString()).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
