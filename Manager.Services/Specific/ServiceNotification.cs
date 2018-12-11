@@ -123,18 +123,18 @@ namespace Manager.Services.Specific
       try
       {
         SetUser(baseUser);
-        OnboardingSeq1();
+        /*OnboardingSeq1();
         OnboardingSeq2();
         OnboardingSeq3();
         OnboardingSeq4();
         OnboardingSeq5();
         OnboardingSeq6();
-        CheckpointSeq1();
+        CheckpointSeq1();*/
         CheckpointSeq2();
-        CheckpointSeq3();
+        /*CheckpointSeq3();
         MonitoringSeq1();
         MonitoringSeq2();
-        PlanSeq1();
+        PlanSeq1();*/
       }
       catch (Exception e)
       {
@@ -326,19 +326,23 @@ namespace Manager.Services.Specific
           if (item.Manager != null)
           {
             var wait = monitoringService.GetAll(p => p.Person._id == item._id
-            & p.StatusMonitoring == EnumStatusMonitoring.End
-            & p.StatusMonitoring == EnumStatusMonitoring.Disapproved).Count();
+            & (p.StatusMonitoring != EnumStatusMonitoring.End
+            & p.StatusMonitoring != EnumStatusMonitoring.Disapproved)).Count();
             if (wait == 0)
             {
               var maxDate = monitoringService.GetAll(p => p.Person._id == item._id).Max(p => p.DateEndEnd);
               if (maxDate == null)
-                maxDate = item.DateAdm.Value.AddDays(90).Date;
+              {
+                maxDate = checkpointService.GetAll(p => p.Person._id == item._id).Max(p => p.DateEnd);
+                if (maxDate == null)
+                  return;
+              }
 
               var totaldays = (DateTime.Parse(DateTime.Now.Date.ToString()) - DateTime.Parse(maxDate.ToString())).TotalDays;
-              if (totaldays == 60)
+              if (Math.Round(totaldays) == 60)
               {
-                MailMonitoringSeq1(item, totaldays);
-                MailMonitoringSeq1_Person(item, totaldays);
+                MailMonitoringSeq1(item, Math.Round(totaldays));
+                MailMonitoringSeq1_Person(item, Math.Round(totaldays));
               }
 
             }
@@ -369,8 +373,8 @@ namespace Manager.Services.Specific
               {
                 foreach (var plan in row.Plans)
                 {
-                  var days = (DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays;
-                  var daysExp = (DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays;
+                  var days = Math.Truncate((DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays);
+                  var daysExp = Math.Truncate((DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays);
                   if ((days <= 10) & (days >= 1))
                   {
                     MailPlanSeq1(item, days);
@@ -394,8 +398,8 @@ namespace Manager.Services.Specific
               {
                 foreach (var plan in row.Plans)
                 {
-                  var days = (DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays;
-                  var daysExp = (DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays;
+                  var days = Math.Truncate((DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays);
+                  var daysExp = Math.Truncate((DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays);
                   if ((days <= 10) & (days >= 1))
                   {
                     MailPlanSeq1(item, days);
@@ -419,8 +423,8 @@ namespace Manager.Services.Specific
               {
                 foreach (var plan in row.Plans)
                 {
-                  var days = (DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays;
-                  var daysExp = (DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays;
+                  var days = Math.Truncate((DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).TotalDays);
+                  var daysExp = Math.Truncate((DateTime.Now - DateTime.Parse(plan.Deadline.ToString())).TotalDays);
                   if ((days <= 10) & (days >= 1))
                   {
                     MailPlanSeq1(item, days);
@@ -460,21 +464,26 @@ namespace Manager.Services.Specific
           if (item.Manager != null)
           {
             var wait = monitoringService.GetAll(p => p.Person._id == item._id
-            & p.StatusMonitoring == EnumStatusMonitoring.End
-            & p.StatusMonitoring == EnumStatusMonitoring.Disapproved).Count();
+            & p.StatusMonitoring != EnumStatusMonitoring.End
+            & p.StatusMonitoring != EnumStatusMonitoring.Disapproved).Count();
             if (wait == 0)
             {
               var maxDate = monitoringService.GetAll(p => p.Person._id == item._id).Max(p => p.DateEndEnd);
               if (maxDate == null)
-                maxDate = item.DateAdm.Value.Date;
+              {
+                maxDate = checkpointService.GetAll(p => p.Person._id == item._id).Max(p => p.DateEnd);
+                if (maxDate == null)
+                  return;
+              }
+
 
               var totaldays = (DateTime.Parse(DateTime.Now.Date.ToString()) - DateTime.Parse(maxDate.ToString())).TotalDays;
-              if (totaldays > 69)
+              if (Math.Truncate(totaldays) > 69)
               {
-                if ((totaldays % 10) == 0)
+                if ((Math.Truncate(totaldays) % 10) == 0)
                 {
-                  MailMonitoringSeq1(item, totaldays);
-                  MailMonitoringSeq1_Person(item, totaldays);
+                  MailMonitoringSeq1(item, Math.Truncate(totaldays));
+                  MailMonitoringSeq1_Person(item, Math.Truncate(totaldays));
                 }
 
               }
@@ -494,16 +503,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var nowLast = DateTime.Now.AddDays(-85).Date;
-        var nowNext = DateTime.Now.AddDays(-75).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm >= nowLast & p.DateAdm <= nowNext).ToList();
+        var nowLast = DateTime.Now.AddDays(-84).Date;
+        var nowNext = DateTime.Now.AddDays(-73).Date;
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
           {
             if (checkpointService.GetAll(p => p.Person._id == item._id & p.StatusCheckpoint == EnumStatusCheckpoint.End).Count() == 0)
             {
-              var days = (nowNext - DateTime.Parse(item.DateAdm.ToString())).TotalDays;
+              var days = Math.Truncate((DateTime.Parse(item.DateAdm.ToString()).AddDays(85) - DateTime.Now).TotalDays);
               MailCheckpointSeq2(item, byte.Parse(((days < 0) ? 0 : days).ToString()));
             }
 
@@ -921,7 +930,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.CheckpointSeq2(path);
+        var model = mailModelService.CheckpointSeq1(path);
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", int.Parse(days.ToString()).ToString());
         var message = new MailMessage
