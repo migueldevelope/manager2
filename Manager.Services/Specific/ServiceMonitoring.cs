@@ -528,7 +528,7 @@ namespace Manager.Services.Specific
       mailMessageService._user = _user;
       mailService._user = _user;
       monitoringActivitiesService._user = _user;
-      logMessagesService._user = _user;
+      logMessagesService.SetUser(_user);
     }
 
     public async void LogSave(string iduser, string local)

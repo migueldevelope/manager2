@@ -375,7 +375,7 @@ namespace Manager.Services.Specific
       mailModelService._user = _user;
       mailMessageService._user = _user;
       mailService._user = _user;
-      logMessagesService._user = _user;
+      logMessagesService.SetUser(_user);
     }
 
     // send mail

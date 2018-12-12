@@ -139,9 +139,9 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var manager = personService.GetAll(p => p._id == idmanager).FirstOrDefault();
-        var detail = logMessagesService.GetAll(p => p.Person.Manager == manager & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = logMessagesService.GetAll(p => p.Person.Manager == manager & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        //var manager = personService.GetAll(p => p._id == idmanager).FirstOrDefault();
+        var detail = logMessagesService.GetAll(p => p.Person.Manager._id == idmanager & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = logMessagesService.GetAll(p => p.Person.Manager._id == idmanager & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
 

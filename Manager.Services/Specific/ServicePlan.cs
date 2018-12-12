@@ -74,7 +74,7 @@ namespace Manager.Services.Specific
         structPlanService._user = _user;
         planActivityService._user = _user;
         trainingPlanService._user = _user;
-        logMessagesService._user = _user;
+        logMessagesService.SetUser(_user);
         serviceMandatoryTraining.SetUser(_user);
       }
       catch (Exception e)

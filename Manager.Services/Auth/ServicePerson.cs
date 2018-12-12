@@ -150,7 +150,6 @@ namespace Manager.Services.Auth
           Mail = person.Mail,
           Registration = person.Registration,
           Company = person.Company,
-          Password = EncryptServices.GetMD5Hash(person.Document),
           StatusUser = person.StatusUser,
           TypeJourney = person.TypeJourney,
           Status = EnumStatus.Enabled,
@@ -169,7 +168,10 @@ namespace Manager.Services.Auth
         };
 
         if (person.Password == string.Empty)
-          person.Password = EncryptServices.GetMD5Hash(person.Document);
+          model.Password = EncryptServices.GetMD5Hash(person.Document);
+        else
+          model.Password = EncryptServices.GetMD5Hash(person.Password);
+
 
         if (person.Manager != null)
           model.DocumentManager = person.Manager.Document;

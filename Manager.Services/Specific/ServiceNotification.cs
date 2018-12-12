@@ -73,7 +73,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -122,23 +122,25 @@ namespace Manager.Services.Specific
     {
       try
       {
+        
         SetUser(baseUser);
-        /*OnboardingSeq1();
+        //logMessagesService.NewLogMessage("Teste", "Gestor e Colaborador realizaram o Onboarding de ", new Person() { _id = ObjectId.GenerateNewId().ToString(), Name = "Teste" });
+        OnboardingSeq1();
         OnboardingSeq2();
         OnboardingSeq3();
         OnboardingSeq4();
         OnboardingSeq5();
         OnboardingSeq6();
-        CheckpointSeq1();*/
+        CheckpointSeq1();
         CheckpointSeq2();
-        /*CheckpointSeq3();
+        CheckpointSeq3();
         MonitoringSeq1();
         MonitoringSeq2();
-        PlanSeq1();*/
+        PlanSeq1();
       }
       catch (Exception e)
       {
-        throw e;
+        //
       }
     }
 
@@ -154,7 +156,7 @@ namespace Manager.Services.Specific
       onBoardingService._user = _user;
       checkpointService._user = _user;
       monitoringService._user = _user;
-      logMessagesService._user = _user;
+      logMessagesService.SetUser(_user);
     }
 
     public async void OnboardingSeq1()
@@ -176,7 +178,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -198,7 +200,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -220,7 +222,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -242,7 +244,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -264,7 +266,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -290,7 +292,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -312,7 +314,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -351,7 +353,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -450,7 +452,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -495,7 +497,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -521,7 +523,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 
@@ -543,7 +545,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        
       }
     }
 

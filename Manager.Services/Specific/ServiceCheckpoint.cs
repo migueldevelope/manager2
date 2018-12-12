@@ -340,7 +340,7 @@ namespace Manager.Services.Specific
       questionsService._user = _user;
       textDefaultService._user = _user;
       parameterService._user = _user;
-      logMessagesService._user = _user;
+      logMessagesService.SetUser(_user);
     }
 
     // send mail
