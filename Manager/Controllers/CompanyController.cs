@@ -43,7 +43,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("get")]
+    [Route("get/{id}")]
     public Company List(string id)
     {
       return service.Get(id);
@@ -85,7 +85,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getestablishment")]
+    [Route("getestablishment/{id}")]
     public Establishment ListEstablishment(string id)
     {
       return service.GetEstablishment(id);

@@ -58,7 +58,9 @@ namespace Manager
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
+      IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
 
+      services.AddSingleton(_ => serviceSalaryScale);
       services.AddSingleton(_ => serviceLogMessages);
       services.AddSingleton(_ => serviceConfigurationNotifications);
       services.AddSingleton(_ => serviceAccount);

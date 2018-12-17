@@ -17,6 +17,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceGeneric<Establishment> establishmentService;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<SalaryScale> salaryScaleService;
+    private readonly ServiceGeneric<Grade> gradeService;
 
     public BaseUser user { get => _user; set => user = _user; }
 
@@ -28,6 +30,8 @@ namespace Manager.Services.Specific
         companyService = new ServiceGeneric<Company>(context);
         personService = new ServiceGeneric<Person>(context);
         establishmentService = new ServiceGeneric<Establishment>(context);
+        salaryScaleService = new ServiceGeneric<SalaryScale>(context);
+        gradeService = new ServiceGeneric<Grade>(context);
       }
       catch (Exception e)
       {
@@ -68,13 +72,18 @@ namespace Manager.Services.Specific
       companyService._user = _user;
       personService._user = _user;
       establishmentService._user = _user;
+      salaryScaleService._user = _user;
+      gradeService._user = _user;
     }
 
     public void SetUser(BaseUser baseUser)
     {
+      _user = baseUser;
       companyService._user = baseUser;
       personService._user = baseUser;
       establishmentService._user = baseUser;
+      salaryScaleService._user = baseUser;
+      gradeService._user = baseUser;
     }
 
     public string New(Company view)
@@ -162,6 +171,33 @@ namespace Manager.Services.Specific
       try
       {
         establishmentService.Insert(view);
+
+        var grades = gradeService.GetAll(p => p.Company._id == view.Company._id).ToList();
+        foreach (var grade in grades)
+        {
+          var list = new List<ListSteps>();
+          for (var step = 0; step <= 7; step++)
+          {
+            list.Add(new ListSteps()
+            {
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = _user._idAccount,
+              Status = EnumStatus.Enabled,
+              Salary = 0,
+              Step = (EnumSteps)step,
+            });
+          }
+
+          var item = new SalaryScale()
+          {
+            Grade = grade,
+            Establishment = view,
+            ListSteps = list
+          };
+          salaryScaleService.Insert(item);
+
+        }
+
         return "add success";
       }
       catch (Exception e)

@@ -18,5 +18,6 @@ namespace Manager.Core.Business
     public CBO CBO { get; set; }
     public string SpecificRequirements { get; set; }
     public List<ProcessLevelTwo> Process { get; set; }
+    public Grade Grade { get; set; }
   }
 }
