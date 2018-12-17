@@ -16,6 +16,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<SalaryScale> salaryScaleService;
     private readonly ServiceGeneric<Grade> gradeService;
+    private readonly ServiceGeneric<Occupation> occupationService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Establishment> establishmentService;
 
@@ -30,6 +31,7 @@ namespace Manager.Services.Specific
         personService = new ServiceGeneric<Person>(context);
         gradeService = new ServiceGeneric<Grade>(context);
         establishmentService = new ServiceGeneric<Establishment>(context);
+        occupationService = new ServiceGeneric<Occupation>(context);
       }
       catch (Exception e)
       {
@@ -45,6 +47,7 @@ namespace Manager.Services.Specific
       personService._user = _user;
       gradeService._user = _user;
       establishmentService._user = _user;
+      occupationService._user = _user;
     }
 
     public void SetUser(BaseUser baseUser)
@@ -54,6 +57,7 @@ namespace Manager.Services.Specific
       personService._user = baseUser;
       gradeService._user = baseUser;
       establishmentService._user = baseUser;
+      occupationService._user = baseUser;
     }
 
 
@@ -144,7 +148,31 @@ namespace Manager.Services.Specific
       try
       {
         gradeService.Update(view, null);
+        UpdateAllGrade(view);
         return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private async void UpdateAllGrade(Grade grade)
+    {
+      try
+      {
+        foreach (var item in salaryScaleService.GetAll(p => p.Grade._id == grade._id))
+        {
+          item.Grade = grade;
+          salaryScaleService.Update(item, null);
+        }
+
+        foreach (var item in occupationService.GetAll(p => p.Grade._id == grade._id))
+        {
+          item.Grade = grade;
+          occupationService.Update(item, null);
+        }
+
       }
       catch (Exception e)
       {
