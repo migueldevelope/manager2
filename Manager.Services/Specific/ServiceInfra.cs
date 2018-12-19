@@ -366,6 +366,7 @@ namespace Manager.Services.Specific
           Schooling = view.Group.Schooling,
           Skills = new List<Skill>(),
           Process = view.Process,
+          Grade = view.Grade,
           Areas = areas
         };
         occupationService.Insert(occupation);
