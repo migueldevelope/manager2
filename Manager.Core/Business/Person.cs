@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Enumns;
 using Manager.Views.Enumns;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace Manager.Core.Business
@@ -39,6 +40,8 @@ namespace Manager.Core.Business
     public decimal Salary { get; set; }
     public DateTime? DateLastReadjust { get; set; }
     public DateTime? DateResignation { get; set; }
+    [BsonIgnore]
+    public decimal SalaryScale { get; set; }
 
   }
 }
