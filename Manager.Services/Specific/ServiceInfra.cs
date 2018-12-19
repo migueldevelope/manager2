@@ -1294,6 +1294,7 @@ namespace Manager.Services.Specific
             _idAccount = p._idAccount,
             Status = p.Status,
             Name = p.Name,
+            Grade = p.Grade,
             Group = new Group()
             {
               _id = p.Group._id,
@@ -1377,6 +1378,7 @@ namespace Manager.Services.Specific
             _idAccount = p._idAccount,
             Status = p.Status,
             Name = p.Name,
+            Grade = p.Grade,
             Group = new Group()
             {
               _id = p.Group._id,
@@ -1523,7 +1525,8 @@ namespace Manager.Services.Specific
                   _id = item._id,
                   _idAccount = item._idAccount,
                   Status = item.Status,
-                  Areas = item.Areas
+                  Areas = item.Areas,
+                  Grade = item.Grade
                 });
               }
           }
