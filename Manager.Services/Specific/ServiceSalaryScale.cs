@@ -4,11 +4,13 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -171,6 +173,7 @@ namespace Manager.Services.Specific
         {
           item.Grade = grade;
           occupationService.Update(item, null);
+          UpdateOccupationAll(item);
         }
 
       }
@@ -250,6 +253,23 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw e;
+      }
+    }
+
+    private async Task UpdateOccupationAll(Occupation occupation)
+    {
+      try
+      {
+        foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
+        {
+          item.Occupation = occupation;
+          personService.Update(item, null);
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
       }
     }
   }
