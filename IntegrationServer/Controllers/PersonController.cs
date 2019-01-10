@@ -196,7 +196,9 @@ namespace IntegrationServer.InfraController
               Salary = view.Colaborador.SalarioNominal,
               DateLastReadjust = view.Colaborador.DataUltimoReajuste,
               DateResignation = view.Colaborador.DataDemissao,
-              TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding
+              TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding,
+              Manager = personManager,
+              DocumentManager = personManager?.DocumentManager
             };
             switch (view.Colaborador.Situacao.ToLower())
             {
@@ -212,11 +214,6 @@ namespace IntegrationServer.InfraController
               default:
                 person.StatusUser = EnumStatusUser.Enabled;
                 break;
-            }
-            if (personManager != null)
-            {
-              person.Manager = personManager;
-              person.DocumentManager = personManager?.Document;
             }
             person = servicePerson.NewPersonView(person);
             view.Message = string.Empty;
@@ -307,14 +304,11 @@ namespace IntegrationServer.InfraController
                   break;
               }
             }
-
-            if (view.CamposAlterados.Contains("ChaveGestor"))
-              if (personManager != null)
-              {
-                person.Manager = personManager;
-                person.DocumentManager = personManager?.Document;
-              }
-
+            if (person.Manager == null)
+            {
+              person.Manager = personManager;
+              person.DocumentManager = personManager?.Document;
+            }
             person = servicePerson.UpdatePersonView(person);
             view.IdPerson = person._id;
             view.Situacao = (int)EnumColaboradorSituacao.Atualized;
@@ -339,7 +333,7 @@ namespace IntegrationServer.InfraController
       try
       {
         TextInfo myTI = new CultureInfo("pt-BR", false).TextInfo;
-        nome = myTI.ToTitleCase(nome).Replace(" De ", " de ").Replace(" Da ", " da ").Replace(" Dos ", " dos ").Replace(" Do ", " do ");
+        nome = myTI.ToTitleCase(nome.ToLower()).Replace(" De ", " de ").Replace(" Da ", " da ").Replace(" Dos ", " dos ").Replace(" Do ", " do ");
         return nome;
       }
       catch (Exception)
@@ -348,5 +342,33 @@ namespace IntegrationServer.InfraController
       }
     }
     #endregion
+
+    [Authorize]
+    [HttpPost]
+    [Route("ajuste")]
+    public IActionResult Ajuste()
+    {
+      try
+      {
+        List<Person> persons = servicePerson.GetPersons("5b91299a17858f95ffdb79f7",string.Empty);
+        foreach (Person person in persons)
+        {
+          if (person.Name.Equals(person.Name.ToUpper()))
+          {
+            person.Name = Capitalization(person.Name);
+            if (person.Manager != null)
+              person.Manager.Name = Capitalization(person.Manager.Name);
+            person.TypeJourney = EnumTypeJourney.OnBoardingOccupation;
+            var x = servicePerson.UpdatePersonView(person);
+          }
+        }
+        return Ok("Fim");
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(ex.ToString());
+      }
+    }
+
   }
 }

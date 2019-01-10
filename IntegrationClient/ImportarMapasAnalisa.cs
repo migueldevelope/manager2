@@ -176,6 +176,7 @@ namespace IntegrationClient
         txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
         novoCargo = false;
       }
+      MessageBox.Show("Importação de cargos realizada!");
     }
 
     private void ImportarCargoAnalisa_Load(object sender, EventArgs e)

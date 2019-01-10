@@ -49,7 +49,7 @@ namespace IntegrationService.Service
         foreach (FileInfo fileinfo in Arquivos)
           File.Delete(fileinfo.FullName);
 
-        LogFileName = string.Format("{0}/integration/{1}.log", Person.IdAccount, DateTime.Now.ToString("yyyyMMdd_hhmmss"));
+        LogFileName = string.Format("{0}/integration/{1}.log", Person.IdAccount, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
         Assembly assem = Assembly.GetEntryAssembly();
         AssemblyName assemName = assem.GetName();
         VersionProgram = assemName.Version;
@@ -522,17 +522,17 @@ namespace IntegrationService.Service
               // Validar alterações
               if (!colaborador.Nome.ToLower().Equals(view.Person.Name.ToLower()))
                 campos.Add("Nome");
-              if (!colaborador.Celular.ToLower().Equals(view.Person.Phone.ToLower()))
+              if (!colaborador.Celular.ToLower().Equals(view.Person.Phone?.ToLower()))
                 campos.Add("Celular");
               if (colaborador.DataNascimento != view.Person.DateBirth)
                 campos.Add("DataNascimento");
               if (colaborador.DataAdmissao != view.Person.DateAdm)
                 campos.Add("DataAdmissao");
-              if (!colaborador.Telefone.ToLower().Equals(view.Person.PhoneFixed.ToLower()))
+              if (!colaborador.Telefone.ToLower().Equals(view.Person.PhoneFixed?.ToLower()))
                 campos.Add("Telefone");
-              if (!colaborador.Identidade.ToLower().Equals(view.Person.DocumentID.ToLower()))
+              if (!colaborador.Identidade.ToLower().Equals(view.Person.DocumentID?.ToLower()))
                 campos.Add("Identidade");
-              if (!colaborador.CarteiraProfissional.ToLower().Equals(view.Person.DocumentCTPF.ToLower()))
+              if (!colaborador.CarteiraProfissional.ToLower().Equals(view.Person.DocumentCTPF?.ToLower()))
                 campos.Add("CarteiraProfissional");
               if (colaborador.DataRetornoFerias != view.Person.HolidayReturn)
                 campos.Add("DataRetornoFerias");
@@ -564,7 +564,10 @@ namespace IntegrationService.Service
             }
             else
             {
-              ControleColaboradores[search].Message = view.Message;
+              if (view.Message == "Pessoa não encontrada!" && ControleColaboradores[search].Acao == EnumColaboradorAcao.Insert)
+                ControleColaboradores[search].Message = string.Empty;
+              else
+                ControleColaboradores[search].Message = view.Message;
             }
           }
           else

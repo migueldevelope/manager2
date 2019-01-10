@@ -70,16 +70,6 @@ namespace IntegrationClient
       Application.Run(new Login());
     }
 
-    private void BtImpMap_Click(object sender, EventArgs e)
-    {
-      ImportarMapasAnalisa form = new ImportarMapasAnalisa(){
-        Person = Person,
-        Conn = string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text)
-      };
-      form.ShowDialog();
-      form.Close();
-    }
-
     private void BtSyncSkill_Click(object sender, EventArgs e)
     {
       SincronizarCompetencia form = new SincronizarCompetencia(){
@@ -88,10 +78,6 @@ namespace IntegrationClient
       };
       form.ShowDialog();
       form.Close();
-    }
-
-    private void Button2_Click(object sender, EventArgs e)
-    {
     }
 
     private void CboMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -273,9 +259,15 @@ namespace IntegrationClient
       }
     }
 
-    private void CboProc_SelectedIndexChanged(object sender, EventArgs e)
+    private void BtCar_Click(object sender, EventArgs e)
     {
-
+      ImportarMapasAnalisa form = new ImportarMapasAnalisa()
+      {
+        Person = Person,
+        Conn = string.Format("{0};{1};{2};{3};{4}", serviceConfiguration.Param.ConnectionString.Split(';')[0].Equals("Oracle"), serviceConfiguration.Param.ConnectionString.Split(';')[1], serviceConfiguration.Param.ConnectionString.Split(';')[2], serviceConfiguration.Param.ConnectionString.Split(';')[3], serviceConfiguration.Param.ConnectionString.Split(';')[4])
+      };
+      form.ShowDialog();
+      form.Close();
     }
   }
 }

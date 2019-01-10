@@ -39,6 +39,8 @@
       this.cboType = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
       this.grpBD = new System.Windows.Forms.GroupBox();
+      this.btCar = new System.Windows.Forms.Button();
+      this.cboDatabaseType = new System.Windows.Forms.ComboBox();
       this.btSave = new System.Windows.Forms.Button();
       this.label9 = new System.Windows.Forms.Label();
       this.txtSql = new System.Windows.Forms.TextBox();
@@ -61,7 +63,6 @@
       this.btImp = new System.Windows.Forms.Button();
       this.cboProc = new System.Windows.Forms.ComboBox();
       this.label12 = new System.Windows.Forms.Label();
-      this.cboDatabaseType = new System.Windows.Forms.ComboBox();
       this.grpBD.SuspendLayout();
       this.grpArq.SuspendLayout();
       this.SuspendLayout();
@@ -169,19 +170,37 @@
       this.grpBD.Controls.Add(this.label7);
       this.grpBD.Controls.Add(this.label4);
       this.grpBD.Controls.Add(this.txtUser);
-      this.grpBD.Location = new System.Drawing.Point(16, 121);
+      this.grpBD.Location = new System.Drawing.Point(16, 214);
       this.grpBD.Name = "grpBD";
-      this.grpBD.Size = new System.Drawing.Size(877, 498);
+      this.grpBD.Size = new System.Drawing.Size(877, 405);
       this.grpBD.TabIndex = 20;
       this.grpBD.TabStop = false;
       this.grpBD.Text = "Banco de Dados";
       this.grpBD.Visible = false;
       // 
+      // btCar
+      // 
+      this.btCar.Location = new System.Drawing.Point(153, 141);
+      this.btCar.Name = "btCar";
+      this.btCar.Size = new System.Drawing.Size(254, 23);
+      this.btCar.TabIndex = 34;
+      this.btCar.Text = "Importar Cargos Analisa";
+      this.btCar.UseVisualStyleBackColor = true;
+      this.btCar.Click += new System.EventHandler(this.BtCar_Click);
+      // 
+      // cboDatabaseType
+      // 
+      this.cboDatabaseType.FormattingEnabled = true;
+      this.cboDatabaseType.Location = new System.Drawing.Point(106, 27);
+      this.cboDatabaseType.Name = "cboDatabaseType";
+      this.cboDatabaseType.Size = new System.Drawing.Size(254, 24);
+      this.cboDatabaseType.TabIndex = 59;
+      // 
       // btSave
       // 
-      this.btSave.Location = new System.Drawing.Point(815, 469);
+      this.btSave.Location = new System.Drawing.Point(802, 371);
       this.btSave.Name = "btSave";
-      this.btSave.Size = new System.Drawing.Size(56, 23);
+      this.btSave.Size = new System.Drawing.Size(69, 23);
       this.btSave.TabIndex = 58;
       this.btSave.Text = "Salvar";
       this.btSave.UseVisualStyleBackColor = true;
@@ -202,7 +221,7 @@
       this.txtSql.Location = new System.Drawing.Point(106, 114);
       this.txtSql.Multiline = true;
       this.txtSql.Name = "txtSql";
-      this.txtSql.Size = new System.Drawing.Size(703, 378);
+      this.txtSql.Size = new System.Drawing.Size(685, 280);
       this.txtSql.TabIndex = 56;
       // 
       // label6
@@ -219,7 +238,7 @@
       this.txtDefault.Font = new System.Drawing.Font("Tahoma", 8.25F);
       this.txtDefault.Location = new System.Drawing.Point(464, 84);
       this.txtDefault.Name = "txtDefault";
-      this.txtDefault.Size = new System.Drawing.Size(345, 24);
+      this.txtDefault.Size = new System.Drawing.Size(327, 24);
       this.txtDefault.TabIndex = 53;
       // 
       // label8
@@ -277,7 +296,7 @@
       // 
       this.txtUser.Location = new System.Drawing.Point(464, 54);
       this.txtUser.Name = "txtUser";
-      this.txtUser.Size = new System.Drawing.Size(345, 22);
+      this.txtUser.Size = new System.Drawing.Size(327, 22);
       this.txtUser.TabIndex = 49;
       // 
       // grpArq
@@ -288,9 +307,9 @@
       this.grpArq.Controls.Add(this.btSearchFile);
       this.grpArq.Controls.Add(this.txtFileName);
       this.grpArq.Controls.Add(this.label10);
-      this.grpArq.Location = new System.Drawing.Point(16, 121);
+      this.grpArq.Location = new System.Drawing.Point(16, 214);
       this.grpArq.Name = "grpArq";
-      this.grpArq.Size = new System.Drawing.Size(877, 498);
+      this.grpArq.Size = new System.Drawing.Size(877, 405);
       this.grpArq.TabIndex = 21;
       this.grpArq.TabStop = false;
       this.grpArq.Text = "Arquivo CSV";
@@ -298,9 +317,9 @@
       // 
       // btSaveFile
       // 
-      this.btSaveFile.Location = new System.Drawing.Point(652, 469);
+      this.btSaveFile.Location = new System.Drawing.Point(802, 371);
       this.btSaveFile.Name = "btSaveFile";
-      this.btSaveFile.Size = new System.Drawing.Size(75, 23);
+      this.btSaveFile.Size = new System.Drawing.Size(69, 23);
       this.btSaveFile.TabIndex = 20;
       this.btSaveFile.Text = "Salvar";
       this.btSaveFile.UseVisualStyleBackColor = true;
@@ -312,7 +331,7 @@
       this.textBox2.Location = new System.Drawing.Point(137, 57);
       this.textBox2.Multiline = true;
       this.textBox2.Name = "textBox2";
-      this.textBox2.Size = new System.Drawing.Size(590, 406);
+      this.textBox2.Size = new System.Drawing.Size(654, 337);
       this.textBox2.TabIndex = 19;
       // 
       // label11
@@ -326,9 +345,9 @@
       // 
       // btSearchFile
       // 
-      this.btSearchFile.Location = new System.Drawing.Point(733, 26);
+      this.btSearchFile.Location = new System.Drawing.Point(802, 27);
       this.btSearchFile.Name = "btSearchFile";
-      this.btSearchFile.Size = new System.Drawing.Size(38, 23);
+      this.btSearchFile.Size = new System.Drawing.Size(69, 23);
       this.btSearchFile.TabIndex = 17;
       this.btSearchFile.Text = "...";
       this.btSearchFile.UseVisualStyleBackColor = true;
@@ -339,7 +358,7 @@
       this.txtFileName.Enabled = false;
       this.txtFileName.Location = new System.Drawing.Point(137, 27);
       this.txtFileName.Name = "txtFileName";
-      this.txtFileName.Size = new System.Drawing.Size(590, 22);
+      this.txtFileName.Size = new System.Drawing.Size(654, 22);
       this.txtFileName.TabIndex = 16;
       // 
       // label10
@@ -368,7 +387,6 @@
       this.cboProc.Name = "cboProc";
       this.cboProc.Size = new System.Drawing.Size(254, 24);
       this.cboProc.TabIndex = 33;
-      this.cboProc.SelectedIndexChanged += new System.EventHandler(this.CboProc_SelectedIndexChanged);
       // 
       // label12
       // 
@@ -379,19 +397,12 @@
       this.label12.TabIndex = 32;
       this.label12.Text = "Tipo de Processo";
       // 
-      // cboDatabaseType
-      // 
-      this.cboDatabaseType.FormattingEnabled = true;
-      this.cboDatabaseType.Location = new System.Drawing.Point(106, 27);
-      this.cboDatabaseType.Name = "cboDatabaseType";
-      this.cboDatabaseType.Size = new System.Drawing.Size(254, 24);
-      this.cboDatabaseType.TabIndex = 59;
-      // 
       // MenuPrincipal
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(899, 631);
+      this.Controls.Add(this.btCar);
       this.Controls.Add(this.cboProc);
       this.Controls.Add(this.label12);
       this.Controls.Add(this.btImp);
@@ -455,5 +466,6 @@
     private System.Windows.Forms.ComboBox cboProc;
     private System.Windows.Forms.Label label12;
     private System.Windows.Forms.ComboBox cboDatabaseType;
+    private System.Windows.Forms.Button btCar;
   }
 }

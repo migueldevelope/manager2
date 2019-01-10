@@ -64,14 +64,16 @@ namespace Manager.Services.Specific
       try
       {
         Send();
-        var timer = new Timer();
-        //24 hours em milliseconds
-        timer.Interval = 86400000;
+        var timer = new Timer
+        {
+          //24 hours em milliseconds
+          Interval = 86400000
+        };
         timer.Elapsed += new ElapsedEventHandler(Timer1_Tick);
         timer.Enabled = true;
         timer.Start();
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -81,23 +83,27 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var log = new ViewLog();
-        log.Description = "Service Notification";
-        log.Person = new Person()
+        var log = new ViewLog
         {
-          Name = "Service",
-          Status = EnumStatus.Enabled,
-          StatusUser = EnumStatusUser.Enabled,
-          Mail = "suporte@jmsoft.com.br"
+          Description = "Service Notification",
+          Person = new Person()
+          {
+            Name = "Service",
+            Status = EnumStatus.Enabled,
+            StatusUser = EnumStatusUser.Enabled,
+            Mail = "suporte@jmsoft.com.br"
+          },
+          Local = "ManagerMessages"
         };
-        log.Local = "ManagerMessages";
 
         logService.NewLog(log);
         var accounts = accountService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
         foreach (var item in accounts)
         {
-          BaseUser baseUser = new BaseUser();
-          baseUser._idAccount = item._idAccount;
+          BaseUser baseUser = new BaseUser
+          {
+            _idAccount = item._idAccount
+          };
           SendMessageAccount(baseUser);
         }
       }
@@ -138,7 +144,7 @@ namespace Manager.Services.Specific
         MonitoringSeq2();
         PlanSeq1();
       }
-      catch (Exception e)
+      catch (Exception)
       {
         //
       }
@@ -176,7 +182,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -198,7 +204,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -220,7 +226,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -242,7 +248,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -264,7 +270,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -290,7 +296,7 @@ namespace Manager.Services.Specific
 
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -312,7 +318,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -351,7 +357,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -450,7 +456,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -495,7 +501,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -521,7 +527,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
@@ -543,7 +549,7 @@ namespace Manager.Services.Specific
           }
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
         
       }
