@@ -607,6 +607,13 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("getprocessleveltwo/{idarea}")]
+    public List<ProcessLevelTwo> GetProcessLevelTwo(string idarea)
+    {
+      return service.GetProcessLevelTwoFilter(idarea);
+    }
+    [Authorize]
+    [HttpGet]
     [Route("getprocessleveltwo")]
     public List<ProcessLevelTwo> GetProcessLevelTwo()
     {

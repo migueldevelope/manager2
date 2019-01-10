@@ -42,6 +42,7 @@ namespace Manager.Core.Interfaces
     //List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
     ProcessLevelTwo GetProcessLevelTwo(string id);
     List<ProcessLevelTwo> GetProcessLevelTwo();
+    List<ProcessLevelTwo> GetProcessLevelTwoFilter(string idarea);
     string AddTextDefault(TextDefault model);
     string AddCBO(CBO model);
     string AddEssential(ViewAddEssential view);
