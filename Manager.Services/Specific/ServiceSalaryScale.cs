@@ -111,8 +111,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var order = gradeService.GetAll(p => p.Company._id == view.Company._id).Max(p => p.Order);
-        view.Order = order + 1;
+        try
+        {
+          var order = gradeService.GetAll(p => p.Company._id == view.Company._id).Max(p => p.Order);
+          view.Order = order + 1;
+        }
+        catch (Exception)
+        {
+          view.Order = 1;
+        }
+        
 
         gradeService.Insert(view);
         var establisments = establishmentService.GetAll(p => p.Company._id == view.Company._id).ToList();
