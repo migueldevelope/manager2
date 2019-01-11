@@ -3062,6 +3062,9 @@ namespace Manager.Services.Specific
             line += 1;
           }
 
+          if (line > maxLine)
+            maxLine = line;
+
           line = 0;
           foreach (var skill in item.Skills)
           {
@@ -3078,6 +3081,9 @@ namespace Manager.Services.Specific
             list.Add(result);
             line += 1;
           }
+
+          if (line > maxLineSkill)
+            maxLineSkill = line;
 
           line = 0;
           foreach (var scholling in item.Schooling)
@@ -3097,6 +3103,8 @@ namespace Manager.Services.Specific
           }
           col += 1;
         }
+        if (line > maxLineSchooling)
+          maxLineSchooling = line;
 
 
         for (var row = 0; row < maxLine; row++)
