@@ -386,7 +386,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingApproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -428,7 +428,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingDisapproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name); 
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
