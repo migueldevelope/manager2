@@ -300,6 +300,7 @@ namespace Manager.Services.Specific
           }
         }
 
+
         checkpointService.Update(checkpoint, null);
         return "update";
       }

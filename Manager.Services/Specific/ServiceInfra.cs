@@ -1301,7 +1301,7 @@ namespace Manager.Services.Specific
               _id = p.Group._id,
               _idAccount = p.Group._idAccount,
               Status = p.Group.Status,
-              Name = p.Name,
+              Name = p.Group.Name,
               Company = new Company()
               {
                 _id = p.Group.Company._id,
