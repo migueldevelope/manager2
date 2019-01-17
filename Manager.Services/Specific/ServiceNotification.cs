@@ -562,7 +562,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq1(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -573,7 +573,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -604,7 +604,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq1_Person(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -615,7 +615,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -646,7 +646,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq2(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -657,7 +657,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -688,7 +688,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq2_Person(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -699,7 +699,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -730,7 +730,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq3(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -741,7 +741,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -772,7 +772,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.PlanSeq3_Person(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -783,7 +783,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -814,7 +814,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.MonitoringSeq1(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", totaldays.ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", totaldays.ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -825,7 +825,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -856,7 +856,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.MonitoringSeq1_Person(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", totaldays.ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", totaldays.ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -867,7 +867,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -898,7 +898,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.CheckpointSeq1(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", "30");
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", "30");
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -909,7 +909,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -940,7 +940,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.CheckpointSeq1(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", int.Parse(days.ToString()).ToString());
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", int.Parse(days.ToString()).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -951,7 +951,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -982,7 +982,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.CheckpointSeq2(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Days}", "90");
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", "90");
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -993,7 +993,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -1024,7 +1024,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq1(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1035,7 +1035,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -1066,7 +1066,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq2(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1077,7 +1077,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -1108,7 +1108,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq3(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1119,7 +1119,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -1150,7 +1150,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq4(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1161,7 +1161,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -1192,7 +1192,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq5(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1203,7 +1203,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },

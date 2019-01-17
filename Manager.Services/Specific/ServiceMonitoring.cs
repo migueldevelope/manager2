@@ -578,7 +578,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.MonitoringApproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link);
+        var body =  model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -589,7 +589,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -620,7 +620,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.MonitoringApproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body =  model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -631,7 +631,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },

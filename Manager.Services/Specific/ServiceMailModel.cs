@@ -267,6 +267,54 @@ namespace Manager.Services.Specific
       }
     }
 
+    public MailModel OnBoardingApprovalManager(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingapprovalmanager");
+        if (model.Count() == 0)
+          return DefaultOnBoardingApprovalManager(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel OnBoardingApprovalOccupation(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingapprovaloccupation");
+        if (model.Count() == 0)
+          return DefaultOnBoardingApprovalOccupation(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel OnBoardingApprovalManagerOccupation(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "onboardingapprovalmanageroccupation");
+        if (model.Count() == 0)
+          return DefaultOnBoardingApprovalManagerOccupation(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel OnBoardingSeq1(string path)
     {
       try
@@ -410,6 +458,23 @@ namespace Manager.Services.Specific
       }
     }
 
+
+    public MailModel CheckpointResultDisapproved(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "checkpointresultDisapproved");
+        if (model.Count() == 0)
+          return DefaultCheckpointResultDisapproved(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel CheckpointResultPerson(string path)
     {
       try
@@ -496,6 +561,28 @@ namespace Manager.Services.Specific
       }
     }
 
+    public MailModel DefaultCheckpointResultDisapproved(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>Recursos Humanos</strong>,</br></br>O resultado do chekcpoint para <strong>{Person}</strong> foi {Result}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Restulado do chekcpoint",
+          Name = "checkpointresultdisapproved",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel DefaultCheckpointResultPerson(string path)
     {
       try
@@ -559,6 +646,29 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public MailModel DefaultOnBoardingApprovalManager(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding de {Person}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de OnBoarding",
+          Name = "onboardingapprovalmanager",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel DefaultOnBoardingApproval(string path)
     {
       try
@@ -569,6 +679,50 @@ namespace Manager.Services.Specific
           Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultOnBoardingApprovalManagerOccupation(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding de {Person}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de OnBoarding",
+          Name = "onboardingapprovalmanageroccupation",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultOnBoardingApprovalOccupation(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de OnBoarding",
+          Name = "onboardingapprovaloccupation",
           Link = path
         };
         // Insert
@@ -602,6 +756,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
 
     public MailModel DefaultCheckpointSeq1(string path)
     {

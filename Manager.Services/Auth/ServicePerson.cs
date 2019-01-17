@@ -455,7 +455,7 @@ namespace Manager.Services.Auth
         }
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                     new MailLogAddress(person.Mail, person.Name)
                 },

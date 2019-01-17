@@ -311,7 +311,10 @@ namespace Manager.Services.Specific
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Wait)
           {
             onboarding.DateEndManager = DateTime.Now;
-            Mail(onboarding.Person);
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              MailOccupation(onboarding.Person);
+            else
+              Mail(onboarding.Person);
           }
         }
         else
@@ -331,7 +334,10 @@ namespace Manager.Services.Specific
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
           {
             onboarding.DateEndPerson = DateTime.Now;
-            Mail(onboarding.Person.Manager);
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              MailManager(onboarding.Person);
+            else
+              MailManagerOccupation(onboarding.Person);
           }
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Disapproved)
           {
@@ -386,7 +392,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingApproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -397,9 +403,135 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailManager(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.OnBoardingApprovalManager(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailOccupation(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.OnBoardingApprovalOccupation(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Mail, person.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailManagerOccupation(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.OnBoardingApprovalManagerOccupation(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -428,7 +560,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingDisapproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -439,7 +571,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },

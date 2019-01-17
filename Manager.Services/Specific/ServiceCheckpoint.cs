@@ -295,7 +295,7 @@ namespace Manager.Services.Specific
           }
           else
           {
-            MailRH(checkpoint.Person, "Reprovado");
+            MailRHDisapproved(checkpoint.Person, "Reprovado");
 
           }
         }
@@ -351,7 +351,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.CheckpointApproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -362,7 +362,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -431,7 +431,54 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          To = listMail,
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = mailDefault,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailRHDisapproved(Person person, string result)
+    {
+      try
+      {
+        var mailDefault = MailDefault();
+        //searsh model mail database
+        var model = mailModelService.CheckpointResultDisapproved(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Result}", result);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+
+        List<MailLogAddress> listMail = new List<MailLogAddress>();
+        foreach (var item in mailDefault.Split(";"))
+        {
+          listMail.Add(new MailLogAddress(item, item));
+        }
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -475,7 +522,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Analisa.Solutions"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
