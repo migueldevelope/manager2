@@ -335,9 +335,9 @@ namespace Manager.Services.Specific
           {
             onboarding.DateEndPerson = DateTime.Now;
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-              MailManager(onboarding.Person);
+              MailManagerOccupation(onboarding.Person); 
             else
-              MailManagerOccupation(onboarding.Person);
+              MailManager(onboarding.Person);
           }
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Disapproved)
           {
@@ -382,6 +382,7 @@ namespace Manager.Services.Specific
       mailMessageService._user = _user;
       mailService._user = _user;
       logMessagesService.SetUser(_user);
+      mailModelService.SetUser(contextAccessor);
     }
 
     // send mail
@@ -403,7 +404,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -445,7 +446,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -487,7 +488,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
@@ -529,7 +530,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
@@ -571,7 +572,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },

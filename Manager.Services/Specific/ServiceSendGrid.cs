@@ -52,6 +52,8 @@ namespace Manager.Services.Specific
           PlainTextContent = "e-Mail formatt HTML",
           HtmlContent = mailSend.Body
         };
+
+        
         foreach (var item in mailSend.To)
           msg.AddTo(new EmailAddress(item.Email, item.Name));
 

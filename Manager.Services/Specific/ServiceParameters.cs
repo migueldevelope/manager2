@@ -99,6 +99,18 @@ namespace Manager.Services.Specific
       }
     }
 
+    public Parameter GetName(string name)
+    {
+      try
+      {
+        return parameterService.GetAll(p => p.Name == name).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<Parameter> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try

@@ -16,14 +16,15 @@ using Tools;
 
 namespace Manager.Services.Specific
 {
-  #pragma warning disable 1998
-  #pragma warning disable 4014
+#pragma warning disable 1998
+#pragma warning disable 4014
   public class ServiceAccount : Repository<Account>, IServiceAccount
   {
     private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceInfra infraService;
+    private readonly ServiceGeneric<Parameter> parameterService;
     private IServiceLog logService;
 
     public ServiceAccount(DataContext context)
@@ -35,6 +36,7 @@ namespace Manager.Services.Specific
         personService = new ServiceGeneric<Person>(context);
         companyService = new ServiceGeneric<Company>(context);
         infraService = new ServiceInfra(context);
+        parameterService = new ServiceGeneric<Parameter>(context);
         logService = new ServiceLog(context);
       }
       catch (Exception e)
@@ -85,6 +87,21 @@ namespace Manager.Services.Specific
 
         infraService._idAccount = account._id;
         infraService.CopyTemplateInfra(company);
+
+
+        var parameter = parameterService.GetAuthentication(p => p.Name == "viewlo" & p._idAccount == id).FirstOrDefault();
+        if (parameter == null)
+        {
+          parameter = new Parameter
+          {
+            _idAccount = id,
+            Name = "viewlo",
+            Content = "show",
+            Status = EnumStatus.Enabled
+          };
+          parameterService.InsertAccount(parameter);
+        }
+
       }
       catch (Exception e)
       {
@@ -98,8 +115,9 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = accountService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-        
+
         total = accountService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
 
         return detail;
       }
@@ -114,10 +132,24 @@ namespace Manager.Services.Specific
       try
       {
         var user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
-        if(user == null)
+        if (user == null)
         {
           user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).FirstOrDefault();
         }
+
+        var parameter = parameterService.GetAuthentication(p => p.Name == "viewlo" & p._idAccount == idaccount).FirstOrDefault();
+        if (parameter == null)
+        {
+          parameter = new Parameter
+          {
+            _idAccount = idaccount,
+            Name = "viewlo",
+            Content = "show",
+            Status = EnumStatus.Enabled
+          };
+          parameterService.InsertAccount(parameter);
+        }
+
         LogSave(user);
         using (var client = new HttpClient())
         {
@@ -209,6 +241,6 @@ namespace Manager.Services.Specific
       }
     }
   }
-  #pragma warning restore 1998
-  #pragma warning restore 4014
+#pragma warning restore 1998
+#pragma warning restore 4014
 }

@@ -42,10 +42,18 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("get")]
+    [Route("get/{id}")]
     public Parameter List(string id)
     {
       return service.Get(id);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getname/{name}")]
+    public Parameter GetName(string name)
+    {
+      return service.GetName(name);
     }
 
     [Authorize]

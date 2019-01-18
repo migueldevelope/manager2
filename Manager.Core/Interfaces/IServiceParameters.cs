@@ -14,6 +14,7 @@ namespace Manager.Core.Interfaces
     string Update(Parameter view);
     string Remove(string id);
     Parameter Get(string id);
+    Parameter GetName(string name);
     List<Parameter> List(ref long total, int count = 10, int page = 1, string filter = "");
     
   }

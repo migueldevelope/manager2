@@ -405,7 +405,7 @@ namespace Manager.Services.Specific
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
-            Mail(monitoring.Person.Manager);
+            MailManager(monitoring.Person);
 
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
@@ -529,6 +529,7 @@ namespace Manager.Services.Specific
       mailService._user = _user;
       monitoringActivitiesService._user = _user;
       logMessagesService.SetUser(_user);
+      mailModelService.SetUser(contextAccessor);
     }
 
     public async void LogSave(string iduser, string local)
@@ -589,13 +590,55 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
           NamePerson = person.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public async void MailManager(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.MonitoringApprovalManager(path);
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person.Manager._id,
+          NamePerson = person.Manager.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -631,7 +674,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },

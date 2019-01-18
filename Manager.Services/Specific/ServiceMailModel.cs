@@ -105,6 +105,15 @@ namespace Manager.Services.Specific
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
+      mailModelService._user = _user;
+      
+    }
+
+    public void SetUser(BaseUser user)
+    {
+      _user = user;
+      mailModelService._user = _user;
+
     }
 
     public MailModel MonitoringSeq1(string path)
@@ -463,7 +472,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "checkpointresultDisapproved");
+        var model = mailModelService.GetAll(p => p.Name == "checkpointresultdisapproved");
         if (model.Count() == 0)
           return DefaultCheckpointResultDisapproved(path);
         else
@@ -496,6 +505,22 @@ namespace Manager.Services.Specific
       try
       {
         var model = mailModelService.GetAll(p => p.Name == "monitoringapproval");
+        if (model.Count() == 0)
+          return DefaultMonitoringApproval(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel MonitoringApprovalManager(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "monitoringapprovalmanager");
         if (model.Count() == 0)
           return DefaultMonitoringApproval(path);
         else
@@ -1152,6 +1177,28 @@ namespace Manager.Services.Specific
           Message = "Ola <strong>{Person}</strong>,</br></br>É necesário acessar o sistema para aprovar o Monitoring.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
           Subject = "Aprovação de Monitoring",
           Name = "monitoringapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultMonitoringApprovalManager(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necesário acessar o sistema para aprovar o Monitoring.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Subject = "Aprovação de Monitoring",
+          Name = "monitoringapprovalmanager",
           Link = path
         };
         // Insert

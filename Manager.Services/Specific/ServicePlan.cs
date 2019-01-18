@@ -876,7 +876,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                UpdatePlan(viewPlan, monitoring.Person.Manager);
+                UpdatePlan(viewPlan, monitoring.Person);
                 listActivities.Add(viewPlan);
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
@@ -884,7 +884,7 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                UpdatePlan(plan, monitoring.Person.Manager);
+                UpdatePlan(plan, monitoring.Person);
                 listActivities.Add(plan);
               }
               else
@@ -902,7 +902,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                UpdatePlan(viewPlan, monitoring.Person.Manager);
+                UpdatePlan(viewPlan, monitoring.Person);
                 listSchoolings.Add(viewPlan);
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
@@ -910,7 +910,7 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                UpdatePlan(plan, monitoring.Person.Manager);
+                UpdatePlan(plan, monitoring.Person);
                 listSchoolings.Add(plan);
               }
               else
@@ -929,7 +929,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                UpdatePlan(viewPlan, monitoring.Person.Manager);
+                UpdatePlan(viewPlan, monitoring.Person);
                 listSkillsCompany.Add(viewPlan);
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible))
@@ -937,7 +937,7 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                UpdatePlan(plan, monitoring.Person.Manager);
+                UpdatePlan(plan, monitoring.Person);
                 listSkillsCompany.Add(plan);
               }
               else
@@ -1942,7 +1942,7 @@ namespace Manager.Services.Specific
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notidicação do Analisa"),
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.Mail, person.Name)
                     },
