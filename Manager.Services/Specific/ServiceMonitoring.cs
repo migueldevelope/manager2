@@ -661,7 +661,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.MonitoringApproval(path);
+        var model = mailModelService.MonitoringDisApproval(path);
         var url = "";
         var body =  model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
