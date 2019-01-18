@@ -52,7 +52,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,</br></br>O gestor <strong>{Requestor}</strong>, está solicitando que o(a) colaborador(a) <strong>{Employee}</strong> faça parte da equipe dele. </br></br>Você <a href='{Approved}'> aprova </a> ou <a href='{Disapproved}'> reprova </a> esta solicitação?</br></br>Obrigado por sua atenção.",
+          Message = "Olá <strong>{Person}</strong>,</br></br>O gestor <strong>{Requestor}</strong>, está solicitando que o(a) colaborador(a) <strong>{Employee}</strong> faça parte da equipe dele. </br></br>Você <a href='{Approved}'> aprova </a> ou <a href='{Disapproved}'> reprova </a> esta solicitação?",
           Subject = "Solicitação de Aprovação de Auto Gestão",
           Name = "automanager",
           Link = string.Format("{0}evaluation_f/genericmessage", path)
@@ -571,7 +571,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>Recursos Humanos</strong>,</br></br>O resultado do chekcpoint para <strong>{Person}</strong> foi {Result}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola Recursos Humanos, <br>O resultado do check point para {Person} foi APROVADO.<br>Procure o gestor {Manager} para realizar os procedimentos de efetivação de período de experiência.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Restulado do chekcpoint",
           Name = "checkpointresult",
           Link = path
@@ -593,7 +593,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>Recursos Humanos</strong>,</br></br>O resultado do chekcpoint para <strong>{Person}</strong> foi {Result}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola Recursos Humanos,<br>O resultado do check point para {Person} foi REPROVADO.<br>Procure o gestor {Manager} para realizar os procedimentos de desligamento.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Restulado do chekcpoint",
           Name = "checkpointresultdisapproved",
           Link = path
@@ -615,7 +615,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola,</br></br>O resultado do seu chekcpoint foi {Result}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Olá {Person},<br>Parabéns!Você foi efetivado na { Company }. Isso é fruto do seu engajamento e alinhamento com nossa cultura e nossas competências essenciais.<br>Agora é seguir interessado em conhecer mais sobre as entregas do seu cargo e as competências que fazem parte do mesmo.<br>Fique atento às notificações do Analisa e aproveite o máximo de suas funcionalidades.<br>Estaremos na torcida para que sua carreira seja a mais fluida possível.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Restulado do chekcpoint",
           Name = "checkpointresultperson",
           Link = path
@@ -636,7 +636,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do checkpointapproval.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do checkpointapproval.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Aprovação de checkpointapproval",
           Name = "checkpointapproval",
           Link = path
@@ -657,7 +657,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do Pdi.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do Pdi.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Aprovação de PDI",
           Name = "planapproval",
           Link = path
@@ -679,7 +679,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding de {Person}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding de {Person}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingapprovalmanager",
           Link = path
@@ -701,7 +701,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Olá {Person}, <br>Bem - vindo ao seu novo cargo { Occupation }!Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.<br>Seu gestor { Manager } acaba de fazer um registro do seu embarque no Analisa.Não perca tempo, clica aqui e confira!<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingapproval",
           Link = path
@@ -723,7 +723,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding de {Person}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Olá {Manager}, <br>O colaborador {Person} foi promovido para o cargo {Occupation}, e iniciou os registros de embarque. <br> De continuidade a este processo para gerar mais engajamento de sua equipe, e melhorar nossos processos de gestão.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingapprovalmanageroccupation",
           Link = path
@@ -745,7 +745,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingapprovaloccupation",
           Link = path
@@ -767,7 +767,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>O seu subordinado {Person} não concordou com o OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Ola <strong>{Manager}</strong>,</br></br>O seu subordinado {Person} não concordou com o OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingdisapproval",
           Link = path
@@ -792,7 +792,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o Checkpoint de " +
           "seu subordinado {Person} que irá vencer em {Days} dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Checkpoint à vencer",
           Name = "checkpointseq1",
           Link = path
@@ -816,7 +816,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o Checkpoint de " +
           "seu subordinado {Person} que está atrasado em {Days} dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Checkpoint atrasado",
           Name = "checkpointseq2",
           Link = path
@@ -840,7 +840,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>Você está a {Days} dias sem " +
           "realizar um Monitoring do seu subordinao {Person}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Monitoring",
           Name = "monitoringseq1",
           Link = path
@@ -864,7 +864,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>Você está a {Days} dias sem " +
           "realizar um Monitoring.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Monitoring",
           Name = "monitoringseq1_person",
           Link = path
@@ -888,7 +888,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
           " em {Days} dias do seu subordinao {Person}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Plano à vencer",
           Name = "planseq1",
           Link = path
@@ -912,7 +912,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
           " em {Days} dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Plano à vencer",
           Name = "planseq1_person",
           Link = path
@@ -936,7 +936,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
           " hoje do seu subordinao {Person}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Plano vencendo",
           Name = "planseq2",
           Link = path
@@ -960,7 +960,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
           " hoje.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Plano vencendo",
           Name = "planseq2_person",
           Link = path
@@ -984,7 +984,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano vencido" +
           " à {Days} dias do seu subordinao {Person}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Plano",
           Name = "planseq3",
           Link = path
@@ -1008,7 +1008,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano vencido" +
           " à {Days}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Plano",
           Name = "planseq3_person",
           Link = path
@@ -1032,7 +1032,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
           "seu subordinado {Person} que irá vencer em 30 dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "OnBoarding à vencer",
           Name = "onboardingseq1",
           Link = path
@@ -1056,7 +1056,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
             Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
           "seu subordinado {Person} que irá vencer em 5 dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "OnBoarding à vencer",
           Name = "onboardingseq2",
           Link = path
@@ -1080,7 +1080,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
           "seu subordinado {Person} que irá vencer hoje.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "OnBoarding vencendo",
           Name = "onboardingseq3",
           Link = path
@@ -1104,7 +1104,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
           "seu subordinado {Person} que está vencido a 5 dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "OnBoarding vencido",
           Name = "onboardingseq4",
           Link = path
@@ -1128,7 +1128,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
           "seu subordinado {Person} que está vencido a 10 dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          "<a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "OnBoarding vencido",
           Name = "onboardingseq5",
           Link = path
@@ -1152,7 +1152,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Seu subordinado {Person} não concorda com o seu Monitoring.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Olá {Manager},<br>Seu colaborador {Person} acaba de propor uma revisão nos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre - se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Aprovação de Monitoring",
           Name = "monitoringdisapproval",
           Link = path
@@ -1174,7 +1174,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necesário acessar o sistema para aprovar o Monitoring.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Olá {Manager},<br>Seu colaborador {Person} acaba de propor uma revisão nos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre - se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Aprovação de Monitoring",
           Name = "monitoringapproval",
           Link = path
@@ -1196,7 +1196,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necesário acessar o sistema para aprovar o Monitoring.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>Obrigado por sua atenção.",
+          Message = "Olá {Manager},<br>Seu colaborador {Person} acaba de propor novos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre - se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Aprovação de Monitoring",
           Name = "monitoringapprovalmanager",
           Link = path
