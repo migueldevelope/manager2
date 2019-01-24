@@ -162,7 +162,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcomments/{idmonitoring}/{iditem}")]
-    public List<List> GetListComments(string idmonitoring, string iditem)
+    public List<ListComments> GetListComments(string idmonitoring, string iditem)
     {
       return service.GetListComments(idmonitoring, iditem);
     }

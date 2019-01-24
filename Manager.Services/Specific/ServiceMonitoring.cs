@@ -810,7 +810,7 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
-            item.Comments.Add(comments);
+             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
             return "ok";
@@ -824,7 +824,7 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
-            item.Comments.Add(comments);
+             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
             return "ok";
@@ -839,7 +839,7 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
-            item.Comments.Add(comments);
+             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
             return "ok";
