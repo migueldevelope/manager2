@@ -24,5 +24,6 @@ namespace Manager.Core.Business
     public List<OnBoardingSchooling> Schoolings { get; set; }
     public List<OnBoardingActivities> Activities { get; set; }
     public EnumStatusOnBoarding StatusOnBoarding { get; set; }
+    public List<ListComments> Comments { get; set; }
   }
 }

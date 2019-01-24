@@ -59,7 +59,9 @@ namespace Manager
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
+      IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
 
+      services.AddSingleton(_ => serviceDictionarySystem);
       services.AddSingleton(_ => serviceSalaryScale);
       services.AddSingleton(_ => serviceLogMessages);
       services.AddSingleton(_ => serviceConfigurationNotifications);

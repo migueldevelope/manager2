@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.Enumns;
 
 namespace Manager.Core.Business
 {
@@ -8,5 +9,6 @@ namespace Manager.Core.Business
     public string Message { get; set; }
     public string Subject { get; set; }
     public string Link { get; set; }
+    public EnumStatus StatusMail { get; set; }
   }
 }

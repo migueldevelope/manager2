@@ -34,7 +34,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "automanager");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "automanager");
         if (model.Count() == 0)
           return DefaultAutoManager(path);
         else
@@ -70,7 +70,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "developmentplan");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "developmentplan");
         if (model.Count() == 0)
           return DefaultDevelopmentPlan(path);
         else
@@ -120,7 +120,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "monitoringseq1");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "monitoringseq1");
         if (model.Count() == 0)
           return DefaultMonitoringSeq1(path);
         else
@@ -136,7 +136,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "monitoringseq1_person");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "monitoringseq1_person");
         if (model.Count() == 0)
           return DefaultMonitoringSeq1_Person(path);
         else
@@ -152,7 +152,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "planseq1");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "planseq1");
         if (model.Count() == 0)
           return DefaultPlanSeq1(path);
         else
@@ -168,7 +168,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "planseq1_person");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "planseq1_person");
         if (model.Count() == 0)
           return DefaultPlanSeq1_Person(path);
         else
@@ -184,7 +184,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "planseq2");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "planseq2");
         if (model.Count() == 0)
           return DefaultPlanSeq2(path);
         else
@@ -200,7 +200,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "planseq2_person");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "planseq2_person");
         if (model.Count() == 0)
           return DefaultPlanSeq2_Person(path);
         else
@@ -216,7 +216,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "planseq3");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "planseq3");
         if (model.Count() == 0)
           return DefaultPlanSeq3(path);
         else
@@ -232,7 +232,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "planseq3_person");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "planseq3_person");
         if (model.Count() == 0)
           return DefaultPlanSeq3_Person(path);
         else
@@ -248,7 +248,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingdisapproval");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingdisapproval");
         if (model.Count() == 0)
           return DefaultOnBoardingDisapproval(path);
         else
@@ -264,7 +264,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingapproval");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingapproval");
         if (model.Count() == 0)
           return DefaultOnBoardingApproval(path);
         else
@@ -280,7 +280,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingapprovalmanager");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingapprovalmanager");
         if (model.Count() == 0)
           return DefaultOnBoardingApprovalManager(path);
         else
@@ -296,7 +296,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingapprovaloccupation");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingapprovaloccupation");
         if (model.Count() == 0)
           return DefaultOnBoardingApprovalOccupation(path);
         else
@@ -312,7 +312,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingapprovalmanageroccupation");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingapprovalmanageroccupation");
         if (model.Count() == 0)
           return DefaultOnBoardingApprovalManagerOccupation(path);
         else
@@ -328,7 +328,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingseq1");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingseq1");
         if (model.Count() == 0)
           return DefaultOnBoardingSeq1(path);
         else
@@ -344,7 +344,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "checkpointseq1");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "checkpointseq1");
         if (model.Count() == 0)
           return DefaultCheckpointSeq1(path);
         else
@@ -360,7 +360,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "checkpointseq2");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "checkpointseq2");
         if (model.Count() == 0)
           return DefaultCheckpointSeq2(path);
         else
@@ -376,7 +376,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingseq2");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingseq2");
         if (model.Count() == 0)
           return DefaultOnBoardingSeq2(path);
         else
@@ -392,7 +392,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingseq3");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingseq3");
         if (model.Count() == 0)
           return DefaultOnBoardingSeq3(path);
         else
@@ -408,7 +408,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingseq4");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingseq4");
         if (model.Count() == 0)
           return DefaultOnBoardingSeq4(path);
         else
@@ -424,7 +424,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "onboardingseq5");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "onboardingseq5");
         if (model.Count() == 0)
           return DefaultOnBoardingSeq5(path);
         else
@@ -440,7 +440,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "planapproval");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "planapproval");
         if (model.Count() == 0)
           return DefaultPlanApproval(path);
         else
@@ -455,7 +455,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "checkpointresult");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "checkpointresult");
         if (model.Count() == 0)
           return DefaultCheckpointResult(path);
         else
@@ -472,7 +472,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "checkpointresultdisapproved");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "checkpointresultdisapproved");
         if (model.Count() == 0)
           return DefaultCheckpointResultDisapproved(path);
         else
@@ -488,7 +488,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "checkpointresultperson");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "checkpointresultperson");
         if (model.Count() == 0)
           return DefaultCheckpointResultPerson(path);
         else
@@ -504,7 +504,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "monitoringapproval");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "monitoringapproval");
         if (model.Count() == 0)
           return DefaultMonitoringApproval(path);
         else
@@ -520,7 +520,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "monitoringapprovalmanager");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "monitoringapprovalmanager");
         if (model.Count() == 0)
           return DefaultMonitoringApprovalManager(path);
         else
@@ -536,7 +536,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "monitoringdisapproval");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "monitoringdisapproval");
         if (model.Count() == 0)
           return DefaultMonitoringDisapproval(path);
         else
@@ -553,7 +553,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "checkpointapproval");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "checkpointapproval");
         if (model.Count() == 0)
           return DefaultCheckpointApproval(path);
         else
@@ -1215,7 +1215,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "expectationspendingmanager");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "expectationspendingmanager");
         if (model.Count() == 0)
           return DefaultExpectationsPendingManager(path);
         else
@@ -1251,7 +1251,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = mailModelService.GetAll(p => p.Name == "expectationspendingemployee");
+        var model = mailModelService.GetAll(p => p.StatusMail == EnumStatus.Enabled & p.Name == "expectationspendingemployee");
         if (model.Count() == 0)
           return DefaultExpectationsPendingEmployee(path);
         else

@@ -105,8 +105,13 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewPlan> result = new List<ViewPlan>();
 
-        var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+        var detail = (from monitoring in
+          monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+                      join person in personService.GetAll() on monitoring.Person._id equals person._id
+                      where person.Manager._id == id
+                      select monitoring
+        ).ToList();
 
 
         foreach (var item in detail)
@@ -1602,7 +1607,7 @@ namespace Manager.Services.Specific
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
           Mail(manager);
 
-        
+
 
         planService.Update(plan, null);
         return "ok";
@@ -1929,9 +1934,9 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.OnBoardingApproval(path);
+        var model = mailModelService.DefaultPlanApproval(path);
         var url = "";
-        var body =  model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
