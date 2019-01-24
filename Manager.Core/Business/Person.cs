@@ -41,7 +41,6 @@ namespace Manager.Core.Business
     public decimal Salary { get; set; }
     public DateTime? DateLastReadjust { get; set; }
     public DateTime? DateResignation { get; set; }
-    public List<Contract> Contracts { get; set; }
     [BsonIgnore]
     public decimal SalaryScale { get; set; }
 

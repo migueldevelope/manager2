@@ -170,7 +170,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcomments/{idmonitoring}/{iditem}")]
-    public string AddComments([FromBody]List comments, string idmonitoring, string iditem)
+    public string AddComments([FromBody]ListComments comments, string idmonitoring, string iditem)
     {
       return service.AddComments(idmonitoring, iditem, comments);
     }

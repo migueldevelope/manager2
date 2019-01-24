@@ -108,7 +108,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecomments/{idonboarding}/{iditem}")]
-    public string UpdateComments([FromBody]List comments, string idonboarding, string iditem)
+    public string UpdateComments([FromBody]ListComments comments, string idonboarding, string iditem)
     {
       return service.UpdateComments(idonboarding, iditem, comments);
     }
@@ -124,7 +124,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcomments/{idonboarding}/{iditem}")]
-    public string AddComments([FromBody]List comments, string idonboarding, string iditem)
+    public string AddComments([FromBody]ListComments comments, string idonboarding, string iditem)
     {
       return service.AddComments(idonboarding, iditem, comments);
     }

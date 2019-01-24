@@ -798,7 +798,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public string AddComments(string idmonitoring, string iditem, List comments)
+    public string AddComments(string idmonitoring, string iditem, ListComments comments)
     {
       try
       {
@@ -808,7 +808,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<List>();
+              item.Comments = new List<ListComments>();
 
             item.Comments.Add(comments);
 
@@ -822,7 +822,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<List>();
+              item.Comments = new List<ListComments>();
 
             item.Comments.Add(comments);
 
@@ -837,7 +837,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<List>();
+              item.Comments = new List<ListComments>();
 
             item.Comments.Add(comments);
 
@@ -856,7 +856,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateComments(string idmonitoring, string iditem, List comments)
+    public string UpdateComments(string idmonitoring, string iditem, ListComments comments)
     {
       try
       {
@@ -990,7 +990,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<List> GetListComments(string idmonitoring, string iditem)
+    public List<ListComments> GetListComments(string idmonitoring, string iditem)
     {
       try
       {

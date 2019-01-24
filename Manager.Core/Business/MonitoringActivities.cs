@@ -12,6 +12,6 @@ namespace Manager.Core.Business
     public string Praise { get; set; }
     public List<Plan> Plans { get; set; }
     public EnumTypeAtivitie TypeAtivitie { get; set; }
-    public List<List> Comments { get; set; }
+    public List<ListComments> Comments { get; set; }
   }
 }
