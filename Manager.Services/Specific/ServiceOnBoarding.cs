@@ -81,7 +81,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddComments(string idonboarding, string iditem, ListComments comments)
+    public string AddComments(string idonboarding, string iditem, List comments)
     {
       try
       {
@@ -91,7 +91,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<ListComments>();
+              item.Comments = new List<List>();
 
             item.Comments.Add(comments);
 
@@ -105,7 +105,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<ListComments>();
+              item.Comments = new List<List>();
 
             item.Comments.Add(comments);
 
@@ -119,7 +119,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<ListComments>();
+              item.Comments = new List<List>();
 
             item.Comments.Add(comments);
 
@@ -133,7 +133,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<ListComments>();
+              item.Comments = new List<List>();
 
             item.Comments.Add(comments);
 
@@ -147,7 +147,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<ListComments>();
+              item.Comments = new List<List>();
 
             item.Comments.Add(comments);
 
@@ -161,7 +161,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             if (item.Comments == null)
-              item.Comments = new List<ListComments>();
+              item.Comments = new List<List>();
 
             item.Comments.Add(comments);
 
@@ -179,7 +179,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateComments(string idonboarding, string iditem, ListComments comments)
+    public string UpdateComments(string idonboarding, string iditem, List comments)
     {
       try
       {
@@ -415,7 +415,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ListComments> GetListComments(string idonboarding, string iditem)
+    public List<List> GetListComments(string idonboarding, string iditem)
     {
       try
       {

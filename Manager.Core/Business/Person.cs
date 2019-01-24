@@ -3,6 +3,7 @@ using Manager.Core.Enumns;
 using Manager.Views.Enumns;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
@@ -23,7 +24,7 @@ namespace Manager.Core.Business
     public DateTime? DateAdm { get; set; }
     public string DocumentManager { get; set; }
     public Schooling Schooling { get; set; }
-    //public Object._id Photo { get; set; }
+    
     public string PhotoUrl { get; set; }
     public long Coins { get; set; }
     public EnumChangePassword ChangePassword { get; set; }
@@ -40,6 +41,7 @@ namespace Manager.Core.Business
     public decimal Salary { get; set; }
     public DateTime? DateLastReadjust { get; set; }
     public DateTime? DateResignation { get; set; }
+    public List<Contract> Contracts { get; set; }
     [BsonIgnore]
     public decimal SalaryScale { get; set; }
 

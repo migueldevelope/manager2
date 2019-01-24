@@ -10,6 +10,6 @@ namespace Manager.Core.Business
     public string CommentsManager { get; set; }
     public string Praise { get; set; }
     public List<Plan> Plans { get; set; }
-    public List<ListComments> Comments { get; set; }
+    public List<List> Comments { get; set; }
   }
 }

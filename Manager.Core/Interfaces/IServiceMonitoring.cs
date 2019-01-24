@@ -24,9 +24,9 @@ namespace Manager.Core.Interfaces
     string RemoveMonitoringActivities(string idmonitoring, string idactivitie);
     string UpdateMonitoringActivities(string idmonitoring, MonitoringActivities activitie);
     string AddMonitoringActivities(string idmonitoring, Activitie activitie);
-    string AddComments(string idmonitoring, string iditem, ListComments comments);
-    string UpdateComments(string idmonitoring, string iditem, ListComments comments);
+    string AddComments(string idmonitoring, string iditem, List comments);
+    string UpdateComments(string idmonitoring, string iditem, List comments);
     string DeleteComments(string idmonitoring, string iditem, string idcomments);
-    List<ListComments> GetListComments(string idmonitoring, string iditem);
+    List<List> GetListComments(string idmonitoring, string iditem);
   }
 }

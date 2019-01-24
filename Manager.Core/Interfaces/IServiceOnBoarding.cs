@@ -16,9 +16,9 @@ namespace Manager.Core.Interfaces
     string RemoveOnBoarding(string idperson);
     List<OnBoarding> GetListExclud(ref long total, string filter, int count, int page);
     void SetUser(IHttpContextAccessor contextAccessor);
-    string AddComments(string idonboarding, string iditem, ListComments comments);
-    string UpdateComments(string idonboarding, string iditem, ListComments comments);
+    string AddComments(string idonboarding, string iditem, List comments);
+    string UpdateComments(string idonboarding, string iditem, List comments);
     string DeleteComments(string idonboarding, string iditem, string idcomments);
-    List<ListComments> GetListComments(string idonboarding, string iditem);
+    List<List> GetListComments(string idonboarding, string iditem);
   }
 }

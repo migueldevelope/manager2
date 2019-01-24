@@ -8,6 +8,6 @@ namespace Manager.Core.Business
     public Activitie Activitie { get; set; }
     public string CommentsManager { get; set; }
     public string CommentsPerson { get; set; }
-    public List<ListComments> Comments { get; set; }
+    public List<List> Comments { get; set; }
   }
 }
