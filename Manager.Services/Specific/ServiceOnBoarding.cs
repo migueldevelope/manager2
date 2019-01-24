@@ -81,6 +81,401 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string AddComments(string idonboarding, string iditem, ListComments comments)
+    {
+      try
+      {
+        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateComments(string idonboarding, string iditem, ListComments comments)
+    {
+      try
+      {
+        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string DeleteComments(string idonboarding, string iditem, string idcomments)
+    {
+      try
+      {
+        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                onBoardingService.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ListComments> GetListComments(string idonboarding, string iditem)
+    {
+      try
+      {
+        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<OnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page)
     {
       try
@@ -335,7 +730,7 @@ namespace Manager.Services.Specific
           {
             onboarding.DateEndPerson = DateTime.Now;
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-              MailManagerOccupation(onboarding.Person); 
+              MailManagerOccupation(onboarding.Person);
             else
               MailManager(onboarding.Person);
           }
@@ -393,7 +788,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingApproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -435,7 +830,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingApprovalManager(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -477,7 +872,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingApprovalOccupation(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -519,7 +914,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingApprovalManagerOccupation(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -561,7 +956,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.OnBoardingDisapproval(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,

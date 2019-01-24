@@ -105,5 +105,39 @@ namespace Manager.Controllers
     }
 
 
+    [Authorize]
+    [HttpPut]
+    [Route("updatecomments/{idonboarding}/{iditem}")]
+    public string UpdateComments([FromBody]ListComments comments, string idonboarding, string iditem)
+    {
+      return service.UpdateComments(idonboarding, iditem, comments);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listcomments/{idonboarding}/{iditem}")]
+    public List<ListComments> GetListComments( string idonboarding, string iditem)
+    {
+      return service.GetListComments(idonboarding, iditem);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addcomments/{idonboarding}/{iditem}")]
+    public string AddComments([FromBody]ListComments comments, string idonboarding, string iditem)
+    {
+      return service.AddComments(idonboarding, iditem, comments);
+    }
+
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deletecomments/{idonboarding}/{iditem}/{idcomments}")]
+    public string DeleteComments(string idonboarding, string iditem, string idcomments)
+    {
+      return service.DeleteComments(idonboarding, iditem, idcomments);
+    }
+
+
   }
 }

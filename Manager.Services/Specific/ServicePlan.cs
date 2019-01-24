@@ -398,8 +398,16 @@ namespace Manager.Services.Specific
 
         if (activities == 1)
         {
-          var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          var detail = (from monitoring in
+         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+       .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+                        join person in personService.GetAll() on monitoring.Person._id equals person._id
+                        where person.Manager._id == id
+                        select monitoring
+       ).ToList();
+
+          /*var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();*/
 
 
           foreach (var item in detail)
@@ -440,8 +448,17 @@ namespace Manager.Services.Specific
 
         if (schooling == 1)
         {
-          var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          //var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          //  .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+          var detailSchool = (from monitoring in
+         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+       .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+                        join person in personService.GetAll() on monitoring.Person._id equals person._id
+                        where person.Manager._id == id
+                        select monitoring
+       ).ToList();
+
           foreach (var item in detailSchool)
           {
             foreach (var plan in item.Plans)
@@ -480,8 +497,16 @@ namespace Manager.Services.Specific
 
         if (skillcompany == 1)
         {
-          var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
-            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          //var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          //  .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+
+          var detailSkills = (from monitoring in
+         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+       .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+                              join person in personService.GetAll() on monitoring.Person._id equals person._id
+                              where person.Manager._id == id
+                              select monitoring
+       ).ToList();
 
           foreach (var item in detailSkills)
           {

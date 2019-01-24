@@ -159,5 +159,30 @@ namespace Manager.Controllers
       return service.AddMonitoringActivities(idmonitoring, activitie);
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("listcomments/{idmonitoring}/{iditem}")]
+    public List<ListComments> GetListComments(string idmonitoring, string iditem)
+    {
+      return service.GetListComments(idmonitoring, iditem);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addcomments/{idmonitoring}/{iditem}")]
+    public string AddComments([FromBody]ListComments comments, string idmonitoring, string iditem)
+    {
+      return service.AddComments(idmonitoring, iditem, comments);
+    }
+
+
+    [Authorize]
+    [HttpDelete]
+    [Route("deletecomments/{idmonitoring}/{iditem}/{idcomments}")]
+    public string DeleteComments(string idmonitoring, string iditem, string idcomments)
+    {
+      return service.DeleteComments(idmonitoring, iditem, idcomments);
+    }
+
   }
 }

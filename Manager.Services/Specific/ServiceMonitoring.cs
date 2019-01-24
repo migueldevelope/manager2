@@ -579,7 +579,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.MonitoringApproval(path);
         var url = "";
-        var body =  model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -663,7 +663,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.MonitoringDisApproval(path);
         var url = "";
-        var body =  model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -796,6 +796,238 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-  }
+
+
+    public string AddComments(string idmonitoring, string iditem, ListComments comments)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        foreach (var item in monitoring.Activities)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            monitoringService.Update(monitoring, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in monitoring.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            monitoringService.Update(monitoring, null);
+            return "ok";
+          }
+        }
+
+
+        foreach (var item in monitoring.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            item.Comments.Add(comments);
+
+            monitoringService.Update(monitoring, null);
+            return "ok";
+          }
+        }
+
+
+
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateComments(string idmonitoring, string iditem, ListComments comments)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        foreach (var item in monitoring.Activities)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                monitoringService.Update(monitoring, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+
+        foreach (var item in monitoring.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                monitoringService.Update(monitoring, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+
+        foreach (var item in monitoring.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                monitoringService.Update(monitoring, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string DeleteComments(string idmonitoring, string iditem, string idcomments)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        foreach (var item in monitoring.Activities)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                monitoringService.Update(monitoring, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in monitoring.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                monitoringService.Update(monitoring, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+
+        foreach (var item in monitoring.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                monitoringService.Update(monitoring, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ListComments> GetListComments(string idmonitoring, string iditem)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        foreach (var item in monitoring.Activities)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+
+        foreach (var item in monitoring.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in monitoring.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 #pragma warning restore 1998
+  }
 }

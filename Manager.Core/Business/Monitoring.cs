@@ -21,6 +21,5 @@ namespace Manager.Core.Business
     public List<MonitoringSchooling> Schoolings { get; set; }
     public List<MonitoringActivities> Activities { get; set; }
     public EnumStatusMonitoring StatusMonitoring { get; set; }
-    public List<ListComments> Comments { get; set; }
   }
 }
