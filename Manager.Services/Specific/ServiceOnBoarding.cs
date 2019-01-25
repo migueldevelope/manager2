@@ -860,6 +860,28 @@ namespace Manager.Services.Specific
       }
     }
 
+    private bool validOnboardingComments(OnBoarding onBoarding)
+    {
+      try
+      {
+        var count = onBoarding.Activities.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
+          + onBoarding.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
+          + onBoarding.Scopes.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
+          + onBoarding.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
+          + onBoarding.SkillsGroup.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
+          + onBoarding.SkillsOccupation.Where(p => p.StatusViewManager == EnumStatusView.None).Count();
+
+        if (count > 0)
+          return true;
+
+        return false;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string UpdateOnBoarding(OnBoarding onboarding, string idperson)
     {
       try
@@ -876,20 +898,45 @@ namespace Manager.Services.Specific
             else
               Mail(onboarding.Person);
           }
-        }
-        else
-        {
+
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
           {
-
             logMessagesService.NewLogMessage("Onboarding", "Gestor e Colaborador realizaram o Onboarding de " + onboarding.Person.Name, onboarding.Person);
             onboarding.DateEndEnd = DateTime.Now;
+
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
               onboarding.Person.TypeJourney = EnumTypeJourney.Monitoring;
             else
               onboarding.Person.TypeJourney = EnumTypeJourney.Checkpoint;
 
             personService.Update(onboarding.Person, null);
+          }
+        }
+        else
+        {
+          if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
+          {
+
+            
+            if (validOnboardingComments(onboarding))
+            {
+              onboarding.StatusOnBoarding = EnumStatusOnBoarding.WaitManager;
+              onboarding.DateEndPerson = DateTime.Now;
+            }
+            else
+            {
+              logMessagesService.NewLogMessage("Onboarding", "Gestor e Colaborador realizaram o Onboarding de " + onboarding.Person.Name, onboarding.Person);
+              onboarding.DateEndEnd = DateTime.Now;
+
+              if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+                onboarding.Person.TypeJourney = EnumTypeJourney.Monitoring;
+              else
+                onboarding.Person.TypeJourney = EnumTypeJourney.Checkpoint;
+
+              personService.Update(onboarding.Person, null);
+            }
+
+            
           }
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
           {

@@ -136,6 +136,41 @@ namespace Manager.Services.Specific
       }
     }
 
+    public Checkpoint ListCheckpointsWaitPerson(string idperson)
+    {
+      try
+      {
+        LogSave(idperson, "List");
+        NewOnZero();
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p._id == idperson)
+        .OrderBy(p => p.Name)
+        .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList();
+
+        var detail = new List<Checkpoint>();
+        foreach (var item in list)
+        {
+          if (item.Checkpoint == null)
+            detail.Add(new Checkpoint
+            {
+              Person = item.Person,
+              _id = null,
+              StatusCheckpoint = EnumStatusCheckpoint.Open
+            });
+          else
+            if (item.Checkpoint.StatusCheckpoint != EnumStatusCheckpoint.End)
+            detail.Add(item.Checkpoint);
+        }
+
+
+        return detail.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public Checkpoint GetCheckpoints(string id)
     {
       try

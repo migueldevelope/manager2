@@ -96,5 +96,14 @@ namespace Manager.Controllers
     }
 
 
+    [Authorize]
+    [HttpGet]
+    [Route("listcheckpointswaitperson/{idperson}")]
+    public Checkpoint ListCheckpointsWaitPerson(string idperson)
+    {
+      return service.ListCheckpointsWaitPerson(idperson);
+    }
+
+
   }
 }

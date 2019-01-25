@@ -141,7 +141,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("updatecommentsview/{idonboarding}/{usercomment}")]
+    [Route("updatecommentsview/{idonboarding}/{iditem}/{usercomment}")]
     public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment usercomment)
     {
       return service.UpdateCommentsView(idonboarding, iditem, usercomment);
