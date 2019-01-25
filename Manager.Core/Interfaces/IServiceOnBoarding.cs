@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
@@ -20,5 +21,6 @@ namespace Manager.Core.Interfaces
     string UpdateComments(string idonboarding, string iditem, ListComments comments);
     string DeleteComments(string idonboarding, string iditem, string idcomments);
     List<ListComments> GetListComments(string idonboarding, string iditem);
+    string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment);
   }
 }

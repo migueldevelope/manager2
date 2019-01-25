@@ -81,7 +81,7 @@ namespace IntegrationServer.InfraController
           DocumentID = person.DocumentID,
           DocumentCTPF = person.DocumentCTPF,
           Sex = (int)person.Sex,
-          HolidayReturn = person.HolidayReturn,
+          //HolidayReturn = person.HolidayReturn,
           MotiveAside = person.MotiveAside,
           DateLastOccupation = person.DateLastOccupation,
           Salary = person.Salary,
@@ -190,7 +190,7 @@ namespace IntegrationServer.InfraController
               DocumentID = view.Colaborador.Identidade,
               DocumentCTPF = view.Colaborador.CarteiraProfissional,
               Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
-              HolidayReturn = view.Colaborador.DataRetornoFerias,
+              //HolidayReturn = view.Colaborador.DataRetornoFerias,
               MotiveAside = view.Colaborador.MotivoAfastamento,
               DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo,
               Salary = view.Colaborador.SalarioNominal,
@@ -265,8 +265,8 @@ namespace IntegrationServer.InfraController
             if (view.CamposAlterados.Contains("Sexo"))
               person.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
 
-            if (view.CamposAlterados.Contains("DataRetornoFerias"))
-              person.HolidayReturn = view.Colaborador.DataRetornoFerias;
+            //if (view.CamposAlterados.Contains("DataRetornoFerias"))
+              //person.HolidayReturn = view.Colaborador.DataRetornoFerias;
 
             if (view.CamposAlterados.Contains("MotivoAfastramento"))
               person.MotiveAside = view.Colaborador.MotivoAfastamento;

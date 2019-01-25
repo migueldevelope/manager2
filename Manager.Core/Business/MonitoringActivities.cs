@@ -13,5 +13,7 @@ namespace Manager.Core.Business
     public List<Plan> Plans { get; set; }
     public EnumTypeAtivitie TypeAtivitie { get; set; }
     public List<ListComments> Comments { get; set; }
+    public EnumStatusView StatusViewManager { get; set; }
+    public EnumStatusView StatusViewPerson { get; set; }
   }
 }

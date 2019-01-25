@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -182,6 +183,22 @@ namespace Manager.Controllers
     public string DeleteComments(string idmonitoring, string iditem, string idcomments)
     {
       return service.DeleteComments(idmonitoring, iditem, idcomments);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatecomments/{idmonitoring}/{iditem}")]
+    public string UpdateComments([FromBody]ListComments comments, string idmonitoring, string iditem)
+    {
+      return service.UpdateComments(idmonitoring, iditem, comments);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatecommentsview/{idmonitoring}/{usercomment}")]
+    public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment usercomment )
+    {
+      return service.UpdateCommentsView(idmonitoring, iditem, usercomment);
     }
 
   }

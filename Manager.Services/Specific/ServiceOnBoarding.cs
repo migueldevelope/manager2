@@ -93,6 +93,17 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+
 
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
@@ -108,6 +119,17 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
@@ -121,6 +143,17 @@ namespace Manager.Services.Specific
           {
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
 
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
@@ -136,6 +169,17 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
@@ -150,6 +194,16 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
@@ -163,6 +217,17 @@ namespace Manager.Services.Specific
           {
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
 
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
@@ -306,6 +371,105 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+    public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment)
+    {
+      try
+      {
+        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            onBoardingService.Update(onboarding, null);
+            return "ok";
+          }
+        }
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public string DeleteComments(string idonboarding, string iditem, string idcomments)
     {

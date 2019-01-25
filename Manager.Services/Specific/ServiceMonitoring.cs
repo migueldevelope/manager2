@@ -810,7 +810,17 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
-             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
             return "ok";
@@ -824,7 +834,17 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
-             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
             return "ok";
@@ -839,7 +859,17 @@ namespace Manager.Services.Specific
             if (item.Comments == null)
               item.Comments = new List<ListComments>();
 
-             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
             return "ok";
@@ -919,6 +949,65 @@ namespace Manager.Services.Specific
             }
           }
         }
+
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        foreach (var item in monitoring.Activities)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            monitoringService.Update(monitoring, null);
+            return "ok";
+          }
+        }
+
+
+        foreach (var item in monitoring.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            monitoringService.Update(monitoring, null);
+            return "ok";
+          }
+        }
+
+
+
+        foreach (var item in monitoring.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            monitoringService.Update(monitoring, null);
+            return "ok";
+          }
+        }
+
 
         return "not found";
       }
