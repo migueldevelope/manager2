@@ -140,6 +140,7 @@ namespace Manager.Services.Specific
                 TypeAction = res.TypeAction,
                 StatusPlanApproved = res.StatusPlanApproved,
                 TextEnd = res.TextEnd,
+                TextEndManager = res.TextEndManager,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
                 NewAction = res.NewAction,
@@ -178,6 +179,7 @@ namespace Manager.Services.Specific
                 TypeAction = res.TypeAction,
                 StatusPlanApproved = res.StatusPlanApproved,
                 TextEnd = res.TextEnd,
+                TextEndManager = res.TextEndManager,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
                 NewAction = res.NewAction,
@@ -217,6 +219,7 @@ namespace Manager.Services.Specific
                 TypeAction = res.TypeAction,
                 StatusPlanApproved = res.StatusPlanApproved,
                 TextEnd = res.TextEnd,
+                TextEndManager = res.TextEndManager,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
                 NewAction = res.NewAction,
@@ -283,6 +286,7 @@ namespace Manager.Services.Specific
                 TypeAction = res.TypeAction,
                 StatusPlanApproved = res.StatusPlanApproved,
                 TextEnd = res.TextEnd,
+                TextEndManager = res.TextEndManager,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
                 NewAction = res.NewAction,
@@ -321,6 +325,7 @@ namespace Manager.Services.Specific
                 TypeAction = res.TypeAction,
                 StatusPlanApproved = res.StatusPlanApproved,
                 TextEnd = res.TextEnd,
+                TextEndManager = res.TextEndManager,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
                 NewAction = res.NewAction,
@@ -360,6 +365,7 @@ namespace Manager.Services.Specific
                 TypeAction = res.TypeAction,
                 StatusPlanApproved = res.StatusPlanApproved,
                 TextEnd = res.TextEnd,
+                TextEndManager = res.TextEndManager,
                 Status = res.Status,
                 DateEnd = res.DateEnd,
                 NewAction = res.NewAction,
@@ -436,6 +442,7 @@ namespace Manager.Services.Specific
                   TypeAction = res.TypeAction,
                   StatusPlanApproved = res.StatusPlanApproved,
                   TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
                   NewAction = res.NewAction,
@@ -485,6 +492,7 @@ namespace Manager.Services.Specific
                   TypeAction = res.TypeAction,
                   StatusPlanApproved = res.StatusPlanApproved,
                   TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
                   NewAction = res.NewAction,
@@ -534,6 +542,7 @@ namespace Manager.Services.Specific
                   TypeAction = res.TypeAction,
                   StatusPlanApproved = res.StatusPlanApproved,
                   TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
                   NewAction = res.NewAction,
@@ -604,6 +613,7 @@ namespace Manager.Services.Specific
                 view.TypeAction = res.TypeAction;
                 view.StatusPlanApproved = res.StatusPlanApproved;
                 view.TextEnd = res.TextEnd;
+                view.TextEndManager = res.TextEndManager;
                 view.Status = res.Status;
                 view.DateEnd = res.DateEnd;
                 view.NewAction = res.NewAction;
@@ -649,6 +659,7 @@ namespace Manager.Services.Specific
                 view.TypeAction = res.TypeAction;
                 view.StatusPlanApproved = res.StatusPlanApproved;
                 view.TextEnd = res.TextEnd;
+                view.TextEndManager = res.TextEndManager;
                 view.Status = res.Status;
                 view.DateEnd = res.DateEnd;
                 view.NewAction = res.NewAction;
@@ -695,6 +706,7 @@ namespace Manager.Services.Specific
                 view.TypeAction = res.TypeAction;
                 view.StatusPlanApproved = res.StatusPlanApproved;
                 view.TextEnd = res.TextEnd;
+                view.TextEndManager = res.TextEndManager;
                 view.Status = res.Status;
                 view.DateEnd = res.DateEnd;
                 view.NewAction = res.NewAction;
@@ -775,6 +787,7 @@ namespace Manager.Services.Specific
                   TypeAction = res.TypeAction,
                   StatusPlanApproved = res.StatusPlanApproved,
                   TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
                   NewAction = res.NewAction,
@@ -815,6 +828,7 @@ namespace Manager.Services.Specific
                   TypeAction = res.TypeAction,
                   StatusPlanApproved = res.StatusPlanApproved,
                   TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
                   NewAction = res.NewAction,
@@ -856,6 +870,7 @@ namespace Manager.Services.Specific
                   TypeAction = res.TypeAction,
                   StatusPlanApproved = res.StatusPlanApproved,
                   TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
                   Status = res.Status,
                   DateEnd = res.DateEnd,
                   NewAction = res.NewAction,
@@ -1543,6 +1558,7 @@ namespace Manager.Services.Specific
               TypeAction = item.TypeAction,
               StatusPlan = item.StatusPlan,
               TextEnd = item.TextEnd,
+              TextEndManager = item.TextEndManager,
               DateEnd = item.DateEnd,
               Evaluation = item.Evaluation,
               Result = item.Result,
@@ -1566,6 +1582,7 @@ namespace Manager.Services.Specific
               TypeAction = item.TypeAction,
               StatusPlan = item.StatusPlan,
               TextEnd = item.TextEnd,
+              TextEndManager = item.TextEndManager,
               DateEnd = item.DateEnd,
               Evaluation = item.Evaluation,
               Result = item.Result,
@@ -1685,6 +1702,7 @@ namespace Manager.Services.Specific
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
               view.TextEnd = res.TextEnd;
+              view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
@@ -1721,6 +1739,7 @@ namespace Manager.Services.Specific
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
               view.TextEnd = res.TextEnd;
+              view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
@@ -1757,6 +1776,7 @@ namespace Manager.Services.Specific
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
               view.TextEnd = res.TextEnd;
+              view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
@@ -1820,6 +1840,7 @@ namespace Manager.Services.Specific
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
               view.TextEnd = res.TextEnd;
+              view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
@@ -1863,6 +1884,7 @@ namespace Manager.Services.Specific
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
               view.TextEnd = res.TextEnd;
+              view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;
@@ -1906,6 +1928,7 @@ namespace Manager.Services.Specific
               view._idAccount = res._idAccount;
               view.IdMonitoring = detail._id;
               view.TextEnd = res.TextEnd;
+              view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments;

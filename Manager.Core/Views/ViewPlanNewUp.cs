@@ -23,6 +23,7 @@ namespace Manager.Core.Views
     public DateTime? DateEnd { get; set; }
     public byte Evaluation { get; set; }
     public string Result { get; set; }
+    public string TextEndManager { get; set; }
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
     public EnumStatus Status { get; set; }
     public EnumTypeViewPlan TypeViewPlan { get; set; }

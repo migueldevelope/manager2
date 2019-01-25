@@ -18,6 +18,7 @@ namespace Manager.Core.Business
     public EnumTypeAction TypeAction { get; set; }
     public EnumStatusPlan StatusPlan { get; set; }
     public string TextEnd { get; set; }
+    public string TextEndManager { get; set; }
     public DateTime? DateEnd { get; set; }
     public byte Evaluation { get; set; }
     public string Result { get; set; }

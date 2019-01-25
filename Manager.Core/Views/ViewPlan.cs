@@ -26,6 +26,7 @@ namespace Manager.Core.Views
     public long Bomb { get; set; }
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
     public string TextEnd { get; set; }
+    public string TextEndManager { get; set; }
     public DateTime? DateEnd { get; set; }
     public EnumStatus Status { get; set; }
     public List<AttachmentField> Attachments { get; set; }

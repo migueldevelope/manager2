@@ -20,6 +20,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<Occupation> occupationService;
     private readonly ServiceGeneric<Plan> planService;
     private readonly ServiceLog logService;
     private readonly ServiceMailModel mailModelService;
@@ -38,6 +39,7 @@ namespace Manager.Services.Specific
         monitoringService = new ServiceGeneric<Monitoring>(context);
         personService = new ServiceGeneric<Person>(context);
         planService = new ServiceGeneric<Plan>(context);
+        occupationService = new ServiceGeneric<Occupation>(context);
         logService = new ServiceLog(_context);
         mailModelService = new ServiceMailModel(context);
         mailMessageService = new ServiceGeneric<MailMessage>(context);
@@ -527,6 +529,7 @@ namespace Manager.Services.Specific
       mailModelService._user = _user;
       mailMessageService._user = _user;
       mailService._user = _user;
+      occupationService._user = _user;
       monitoringActivitiesService._user = _user;
       logMessagesService.SetUser(_user);
       mailModelService.SetUser(contextAccessor);
