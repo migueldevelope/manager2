@@ -30,5 +30,6 @@ namespace Manager.Core.Interfaces
     string DeleteComments(string idmonitoring, string iditem, string idcomments);
     List<ListComments> GetListComments(string idmonitoring, string iditem);
     string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment);
+    bool ValidComments(string id);
   }
 }

@@ -201,5 +201,13 @@ namespace Manager.Controllers
       return service.UpdateCommentsView(idmonitoring, iditem, usercomment);
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("validcomments/{idmonitoring}")]
+    public bool UpdateCommentsView(string idmonitoring)
+    {
+      return service.ValidComments(idmonitoring);
+    }
+
   }
 }

@@ -158,7 +158,6 @@ namespace Manager.Services.Specific
               StatusCheckpoint = EnumStatusCheckpoint.Open
             });
           else
-            if (item.Checkpoint.StatusCheckpoint != EnumStatusCheckpoint.End)
             detail.Add(item.Checkpoint);
         }
 

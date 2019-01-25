@@ -1082,6 +1082,27 @@ namespace Manager.Services.Specific
       }
     }
 
+    public bool ValidComments(string id)
+    {
+      try
+      {
+        var monitoring = monitoringService.GetAll(p => p._id == id).FirstOrDefault();
+
+        var count = monitoring.Activities.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
+          + monitoring.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
+          + monitoring.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None).Count();
+
+        if (count > 0)
+          return true;
+        else
+          return false;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ListComments> GetListComments(string idmonitoring, string iditem)
     {
       try
