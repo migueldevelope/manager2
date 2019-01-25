@@ -864,12 +864,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var count = onBoarding.Activities.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
-          + onBoarding.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
-          + onBoarding.Scopes.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
-          + onBoarding.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
-          + onBoarding.SkillsGroup.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
-          + onBoarding.SkillsOccupation.Where(p => p.StatusViewManager == EnumStatusView.None).Count();
+        var count = onBoarding.Activities.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
+          + onBoarding.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
+          + onBoarding.Scopes.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
+          + onBoarding.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
+          + onBoarding.SkillsGroup.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
+          + onBoarding.SkillsOccupation.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count();
 
         if (count > 0)
           return true;

@@ -220,10 +220,20 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
-        var monitoringActivitie = monitoring.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
-        monitoring.Activities.Remove(monitoringActivitie);
-        monitoringService.Update(monitoring, null);
-        return "remove";
+        //var monitoringActivitie = monitoring.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
+        //monitoring.Activities.Remove(monitoringActivitie);
+        foreach(var item in monitoring.Activities)
+        {
+          if(item._id == idactivitie)
+          {
+            item.Status = EnumStatus.Disabled;
+            monitoringService.Update(monitoring, null);
+            return "remove";
+          }
+          
+        }
+        
+        return "not found";
       }
       catch (Exception e)
       {
@@ -1088,9 +1098,12 @@ namespace Manager.Services.Specific
       {
         var monitoring = monitoringService.GetAll(p => p._id == id).FirstOrDefault();
 
-        var count = monitoring.Activities.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
-          + monitoring.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None).Count()
-          + monitoring.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None).Count();
+        var count = monitoring.Activities.Where(p => p.StatusViewManager == EnumStatusView.None
+        & p.Comments != null).Count()
+          + monitoring.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None
+          & p.Comments != null).Count()
+          + monitoring.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None
+          & p.Comments != null).Count();
 
         if (count > 0)
           return true;
