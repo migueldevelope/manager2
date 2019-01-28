@@ -53,7 +53,10 @@ namespace Manager.Services.Specific
           HtmlContent = mailSend.Body
         };
 
+        //msg.ReplyTo.Email = "no-reply@jmsoft.com.br";
+        //msg.ReplyTo.Name = "no-reply";
         
+
         foreach (var item in mailSend.To)
           msg.AddTo(new EmailAddress(item.Email, item.Name));
 

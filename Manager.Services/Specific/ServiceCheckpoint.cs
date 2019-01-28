@@ -386,6 +386,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.CheckpointApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
@@ -449,6 +452,9 @@ namespace Manager.Services.Specific
         var mailDefault = MailDefault();
         //searsh model mail database
         var model = mailModelService.CheckpointResult(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -496,6 +502,9 @@ namespace Manager.Services.Specific
         var mailDefault = MailDefault();
         //searsh model mail database
         var model = mailModelService.CheckpointResultDisapproved(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -542,6 +551,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.CheckpointResultPerson(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage

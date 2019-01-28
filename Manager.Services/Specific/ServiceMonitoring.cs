@@ -222,17 +222,17 @@ namespace Manager.Services.Specific
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         //var monitoringActivitie = monitoring.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
         //monitoring.Activities.Remove(monitoringActivitie);
-        foreach(var item in monitoring.Activities)
+        foreach (var item in monitoring.Activities)
         {
-          if(item._id == idactivitie)
+          if (item._id == idactivitie)
           {
             item.Status = EnumStatus.Disabled;
             monitoringService.Update(monitoring, null);
             return "remove";
           }
-          
+
         }
-        
+
         return "not found";
       }
       catch (Exception e)
@@ -591,6 +591,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.MonitoringApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -633,6 +636,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.MonitoringApprovalManager(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -675,6 +681,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.MonitoringDisApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -1091,6 +1100,8 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    
 
     public bool ValidComments(string id)
     {
