@@ -196,7 +196,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecommentsview/{idmonitoring}/{iditem}/{usercomment}")]
-    public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment usercomment )
+    public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment usercomment)
     {
       return service.UpdateCommentsView(idmonitoring, iditem, usercomment);
     }
@@ -207,6 +207,22 @@ namespace Manager.Controllers
     public bool UpdateCommentsView(string idmonitoring)
     {
       return service.ValidComments(idmonitoring);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addplan/{idmonitoring}/{iditem}")]
+    public string AddPlan([FromBody]Plan plan, string idmonitoring, string iditem)
+    {
+      return service.AddPlan(idmonitoring, iditem, plan);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updateplan/{idmonitoring}/{iditem}")]
+    public string UpdatePlan([FromBody]Plan plan, string idmonitoring, string iditem)
+    {
+      return service.UpdatePlan(idmonitoring, iditem, plan);
     }
 
   }

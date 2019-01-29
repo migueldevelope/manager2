@@ -1,5 +1,7 @@
-﻿using Manager.Core.Enumns;
+﻿using Manager.Core.Business;
+using Manager.Core.Enumns;
 using Manager.Views.Enumns;
+using System.Collections.Generic;
 
 namespace Manager.Core.Views
 {
@@ -14,5 +16,6 @@ namespace Manager.Core.Views
     public string Logo { get; set; }
     public EnumChangePassword ChangePassword { get; set; }
     public EnumTypeUser TypeUser { get; set; }
+    public List<DictionarySystem> DictionarySystem { get; set; }
   }
 }

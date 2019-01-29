@@ -20,6 +20,7 @@ namespace Manager.Services.Auth
     private readonly IServicePerson servicePerson;
     private readonly ServiceGeneric<Person> personService;
     private ServiceGeneric<Account> accountService;
+    private ServiceDictionarySystem dictionarySystemService;
     private IServiceCompany companyService;
     private IServiceLog logService;
     private DataContext _context;
@@ -34,6 +35,7 @@ namespace Manager.Services.Auth
         companyService = _companyService;
         logService = _logService;
         personService = new ServiceGeneric<Person>(context);
+        dictionarySystemService = new ServiceDictionarySystem(context);
         _context = context;
       }
       catch (Exception)
@@ -60,6 +62,11 @@ namespace Manager.Services.Auth
 
         var _user = new BaseUser { _idAccount = user._idAccount };
         companyService.SetUser(_user);
+        dictionarySystemService.SetUser(_user);
+        long total = 0;
+        var listDictionary = dictionarySystemService.List(ref total, 9999999, 1, "");
+        
+
         ViewPerson person = new ViewPerson()
         {
           IdPerson = user._id,
@@ -69,7 +76,8 @@ namespace Manager.Services.Auth
           Photo = user.PhotoUrl,
           TypeUser = user.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
-          Logo = companyService.GetLogo(user.Company._id.ToString())
+          Logo = companyService.GetLogo(user.Company._id.ToString()),
+          DictionarySystem = listDictionary
         };
 
         LogSave(user);
@@ -94,6 +102,8 @@ namespace Manager.Services.Auth
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
+        
+
         ViewPerson person = new ViewPerson()
         {
           IdPerson = user._id,
@@ -113,6 +123,12 @@ namespace Manager.Services.Auth
           _idPerson = user._id,
           NameAccount = person.NameAccount
         };
+
+        dictionarySystemService.SetUser(_user);
+        long total = 0;
+        var listDictionary = dictionarySystemService.List(ref total, 9999999, 1, "");
+
+        person.DictionarySystem = listDictionary;
 
         logService = new ServiceLog(_context);
 
@@ -143,6 +159,11 @@ namespace Manager.Services.Auth
 
         var _user = new BaseUser { _idAccount = user._idAccount };
         companyService.SetUser(_user);
+        dictionarySystemService.SetUser(_user);
+        long total = 0;
+        var listDictionary = dictionarySystemService.List(ref total, 9999999, 1, "");
+
+
         ViewPerson person = new ViewPerson()
         {
           IdPerson = user._id,
@@ -152,7 +173,8 @@ namespace Manager.Services.Auth
           Photo = user.PhotoUrl,
           TypeUser = user.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
-          Logo = companyService.GetLogo(user.Company._id.ToString())
+          Logo = companyService.GetLogo(user.Company._id.ToString()),
+          DictionarySystem = listDictionary
         };
 
         LogSave(user);
@@ -194,6 +216,12 @@ namespace Manager.Services.Auth
           _idPerson = user._id,
           NameAccount = person.NameAccount
         };
+
+        dictionarySystemService.SetUser(_user);
+        long total = 0;
+        var listDictionary = dictionarySystemService.List(ref total, 9999999, 1, "");
+
+        person.DictionarySystem = listDictionary;
 
         logService = new ServiceLog(_context);
 
