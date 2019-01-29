@@ -860,6 +860,7 @@ namespace Manager.Services.Specific
       }
     }
 
+
     private bool validOnboardingComments(OnBoarding onBoarding)
     {
       try
@@ -999,6 +1000,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -1041,6 +1045,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingApprovalManager(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -1083,6 +1090,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingApprovalOccupation(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -1125,6 +1135,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingApprovalManagerOccupation(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -1167,6 +1180,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingDisapproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage

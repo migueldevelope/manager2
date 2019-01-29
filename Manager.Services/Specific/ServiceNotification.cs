@@ -562,6 +562,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.PlanSeq1(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
@@ -604,6 +607,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.PlanSeq1_Person(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
@@ -646,6 +652,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.PlanSeq2(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
@@ -688,6 +697,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.PlanSeq2_Person(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
@@ -730,6 +742,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.PlanSeq3(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
@@ -772,6 +787,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.PlanSeq3_Person(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
@@ -814,6 +832,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.MonitoringSeq1(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", totaldays.ToString());
         var message = new MailMessage
@@ -856,6 +877,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.MonitoringSeq1_Person(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", totaldays.ToString());
         var message = new MailMessage
@@ -1024,6 +1048,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq1(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
@@ -1066,6 +1093,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq2(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
@@ -1108,6 +1138,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq3(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
@@ -1150,6 +1183,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq4(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
@@ -1192,6 +1228,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.OnBoardingSeq5(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage

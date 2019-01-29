@@ -222,17 +222,17 @@ namespace Manager.Services.Specific
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         //var monitoringActivitie = monitoring.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
         //monitoring.Activities.Remove(monitoringActivitie);
-        foreach(var item in monitoring.Activities)
+        foreach (var item in monitoring.Activities)
         {
-          if(item._id == idactivitie)
+          if (item._id == idactivitie)
           {
             item.Status = EnumStatus.Disabled;
             monitoringService.Update(monitoring, null);
             return "remove";
           }
-          
+
         }
-        
+
         return "not found";
       }
       catch (Exception e)
@@ -428,71 +428,224 @@ namespace Manager.Services.Specific
         }
 
 
-        //verify plan;
-        foreach (var item in monitoring.Activities)
+        ////verify plan;
+        //foreach (var item in monitoring.Activities)
+        //{
+        //  if (item._id == null)
+        //    item._id = ObjectId.GenerateNewId().ToString();
+
+        //  var listActivities = new List<Plan>();
+        //  foreach (var plan in item.Plans)
+        //  {
+        //    if (plan._id == null)
+        //    {
+        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+        //      listActivities.Add(AddPlan(plan, userInclude));
+        //    }
+
+        //    else
+        //    {
+        //      UpdatePlan(plan);
+        //      listActivities.Add(plan);
+        //    }
+        //  }
+        //  item.Plans = listActivities;
+        //}
+
+        //foreach (var item in monitoring.Schoolings)
+        //{
+        //  var listSchoolings = new List<Plan>();
+        //  foreach (var plan in item.Plans)
+        //  {
+        //    if (plan._id == null)
+        //    {
+        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+        //      listSchoolings.Add(AddPlan(plan, userInclude));
+        //    }
+
+        //    else
+        //    {
+        //      UpdatePlan(plan);
+        //      listSchoolings.Add(plan);
+        //    }
+        //  }
+        //  item.Plans = listSchoolings;
+        //}
+
+        //foreach (var item in monitoring.SkillsCompany)
+        //{
+        //  var listSkillsCompany = new List<Plan>();
+        //  foreach (var plan in item.Plans)
+        //  {
+        //    if (plan._id == null)
+        //    {
+        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+        //      listSkillsCompany.Add(AddPlan(plan, userInclude));
+        //    }
+
+        //    else
+        //    {
+        //      UpdatePlan(plan);
+        //      listSkillsCompany.Add(plan);
+        //    }
+        //  }
+        //  item.Plans = listSkillsCompany;
+        //}
+
+
+
+        monitoringService.Update(monitoring, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddPlan(string idmonitoring, string iditem, Plan plan)
+    {
+      try
+      {
+        var userInclude = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+
+        
+        var newPlan = AddPlan(plan, monitoring.Person); 
+
+        if (plan.SourcePlan == EnumSourcePlan.Activite)
         {
-          if (item._id == null)
-            item._id = ObjectId.GenerateNewId().ToString();
-
-          var listActivities = new List<Plan>();
-          foreach (var plan in item.Plans)
+          foreach (var item in monitoring.Activities)
           {
-            if (plan._id == null)
+            if(item._id == iditem)
             {
-              logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
-              listActivities.Add(AddPlan(plan, userInclude));
-            }
+              if (item.Plans == null)
+                item.Plans = new List<Plan>();
 
-            else
-            {
-              UpdatePlan(plan);
-              listActivities.Add(plan);
+              item.Plans.Add(newPlan);
+              monitoringService.Update(monitoring, null);
+              return "add plan";
             }
           }
-          item.Plans = listActivities;
         }
 
-        foreach (var item in monitoring.Schoolings)
+        if (plan.SourcePlan == EnumSourcePlan.Schooling)
         {
-          var listSchoolings = new List<Plan>();
-          foreach (var plan in item.Plans)
+          foreach (var item in monitoring.Schoolings)
           {
-            if (plan._id == null)
+            if (item._id == iditem)
             {
-              logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
-              listSchoolings.Add(AddPlan(plan, userInclude));
-            }
+              if (item.Plans == null)
+                item.Plans = new List<Plan>();
 
-            else
-            {
-              UpdatePlan(plan);
-              listSchoolings.Add(plan);
+              item.Plans.Add(newPlan);
+              monitoringService.Update(monitoring, null);
+              return "add plan";
             }
           }
-          item.Plans = listSchoolings;
         }
 
-        foreach (var item in monitoring.SkillsCompany)
+        if (plan.SourcePlan == EnumSourcePlan.Skill)
         {
-          var listSkillsCompany = new List<Plan>();
-          foreach (var plan in item.Plans)
+          foreach (var item in monitoring.SkillsCompany)
           {
-            if (plan._id == null)
+            if (item._id == iditem)
             {
-              logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
-              listSkillsCompany.Add(AddPlan(plan, userInclude));
-            }
+              if (item.Plans == null)
+                item.Plans = new List<Plan>();
 
-            else
-            {
-              UpdatePlan(plan);
-              listSkillsCompany.Add(plan);
+              item.Plans.Add(newPlan);
+              monitoringService.Update(monitoring, null);
+              return "add plan";
             }
           }
-          item.Plans = listSkillsCompany;
         }
 
+        
+        return "add plan";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
 
+    public string UpdatePlan(string idmonitoring, string iditem, Plan plan)
+    {
+      try
+      {
+        var userInclude = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+
+
+        
+
+        if (plan.SourcePlan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            if (item._id == iditem)
+            {
+              foreach(var row in item.Plans)
+              {
+                if(row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  item.Plans.Add(plan);
+                  UpdatePlan(plan);
+                  monitoringService.Update(monitoring, null);
+                  return "update";
+                }
+              }
+
+              
+            }
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  item.Plans.Add(plan);
+                  UpdatePlan(plan);
+                  monitoringService.Update(monitoring, null);
+                  return "update";
+                }
+              }
+            }
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.Skill)
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  item.Plans.Add(plan);
+                  UpdatePlan(plan);
+                  monitoringService.Update(monitoring, null);
+                  return "update";
+                }
+              }
+            }
+          }
+        }
 
         monitoringService.Update(monitoring, null);
         return "update";
@@ -591,6 +744,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.MonitoringApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -633,6 +789,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.MonitoringApprovalManager(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -675,6 +834,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.MonitoringDisApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
@@ -1091,6 +1253,8 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
 
     public bool ValidComments(string id)
     {

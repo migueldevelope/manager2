@@ -395,7 +395,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end)
+    public List<ViewPlan> ListPlans(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -461,9 +461,9 @@ namespace Manager.Services.Specific
           var detailSchool = (from monitoring in
          monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
        .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
-                        join person in personService.GetAll() on monitoring.Person._id equals person._id
-                        where person.Manager._id == id
-                        select monitoring
+                              join person in personService.GetAll() on monitoring.Person._id equals person._id
+                              where person.Manager._id == id
+                              select monitoring
        ).ToList();
 
           foreach (var item in detailSchool)
@@ -556,13 +556,16 @@ namespace Manager.Services.Specific
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
         if (open == 0)
-          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline > DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved == EnumStatusPlanApproved.Open & p.Deadline > DateTime.Now)).ToList();
 
         if (expired == 0)
-          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline < DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved == EnumStatusPlanApproved.Open & p.Deadline < DateTime.Now)).ToList();
 
         if (end == 0)
           result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList();
+
+        if (wait == 0)
+          result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Wait).ToList();
 
 
         total = result.Count();
@@ -748,7 +751,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewPlan> ListPlansPerson(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end)
+    public List<ViewPlan> ListPlansPerson(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -884,13 +887,16 @@ namespace Manager.Services.Specific
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
         if (open == 0)
-          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline > DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved == EnumStatusPlanApproved.Open & p.Deadline > DateTime.Now)).ToList();
 
         if (expired == 0)
-          result = result.Where(p => !(p.StatusPlanApproved != EnumStatusPlanApproved.Approved & p.Deadline < DateTime.Now)).ToList();
+          result = result.Where(p => !(p.StatusPlanApproved == EnumStatusPlanApproved.Open & p.Deadline < DateTime.Now)).ToList();
 
         if (end == 0)
           result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList();
+
+        if (wait == 0)
+          result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Wait).ToList();
 
         total = result.Count();
 
@@ -1535,6 +1541,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         Plan planNew = new Plan();
         Plan planUpdate = new Plan();
 
@@ -1647,7 +1654,18 @@ namespace Manager.Services.Specific
         LogSave(manager._id, "Plan Process Update");
 
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
-          Mail(manager);
+        {
+          if(user._idPerson == manager._id)
+          {
+            //var person = personService.GetAll(p => p._id == persons._id).FirstOrDefault();
+            Mail(manager.Manager);
+          }
+          else
+          {
+            Mail(manager);
+          }
+        }
+          
 
 
 
@@ -1983,6 +2001,9 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = mailModelService.DefaultPlanApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
         var url = "";
         var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage

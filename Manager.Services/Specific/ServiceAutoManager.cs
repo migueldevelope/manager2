@@ -158,6 +158,9 @@ namespace Manager.Services.Specific
           autoManagerService.Insert(auto);
           //searsh model mail database
           var model = mailModelService.AutoManager(path);
+          if (model.StatusMail == EnumStatus.Disabled)
+            return;
+
           var url = path + "evaluationconfiguration/automanager/" + person._id.ToString() + "/approved/" + manager._id.ToString();
           var message = new MailMessage
           {

@@ -24,11 +24,11 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listplans/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}")]
-    public List<ViewPlan> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, int count = 10, int page = 1, string filter = "")
+    [Route("listplans/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}/{wait}")]
+    public List<ViewPlan> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPlans(ref total, id, filter, count, page, activities, skillcompany, schooling, open, expired, end);
+      var result = service.ListPlans(ref total, id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -57,11 +57,11 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listplansperson/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}")]
-    public List<ViewPlan> ListPlansPerson(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, int count = 10, int page = 1, string filter = "")
+    [Route("listplansperson/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}/{wait}")]
+    public List<ViewPlan> ListPlansPerson(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPlansPerson(ref total, id, filter, count, page, activities, skillcompany, schooling, open, expired, end);
+      var result = service.ListPlansPerson(ref total, id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

@@ -31,5 +31,7 @@ namespace Manager.Core.Interfaces
     List<ListComments> GetListComments(string idmonitoring, string iditem);
     string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment);
     bool ValidComments(string id);
+    string AddPlan(string idmonitoring, string iditem, Plan plan);
+    string UpdatePlan(string idmonitoring, string iditem, Plan plan);
   }
 }

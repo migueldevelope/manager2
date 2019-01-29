@@ -10,9 +10,9 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     List<ViewPlan> ListPlans(ref long total, string id, string filter, int count,
-      int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end);
+      int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
     List<ViewPlan> ListPlansPerson(ref long total, string id, string filter, int count,
-      int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end);
+      int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
     ViewPlan GetPlan(string idmonitoring, string idplan);
     string UpdatePlan(string idmonitoring, Plan viewPlan);
     string NewPlan(string idmonitoring, string idplanold, Plan viewPlan);
