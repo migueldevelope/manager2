@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -35,10 +31,10 @@ namespace IntegrationServer.Controllers
       if (String.IsNullOrEmpty(user.Password))
         return BadRequest("MSG2");
 
-      var person = this.service.Authentication(user.Mail, user.Password);
+      ViewPerson person = this.service.Authentication(user.Mail, user.Password);
 
 
-      var claims = new[]
+      Claim[] claims = new[]
       {
         new Claim(ClaimTypes.Name, person.Name),
         new Claim(ClaimTypes.Hash, person.IdAccount),
@@ -47,10 +43,10 @@ namespace IntegrationServer.Controllers
         new Claim(ClaimTypes.UserData, person.IdPerson)
       };
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
-      var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+      SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
+      SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-      var token = new JwtSecurityToken(
+      JwtSecurityToken token = new JwtSecurityToken(
           issuer: "localhost",
           audience: "localhost",
           claims: claims,
@@ -58,7 +54,7 @@ namespace IntegrationServer.Controllers
           signingCredentials: creds
       );
 
-      var tokenId = new JwtSecurityTokenHandler().WriteToken(token);
+      string tokenId = new JwtSecurityTokenHandler().WriteToken(token);
       person.Token = tokenId;
 
       return Ok(person);

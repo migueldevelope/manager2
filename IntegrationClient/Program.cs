@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager.Views.Integration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace IntegrationClient
 {
   static class Program
   {
+    public static string FileConfig = "config.txt";
+    public static ViewPersonLogin PersonLogin;
     /// <summary>
     /// The main entry point for the application.
     /// </summary>

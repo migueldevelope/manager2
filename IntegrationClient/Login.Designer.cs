@@ -36,7 +36,6 @@
       this.lblUrl = new System.Windows.Forms.Label();
       this.btOk = new System.Windows.Forms.Button();
       this.btCan = new System.Windows.Forms.Button();
-      this.lblVer = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // lblEma
@@ -84,11 +83,11 @@
       // lblUrl
       // 
       this.lblUrl.AutoSize = true;
-      this.lblUrl.Location = new System.Drawing.Point(134, 53);
+      this.lblUrl.Location = new System.Drawing.Point(78, 50);
       this.lblUrl.Name = "lblUrl";
-      this.lblUrl.Size = new System.Drawing.Size(26, 17);
+      this.lblUrl.Size = new System.Drawing.Size(103, 17);
       this.lblUrl.TabIndex = 4;
-      this.lblUrl.Text = "Url";
+      this.lblUrl.Text = "Url do Servidor";
       // 
       // btOk
       // 
@@ -110,23 +109,12 @@
       this.btCan.UseVisualStyleBackColor = true;
       this.btCan.Click += new System.EventHandler(this.BtCan_Click);
       // 
-      // lblVer
-      // 
-      this.lblVer.AutoSize = true;
-      this.lblVer.Location = new System.Drawing.Point(551, 205);
-      this.lblVer.Name = "lblVer";
-      this.lblVer.Size = new System.Drawing.Size(49, 17);
-      this.lblVer.TabIndex = 5;
-      this.lblVer.Text = "Senha";
-      this.lblVer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-      // 
       // Login
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(612, 231);
       this.ControlBox = false;
-      this.Controls.Add(this.lblVer);
       this.Controls.Add(this.btCan);
       this.Controls.Add(this.btOk);
       this.Controls.Add(this.txtEma);
@@ -153,7 +141,6 @@
     private System.Windows.Forms.Label lblUrl;
     private System.Windows.Forms.Button btOk;
     private System.Windows.Forms.Button btCan;
-    private System.Windows.Forms.Label lblVer;
   }
 }
 

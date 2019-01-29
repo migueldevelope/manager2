@@ -1,22 +1,15 @@
 ﻿using System;
 using System.Reflection;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Threading;
 using IntegrationService.Tools;
+using Manager.Views.Integration;
 
 namespace IntegrationClient
 {
   public partial class Login : Form
   {
-    private string fileConfig = "config.txt";
     public Login()
     {
       InitializeComponent();
@@ -24,10 +17,12 @@ namespace IntegrationClient
 
     private void Login_Load(object sender, EventArgs e)
     {
-      lblVer.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-      if (System.IO.File.Exists(fileConfig ))
+      this.Text = string.Format("Login Robo Ana - Versão {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+      if (System.IO.File.Exists(Program.FileConfig))
       {
-        Thread t = new Thread(new ThreadStart(CallMenuPrincipal));
+        // Ler arquivo persistido
+        Program.PersonLogin = JsonConvert.DeserializeObject<ViewPersonLogin>(FileClass.ReadFromBinaryFile<string>(Program.FileConfig));
+        Thread t = new Thread(new ThreadStart(CallMenu));
         t.Start();
         this.Close();
       }
@@ -44,14 +39,13 @@ namespace IntegrationClient
       {
         // Iniciar Autenticação
         var auth = new IntegrationService.Api.Authentication();
-        auth.Connect(txtUrl.Text, txtEma.Text, txtSen.Text);
+        Program.PersonLogin = auth.Connect(txtUrl.Text, txtEma.Text, txtSen.Text);
 
         // Se estiver OK preparar o objeto de persistência local
-        string person = JsonConvert.SerializeObject(auth.Person);
-        FileClass.WriteToBinaryFile<string>(fileConfig, person, false);
+        FileClass.WriteToBinaryFile<string>(Program.FileConfig, JsonConvert.SerializeObject(Program.PersonLogin), false);
 
         // Prepara chamada outro formulário
-        Thread t = new Thread(new ThreadStart(CallMenuPrincipal));
+        Thread t = new Thread(new ThreadStart(CallMenu));
         t.Start();
         this.Close();
       }
@@ -61,9 +55,9 @@ namespace IntegrationClient
       }
     }
 
-    public static void CallMenuPrincipal()
+    public static void CallMenu()
     {
-      Application.Run(new MenuPrincipal());
+      Application.Run(new Menu());
     }
   }
 }

@@ -69,6 +69,18 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImportacaoConfigurar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportacaoConfigurar.Designer.cs">
+      <DependentUpon>ImportacaoConfigurar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportacaoImportar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportacaoImportar.Designer.cs">
+      <DependentUpon>ImportacaoImportar.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImportarMapasAnalisa.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +99,12 @@
     <Compile Include="Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu.Designer.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
     <Compile Include="MenuPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +122,12 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ImportacaoConfigurar.resx">
+      <DependentUpon>ImportacaoConfigurar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportacaoImportar.resx">
+      <DependentUpon>ImportacaoImportar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ImportarMapasAnalisa.resx">
       <DependentUpon>ImportarMapasAnalisa.cs</DependentUpon>
     </EmbeddedResource>
@@ -112,6 +136,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu.resx">
+      <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MenuPrincipal.resx">
       <DependentUpon>MenuPrincipal.cs</DependentUpon>
