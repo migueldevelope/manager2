@@ -171,7 +171,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcomments/{idmonitoring}/{iditem}")]
-    public string AddComments([FromBody]ListComments comments, string idmonitoring, string iditem)
+    public List<ListComments> AddComments([FromBody]ListComments comments, string idmonitoring, string iditem)
     {
       return service.AddComments(idmonitoring, iditem, comments);
     }
@@ -212,7 +212,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addplan/{idmonitoring}/{iditem}")]
-    public string AddPlan([FromBody]Plan plan, string idmonitoring, string iditem)
+    public List<Plan> AddPlan([FromBody]Plan plan, string idmonitoring, string iditem)
     {
       return service.AddPlan(idmonitoring, iditem, plan);
     }
@@ -220,7 +220,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateplan/{idmonitoring}/{iditem}")]
-    public string UpdatePlan([FromBody]Plan plan, string idmonitoring, string iditem)
+    public List<Plan> UpdatePlan([FromBody]Plan plan, string idmonitoring, string iditem)
     {
       return service.UpdatePlan(idmonitoring, iditem, plan);
     }

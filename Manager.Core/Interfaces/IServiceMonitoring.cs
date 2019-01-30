@@ -25,13 +25,13 @@ namespace Manager.Core.Interfaces
     string RemoveMonitoringActivities(string idmonitoring, string idactivitie);
     string UpdateMonitoringActivities(string idmonitoring, MonitoringActivities activitie);
     string AddMonitoringActivities(string idmonitoring, Activitie activitie);
-    string AddComments(string idmonitoring, string iditem, ListComments comments);
+    List<ListComments> AddComments(string idmonitoring, string iditem, ListComments comments);
     string UpdateComments(string idmonitoring, string iditem, ListComments comments);
     string DeleteComments(string idmonitoring, string iditem, string idcomments);
     List<ListComments> GetListComments(string idmonitoring, string iditem);
     string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment);
     bool ValidComments(string id);
-    string AddPlan(string idmonitoring, string iditem, Plan plan);
-    string UpdatePlan(string idmonitoring, string iditem, Plan plan);
+    List<Plan> AddPlan(string idmonitoring, string iditem, Plan plan);
+    List<Plan> UpdatePlan(string idmonitoring, string iditem, Plan plan);
   }
 }

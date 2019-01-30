@@ -81,7 +81,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddComments(string idonboarding, string iditem, ListComments comments)
+    public List<ListComments> AddComments(string idonboarding, string iditem, ListComments comments)
     {
       try
       {
@@ -108,7 +108,8 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
-            return "ok";
+
+            return item.Comments;
           }
         }
 
@@ -133,7 +134,8 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
-            return "ok";
+
+            return item.Comments;
           }
         }
 
@@ -158,7 +160,8 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
-            return "ok";
+
+            return item.Comments;
           }
         }
 
@@ -183,7 +186,8 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
-            return "ok";
+
+            return item.Comments;
           }
         }
 
@@ -207,7 +211,7 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
-            return "ok";
+            return item.Comments;
           }
         }
 
@@ -232,12 +236,12 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             onBoardingService.Update(onboarding, null);
-            return "ok";
+            return item.Comments;
           }
         }
 
 
-        return "not found";
+        return null;
       }
       catch (Exception e)
       {

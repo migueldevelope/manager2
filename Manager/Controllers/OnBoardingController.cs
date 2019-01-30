@@ -125,7 +125,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcomments/{idonboarding}/{iditem}")]
-    public string AddComments([FromBody]ListComments comments, string idonboarding, string iditem)
+    public List<ListComments> AddComments([FromBody]ListComments comments, string idonboarding, string iditem)
     {
       return service.AddComments(idonboarding, iditem, comments);
     }

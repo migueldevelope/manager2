@@ -503,7 +503,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddPlan(string idmonitoring, string iditem, Plan plan)
+    public List<Plan> AddPlan(string idmonitoring, string iditem, Plan plan)
     {
       try
       {
@@ -512,7 +512,7 @@ namespace Manager.Services.Specific
         logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
 
         
-        var newPlan = AddPlan(plan, monitoring.Person); 
+        var newPlan = AddPlan(plan, userInclude); 
 
         if (plan.SourcePlan == EnumSourcePlan.Activite)
         {
@@ -525,7 +525,7 @@ namespace Manager.Services.Specific
 
               item.Plans.Add(newPlan);
               monitoringService.Update(monitoring, null);
-              return "add plan";
+              return item.Plans;
             }
           }
         }
@@ -541,7 +541,7 @@ namespace Manager.Services.Specific
 
               item.Plans.Add(newPlan);
               monitoringService.Update(monitoring, null);
-              return "add plan";
+              return item.Plans;
             }
           }
         }
@@ -557,13 +557,13 @@ namespace Manager.Services.Specific
 
               item.Plans.Add(newPlan);
               monitoringService.Update(monitoring, null);
-              return "add plan";
+              return item.Plans;
             }
           }
         }
 
         
-        return "add plan";
+        return null;
       }
       catch (Exception e)
       {
@@ -571,11 +571,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdatePlan(string idmonitoring, string iditem, Plan plan)
+    public List<Plan> UpdatePlan(string idmonitoring, string iditem, Plan plan)
     {
       try
       {
-        var userInclude = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        //var userInclude = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
 
@@ -596,7 +596,7 @@ namespace Manager.Services.Specific
                   item.Plans.Add(plan);
                   UpdatePlan(plan);
                   monitoringService.Update(monitoring, null);
-                  return "update";
+                  return item.Plans;
                 }
               }
 
@@ -619,7 +619,7 @@ namespace Manager.Services.Specific
                   item.Plans.Add(plan);
                   UpdatePlan(plan);
                   monitoringService.Update(monitoring, null);
-                  return "update";
+                  return item.Plans;
                 }
               }
             }
@@ -640,7 +640,7 @@ namespace Manager.Services.Specific
                   item.Plans.Add(plan);
                   UpdatePlan(plan);
                   monitoringService.Update(monitoring, null);
-                  return "update";
+                  return item.Plans;
                 }
               }
             }
@@ -648,7 +648,7 @@ namespace Manager.Services.Specific
         }
 
         monitoringService.Update(monitoring, null);
-        return "update";
+        return null;
       }
       catch (Exception e)
       {
@@ -973,7 +973,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public string AddComments(string idmonitoring, string iditem, ListComments comments)
+    public List<ListComments> AddComments(string idmonitoring, string iditem, ListComments comments)
     {
       try
       {
@@ -998,7 +998,9 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
-            return "ok";
+            //return "ok";
+
+            return item.Comments;
           }
         }
 
@@ -1022,7 +1024,9 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
-            return "ok";
+            //return "ok";
+
+            return item.Comments;
           }
         }
 
@@ -1047,13 +1051,15 @@ namespace Manager.Services.Specific
             comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
 
             monitoringService.Update(monitoring, null);
-            return "ok";
+            //return "ok";
+            return item.Comments;
           }
         }
 
 
 
-        return "not found";
+        //return "not found";
+        return null;
       }
       catch (Exception e)
       {
