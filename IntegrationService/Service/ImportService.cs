@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -78,6 +79,7 @@ namespace IntegrationService.Service
                 FileCsvV1();
                 break;
               case EnumIntegrationMode.FileExcelV1:
+                FileExcelV1();
                 break;
               case EnumIntegrationMode.Custom:
                 Message = "Modo customizado não suportado no processo manual!";
@@ -94,6 +96,7 @@ namespace IntegrationService.Service
                 FileCsvV1();
                 break;
               case EnumIntegrationMode.FileExcelV1:
+                FileExcelV1();
                 break;
               case EnumIntegrationMode.Custom:
                 Message = "Modo customizado não suportado no processo manual!";
@@ -382,6 +385,131 @@ namespace IntegrationService.Service
     #endregion
 
     #region Preparação Arquivo Excel V1
+    private void FileExcelV1()
+    {
+      try
+      {
+        if (service.Param.Process == EnumIntegrationProcess.Executable)
+        {
+          Message = "Processo deve ser do tipo executável!!!";
+          throw new Exception(Message);
+        }
+        if (service.Param.Type == EnumIntegrationType.Custom)
+        {
+          Message = "Rotina deve ser do tipo customizada!!!";
+          throw new Exception(Message);
+        }
+        // Validar parâmetros
+        if (string.IsNullOrEmpty(service.Param.FilePathLocal))
+        {
+          Message = "Sem arquivo de importação definido!!!";
+          throw new Exception(Message);
+        }
+        if (!File.Exists(service.Param.FilePathLocal))
+        {
+          Message = string.Format("Arquivo {0} não encontrado!!!", service.Param.FilePathLocal);
+          throw new Exception(Message);
+        }
+        // Ler banco de dados
+        DataTable readData = ReadDataXls();
+        if (readData.Rows.Count == 0)
+        {
+          Message = "Não tem nenhum colaborador como retorno da consulta!!!";
+          throw new Exception(Message);
+        }
+        // Tratar os dados
+        switch (service.Param.Process)
+        {
+          case EnumIntegrationProcess.Manual:
+            switch (service.Param.Type)
+            {
+              case EnumIntegrationType.Basic:
+                Message = ValidColumnManualBasicV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                break;
+              case EnumIntegrationType.Complete:
+                Message = ValidColumnManualCompleteV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                break;
+            }
+            break;
+          case EnumIntegrationProcess.System:
+            switch (service.Param.Type)
+            {
+              case EnumIntegrationType.Basic:
+                Message = ValidColumnSystemBasicV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                break;
+              case EnumIntegrationType.Complete:
+                Message = ValidColumnSystemCompleteV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                break;
+            }
+            break;
+        }
+        if (!string.IsNullOrEmpty(Message))
+        {
+          throw new Exception(Message);
+        }
+        Colaboradores = new List<ColaboradorImportar>();
+        // Carregar Lista de Colaboradores
+        foreach (DataRow row in readData.Rows)
+        {
+          List<string> teste = row.ItemArray.Select(x => x.ToString()).ToList();
+          switch (service.Param.Process)
+          {
+            case EnumIntegrationProcess.Manual:
+              switch (service.Param.Type)
+              {
+                case EnumIntegrationType.Basic:
+                  Colaboradores.Add(new ColaboradorImportar(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutManualBasicV1()));
+                  break;
+                case EnumIntegrationType.Complete:
+                  Colaboradores.Add(new ColaboradorImportar(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutManualCompleteV1()));
+                  break;
+              }
+              break;
+            case EnumIntegrationProcess.System:
+              switch (service.Param.Type)
+              {
+                case EnumIntegrationType.Basic:
+                  Colaboradores.Add(new ColaboradorImportar(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutSystemBasicV1()));
+                  break;
+                case EnumIntegrationType.Complete:
+                  Colaboradores.Add(new ColaboradorImportar(row.ItemArray.Select(x => x.ToString()).ToList(), new EnumLayoutSystemCompleteV1()));
+                  break;
+              }
+              break;
+          }
+        }
+      }
+      catch (Exception)
+      {
+        Status = EnumStatusService.CriticalError;
+        throw;
+      }
+    }
+    private DataTable ReadDataXls()
+    {
+      try
+      {
+        string connectionString;
+        if (Path.GetExtension(service.Param.FilePathLocal) == ".xlsx")
+          connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=Excel 12.0;", service.Param.FilePathLocal);
+        else
+          connectionString = string.Format("Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties=Excel 8.0;", service.Param.FilePathLocal);
+
+        DataTable dataTable = new DataTable();
+        using (OleDbConnection connection = new OleDbConnection(connectionString))
+        {
+          connection.Open();
+          OleDbCommand command = new OleDbCommand(string.Format("select * from [{0}$]", service.Param.SheetName), connection);
+          dataTable.Load(command.ExecuteReader(CommandBehavior.SingleResult));
+        }
+        return dataTable;
+      }
+      catch (Exception e)
+      {
+        Status = EnumStatusService.CriticalError;
+        throw;
+      }
+    }
     #endregion
 
     #region Validação de Colunas
@@ -494,110 +622,45 @@ namespace IntegrationService.Service
       {
         PersonIntegration personIntegration = new PersonIntegration(Person);
         int search;
-        foreach (var colaborador in Colaboradores)
+        foreach (var colaborador in Colaboradores.Where(p => !string.IsNullOrEmpty(p.Message)))
         {
           search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
           if (search == -1)
           {
             ControleColaboradores.Add(new ControleColaborador(colaborador));
             search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
+            ControleColaboradores[search].Situacao = EnumColaboradorSituacao.LocalError;
+            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, colaborador.Message), EnumTypeLog.Warning);
+            Status = EnumStatusService.Error;
+            hasLogFile = true;
+          }
+        }
 
-            // Verificar se a pessoa já existe
-            ViewIntegrationMapPersonV1 view = personIntegration.GetPersonByKey(new ViewIntegrationMapPersonV1()
-            {
-              CompanyKey = ControleColaboradores[search].Colaborador.ChaveEmpresa,
-              CompanyName = ControleColaboradores[search].Colaborador.NomeEmpresa,
-              Document = colaborador.Documento,
-              Registration = colaborador.Matricula,
-              IdPerson = string.Empty,
-              IdContract = string.Empty,
-              Message = string.Empty
-            });
-            if (string.IsNullOrEmpty(view.Message))
-            {
-              ControleColaboradores[search].IdPerson = view.IdPerson;
-              ControleColaboradores[search].IdContract = view.IdContract;
-              ControleColaboradores[search].Acao = EnumColaboradorAcao.Update;
-              List<string> campos = new List<string>();
-              // Validar alterações
-              if (!colaborador.Nome.ToLower().Equals(view.Person.Name.ToLower()))
-                campos.Add("Nome");
-              if (!colaborador.Celular.ToLower().Equals(view.Person.Phone?.ToLower()))
-                campos.Add("Celular");
-              if (colaborador.DataNascimento != view.Person.DateBirth)
-                campos.Add("DataNascimento");
-              if (colaborador.DataAdmissao != view.Person.DateAdm)
-                campos.Add("DataAdmissao");
-              if (!colaborador.Telefone.ToLower().Equals(view.Person.PhoneFixed?.ToLower()))
-                campos.Add("Telefone");
-              if (!colaborador.Identidade.ToLower().Equals(view.Person.DocumentID?.ToLower()))
-                campos.Add("Identidade");
-              if (!colaborador.CarteiraProfissional.ToLower().Equals(view.Person.DocumentCTPF?.ToLower()))
-                campos.Add("CarteiraProfissional");
-              if (colaborador.DataRetornoFerias != view.Person.HolidayReturn)
-                campos.Add("DataRetornoFerias");
-              if (!colaborador.MotivoAfastamento.ToLower().Equals(view.Person.MotiveAside?.ToLower()))
-                campos.Add("MotivoAfastamento");
-              if (colaborador.DataUltimaTrocaCargo != view.Person.DateLastOccupation)
-                campos.Add("DataUltimaTrocaCargo");
-              if (colaborador.SalarioNominal != view.Person.Salary)
-                campos.Add("SalarioNominal");
-              if (colaborador.DataUltimoReajuste != view.Person.DateLastReadjust)
-                campos.Add("DataUltimoReajuste");
-              if (colaborador.DataDemissao != view.Person.DateResignation)
-                campos.Add("DataDemissao");
-              switch ((EnumSex)view.Person.Sex)
-              {
-                case EnumSex.Male:
-                  if (!colaborador.Sexo.ToLower().StartsWith("m"))
-                    campos.Add("Sexo");
-                  break;
-                case EnumSex.Female:
-                  if (!colaborador.Sexo.ToLower().StartsWith("f"))
-                    campos.Add("Sexo");
-                  break;
-                default:
-                  campos.Add("Sexo");
-                  break;
-              }
-              ControleColaboradores[search].CamposAlterados = campos;
-            }
-            else
-            {
-              if (view.Message == "Pessoa não encontrada!" && ControleColaboradores[search].Acao == EnumColaboradorAcao.Insert)
-                ControleColaboradores[search].Message = string.Empty;
-              else
-                ControleColaboradores[search].Message = view.Message;
-            }
+        ViewIntegrationColaborador viewColaborador;
+        foreach (var colaborador in Colaboradores.Where(p => string.IsNullOrEmpty(p.Message)))
+        {
+          search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
+          if (search == -1)
+          {
+            ControleColaboradores.Add(new ControleColaborador(colaborador));
+            search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
           }
           else
             ControleColaboradores[search].SetColaborador(colaborador);
-        }
-        hasLogFile = false;
-        foreach (var colaboradorControle in ControleColaboradores.Where(p => !string.IsNullOrEmpty(p.Message)))
-        {
-          // Gravar LOG de colaboradores com mensagem
-          FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaboradorControle.Colaborador.ChaveColaborador, colaboradorControle.Colaborador.Nome, colaboradorControle.Message), EnumTypeLog.Warning);
-          Status = EnumStatusService.Error;
-          hasLogFile = true;
-        }
-        ViewIntegrationColaborador viewColaborador;
-        foreach (var colaboradorControle in ControleColaboradores.Where(p => string.IsNullOrEmpty(p.Message)))
-        {
-          if (colaboradorControle.Acao != EnumColaboradorAcao.Passed)
+          if (ControleColaboradores[search].Acao != EnumColaboradorAcao.Passed)
           {
             viewColaborador = new ViewIntegrationColaborador()
             {
-              Colaborador = colaboradorControle.Colaborador,
-              CamposAlterados = colaboradorControle.CamposAlterados,
-              IdContract = colaboradorControle.IdContract,
-              IdPerson = colaboradorControle.IdPerson,
-              Acao = (int)colaboradorControle.Acao,
-              Situacao = (int)colaboradorControle.Situacao,
+              Colaborador = ControleColaboradores[search].Colaborador,
+              CamposAlterados = ControleColaboradores[search].CamposAlterados,
+              IdContract = ControleColaboradores[search].IdContract,
+              IdPerson = ControleColaboradores[search].IdPerson,
+              Acao = ControleColaboradores[search].Acao,
+              Situacao = ControleColaboradores[search].Situacao,
               Message = string.Empty
             };
             viewColaborador = personIntegration.PostPerson(viewColaborador);
-            search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaboradorControle.Colaborador.ChaveColaborador);
+            search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == ControleColaboradores[search].Colaborador.ChaveColaborador);
             ControleColaboradores[search].Message = viewColaborador.Message;
             ControleColaboradores[search].Situacao = (EnumColaboradorSituacao)viewColaborador.Situacao;
             ControleColaboradores[search].Acao = (EnumColaboradorAcao)viewColaborador.Acao;
@@ -606,17 +669,20 @@ namespace IntegrationService.Service
               ControleColaboradores[search].IdPerson = viewColaborador.IdPerson;
               ControleColaboradores[search].IdContract = viewColaborador.IdContract;
               ControleColaboradores[search].Message = viewColaborador.Message;
-              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaboradorControle.Colaborador.ChaveColaborador, colaboradorControle.Colaborador.Nome, "Pessoa atualizada."), EnumTypeLog.Information);
+              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, "Pessoa atualizada."), EnumTypeLog.Information);
             }
             else
             {
               ControleColaboradores[search].Message = viewColaborador.Message;
-              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaboradorControle.Colaborador.ChaveColaborador, colaboradorControle.Colaborador.Nome, string.Format("Pessoa não atualizada. {0}", viewColaborador.Message)), EnumTypeLog.Warning);
+              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, string.Format("Pessoa não atualizada. {0}", viewColaborador.Message)), EnumTypeLog.Warning);
               hasLogFile = true;
             }
           }
           else
-            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaboradorControle.Colaborador.ChaveColaborador, colaboradorControle.Colaborador.Nome, string.Format("Pessoa sem alteração.")), EnumTypeLog.Warning);
+            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, string.Format("Pessoa sem alteração.")), EnumTypeLog.Warning);
+        }
+        foreach (var colaboradorControle in ControleColaboradores.Where(p => string.IsNullOrEmpty(p.Message)))
+        {
         }
         SaveLists();
         Status = EnumStatusService.Ok;

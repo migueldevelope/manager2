@@ -21,6 +21,8 @@ namespace Manager.Views.Integration
     public string SqlCommand { get; set; }
     // =========== Arquivo CSV ou Excel ===========
     public string FilePathLocal { get; set; }
+    // =========== Arquivo Excel ===========
+    public string SheetName { get; set; }
     // =========== Execução do Serviço ===========
     public DateTime? LastExecution { get; set; }
     public string StatusExecution { get; set; }

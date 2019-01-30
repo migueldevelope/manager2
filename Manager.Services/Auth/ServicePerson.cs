@@ -159,7 +159,7 @@ namespace Manager.Services.Auth
           DocumentID = person.DocumentID,
           DocumentCTPF = person.DocumentCTPF,
           Sex = person.Sex,
-          //HolidayReturn = person.HolidayReturn,
+          HolidayReturn = person.HolidayReturn,
           MotiveAside = person.MotiveAside,
           DateLastOccupation = person.DateLastOccupation,
           Salary = person.Salary,

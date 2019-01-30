@@ -10,5 +10,6 @@ namespace Manager.Views.Integration
     public string ConnectionString { get; set; }
     public string SqlCommand { get; set; }
     public string FilePathLocal { get; set; }
+    public string SheetName { get; set; }
   }
 }

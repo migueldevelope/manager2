@@ -33,9 +33,10 @@
       // 
       // btImp
       // 
-      this.btImp.Location = new System.Drawing.Point(12, 12);
+      this.btImp.Location = new System.Drawing.Point(9, 10);
+      this.btImp.Margin = new System.Windows.Forms.Padding(2);
       this.btImp.Name = "btImp";
-      this.btImp.Size = new System.Drawing.Size(251, 23);
+      this.btImp.Size = new System.Drawing.Size(188, 19);
       this.btImp.TabIndex = 0;
       this.btImp.Text = "Executar Importação Manual";
       this.btImp.UseVisualStyleBackColor = true;
@@ -43,11 +44,12 @@
       // 
       // ImportacaoImportar
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(800, 450);
+      this.ClientSize = new System.Drawing.Size(600, 366);
       this.Controls.Add(this.btImp);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+      this.Margin = new System.Windows.Forms.Padding(2);
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "ImportacaoImportar";

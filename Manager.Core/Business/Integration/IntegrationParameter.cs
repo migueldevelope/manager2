@@ -21,6 +21,7 @@ namespace Manager.Core.Business.Integration
     public string SqlCommand { get; set; }
     // =========== Arquivo CSV ou Excel ===========
     public string FilePathLocal { get; set; }
+    public string SheetName { get; set; }
     public DateTime? LastExecution { get; set; }
     // =========== Execução do Serviço ===========
     public string StatusExecution { get; set; }

@@ -62,22 +62,23 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationCompany item = integrationCompanyService.GetAll(p => p.Key.ToLower() == key.ToLower()).FirstOrDefault();
+        IntegrationCompany item = integrationCompanyService.GetAll(p => p.Key == key).FirstOrDefault();
         if (item == null)
         {
           item = new IntegrationCompany()
           {
             Key = key,
             Name = name,
-            _idCompany = string.Empty,
-            IdCompany = string.Empty,
+            _idCompany = "000000000000000000000000",
+            IdCompany = "000000000000000000000000",
             Status = EnumStatus.Enabled
           };
           integrationCompanyService.Insert(item);
         }
-        if (string.IsNullOrEmpty(item.IdCompany))
+        if (item.IdCompany.Equals("000000000000000000000000"))
         {
-          List<Company> companies = companyService.GetAll(p => p.Name.ToLower() == name).ToList<Company>();
+          item.Name = name;
+          List<Company> companies = companyService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList<Company>();
           if (companies.Count == 1)
           {
             item.IdCompany = companies[0]._id;
@@ -95,7 +96,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p.Key.ToLower() == key.ToLower()).FirstOrDefault();
+        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p.Key == key).FirstOrDefault();
         if (item == null)
         {
           item = new IntegrationEstablishment()
@@ -103,14 +104,16 @@ namespace Manager.Services.Specific
             Key = key,
             Name = name,
             _idCompany = idcompany,
-            IdEstablishment = string.Empty,
+            IdEstablishment = "000000000000000000000000",
             Status = EnumStatus.Enabled
           };
           integrationEstablishmentService.Insert(item);
         }
-        if (string.IsNullOrEmpty(item.IdEstablishment))
+        if (item.IdEstablishment.Equals("000000000000000000000000"))
         {
-          List<Establishment> establishments = establishmentService.GetAll(p => p.Company._id == idcompany && p.Name.ToLower() == name).ToList<Establishment>();
+          item.Name = name;
+          item._idCompany = idcompany;
+          List<Establishment> establishments = establishmentService.GetAll(p => p.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList<Establishment>();
           if (establishments.Count == 1)
           {
             item.IdEstablishment = establishments[0]._id;
@@ -128,7 +131,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationOccupation item = integrationOccupationService.GetAll(p => p.Key.ToLower() == key.ToLower()).FirstOrDefault();
+        IntegrationOccupation item = integrationOccupationService.GetAll(p => p.Key == key).FirstOrDefault();
         if (item == null)
         {
           item = new IntegrationOccupation()
@@ -136,14 +139,16 @@ namespace Manager.Services.Specific
             Key = key,
             Name = name,
             _idCompany = idcompany,
-            IdOccupation = string.Empty,
+            IdOccupation = "000000000000000000000000",
             Status = EnumStatus.Enabled
           };
           integrationOccupationService.Insert(item);
         }
-        if (string.IsNullOrEmpty(item.IdOccupation))
+        if (item.IdOccupation.Equals("000000000000000000000000"))
         {
-          List<Occupation> occupations = occupationService.GetAll(p => p.ProcessLevelTwo.ProcessLevelOne.Area.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList<Occupation>();
+          item.Name = name;
+          item._idCompany = idcompany;
+          List<Occupation> occupations = occupationService.GetAll(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList<Occupation>();
           if (occupations.Count == 1)
           {
             item.IdOccupation = occupations[0]._id;
@@ -161,22 +166,23 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p.Key.ToLower() == key.ToLower()).FirstOrDefault();
+        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p.Key == key).FirstOrDefault();
         if (item == null)
         {
           item = new IntegrationSchooling()
           {
             Key = key,
             Name = name,
-            _idCompany = string.Empty,
-            IdSchooling = string.Empty,
+            _idCompany = "000000000000000000000000",
+            IdSchooling = "000000000000000000000000",
             Status = EnumStatus.Enabled
           };
           integrationSchoolingService.Insert(item);
         }
         if (string.IsNullOrEmpty(item.IdSchooling))
         {
-          List<Schooling> schoolings = schoolingService.GetAll(p => p.Name.ToLower() == name).ToList<Schooling>();
+          item.Name = name;
+          List<Schooling> schoolings = schoolingService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList<Schooling>();
           if (schoolings.Count == 1)
           {
             item.IdSchooling = schoolings[0]._id;
@@ -285,6 +291,7 @@ namespace Manager.Services.Specific
         param.ConnectionString = view.ConnectionString;
         param.SqlCommand = view.SqlCommand;
         param.FilePathLocal = view.FilePathLocal;
+        param.SheetName = view.SheetName;
         parameterService.Update(param, null);
         return param;
       }

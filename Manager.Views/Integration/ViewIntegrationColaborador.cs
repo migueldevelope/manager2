@@ -7,10 +7,10 @@ namespace Manager.Views.Integration
 {
   public class ViewIntegrationColaborador
   {
-    public Colaborador Colaborador { get; set; }
+    public ViewColaborador Colaborador { get; set; }
     public List<string> CamposAlterados { get; set; }
-    public int Acao { get; set; }
-    public int Situacao { get; set; }
+    public EnumColaboradorAcao Acao { get; set; }
+    public EnumColaboradorSituacao Situacao { get; set; }
     public string IdPerson { get; set; }
     public string IdContract { get; set; }
     public string Message { get; set;}

@@ -67,6 +67,9 @@ namespace IntegrationClient
         txtDefault.Text = string.Empty;
         txtSql.Text = string.Empty;
         txtFileName.Text = serviceConfiguration.Param.FilePathLocal;
+        lblSheetName.Visible = false;
+        txtSheetName.Visible = false;
+        txtSheetName.Text = string.Empty;
         grpArq.Text = "Arquivo Csv";
       }
       if (cboMode.SelectedItem.ToString().StartsWith("FileExcel"))
@@ -78,7 +81,10 @@ namespace IntegrationClient
         txtPassword.Text = string.Empty;
         txtDefault.Text = string.Empty;
         txtSql.Text = string.Empty;
+        lblSheetName.Visible = true;
+        txtSheetName.Visible = true;
         txtFileName.Text = serviceConfiguration.Param.FilePathLocal;
+        txtSheetName.Text = serviceConfiguration.Param.SheetName;
         grpArq.Text = "Arquivo Microsoft Excel";
       }
     }
@@ -143,6 +149,11 @@ namespace IntegrationClient
           txtFileName.Focus();
           throw new Exception("O arquivo informado deve existir.");
         }
+        if ((EnumIntegrationMode)cboMode.SelectedItem == EnumIntegrationMode.FileExcelV1 && string.IsNullOrEmpty(txtSheetName.Text))
+        {
+          txtSheetName.Focus();
+          throw new Exception("Informe o nome da planilha de colaboradores.");
+        }
         serviceConfiguration.SetParameter(new ViewIntegrationParameterMode()
         {
           ConnectionString = string.Empty,
@@ -150,7 +161,8 @@ namespace IntegrationClient
           Process = (EnumIntegrationProcess)cboProc.SelectedItem,
           Mode = (EnumIntegrationMode)cboMode.SelectedItem,
           Type = (EnumIntegrationType)cboType.SelectedItem,
-          SqlCommand = string.Empty
+          SqlCommand = string.Empty,
+          SheetName = txtSheetName.Text
         });
         MessageBox.Show("Parâmetro atualizado!",Text, MessageBoxButtons.OK,MessageBoxIcon.Information);
       }

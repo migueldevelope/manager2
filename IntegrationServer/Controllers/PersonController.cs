@@ -81,7 +81,7 @@ namespace IntegrationServer.InfraController
           DocumentID = person.DocumentID,
           DocumentCTPF = person.DocumentCTPF,
           Sex = (int)person.Sex,
-          //HolidayReturn = person.HolidayReturn,
+          HolidayReturn = person.HolidayReturn,
           MotiveAside = person.MotiveAside,
           DateLastOccupation = person.DateLastOccupation,
           Salary = person.Salary,
@@ -107,11 +107,11 @@ namespace IntegrationServer.InfraController
         IntegrationSchooling schooling = service.GetIntegrationSchooling(view.Colaborador.ChaveGrauInstrucao, view.Colaborador.NomeGrauInstrucao);
 
         IntegrationEstablishment establishment = null;
-        if (!string.IsNullOrEmpty(company.IdCompany) && !string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento))
+        if (!company.IdCompany.Equals("000000000000000000000000"))
           establishment = service.GetIntegrationEstablishment(view.Colaborador.ChaveEstabelecimento, view.Colaborador.NomeEstabelecimento, company.IdCompany);
 
         IntegrationOccupation occupation = null;
-        if (!string.IsNullOrEmpty(company.IdCompany))
+        if (!company.IdCompany.Equals("000000000000000000000000"))
           occupation = service.GetIntegrationOccupation(view.Colaborador.ChaveCargo, view.Colaborador.NomeCargo, company.IdCompany);
 
         IntegrationCompany companyManager = null;
@@ -122,22 +122,22 @@ namespace IntegrationServer.InfraController
         if (companyManager != null && !string.IsNullOrEmpty(view.Colaborador.DocumentoGestor))
           personManager = service.GetPersonByKey(companyManager.IdCompany, view.Colaborador.DocumentoGestor, view.Colaborador.MatriculaGestor);
 
-        if (string.IsNullOrEmpty(company.IdCompany))
+        if (company.IdCompany.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração da empresa!";
           return BadRequest(view);
         }
-        if (string.IsNullOrEmpty(schooling.IdSchooling))
+        if (schooling.IdSchooling.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração do grau de instrução!";
           return BadRequest(view);
         }
-        if (string.IsNullOrEmpty(occupation.IdOccupation))
+        if (occupation.IdOccupation.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração do cargo!";
           return BadRequest(view);
         }
-        if (!string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) && string.IsNullOrEmpty(establishment.IdEstablishment))
+        if (establishment.IdEstablishment.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração do estabelecimento!";
           return BadRequest(view);
@@ -168,17 +168,20 @@ namespace IntegrationServer.InfraController
           return BadRequest(view);
         }
 
+        // Testar se o que está vindo é igual ao que já tinha antes
+        // se for igual ao que já tinha mudar a view.Acao = EnumColaboradorAcao.Passed;
+
         Person person = null;
         switch ((EnumColaboradorAcao)view.Acao)
         {
           case EnumColaboradorAcao.Insert:
             person = new Person
             {
-              Name = Capitalization(view.Colaborador.Nome),
+              Name = view.Colaborador.Nome,
               Document = view.Colaborador.Documento,
               Mail = view.Colaborador.Email,
               Phone = view.Colaborador.Celular,
-              TypeUser = (EnumTypeUser)view.Colaborador.TypeUser,
+              TypeUser = EnumTypeUser.Employee,
               Company = service.GetCompany(company.IdCompany),
               Establishment = string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) ? null : service.GetEstablishment(establishment.IdEstablishment),
               Occupation = service.GetOccupation(occupation.IdOccupation),
@@ -190,13 +193,13 @@ namespace IntegrationServer.InfraController
               DocumentID = view.Colaborador.Identidade,
               DocumentCTPF = view.Colaborador.CarteiraProfissional,
               Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
-              //HolidayReturn = view.Colaborador.DataRetornoFerias,
+              HolidayReturn = view.Colaborador.DataRetornoFerias,
               MotiveAside = view.Colaborador.MotivoAfastamento,
               DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo,
               Salary = view.Colaborador.SalarioNominal,
               DateLastReadjust = view.Colaborador.DataUltimoReajuste,
               DateResignation = view.Colaborador.DataDemissao,
-              TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding,
+              TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
               Manager = personManager,
               DocumentManager = personManager?.DocumentManager
             };
@@ -218,7 +221,7 @@ namespace IntegrationServer.InfraController
             person = servicePerson.NewPersonView(person);
             view.Message = string.Empty;
             view.IdPerson = person._id;
-            view.Situacao = (int)EnumColaboradorSituacao.Atualized;
+            view.Situacao = EnumColaboradorSituacao.Atualized;
             break;
           case EnumColaboradorAcao.Update:
             person = servicePerson.GetPerson(view.IdPerson);
@@ -227,7 +230,7 @@ namespace IntegrationServer.InfraController
             person.Registration = view.Colaborador.Matricula;
 
             if (view.CamposAlterados.Contains("Nome"))
-              person.Name = Capitalization(view.Colaborador.Nome);
+              person.Name = view.Colaborador.Nome;
 
             if (view.CamposAlterados.Contains("Email"))
               person.Mail = view.Colaborador.Email;
@@ -283,8 +286,8 @@ namespace IntegrationServer.InfraController
             if (view.CamposAlterados.Contains("DataDemissao"))
               person.DateResignation = view.Colaborador.DataDemissao;
 
-            if (view.CamposAlterados.Contains("TypeUser"))
-              person.TypeUser = (EnumTypeUser)view.Colaborador.TypeUser;
+            //if (view.CamposAlterados.Contains("TypeUser"))
+            //  person.TypeUser = (EnumTypeUser)view.Colaborador.TypeUser;
 
             if (view.CamposAlterados.Contains("Situacao"))
             {
@@ -311,10 +314,9 @@ namespace IntegrationServer.InfraController
             }
             person = servicePerson.UpdatePersonView(person);
             view.IdPerson = person._id;
-            view.Situacao = (int)EnumColaboradorSituacao.Atualized;
+            view.Situacao = EnumColaboradorSituacao.Atualized;
             break;
           case EnumColaboradorAcao.Passed:
-            view.Message = "Chamada inválida!!!";
             break;
           default:
             view.Message = "Chamada inválida!!!";

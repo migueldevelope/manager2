@@ -20,21 +20,6 @@ namespace IntegrationService.Api
       clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
     }
-    public ViewIntegrationMapPersonV1 GetPersonByKey(ViewIntegrationMapPersonV1 map)
-    {
-      try
-      {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(map));
-        content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("person", content).Result;
-        return JsonConvert.DeserializeObject<ViewIntegrationMapPersonV1>(result.Content.ReadAsStringAsync().Result);
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-
     public ViewIntegrationColaborador PostPerson(ViewIntegrationColaborador view)
     {
       try

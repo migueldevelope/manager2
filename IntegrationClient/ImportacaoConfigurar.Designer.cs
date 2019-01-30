@@ -50,11 +50,11 @@
       this.txtUser = new System.Windows.Forms.TextBox();
       this.grpArq = new System.Windows.Forms.GroupBox();
       this.btSaveFile = new System.Windows.Forms.Button();
-      this.textBox2 = new System.Windows.Forms.TextBox();
-      this.label11 = new System.Windows.Forms.Label();
+      this.lblSheetName = new System.Windows.Forms.Label();
       this.btSearchFile = new System.Windows.Forms.Button();
       this.txtFileName = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
+      this.txtSheetName = new System.Windows.Forms.TextBox();
       this.grpBD.SuspendLayout();
       this.grpArq.SuspendLayout();
       this.SuspendLayout();
@@ -247,9 +247,9 @@
       // 
       // grpArq
       // 
+      this.grpArq.Controls.Add(this.txtSheetName);
       this.grpArq.Controls.Add(this.btSaveFile);
-      this.grpArq.Controls.Add(this.textBox2);
-      this.grpArq.Controls.Add(this.label11);
+      this.grpArq.Controls.Add(this.lblSheetName);
       this.grpArq.Controls.Add(this.btSearchFile);
       this.grpArq.Controls.Add(this.txtFileName);
       this.grpArq.Controls.Add(this.label10);
@@ -271,23 +271,14 @@
       this.btSaveFile.UseVisualStyleBackColor = true;
       this.btSaveFile.Click += new System.EventHandler(this.BtSaveFile_Click);
       // 
-      // textBox2
+      // lblSheetName
       // 
-      this.textBox2.Enabled = false;
-      this.textBox2.Location = new System.Drawing.Point(137, 57);
-      this.textBox2.Multiline = true;
-      this.textBox2.Name = "textBox2";
-      this.textBox2.Size = new System.Drawing.Size(654, 337);
-      this.textBox2.TabIndex = 19;
-      // 
-      // label11
-      // 
-      this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(68, 60);
-      this.label11.Name = "label11";
-      this.label11.Size = new System.Drawing.Size(63, 17);
-      this.label11.TabIndex = 18;
-      this.label11.Text = "Situação";
+      this.lblSheetName.AutoSize = true;
+      this.lblSheetName.Location = new System.Drawing.Point(12, 57);
+      this.lblSheetName.Name = "lblSheetName";
+      this.lblSheetName.Size = new System.Drawing.Size(119, 17);
+      this.lblSheetName.TabIndex = 18;
+      this.lblSheetName.Text = "Nome da Planilha";
       // 
       // btSearchFile
       // 
@@ -300,7 +291,6 @@
       // 
       // txtFileName
       // 
-      this.txtFileName.Enabled = false;
       this.txtFileName.Location = new System.Drawing.Point(137, 27);
       this.txtFileName.Name = "txtFileName";
       this.txtFileName.Size = new System.Drawing.Size(590, 22);
@@ -314,6 +304,13 @@
       this.label10.Size = new System.Drawing.Size(56, 17);
       this.label10.TabIndex = 15;
       this.label10.Text = "Arquivo";
+      // 
+      // txtSheetName
+      // 
+      this.txtSheetName.Location = new System.Drawing.Point(137, 54);
+      this.txtSheetName.Name = "txtSheetName";
+      this.txtSheetName.Size = new System.Drawing.Size(254, 22);
+      this.txtSheetName.TabIndex = 21;
       // 
       // ImportacaoConfigurar
       // 
@@ -366,10 +363,10 @@
     private System.Windows.Forms.TextBox txtUser;
     private System.Windows.Forms.GroupBox grpArq;
     private System.Windows.Forms.Button btSaveFile;
-    private System.Windows.Forms.TextBox textBox2;
-    private System.Windows.Forms.Label label11;
+    private System.Windows.Forms.Label lblSheetName;
     private System.Windows.Forms.Button btSearchFile;
     private System.Windows.Forms.TextBox txtFileName;
     private System.Windows.Forms.Label label10;
+    private System.Windows.Forms.TextBox txtSheetName;
   }
 }
