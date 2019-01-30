@@ -747,8 +747,18 @@ namespace Manager.Services.Specific
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
+        string managername = "";
+        try
+        {
+          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().Name;
+        }
+        catch (Exception)
+        {
+
+        }
+
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -792,8 +802,18 @@ namespace Manager.Services.Specific
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
+        string managername = "";
+        try
+        {
+          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().Name;
+        }
+        catch (Exception)
+        {
+
+        }
+
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -837,8 +857,18 @@ namespace Manager.Services.Specific
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
+        string managername = "";
+        try
+        {
+          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().Name;
+        }
+        catch (Exception)
+        {
+
+        }
+
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
