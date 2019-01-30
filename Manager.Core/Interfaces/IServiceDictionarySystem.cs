@@ -11,6 +11,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
     string New(DictionarySystem view);
+    string New(List<DictionarySystem> list);
     string Update(DictionarySystem view);
     string Remove(string id);
     DictionarySystem Get(string id);

@@ -59,6 +59,23 @@ namespace Manager.Services.Specific
       }
     }
 
+
+    public string New(List<DictionarySystem> list)
+    {
+      try
+      {
+        foreach(var view in list)
+        {
+          dictionarySystemService.Insert(view);
+        }
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string Update(DictionarySystem view)
     {
       try

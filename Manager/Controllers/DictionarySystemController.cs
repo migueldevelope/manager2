@@ -29,6 +29,13 @@ namespace Manager.Controllers
       return service.New(view);
     }
 
+    [HttpPost]
+    [Route("newlist")]
+    public string Post([FromBody]List<DictionarySystem> list)
+    {
+      return service.New(list);
+    }
+
     [Authorize]
     [HttpGet]
     [Route("list")]
