@@ -45,13 +45,48 @@ namespace IntegrationClient
       if (cboMode.SelectedItem.ToString().StartsWith("DataBase"))
       {
         grpBD.Visible = true;
-        if (!string.IsNullOrEmpty(serviceConfiguration.Param.ConnectionString))
+        if (serviceConfiguration.Param.ConnectionString.StartsWith("ODBC"))
         {
-          cboDatabaseType.SelectedIndex = cboDatabaseType.FindStringExact(serviceConfiguration.Param.ConnectionString.Split(';')[0]);
-          txtHostName.Text = serviceConfiguration.Param.ConnectionString.Split(';')[1];
-          txtUser.Text = serviceConfiguration.Param.ConnectionString.Split(';')[2];
-          txtPassword.Text = serviceConfiguration.Param.ConnectionString.Split(';')[3];
-          txtDefault.Text = serviceConfiguration.Param.ConnectionString.Split(';')[4];
+          cboDatabaseType.SelectedIndex = cboDatabaseType.FindStringExact(serviceConfiguration.Param.ConnectionString.Split('|')[0]);
+          txtStr.Text = serviceConfiguration.Param.ConnectionString.Split('|')[1];
+          lblHostName.Visible = false;
+          txtHostName.Visible = false;
+          lblUser.Visible = false;
+          txtUser.Visible = false;
+          lblPassword.Visible = false;
+          txtPassword.Visible = false;
+          lblDefault.Visible = false;
+          txtDefault.Visible = false;
+          txtHostName.Text = string.Empty;
+          txtUser.Text = string.Empty;
+          txtPassword.Text = string.Empty;
+          txtDefault.Text = string.Empty;
+          lblDefault.Visible = false;
+          txtDefault.Visible = false;
+          lblStr.Visible = true;
+          txtStr.Visible = true;
+        }
+        else
+        {
+          lblHostName.Visible = true;
+          txtHostName.Visible = true;
+          lblUser.Visible = true;
+          txtUser.Visible = true;
+          lblPassword.Visible = true;
+          txtPassword.Visible = true;
+          lblDefault.Visible = true;
+          txtDefault.Visible = true;
+          lblStr.Visible = false;
+          txtStr.Visible = false;
+          txtStr.Text = string.Empty;
+          if (!string.IsNullOrEmpty(serviceConfiguration.Param.ConnectionString))
+          {
+            cboDatabaseType.SelectedIndex = cboDatabaseType.FindStringExact(serviceConfiguration.Param.ConnectionString.Split(';')[0]);
+            txtHostName.Text = serviceConfiguration.Param.ConnectionString.Split(';')[1];
+            txtUser.Text = serviceConfiguration.Param.ConnectionString.Split(';')[2];
+            txtPassword.Text = serviceConfiguration.Param.ConnectionString.Split(';')[3];
+            txtDefault.Text = serviceConfiguration.Param.ConnectionString.Split(';')[4];
+          }
         }
         txtSql.Text = serviceConfiguration.Param.SqlCommand;
         grpArq.Visible = false;
@@ -93,39 +128,51 @@ namespace IntegrationClient
     {
       try
       {
-        if (string.IsNullOrEmpty(txtHostName.Text))
+        if (cboDatabaseType.SelectedItem.ToString().StartsWith("ODBC"))
         {
-          txtHostName.Focus();
-          throw new Exception("Informe o nome do servidor!!");
+          if (string.IsNullOrEmpty(txtStr.Text))
+          {
+            txtStr.Focus();
+            throw new Exception("String de conexão ODBC deve ser informada!!");
+          }
         }
-        if (string.IsNullOrEmpty(txtUser.Text))
+        else
         {
-          txtUser.Focus();
-          throw new Exception("Informe o usuário de conexão!!");
-        }
-        if (string.IsNullOrEmpty(txtPassword.Text))
-        {
-          txtPassword.Focus();
-          throw new Exception("Informe a senha de conexão!!");
-        }
-        if (string.IsNullOrEmpty(txtDefault.Text) && (EnumDatabaseType)cboDatabaseType.SelectedItem == EnumDatabaseType.SqlServer)
-        {
-          txtDefault.Focus();
-          throw new Exception("Informe o nome do banco de dados padrão!!");
-        }
-        if (string.IsNullOrEmpty(txtSql.Text))
-        {
-          txtSql.Focus();
-          throw new Exception("Informe o comando para retornar a lista de colaboradores!!");
+          if (string.IsNullOrEmpty(txtHostName.Text))
+          {
+            txtHostName.Focus();
+            throw new Exception("Informe o nome do servidor!!");
+          }
+          if (string.IsNullOrEmpty(txtUser.Text))
+          {
+            txtUser.Focus();
+            throw new Exception("Informe o usuário de conexão!!");
+          }
+          if (string.IsNullOrEmpty(txtPassword.Text))
+          {
+            txtPassword.Focus();
+            throw new Exception("Informe a senha de conexão!!");
+          }
+          if (string.IsNullOrEmpty(txtDefault.Text) && (EnumDatabaseType)cboDatabaseType.SelectedItem == EnumDatabaseType.SqlServer)
+          {
+            txtDefault.Focus();
+            throw new Exception("Informe o nome do banco de dados padrão!!");
+          }
+          if (string.IsNullOrEmpty(txtSql.Text))
+          {
+            txtSql.Focus();
+            throw new Exception("Informe o comando para retornar a lista de colaboradores!!");
+          }
         }
         serviceConfiguration.SetParameter(new ViewIntegrationParameterMode()
         {
-          ConnectionString = string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text),
+          ConnectionString = cboDatabaseType.SelectedItem.ToString().Equals("ODBC") ? string.Format("{0}|{1}", cboDatabaseType.SelectedItem, txtStr.Text) : string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text),
           FilePathLocal = txtFileName.Text,
+          SqlCommand = txtSql.Text,
+          SheetName = string.Empty,
           Process = (EnumIntegrationProcess)cboProc.SelectedItem,
           Mode = (EnumIntegrationMode)cboMode.SelectedItem,
-          Type = (EnumIntegrationType)cboType.SelectedItem,
-          SqlCommand = txtSql.Text
+          Type = (EnumIntegrationType)cboType.SelectedItem
         });
         MessageBox.Show("Parâmetro atualizado!",Text,MessageBoxButtons.OK,MessageBoxIcon.Information);
       }
@@ -169,6 +216,43 @@ namespace IntegrationClient
       catch (Exception ex)
       {
         MessageBox.Show(ex.Message,Text, MessageBoxButtons.OK,MessageBoxIcon.Error);
+      }
+    }
+
+    private void CboDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      lblHostName.Visible = true;
+      txtHostName.Visible = true;
+      lblUser.Visible = true;
+      txtUser.Visible = true;
+      lblPassword.Visible = true;
+      txtPassword.Visible = true;
+      lblDefault.Visible = true;
+      txtDefault.Visible = true;
+      lblStr.Visible = false;
+      txtStr.Visible = false;
+      txtStr.Text = string.Empty;
+      if (cboDatabaseType.SelectedItem != null)
+      {
+        if (cboDatabaseType.SelectedItem.ToString().StartsWith("ODBC"))
+        {
+          lblHostName.Visible = false;
+          txtHostName.Visible = false;
+          lblUser.Visible = false;
+          txtUser.Visible = false;
+          lblPassword.Visible = false;
+          txtPassword.Visible = false;
+          lblDefault.Visible = false;
+          txtDefault.Visible = false;
+          txtHostName.Text = string.Empty;
+          txtUser.Text = string.Empty;
+          txtPassword.Text = string.Empty;
+          txtDefault.Text = string.Empty;
+          lblDefault.Visible = false;
+          txtDefault.Visible = false;
+          lblStr.Visible = true;
+          txtStr.Visible = true;
+        }
       }
     }
   }

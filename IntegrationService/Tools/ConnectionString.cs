@@ -15,6 +15,7 @@ namespace IntegrationService.Tools
     public string Password { get; private set; }
     public string DatabaseDefault { get; private set; }
     public string Sql { get; set; }
+    public string ConnectionStringOdbc { get; set; }
 
     public ConnectionString(string hostname, string user, string password, string databasedefault)
     {
@@ -31,6 +32,11 @@ namespace IntegrationService.Tools
       Password = password;
       DatabaseDefault = string.Empty;
       DatabaseType = EnumDatabaseType.Oracle;
+    }
+    public ConnectionString(string connectionString)
+    {
+      ConnectionStringOdbc = connectionString;
+      DatabaseType = EnumDatabaseType.ODBC;
     }
   }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using OdbcTools;
 using OracleTools;
 using SqlServerTools;
 
@@ -22,7 +23,7 @@ namespace IntegrationService.Tools
           connOra.Close();
           break;
         case Enumns.EnumDatabaseType.ODBC:
-          SqlConnectionTool connOdbc = new SqlConnectionTool(Conn.HostName, Conn.User, Conn.Password, Conn.DatabaseDefault);
+          OdbcConnectionTool connOdbc = new OdbcConnectionTool(Conn.ConnectionStringOdbc);
           dados = connOdbc.ExecuteQuery(Conn.Sql);
           connOdbc.Close();
           break;

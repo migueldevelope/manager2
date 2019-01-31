@@ -39,22 +39,24 @@
       this.btSave = new System.Windows.Forms.Button();
       this.label9 = new System.Windows.Forms.Label();
       this.txtSql = new System.Windows.Forms.TextBox();
-      this.label6 = new System.Windows.Forms.Label();
+      this.lblDefault = new System.Windows.Forms.Label();
       this.txtDefault = new System.Windows.Forms.TextBox();
       this.label8 = new System.Windows.Forms.Label();
-      this.label5 = new System.Windows.Forms.Label();
+      this.lblPassword = new System.Windows.Forms.Label();
       this.txtHostName = new System.Windows.Forms.TextBox();
       this.txtPassword = new System.Windows.Forms.TextBox();
-      this.label7 = new System.Windows.Forms.Label();
-      this.label4 = new System.Windows.Forms.Label();
+      this.lblHostName = new System.Windows.Forms.Label();
+      this.lblUser = new System.Windows.Forms.Label();
       this.txtUser = new System.Windows.Forms.TextBox();
       this.grpArq = new System.Windows.Forms.GroupBox();
+      this.txtSheetName = new System.Windows.Forms.TextBox();
       this.btSaveFile = new System.Windows.Forms.Button();
       this.lblSheetName = new System.Windows.Forms.Label();
       this.btSearchFile = new System.Windows.Forms.Button();
       this.txtFileName = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
-      this.txtSheetName = new System.Windows.Forms.TextBox();
+      this.lblStr = new System.Windows.Forms.Label();
+      this.txtStr = new System.Windows.Forms.TextBox();
       this.grpBD.SuspendLayout();
       this.grpArq.SuspendLayout();
       this.SuspendLayout();
@@ -113,18 +115,20 @@
       // 
       // grpBD
       // 
+      this.grpBD.Controls.Add(this.txtStr);
+      this.grpBD.Controls.Add(this.lblStr);
       this.grpBD.Controls.Add(this.cboDatabaseType);
       this.grpBD.Controls.Add(this.btSave);
       this.grpBD.Controls.Add(this.label9);
       this.grpBD.Controls.Add(this.txtSql);
-      this.grpBD.Controls.Add(this.label6);
+      this.grpBD.Controls.Add(this.lblDefault);
       this.grpBD.Controls.Add(this.txtDefault);
       this.grpBD.Controls.Add(this.label8);
-      this.grpBD.Controls.Add(this.label5);
+      this.grpBD.Controls.Add(this.lblPassword);
       this.grpBD.Controls.Add(this.txtHostName);
       this.grpBD.Controls.Add(this.txtPassword);
-      this.grpBD.Controls.Add(this.label7);
-      this.grpBD.Controls.Add(this.label4);
+      this.grpBD.Controls.Add(this.lblHostName);
+      this.grpBD.Controls.Add(this.lblUser);
       this.grpBD.Controls.Add(this.txtUser);
       this.grpBD.Location = new System.Drawing.Point(10, 72);
       this.grpBD.Name = "grpBD";
@@ -141,6 +145,7 @@
       this.cboDatabaseType.Name = "cboDatabaseType";
       this.cboDatabaseType.Size = new System.Drawing.Size(254, 24);
       this.cboDatabaseType.TabIndex = 59;
+      this.cboDatabaseType.SelectedIndexChanged += new System.EventHandler(this.CboDatabaseType_SelectedIndexChanged);
       // 
       // btSave
       // 
@@ -170,14 +175,14 @@
       this.txtSql.Size = new System.Drawing.Size(685, 280);
       this.txtSql.TabIndex = 56;
       // 
-      // label6
+      // lblDefault
       // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(368, 88);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(90, 17);
-      this.label6.TabIndex = 54;
-      this.label6.Text = "Base Padrão";
+      this.lblDefault.AutoSize = true;
+      this.lblDefault.Location = new System.Drawing.Point(368, 88);
+      this.lblDefault.Name = "lblDefault";
+      this.lblDefault.Size = new System.Drawing.Size(90, 17);
+      this.lblDefault.TabIndex = 54;
+      this.lblDefault.Text = "Base Padrão";
       // 
       // txtDefault
       // 
@@ -196,14 +201,14 @@
       this.label8.TabIndex = 46;
       this.label8.Text = "Tipo";
       // 
-      // label5
+      // lblPassword
       // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(51, 87);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(49, 17);
-      this.label5.TabIndex = 52;
-      this.label5.Text = "Senha";
+      this.lblPassword.AutoSize = true;
+      this.lblPassword.Location = new System.Drawing.Point(51, 87);
+      this.lblPassword.Name = "lblPassword";
+      this.lblPassword.Size = new System.Drawing.Size(49, 17);
+      this.lblPassword.TabIndex = 52;
+      this.lblPassword.Text = "Senha";
       // 
       // txtHostName
       // 
@@ -220,23 +225,23 @@
       this.txtPassword.Size = new System.Drawing.Size(254, 24);
       this.txtPassword.TabIndex = 51;
       // 
-      // label7
+      // lblHostName
       // 
-      this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(28, 59);
-      this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(72, 17);
-      this.label7.TabIndex = 48;
-      this.label7.Text = "Hostname";
+      this.lblHostName.AutoSize = true;
+      this.lblHostName.Location = new System.Drawing.Point(28, 59);
+      this.lblHostName.Name = "lblHostName";
+      this.lblHostName.Size = new System.Drawing.Size(72, 17);
+      this.lblHostName.TabIndex = 48;
+      this.lblHostName.Text = "Hostname";
       // 
-      // label4
+      // lblUser
       // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(401, 57);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(57, 17);
-      this.label4.TabIndex = 50;
-      this.label4.Text = "Usuário";
+      this.lblUser.AutoSize = true;
+      this.lblUser.Location = new System.Drawing.Point(401, 57);
+      this.lblUser.Name = "lblUser";
+      this.lblUser.Size = new System.Drawing.Size(57, 17);
+      this.lblUser.TabIndex = 50;
+      this.lblUser.Text = "Usuário";
       // 
       // txtUser
       // 
@@ -260,6 +265,13 @@
       this.grpArq.TabStop = false;
       this.grpArq.Text = "Arquivo CSV";
       this.grpArq.Visible = false;
+      // 
+      // txtSheetName
+      // 
+      this.txtSheetName.Location = new System.Drawing.Point(137, 54);
+      this.txtSheetName.Name = "txtSheetName";
+      this.txtSheetName.Size = new System.Drawing.Size(254, 22);
+      this.txtSheetName.TabIndex = 21;
       // 
       // btSaveFile
       // 
@@ -305,12 +317,22 @@
       this.label10.TabIndex = 15;
       this.label10.Text = "Arquivo";
       // 
-      // txtSheetName
+      // lblStr
       // 
-      this.txtSheetName.Location = new System.Drawing.Point(137, 54);
-      this.txtSheetName.Name = "txtSheetName";
-      this.txtSheetName.Size = new System.Drawing.Size(254, 22);
-      this.txtSheetName.TabIndex = 21;
+      this.lblStr.AutoSize = true;
+      this.lblStr.Location = new System.Drawing.Point(35, 59);
+      this.lblStr.Name = "lblStr";
+      this.lblStr.Size = new System.Drawing.Size(65, 34);
+      this.lblStr.TabIndex = 60;
+      this.lblStr.Text = "String de\r\nConexão";
+      // 
+      // txtStr
+      // 
+      this.txtStr.Location = new System.Drawing.Point(106, 54);
+      this.txtStr.Multiline = true;
+      this.txtStr.Name = "txtStr";
+      this.txtStr.Size = new System.Drawing.Size(685, 54);
+      this.txtStr.TabIndex = 61;
       // 
       // ImportacaoConfigurar
       // 
@@ -323,8 +345,8 @@
       this.Controls.Add(this.label3);
       this.Controls.Add(this.cboMode);
       this.Controls.Add(this.label2);
-      this.Controls.Add(this.grpArq);
       this.Controls.Add(this.grpBD);
+      this.Controls.Add(this.grpArq);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
@@ -352,14 +374,14 @@
     private System.Windows.Forms.Button btSave;
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.TextBox txtSql;
-    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.Label lblDefault;
     private System.Windows.Forms.TextBox txtDefault;
     private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.Label lblPassword;
     private System.Windows.Forms.TextBox txtHostName;
     private System.Windows.Forms.TextBox txtPassword;
-    private System.Windows.Forms.Label label7;
-    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.Label lblHostName;
+    private System.Windows.Forms.Label lblUser;
     private System.Windows.Forms.TextBox txtUser;
     private System.Windows.Forms.GroupBox grpArq;
     private System.Windows.Forms.Button btSaveFile;
@@ -368,5 +390,7 @@
     private System.Windows.Forms.TextBox txtFileName;
     private System.Windows.Forms.Label label10;
     private System.Windows.Forms.TextBox txtSheetName;
+    private System.Windows.Forms.TextBox txtStr;
+    private System.Windows.Forms.Label lblStr;
   }
 }

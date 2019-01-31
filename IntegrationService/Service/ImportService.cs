@@ -253,22 +253,33 @@ namespace IntegrationService.Service
     {
       try
       {
-        Boolean oracle = service.Param.ConnectionString.Split(';')[0].Equals("Oracle");
-        string hostname = service.Param.ConnectionString.Split(';')[1];
-        string user = service.Param.ConnectionString.Split(';')[2];
-        string password = service.Param.ConnectionString.Split(';')[3];
-        string baseDefault = service.Param.ConnectionString.Split(';')[4];
+        bool oracle = false;
         ConnectionString conn;
-        if (oracle)
-          conn = new ConnectionString(hostname, user, password)
+        if (service.Param.ConnectionString.StartsWith("ODBC"))
+        {
+          conn = new ConnectionString(service.Param.ConnectionString.Split('|')[1])
           {
             Sql = service.Param.SqlCommand
           };
+        }
         else
-          conn = new ConnectionString(hostname, user, password, baseDefault)
-          {
-            Sql = service.Param.SqlCommand
-          };
+        {
+          oracle = service.Param.ConnectionString.Split(';')[0].Equals("Oracle");
+          string hostname = service.Param.ConnectionString.Split(';')[1];
+          string user = service.Param.ConnectionString.Split(';')[2];
+          string password = service.Param.ConnectionString.Split(';')[3];
+          string baseDefault = service.Param.ConnectionString.Split(';')[4];
+          if (oracle)
+            conn = new ConnectionString(hostname, user, password)
+            {
+              Sql = service.Param.SqlCommand
+            };
+          else
+            conn = new ConnectionString(hostname, user, password, baseDefault)
+            {
+              Sql = service.Param.SqlCommand
+            };
+        }
         GetPersonSystem gps = new GetPersonSystem(conn);
         return gps.GetPerson();
       }
