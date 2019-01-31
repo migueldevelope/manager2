@@ -925,7 +925,7 @@ namespace Manager.Services.Specific
             
             if (validOnboardingComments(onboarding))
             {
-              onboarding.StatusOnBoarding = EnumStatusOnBoarding.WaitManager;
+              onboarding.StatusOnBoarding = EnumStatusOnBoarding.Disapproved;
               onboarding.DateEndPerson = DateTime.Now;
             }
             else
