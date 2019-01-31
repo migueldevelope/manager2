@@ -59,5 +59,59 @@ namespace IntegrationServer.Controllers
 
       return Ok(person);
     }
+
+    [AllowAnonymous]
+    [HttpPost]
+    [Route("encrypt")]
+    public ObjectResult PostEncripty([FromBody]ViewAuthentication user)
+    {
+      if (String.IsNullOrEmpty(user.Mail))
+        return BadRequest("MSG1");
+      if (String.IsNullOrEmpty(user.Password))
+        return BadRequest("MSG2");
+
+      ViewPerson person;
+      var authMaristas = false;
+      var authPUC = false;
+      try
+      {
+        authMaristas = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+        authPUC = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+      }
+      catch (Exception)
+      {
+
+      }
+
+      if ((authMaristas) || (authPUC))
+        person = this.service.AuthenticationEncryptMaristas(user.Mail, user.Password);
+      else
+        person = this.service.AuthenticationEncrypt(user.Mail, user.Password);
+
+      var claims = new[]
+      {
+        new Claim(ClaimTypes.Name, person.Name),
+        new Claim(ClaimTypes.Hash, person.IdAccount),
+        new Claim(ClaimTypes.Email, user.Mail),
+        new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
+        new Claim(ClaimTypes.UserData, person.IdPerson)
+      };
+
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
+      var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+      var token = new JwtSecurityToken(
+          issuer: "localhost",
+          audience: "localhost",
+          claims: claims,
+          expires: DateTime.Now.AddYears(1),
+          signingCredentials: creds
+      );
+
+      var tokenId = new JwtSecurityTokenHandler().WriteToken(token);
+      person.Token = tokenId;
+
+      return Ok(person);
+    }
   }
 }

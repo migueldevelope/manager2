@@ -8,13 +8,10 @@ using Manager.Services.Commons;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Tools;
+using System.Reflection;
 
 namespace Manager.Services.Specific
 {
@@ -31,6 +28,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<IntegrationEstablishment> integrationEstablishmentService;
     private readonly ServiceGeneric<IntegrationOccupation> integrationOccupationService;
     private readonly ServiceGeneric<IntegrationParameter> parameterService;
+    private readonly ServiceGeneric<IntegrationPerson> integrationPersonService;
     private readonly IServiceLog logService;
 
     public ServiceIntegration(DataContext context)
@@ -48,7 +46,8 @@ namespace Manager.Services.Specific
         integrationCompanyService = new ServiceGeneric<IntegrationCompany>(context);
         integrationEstablishmentService = new ServiceGeneric<IntegrationEstablishment>(context);
         integrationOccupationService = new ServiceGeneric<IntegrationOccupation>(context);
-        parameterService= new ServiceGeneric<IntegrationParameter>(context);
+        parameterService = new ServiceGeneric<IntegrationParameter>(context);
+        integrationPersonService = new ServiceGeneric<IntegrationPerson>(context);
         logService = new ServiceLog(context);
       }
       catch (Exception e)
@@ -212,7 +211,37 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public string GetStatusIntegration()
+    {
+      try
+      {
+        IntegrationCompany integrationCompany = integrationCompanyService.GetAll(p => p.IdCompany == "000000000000000000000000").FirstOrDefault();
+        if (integrationCompany != null)
+          throw new Exception("Verificar integração de empresas!");
+
+        IntegrationSchooling integrationSchooling = integrationSchoolingService.GetAll(p => p.IdSchooling == "000000000000000000000000").FirstOrDefault();
+        if (integrationSchooling != null)
+          throw new Exception("Verificar integração de escolaridades!");
+
+        IntegrationEstablishment integrationEstablishment = integrationEstablishmentService.GetAll(p => p.IdEstablishment == "000000000000000000000000").FirstOrDefault();
+        if (integrationEstablishment != null)
+          throw new Exception("Verificar integração de estabelecimentos!");
+
+        IntegrationOccupation integrationOccupation = integrationOccupationService.GetAll(p => p.IdOccupation == "000000000000000000000000").FirstOrDefault();
+        if (integrationOccupation != null)
+          throw new Exception("Verificar integração de cargos!");
+
+        return string.Empty;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     #endregion
+
+    #region Gets isolados por id
     public Schooling GetSchooling(string id)
     {
       try
@@ -257,7 +286,9 @@ namespace Manager.Services.Specific
         throw;
       }
     }
+    #endregion
 
+    #region IntegrationParameter
     public IntegrationParameter GetIntegrationParameter()
     {
       try
@@ -340,7 +371,71 @@ namespace Manager.Services.Specific
         throw;
       }
     }
+    #endregion
 
+    #region Controle de histório
+    public IntegrationPerson GetIntegrationPerson(string key)
+    {
+      try
+      {
+        return integrationPersonService.GetAll(p => p.Key == key).FirstOrDefault();
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+    public void PostIntegrationPerson(IntegrationPerson integrationPerson)
+    {
+      try
+      {
+        integrationPersonService.Insert(integrationPerson);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public void PutIntegrationPerson(IntegrationPerson integrationPerson)
+    {
+      try
+      {
+        integrationPersonService.Update(integrationPerson,null);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public List<string> EmployeeChange(ViewColaborador oldEmployee, ViewColaborador newEmployee)
+    {
+      try
+      {
+        var type = typeof(ViewColaborador);
+        List<string> fields = new List<string>();
+        var unequalProperties =
+            from pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            let selfValue = type.GetProperty(pi.Name).GetValue(oldEmployee, null)
+            let toValue = type.GetProperty(pi.Name).GetValue(newEmployee, null)
+            where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
+            select new ViewColaboradorMudanca() { Campo = pi.Name, ValorAntigo = selfValue.ToString(), ValorNovo = toValue.ToString() };
+        if (unequalProperties.Count() != 0)
+        {
+          foreach (var item in unequalProperties.ToList<ViewColaboradorMudanca>())
+            fields.Add(item.Campo);
+        }
+        return fields;
+      }
+      catch (Exception)
+      {
+        return new List<string>();
+      }
+    }
+
+    #endregion
+
+    #region Configuração de contexto
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
@@ -354,6 +449,7 @@ namespace Manager.Services.Specific
       integrationCompanyService._user = _user;
       integrationEstablishmentService._user = _user;
       integrationOccupationService._user = _user;
+      integrationPersonService._user = _user;
       parameterService._user = _user;
       logService.SetUser(contextAccessor);
     }
@@ -371,7 +467,10 @@ namespace Manager.Services.Specific
       integrationCompanyService._user = _user;
       integrationEstablishmentService._user = _user;
       integrationOccupationService._user = _user;
+      integrationPersonService._user = _user;
       parameterService._user = _user;
     }
+    #endregion
+
   }
 }

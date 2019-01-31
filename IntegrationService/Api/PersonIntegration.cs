@@ -34,5 +34,21 @@ namespace IntegrationService.Api
         throw;
       }
     }
+
+    public void GetStatusIntegration()
+    {
+      try
+      {
+        StringContent content = new StringContent(string.Empty);
+        content.Headers.ContentType.MediaType = "application/json";
+        var result = clientSkill.PostAsync("person/statusintegration", content).Result;
+        if (!result.IsSuccessStatusCode)
+          throw new Exception(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
   }
 }

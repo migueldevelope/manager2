@@ -30,5 +30,10 @@ namespace Manager.Core.Interfaces
     IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterPack view);
     IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterExecution view);
 
+    IntegrationPerson GetIntegrationPerson(string key);
+    void PostIntegrationPerson(IntegrationPerson integrationPerson);
+    void PutIntegrationPerson(IntegrationPerson integrationPerson);
+    List<string> EmployeeChange(ViewColaborador oldEmployee, ViewColaborador newEmployee);
+    string GetStatusIntegration();
   }
 }

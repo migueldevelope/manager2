@@ -9,7 +9,6 @@ namespace Manager.Views.Integration
   {
     public ViewColaborador Colaborador { get; set; }
     public List<string> CamposAlterados { get; set; }
-    public EnumColaboradorAcao Acao { get; set; }
     public EnumColaboradorSituacao Situacao { get; set; }
     public string IdPerson { get; set; }
     public string IdContract { get; set; }

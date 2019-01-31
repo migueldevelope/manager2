@@ -2,6 +2,6 @@
 {
   public enum EnumColaboradorSituacao : byte
   {
-    Pendent = 0, Atualized = 1, LocalError = 2
+    NoChange = 0, SendServer = 1, LocalError = 2, ServerError = 3, Atualized = 4
   }
 }

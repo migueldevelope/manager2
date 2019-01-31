@@ -17,14 +17,14 @@ namespace IntegrationService.Data
     {
       try
       {
-        DateTime.TryParse(list[(int)EnumLayoutManualBasicV1.DataNascimento], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataNascimento);
-        DateTime.TryParse(list[(int)EnumLayoutManualBasicV1.DataAdmissao], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataAdmissao);
-        DateTime.TryParse(list[(int)EnumLayoutManualBasicV1.DataDemissao], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataDemissao);
+        DateTime? dataNascimento = FieldDate(list[(int)EnumLayoutManualBasicV1.DataNascimento]);
+        DateTime? dataAdmissao = FieldDate(list[(int)EnumLayoutManualBasicV1.DataAdmissao]);
+        DateTime? dataDemissao = FieldDate(list[(int)EnumLayoutManualBasicV1.DataDemissao]);
         Empresa = FormatedFieldKey(list[(int)EnumLayoutManualBasicV1.NomeEmpresa]);
         NomeEmpresa = FormatedField(list[(int)EnumLayoutManualBasicV1.NomeEmpresa]);
         Estabelecimento = "1";
         NomeEstabelecimento = "Estabelecimento Padrão";
-        Documento = list[(int)EnumLayoutManualBasicV1.Cpf].Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
+        Documento = list[(int)EnumLayoutManualBasicV1.Cpf].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
         Matricula = Convert.ToInt64(list[(int)EnumLayoutManualBasicV1.Matricula].Trim());
         Nome = FormatedField(list[(int)EnumLayoutManualBasicV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutManualBasicV1.Email]);
@@ -48,7 +48,7 @@ namespace IntegrationService.Data
         DataUltimoReajuste = null;
         EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutManualBasicV1.NomeEmpresaGestor]);
         NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutManualBasicV1.NomeEmpresaGestor]);
-        DocumentoGestor = list[(int)EnumLayoutManualBasicV1.CpfGestor].Trim().Replace(".", string.Empty).Replace("-", string.Empty);
+        DocumentoGestor = list[(int)EnumLayoutManualBasicV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
@@ -64,19 +64,19 @@ namespace IntegrationService.Data
     {
       try
       {
-        DateTime.TryParse(list[(int)EnumLayoutManualCompleteV1.DataNascimento], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataNascimento);
-        DateTime.TryParse(list[(int)EnumLayoutManualCompleteV1.DataAdmissao], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataAdmissao);
-        DateTime.TryParse(list[(int)EnumLayoutManualCompleteV1.DataRetornoFerias], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataRetornoFerias);
-        DateTime.TryParse(list[(int)EnumLayoutManualCompleteV1.DataDemissao], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataDemissao);
-        DateTime.TryParse(list[(int)EnumLayoutManualCompleteV1.DataUltimaTrocaCargo], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataUltimaTrocaCargo);
-        DateTime.TryParse(list[(int)EnumLayoutManualCompleteV1.DataUltimoReajuste], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataUltimoReajuste);
-        Empresa = list[(int)EnumLayoutManualCompleteV1.NomeEmpresa].Trim().ToLower();
-        NomeEmpresa = list[(int)EnumLayoutManualCompleteV1.NomeEmpresa].Trim();
-        Estabelecimento = list[(int)EnumLayoutManualCompleteV1.NomeEstabelecimento].Trim().ToLower();
-        NomeEstabelecimento = list[(int)EnumLayoutManualCompleteV1.NomeEstabelecimento].Trim();
+        DateTime? dataNascimento = FieldDate(list[(int)EnumLayoutManualCompleteV1.DataNascimento]);
+        DateTime? dataAdmissao = FieldDate(list[(int)EnumLayoutManualCompleteV1.DataAdmissao]);
+        DateTime? dataRetornoFerias = FieldDate(list[(int)EnumLayoutManualCompleteV1.DataRetornoFerias]);
+        DateTime? dataDemissao = FieldDate(list[(int)EnumLayoutManualCompleteV1.DataDemissao]);
+        DateTime? dataUltimaTrocaCargo = FieldDate(list[(int)EnumLayoutManualCompleteV1.DataUltimaTrocaCargo]);
+        DateTime? dataUltimoReajuste = FieldDate(list[(int)EnumLayoutManualCompleteV1.DataUltimoReajuste]);
+        Empresa = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEmpresa]);
+        NomeEmpresa = FormatedField(list[(int)EnumLayoutManualCompleteV1.NomeEmpresa]);
+        Estabelecimento = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEstabelecimento]);
+        NomeEstabelecimento = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEstabelecimento]);
         Documento = list[(int)EnumLayoutManualCompleteV1.Cpf].Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
         Matricula = Convert.ToInt64(list[(int)EnumLayoutManualCompleteV1.Matricula].Trim());
-        Nome = list[(int)EnumLayoutManualCompleteV1.Nome].Trim();
+        Nome = FormatedField(list[(int)EnumLayoutManualCompleteV1.Nome]);
         Email = list[(int)EnumLayoutManualCompleteV1.Email].Trim().ToLower();
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutManualCompleteV1.Celular].Trim();
@@ -89,16 +89,16 @@ namespace IntegrationService.Data
         DataRetornoFerias = dataRetornoFerias;
         MotivoAfastamento = list[(int)EnumLayoutManualCompleteV1.MotivoAfastamento].Trim();
         DataDemissao = dataDemissao;
-        Cargo = list[(int)EnumLayoutManualCompleteV1.DescricaoCargo].Trim().ToLower();
-        NomeCargo = list[(int)EnumLayoutManualCompleteV1.DescricaoCargo].Trim();
+        Cargo = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.DescricaoCargo]);
+        NomeCargo = FormatedField(list[(int)EnumLayoutManualCompleteV1.DescricaoCargo]);
         DataUltimaTrocaCargo = dataUltimaTrocaCargo;
-        GrauInstrucao = list[(int)EnumLayoutManualCompleteV1.DescricaoGrauInstrucao].Trim().ToLower();
-        NomeGrauInstrucao = list[(int)EnumLayoutManualCompleteV1.DescricaoGrauInstrucao].Trim();
+        GrauInstrucao = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.DescricaoGrauInstrucao]);
+        NomeGrauInstrucao = FormatedField(list[(int)EnumLayoutManualCompleteV1.DescricaoGrauInstrucao]);
         SalarioNominal = Convert.ToDecimal(list[(int)EnumLayoutManualCompleteV1.Salario].Trim());
         DataUltimoReajuste = dataUltimoReajuste;
-        DocumentoGestor = list[(int)EnumLayoutManualCompleteV1.CpfGestor].Trim().Replace(".", string.Empty).Replace("-", string.Empty);
-        EmpresaGestor = list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor].Trim().ToLower();
-        NomeEmpresaGestor = list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor].Trim();
+        DocumentoGestor = list[(int)EnumLayoutManualCompleteV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
+        EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor]);
+        NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor]);
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
@@ -114,16 +114,16 @@ namespace IntegrationService.Data
     {
       try
       {
-        DateTime.TryParse(list[(int)EnumLayoutSystemBasicV1.DataNascimento], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataNascimento);
-        DateTime.TryParse(list[(int)EnumLayoutSystemBasicV1.DataAdmissao], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataAdmissao);
-        DateTime.TryParse(list[(int)EnumLayoutSystemBasicV1.DataDemissao], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataDemissao);
-        Empresa = list[(int)EnumLayoutSystemBasicV1.Empresa].Trim().ToLower();
-        NomeEmpresa = list[(int)EnumLayoutSystemBasicV1.NomeEmpresa].Trim();
+        DateTime? dataNascimento = FieldDate(list[(int)EnumLayoutSystemBasicV1.DataNascimento]);
+        DateTime? dataAdmissao = FieldDate(list[(int)EnumLayoutSystemBasicV1.DataAdmissao]);
+        DateTime? dataDemissao = FieldDate(list[(int)EnumLayoutSystemBasicV1.DataDemissao]);
+        Empresa = FormatedFieldKey(list[(int)EnumLayoutSystemBasicV1.Empresa]);
+        NomeEmpresa = FormatedField(list[(int)EnumLayoutSystemBasicV1.NomeEmpresa]);
         Estabelecimento = "1";
         NomeEstabelecimento = "Estabelecimento Padrão";
-        Documento = list[(int)EnumLayoutSystemBasicV1.Cpf].Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
+        Documento = list[(int)EnumLayoutSystemBasicV1.Cpf].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
         Matricula = Convert.ToInt64(list[(int)EnumLayoutSystemBasicV1.Matricula].Trim());
-        Nome = list[(int)EnumLayoutSystemBasicV1.Nome].Trim();
+        Nome = FormatedField(list[(int)EnumLayoutSystemBasicV1.Nome]);
         Email = list[(int)EnumLayoutSystemBasicV1.Email].Trim().ToLower();
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutSystemBasicV1.Celular].Trim();
@@ -136,16 +136,16 @@ namespace IntegrationService.Data
         DataRetornoFerias = null;
         MotivoAfastamento = string.Empty;
         DataDemissao = dataDemissao;
-        Cargo = list[(int)EnumLayoutSystemBasicV1.Cargo].Trim().ToLower();
-        NomeCargo = list[(int)EnumLayoutSystemBasicV1.DescricaoCargo].Trim();
+        Cargo = FormatedFieldKey(list[(int)EnumLayoutSystemBasicV1.Cargo]);
+        NomeCargo = FormatedField(list[(int)EnumLayoutSystemBasicV1.DescricaoCargo]);
         DataUltimaTrocaCargo = null;
-        GrauInstrucao = list[(int)EnumLayoutSystemBasicV1.GrauInstrucao].Trim().ToLower();
-        NomeGrauInstrucao = list[(int)EnumLayoutSystemBasicV1.DescricaoGrauInstrucao].Trim();
+        GrauInstrucao = FormatedFieldKey(list[(int)EnumLayoutSystemBasicV1.GrauInstrucao]);
+        NomeGrauInstrucao = FormatedField(list[(int)EnumLayoutSystemBasicV1.DescricaoGrauInstrucao]);
         SalarioNominal = 0;
         DataUltimoReajuste = null;
-        DocumentoGestor = list[(int)EnumLayoutSystemBasicV1.CpfGestor].Trim().Replace(".", string.Empty).Replace("-", string.Empty);
-        EmpresaGestor = list[(int)EnumLayoutSystemBasicV1.EmpresaGestor].Trim().ToLower();
-        NomeEmpresaGestor = list[(int)EnumLayoutSystemBasicV1.NomeEmpresaGestor].Trim();
+        DocumentoGestor = list[(int)EnumLayoutSystemBasicV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
+        EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutSystemBasicV1.EmpresaGestor]);
+        NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutSystemBasicV1.NomeEmpresaGestor]);
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
@@ -161,19 +161,19 @@ namespace IntegrationService.Data
     {
       try
       {
-        DateTime.TryParse(list[(int)EnumLayoutSystemCompleteV1.DataNascimento], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataNascimento);
-        DateTime.TryParse(list[(int)EnumLayoutSystemCompleteV1.DataAdmissao], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataAdmissao);
-        DateTime.TryParse(list[(int)EnumLayoutSystemCompleteV1.DataRetornoFerias], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataRetornoFerias);
-        DateTime.TryParse(list[(int)EnumLayoutSystemCompleteV1.DataDemissao], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataDemissao);
-        DateTime.TryParse(list[(int)EnumLayoutSystemCompleteV1.DataUltimaTrocaCargo], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataUltimaTrocaCargo);
-        DateTime.TryParse(list[(int)EnumLayoutSystemCompleteV1.DataUltimoReajuste], CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime dataUltimoReajuste);
+        DateTime? dataNascimento = FieldDate(list[(int)EnumLayoutSystemCompleteV1.DataNascimento]);
+        DateTime? dataAdmissao = FieldDate(list[(int)EnumLayoutSystemCompleteV1.DataAdmissao]);
+        DateTime? dataRetornoFerias = FieldDate(list[(int)EnumLayoutSystemCompleteV1.DataRetornoFerias]);
+        DateTime? dataDemissao = FieldDate(list[(int)EnumLayoutSystemCompleteV1.DataDemissao]);
+        DateTime? dataUltimaTrocaCargo = FieldDate(list[(int)EnumLayoutSystemCompleteV1.DataUltimaTrocaCargo]);
+        DateTime? dataUltimoReajuste = FieldDate(list[(int)EnumLayoutSystemCompleteV1.DataUltimoReajuste]);
         Empresa = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.Empresa]);
         NomeEmpresa = FormatedField(list[(int)EnumLayoutSystemCompleteV1.NomeEmpresa]);
-        Estabelecimento = list[(int)EnumLayoutSystemCompleteV1.Estabelecimento].Trim().ToLower();
-        NomeEstabelecimento = list[(int)EnumLayoutSystemCompleteV1.NomeEstabelecimento].Trim();
-        Documento = list[(int)EnumLayoutSystemCompleteV1.Cpf].Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
+        Estabelecimento = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.Estabelecimento]);
+        NomeEstabelecimento = FormatedField(list[(int)EnumLayoutSystemCompleteV1.NomeEstabelecimento]);
+        Documento = list[(int)EnumLayoutSystemCompleteV1.Cpf].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
         Matricula = Convert.ToInt64(list[(int)EnumLayoutSystemCompleteV1.Matricula].Trim());
-        Nome = list[(int)EnumLayoutSystemCompleteV1.Nome].Trim();
+        Nome = FormatedField(list[(int)EnumLayoutSystemCompleteV1.Nome]);
         Email = list[(int)EnumLayoutSystemCompleteV1.Email].Trim().ToLower();
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutSystemCompleteV1.Celular].Trim();
@@ -186,16 +186,16 @@ namespace IntegrationService.Data
         DataRetornoFerias = dataRetornoFerias;
         MotivoAfastamento = list[(int)EnumLayoutSystemCompleteV1.MotivoAfastamento].Trim();
         DataDemissao = dataDemissao;
-        Cargo = list[(int)EnumLayoutSystemCompleteV1.Cargo].Trim().ToLower();
-        NomeCargo = list[(int)EnumLayoutSystemCompleteV1.DescricaoCargo].Trim();
+        Cargo = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.Cargo]);
+        NomeCargo = FormatedField(list[(int)EnumLayoutSystemCompleteV1.DescricaoCargo]);
         DataUltimaTrocaCargo = dataUltimaTrocaCargo;
-        GrauInstrucao = list[(int)EnumLayoutSystemCompleteV1.GrauInstrucao].Trim();
-        NomeGrauInstrucao = list[(int)EnumLayoutSystemCompleteV1.DescricaoGrauInstrucao].Trim();
+        GrauInstrucao = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.GrauInstrucao]);
+        NomeGrauInstrucao = FormatedField(list[(int)EnumLayoutSystemCompleteV1.DescricaoGrauInstrucao]);
         SalarioNominal = Convert.ToDecimal(list[(int)EnumLayoutSystemCompleteV1.Salario].Trim());
         DataUltimoReajuste = dataUltimoReajuste;
-        DocumentoGestor = list[(int)EnumLayoutSystemCompleteV1.CpfGestor].Trim().Replace(".", string.Empty).Replace("-", string.Empty);
-        EmpresaGestor = list[(int)EnumLayoutSystemCompleteV1.EmpresaGestor].Trim().ToLower();
-        NomeEmpresaGestor = list[(int)EnumLayoutSystemCompleteV1.NomeEmpresaGestor].Trim();
+        DocumentoGestor = list[(int)EnumLayoutSystemCompleteV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
+        EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.EmpresaGestor]);
+        NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutSystemCompleteV1.NomeEmpresaGestor]);
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
@@ -235,6 +235,14 @@ namespace IntegrationService.Data
 
         throw;
       }
+    }
+    private DateTime? FieldDate(string data)
+    {
+      DateTime? result = null;
+      DateTime.TryParse(data, CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime resultParse);
+      if (!string.IsNullOrEmpty(data))
+        result = resultParse;
+      return result;
     }
     #endregion
 

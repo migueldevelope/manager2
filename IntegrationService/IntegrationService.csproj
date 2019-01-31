@@ -69,7 +69,6 @@
     <Compile Include="Api\ConfigurationIntegration.cs" />
     <Compile Include="Api\InfraIntegration.cs" />
     <Compile Include="Api\PersonIntegration.cs" />
-    <Compile Include="Data\MudancaColaborador.cs" />
     <Compile Include="Data\ControleColaborador.cs" />
     <Compile Include="Data\ColaboradorImportar.cs" />
     <Compile Include="Enumns\EnumDatabaseType.cs" />

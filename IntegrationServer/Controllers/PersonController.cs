@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using Manager.Core.Business;
 using Manager.Core.Business.Integration;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
-using Manager.Services.Commons;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace IntegrationServer.InfraController
 {
@@ -42,7 +38,7 @@ namespace IntegrationServer.InfraController
 
     #region Person
     [Authorize]
-    [HttpPost]
+    [HttpGet]
     public IActionResult GetPersonByKey([FromBody]ViewIntegrationMapPersonV1 view)
     {
       try
@@ -96,12 +92,28 @@ namespace IntegrationServer.InfraController
       }
     }
     [Authorize]
+    [HttpGet]
+    [Route("statusintegration")]
+    public IActionResult GetStatusIntegration()
+    {
+      try
+      {
+        return Ok(service.GetStatusIntegration());
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
+    [Authorize]
     [HttpPost]
     [Route("update")]
     public IActionResult PutPerson([FromBody]ViewIntegrationColaborador view)
     {
       try
       {
+        view.Situacao = EnumColaboradorSituacao.ServerError;
         IntegrationCompany company = service.GetIntegrationCompany(view.Colaborador.ChaveEmpresa, view.Colaborador.NomeEmpresa);
 
         IntegrationSchooling schooling = service.GetIntegrationSchooling(view.Colaborador.ChaveGrauInstrucao, view.Colaborador.NomeGrauInstrucao);
@@ -167,65 +179,82 @@ namespace IntegrationServer.InfraController
           view.Message = "Descrição do grau de instrução deve ser informado!";
           return BadRequest(view);
         }
+        // Ler histórico de carga
+        IntegrationPerson integrationPerson = service.GetIntegrationPerson(view.Colaborador.ChaveColaborador);
+        if (integrationPerson != null && view.CamposAlterados.Count != 0)
+        {
+          if (view.CamposAlterados == null | view.CamposAlterados.Count == 0)
+          {
+            view.CamposAlterados = service.EmployeeChange(view.Colaborador, integrationPerson.Employee);
+          }
+        };
 
         // Testar se o que está vindo é igual ao que já tinha antes
-        // se for igual ao que já tinha mudar a view.Acao = EnumColaboradorAcao.Passed;
-
-        Person person = null;
-        switch ((EnumColaboradorAcao)view.Acao)
+        Person person = service.GetPersonByKey(company.IdCompany, view.Colaborador.Documento, view.Colaborador.Matricula);
+        if (view.Colaborador.DataAdmissao != null)
+          view.Colaborador.DataAdmissao = ((DateTime)view.Colaborador.DataAdmissao).ToUniversalTime();
+        if (view.Colaborador.DataNascimento != null)
+          view.Colaborador.DataNascimento = ((DateTime)view.Colaborador.DataNascimento).ToUniversalTime();
+        if (view.Colaborador.DataUltimaTrocaCargo != null)
+          view.Colaborador.DataUltimaTrocaCargo = ((DateTime)view.Colaborador.DataUltimaTrocaCargo).ToUniversalTime();
+        if (view.Colaborador.DataUltimoReajuste != null)
+          view.Colaborador.DataUltimoReajuste = ((DateTime)view.Colaborador.DataUltimoReajuste).ToUniversalTime();
+        if (view.Colaborador.DataDemissao != null)
+          view.Colaborador.DataDemissao = ((DateTime)view.Colaborador.DataDemissao).ToUniversalTime();
+        if (person == null)
         {
-          case EnumColaboradorAcao.Insert:
-            person = new Person
-            {
-              Name = view.Colaborador.Nome,
-              Document = view.Colaborador.Documento,
-              Mail = view.Colaborador.Email,
-              Phone = view.Colaborador.Celular,
-              TypeUser = EnumTypeUser.Employee,
-              Company = service.GetCompany(company.IdCompany),
-              Establishment = string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) ? null : service.GetEstablishment(establishment.IdEstablishment),
-              Occupation = service.GetOccupation(occupation.IdOccupation),
-              Registration = view.Colaborador.Matricula,
-              DateBirth = view.Colaborador.DataNascimento,
-              DateAdm = view.Colaborador.DataAdmissao,
-              Schooling = service.GetSchooling(schooling.IdSchooling),
-              PhoneFixed = view.Colaborador.Telefone,
-              DocumentID = view.Colaborador.Identidade,
-              DocumentCTPF = view.Colaborador.CarteiraProfissional,
-              Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
-              HolidayReturn = view.Colaborador.DataRetornoFerias,
-              MotiveAside = view.Colaborador.MotivoAfastamento,
-              DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo,
-              Salary = view.Colaborador.SalarioNominal,
-              DateLastReadjust = view.Colaborador.DataUltimoReajuste,
-              DateResignation = view.Colaborador.DataDemissao,
-              TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
-              Manager = personManager,
-              DocumentManager = personManager?.DocumentManager
-            };
-            switch (view.Colaborador.Situacao.ToLower())
-            {
-              case "férias":
-                person.StatusUser = EnumStatusUser.Vacation;
-                break;
-              case "afastado":
-                person.StatusUser = EnumStatusUser.Away;
-                break;
-              case "demitido":
-                person.StatusUser = EnumStatusUser.Disabled;
-                break;
-              default:
-                person.StatusUser = EnumStatusUser.Enabled;
-                break;
-            }
-            person = servicePerson.NewPersonView(person);
-            view.Message = string.Empty;
-            view.IdPerson = person._id;
-            view.Situacao = EnumColaboradorSituacao.Atualized;
-            break;
-          case EnumColaboradorAcao.Update:
-            person = servicePerson.GetPerson(view.IdPerson);
-
+          person = new Person
+          {
+            Name = view.Colaborador.Nome,
+            Document = view.Colaborador.Documento,
+            Mail = view.Colaborador.Email,
+            Phone = view.Colaborador.Celular,
+            TypeUser = EnumTypeUser.Employee,
+            Company = service.GetCompany(company.IdCompany),
+            Establishment = string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) ? null : service.GetEstablishment(establishment.IdEstablishment),
+            Occupation = service.GetOccupation(occupation.IdOccupation),
+            Registration = view.Colaborador.Matricula,
+            DateBirth = view.Colaborador.DataNascimento,
+            DateAdm = view.Colaborador.DataAdmissao,
+            Schooling = service.GetSchooling(schooling.IdSchooling),
+            PhoneFixed = view.Colaborador.Telefone,
+            DocumentID = view.Colaborador.Identidade,
+            DocumentCTPF = view.Colaborador.CarteiraProfissional,
+            Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
+            HolidayReturn = view.Colaborador.DataRetornoFerias,
+            MotiveAside = view.Colaborador.MotivoAfastamento,
+            DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo,
+            Salary = view.Colaborador.SalarioNominal,
+            DateLastReadjust = view.Colaborador.DataUltimoReajuste,
+            DateResignation = view.Colaborador.DataDemissao,
+            TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
+            Manager = personManager,
+            DocumentManager = personManager?.DocumentManager,
+            Password = view.Colaborador.Documento
+          };
+          switch (view.Colaborador.Situacao.ToLower())
+          {
+            case "férias":
+              person.StatusUser = EnumStatusUser.Vacation;
+              break;
+            case "afastado":
+              person.StatusUser = EnumStatusUser.Away;
+              break;
+            case "demitido":
+              person.StatusUser = EnumStatusUser.Disabled;
+              break;
+            default:
+              person.StatusUser = EnumStatusUser.Enabled;
+              break;
+          }
+          person = servicePerson.NewPersonView(person);
+          view.Message = string.Empty;
+          view.IdPerson = person._id;
+        }
+        else
+        {
+          if (view.CamposAlterados.Count > 0)
+          {
             person.Document = view.Colaborador.Documento;
             person.Registration = view.Colaborador.Matricula;
 
@@ -238,13 +267,13 @@ namespace IntegrationServer.InfraController
             if (view.CamposAlterados.Contains("Celular"))
               person.Phone = view.Colaborador.Celular;
 
-            if (view.CamposAlterados.Contains("ChaveEmpresa"))
+            if (view.CamposAlterados.Contains("Empresa"))
               person.Company = service.GetCompany(company.IdCompany);
 
-            if (view.CamposAlterados.Contains("ChaveEstabelecimento"))
+            if (view.CamposAlterados.Contains("Estabelecimento"))
               person.Establishment = string.IsNullOrEmpty(establishment.IdEstablishment) ? null : service.GetEstablishment(establishment.IdEstablishment);
 
-            if (view.CamposAlterados.Contains("ChaveCargo"))
+            if (view.CamposAlterados.Contains("Cargo"))
               person.Occupation = service.GetOccupation(occupation.IdOccupation);
 
             if (view.CamposAlterados.Contains("DataNascimento"))
@@ -253,7 +282,7 @@ namespace IntegrationServer.InfraController
             if (view.CamposAlterados.Contains("DataAdmissao"))
               person.DateAdm = view.Colaborador.DataAdmissao;
 
-            if (view.CamposAlterados.Contains("ChaveGrauInstrucao"))
+            if (view.CamposAlterados.Contains("GrauInstrucao"))
               person.Schooling = service.GetSchooling(schooling.IdSchooling);
 
             if (view.CamposAlterados.Contains("Telefone"))
@@ -268,8 +297,8 @@ namespace IntegrationServer.InfraController
             if (view.CamposAlterados.Contains("Sexo"))
               person.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
 
-            //if (view.CamposAlterados.Contains("DataRetornoFerias"))
-              //person.HolidayReturn = view.Colaborador.DataRetornoFerias;
+            if (view.CamposAlterados.Contains("DataRetornoFerias"))
+              person.HolidayReturn = view.Colaborador.DataRetornoFerias;
 
             if (view.CamposAlterados.Contains("MotivoAfastramento"))
               person.MotiveAside = view.Colaborador.MotivoAfastamento;
@@ -285,9 +314,6 @@ namespace IntegrationServer.InfraController
 
             if (view.CamposAlterados.Contains("DataDemissao"))
               person.DateResignation = view.Colaborador.DataDemissao;
-
-            //if (view.CamposAlterados.Contains("TypeUser"))
-            //  person.TypeUser = (EnumTypeUser)view.Colaborador.TypeUser;
 
             if (view.CamposAlterados.Contains("Situacao"))
             {
@@ -314,18 +340,29 @@ namespace IntegrationServer.InfraController
             }
             person = servicePerson.UpdatePersonView(person);
             view.IdPerson = person._id;
-            view.Situacao = EnumColaboradorSituacao.Atualized;
-            break;
-          case EnumColaboradorAcao.Passed:
-            break;
-          default:
-            view.Message = "Chamada inválida!!!";
-            break;
+          }
         }
+        if (integrationPerson == null)
+        {
+          // Novo colaborador na integração
+          integrationPerson = new IntegrationPerson()
+          {
+            Key = view.Colaborador.ChaveColaborador,
+            Employee = view.Colaborador
+          };
+          service.PostIntegrationPerson(integrationPerson);
+        }
+        else
+        {
+          integrationPerson.Employee = view.Colaborador;
+          service.PutIntegrationPerson(integrationPerson);
+        }
+        view.Situacao = EnumColaboradorSituacao.Atualized;
         return Ok(view);
       }
       catch (Exception ex)
       {
+        view.Situacao = EnumColaboradorSituacao.ServerError;
         return BadRequest(ex.ToString());
       }
     }

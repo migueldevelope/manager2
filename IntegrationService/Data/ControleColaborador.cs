@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Manager.Views.Enumns;
+using Manager.Views.Integration;
 
 namespace IntegrationService.Data
 {
@@ -12,41 +13,43 @@ namespace IntegrationService.Data
     public ColaboradorImportar Colaborador { get; private set; }
     public ColaboradorImportar ColaboradorAnterior { get; private set; }
     public List<string> CamposAlterados { get; set; }
-    public EnumColaboradorAcao Acao { get; set; }
     public EnumColaboradorSituacao Situacao { get; set; }
     public string Message { get; set; }
     public string IdPerson { get; set; }
     public string IdContract { get; set; }
 
+    #region Constructor Colaborador Novo
     public ControleColaborador(ColaboradorImportar colaborador)
     {
       ChaveColaborador = colaborador.ChaveColaborador;
       Colaborador = colaborador;
       CamposAlterados = new List<string>();
-      Acao = EnumColaboradorAcao.Insert;
-      Situacao = EnumColaboradorSituacao.Pendent;
+      Situacao = EnumColaboradorSituacao.SendServer;
       Message = string.Empty;
     }
+    #endregion
 
+    #region Atualizar Colaborador
     public void SetColaborador(ColaboradorImportar colaborador)
     {
       Message = string.Empty;
       if (Situacao == EnumColaboradorSituacao.Atualized)
       {
-        Acao = EnumColaboradorAcao.Update;
-        Situacao = EnumColaboradorSituacao.Pendent;
+        Situacao = EnumColaboradorSituacao.NoChange;
         ColaboradorAnterior = Colaborador;
       }
       Colaborador = colaborador;
       if (string.IsNullOrEmpty(Message) && ColaboradorAnterior != null)
         TestarMudanca();
     }
+    #endregion
 
     #region Testar mudança de propriedades
-    public string TestarMudanca()
+    public void TestarMudanca()
     {
       try
       {
+        CamposAlterados = new List<string>();
         if (this != null && Colaborador != null)
         {
           var type = typeof(ColaboradorImportar);
@@ -55,24 +58,18 @@ namespace IntegrationService.Data
               let selfValue = type.GetProperty(pi.Name).GetValue(ColaboradorAnterior, null)
               let toValue = type.GetProperty(pi.Name).GetValue(Colaborador, null)
               where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
-              select new MudancaColaborador() { Campo = pi.Name, ValorAntigo = selfValue.ToString(), ValorNovo = toValue.ToString() };
-          if (unequalProperties.Count() == 0)
+              select new ViewColaboradorMudanca() { Campo = pi.Name, ValorAntigo = selfValue.ToString(), ValorNovo = toValue.ToString() };
+          if (unequalProperties.Count() != 0)
           {
-            CamposAlterados = new List<string>();
-            Acao = EnumColaboradorAcao.Passed;
-            Situacao = EnumColaboradorSituacao.Atualized;
-          }
-          else
-          {
-            foreach (var item in unequalProperties.ToList<MudancaColaborador>())
+            Situacao = EnumColaboradorSituacao.SendServer;
+            foreach (var item in unequalProperties.ToList())
               CamposAlterados.Add(item.Campo);
           }
         }
-        return string.Empty;
       }
       catch (Exception)
       {
-        return string.Empty;
+        
       }
     }
     #endregion
