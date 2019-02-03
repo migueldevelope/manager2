@@ -57,6 +57,28 @@ namespace Manager.Services.Specific
     }
 
     #region Integration Company, Estabilischment, Schooling, Occupation, Person
+    public ViewIntegrationDashboard GetStatusDashboard()
+    {
+      try
+      {
+        IntegrationParameter param = GetIntegrationParameter();
+        ViewIntegrationDashboard view = new ViewIntegrationDashboard
+        {
+          CompanyError = integrationCompanyService.GetAll(p => p.IdCompany == "000000000000000000000000").Count(),
+          EstablishmentError = integrationEstablishmentService.GetAll(p => p.IdEstablishment == "000000000000000000000000").Count(),
+          OccupationError = integrationOccupationService.GetAll(p => p.IdOccupation == "000000000000000000000000").Count(),
+          SchoolingError = integrationSchoolingService.GetAll(p => p.IdSchooling == "000000000000000000000000").Count(),
+          CriticalError = param.CriticalError,
+          ProgramVersionExecution = param.ProgramVersionExecution,
+          StatusExecution = param.StatusExecution
+        };
+        return view;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     public IntegrationCompany GetIntegrationCompany(string key, string name)
     {
       try
@@ -84,6 +106,37 @@ namespace Manager.Services.Specific
             integrationCompanyService.Update(item, null);
           }
         }
+        return item;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<IntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        return detail.ToList();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public IntegrationCompany CompanyUpdate(string idIntegration, string id)
+    {
+      try
+      {
+        IntegrationCompany item = integrationCompanyService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id não localizado!");
+        item.IdCompany = id;
+        integrationCompanyService.Update(item, null);
         return item;
       }
       catch (Exception e)
@@ -126,6 +179,36 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+    public List<IntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        return detail.ToList();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public IntegrationEstablishment EstablishmentUpdate(string idIntegration, string id)
+    {
+      try
+      {
+        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id não localizado!");
+        item.IdEstablishment = id;
+        integrationEstablishmentService.Update(item, null);
+        return item;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
     public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany)
     {
       try
@@ -161,6 +244,36 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+    public List<IntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        return detail.ToList();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public IntegrationOccupation OccupationUpdate(string idIntegration, string id)
+    {
+      try
+      {
+        IntegrationOccupation item = integrationOccupationService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id não localizado!");
+        item.IdOccupation = id;
+        integrationOccupationService.Update(item, null);
+        return item;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
     public IntegrationSchooling GetIntegrationSchooling(string key, string name)
     {
       try
@@ -188,6 +301,36 @@ namespace Manager.Services.Specific
             integrationSchoolingService.Update(item, null);
           }
         }
+        return item;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<IntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        return detail.ToList();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public IntegrationSchooling SchoolingUpdate(string idIntegration, string id)
+    {
+      try
+      {
+        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id não localizado!");
+        item.IdSchooling = id;
+        integrationSchoolingService.Update(item, null);
         return item;
       }
       catch (Exception e)

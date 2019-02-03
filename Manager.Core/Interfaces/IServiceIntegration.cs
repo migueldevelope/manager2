@@ -29,11 +29,19 @@ namespace Manager.Core.Interfaces
     IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterMode view);
     IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterPack view);
     IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterExecution view);
-
     IntegrationPerson GetIntegrationPerson(string key);
     void PostIntegrationPerson(IntegrationPerson integrationPerson);
     void PutIntegrationPerson(IntegrationPerson integrationPerson);
     List<string> EmployeeChange(ViewColaborador oldEmployee, ViewColaborador newEmployee);
     string GetStatusIntegration();
+    List<IntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "");
+    List<IntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "");
+    List<IntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "");
+    List<IntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "");
+    IntegrationCompany CompanyUpdate(string idIntegration, string id);
+    IntegrationEstablishment EstablishmentUpdate(string idIntegration, string id);
+    IntegrationOccupation OccupationUpdate(string idIntegration, string id);
+    IntegrationSchooling SchoolingUpdate(string idIntegration, string id);
+    ViewIntegrationDashboard GetStatusDashboard();
   }
 }
