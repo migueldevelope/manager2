@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Manager.Core.Business.Integration;
 using Manager.Core.Interfaces;
+using Manager.Views.Integration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,22 +49,22 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("company/list")]
-    public List<IntegrationCompany> GetCompanyList(int count = 10, int page = 1, string filter = "")
+    public List<ViewIntegrationCompany> GetCompanyList(int count = 10, int page = 1, string filter = "", bool all = false)
     {
       long total = 0;
-      var result = service.CompanyList(ref total, count, page, filter);
+      var result = service.CompanyList(ref total, count, page, filter, all);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpPost]
-    [Route("company/update/{idintegration}/{id}")]
-    public IActionResult PostCompany(string idintegration, string id)
+    [Route("company/update/{idintegration}/{idcompany}")]
+    public IActionResult PostCompany(string idintegration, string idcompany)
     {
       try
       {
-        return Ok(service.CompanyUpdate(idintegration, id));
+        return Ok(service.CompanyUpdate(idintegration, idcompany));
       }
       catch (Exception e)
       {

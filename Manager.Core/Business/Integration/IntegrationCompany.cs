@@ -7,5 +7,6 @@ namespace Manager.Core.Business.Integration
   {
     [BsonRepresentation(BsonType.ObjectId)]
     public string IdCompany { get; set; }
+    public string NameCompany { get; set; }
   }
 }

@@ -32,15 +32,20 @@ namespace IntegrationService.Data
     #region Atualizar Colaborador
     public void SetColaborador(ColaboradorImportar colaborador)
     {
-      Message = string.Empty;
       if (Situacao == EnumColaboradorSituacao.Atualized)
       {
+        Message = string.Empty;
         Situacao = EnumColaboradorSituacao.NoChange;
         ColaboradorAnterior = Colaborador;
+        Colaborador = colaborador;
+        if (string.IsNullOrEmpty(Message) && ColaboradorAnterior != null)
+          TestarMudanca();
       }
-      Colaborador = colaborador;
-      if (string.IsNullOrEmpty(Message) && ColaboradorAnterior != null)
-        TestarMudanca();
+      else
+      {
+        Colaborador = colaborador;
+        Situacao = EnumColaboradorSituacao.SendServer;
+      }
     }
     #endregion
 

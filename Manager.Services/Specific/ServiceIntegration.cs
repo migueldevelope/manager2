@@ -92,6 +92,7 @@ namespace Manager.Services.Specific
             Name = name,
             _idCompany = "000000000000000000000000",
             IdCompany = "000000000000000000000000",
+            NameCompany = string.Empty,
             Status = EnumStatus.Enabled
           };
           integrationCompanyService.Insert(item);
@@ -103,6 +104,7 @@ namespace Manager.Services.Specific
           if (companies.Count == 1)
           {
             item.IdCompany = companies[0]._id;
+            item.NameCompany = companies[0].Name;
             integrationCompanyService.Update(item, null);
           }
         }
@@ -114,28 +116,49 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<IntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-        return detail.ToList();
+        IQueryable<IntegrationCompany> detail;
+        if (all)
+        {
+          detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
+          total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        }
+        else
+        {
+          detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
+          total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").Count();
+        }
+        List<ViewIntegrationCompany> result = new List<ViewIntegrationCompany>();
+        foreach (var item in detail)
+        {
+          result.Add(new ViewIntegrationCompany()
+          {
+            IdIntegration = item._id,
+            NameIntegration = item.Name,
+            IdCompany = item.IdCompany.Equals("000000000000000000000000") ? string.Empty : item.IdCompany,
+            NameCompany = item.NameCompany
+          });
+        }
+        return result;
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public IntegrationCompany CompanyUpdate(string idIntegration, string id)
+    public IntegrationCompany CompanyUpdate(string idIntegration, string idCompany)
     {
       try
       {
         IntegrationCompany item = integrationCompanyService.GetAll(p => p._id == idIntegration).FirstOrDefault();
         if (item == null)
           throw new Exception("Id não localizado!");
-        item.IdCompany = id;
+        item.IdCompany = idCompany;
+        item.NameCompany = companyService.GetAll(p => p._id == idCompany).FirstOrDefault().Name;
         integrationCompanyService.Update(item, null);
         return item;
       }
@@ -157,6 +180,7 @@ namespace Manager.Services.Specific
             Name = name,
             _idCompany = idcompany,
             IdEstablishment = "000000000000000000000000",
+            NameEstablishment = string.Empty,
             Status = EnumStatus.Enabled
           };
           integrationEstablishmentService.Insert(item);
@@ -169,6 +193,7 @@ namespace Manager.Services.Specific
           if (establishments.Count == 1)
           {
             item.IdEstablishment = establishments[0]._id;
+            item.NameEstablishment = establishments[0].Name;
             integrationEstablishmentService.Update(item, null);
           }
         }
@@ -201,6 +226,7 @@ namespace Manager.Services.Specific
         if (item == null)
           throw new Exception("Id não localizado!");
         item.IdEstablishment = id;
+        item.NameEstablishment = item.Name;
         integrationEstablishmentService.Update(item, null);
         return item;
       }
@@ -222,6 +248,7 @@ namespace Manager.Services.Specific
             Name = name,
             _idCompany = idcompany,
             IdOccupation = "000000000000000000000000",
+            NameOccupation = string.Empty,
             Status = EnumStatus.Enabled
           };
           integrationOccupationService.Insert(item);
@@ -234,6 +261,7 @@ namespace Manager.Services.Specific
           if (occupations.Count == 1)
           {
             item.IdOccupation = occupations[0]._id;
+            item.NameOccupation = occupations[0].Name;
             integrationOccupationService.Update(item, null);
           }
         }
@@ -266,6 +294,7 @@ namespace Manager.Services.Specific
         if (item == null)
           throw new Exception("Id não localizado!");
         item.IdOccupation = id;
+        item.NameOccupation = item.Name;
         integrationOccupationService.Update(item, null);
         return item;
       }
@@ -287,17 +316,19 @@ namespace Manager.Services.Specific
             Name = name,
             _idCompany = "000000000000000000000000",
             IdSchooling = "000000000000000000000000",
+            NameSchooling = string.Empty,
             Status = EnumStatus.Enabled
           };
           integrationSchoolingService.Insert(item);
         }
-        if (string.IsNullOrEmpty(item.IdSchooling))
+        if (item.IdSchooling.Equals("000000000000000000000000"))
         {
           item.Name = name;
           List<Schooling> schoolings = schoolingService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList<Schooling>();
           if (schoolings.Count == 1)
           {
             item.IdSchooling = schoolings[0]._id;
+            item.NameSchooling = schoolings[0].Name;
             integrationSchoolingService.Update(item, null);
           }
         }
@@ -330,6 +361,7 @@ namespace Manager.Services.Specific
         if (item == null)
           throw new Exception("Id não localizado!");
         item.IdSchooling = id;
+        item.NameSchooling = item.Name;
         integrationSchoolingService.Update(item, null);
         return item;
       }

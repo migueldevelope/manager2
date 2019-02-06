@@ -137,7 +137,7 @@ namespace IntegrationService.Service
       catch (Exception ex)
       {
         if (string.IsNullOrEmpty(Message))
-          Message = ex.ToString();
+          Message = ex.Message;
         service.SetParameter(new ViewIntegrationParameterExecution()
         {
           CriticalError = Message,
@@ -706,11 +706,9 @@ namespace IntegrationService.Service
               break;
           }
         }
-        foreach (var colaboradorControle in ControleColaboradores.Where(p => string.IsNullOrEmpty(p.Message)))
-        {
-        }
         SaveLists();
         Status = EnumStatusService.Ok;
+        Message = "Fim de integração!";
         if (hasLogFile)
         {
           Message = "Fim de integração com LOG!";

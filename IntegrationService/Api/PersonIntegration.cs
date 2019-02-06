@@ -39,9 +39,7 @@ namespace IntegrationService.Api
     {
       try
       {
-        StringContent content = new StringContent(string.Empty);
-        content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("person/statusintegration", content).Result;
+        var result = clientSkill.GetAsync("person/statusintegration").Result;
         if (!result.IsSuccessStatusCode)
           throw new Exception(result.Content.ReadAsStringAsync().Result);
       }
