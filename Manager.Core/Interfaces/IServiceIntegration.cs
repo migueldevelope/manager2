@@ -35,13 +35,13 @@ namespace Manager.Core.Interfaces
     List<string> EmployeeChange(ViewColaborador oldEmployee, ViewColaborador newEmployee);
     string GetStatusIntegration();
     List<ViewIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
-    List<IntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "");
-    List<IntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "");
-    List<IntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "");
-    IntegrationCompany CompanyUpdate(string idIntegration, string idCompany);
-    IntegrationEstablishment EstablishmentUpdate(string idIntegration, string id);
-    IntegrationOccupation OccupationUpdate(string idIntegration, string id);
-    IntegrationSchooling SchoolingUpdate(string idIntegration, string id);
+    List<ViewIntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
+    List<ViewIntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
+    List<ViewIntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
+    ViewIntegrationCompany CompanyUpdate(string idIntegration, string idCompany);
+    ViewIntegrationEstablishment EstablishmentUpdate(string idIntegration, string idEstablishment);
+    ViewIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation);
+    ViewIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling);
     ViewIntegrationDashboard GetStatusDashboard();
   }
 }

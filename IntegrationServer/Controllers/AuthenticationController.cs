@@ -33,7 +33,6 @@ namespace IntegrationServer.Controllers
 
       ViewPerson person = this.service.Authentication(user.Mail, user.Password);
 
-
       Claim[] claims = new[]
       {
         new Claim(ClaimTypes.Name, person.Name),
@@ -42,21 +41,14 @@ namespace IntegrationServer.Controllers
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
         new Claim(ClaimTypes.UserData, person.IdPerson)
       };
-
-      SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
-      SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
       JwtSecurityToken token = new JwtSecurityToken(
           issuer: "localhost",
           audience: "localhost",
           claims: claims,
           expires: DateTime.Now.AddYears(10),
-          signingCredentials: creds
+          signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
       );
-
-      string tokenId = new JwtSecurityTokenHandler().WriteToken(token);
-      person.Token = tokenId;
-
+      person.Token = new JwtSecurityTokenHandler().WriteToken(token);
       return Ok(person);
     }
 
@@ -96,21 +88,14 @@ namespace IntegrationServer.Controllers
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
         new Claim(ClaimTypes.UserData, person.IdPerson)
       };
-
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
-      var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
       var token = new JwtSecurityToken(
           issuer: "localhost",
           audience: "localhost",
           claims: claims,
           expires: DateTime.Now.AddYears(1),
-          signingCredentials: creds
+          signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
       );
-
-      var tokenId = new JwtSecurityTokenHandler().WriteToken(token);
-      person.Token = tokenId;
-
+      person.Token = new JwtSecurityTokenHandler().WriteToken(token);
       return Ok(person);
     }
   }

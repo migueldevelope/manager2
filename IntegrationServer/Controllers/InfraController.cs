@@ -131,7 +131,7 @@ namespace IntegrationServer.InfraController
         Occupation occupation = service.GetOccupation(filter.IdCompany, filter.Name);
         if (occupation == null)
           return NotFound("Cargo não encontrado!");
-        return Ok(new ViewIntegrationOccupation()
+        return Ok(new ViewIntegrationProfileOccupation()
         {
           IdOccupation = occupation._id,
           Name = occupation.Name,
@@ -154,7 +154,7 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpPost]
     [Route("occupation/new")]
-    public IActionResult AddOccupation([FromBody]ViewIntegrationOccupation view)
+    public IActionResult AddOccupation([FromBody]ViewIntegrationProfileOccupation view)
     {
       try
       {
@@ -204,7 +204,7 @@ namespace IntegrationServer.InfraController
           Schooling = schoolings 
         };
         service.AddOccupation(newOccupation);
-        var retorno = new ViewIntegrationOccupation()
+        var retorno = new ViewIntegrationProfileOccupation()
         {
           IdOccupation = newOccupation._id,
           Name = newOccupation.Name,

@@ -114,7 +114,7 @@ namespace IntegrationService.Api
         throw;
       }
     }
-    public ViewIntegrationOccupation GetOccupationByName(string idCompany, string name)
+    public ViewIntegrationProfileOccupation GetOccupationByName(string idCompany, string name)
     {
       try
       {
@@ -130,14 +130,14 @@ namespace IntegrationService.Api
           else
             throw new Exception(messageResult);
         }
-        return JsonConvert.DeserializeObject<ViewIntegrationOccupation>(result.Content.ReadAsStringAsync().Result);
+        return JsonConvert.DeserializeObject<ViewIntegrationProfileOccupation>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public ViewIntegrationOccupation AddOccupation(ViewIntegrationOccupation newOccupation)
+    public ViewIntegrationProfileOccupation AddOccupation(ViewIntegrationProfileOccupation newOccupation)
     {
       try
       {
@@ -149,7 +149,7 @@ namespace IntegrationService.Api
           string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
           throw new Exception(messageResult);
         }
-        return JsonConvert.DeserializeObject<ViewIntegrationOccupation>(result.Content.ReadAsStringAsync().Result);
+        return JsonConvert.DeserializeObject<ViewIntegrationProfileOccupation>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {

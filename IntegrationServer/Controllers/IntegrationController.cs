@@ -77,22 +77,22 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("schooling/list")]
-    public List<IntegrationSchooling> GetSchoolingList(int count = 10, int page = 1, string filter = "")
+    public List<ViewIntegrationSchooling> GetSchoolingList(int count = 10, int page = 1, string filter = "", bool all = false)
     {
       long total = 0;
-      var result = service.SchoolingList(ref total, count, page, filter);
+      var result = service.SchoolingList(ref total, count, page, filter, all);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpPost]
-    [Route("schooling/update/{idintegration}/{id}")]
-    public IActionResult PostSchooling(string idintegration, string id)
+    [Route("schooling/update/{idintegration}/{idschooling}")]
+    public IActionResult PostSchooling(string idintegration, string idschooling)
     {
       try
       {
-        return Ok(service.SchoolingUpdate(idintegration, id));
+        return Ok(service.SchoolingUpdate(idintegration, idschooling));
       }
       catch (Exception e)
       {
@@ -105,22 +105,22 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("establishment/list")]
-    public List<IntegrationEstablishment> GetEstablishmentList(int count = 10, int page = 1, string filter = "")
+    public List<ViewIntegrationEstablishment> GetEstablishmentList(int count = 10, int page = 1, string filter = "", bool all = false)
     {
       long total = 0;
-      var result = service.EstablishmentList(ref total, count, page, filter);
+      var result = service.EstablishmentList(ref total, count, page, filter, all);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpPost]
-    [Route("establishment/update/{idintegration}/{id}")]
-    public IActionResult PostEstablishment(string idintegration, string id)
+    [Route("establishment/update/{idintegration}/{idestablishment}")]
+    public IActionResult PostEstablishment(string idintegration, string idestablishment)
     {
       try
       {
-        return Ok(service.EstablishmentUpdate(idintegration, id));
+        return Ok(service.EstablishmentUpdate(idintegration, idestablishment));
       }
       catch (Exception e)
       {
@@ -133,22 +133,22 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("occupation/list")]
-    public List<IntegrationOccupation> GetOccupationList(int count = 10, int page = 1, string filter = "")
+    public List<ViewIntegrationOccupation> GetOccupationList(int count = 10, int page = 1, string filter = "", bool all = false)
     {
       long total = 0;
-      var result = service.OccupationList(ref total, count, page, filter);
+      var result = service.OccupationList(ref total, count, page, filter, all);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpPost]
-    [Route("occupation/update/{idintegration}/{id}")]
-    public IActionResult PostOccupation(string idintegration, string id)
+    [Route("occupation/update/{idintegration}/{idoccupation}")]
+    public IActionResult PostOccupation(string idintegration, string idoccupation)
     {
       try
       {
-        return Ok(service.OccupationUpdate(idintegration, id));
+        return Ok(service.OccupationUpdate(idintegration, idoccupation));
       }
       catch (Exception e)
       {

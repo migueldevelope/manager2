@@ -363,7 +363,7 @@ namespace IntegrationServer.InfraController
       catch (Exception ex)
       {
         view.Situacao = EnumColaboradorSituacao.ServerError;
-        return BadRequest(ex.ToString());
+        return BadRequest(ex.Message);
       }
     }
 

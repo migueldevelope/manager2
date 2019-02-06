@@ -62,7 +62,7 @@ namespace IntegrationClient
       string salvaCargo = string.Empty;
       string salvaCargoCodigo = string.Empty;
       ViewIntegrationGroup grupoCargo = null;
-      ViewIntegrationOccupation cargo = null;
+      ViewIntegrationProfileOccupation cargo = null;
       Boolean novoCargo = false;
       foreach (DataRow item in occupations.Rows)
       {
@@ -115,7 +115,7 @@ namespace IntegrationClient
             //Montar cargo
             if (cargo == null)
             {
-              cargo = new ViewIntegrationOccupation()
+              cargo = new ViewIntegrationProfileOccupation()
               {
                 Name = item["nome_cargo"].ToString().Trim(),
                 NameGroup = grupoCargo.Name,
