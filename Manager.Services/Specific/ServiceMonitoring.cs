@@ -54,6 +54,147 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string ScriptComments()
+    {
+      try
+      {
+        var list = monitoringService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
+
+        foreach (var item in list)
+        {
+          foreach (var row in item.Activities)
+          {
+            row.Comments = new List<ListComments>();
+            var commentPerson = new ListComments();
+            commentPerson._id = ObjectId.GenerateNewId().ToString();
+            commentPerson._idAccount = item._idAccount;
+            commentPerson.Comments = row.CommentsPerson;
+            commentPerson.StatusView = EnumStatusView.View;
+            commentPerson.Date = item.DateBeginPerson;
+            commentPerson.UserComment = EnumUserComment.Person;
+
+            var commentManager = new ListComments();
+            commentManager._id = ObjectId.GenerateNewId().ToString();
+            commentManager._idAccount = item._idAccount;
+            commentManager.Comments = row.CommentsManager;
+            commentManager.StatusView = EnumStatusView.View;
+            commentManager.Date = item.DateBeginManager;
+            commentManager.UserComment = EnumUserComment.Manager;
+
+            if (item.DateBeginPerson > item.DateBeginManager)
+            {
+              if (commentPerson.Comments != null)
+                row.Comments.Add(commentPerson);
+
+              if (commentManager.Comments != null)
+                row.Comments.Add(commentManager);
+            }
+            else
+            {
+              if (commentManager.Comments != null)
+                row.Comments.Add(commentManager);
+
+              if (commentPerson.Comments != null)
+                row.Comments.Add(commentPerson);
+            }
+            row.StatusViewManager = EnumStatusView.View;
+            row.StatusViewPerson = EnumStatusView.View;
+            
+          }
+
+          foreach (var row in item.Schoolings)
+          {
+            row.Comments = new List<ListComments>();
+            var commentPerson = new ListComments();
+            commentPerson._id = ObjectId.GenerateNewId().ToString();
+            commentPerson._idAccount = item._idAccount;
+            commentPerson.Comments = row.CommentsPerson;
+            commentPerson.StatusView = EnumStatusView.View;
+            commentPerson.Date = item.DateBeginPerson;
+            commentPerson.UserComment = EnumUserComment.Person;
+
+            var commentManager = new ListComments();
+            commentManager._id = ObjectId.GenerateNewId().ToString();
+            commentManager._idAccount = item._idAccount;
+            commentManager.Comments = row.CommentsManager;
+            commentManager.StatusView = EnumStatusView.View;
+            commentManager.Date = item.DateBeginManager;
+            commentManager.UserComment = EnumUserComment.Manager;
+
+            if (item.DateBeginPerson > item.DateBeginManager)
+            {
+              if (commentPerson.Comments != null)
+                row.Comments.Add(commentPerson);
+
+              if (commentManager.Comments != null)
+                row.Comments.Add(commentManager);
+            }
+            else
+            {
+              if (commentManager.Comments != null)
+                row.Comments.Add(commentManager);
+
+              if (commentPerson.Comments != null)
+                row.Comments.Add(commentPerson);
+            }
+            row.StatusViewManager = EnumStatusView.View;
+            row.StatusViewPerson = EnumStatusView.View;
+
+          }
+
+          foreach (var row in item.SkillsCompany)
+          {
+            row.Comments = new List<ListComments>();
+            var commentPerson = new ListComments();
+            commentPerson._id = ObjectId.GenerateNewId().ToString();
+            commentPerson._idAccount = item._idAccount;
+            commentPerson.Comments = row.CommentsPerson;
+            commentPerson.StatusView = EnumStatusView.View;
+            commentPerson.Date = item.DateBeginPerson;
+            commentPerson.UserComment = EnumUserComment.Person;
+
+            var commentManager = new ListComments();
+            commentManager._id = ObjectId.GenerateNewId().ToString();
+            commentManager._idAccount = item._idAccount;
+            commentManager.Comments = row.CommentsManager;
+            commentManager.StatusView = EnumStatusView.View;
+            commentManager.Date = item.DateBeginManager;
+            commentManager.UserComment = EnumUserComment.Manager;
+
+            if (item.DateBeginPerson > item.DateBeginManager)
+            {
+              if (commentPerson.Comments != null)
+                row.Comments.Add(commentPerson);
+
+              if (commentManager.Comments != null)
+                row.Comments.Add(commentManager);
+            }
+            else
+            {
+              if (commentManager.Comments != null)
+                row.Comments.Add(commentManager);
+
+              if (commentPerson.Comments != null)
+                row.Comments.Add(commentPerson);
+            }
+
+            
+            row.StatusViewManager = EnumStatusView.View;
+            row.StatusViewPerson = EnumStatusView.View;
+
+          }
+
+          monitoringService.UpdateAccount(item, null);
+        }
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<Monitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page)
     {
       try

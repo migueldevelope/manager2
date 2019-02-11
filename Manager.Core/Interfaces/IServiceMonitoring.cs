@@ -33,5 +33,6 @@ namespace Manager.Core.Interfaces
     bool ValidComments(string id);
     List<Plan> AddPlan(string idmonitoring, string iditem, Plan plan);
     List<Plan> UpdatePlan(string idmonitoring, string iditem, Plan plan);
+    string ScriptComments();
   }
 }

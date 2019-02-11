@@ -23,6 +23,7 @@ namespace Manager.Controllers
       service.SetUser(contextAccessor);
     }
 
+
     [Authorize]
     [HttpPost]
     [Route("new/{idperson}")]
@@ -147,6 +148,12 @@ namespace Manager.Controllers
       return service.UpdateCommentsView(idonboarding, iditem, usercomment);
     }
 
+    [HttpPut]
+    [Route("scriptcomments")]
+    public string GetLiScriptCommentsstComments()
+    {
+      return service.ScriptComments();
+    }
 
   }
 }

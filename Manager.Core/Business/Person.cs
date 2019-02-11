@@ -42,9 +42,8 @@ namespace Manager.Core.Business
     public string Phone { get; set; }
     public string Password { get; set; }
     public EnumTypeUser TypeUser { get; set; }
-
-
-    //public User User { get; set; }
+    public string RegistrationPerson { get; set; }
+    public User User { get; set; }
 
   }
 }
