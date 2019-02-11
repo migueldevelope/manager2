@@ -1,7 +1,5 @@
 ﻿using Manager.Views.Enumns;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Manager.Views.Integration
 {

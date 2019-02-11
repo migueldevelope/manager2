@@ -52,7 +52,7 @@ namespace IntegrationServer.InfraController
           view.Message = "Falta integração da empresa!";
           throw new Exception(view.Message);
         }
-        Person person = service.GetPersonByKey(company.IdCompany, view.Document, view.Registration);
+        Person person = service.GetPersonByKey(company.IdCompany, string.Empty, view.Document, view.Registration);
         if (person == null)
         {
           view.Message = "Pessoa não encontrada!";
@@ -132,7 +132,7 @@ namespace IntegrationServer.InfraController
 
         Person personManager = null;
         if (companyManager != null && !string.IsNullOrEmpty(view.Colaborador.DocumentoGestor))
-          personManager = service.GetPersonByKey(companyManager.IdCompany, view.Colaborador.DocumentoGestor, view.Colaborador.MatriculaGestor);
+          personManager = service.GetPersonByKey(companyManager.IdCompany, string.Empty, view.Colaborador.DocumentoGestor, view.Colaborador.MatriculaGestor);
 
         if (company.IdCompany.Equals("000000000000000000000000"))
         {
@@ -190,7 +190,7 @@ namespace IntegrationServer.InfraController
         };
 
         // Testar se o que está vindo é igual ao que já tinha antes
-        Person person = service.GetPersonByKey(company.IdCompany, view.Colaborador.Documento, view.Colaborador.Matricula);
+        Person person = service.GetPersonByKey(company.IdCompany, establishment.IdEstablishment, view.Colaborador.Documento, view.Colaborador.Matricula);
         if (view.Colaborador.DataAdmissao != null)
           view.Colaborador.DataAdmissao = ((DateTime)view.Colaborador.DataAdmissao).ToUniversalTime();
         if (view.Colaborador.DataNascimento != null)

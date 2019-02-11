@@ -20,7 +20,7 @@ namespace Manager.Core.Interfaces
     IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany);
     IntegrationSchooling GetIntegrationSchooling(string key, string name);
     IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany);
-    Person GetPersonByKey(string idcompany, string document, long registration);
+    Person GetPersonByKey(string idcompany, string idestablishment, string document, long registration);
     Schooling GetSchooling(string id);
     Company GetCompany(string id);
     Establishment GetEstablishment(string id);

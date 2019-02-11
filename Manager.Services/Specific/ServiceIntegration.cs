@@ -724,16 +724,14 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    public Person GetPersonByKey(string idcompany, string document, long registration)
+    public Person GetPersonByKey(string idcompany, string idestablishment, string document, long registration)
     {
       try
       {
         IQueryable<Person> personsDocument = personService.GetAll(p => p.Document == document);
         if (personsDocument.Count() == 0)
           return null;
-        if (personsDocument.Count() == 1)
-          return personsDocument.FirstOrDefault();
-        return personsDocument.Where(p => p.Company._id == idcompany && p.Registration == registration).FirstOrDefault();
+        return personsDocument.Where(p => p.Company._id == idcompany && p.Establishment._id == idestablishment && p.Registration == registration).FirstOrDefault();
       }
       catch (Exception e)
       {
