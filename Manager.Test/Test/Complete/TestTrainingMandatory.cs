@@ -36,7 +36,7 @@ namespace Manager.Test.Test.Complete
       try
       {
         long total = 0;
-        var person = servicePerson.GetAll(p => p.Name.Contains("Analisa")).FirstOrDefault();
+        var person = servicePerson.GetAll(p => p.User.Name.Contains("Analisa")).FirstOrDefault();
 
         
         var course = serviceEvent.ListCourse(ref total, 1, 1, "").FirstOrDefault();

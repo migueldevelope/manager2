@@ -67,10 +67,10 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        //var detail = logsService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-        var detail = logsService.GetAuthentication(p => p.Person._idAccount == idaccount & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderByDescending(p => p.DataLog).Skip(skip).Take(count);
+        //var detail = logsService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        var detail = logsService.GetAuthentication(p => p.Person._idAccount == idaccount & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderByDescending(p => p.DataLog).Skip(skip).Take(count);
         //total = detail.Count();
-        total = logsService.GetAll(p => p.Person._idAccount == idaccount & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = logsService.GetAll(p => p.Person._idAccount == idaccount & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         //return detail.Skip(skip).Take(count).OrderByDescending(p => p.DataLog).ToList();
         return detail.OrderByDescending(p => p.DataLog).ToList();

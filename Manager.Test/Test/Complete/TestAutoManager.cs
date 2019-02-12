@@ -33,8 +33,8 @@ namespace Manager.Test.Test.Complete
       try
       {
         long total = 0;
-        var manager = this.servicePerson.ListPerson(p => p.Mail == "miguel@jmsoft.com.br").FirstOrDefault();
-        var employee = this.servicePerson.ListPerson(p => p.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
+        var manager = this.servicePerson.ListPerson(p => p.User.Mail == "miguel@jmsoft.com.br").FirstOrDefault();
+        var employee = this.servicePerson.ListPerson(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
         var origin = this.servicePerson.ListPerson(p => p._id == employee.Manager._id).FirstOrDefault();
         //List Persons
         var listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "");
@@ -60,7 +60,7 @@ namespace Manager.Test.Test.Complete
         }
 
         //List Team Filter
-        employee = this.servicePerson.ListPerson(p => p.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
+        employee = this.servicePerson.ListPerson(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
         listTeam = this.servicePerson.GetPersonTeam(ref total, employee.Manager._id, "Ariel", 10, 1);
         foreach (var item in listTeam)
         {

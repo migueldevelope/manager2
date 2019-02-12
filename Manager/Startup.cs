@@ -55,12 +55,14 @@ namespace Manager
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, conn.TokenServer);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
       IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
+      IServiceUser serviceUser = new ServiceUser(_context);
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany,serviceUser);
 
+      services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceDictionarySystem);
       services.AddSingleton(_ => serviceSalaryScale);
       services.AddSingleton(_ => serviceLogMessages);

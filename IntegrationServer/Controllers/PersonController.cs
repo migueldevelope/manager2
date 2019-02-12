@@ -61,22 +61,22 @@ namespace IntegrationServer.InfraController
         view.IdPerson = person._id;
         view.Person = new ViewIntegrationPerson()
         {
-          Name = person.Name,
-          Document = person.Document,
-          Mail = person.Mail,
-          Phone = person.Phone,
+          Name = person.User.Name,
+          //Document = person.Document,
+          Mail = person.User.Mail,
+          //Phone = person.Phone,
           IdCompany = person.Company?._id,
           IdOccupation = person.Occupation?._id,
           Registration = person.Registration,
           IdManager = person.Manager?._id,
-          DateBirth = person.DateBirth,
-          DateAdm = person.DateAdm,
+          //DateBirth = person.DateBirth,
+          DateAdm = person.User.DateAdm,
           DocumentManager = person.DocumentManager,
-          IdSchooling = person.Schooling?._id,
-          PhoneFixed = person.PhoneFixed,
-          DocumentID = person.DocumentID,
-          DocumentCTPF = person.DocumentCTPF,
-          Sex = (int)person.Sex,
+          //IdSchooling = person.Schooling?._id,
+          //PhoneFixed = person.PhoneFixed,
+          //DocumentID = person.DocumentID,
+          //DocumentCTPF = person.DocumentCTPF,
+          //Sex = (int)person.Sex,
           HolidayReturn = person.HolidayReturn,
           MotiveAside = person.MotiveAside,
           DateLastOccupation = person.DateLastOccupation,
@@ -205,22 +205,22 @@ namespace IntegrationServer.InfraController
         {
           person = new Person
           {
-            Name = view.Colaborador.Nome,
-            Document = view.Colaborador.Documento,
-            Mail = view.Colaborador.Email,
-            Phone = view.Colaborador.Celular,
-            TypeUser = EnumTypeUser.Employee,
+            //Name = view.Colaborador.Nome,
+            //Document = view.Colaborador.Documento,
+            //Mail = view.Colaborador.Email,
+            //Phone = view.Colaborador.Celular,
+            //TypeUser = EnumTypeUser.Employee,
             Company = service.GetCompany(company.IdCompany),
             Establishment = string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) ? null : service.GetEstablishment(establishment.IdEstablishment),
             Occupation = service.GetOccupation(occupation.IdOccupation),
             Registration = view.Colaborador.Matricula,
-            DateBirth = view.Colaborador.DataNascimento,
-            DateAdm = view.Colaborador.DataAdmissao,
-            Schooling = service.GetSchooling(schooling.IdSchooling),
-            PhoneFixed = view.Colaborador.Telefone,
-            DocumentID = view.Colaborador.Identidade,
-            DocumentCTPF = view.Colaborador.CarteiraProfissional,
-            Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
+            //DateBirth = view.Colaborador.DataNascimento,
+            //DateAdm = view.Colaborador.DataAdmissao,
+            //Schooling = service.GetSchooling(schooling.IdSchooling),
+            //PhoneFixed = view.Colaborador.Telefone,
+            //DocumentID = view.Colaborador.Identidade,
+            //DocumentCTPF = view.Colaborador.CarteiraProfissional,
+            //Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
             HolidayReturn = view.Colaborador.DataRetornoFerias,
             MotiveAside = view.Colaborador.MotivoAfastamento,
             DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo,
@@ -230,7 +230,7 @@ namespace IntegrationServer.InfraController
             TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
             Manager = personManager,
             DocumentManager = personManager?.DocumentManager,
-            Password = view.Colaborador.Documento
+            //Password = view.Colaborador.Documento
           };
           switch (view.Colaborador.Situacao.ToLower())
           {
@@ -255,17 +255,17 @@ namespace IntegrationServer.InfraController
         {
           if (view.CamposAlterados.Count > 0)
           {
-            person.Document = view.Colaborador.Documento;
+            //person.Document = view.Colaborador.Documento;
             person.Registration = view.Colaborador.Matricula;
 
             if (view.CamposAlterados.Contains("Nome"))
-              person.Name = view.Colaborador.Nome;
+              person.User.Name = view.Colaborador.Nome;
 
             if (view.CamposAlterados.Contains("Email"))
-              person.Mail = view.Colaborador.Email;
+              person.User.Mail = view.Colaborador.Email;
 
-            if (view.CamposAlterados.Contains("Celular"))
-              person.Phone = view.Colaborador.Celular;
+            //if (view.CamposAlterados.Contains("Celular"))
+              //person.Phone = view.Colaborador.Celular;
 
             if (view.CamposAlterados.Contains("Empresa"))
               person.Company = service.GetCompany(company.IdCompany);
@@ -276,26 +276,26 @@ namespace IntegrationServer.InfraController
             if (view.CamposAlterados.Contains("Cargo"))
               person.Occupation = service.GetOccupation(occupation.IdOccupation);
 
-            if (view.CamposAlterados.Contains("DataNascimento"))
-              person.DateBirth = view.Colaborador.DataNascimento;
+            //if (view.CamposAlterados.Contains("DataNascimento"))
+              //person.DateBirth = view.Colaborador.DataNascimento;
 
             if (view.CamposAlterados.Contains("DataAdmissao"))
-              person.DateAdm = view.Colaborador.DataAdmissao;
+              person.User.DateAdm = view.Colaborador.DataAdmissao;
 
-            if (view.CamposAlterados.Contains("GrauInstrucao"))
-              person.Schooling = service.GetSchooling(schooling.IdSchooling);
+            //if (view.CamposAlterados.Contains("GrauInstrucao"))
+              //person.Schooling = service.GetSchooling(schooling.IdSchooling);
 
-            if (view.CamposAlterados.Contains("Telefone"))
-              person.PhoneFixed = view.Colaborador.Telefone;
+            //if (view.CamposAlterados.Contains("Telefone"))
+              //person.PhoneFixed = view.Colaborador.Telefone;
 
-            if (view.CamposAlterados.Contains("Identidade"))
-              person.DocumentID = view.Colaborador.Identidade;
+            //if (8view.CamposAlterados.Contains("Identidade"))
+              //person.DocumentID = view.Colaborador.Identidade;
 
-            if (view.CamposAlterados.Contains("CarteiraProfissional"))
-              person.DocumentCTPF = view.Colaborador.CarteiraProfissional;
+            //if (view.CamposAlterados.Contains("CarteiraProfissional"))
+              //person.DocumentCTPF = view.Colaborador.CarteiraProfissional;
 
-            if (view.CamposAlterados.Contains("Sexo"))
-              person.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
+            //if (view.CamposAlterados.Contains("Sexo"))
+              //person.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
 
             if (view.CamposAlterados.Contains("DataRetornoFerias"))
               person.HolidayReturn = view.Colaborador.DataRetornoFerias;
@@ -336,7 +336,7 @@ namespace IntegrationServer.InfraController
             if (person.Manager == null)
             {
               person.Manager = personManager;
-              person.DocumentManager = personManager?.Document;
+              //person.DocumentManager = personManager?.Document;
             }
             person = servicePerson.UpdatePersonView(person);
             view.IdPerson = person._id;
@@ -392,11 +392,11 @@ namespace IntegrationServer.InfraController
         List<Person> persons = servicePerson.GetPersons("5b91299a17858f95ffdb79f7",string.Empty);
         foreach (Person person in persons)
         {
-          if (person.Name.Equals(person.Name.ToUpper()))
+          if (person.User.Name.Equals(person.User.Name.ToUpper()))
           {
-            person.Name = Capitalization(person.Name);
+            person.User.Name = Capitalization(person.User.Name);
             if (person.Manager != null)
-              person.Manager.Name = Capitalization(person.Manager.Name);
+              person.Manager.User.Name = Capitalization(person.Manager.User.Name);
             person.TypeJourney = EnumTypeJourney.OnBoardingOccupation;
             var x = servicePerson.UpdatePersonView(person);
           }

@@ -225,5 +225,13 @@ namespace Manager.Controllers
       return service.UpdatePlan(idmonitoring, iditem, plan);
     }
 
+
+    [HttpPut]
+    [Route("scriptcomments")]
+    public string GetLiScriptCommentsstComments()
+    {
+      return service.ScriptComments();
+    }
+
   }
 }

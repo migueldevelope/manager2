@@ -22,6 +22,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<User> userService;
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceInfra infraService;
     private readonly ServiceGeneric<Parameter> parameterService;
@@ -34,6 +35,7 @@ namespace Manager.Services.Specific
       {
         accountService = new ServiceGeneric<Account>(context);
         personService = new ServiceGeneric<Person>(context);
+        userService = new ServiceGeneric<User>(context);
         companyService = new ServiceGeneric<Company>(context);
         infraService = new ServiceInfra(context);
         parameterService = new ServiceGeneric<Parameter>(context);
@@ -71,19 +73,17 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled
         };
         var _company = companyService.InsertAccount(company);
-        var user = new Person()
+        var user = new User()
         {
           _idAccount = id,
           Name = view.NameAccount,
-          Company = _company,
           Mail = view.Mail,
           Document = view.Document,
-          StatusUser = EnumStatusUser.Enabled,
           Status = EnumStatus.Enabled,
           Password = EncryptServices.GetMD5Hash(view.Password),
           TypeUser = EnumTypeUser.Administrator
         };
-        personService.InsertAccount(user);
+        userService.InsertAccount(user);
 
         infraService._idAccount = account._id;
         infraService.CopyTemplateInfra(company);
@@ -131,10 +131,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
+        var user = personService.GetAuthentication(p => p._idAccount == idaccount & p.User.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
         if (user == null)
         {
-          user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).FirstOrDefault();
+          user = personService.GetAuthentication(p => p._idAccount == idaccount & p.User.TypeUser == EnumTypeUser.Support).FirstOrDefault();
         }
 
         var parameter = parameterService.GetAuthentication(p => p.Name == "viewlo" & p._idAccount == idaccount).FirstOrDefault();
@@ -156,8 +156,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            user.Mail,
-            user.Password
+            user.User.Mail,
+            user.User.Password
           };
           var json = JsonConvert.SerializeObject(data);
           var content = new StringContent(json);
@@ -190,8 +190,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            user.Mail,
-            user.Password
+            user.User.Mail,
+            user.User.Password
           };
 
           var json = JsonConvert.SerializeObject(data);
@@ -221,14 +221,14 @@ namespace Manager.Services.Specific
         var _user = new BaseUser()
         {
           _idAccount = user._idAccount,
-          NamePerson = user.Name,
-          Mail = user.Mail,
+          NamePerson = user.User.Name,
+          Mail = user.User.Mail,
           _idPerson = user._id
         };
         logService = new ServiceLog(_context);
         var log = new ViewLog()
         {
-          Description = "Alter Account/User out: " + user.Name + "/" + user._idAccount
+          Description = "Alter Account/User out: " + user.User.Name + "/" + user._idAccount
           + " - in: " + _user.NamePerson + "/" + _user._idAccount,
           Local = "Authentication",
           Person = user

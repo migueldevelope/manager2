@@ -88,10 +88,13 @@ namespace Manager.Services.Specific
           Description = "Service Notification",
           Person = new Person()
           {
-            Name = "Service",
+            User = new User
+            {
+              Name = "Service",
+              Mail = "suporte@jmsoft.com.br"
+            },
             Status = EnumStatus.Enabled,
-            StatusUser = EnumStatusUser.Enabled,
-            Mail = "suporte@jmsoft.com.br"
+            StatusUser = EnumStatusUser.Enabled
           },
           Local = "ManagerMessages"
         };
@@ -172,12 +175,12 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-1).Date;
         var nowNext = DateTime.Now.AddDays(1).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
           {
-            logMessagesService.NewLogMessage("Novo Colaborador", "Colaborador " + item.Name, item);
+            logMessagesService.NewLogMessage("Novo Colaborador", "Colaborador " + item.User.Name, item);
             if (onBoardingService.GetAll(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Count() == 0)
               MailOnboardingSeq1(item);
           }
@@ -195,7 +198,7 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-26).Date;
         var nowNext = DateTime.Now.AddDays(-24).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
@@ -217,7 +220,7 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-31).Date;
         var nowNext = DateTime.Now.AddDays(-29).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
@@ -239,7 +242,7 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-36).Date;
         var nowNext = DateTime.Now.AddDays(-34).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
@@ -261,7 +264,7 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-41).Date;
         var nowNext = DateTime.Now.AddDays(-39).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
@@ -283,7 +286,7 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-71).Date;
         var nowNext = DateTime.Now.AddDays(-69).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
@@ -309,7 +312,7 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-56).Date;
         var nowNext = DateTime.Now.AddDays(-54).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
@@ -514,14 +517,14 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-84).Date;
         var nowNext = DateTime.Now.AddDays(-73).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
           {
             if (checkpointService.GetAll(p => p.Person._id == item._id & p.StatusCheckpoint == EnumStatusCheckpoint.End).Count() == 0)
             {
-              var days = Math.Truncate((DateTime.Parse(item.DateAdm.ToString()).AddDays(85) - DateTime.Now).TotalDays);
+              var days = Math.Truncate((DateTime.Parse(item.User.DateAdm.ToString()).AddDays(85) - DateTime.Now).TotalDays);
               MailCheckpointSeq2(item, byte.Parse(((days < 0) ? 0 : days).ToString()));
             }
 
@@ -540,7 +543,7 @@ namespace Manager.Services.Specific
       {
         var nowLast = DateTime.Now.AddDays(-91).Date;
         var nowNext = DateTime.Now.AddDays(-89).Date;
-        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.DateAdm > nowLast & p.DateAdm < nowNext).ToList();
+        var persons = personService.GetAll(p => p.TypeJourney == EnumTypeJourney.Checkpoint & p.User.DateAdm > nowLast & p.User.DateAdm < nowNext).ToList();
         foreach (var item in persons)
         {
           if (item.Manager != null)
@@ -566,7 +569,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -579,11 +582,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -611,7 +614,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -624,11 +627,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Mail, person.Name)
+                        new MailLogAddress(person.User.Mail, person.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -656,7 +659,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -669,11 +672,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -701,7 +704,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -714,11 +717,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Mail, person.Name)
+                        new MailLogAddress(person.User.Mail, person.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -746,7 +749,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -759,11 +762,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -791,7 +794,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", Math.Truncate(totaldays).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -804,11 +807,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Mail, person.Name)
+                        new MailLogAddress(person.User.Mail, person.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -836,7 +839,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", totaldays.ToString());
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", totaldays.ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -849,11 +852,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -881,7 +884,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", totaldays.ToString());
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", totaldays.ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -894,11 +897,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Mail, person.Name)
+                        new MailLogAddress(person.User.Mail, person.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -923,7 +926,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.CheckpointSeq1(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", "30");
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", "30");
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -936,11 +939,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -965,7 +968,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.CheckpointSeq1(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", int.Parse(days.ToString()).ToString());
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", int.Parse(days.ToString()).ToString());
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -978,11 +981,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1007,7 +1010,7 @@ namespace Manager.Services.Specific
         //searsh model mail database
         var model = mailModelService.CheckpointSeq2(path);
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", "90");
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Days}", "90");
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1020,11 +1023,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1052,7 +1055,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1065,11 +1068,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1097,7 +1100,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1110,11 +1113,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1142,7 +1145,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1155,11 +1158,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1187,7 +1190,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1200,11 +1203,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1232,7 +1235,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1245,11 +1248,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1276,8 +1279,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            mail = person.Mail,
-            password = person.Password
+            mail = person.User.Mail,
+            password = person.User.Password
           };
           var json = JsonConvert.SerializeObject(data);
           var content = new StringContent(json);

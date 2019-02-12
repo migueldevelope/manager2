@@ -41,7 +41,9 @@ namespace Mail
       IServiceMail serviceMail = new ServiceMail(_context);
       IServicePerson servicePerson = new ServicePerson(_context);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, conn.SignalRService);
+      IServiceUser serviceUser = new ServiceUser(_context);
 
+      services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceMailMessage);
       services.AddSingleton(_ => serviceSendGrid);
       services.AddSingleton(_ => serviceMailModel);

@@ -22,5 +22,6 @@ namespace Manager.Core.Interfaces
     string DeleteComments(string idonboarding, string iditem, string idcomments);
     List<ListComments> GetListComments(string idonboarding, string iditem);
     string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment);
+    string ScriptComments();
   }
 }

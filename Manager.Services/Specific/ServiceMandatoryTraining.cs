@@ -184,8 +184,8 @@ namespace Manager.Services.Specific
         else
         {
           DateTime? maxHis = beginDate;
-          if (person.DateAdm > maxHis)
-            maxHis = person.DateAdm;
+          if (person.User.DateAdm > maxHis)
+            maxHis = person.User.DateAdm;
 
           if (person.DateLastOccupation > maxHis)
             maxHis = person.DateLastOccupation;
@@ -538,7 +538,7 @@ namespace Manager.Services.Specific
           Occupations = p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
           Companys = p.Companys.OrderBy(x => x.Company).ToList(),
           Course = p.Course,
-          Persons = p.Persons.OrderBy(x => x.Person.Name).ToList(),
+          Persons = p.Persons.OrderBy(x => x.Person.User.Name).ToList(),
           Status = p.Status,
           _id = p._id,
           _idAccount = p._idAccount
@@ -616,8 +616,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = trainingPlanService.GetAll(p => p.Person.Company._id == idcompany & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = trainingPlanService.GetAll(p => p.Person.Company._id == idcompany & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = trainingPlanService.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = trainingPlanService.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
       }
@@ -632,8 +632,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = trainingPlanService.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = trainingPlanService.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = trainingPlanService.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = trainingPlanService.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
       }
@@ -648,7 +648,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._id == idperson & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        var detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._id == idperson & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._id == idperson & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
         var list = new List<ViewTrainingPlan>();
         var countRealized = 0;
@@ -657,7 +657,7 @@ namespace Manager.Services.Specific
         foreach (var item in detail)
         {
           var view = new ViewTrainingPlan();
-          view.Person = item.Person.Name;
+          view.Person = item.Person.User.Name;
           view.Course = item.Course.Name;
           if (item.StatusTrainingPlan == EnumStatusTrainingPlan.Realized)
             countRealized += 1;
@@ -693,12 +693,12 @@ namespace Manager.Services.Specific
         {
           if (origin == EnumOrigin.Full)
           {
-            detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+            detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
           }
           else
           {
-            detail = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+            detail = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
           }
         }
@@ -706,12 +706,12 @@ namespace Manager.Services.Specific
         {
           if (origin == EnumOrigin.Full)
           {
-            detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+            detail = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = trainingPlanService.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
           }
           else
           {
-            detail = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+            detail = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = trainingPlanService.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
           }
         }
@@ -721,7 +721,7 @@ namespace Manager.Services.Specific
         foreach (var item in detail)
         {
           var plan = new ViewTrainingPlan();
-          plan.Person = item.Person.Name;
+          plan.Person = item.Person.User.Name;
           plan.Course = item.Course.Name;
           plan.Origin = item.Origin;
           plan.StatusTrainingPlan = item.StatusTrainingPlan;
@@ -912,7 +912,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        var detail = personService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
+        var detail = personService.GetAll(p => p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
           .Where(x => !filters.Contains(x._id)).ToList();
 
         total = detail.Count();

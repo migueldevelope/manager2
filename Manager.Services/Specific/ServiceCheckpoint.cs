@@ -59,8 +59,8 @@ namespace Manager.Services.Specific
       {
         LogSave(idmanager, "ListEnd");
         int skip = (count * (page - 1));
-        var detail = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }
@@ -107,8 +107,8 @@ namespace Manager.Services.Specific
         LogSave(idmanager, "List");
         NewOnZero();
         int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
-        & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
+        & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
 
@@ -142,8 +142,8 @@ namespace Manager.Services.Specific
       {
         LogSave(idperson, "List");
         NewOnZero();
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p._id == idperson)
-        .OrderBy(p => p.Name)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p._id == idperson)
+        .OrderBy(p => p.User.Name)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
 
@@ -237,7 +237,7 @@ namespace Manager.Services.Specific
                _id = item._id,
                _idAccount = item._idAccount,
                Company = item.Company,
-               Content = item.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.Name),
+               Content = item.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name),
                Name = item.Name,
                Order = item.Order,
                Status = item.Status,
@@ -261,7 +261,7 @@ namespace Manager.Services.Specific
               _id = item._id,
               _idAccount = item._idAccount,
               Company = item.Company,
-              Content = item.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.Name),
+              Content = item.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name),
               Name = item.Name,
               Order = item.Order,
               Status = item.Status,
@@ -276,7 +276,7 @@ namespace Manager.Services.Specific
 
         var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.Checkpoint).FirstOrDefault();
         if (text != null)
-          checkpoint.TextDefault = text.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.Name).Replace("{manager_name}", checkpoint.Person.Manager.Name);
+          checkpoint.TextDefault = text.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name).Replace("{manager_name}", checkpoint.Person.Manager.User.Name);
 
         return checkpoint;
       }
@@ -294,8 +294,8 @@ namespace Manager.Services.Specific
         checkpoint.StatusCheckpoint = EnumStatusCheckpoint.Wait;
         checkpoint.DateBegin = DateTime.Now;
         checkpoint = LoadMap(checkpoint);
-        if (checkpoint.Person.DateAdm != null)
-          checkpoint.DataAccess = DateTime.Parse(checkpoint.Person.DateAdm.ToString()).AddDays(Deadline());
+        if (checkpoint.Person.User.DateAdm != null)
+          checkpoint.DataAccess = DateTime.Parse(checkpoint.Person.User.DateAdm.ToString()).AddDays(Deadline());
         else
           checkpoint.DataAccess = DateTime.Now;
 
@@ -325,7 +325,7 @@ namespace Manager.Services.Specific
             MailRH(checkpoint.Person, "Aprovado");
             MailPerson(checkpoint.Person, "Aprovado");
 
-            logMessagesService.NewLogMessage("Checkpoint", " Colaborador " + checkpoint.Person.Name + " aprovado no Checkpoint", checkpoint.Person);
+            logMessagesService.NewLogMessage("Checkpoint", " Colaborador " + checkpoint.Person.User.Name + " aprovado no Checkpoint", checkpoint.Person);
           }
           else
           {
@@ -390,7 +390,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -403,11 +403,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Mail, person.Name)
+                        new MailLogAddress(person.User.Mail, person.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -456,7 +456,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -506,7 +506,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -555,7 +555,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -565,7 +565,7 @@ namespace Manager.Services.Specific
         };
 
         List<MailLogAddress> listMail = new List<MailLogAddress>();
-        listMail.Add(new MailLogAddress(person.Mail, person.Name));
+        listMail.Add(new MailLogAddress(person.User.Mail, person.User.Name));
 
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
@@ -574,7 +574,7 @@ namespace Manager.Services.Specific
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -601,8 +601,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            mail = person.Mail,
-            password = person.Password
+            mail = person.User.Mail,
+            password = person.User.Password
           };
           var json = JsonConvert.SerializeObject(data);
           var content = new StringContent(json);
@@ -671,8 +671,8 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "ListExclud");
         int skip = (count * (page - 1));
-        var detail = checkpointService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = checkpointService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = checkpointService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = checkpointService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }

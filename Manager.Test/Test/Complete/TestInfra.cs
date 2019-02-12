@@ -107,7 +107,7 @@ namespace Manager.Test.Test.Complete
           Type = EnumTypeSchooling.Excellence,
           Status = EnumStatus.Enabled
         };
-        var group = servicePerson.GetAll(p => p.Mail == "miguel@jmsoft.com.br").FirstOrDefault().Occupation.Group;
+        var group = servicePerson.GetAll(p => p.User.Mail == "miguel@jmsoft.com.br").FirstOrDefault().Occupation.Group;
 
         var view = new ViewAddMapGroupSchooling()
         {

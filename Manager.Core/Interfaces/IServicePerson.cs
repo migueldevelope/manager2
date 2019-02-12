@@ -26,15 +26,11 @@ namespace Manager.Core.Interfaces
     ViewPersonDetail GetPersonDetail(string idPerson);
     List<ViewPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page);
     string GetPhoto(string idPerson);
-    string AlterPassword(ViewAlterPass resetPass, string idPerson);
-    string AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
     List<ViewPersonList> GetPersons(string filter);
     List<Person> GetPersons(string idcompany, string filter);
     List<Person> GetPersonsCrud(EnumTypeUser type, ref long total, string filter, int count, int page);
     Person GetPersonCrud(string idperson);
     Person GetPerson(string id);
-    Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid);
-    Person GetAuthentication(string mail, string password);
     List<Occupation> ListOccupation(ref long total, string filter, int count, int page);
     List<Person> ListManager(ref long total, string filter, int count, int page);
     List<Company> ListCompany(ref long total, string filter, int count, int page);

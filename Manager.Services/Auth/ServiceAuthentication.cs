@@ -19,14 +19,16 @@ namespace Manager.Services.Auth
   {
     private readonly IServicePerson servicePerson;
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<User> userService;
     private ServiceGeneric<Account> accountService;
     private ServiceDictionarySystem dictionarySystemService;
     private IServiceCompany companyService;
     private IServiceLog logService;
+    private IServiceUser serviceUser;
     private DataContext _context;
 
     public ServiceAuthentication(DataContext context, IServiceLog _logService,
-      IServicePerson _servicePerson, IServiceCompany _companyService)
+      IServicePerson _servicePerson, IServiceCompany _companyService, IServiceUser _serviceUser)
     {
       try
       {
@@ -34,7 +36,9 @@ namespace Manager.Services.Auth
         accountService = new ServiceGeneric<Account>(context);
         companyService = _companyService;
         logService = _logService;
+        serviceUser = _serviceUser;
         personService = new ServiceGeneric<Person>(context);
+        userService = new ServiceGeneric<User>(context);
         dictionarySystemService = new ServiceDictionarySystem(context);
         _context = context;
       }
@@ -51,14 +55,14 @@ namespace Manager.Services.Auth
     {
       try
       {
-        Person user = null;
+        User user = null;
         if (GetMaristas(mail, password) == "ok")
-          user = personService.GetAuthentication(p => p.Mail == mail & p.Status == EnumStatus.Enabled & p.StatusUser != EnumStatusUser.Disabled
-          & p.StatusUser != EnumStatusUser.ErrorIntegration).FirstOrDefault();
+          user = userService.GetAuthentication(p => p.Mail == mail & p.Status == EnumStatus.Enabled).FirstOrDefault();
 
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
+        var personGet = personService.GetAuthentication(p => p.User._id == user._id).FirstOrDefault();
 
         var _user = new BaseUser { _idAccount = user._idAccount };
         companyService.SetUser(_user);
@@ -76,11 +80,11 @@ namespace Manager.Services.Auth
           Photo = user.PhotoUrl,
           TypeUser = user.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
-          Logo = companyService.GetLogo(user.Company._id.ToString()),
+          Logo = companyService.GetLogo(personGet.Company._id.ToString()),
           DictionarySystem = listDictionary
         };
 
-        LogSave(user);
+        LogSave(personGet);
 
         return person;
       }
@@ -94,15 +98,15 @@ namespace Manager.Services.Auth
     {
       try
       {
-        Person user = null;
+        User user = null;
         //if (GetMaristas(mail, password) == "ok")
-        user = personService.GetAuthentication(p => p.Mail == mail & p.Status == EnumStatus.Enabled & p.StatusUser != EnumStatusUser.Disabled
-          & p.StatusUser != EnumStatusUser.ErrorIntegration).FirstOrDefault();
+        user = userService.GetAuthentication(p => p.Mail == mail & p.Status == EnumStatus.Enabled).FirstOrDefault();
 
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
-        
+
+        var personGet = personService.GetAuthentication(p => p.User._id == user._id).FirstOrDefault();
 
         ViewPerson person = new ViewPerson()
         {
@@ -136,7 +140,7 @@ namespace Manager.Services.Auth
         {
           Description = "Login",
           Local = "Authentication",
-          Person = user
+          Person = personGet
         };
         logService.NewLog(log);
 
@@ -152,11 +156,12 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = servicePerson.GetAuthentication(mail, EncryptServices.GetMD5Hash(password));
+        var user = serviceUser.GetAuthentication(mail, EncryptServices.GetMD5Hash(password));
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
 
+        var personGet = personService.GetAuthentication(p => p.User._id == user._id).FirstOrDefault();
         var _user = new BaseUser { _idAccount = user._idAccount };
         companyService.SetUser(_user);
         dictionarySystemService.SetUser(_user);
@@ -173,11 +178,11 @@ namespace Manager.Services.Auth
           Photo = user.PhotoUrl,
           TypeUser = user.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
-          Logo = companyService.GetLogo(user.Company._id.ToString()),
+          Logo = companyService.GetLogo(personGet.Company._id.ToString()),
           DictionarySystem = listDictionary
         };
 
-        LogSave(user);
+        LogSave(personGet);
 
         return person;
       }
@@ -191,12 +196,12 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = servicePerson.GetAuthentication(mail, password);
+        var user = serviceUser.GetAuthentication(mail, password);
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
 
-
+        var personGet = personService.GetAuthentication(p => p.User._id == user._id).FirstOrDefault();
         ViewPerson person = new ViewPerson()
         {
           IdPerson = user._id,
@@ -229,7 +234,7 @@ namespace Manager.Services.Auth
         {
           Description = "Login",
           Local = "Authentication",
-          Person = user
+          Person = personGet
         };
         logService.NewLog(log);
 
@@ -246,19 +251,19 @@ namespace Manager.Services.Auth
       try
       {
         var user = servicePerson.GetPerson(idPerson);
-        ViewPerson person = new ViewPerson()
-        {
-          IdPerson = user._id.ToString(),
-          Name = user.Name
-        };
+        //ViewPerson person = new ViewPerson()
+        //{
+        //  IdPerson = user._id.ToString(),
+        //  Name = user.Name
+        //};
 
-        var _user = new BaseUser()
-        {
-          _idAccount = user._idAccount,
-          NamePerson = user.Name,
-          Mail = user.Mail,
-          _idPerson = user._id
-        };
+        //var _user = new BaseUser()
+        //{
+        //  _idAccount = user._idAccount,
+        //  NamePerson = user.Name,
+        //  Mail = user.User.Mail,
+        //  _idPerson = user._id
+        //};
 
         logService = new ServiceLog(_context);
 
@@ -270,7 +275,7 @@ namespace Manager.Services.Auth
         };
         logService.NewLog(log);
 
-        return person;
+        return null;
       }
       catch (Exception e)
       {
@@ -285,8 +290,8 @@ namespace Manager.Services.Auth
         var _user = new BaseUser()
         {
           _idAccount = user._idAccount,
-          NamePerson = user.Name,
-          Mail = user.Mail,
+          NamePerson = user.User.Name,
+          Mail = user.User.Mail,
           _idPerson = user._id
         };
         logService = new ServiceLog(_context);

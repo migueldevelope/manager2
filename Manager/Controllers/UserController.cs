@@ -15,12 +15,12 @@ using Tools;
 namespace Manager.Controllers
 {
   [Produces("application/json")]
-  [Route("person")]
-  public class PersonController : Controller
+  [Route("user")]
+  public class UserController : Controller
   {
-    private readonly IServicePerson service;
+    private readonly IServiceUser service;
 
-    public PersonController(IHttpContextAccessor contextAccessor, IServicePerson _service)
+    public UserController(IHttpContextAccessor contextAccessor, IServiceUser _service)
     {
       try
       {
@@ -34,93 +34,85 @@ namespace Manager.Controllers
 
     }
 
-    [Authorize]
-    [HttpGet]
-    [Route("personalinformation/{idPerson}")]
-    public ViewPersonDetail GetPerson(string idPerson)
-    {
-      return service.GetPersonDetail(idPerson);
-    }
 
 
     [Authorize]
     [HttpGet]
-    [Route("directteam/{idPerson}")]
-    public List<ViewPersonTeam> GetPersonTeam(string idPerson, int count = 10, int page = 1, string filter = "")
+    [Route("photo/{idUser}")]
+    public string GetPhoto(string idUser)
     {
-      long total = 0;
-      var result = service.GetPersonTeam(ref total, idPerson, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return service.GetPhoto(idUser);
     }
+
+    [Authorize]
+    [HttpPut]
+    [Route("alterpass/{idUser}")]
+    public string AlterPass([FromBody]ViewAlterPass view, string idUser)
+    {
+      return service.AlterPassword(view, idUser);
+    }
+
+
+    [HttpPut]
+    [Route("forgotpassword/{foreign}/alter")]
+    public string ForgotPassword([FromBody]ViewAlterPass view, string foreign)
+    {
+      return service.AlterPasswordForgot(view, foreign);
+    }
+
+    [HttpPut]
+    [Route("forgotpassword/{mail}")]
+    public string ForgotPassword([FromBody]ViewForgotPassword view, string mail)
+    {
+      var conn = ConnectionNoSqlService.GetConnetionServer();
+      var sendGridKey = conn.SendGridKey;
+      return service.ForgotPassword(mail, view, sendGridKey).Result;
+    }
+
 
 
     [Authorize]
     [HttpGet]
-    [Route("photo/{idPerson}")]
-    public string GetPhoto(string idPerson)
+    [Route("listusers/{idcompany}")]
+    public List<User> ListUsers(string idcompany, string filter = "")
     {
-      return service.GetPhoto(idPerson);
+      return service.GetUsers(idcompany, filter);
     }
 
-
-    [Authorize]
-    [HttpGet]
-    [Route("listpersons")]
-    public List<ViewPersonList> ListPersons(string filter = "")
-    {
-      return service.GetPersons(filter);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("listpersons/{idcompany}")]
-    public List<Person> ListPersons(string idcompany, string filter = "")
-    {
-      return service.GetPersons(idcompany, filter);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("{idperson}/head")]
-    public ViewPersonHead Head(string idperson)
-    {
-      return service.Head(idperson);
-    }
 
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public List<Person> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public List<User> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetPersonsCrud(type, ref total, filter, count, page);
+      var result = service.GetUsersCrud(type, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpGet]
-    [Route("{idperson}/edit")]
-    public Person GetEdit(string idperson)
+    [Route("{iduser}/edit")]
+    public User GetEdit(string iduser)
     {
-      return service.GetPersonCrud(idperson); ;
+      return service.GetUserCrud(iduser); ;
     }
 
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public Person Post([FromBody] Person person)
+    public User Post([FromBody] User user)
     {
-      return service.NewPersonView(person);
+      return service.NewUserView(user);
     }
 
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string Put([FromBody] Person person)
+    public string Put([FromBody] User user)
     {
-      service.UpdatePersonView(person);
+      service.UpdateUserView(user);
       return "ok";
     }
 
@@ -149,7 +141,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager")]
-    public List<Person> ListManager(int count = 10, int page = 1, string filter = "")
+    public List<User> ListManager(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListManager(ref total, filter, count, page);
