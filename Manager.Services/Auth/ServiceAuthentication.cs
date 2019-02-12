@@ -11,10 +11,11 @@ using Tools;
 using System.Net.Http;
 using Manager.Core.Enumns;
 using Manager.Views.Enumns;
+using System.Collections.Generic;
 
 namespace Manager.Services.Auth
 {
-  #pragma warning disable 1998
+#pragma warning disable 1998
   public class ServiceAuthentication : IServiceAuthentication
   {
     private readonly IServicePerson servicePerson;
@@ -62,29 +63,39 @@ namespace Manager.Services.Auth
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
-        var personGet = personService.GetAuthentication(p => p.User._id == user._id).FirstOrDefault();
+        var persons = personService.GetAuthentication(p => p.User._id == user._id).ToList();
 
         var _user = new BaseUser { _idAccount = user._idAccount };
         companyService.SetUser(_user);
         dictionarySystemService.SetUser(_user);
         long total = 0;
         var listDictionary = dictionarySystemService.List(ref total, 9999999, 1, "");
-        
+
 
         ViewPerson person = new ViewPerson()
         {
-          IdPerson = user._id,
+          IdUser = user._id,
           Name = user.Name,
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          TypeUser = personGet.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
-          Logo = companyService.GetLogo(personGet.Company._id.ToString()),
           DictionarySystem = listDictionary
         };
 
-        LogSave(personGet);
+        foreach (var item in persons)
+        {
+          person.Contracts = new List<ViewContract>();
+          person.Contracts.Add(new ViewContract()
+          {
+            IdPerson = item._id,
+            Logo = item.Company.Logo,
+            TypeUser = item.TypeUser
+          });
+        }
+
+
+        LogSave(persons.FirstOrDefault());
 
         return person;
       }
@@ -106,18 +117,28 @@ namespace Manager.Services.Auth
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
 
-        var personGet = personService.GetAuthentication(p => p.User._id == user._id).FirstOrDefault();
+        var persons = personService.GetAuthentication(p => p.User._id == user._id).ToList();
 
         ViewPerson person = new ViewPerson()
         {
-          IdPerson = user._id,
+          IdUser = user._id,
           Name = user.Name,
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          TypeUser = personGet.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name
         };
+
+        foreach (var item in persons)
+        {
+          person.Contracts = new List<ViewContract>();
+          person.Contracts.Add(new ViewContract()
+          {
+            IdPerson = item._id,
+            Logo = item.Company.Logo,
+            TypeUser = item.TypeUser
+          });
+        }
 
         var _user = new BaseUser()
         {
@@ -140,7 +161,7 @@ namespace Manager.Services.Auth
         {
           Description = "Login",
           Local = "Authentication",
-          Person = personGet
+          Person = persons.FirstOrDefault()
         };
         logService.NewLog(log);
 
@@ -161,7 +182,7 @@ namespace Manager.Services.Auth
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
 
-        var personGet = personService.GetAuthentication(p => p.User._id == user._id).FirstOrDefault();
+        var persons = personService.GetAuthentication(p => p.User._id == user._id).ToList();
         var _user = new BaseUser { _idAccount = user._idAccount };
         companyService.SetUser(_user);
         dictionarySystemService.SetUser(_user);
@@ -171,18 +192,27 @@ namespace Manager.Services.Auth
 
         ViewPerson person = new ViewPerson()
         {
-          IdPerson = user._id,
+          IdUser = user._id,
           Name = user.Name,
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          TypeUser = personGet.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
-          Logo = companyService.GetLogo(personGet.Company._id.ToString()),
           DictionarySystem = listDictionary
         };
 
-        LogSave(personGet);
+        foreach (var item in persons)
+        {
+          person.Contracts = new List<ViewContract>();
+          person.Contracts.Add(new ViewContract()
+          {
+            IdPerson = item._id,
+            Logo = item.Company.Logo,
+            TypeUser = item.TypeUser
+          });
+        }
+
+        LogSave(persons.FirstOrDefault());
 
         return person;
       }
@@ -201,17 +231,27 @@ namespace Manager.Services.Auth
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
 
-        var personGet = personService.GetAuthentication(p => p.User._id == user._id).FirstOrDefault();
+        var persons = personService.GetAuthentication(p => p.User._id == user._id).ToList();
         ViewPerson person = new ViewPerson()
         {
-          IdPerson = user._id,
+          IdUser = user._id,
           Name = user.Name,
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          TypeUser = personGet.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name
         };
+
+        foreach (var item in persons)
+        {
+          person.Contracts = new List<ViewContract>();
+          person.Contracts.Add(new ViewContract()
+          {
+            IdPerson = item._id,
+            Logo = item.Company.Logo,
+            TypeUser = item.TypeUser
+          });
+        }
 
         var _user = new BaseUser()
         {
@@ -234,7 +274,7 @@ namespace Manager.Services.Auth
         {
           Description = "Login",
           Local = "Authentication",
-          Person = personGet
+          Person = persons.FirstOrDefault()
         };
         logService.NewLog(log);
 
@@ -332,5 +372,5 @@ namespace Manager.Services.Auth
       }
     }
   }
-  #pragma warning restore 1998
+#pragma warning restore 1998
 }
