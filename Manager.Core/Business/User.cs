@@ -21,7 +21,6 @@ namespace Manager.Core.Business
     public long Coins { get; set; }
     public EnumChangePassword ChangePassword { get; set; }
     public string ForeignForgotPassword { get; set; }
-    public EnumTypeJourney TypeJourney { get; set; }
     public string PhoneFixed { get; set; }
     public string DocumentID { get; set; }
     public string DocumentCTPF { get; set; }

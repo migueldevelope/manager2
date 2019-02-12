@@ -149,6 +149,12 @@ namespace Manager.Controllers
       return result;
     }
 
+    [HttpPut]
+    [Route("scriptperson/{idaccount}")]
+    public string ScriptPerson(string idaccount)
+    {
+      return service.ScriptPerson(idaccount);
+    }
 
 
   }

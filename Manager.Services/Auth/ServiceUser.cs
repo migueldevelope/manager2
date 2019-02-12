@@ -21,6 +21,7 @@ namespace Manager.Services.Auth
   public class ServiceUser : Repository<User>, IServiceUser
   {
     private ServiceGeneric<User> userService;
+    private ServiceGeneric<Person> personService;
     private ServiceGeneric<Attachments> attachmentService;
     private ServiceGeneric<Company> companyService;
     private ServiceGeneric<Occupation> occupationService;
@@ -38,7 +39,7 @@ namespace Manager.Services.Auth
         mailService._user = _user;
         companyService._user = _user;
         occupationService._user = _user;
-
+        personService._user = _user;
       }
       catch (Exception e)
       {
@@ -56,6 +57,7 @@ namespace Manager.Services.Auth
         mailService = new ServiceSendGrid(context);
         companyService = new ServiceGeneric<Company>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
+        personService = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
       {
@@ -73,6 +75,7 @@ namespace Manager.Services.Auth
         mailService._user = _user;
         companyService._user = _user;
         occupationService._user = _user;
+        personService._user = _user;
       }
       catch (Exception e)
       {
@@ -80,6 +83,113 @@ namespace Manager.Services.Auth
       }
     }
 
+    public string ScriptPerson(string idaccount)
+    {
+      try
+      {
+        var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount & p.User == null).ToList();
+        foreach (var item in persons)
+        {
+          var user = new User()
+          {
+            _id = ObjectId.GenerateNewId().ToString(),
+            _idAccount = item._idAccount,
+            Status = EnumStatus.Enabled,
+            ChangePassword = item.ChangePassword,
+            Coins = item.Coins,
+            DateAdm = item.DateAdm,
+            DateBirth = item.DateBirth,
+            Document = item.Document,
+            DocumentCTPF = item.DocumentCTPF,
+            DocumentID = item.DocumentID,
+            ForeignForgotPassword = item.ForeignForgotPassword,
+            HolidayReturn = item.HolidayReturn,
+            Mail = item.Mail,
+            MotiveAside = item.MotiveAside,
+            Name = item.Name,
+            Password = item.Password,
+            Phone = item.Phone,
+            PhoneFixed = item.PhoneFixed,
+            PhotoUrl = item.PhotoUrl,
+            Schooling = item.Schooling,
+            Sex = item.Sex
+          };
+
+          item.User = userService.InsertAccount(user);
+          personService.UpdateAccount(item, null);
+          UpdateManager(user, item._id);
+        }
+        return "ok";
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private async Task UpdateManager(User user, string idperson)
+    {
+      var managers = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == user._idAccount).ToList();
+      foreach(var item in managers)
+      {
+        try
+        {
+          if (item.Manager._id == idperson)
+          {
+            item.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+          else if (item.Manager.Manager._id == idperson)
+          {
+            item.Manager.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+          else if (item.Manager.Manager.Manager._id == idperson)
+          {
+            item.Manager.Manager.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+          else if (item.Manager.Manager._id == idperson)
+          {
+            item.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+          else if (item.Manager.Manager.Manager.Manager._id == idperson)
+          {
+            item.Manager.Manager.Manager.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+          else if (item.Manager.Manager._id == idperson)
+          {
+            item.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+          else if (item.Manager.Manager.Manager.Manager.Manager._id == idperson)
+          {
+            item.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+          else if (item.Manager.Manager.Manager.Manager.Manager.Manager.Manager._id == idperson)
+          {
+            item.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+          else if (item.Manager.Manager.Manager.Manager.Manager.Manager.Manager.Manager._id == idperson)
+          {
+            item.Manager.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
+            personService.UpdateAccount(item, null);
+          }
+
+
+        }
+        catch
+        {
+
+        }
+        
+      }
+    }
 
     public User NewUser(User user)
     {
@@ -126,7 +236,6 @@ namespace Manager.Services.Auth
           Document = user.Document,
           Phone = user.Phone,
           Mail = user.Mail,
-          TypeJourney = user.TypeJourney,
           Status = EnumStatus.Enabled,
           Schooling = user.Schooling,
           PhoneFixed = user.PhoneFixed,
@@ -393,8 +502,8 @@ namespace Manager.Services.Auth
 
         else
         {
-          detail = userService.GetAll(p =>  p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = userService.GetAll(p =>  p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         return detail;
@@ -429,7 +538,7 @@ namespace Manager.Services.Auth
     public List<User> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = userService.GetAll(p =>  p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).ToList();
+      var detail = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).ToList();
       //var detail = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       //total = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 

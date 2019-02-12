@@ -70,7 +70,9 @@ namespace Manager.Services.Specific
         //var detail = logsService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).ToList();
         var detail = logsService.GetAuthentication(p => p.Person._idAccount == idaccount & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderByDescending(p => p.DataLog).Skip(skip).Take(count);
         //total = detail.Count();
-        total = logsService.GetAll(p => p.Person._idAccount == idaccount & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        //total = logsService.GetAll(p => p.Person._idAccount == idaccount & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = 99999999;
+
 
         //return detail.Skip(skip).Take(count).OrderByDescending(p => p.DataLog).ToList();
         return detail.OrderByDescending(p => p.DataLog).ToList();

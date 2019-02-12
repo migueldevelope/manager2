@@ -64,7 +64,7 @@ namespace Manager.Controllers
         new Claim(ClaimTypes.Hash, person.IdAccount),
         new Claim(ClaimTypes.Email, user.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
-        new Claim(ClaimTypes.UserData, person.IdPerson)
+        new Claim(ClaimTypes.UserData, person.Contracts.FirstOrDefault().IdPerson)
       };
 
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
@@ -120,7 +120,7 @@ namespace Manager.Controllers
         new Claim(ClaimTypes.Hash, person.IdAccount),
         new Claim(ClaimTypes.Email, user.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
-        new Claim(ClaimTypes.UserData, person.IdPerson)
+        new Claim(ClaimTypes.UserData, person.Contracts.FirstOrDefault().IdPerson)
       };
 
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));

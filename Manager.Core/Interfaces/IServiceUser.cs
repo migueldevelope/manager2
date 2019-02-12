@@ -34,6 +34,7 @@ namespace Manager.Core.Interfaces
     List<User> ListManager(ref long total, string filter, int count, int page);
     List<Company> ListCompany(ref long total, string filter, int count, int page);
     List<User> ListAll();
+    string ScriptPerson(string idaccount);
 
   }
 }
