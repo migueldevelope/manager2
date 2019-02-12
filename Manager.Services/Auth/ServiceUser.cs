@@ -121,7 +121,6 @@ namespace Manager.Services.Auth
           Name = user.Name,
 
           ChangePassword = EnumChangePassword.AccessFirst,
-          TypeUser = user.TypeUser,
           DateAdm = user.DateAdm,
           DateBirth = user.DateBirth,
           Document = user.Document,
@@ -130,7 +129,6 @@ namespace Manager.Services.Auth
           TypeJourney = user.TypeJourney,
           Status = EnumStatus.Enabled,
           Schooling = user.Schooling,
-          Establishment = user.Establishment,
           PhoneFixed = user.PhoneFixed,
           DocumentID = user.DocumentID,
           DocumentCTPF = user.DocumentCTPF,
@@ -207,7 +205,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return userService.GetAll(p => p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        return userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
       }
       catch (Exception e)
       {
@@ -389,14 +387,14 @@ namespace Manager.Services.Auth
 
         else if (typeUser == EnumTypeUser.Administrator)
         {
-          detail = userService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = userService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         else
         {
-          detail = userService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = userService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = userService.GetAll(p =>  p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = userService.GetAll(p =>  p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         return detail;
@@ -431,7 +429,7 @@ namespace Manager.Services.Auth
     public List<User> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = userService.GetAll(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).ToList();
+      var detail = userService.GetAll(p =>  p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).ToList();
       //var detail = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       //total = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 

@@ -236,7 +236,7 @@ namespace Manager.Services.Specific
         LogSave(idmanager, "List");
         NewOnZero();
         int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
         & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
         .ToList();

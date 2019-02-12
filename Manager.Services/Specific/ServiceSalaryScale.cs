@@ -271,7 +271,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
+        foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
         {
           item.Occupation = occupation;
           personService.Update(item, null);

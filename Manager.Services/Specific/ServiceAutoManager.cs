@@ -76,11 +76,11 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
 
         var list = (from person in personService.GetAll()
-                    where person.User.TypeUser != EnumTypeUser.Support & person.User.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
+                    where person.TypeUser != EnumTypeUser.Support & person.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
                     select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
 
         total = (from person in personService.GetAll()
-                 where person.User.TypeUser != EnumTypeUser.Support & person.User.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
+                 where person.TypeUser != EnumTypeUser.Support & person.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
                  select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Count();
 
         return list;
@@ -97,7 +97,7 @@ namespace Manager.Services.Specific
       {
         var result = new List<ViewAutoManagerPerson>();
 
-        foreach (var item in personService.GetAll(p => p.User.TypeUser != EnumTypeUser.Support & p.User.TypeUser != EnumTypeUser.Administrator & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.Name.ToUpper().Contains(filter.ToUpper()) & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p._id != idManager & p.Manager._id != idManager).ToList())
+        foreach (var item in personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.Name.ToUpper().Contains(filter.ToUpper()) & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p._id != idManager & p.Manager._id != idManager).ToList())
         {
           var view = new ViewAutoManagerPerson();
           var exists = autoManagerService.GetAll(p => p.Person._id == item._id & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).Count();
@@ -132,9 +132,9 @@ namespace Manager.Services.Specific
         {
           person.Manager = manager;
           var exists = personService.GetAll(p => p.Manager._id == view.IdManager).Count();
-          if (exists == 0 & manager.User.TypeUser == EnumTypeUser.Employee)
+          if (exists == 0 & manager.TypeUser == EnumTypeUser.Employee)
           {
-            manager.User.TypeUser = EnumTypeUser.Manager;
+            manager.TypeUser = EnumTypeUser.Manager;
             personService.Update(manager, null);
           }
           personService.Update(person, null);
@@ -277,9 +277,9 @@ namespace Manager.Services.Specific
         var person = personService.GetAll(p => p._id == idPerson).FirstOrDefault();
         person.Manager = manager;
         personService.Update(person, null);
-        if (manager.User.TypeUser == EnumTypeUser.Employee)
+        if (manager.TypeUser == EnumTypeUser.Employee)
         {
-          manager.User.TypeUser = EnumTypeUser.Manager;
+          manager.TypeUser = EnumTypeUser.Manager;
           personService.Update(manager, null);
         }
         autoManagerService.Update(auto, null);

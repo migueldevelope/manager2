@@ -80,10 +80,20 @@ namespace Manager.Services.Specific
           Mail = view.Mail,
           Document = view.Document,
           Status = EnumStatus.Enabled,
-          Password = EncryptServices.GetMD5Hash(view.Password),
-          TypeUser = EnumTypeUser.Administrator
+          Password = EncryptServices.GetMD5Hash(view.Password)
         };
         userService.InsertAccount(user);
+
+        var person = new Person()
+        {
+          _idAccount = id,
+          Status = EnumStatus.Enabled,
+          TypeUser = EnumTypeUser.Administrator,
+          StatusUser = EnumStatusUser.Enabled,
+          Company = company,
+          User = user,
+        };
+        personService.InsertAccount(person);
 
         infraService._idAccount = account._id;
         infraService.CopyTemplateInfra(company);
@@ -131,10 +141,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = personService.GetAuthentication(p => p._idAccount == idaccount & p.User.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
+        var user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
         if (user == null)
         {
-          user = personService.GetAuthentication(p => p._idAccount == idaccount & p.User.TypeUser == EnumTypeUser.Support).FirstOrDefault();
+          user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).FirstOrDefault();
         }
 
         var parameter = parameterService.GetAuthentication(p => p.Name == "viewlo" & p._idAccount == idaccount).FirstOrDefault();

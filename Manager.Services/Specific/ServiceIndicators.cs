@@ -343,7 +343,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
@@ -372,7 +372,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
@@ -401,7 +401,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
@@ -430,7 +430,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
@@ -611,7 +611,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .GroupBy(p => p.OnBoarding == null ? EnumStatusOnBoarding.Open : p.OnBoarding.StatusOnBoarding).Select(x => new
         {
@@ -632,7 +632,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
        .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
        .GroupBy(p => p.OnBoarding == null ? "Não Realizado" : (p.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado")).Select(x => new
        {
@@ -653,7 +653,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .GroupBy(p => p.Monitoring == null ? EnumStatusMonitoring.Open : p.Monitoring.StatusMonitoring).Select(x => new
         {
@@ -674,7 +674,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
        .GroupBy(p => p.Monitoring == null ? "Não Realizado" : (p.Monitoring.StatusMonitoring == EnumStatusMonitoring.End ? "Realizado" : "Não Realizado")).Select(x => new
        {
@@ -695,7 +695,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .GroupBy(p => p.Checkpoint == null ? EnumStatusCheckpoint.Open : p.Checkpoint.StatusCheckpoint).Select(x => new
         {
@@ -716,7 +716,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
        .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
        .GroupBy(p => p.Checkpoint == null ? "Não Realizado" : (p.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End ? "Realizado" : "Não Realizado")).Select(x => new
        {
@@ -737,7 +737,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() }).ToList();
 
         List<dynamic> result = new List<dynamic>();
@@ -802,7 +802,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() }).ToList();
 
         List<dynamic> result = new List<dynamic>();

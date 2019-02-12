@@ -78,7 +78,7 @@ namespace Manager.Services.Auth
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          TypeUser = user.TypeUser,
+          TypeUser = personGet.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
           Logo = companyService.GetLogo(personGet.Company._id.ToString()),
           DictionarySystem = listDictionary
@@ -115,7 +115,7 @@ namespace Manager.Services.Auth
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          TypeUser = user.TypeUser,
+          TypeUser = personGet.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name
         };
 
@@ -176,7 +176,7 @@ namespace Manager.Services.Auth
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          TypeUser = user.TypeUser,
+          TypeUser = personGet.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name,
           Logo = companyService.GetLogo(personGet.Company._id.ToString()),
           DictionarySystem = listDictionary
@@ -209,7 +209,7 @@ namespace Manager.Services.Auth
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          TypeUser = user.TypeUser,
+          TypeUser = personGet.TypeUser,
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name
         };
 

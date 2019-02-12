@@ -84,7 +84,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p._id == idperson).ToList().Select(
+        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p._id == idperson).ToList().Select(
         person => new ViewPersonHead
         {
           IdPerson = idperson,
@@ -241,7 +241,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p._id == idPerson).ToList().Select(
+        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p._id == idPerson).ToList().Select(
         detail => new ViewPersonDetail()
         {
           Birth = detail.User.DateBirth,
@@ -261,7 +261,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList()
+        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList()
           .Select(item => new ViewPersonList()
           {
             IdPerson = item._id,
@@ -278,7 +278,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        return personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList();
       }
       catch (Exception e)
       {
@@ -291,8 +291,8 @@ namespace Manager.Services.Auth
       try
       {
         int skip = (count * (page - 1));
-        var detail = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
-        total = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+        total = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail
           .Select(item => new ViewPersonTeam()
@@ -360,14 +360,14 @@ namespace Manager.Services.Auth
 
         else if (typeUser == EnumTypeUser.Administrator)
         {
-          detail = personService.GetAll(p => p.User.TypeUser != EnumTypeUser.Support & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
-          total = personService.GetAll(p => p.User.TypeUser != EnumTypeUser.Support & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+          total = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         else
         {
-          detail = personService.GetAll(p => p.User.TypeUser != EnumTypeUser.Support & p.User.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
-          total = personService.GetAll(p => p.User.TypeUser != EnumTypeUser.Support & p.User.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+          total = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         return detail;
@@ -402,7 +402,7 @@ namespace Manager.Services.Auth
     public List<Person> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = personService.GetAll(p => p.User.TypeUser != EnumTypeUser.Employee & p.User.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).ToList();
+      var detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).ToList();
       //var detail = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       //total = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 

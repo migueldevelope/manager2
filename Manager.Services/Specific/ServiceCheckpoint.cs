@@ -107,7 +107,7 @@ namespace Manager.Services.Specific
         LogSave(idmanager, "List");
         NewOnZero();
         int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
         & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
       {
         LogSave(idperson, "List");
         NewOnZero();
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p._id == idperson)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p._id == idperson)
         .OrderBy(p => p.User.Name)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();

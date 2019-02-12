@@ -14,7 +14,6 @@ namespace Manager.Core.Business
     public string Mail { get; set; }
     public string Phone { get; set; }
     public string Password { get; set; }
-    public EnumTypeUser TypeUser { get; set; }
     public DateTime? DateBirth { get; set; }
     public DateTime? DateAdm { get; set; }
     public Schooling Schooling { get; set; }
@@ -23,7 +22,6 @@ namespace Manager.Core.Business
     public EnumChangePassword ChangePassword { get; set; }
     public string ForeignForgotPassword { get; set; }
     public EnumTypeJourney TypeJourney { get; set; }
-    public Establishment Establishment { get; set; }
     public string PhoneFixed { get; set; }
     public string DocumentID { get; set; }
     public string DocumentCTPF { get; set; }

@@ -185,7 +185,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         var detail = new List<Person>();
         var participants = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Select(p => p.Person).ToList();
-        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())
+        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())
         ).ToList();
         foreach (var item in list)
         {
@@ -210,7 +210,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         var detail = new List<Person>();
         var instructors = eventService.GetAll(p => p._id == idevent).FirstOrDefault().Instructors.Select(p => p.Person).ToList();
-        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())
+        var list = personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())
         ).ToList();
         foreach (var item in list)
         {
