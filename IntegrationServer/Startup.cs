@@ -50,7 +50,9 @@ namespace IntegrationServer
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
       IServiceIntegration serviceIntegration = new ServiceIntegration(_context);
+      IServiceUser serviceUser = new ServiceUser(_context);
 
+      services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceCompany);
       services.AddSingleton(_ => serviceAuthentication);

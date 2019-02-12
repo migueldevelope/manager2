@@ -463,20 +463,22 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var occupation = occupationService.GetAll(p => p._id == monitoring.Person.Occupation._id).FirstOrDefault();
+
         monitoring.SkillsCompany = new List<MonitoringSkills>();
-        foreach (var item in monitoring.Person.Company.Skills)
+        foreach (var item in occupation.Group.Company.Skills)
         {
           monitoring.SkillsCompany.Add(new MonitoringSkills() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<Plan>() });
         }
 
         monitoring.Activities = new List<MonitoringActivities>();
-        foreach (var item in monitoring.Person.Occupation.Activities)
+        foreach (var item in occupation.Activities)
         {
           monitoring.Activities.Add(new MonitoringActivities() { Activities = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<Plan>() });
         }
 
         monitoring.Schoolings = new List<MonitoringSchooling>();
-        foreach (var item in monitoring.Person.Occupation.Schooling)
+        foreach (var item in occupation.Schooling)
         {
           monitoring.Schoolings.Add(new MonitoringSchooling() { Schooling = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<Plan>() });
         }

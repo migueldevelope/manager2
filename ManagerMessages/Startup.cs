@@ -58,7 +58,9 @@ namespace ManagerMessages
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceNotification serviceNotification = new ServiceNotification(_context, conn.TokenServer);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
+      IServiceUser serviceUser = new ServiceUser(_context);
 
+      services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceLogMessages);
 
       /// Start service

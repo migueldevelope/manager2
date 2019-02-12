@@ -60,7 +60,9 @@ namespace Manager
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
       IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
+      IServiceUser serviceUser = new ServiceUser(_context);
 
+      services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceDictionarySystem);
       services.AddSingleton(_ => serviceSalaryScale);
       services.AddSingleton(_ => serviceLogMessages);

@@ -19,6 +19,7 @@ namespace Manager.Services.Specific
   public class ServiceOnBoarding : Repository<OnBoarding>, IServiceOnBoarding
   {
     private readonly ServiceGeneric<OnBoarding> onBoardingService;
+    private readonly ServiceGeneric<Occupation> occupationService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceLog logService;
     private readonly ServiceMailModel mailModelService;
@@ -39,6 +40,7 @@ namespace Manager.Services.Specific
         mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
         logMessagesService = new ServiceLogMessages(context);
+        occupationService = new ServiceGeneric<Occupation>(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -1041,38 +1043,40 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var occupation = occupationService.GetAll(p => p._id == onBoarding.Person.Occupation._id).FirstOrDefault();
+
         onBoarding.SkillsCompany = new List<OnBoardingSkills>();
-        foreach (var item in onBoarding.Person.Company.Skills)
+        foreach (var item in occupation.Group.Company.Skills)
         {
           onBoarding.SkillsCompany.Add(new OnBoardingSkills() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.SkillsGroup = new List<OnBoardingSkills>();
-        foreach (var item in onBoarding.Person.Occupation.Group.Skills)
+        foreach (var item in occupation.Group.Skills)
         {
           onBoarding.SkillsGroup.Add(new OnBoardingSkills() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.SkillsOccupation = new List<OnBoardingSkills>();
-        foreach (var item in onBoarding.Person.Occupation.Skills)
+        foreach (var item in occupation.Skills)
         {
           onBoarding.SkillsOccupation.Add(new OnBoardingSkills() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.Scopes = new List<OnBoardingScope>();
-        foreach (var item in onBoarding.Person.Occupation.Group.Scope)
+        foreach (var item in occupation.Group.Scope)
         {
           onBoarding.Scopes.Add(new OnBoardingScope() { Scope = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.Activities = new List<OnBoardingActivities>();
-        foreach (var item in onBoarding.Person.Occupation.Activities)
+        foreach (var item in occupation.Activities)
         {
           onBoarding.Activities.Add(new OnBoardingActivities() { Activitie = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
 
         onBoarding.Schoolings = new List<OnBoardingSchooling>();
-        foreach (var item in onBoarding.Person.Occupation.Schooling)
+        foreach (var item in occupation.Schooling)
         {
           onBoarding.Schoolings.Add(new OnBoardingSchooling() { Schooling = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString() });
         }
@@ -1182,7 +1186,7 @@ namespace Manager.Services.Specific
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
           {
 
-            
+
             if (validOnboardingComments(onboarding))
             {
               onboarding.StatusOnBoarding = EnumStatusOnBoarding.Disapproved;
@@ -1201,7 +1205,7 @@ namespace Manager.Services.Specific
               personService.Update(onboarding.Person, null);
             }
 
-            
+
           }
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
           {
@@ -1249,6 +1253,7 @@ namespace Manager.Services.Specific
       User(contextAccessor);
       personService._user = _user;
       onBoardingService._user = _user;
+      occupationService._user = _user;
       logService._user = _user;
       mailModelService._user = _user;
       mailMessageService._user = _user;
