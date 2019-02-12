@@ -118,7 +118,7 @@ namespace Manager.Test.Test.Complete
       {
         base.Init();
         servicePerson._user = base.baseUser;
-        var manager = servicePerson.GetAll(p => p.Mail == "testbig@jmsoft.com.br").FirstOrDefault();
+        var manager = servicePerson.GetAll(p => p.User.Mail == "testbig@jmsoft.com.br").FirstOrDefault();
         foreach (var item in servicePerson.GetAll().ToList())
         {
           item.Manager = manager;
@@ -309,8 +309,8 @@ namespace Manager.Test.Test.Complete
       {
         base.Init();
         servicePerson._user = base.baseUser;
-        var user = servicePerson.GetAll(p => p.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
-        var manager = servicePerson.GetAll(p => p.Mail == "juremir@jmsoft.com.br").FirstOrDefault();
+        var user = servicePerson.GetAll(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
+        var manager = servicePerson.GetAll(p => p.User.Mail == "juremir@jmsoft.com.br").FirstOrDefault();
         user.Manager = manager;
         servicePerson.Update(user, null);
       }

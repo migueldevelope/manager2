@@ -48,8 +48,8 @@ namespace Manager.Controllers
 
       }
 
-      //var authMaristas = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
-      //var authPUC = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+      //var authMaristas = user.User.Mail.Substring(user.User.Mail.IndexOf("@"), user.User.Mail.Length - user.User.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+      //var authPUC = user.User.Mail.Substring(user.User.Mail.IndexOf("@"), user.User.Mail.Length - user.User.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
 
       if ((authMaristas) || (authPUC))
         person = this.service.AuthenticationMaristas(user.Mail, user.Password);
@@ -95,8 +95,8 @@ namespace Manager.Controllers
         return BadRequest("MSG2");
 
       ViewPerson person;
-      //var authMaristas = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
-      //var authPUC = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+      //var authMaristas = user.User.Mail.Substring(user.User.Mail.IndexOf("@"), user.User.Mail.Length - user.User.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+      //var authPUC = user.User.Mail.Substring(user.User.Mail.IndexOf("@"), user.User.Mail.Length - user.User.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
       var authMaristas = false;
       var authPUC = false;
       try

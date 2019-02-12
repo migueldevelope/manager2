@@ -251,19 +251,19 @@ namespace Manager.Services.Auth
       try
       {
         var user = servicePerson.GetPerson(idPerson);
-        ViewPerson person = new ViewPerson()
-        {
-          IdPerson = user._id.ToString(),
-          Name = user.Name
-        };
+        //ViewPerson person = new ViewPerson()
+        //{
+        //  IdPerson = user._id.ToString(),
+        //  Name = user.Name
+        //};
 
-        var _user = new BaseUser()
-        {
-          _idAccount = user._idAccount,
-          NamePerson = user.Name,
-          Mail = user.Mail,
-          _idPerson = user._id
-        };
+        //var _user = new BaseUser()
+        //{
+        //  _idAccount = user._idAccount,
+        //  NamePerson = user.Name,
+        //  Mail = user.User.Mail,
+        //  _idPerson = user._id
+        //};
 
         logService = new ServiceLog(_context);
 
@@ -275,7 +275,7 @@ namespace Manager.Services.Auth
         };
         logService.NewLog(log);
 
-        return person;
+        return null;
       }
       catch (Exception e)
       {
@@ -290,8 +290,8 @@ namespace Manager.Services.Auth
         var _user = new BaseUser()
         {
           _idAccount = user._idAccount,
-          NamePerson = user.Name,
-          Mail = user.Mail,
+          NamePerson = user.User.Name,
+          Mail = user.User.Mail,
           _idPerson = user._id
         };
         logService = new ServiceLog(_context);

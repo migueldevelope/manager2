@@ -54,11 +54,11 @@ namespace ManagerMessages
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, conn.TokenServer);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
+      IServiceUser serviceUser = new ServiceUser(_context);
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany, serviceUser);
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceNotification serviceNotification = new ServiceNotification(_context, conn.TokenServer);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
-      IServiceUser serviceUser = new ServiceUser(_context);
 
       services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceLogMessages);

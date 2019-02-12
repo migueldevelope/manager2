@@ -728,7 +728,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IQueryable<Person> personsDocument = personService.GetAll(p => p.Document == document);
+        IQueryable<Person> personsDocument = personService.GetAll(p => p.User.Document == document);
         if (personsDocument.Count() == 0)
           return null;
         if (personsDocument.Count() == 1)

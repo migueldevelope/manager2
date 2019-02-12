@@ -63,31 +63,6 @@ namespace Manager.Controllers
       return service.GetPhoto(idPerson);
     }
 
-    [Authorize]
-    [HttpPut]
-    [Route("alterpass/{idPerson}")]
-    public string AlterPass([FromBody]ViewAlterPass view, string idPerson)
-    {
-      return service.AlterPassword(view, idPerson);
-    }
-
-
-    [HttpPut]
-    [Route("forgotpassword/{foreign}/alter")]
-    public string ForgotPassword([FromBody]ViewAlterPass view, string foreign)
-    {
-      return service.AlterPasswordForgot(view, foreign);
-    }
-
-    [HttpPut]
-    [Route("forgotpassword/{mail}")]
-    public string ForgotPassword([FromBody]ViewForgotPassword view, string mail)
-    {
-      var conn = ConnectionNoSqlService.GetConnetionServer();
-      var sendGridKey = conn.SendGridKey;
-      return service.ForgotPassword(mail, view, sendGridKey).Result;
-    }
-
 
     [Authorize]
     [HttpGet]

@@ -201,8 +201,8 @@ namespace Manager.Services.Specific
       {
         LogSave(idmanager, "ListEnd");
         int skip = (count * (page - 1));
-        var detail = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-        total = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+        total = monitoringService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }
@@ -236,8 +236,8 @@ namespace Manager.Services.Specific
         LogSave(idmanager, "List");
         NewOnZero();
         int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
-        & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
+        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
+        & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
         .ToList();
 
@@ -270,7 +270,7 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(idmanager, "PersonEnd");
-        return monitoringService.GetAll(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).OrderBy(p => p.Person.Name).ToList();
+        return monitoringService.GetAll(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).OrderBy(p => p.Person.User.Name).ToList();
       }
       catch (Exception e)
       {
@@ -548,12 +548,12 @@ namespace Manager.Services.Specific
         {
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
           {
-            logMessagesService.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + monitoring.Person.Name, monitoring.Person);
+            logMessagesService.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + monitoring.Person.User.Name, monitoring.Person);
             if ((monitoring.Activities.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.SkillsCompany.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.Schoolings.Where(p => p.Praise != null).Count() > 0))
             {
-              logMessagesService.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.Name + " foi elogiado pelo gestor", monitoring.Person);
+              logMessagesService.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.User.Name + " foi elogiado pelo gestor", monitoring.Person);
             }
             monitoring.DateEndEnd = DateTime.Now;
           }
@@ -582,7 +582,7 @@ namespace Manager.Services.Specific
         //  {
         //    if (plan._id == null)
         //    {
-        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
         //      listActivities.Add(AddPlan(plan, userInclude));
         //    }
 
@@ -602,7 +602,7 @@ namespace Manager.Services.Specific
         //  {
         //    if (plan._id == null)
         //    {
-        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
         //      listSchoolings.Add(AddPlan(plan, userInclude));
         //    }
 
@@ -622,7 +622,7 @@ namespace Manager.Services.Specific
         //  {
         //    if (plan._id == null)
         //    {
-        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+        //      logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
         //      listSkillsCompany.Add(AddPlan(plan, userInclude));
         //    }
 
@@ -652,7 +652,7 @@ namespace Manager.Services.Specific
       {
         var userInclude = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
-        logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+        logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
 
         
         var newPlan = AddPlan(plan, userInclude); 
@@ -720,7 +720,7 @@ namespace Manager.Services.Specific
       {
         //var userInclude = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
-        logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, monitoring.Person);
+        logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
 
 
         
@@ -893,7 +893,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().Name;
+          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -901,7 +901,7 @@ namespace Manager.Services.Specific
         }
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -914,11 +914,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Mail, person.Name)
+                        new MailLogAddress(person.User.Mail, person.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -948,7 +948,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().Name;
+          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -956,7 +956,7 @@ namespace Manager.Services.Specific
         }
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -969,11 +969,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person.Manager._id,
-          NamePerson = person.Manager.Name,
+          NamePerson = person.Manager.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1003,7 +1003,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().Name;
+          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1011,7 +1011,7 @@ namespace Manager.Services.Specific
         }
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1024,11 +1024,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1054,8 +1054,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            mail = person.Mail,
-            password = person.Password
+            mail = person.User.Mail,
+            password = person.User.Password
           };
           var json = JsonConvert.SerializeObject(data);
           var content = new StringContent(json);
@@ -1134,8 +1134,8 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "ListExclud");
         int skip = (count * (page - 1));
-        var detail = monitoringService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = monitoringService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = monitoringService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = monitoringService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }

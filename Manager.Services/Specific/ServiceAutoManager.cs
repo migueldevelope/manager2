@@ -76,12 +76,12 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
 
         var list = (from person in personService.GetAll()
-                    where person.TypeUser != EnumTypeUser.Support & person.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
-                    select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
+                    where person.User.TypeUser != EnumTypeUser.Support & person.User.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
+                    select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
 
         total = (from person in personService.GetAll()
-                 where person.TypeUser != EnumTypeUser.Support & person.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
-                 select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.Name, Status = EnumStatusAutoManagerView.Open }).Count();
+                 where person.User.TypeUser != EnumTypeUser.Support & person.User.TypeUser != EnumTypeUser.Administrator & person.StatusUser != EnumStatusUser.Disabled & person.Manager == null & person.StatusUser != EnumStatusUser.Disabled & person._id != idManager
+                 select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Count();
 
         return list;
       }
@@ -97,14 +97,14 @@ namespace Manager.Services.Specific
       {
         var result = new List<ViewAutoManagerPerson>();
 
-        foreach (var item in personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.Name.ToUpper().Contains(filter.ToUpper()) & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p._id != idManager & p.Manager._id != idManager).ToList())
+        foreach (var item in personService.GetAll(p => p.User.TypeUser != EnumTypeUser.Support & p.User.TypeUser != EnumTypeUser.Administrator & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.User.Name.ToUpper().Contains(filter.ToUpper()) & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p._id != idManager & p.Manager._id != idManager).ToList())
         {
           var view = new ViewAutoManagerPerson();
           var exists = autoManagerService.GetAll(p => p.Person._id == item._id & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).Count();
           var existsManager = personService.GetAll(p => p._id == item._id & p.Manager._id != null).Count();
 
           view.IdPerson = item._id;
-          view.NamePerson = item.Name;
+          view.NamePerson = item.User.Name;
           if (exists > 0)
             view.Status = EnumStatusAutoManagerView.Requestor;
           else if (existsManager > 0)
@@ -132,9 +132,9 @@ namespace Manager.Services.Specific
         {
           person.Manager = manager;
           var exists = personService.GetAll(p => p.Manager._id == view.IdManager).Count();
-          if (exists == 0 & manager.TypeUser == EnumTypeUser.Employee)
+          if (exists == 0 & manager.User.TypeUser == EnumTypeUser.Employee)
           {
-            manager.TypeUser = EnumTypeUser.Manager;
+            manager.User.TypeUser = EnumTypeUser.Manager;
             personService.Update(manager, null);
           }
           personService.Update(person, null);
@@ -171,9 +171,9 @@ namespace Manager.Services.Specific
           };
           var idMessageApv = mailMessageService.Insert(message)._id;
           var requestor = personService.GetAll(p => p._id == auto.Workflow.FirstOrDefault().Requestor._id).FirstOrDefault();
-          var body = model.Message.Replace("{Person}", auto.Workflow.FirstOrDefault().Requestor.Name);
-          body = body.Replace("{Requestor}", auto.Requestor.Name);
-          body = body.Replace("{Employee}", person.Name);
+          var body = model.Message.Replace("{Person}", auto.Workflow.FirstOrDefault().Requestor.User.Name);
+          body = body.Replace("{Requestor}", auto.Requestor.User.Name);
+          body = body.Replace("{Employee}", person.User.Name);
           // approved link
           body = body.Replace("{Approved}", model.Link + "/" + idMessageApv.ToString());
           url = path + "evaluationconfiguration/automanager/" + person._id.ToString() + "/disapproved/" + manager._id.ToString();
@@ -185,11 +185,11 @@ namespace Manager.Services.Specific
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
             To = new List<MailLogAddress>(){
-                  new MailLogAddress(requestor.Mail, requestor.Name)
+                  new MailLogAddress(requestor.User.Mail, requestor.User.Name)
               },
             Priority = EnumPriorityMail.Low,
             _idPerson = person._id,
-            NamePerson = person.Name,
+            NamePerson = person.User.Name,
             Body = body,
             StatusMail = EnumStatusMail.Sended,
             Included = DateTime.Now,
@@ -220,8 +220,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            mail = person.Mail,
-            password = person.Password
+            mail = person.User.Mail,
+            password = person.User.Password
           };
           var json = JsonConvert.SerializeObject(data);
           var content = new StringContent(json);
@@ -277,9 +277,9 @@ namespace Manager.Services.Specific
         var person = personService.GetAll(p => p._id == idPerson).FirstOrDefault();
         person.Manager = manager;
         personService.Update(person, null);
-        if (manager.TypeUser == EnumTypeUser.Employee)
+        if (manager.User.TypeUser == EnumTypeUser.Employee)
         {
-          manager.TypeUser = EnumTypeUser.Manager;
+          manager.User.TypeUser = EnumTypeUser.Manager;
           personService.Update(manager, null);
         }
         autoManagerService.Update(auto, null);
@@ -317,9 +317,9 @@ namespace Manager.Services.Specific
                     {
                       IdWorkflow = auto.Workflow.FirstOrDefault()._id,
                       IdRequestor = auto.Requestor._id,
-                      NameRequestor = auto.Requestor.Name,
+                      NameRequestor = auto.Requestor.User.Name,
                       IdPerson = auto.Person._id.ToString(),
-                      NamePerson = auto.Person.Name
+                      NamePerson = auto.Person.User.Name
                     }).ToList();
       }
       catch (Exception e)

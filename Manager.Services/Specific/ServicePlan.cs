@@ -106,7 +106,7 @@ namespace Manager.Services.Specific
         List<ViewPlan> result = new List<ViewPlan>();
 
         var detail = (from monitoring in
-          monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
         .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
                       join person in personService.GetAll() on monitoring.Person._id equals person._id
                       where person.Manager._id == id
@@ -132,7 +132,7 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
+                NamePerson = item.Person.User.Name,
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
@@ -151,7 +151,7 @@ namespace Manager.Services.Specific
         }
 
 
-        var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+        var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
         foreach (var item in detailSchool)
         {
@@ -171,7 +171,7 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
+                NamePerson = item.Person.User.Name,
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
@@ -190,7 +190,7 @@ namespace Manager.Services.Specific
         }
 
 
-        var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+        var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
         foreach (var item in detailSkills)
@@ -211,7 +211,7 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
+                NamePerson = item.Person.User.Name,
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
@@ -256,7 +256,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewPlan> result = new List<ViewPlan>();
 
-        var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+        var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
         .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
 
@@ -278,7 +278,7 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
+                NamePerson = item.Person.User.Name,
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
@@ -297,7 +297,7 @@ namespace Manager.Services.Specific
         }
 
 
-        var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+        var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
         foreach (var item in detailSchool)
         {
@@ -317,7 +317,7 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
+                NamePerson = item.Person.User.Name,
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
@@ -336,7 +336,7 @@ namespace Manager.Services.Specific
         }
 
 
-        var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+        var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
         foreach (var item in detailSkills)
@@ -357,7 +357,7 @@ namespace Manager.Services.Specific
                 UserInclude = res.UserInclude,
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
-                NamePerson = item.Person.Name,
+                NamePerson = item.Person.User.Name,
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = item._id,
                 Evaluation = res.Evaluation,
@@ -405,14 +405,14 @@ namespace Manager.Services.Specific
         if (activities == 1)
         {
           var detail = (from monitoring in
-         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
                         join person in personService.GetAll() on monitoring.Person._id equals person._id
                         where person.Manager._id == id
                         select monitoring
        ).ToList();
 
-          /*var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          /*var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();*/
 
 
@@ -434,7 +434,7 @@ namespace Manager.Services.Specific
                   UserInclude = res.UserInclude,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
+                  NamePerson = item.Person.User.Name,
                   SourcePlan = res.SourcePlan,
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
@@ -455,11 +455,11 @@ namespace Manager.Services.Specific
 
         if (schooling == 1)
         {
-          //var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          //var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
           //  .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
           var detailSchool = (from monitoring in
-         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
        .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
                               join person in personService.GetAll() on monitoring.Person._id equals person._id
                               where person.Manager._id == id
@@ -484,7 +484,7 @@ namespace Manager.Services.Specific
                   UserInclude = res.UserInclude,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
+                  NamePerson = item.Person.User.Name,
                   SourcePlan = res.SourcePlan,
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
@@ -505,11 +505,11 @@ namespace Manager.Services.Specific
 
         if (skillcompany == 1)
         {
-          //var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          //var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
           //  .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
           var detailSkills = (from monitoring in
-         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+         monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
        .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
                               join person in personService.GetAll() on monitoring.Person._id equals person._id
                               where person.Manager._id == id
@@ -534,7 +534,7 @@ namespace Manager.Services.Specific
                   UserInclude = res.UserInclude,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
+                  NamePerson = item.Person.User.Name,
                   SourcePlan = res.SourcePlan,
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
@@ -608,7 +608,7 @@ namespace Manager.Services.Specific
                 view.UserInclude = res.UserInclude;
                 view.TypePlan = res.TypePlan;
                 view.IdPerson = item.Person._id;
-                view.NamePerson = item.Person.Name;
+                view.NamePerson = item.Person.User.Name;
                 view.SourcePlan = res.SourcePlan;
                 view.IdMonitoring = item._id;
                 view.Evaluation = res.Evaluation;
@@ -654,7 +654,7 @@ namespace Manager.Services.Specific
                 view.UserInclude = res.UserInclude;
                 view.TypePlan = res.TypePlan;
                 view.IdPerson = item.Person._id;
-                view.NamePerson = item.Person.Name;
+                view.NamePerson = item.Person.User.Name;
                 view.SourcePlan = res.SourcePlan;
                 view.IdMonitoring = item._id;
                 view.Evaluation = res.Evaluation;
@@ -701,7 +701,7 @@ namespace Manager.Services.Specific
                 view.UserInclude = res.UserInclude;
                 view.TypePlan = res.TypePlan;
                 view.IdPerson = item.Person._id;
-                view.NamePerson = item.Person.Name;
+                view.NamePerson = item.Person.User.Name;
                 view.SourcePlan = res.SourcePlan;
                 view.IdMonitoring = item._id;
                 view.Evaluation = res.Evaluation;
@@ -760,7 +760,7 @@ namespace Manager.Services.Specific
 
         if (activities == 1)
         {
-          var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detail = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
           .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
 
@@ -782,7 +782,7 @@ namespace Manager.Services.Specific
                   UserInclude = res.UserInclude,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
+                  NamePerson = item.Person.User.Name,
                   SourcePlan = res.SourcePlan,
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
@@ -803,7 +803,7 @@ namespace Manager.Services.Specific
 
         if (schooling == 1)
         {
-          var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detailSchool = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
             .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
           foreach (var item in detailSchool)
           {
@@ -823,7 +823,7 @@ namespace Manager.Services.Specific
                   UserInclude = res.UserInclude,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
+                  NamePerson = item.Person.User.Name,
                   SourcePlan = res.SourcePlan,
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
@@ -844,7 +844,7 @@ namespace Manager.Services.Specific
 
         if (skillcompany == 1)
         {
-          var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.Name.ToUpper().Contains(filter.ToUpper()))
+          var detailSkills = monitoringService.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
             .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
 
           foreach (var item in detailSkills)
@@ -865,7 +865,7 @@ namespace Manager.Services.Specific
                   UserInclude = res.UserInclude,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
-                  NamePerson = item.Person.Name,
+                  NamePerson = item.Person.User.Name,
                   SourcePlan = res.SourcePlan,
                   IdMonitoring = item._id,
                   Evaluation = res.Evaluation,
@@ -915,7 +915,7 @@ namespace Manager.Services.Specific
       {
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         if (viewPlan.StatusPlanApproved == EnumStatusPlanApproved.Approved)
-          logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento dentro do prazo do colaborador " + monitoring.Person.Name, monitoring.Person);
+          logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento dentro do prazo do colaborador " + monitoring.Person.User.Name, monitoring.Person);
 
         //verify plan;
         if (viewPlan.SourcePlan == EnumSourcePlan.Activite)
@@ -2007,7 +2007,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().Name;
+          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -2015,7 +2015,7 @@ namespace Manager.Services.Specific
         }
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -2028,11 +2028,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Mail, person.Name)
+                        new MailLogAddress(person.User.Mail, person.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
-          NamePerson = person.Name,
+          NamePerson = person.User.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -2058,8 +2058,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            mail = person.Mail,
-            password = person.Password
+            mail = person.User.Mail,
+            password = person.User.Password
           };
           var json = JsonConvert.SerializeObject(data);
           var content = new StringContent(json);

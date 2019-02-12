@@ -20,7 +20,7 @@ using Tools;
 
 namespace Attachment
 {
-    public class Startup
+  public class Startup
   {
     public Startup(IConfiguration configuration)
     {
@@ -49,8 +49,8 @@ namespace Attachment
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
       IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer, serviceMandatoryTraining);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany);
       IServiceUser serviceUser = new ServiceUser(_context);
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany, serviceUser);
 
       services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceMandatoryTraining);

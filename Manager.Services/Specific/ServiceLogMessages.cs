@@ -122,8 +122,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = logMessagesService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = logMessagesService.GetAll(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = logMessagesService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = logMessagesService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
 
@@ -140,8 +140,8 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         //var manager = personService.GetAll(p => p._id == idmanager).FirstOrDefault();
-        var detail = logMessagesService.GetAll(p => p.Person.Manager._id == idmanager & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = logMessagesService.GetAll(p => p.Person.Manager._id == idmanager & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = logMessagesService.GetAll(p => p.Person.Manager._id == idmanager & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = logMessagesService.GetAll(p => p.Person.Manager._id == idmanager & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
 
@@ -157,8 +157,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = logMessagesService.GetAll(p => p.Person._id == idperson & p.Person.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
-        total = logMessagesService.GetAll(p => p.Person._id == idperson & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = logMessagesService.GetAll(p => p.Person._id == idperson & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = logMessagesService.GetAll(p => p.Person._id == idperson & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
 
