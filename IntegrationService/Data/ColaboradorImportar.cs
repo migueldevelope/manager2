@@ -215,7 +215,9 @@ namespace IntegrationService.Data
       try
       {
         string result = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param.Trim().ToLower());
-        result = result.Replace(" Da "," da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ").Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em "," em ");
+        result = result.Replace(" Da "," da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ")
+          .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em "," em ").Replace(" Ti", " TI")
+          .Replace(" Pl", " PL").Replace(" Jr", " JR").Replace(" Sr", " SR");
         return result;
       }
       catch (Exception)
