@@ -39,7 +39,7 @@ namespace IntegrationServer.Controllers
         new Claim(ClaimTypes.Hash, person.IdAccount),
         new Claim(ClaimTypes.Email, user.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
-        new Claim(ClaimTypes.UserData, person.IdPerson)
+        new Claim(ClaimTypes.UserData, person.IdUser)
       };
       JwtSecurityToken token = new JwtSecurityToken(
           issuer: "localhost",
@@ -86,7 +86,7 @@ namespace IntegrationServer.Controllers
         new Claim(ClaimTypes.Hash, person.IdAccount),
         new Claim(ClaimTypes.Email, user.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
-        new Claim(ClaimTypes.UserData, person.IdPerson)
+        new Claim(ClaimTypes.UserData, person.IdUser)
       };
       var token = new JwtSecurityToken(
           issuer: "localhost",
