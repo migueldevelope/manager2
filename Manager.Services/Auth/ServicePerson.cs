@@ -148,12 +148,24 @@ namespace Manager.Services.Auth
           DateLastOccupation = person.DateLastOccupation,
           Salary = person.Salary,
           DateLastReadjust = person.DateLastReadjust,
-          DateResignation = person.DateResignation
+          DateResignation = person.DateResignation,
+          RegistrationPerson = person.RegistrationPerson,
+          TypeUser = person.TypeUser,
+          User = person.User
         };
 
         
+        
         if (person.Manager != null)
-          model.DocumentManager = person.Manager.User.Document;
+        {
+          var manager = personService.GetAll(p => p._id == model.Manager._id).FirstOrDefault();
+          if(manager != null)
+          {
+            if (manager.User != null)
+              model.DocumentManager = manager.User.Document;
+          }
+        }
+          
 
         
         return personService.Insert(model);
@@ -183,9 +195,19 @@ namespace Manager.Services.Auth
         model.Salary = person.Salary;
         model.DateLastReadjust = person.DateLastReadjust;
         model.DateResignation = person.DateResignation;
+        model.RegistrationPerson = person.RegistrationPerson;
+        model.TypeUser = person.TypeUser;
+        model.User = person.User;
 
         if (person.Manager != null)
-          model.DocumentManager = person.Manager.User.Document;
+        {
+          var manager = personService.GetAll(p => p._id == model.Manager._id).FirstOrDefault();
+          if (manager != null)
+          {
+            if (manager.User != null)
+              model.DocumentManager = manager.User.Document;
+          }
+        }
 
         personService.Update(model, null);
         return "ok";
