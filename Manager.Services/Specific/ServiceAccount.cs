@@ -160,14 +160,17 @@ namespace Manager.Services.Specific
           parameterService.InsertAccount(parameter);
         }
 
+        var userPerson = userService.GetAuthentication(p => p._id == user.User._id).FirstOrDefault();
+
         LogSave(user);
+
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            user.User.Mail,
-            user.User.Password
+            userPerson.Mail,
+            userPerson.Password
           };
           var json = JsonConvert.SerializeObject(data);
           var content = new StringContent(json);
@@ -193,6 +196,7 @@ namespace Manager.Services.Specific
       try
       {
         var user = personService.GetAuthentication(p => p._id == idperson).FirstOrDefault();
+        var userPerson = userService.GetAuthentication(p => p._id == user.User._id).FirstOrDefault();
         LogSave(user);
 
         using (var client = new HttpClient())
@@ -200,8 +204,8 @@ namespace Manager.Services.Specific
           client.BaseAddress = new Uri(link);
           var data = new
           {
-            user.User.Mail,
-            user.User.Password
+            userPerson.Mail,
+            userPerson.Password
           };
 
           var json = JsonConvert.SerializeObject(data);

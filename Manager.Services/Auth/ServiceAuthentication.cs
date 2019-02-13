@@ -83,15 +83,20 @@ namespace Manager.Services.Auth
           DictionarySystem = listDictionary
         };
 
+
+        person.Contracts = new List<ViewContract>();
         foreach (var item in persons)
         {
-          person.Contracts = new List<ViewContract>();
-          person.Contracts.Add(new ViewContract()
+          var view = new ViewContract()
           {
             IdPerson = item._id,
             Logo = item.Company.Logo,
-            TypeUser = item.TypeUser
-          });
+            TypeUser = item.TypeUser,
+            RegistrationPerson = item.RegistrationPerson.ToString()
+          };
+          if (item.Occupation != null)
+            view.Occupation = item.Occupation.Name;
+          person.Contracts.Add(view);
         }
 
 
@@ -129,15 +134,20 @@ namespace Manager.Services.Auth
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name
         };
 
+
+        person.Contracts = new List<ViewContract>();
         foreach (var item in persons)
         {
-          person.Contracts = new List<ViewContract>();
-          person.Contracts.Add(new ViewContract()
+          var view = new ViewContract()
           {
             IdPerson = item._id,
             Logo = item.Company.Logo,
-            TypeUser = item.TypeUser
-          });
+            TypeUser = item.TypeUser,
+            RegistrationPerson = item.RegistrationPerson.ToString()
+          };
+          if (item.Occupation != null)
+            view.Occupation = item.Occupation.Name;
+          person.Contracts.Add(view);
         }
 
         var _user = new BaseUser()
@@ -201,15 +211,20 @@ namespace Manager.Services.Auth
           DictionarySystem = listDictionary
         };
 
+
+        person.Contracts = new List<ViewContract>();
         foreach (var item in persons)
         {
-          person.Contracts = new List<ViewContract>();
-          person.Contracts.Add(new ViewContract()
+          var view = new ViewContract()
           {
             IdPerson = item._id,
             Logo = item.Company.Logo,
-            TypeUser = item.TypeUser
-          });
+            TypeUser = item.TypeUser,
+            RegistrationPerson = item.RegistrationPerson.ToString()
+          };
+          if (item.Occupation != null)
+            view.Occupation = item.Occupation.Name;
+          person.Contracts.Add(view);
         }
 
         LogSave(persons.FirstOrDefault());
@@ -242,15 +257,20 @@ namespace Manager.Services.Auth
           NameAccount = accountService.GetAuthentication(p => p._id == user._idAccount).FirstOrDefault().Name
         };
 
+
+        person.Contracts = new List<ViewContract>();
         foreach (var item in persons)
         {
-          person.Contracts = new List<ViewContract>();
-          person.Contracts.Add(new ViewContract()
+          var view = new ViewContract()
           {
             IdPerson = item._id,
             Logo = item.Company.Logo,
-            TypeUser = item.TypeUser
-          });
+            TypeUser = item.TypeUser,
+            RegistrationPerson = item.RegistrationPerson.ToString()
+          };
+          if (item.Occupation != null)
+            view.Occupation = item.Occupation.Name;
+          person.Contracts.Add(view);
         }
 
         var _user = new BaseUser()

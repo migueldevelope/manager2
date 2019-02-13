@@ -87,7 +87,8 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount & p.User == null).ToList();
+        //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount & p.User == null).ToList();
+        var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount).ToList();
         foreach (var item in persons)
         {
           var user = new User()
@@ -117,7 +118,7 @@ namespace Manager.Services.Auth
 
           item.User = userService.InsertAccount(user);
           personService.UpdateAccount(item, null);
-          UpdateManager(user, item._id);
+          //UpdateManager(user, item._id);
         }
         return "ok";
 

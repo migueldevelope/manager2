@@ -34,5 +34,7 @@ namespace Manager.Core.Views
     public decimal Salary { get; set; }
     public DateTime? DateLastReadjust { get; set; }
     public DateTime? DateResignation { get; set; }
+    public User User { get; set; }
+    public string RegistrationPerson { get; set; }
   }
 }
