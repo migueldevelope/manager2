@@ -39,6 +39,7 @@ namespace Manager.Core.Interfaces
     string ScriptCheckpoint();
     string ScriptMonitoring();
     string ScriptPlan();
+    string ScriptLog();
 
 
   }

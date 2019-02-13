@@ -30,6 +30,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Monitoring> monitoringService;
     private ServiceGeneric<Checkpoint> checkpointService;
     private ServiceGeneric<Plan> planService;
+    private ServiceGeneric<Log> logService;
     private ServiceSendGrid mailService;
 
     public BaseUser user { get => _user; set => user = _user; }
@@ -46,6 +47,11 @@ namespace Manager.Services.Auth
         occupationService._user = _user;
         personService._user = _user;
         personOldService._user = _user;
+        onboardingService._user = _user;
+        monitoringService._user = _user;
+        checkpointService._user = _user;
+        planService._user = _user;
+        logService._user = _user;
       }
       catch (Exception e)
       {
@@ -65,6 +71,11 @@ namespace Manager.Services.Auth
         occupationService = new ServiceGeneric<Occupation>(context);
         personService = new ServiceGeneric<Person>(context);
         personOldService = new ServiceGeneric<PersonOld>(context);
+        onboardingService = new ServiceGeneric<OnBoarding>(context);
+        monitoringService = new ServiceGeneric<Monitoring>(context);
+        checkpointService = new ServiceGeneric<Checkpoint>(context);
+        planService = new ServiceGeneric<Plan>(context);
+        logService = new ServiceGeneric<Log>(context);
       }
       catch (Exception e)
       {
@@ -83,6 +94,7 @@ namespace Manager.Services.Auth
         companyService._user = _user;
         occupationService._user = _user;
         personService._user = _user;
+        logService._user = _user;
       }
       catch (Exception e)
       {
@@ -620,8 +632,61 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
-
+        var onboardings =
+          (from onb in onboardingService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
+           select new
+           {
+             _id = onb._id,
+             _idAccount = onb._idAccount,
+             Status = onb.Status,
+             Person = onb.Person._id,
+             DateBeginPerson = onb.DateBeginPerson,
+             DateBeginManager = onb.DateBeginManager,
+             DateBeginEnd = onb.DateBeginEnd,
+             DateEndPerson = onb.DateEndPerson,
+             DateEndManager = onb.DateEndManager,
+             DateEndEnd = onb.DateEndEnd,
+             CommentsPerson = onb.CommentsPerson,
+             CommentsManager = onb.CommentsManager,
+             CommentsEnd = onb.CommentsEnd,
+             SkillsCompany = onb.SkillsCompany,
+             SkillsGroup = onb.SkillsGroup,
+             SkillsOccupation = onb.SkillsOccupation,
+             Scopes = onb.Scopes,
+             Schoolings = onb.Schoolings,
+             Activities = onb.Activities,
+             StatusOnBoarding = onb.StatusOnBoarding
+           })
+          .ToList();
+        foreach (var item in onboardings)
+        {
+          var personOld = personOldService.GetAuthentication(p => p._id == item.Person).FirstOrDefault().Mail;
+          var person = personService.GetAuthentication(p => p.User.Mail == personOld).FirstOrDefault();
+          var onboarding = new OnBoarding()
+          {
+            _id = item._id,
+            Person = person,
+            DateBeginPerson = item.DateBeginPerson,
+            DateBeginManager = item.DateBeginManager,
+            DateBeginEnd = item.DateBeginEnd,
+            DateEndPerson = item.DateEndPerson,
+            DateEndManager = item.DateEndManager,
+            DateEndEnd = item.DateEndEnd,
+            CommentsPerson = item.CommentsPerson,
+            CommentsManager = item.CommentsManager,
+            CommentsEnd = item.CommentsEnd,
+            SkillsCompany = item.SkillsCompany,
+            SkillsGroup = item.SkillsGroup,
+            SkillsOccupation = item.SkillsOccupation,
+            Scopes = item.Scopes,
+            Schoolings = item.Schoolings,
+            Activities = item.Activities,
+            StatusOnBoarding = item.StatusOnBoarding,
+            Status = item.Status,
+            _idAccount = item._idAccount
+          };
+          onboardingService.UpdateAccount(onboarding, null);
+        }
 
         return "ok";
 
@@ -643,6 +708,11 @@ namespace Manager.Services.Auth
     }
 
     public string ScriptPlan()
+    {
+      throw new NotImplementedException();
+    }
+
+    public string ScriptLog()
     {
       throw new NotImplementedException();
     }

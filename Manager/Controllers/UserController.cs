@@ -156,6 +156,13 @@ namespace Manager.Controllers
       return service.ScriptPerson();
     }
 
+    [HttpPut]
+    [Route("scriptonboarding")]
+    public string ScriptOnBoarding()
+    {
+      return service.ScriptOnBoarding();
+    }
+
 
   }
 }
