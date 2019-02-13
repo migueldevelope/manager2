@@ -22,9 +22,14 @@ namespace Manager.Services.Auth
   {
     private ServiceGeneric<User> userService;
     private ServiceGeneric<Person> personService;
+    private ServiceGeneric<PersonOld> personOldService;
     private ServiceGeneric<Attachments> attachmentService;
     private ServiceGeneric<Company> companyService;
     private ServiceGeneric<Occupation> occupationService;
+    private ServiceGeneric<OnBoarding> onboardingService;
+    private ServiceGeneric<Monitoring> monitoringService;
+    private ServiceGeneric<Checkpoint> checkpointService;
+    private ServiceGeneric<Plan> planService;
     private ServiceSendGrid mailService;
 
     public BaseUser user { get => _user; set => user = _user; }
@@ -40,6 +45,7 @@ namespace Manager.Services.Auth
         companyService._user = _user;
         occupationService._user = _user;
         personService._user = _user;
+        personOldService._user = _user;
       }
       catch (Exception e)
       {
@@ -58,6 +64,7 @@ namespace Manager.Services.Auth
         companyService = new ServiceGeneric<Company>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
         personService = new ServiceGeneric<Person>(context);
+        personOldService = new ServiceGeneric<PersonOld>(context);
       }
       catch (Exception e)
       {
@@ -83,12 +90,14 @@ namespace Manager.Services.Auth
       }
     }
 
-    public string ScriptPerson(string idaccount)
+    public string ScriptPerson()
     {
       try
       {
         //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount & p.User == null).ToList();
-        var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount).ToList();
+        //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount).ToList();
+        //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
+        var persons = personOldService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
         foreach (var item in persons)
         {
           var user = new User()
@@ -104,9 +113,7 @@ namespace Manager.Services.Auth
             DocumentCTPF = item.DocumentCTPF,
             DocumentID = item.DocumentID,
             ForeignForgotPassword = item.ForeignForgotPassword,
-            HolidayReturn = item.HolidayReturn,
             Mail = item.Mail,
-            MotiveAside = item.MotiveAside,
             Name = item.Name,
             Password = item.Password,
             Phone = item.Phone,
@@ -117,7 +124,34 @@ namespace Manager.Services.Auth
           };
 
           item.User = userService.InsertAccount(user);
-          personService.UpdateAccount(item, null);
+
+          var person = new Person()
+          {
+            Company = item.Company,
+            DateLastOccupation = item.DateLastOccupation,
+            DateLastReadjust = item.DateLastReadjust,
+            DateResignation = item.DateResignation,
+            DocumentManager = item.DocumentManager,
+            Establishment = item.Establishment,
+            HolidayReturn = item.HolidayReturn,
+            MotiveAside = item.MotiveAside,
+            Occupation = item.Occupation,
+            Registration = item.Registration.ToString(),
+            Salary = item.Salary,
+            Status = item.Status,
+            StatusUser = item.StatusUser,
+            TypeJourney = item.TypeJourney,
+            TypeUser = item.TypeUser,
+            User = user,
+            _id = item._id,
+            _idAccount = item._idAccount
+          };
+          var manager = personOldService.GetAll(p => p.Document == item.DocumentManager).FirstOrDefault();
+
+          if (manager != null)
+            person.Manager = new BaseFields() { Name = manager.Name, _id = item._id, Mail = manager.Mail };
+
+          personService.InsertAccount(person);
           //UpdateManager(user, item._id);
         }
         return "ok";
@@ -129,68 +163,68 @@ namespace Manager.Services.Auth
       }
     }
 
-    private async Task UpdateManager(User user, string idperson)
-    {
-      var managers = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == user._idAccount).ToList();
-      foreach(var item in managers)
-      {
-        try
-        {
-          if (item.Manager._id == idperson)
-          {
-            item.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
-          else if (item.Manager.Manager._id == idperson)
-          {
-            item.Manager.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
-          else if (item.Manager.Manager.Manager._id == idperson)
-          {
-            item.Manager.Manager.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
-          else if (item.Manager.Manager._id == idperson)
-          {
-            item.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
-          else if (item.Manager.Manager.Manager.Manager._id == idperson)
-          {
-            item.Manager.Manager.Manager.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
-          else if (item.Manager.Manager._id == idperson)
-          {
-            item.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
-          else if (item.Manager.Manager.Manager.Manager.Manager._id == idperson)
-          {
-            item.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
-          else if (item.Manager.Manager.Manager.Manager.Manager.Manager.Manager._id == idperson)
-          {
-            item.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
-          else if (item.Manager.Manager.Manager.Manager.Manager.Manager.Manager.Manager._id == idperson)
-          {
-            item.Manager.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
-            personService.UpdateAccount(item, null);
-          }
+    //private async Task UpdateManager(User user, string idperson)
+    //{
+    //  var managers = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == user._idAccount).ToList();
+    //  foreach (var item in managers)
+    //  {
+    //    try
+    //    {
+    //      if (item.Manager._id == idperson)
+    //      {
+    //        item.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
+    //      else if (item.Manager.Manager._id == idperson)
+    //      {
+    //        item.Manager.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
+    //      else if (item.Manager.Manager.Manager._id == idperson)
+    //      {
+    //        item.Manager.Manager.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
+    //      else if (item.Manager.Manager._id == idperson)
+    //      {
+    //        item.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
+    //      else if (item.Manager.Manager.Manager.Manager._id == idperson)
+    //      {
+    //        item.Manager.Manager.Manager.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
+    //      else if (item.Manager.Manager._id == idperson)
+    //      {
+    //        item.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
+    //      else if (item.Manager.Manager.Manager.Manager.Manager._id == idperson)
+    //      {
+    //        item.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
+    //      else if (item.Manager.Manager.Manager.Manager.Manager.Manager.Manager._id == idperson)
+    //      {
+    //        item.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
+    //      else if (item.Manager.Manager.Manager.Manager.Manager.Manager.Manager.Manager._id == idperson)
+    //      {
+    //        item.Manager.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
+    //        personService.UpdateAccount(item, null);
+    //      }
 
 
-        }
-        catch
-        {
+    //    }
+    //    catch
+    //    {
 
-        }
-        
-      }
-    }
+    //    }
+
+    //  }
+    //}
 
     public User NewUser(User user)
     {
@@ -242,9 +276,7 @@ namespace Manager.Services.Auth
           PhoneFixed = user.PhoneFixed,
           DocumentID = user.DocumentID,
           DocumentCTPF = user.DocumentCTPF,
-          Sex = user.Sex,
-          HolidayReturn = user.HolidayReturn,
-          MotiveAside = user.MotiveAside
+          Sex = user.Sex
         };
 
         if (user.Password == string.Empty)
@@ -582,6 +614,37 @@ namespace Manager.Services.Auth
       {
         throw e;
       }
+    }
+
+    public string ScriptOnBoarding()
+    {
+      try
+      {
+        var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
+
+
+        return "ok";
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string ScriptCheckpoint()
+    {
+      throw new NotImplementedException();
+    }
+
+    public string ScriptMonitoring()
+    {
+      throw new NotImplementedException();
+    }
+
+    public string ScriptPlan()
+    {
+      throw new NotImplementedException();
     }
   }
 }

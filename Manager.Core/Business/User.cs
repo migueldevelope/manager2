@@ -25,7 +25,5 @@ namespace Manager.Core.Business
     public string DocumentID { get; set; }
     public string DocumentCTPF { get; set; }
     public EnumSex Sex { get; set; }
-    public DateTime? HolidayReturn { get; set; }
-    public string MotiveAside { get; set; }
   }
 }

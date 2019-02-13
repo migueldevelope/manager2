@@ -92,7 +92,7 @@ namespace Manager.Services.Auth
             IdPerson = item._id,
             Logo = item.Company.Logo,
             TypeUser = item.TypeUser,
-            RegistrationPerson = item.RegistrationPerson.ToString()
+            Registration = item.Registration.ToString()
           };
           if (item.Occupation != null)
             view.Occupation = item.Occupation.Name;
@@ -143,7 +143,7 @@ namespace Manager.Services.Auth
             IdPerson = item._id,
             Logo = item.Company.Logo,
             TypeUser = item.TypeUser,
-            RegistrationPerson = item.RegistrationPerson.ToString()
+            Registration = item.Registration.ToString()
           };
           if (item.Occupation != null)
             view.Occupation = item.Occupation.Name;
@@ -220,7 +220,7 @@ namespace Manager.Services.Auth
             IdPerson = item._id,
             Logo = item.Company.Logo,
             TypeUser = item.TypeUser,
-            RegistrationPerson = item.RegistrationPerson.ToString()
+            Registration = item.Registration.ToString()
           };
           if (item.Occupation != null)
             view.Occupation = item.Occupation.Name;
@@ -266,7 +266,7 @@ namespace Manager.Services.Auth
             IdPerson = item._id,
             Logo = item.Company.Logo,
             TypeUser = item.TypeUser,
-            RegistrationPerson = item.RegistrationPerson.ToString()
+            Registration = item.Registration.ToString()
           };
           if (item.Occupation != null)
             view.Occupation = item.Occupation.Name;

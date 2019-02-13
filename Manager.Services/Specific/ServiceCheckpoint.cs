@@ -276,7 +276,7 @@ namespace Manager.Services.Specific
 
         var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.Checkpoint).FirstOrDefault();
         if (text != null)
-          checkpoint.TextDefault = text.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name).Replace("{manager_name}", checkpoint.Person.Manager.User.Name);
+          checkpoint.TextDefault = text.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name).Replace("{manager_name}", checkpoint.Person.Manager.Name);
 
         return checkpoint;
       }
@@ -390,7 +390,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -456,7 +456,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -506,7 +506,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -555,7 +555,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,

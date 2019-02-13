@@ -8,6 +8,6 @@ namespace Manager.Core.Views
     public EnumTypeUser TypeUser { get; set; }
     public string Logo { get; set; }
     public string Occupation { get; set; }
-    public string RegistrationPerson { get; set; }
+    public string Registration { get; set; }
   }
 }

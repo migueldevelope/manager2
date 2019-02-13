@@ -149,7 +149,7 @@ namespace Manager.Services.Auth
           Salary = person.Salary,
           DateLastReadjust = person.DateLastReadjust,
           DateResignation = person.DateResignation,
-          RegistrationPerson = person.RegistrationPerson,
+          Registration = person.Registration,
           TypeUser = person.TypeUser,
           User = person.User
         };
@@ -195,7 +195,7 @@ namespace Manager.Services.Auth
         model.Salary = person.Salary;
         model.DateLastReadjust = person.DateLastReadjust;
         model.DateResignation = person.DateResignation;
-        model.RegistrationPerson = person.RegistrationPerson;
+        model.Registration = person.Registration;
         model.TypeUser = person.TypeUser;
         model.User = person.User;
 

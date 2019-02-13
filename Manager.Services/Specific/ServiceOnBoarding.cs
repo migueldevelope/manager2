@@ -1351,7 +1351,7 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -1383,7 +1383,7 @@ namespace Manager.Services.Specific
           return;
 
         var url = "";
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.User.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var message = new MailMessage
         {
           Type = EnumTypeMailMessage.Put,
@@ -1451,7 +1451,7 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -1506,7 +1506,7 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,

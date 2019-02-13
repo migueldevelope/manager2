@@ -353,7 +353,7 @@ namespace Manager.Services.Specific
           result.Add(new
           {
             item.Person.User.Name,
-            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.User.Name,
+            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
             Status = item.OnBoarding == null ? EnumStatusOnBoarding.Open.ToString() : item.OnBoarding.StatusOnBoarding.ToString(),
             Date = item.OnBoarding?.DateEndEnd
           });
@@ -382,7 +382,7 @@ namespace Manager.Services.Specific
           result.Add(new
           {
             item.Person.User.Name,
-            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.User.Name,
+            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
             Status = item.Checkpoint == null ? EnumStatusCheckpoint.Open.ToString() : item.Checkpoint.StatusCheckpoint.ToString(),
             Date = item.Checkpoint?.DateEnd
           });
@@ -411,7 +411,7 @@ namespace Manager.Services.Specific
           result.Add(new
           {
             item.Person.User.Name,
-            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.User.Name,
+            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
             Status = item.Monitoring == null ? EnumStatusOnBoarding.Open.ToString() : item.Monitoring.StatusMonitoring.ToString(),
             Date = item.Monitoring?.DateEndEnd
           });
@@ -446,7 +446,7 @@ namespace Manager.Services.Specific
                 result.Add(new
                 {
                   item.Person.User.Name,
-                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.User.Name,
+                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                   plan?.Description,
                   Evalutions = plan == null ? 0 : plan.Evaluation,
                   Approved = plan?.StatusPlanApproved.ToString(),
@@ -463,7 +463,7 @@ namespace Manager.Services.Specific
                 result.Add(new
                 {
                   item.Person.User.Name,
-                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.User.Name,
+                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                   plan?.Description,
                   Evalutions = plan == null ? 0 : plan.Evaluation,
                   Approved = plan?.StatusPlanApproved.ToString(),
@@ -480,7 +480,7 @@ namespace Manager.Services.Specific
                 result.Add(new
                 {
                   item.Person.User.Name,
-                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.User.Name,
+                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                   plan?.Description,
                   Evalutions = plan == null ? 0 : plan.Evaluation,
                   Approved = plan?.StatusPlanApproved.ToString(),
@@ -522,7 +522,7 @@ namespace Manager.Services.Specific
     //      if (item.Person.Manager == null)
     //        itemView += "Sem Gestor;";
     //      else
-    //        itemView += item.Person.Manager.User.Name + ";";
+    //        itemView += item.Person.Manager.Name + ";";
     //      if (item.OnBoarding == null)
     //        itemView += EnumStatusOnBoarding.Open.ToString() + ";";
     //      else

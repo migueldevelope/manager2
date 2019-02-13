@@ -1658,7 +1658,7 @@ namespace Manager.Services.Specific
           if(user._idPerson == manager._id)
           {
             //var person = personService.GetAll(p => p._id == persons._id).FirstOrDefault();
-            Mail(manager.Manager);
+            //Mail(manager.Manager);
           }
           else
           {

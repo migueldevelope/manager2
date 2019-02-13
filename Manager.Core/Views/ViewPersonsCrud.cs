@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Views.Enumns;
 using System;
@@ -19,8 +20,8 @@ namespace Manager.Core.Views
     public DateTime? DateBirth { get; set; }
     public DateTime? DateAdm { get; set; }
     public EnumStatusUser StatusUser { get; set; }
-    public Person Manager { get; set; }
-    public long Registration { get; set; }
+    public BaseFields Manager { get; set; }
+    public string Registration { get; set; }
     public EnumTypeUser TypeUser { get; set; }
     public EnumTypeJourney TypeJourney { get; set; }
     public Establishment Establishment { get; set; }
@@ -35,6 +36,5 @@ namespace Manager.Core.Views
     public DateTime? DateLastReadjust { get; set; }
     public DateTime? DateResignation { get; set; }
     public User User { get; set; }
-    public string RegistrationPerson { get; set; }
   }
 }

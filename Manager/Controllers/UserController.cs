@@ -150,10 +150,10 @@ namespace Manager.Controllers
     }
 
     [HttpPut]
-    [Route("scriptperson/{idaccount}")]
-    public string ScriptPerson(string idaccount)
+    [Route("scriptperson")]
+    public string ScriptPerson()
     {
-      return service.ScriptPerson(idaccount);
+      return service.ScriptPerson();
     }
 
 

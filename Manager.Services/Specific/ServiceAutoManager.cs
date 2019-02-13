@@ -130,7 +130,7 @@ namespace Manager.Services.Specific
         var manager = personService.GetAll(p => p._id == view.IdManager).FirstOrDefault();
         if (view.Status == EnumStatusAutoManagerView.Open)
         {
-          person.Manager = manager;
+          person.Manager = new BaseFields() { _id = manager._id, Mail = manager.User.Mail, Name = manager.User.Name };
           var exists = personService.GetAll(p => p.Manager._id == view.IdManager).Count();
           if (exists == 0 & manager.TypeUser == EnumTypeUser.Employee)
           {
@@ -275,7 +275,7 @@ namespace Manager.Services.Specific
         auto.StatusAutoManager = EnumStatusAutoManager.Approved;
         var manager = personService.GetAll(p => p._id == idManager).FirstOrDefault();
         var person = personService.GetAll(p => p._id == idPerson).FirstOrDefault();
-        person.Manager = manager;
+        person.Manager = new BaseFields() { _id = manager._id, Mail = manager.User.Mail, Name = manager.User.Name };
         personService.Update(person, null);
         if (manager.TypeUser == EnumTypeUser.Employee)
         {

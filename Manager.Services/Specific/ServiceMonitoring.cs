@@ -969,11 +969,11 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person.Manager._id,
-          NamePerson = person.Manager.User.Name,
+          NamePerson = person.Manager.Name,
           Body = body,
           StatusMail = EnumStatusMail.Sended,
           Included = DateTime.Now,
@@ -1024,7 +1024,7 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.User.Mail, person.Manager.User.Name)
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
