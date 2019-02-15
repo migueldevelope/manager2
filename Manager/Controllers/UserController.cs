@@ -177,5 +177,12 @@ namespace Manager.Controllers
       return service.ScriptMonitoring();
     }
 
+    [HttpPut]
+    [Route("scriptlog")]
+    public string ScriptLog()
+    {
+      return service.ScriptLog();
+    }
+
   }
 }

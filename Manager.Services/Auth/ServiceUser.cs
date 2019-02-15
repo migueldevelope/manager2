@@ -937,10 +937,10 @@ namespace Manager.Services.Auth
 
             if (item.SkillsCompany != null)
             {
+              monitoring.SkillsCompany = new List<MonitoringSkills>();
               foreach (var row in item.SkillsCompany.ToList())
               {
                 var view = new MonitoringSkills();
-                monitoring.SkillsCompany = new List<MonitoringSkills>();
                 view.Skill = row.Skill;
                 view.Praise = row.Praise;
                 view.Status = row.Status;
@@ -951,32 +951,40 @@ namespace Manager.Services.Auth
                 view.CommentsPerson = row.CommentsPerson;
                 view.StatusViewManager = row.StatusViewManager;
                 view.StatusViewPerson = row.StatusViewPerson;
-                foreach (var plan in row.Plans)
+                if (row.Plans.Count() == 0)
                 {
-                  var planNew = new Plan();
                   view.Plans = new List<Plan>();
-
-                  planNew.Name = plan.Name;
-                  planNew.Description = plan.Description;
-                  planNew.Deadline = plan.Deadline;
-                  planNew.Skills = plan.Skills;
-                  planNew.UserInclude = person;
-                  planNew.DateInclude = plan.DateInclude;
-                  planNew.TypePlan = plan.TypePlan;
-                  planNew.SourcePlan = plan.SourcePlan;
-                  planNew.TypeAction = plan.TypeAction;
-                  planNew.StatusPlan = plan.StatusPlan;
-                  planNew.TextEnd = plan.TextEnd;
-                  planNew.TextEndManager = plan.TextEndManager;
-                  planNew.DateEnd = plan.DateEnd;
-                  planNew.Evaluation = plan.Evaluation;
-                  planNew.Result = plan.Result;
-                  planNew.StatusPlanApproved = plan.StatusPlanApproved;
-                  planNew.Attachments = plan.Attachments;
-                  planNew.NewAction = plan.NewAction;
-                  planNew.StructPlans = plan.StructPlans;
-                  view.Plans.Add(ScriptPlan(planNew));
                 }
+                else
+                {
+                  foreach (var plan in row.Plans)
+                  {
+                    var planNew = new Plan();
+                    view.Plans = new List<Plan>();
+
+                    planNew.Name = plan.Name;
+                    planNew.Description = plan.Description;
+                    planNew.Deadline = plan.Deadline;
+                    planNew.Skills = plan.Skills;
+                    planNew.UserInclude = person;
+                    planNew.DateInclude = plan.DateInclude;
+                    planNew.TypePlan = plan.TypePlan;
+                    planNew.SourcePlan = plan.SourcePlan;
+                    planNew.TypeAction = plan.TypeAction;
+                    planNew.StatusPlan = plan.StatusPlan;
+                    planNew.TextEnd = plan.TextEnd;
+                    planNew.TextEndManager = plan.TextEndManager;
+                    planNew.DateEnd = plan.DateEnd;
+                    planNew.Evaluation = plan.Evaluation;
+                    planNew.Result = plan.Result;
+                    planNew.StatusPlanApproved = plan.StatusPlanApproved;
+                    planNew.Attachments = plan.Attachments;
+                    planNew.NewAction = plan.NewAction;
+                    planNew.StructPlans = plan.StructPlans;
+                    view.Plans.Add(ScriptPlan(planNew));
+                  }
+                }
+
 
                 monitoring.SkillsCompany.Add(view);
 
@@ -985,10 +993,10 @@ namespace Manager.Services.Auth
 
             if (item.Schoolings != null)
             {
+              monitoring.Schoolings = new List<MonitoringSchooling>();
               foreach (var row in item.Schoolings.ToList())
               {
                 var view = new MonitoringSchooling();
-                monitoring.Schoolings = new List<MonitoringSchooling>();
                 view.Schooling = row.Schooling;
                 view.Praise = row.Praise;
                 view.Status = row.Status;
@@ -999,33 +1007,39 @@ namespace Manager.Services.Auth
                 view.CommentsPerson = row.CommentsPerson;
                 view.StatusViewManager = row.StatusViewManager;
                 view.StatusViewPerson = row.StatusViewPerson;
-                foreach (var plan in row.Plans)
+                if (row.Plans.Count() == 0)
                 {
-                  var planNew = new Plan();
                   view.Plans = new List<Plan>();
-
-                  planNew.Name = plan.Name;
-                  planNew.Description = plan.Description;
-                  planNew.Deadline = plan.Deadline;
-                  planNew.Skills = plan.Skills;
-                  planNew.UserInclude = person;
-                  planNew.DateInclude = plan.DateInclude;
-                  planNew.TypePlan = plan.TypePlan;
-                  planNew.SourcePlan = plan.SourcePlan;
-                  planNew.TypeAction = plan.TypeAction;
-                  planNew.StatusPlan = plan.StatusPlan;
-                  planNew.TextEnd = plan.TextEnd;
-                  planNew.TextEndManager = plan.TextEndManager;
-                  planNew.DateEnd = plan.DateEnd;
-                  planNew.Evaluation = plan.Evaluation;
-                  planNew.Result = plan.Result;
-                  planNew.StatusPlanApproved = plan.StatusPlanApproved;
-                  planNew.Attachments = plan.Attachments;
-                  planNew.NewAction = plan.NewAction;
-                  planNew.StructPlans = plan.StructPlans;
-                  view.Plans.Add(ScriptPlan(planNew));
                 }
+                else
+                {
+                  foreach (var plan in row.Plans)
+                  {
+                    var planNew = new Plan();
+                    view.Plans = new List<Plan>();
 
+                    planNew.Name = plan.Name;
+                    planNew.Description = plan.Description;
+                    planNew.Deadline = plan.Deadline;
+                    planNew.Skills = plan.Skills;
+                    planNew.UserInclude = person;
+                    planNew.DateInclude = plan.DateInclude;
+                    planNew.TypePlan = plan.TypePlan;
+                    planNew.SourcePlan = plan.SourcePlan;
+                    planNew.TypeAction = plan.TypeAction;
+                    planNew.StatusPlan = plan.StatusPlan;
+                    planNew.TextEnd = plan.TextEnd;
+                    planNew.TextEndManager = plan.TextEndManager;
+                    planNew.DateEnd = plan.DateEnd;
+                    planNew.Evaluation = plan.Evaluation;
+                    planNew.Result = plan.Result;
+                    planNew.StatusPlanApproved = plan.StatusPlanApproved;
+                    planNew.Attachments = plan.Attachments;
+                    planNew.NewAction = plan.NewAction;
+                    planNew.StructPlans = plan.StructPlans;
+                    view.Plans.Add(ScriptPlan(planNew));
+                  }
+                }
                 monitoring.Schoolings.Add(view);
 
               };
@@ -1033,10 +1047,10 @@ namespace Manager.Services.Auth
 
             if (item.Activities != null)
             {
+              monitoring.Activities = new List<MonitoringActivities>();
               foreach (var row in item.Activities.ToList())
               {
                 var view = new MonitoringActivities();
-                monitoring.Activities = new List<MonitoringActivities>();
                 view.Activities = row.Activities;
                 view.Praise = row.Praise;
                 view.Status = row.Status;
@@ -1047,31 +1061,39 @@ namespace Manager.Services.Auth
                 view.CommentsPerson = row.CommentsPerson;
                 view.StatusViewManager = row.StatusViewManager;
                 view.StatusViewPerson = row.StatusViewPerson;
-                foreach (var plan in row.Plans)
-                {
-                  var planNew = new Plan();
-                  view.Plans = new List<Plan>();
 
-                  planNew.Name = plan.Name;
-                  planNew.Description = plan.Description;
-                  planNew.Deadline = plan.Deadline;
-                  planNew.Skills = plan.Skills;
-                  planNew.UserInclude = person;
-                  planNew.DateInclude = plan.DateInclude;
-                  planNew.TypePlan = plan.TypePlan;
-                  planNew.SourcePlan = plan.SourcePlan;
-                  planNew.TypeAction = plan.TypeAction;
-                  planNew.StatusPlan = plan.StatusPlan;
-                  planNew.TextEnd = plan.TextEnd;
-                  planNew.TextEndManager = plan.TextEndManager;
-                  planNew.DateEnd = plan.DateEnd;
-                  planNew.Evaluation = plan.Evaluation;
-                  planNew.Result = plan.Result;
-                  planNew.StatusPlanApproved = plan.StatusPlanApproved;
-                  planNew.Attachments = plan.Attachments;
-                  planNew.NewAction = plan.NewAction;
-                  planNew.StructPlans = plan.StructPlans;
-                  view.Plans.Add(ScriptPlan(planNew));
+                if (row.Plans.Count() == 0)
+                {
+                  view.Plans = new List<Plan>();
+                }
+                else
+                {
+                  foreach (var plan in row.Plans)
+                  {
+                    var planNew = new Plan();
+                    view.Plans = new List<Plan>();
+
+                    planNew.Name = plan.Name;
+                    planNew.Description = plan.Description;
+                    planNew.Deadline = plan.Deadline;
+                    planNew.Skills = plan.Skills;
+                    planNew.UserInclude = person;
+                    planNew.DateInclude = plan.DateInclude;
+                    planNew.TypePlan = plan.TypePlan;
+                    planNew.SourcePlan = plan.SourcePlan;
+                    planNew.TypeAction = plan.TypeAction;
+                    planNew.StatusPlan = plan.StatusPlan;
+                    planNew.TextEnd = plan.TextEnd;
+                    planNew.TextEndManager = plan.TextEndManager;
+                    planNew.DateEnd = plan.DateEnd;
+                    planNew.Evaluation = plan.Evaluation;
+                    planNew.Result = plan.Result;
+                    planNew.StatusPlanApproved = plan.StatusPlanApproved;
+                    planNew.Attachments = plan.Attachments;
+                    planNew.NewAction = plan.NewAction;
+                    planNew.StructPlans = plan.StructPlans;
+                    view.Plans.Add(ScriptPlan(planNew));
+                  }
                 }
 
                 monitoring.Activities.Add(view);
@@ -1109,7 +1131,55 @@ namespace Manager.Services.Auth
 
     public string ScriptLog()
     {
-      throw new NotImplementedException();
+      try
+      {
+        var logs =
+          (from onb in logService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
+           select new
+           {
+             _id = onb._id,
+             _idAccount = onb._idAccount,
+             Status = onb.Status,
+             Person = onb.Person._id,
+             DataLog = onb.DataLog,
+             Description = onb.Description,
+             Local = onb.Local
+           })
+          .ToList();
+        foreach (var item in logs)
+        {
+          var personOld = (from old in personOldService.GetAuthentication(p => p._id == item.Person)
+                           select new
+                           {
+                             Mail = old.Mail
+                           }
+                           ).FirstOrDefault();
+          Person person = null;
+          if (personOld != null)
+          {
+            person = personService.GetAuthentication(p => p.User.Mail == personOld.Mail).FirstOrDefault();
+
+            var log = new Log()
+            {
+              _id = item._id,
+              Person = person,
+              Status = item.Status,
+              _idAccount = item._idAccount,
+              DataLog = item.DataLog,
+              Description = item.Description,
+              Local = item.Local
+            };
+            logService.UpdateAccount(log, null);
+          }
+        }
+
+        return "ok";
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
   }
 }
