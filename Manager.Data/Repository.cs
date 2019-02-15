@@ -180,6 +180,20 @@ namespace Manager.Data
       }
     }
 
+    public T InsertAccountId(T entity)
+    {
+      try
+      {
+        _collection.InsertOne(entity);
+
+        return entity;
+      }
+      catch
+      {
+        throw;
+      }
+    }
+
     public void Update(T entity, FilterDefinition<T> filter)
     {
       try

@@ -28,6 +28,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Occupation> occupationService;
     private ServiceGeneric<OnBoarding> onboardingService;
     private ServiceGeneric<Monitoring> monitoringService;
+    private ServiceGeneric<MonitoringOld> monitoringOldService;
     private ServiceGeneric<Checkpoint> checkpointService;
     private ServiceGeneric<Plan> planService;
     private ServiceGeneric<Log> logService;
@@ -49,6 +50,7 @@ namespace Manager.Services.Auth
         personOldService._user = _user;
         onboardingService._user = _user;
         monitoringService._user = _user;
+        monitoringOldService._user = _user;
         checkpointService._user = _user;
         planService._user = _user;
         logService._user = _user;
@@ -73,6 +75,7 @@ namespace Manager.Services.Auth
         personOldService = new ServiceGeneric<PersonOld>(context);
         onboardingService = new ServiceGeneric<OnBoarding>(context);
         monitoringService = new ServiceGeneric<Monitoring>(context);
+        monitoringOldService = new ServiceGeneric<MonitoringOld>(context);
         checkpointService = new ServiceGeneric<Checkpoint>(context);
         planService = new ServiceGeneric<Plan>(context);
         logService = new ServiceGeneric<Log>(context);
@@ -109,7 +112,49 @@ namespace Manager.Services.Auth
         //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount & p.User == null).ToList();
         //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount).ToList();
         //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
-        var persons = personOldService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
+        var persons =
+          (from per in personOldService.GetAuthentication(p => p.Status == EnumStatus.Enabled)
+           select new ViewPersonOld
+           {
+             Status = per.Status,
+             _idAccount = per._idAccount,
+             _id = per._id,
+             StatusUser = per.StatusUser,
+             Manager = per.Manager._id,
+             Company = per.Company,
+             Occupation = per.Occupation,
+             DocumentManager = per.DocumentManager,
+             DateLastOccupation = per.DateLastOccupation,
+             Salary = per.Salary,
+             DateLastReadjust = per.DateLastReadjust,
+             DateResignation = per.DateResignation,
+             TypeJourney = per.TypeJourney,
+             Establishment = per.Establishment,
+             HolidayReturn = per.HolidayReturn,
+             MotiveAside = per.MotiveAside,
+             Name = per.Name,
+             TypeUser = per.TypeUser,
+             Registration = per.Registration,
+             DateBirth = per.DateBirth,
+             DateAdm = per.DateAdm,
+             Schooling = per.Schooling,
+             PhotoUrl = per.PhotoUrl,
+             Coins = per.Coins,
+             ChangePassword = per.ChangePassword,
+             ForeignForgotPassword = per.ForeignForgotPassword,
+             PhoneFixed = per.PhoneFixed,
+             DocumentID = per.DocumentID,
+             DocumentCTPF = per.DocumentCTPF,
+             Sex = per.Sex,
+             Document = per.Document,
+             Mail = per.Mail,
+             Phone = per.Phone,
+             Password = per.Password
+           }
+          ).ToList();
+
+
+
         foreach (var item in persons)
         {
           var user = new User()
@@ -135,7 +180,7 @@ namespace Manager.Services.Auth
             Sex = item.Sex
           };
 
-          item.User = userService.InsertAccount(user);
+          userService.InsertAccount(user);
 
           var person = new Person()
           {
@@ -158,13 +203,30 @@ namespace Manager.Services.Auth
             _id = item._id,
             _idAccount = item._idAccount
           };
-          var manager = personOldService.GetAll(p => p.Document == item.DocumentManager).FirstOrDefault();
+          var manager = (from man in personOldService.GetAuthentication(p => p._id == item.Manager)
+                         select new
+                         {
+                           Name = man.Name,
+                           Mail = man.Mail,
+                           _id = man._id
+                         }).FirstOrDefault();
 
           if (manager != null)
-            person.Manager = new BaseFields() { Name = manager.Name, _id = item._id, Mail = manager.Mail };
+            person.Manager = new BaseFields() { Name = manager.Name, Mail = manager.Mail };
 
-          personService.InsertAccount(person);
-          //UpdateManager(user, item._id);
+          personService.InsertAccountId(person);
+        }
+
+        var list = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
+        foreach (var item in list)
+        {
+          if (item.Manager != null)
+          {
+            var idmanager = personService.GetAuthentication(p => p.User.Mail == item.Manager.Mail).FirstOrDefault()._id;
+            item.Manager._id = idmanager;
+            personService.UpdateAccount(item, null);
+          }
+
         }
         return "ok";
 
@@ -632,6 +694,8 @@ namespace Manager.Services.Auth
     {
       try
       {
+        //var valid = onboardingService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled).ToList();
+
         var onboardings =
           (from onb in onboardingService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
            select new
@@ -660,32 +724,45 @@ namespace Manager.Services.Auth
           .ToList();
         foreach (var item in onboardings)
         {
-          var personOld = personOldService.GetAuthentication(p => p._id == item.Person).FirstOrDefault().Mail;
-          var person = personService.GetAuthentication(p => p.User.Mail == personOld).FirstOrDefault();
-          var onboarding = new OnBoarding()
+          var personOld = (from old in personOldService.GetAuthentication(p => p._id == item.Person)
+                           select new
+                           {
+                             Mail = old.Mail
+                           }
+                           ).FirstOrDefault();
+          Person person = null;
+          if (personOld != null)
           {
-            _id = item._id,
-            Person = person,
-            DateBeginPerson = item.DateBeginPerson,
-            DateBeginManager = item.DateBeginManager,
-            DateBeginEnd = item.DateBeginEnd,
-            DateEndPerson = item.DateEndPerson,
-            DateEndManager = item.DateEndManager,
-            DateEndEnd = item.DateEndEnd,
-            CommentsPerson = item.CommentsPerson,
-            CommentsManager = item.CommentsManager,
-            CommentsEnd = item.CommentsEnd,
-            SkillsCompany = item.SkillsCompany,
-            SkillsGroup = item.SkillsGroup,
-            SkillsOccupation = item.SkillsOccupation,
-            Scopes = item.Scopes,
-            Schoolings = item.Schoolings,
-            Activities = item.Activities,
-            StatusOnBoarding = item.StatusOnBoarding,
-            Status = item.Status,
-            _idAccount = item._idAccount
-          };
-          onboardingService.UpdateAccount(onboarding, null);
+            person = personService.GetAuthentication(p => p.User.Mail == personOld.Mail).FirstOrDefault();
+
+            var onboarding = new OnBoarding()
+            {
+              _id = item._id,
+              Person = person,
+              DateBeginPerson = item.DateBeginPerson,
+              DateBeginManager = item.DateBeginManager,
+              DateBeginEnd = item.DateBeginEnd,
+              DateEndPerson = item.DateEndPerson,
+              DateEndManager = item.DateEndManager,
+              DateEndEnd = item.DateEndEnd,
+              CommentsPerson = item.CommentsPerson,
+              CommentsManager = item.CommentsManager,
+              CommentsEnd = item.CommentsEnd,
+              SkillsCompany = item.SkillsCompany,
+              SkillsGroup = item.SkillsGroup,
+              SkillsOccupation = item.SkillsOccupation,
+              Scopes = item.Scopes,
+              Schoolings = item.Schoolings,
+              Activities = item.Activities,
+              StatusOnBoarding = item.StatusOnBoarding,
+              Status = item.Status,
+              _idAccount = item._idAccount
+            };
+            onboardingService.UpdateAccount(onboarding, null);
+          }
+
+
+
         }
 
         return "ok";
@@ -699,17 +776,335 @@ namespace Manager.Services.Auth
 
     public string ScriptCheckpoint()
     {
-      throw new NotImplementedException();
+      try
+      {
+        //var valid = checkpointService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled).ToList();
+
+        var checkpoints =
+          (from onb in checkpointService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
+           select new
+           {
+             _id = onb._id,
+             _idAccount = onb._idAccount,
+             Status = onb.Status,
+             Person = onb.Person._id,
+             DateBegin = onb.DateBegin,
+             DateEnd = onb.DateEnd,
+             Comments = onb.Comments,
+             TextDefault = onb.TextDefault,
+             Questions = onb.Questions,
+             StatusCheckpoint = onb.StatusCheckpoint,
+             DataAccess = onb.DataAccess,
+             TypeCheckpoint = onb.TypeCheckpoint
+           })
+          .ToList();
+        foreach (var item in checkpoints)
+        {
+          var personOld = (from old in personOldService.GetAuthentication(p => p._id == item.Person)
+                           select new
+                           {
+                             Mail = old.Mail
+                           }
+                           ).FirstOrDefault();
+          Person person = null;
+          if (personOld != null)
+          {
+            person = personService.GetAuthentication(p => p.User.Mail == personOld.Mail).FirstOrDefault();
+
+            var checkpoint = new Checkpoint()
+            {
+              _id = item._id,
+              Person = person,
+              DateBegin = item.DateBegin,
+              DateEnd = item.DateEnd,
+              Comments = item.Comments,
+              TextDefault = item.TextDefault,
+              Questions = item.Questions,
+              StatusCheckpoint = item.StatusCheckpoint,
+              DataAccess = item.DataAccess,
+              TypeCheckpoint = item.TypeCheckpoint,
+              Status = item.Status,
+              _idAccount = item._idAccount
+            };
+            checkpointService.UpdateAccount(checkpoint, null);
+          }
+
+
+
+        }
+
+        return "ok";
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
 
     public string ScriptMonitoring()
     {
-      throw new NotImplementedException();
+      try
+      {
+        //var valid = monitoringService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled).ToList();
+
+        //var monitorings =
+        //  (from onb in monitoringService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
+        //   select new
+        //   {
+        //     _id = onb._id,
+        //     _idAccount = onb._idAccount,
+        //     Status = onb.Status,
+        //     Person = onb.Person._id,
+        //     DateBeginPerson = onb.DateBeginPerson,
+        //     DateBeginManager = onb.DateBeginManager,
+        //     DateBeginEnd = onb.DateBeginEnd,
+        //     DateEndPerson = onb.DateEndPerson,
+        //     DateEndManager = onb.DateEndManager,
+        //     DateEndEnd = onb.DateEndEnd,
+        //     CommentsPerson = onb.CommentsPerson,
+        //     CommentsManager = onb.CommentsManager,
+        //     CommentsEnd = onb.CommentsEnd,
+        //     SkillsCompany = onb.SkillsCompany.Select(x => new MonitoringSkills()
+        //     {
+        //       Skill = x.Skill,
+        //       CommentsPerson = x.CommentsPerson,
+        //       CommentsManager = x.CommentsManager,
+        //       Praise = x.Praise,
+        //       Comments = x.Comments,
+        //       StatusViewManager = x.StatusViewManager,
+        //       StatusViewPerson = x.StatusViewPerson,
+        //       Plans = null
+        //     }),
+        //     Schoolings = onb.Schoolings.Select(x => new MonitoringSchooling()
+        //     {
+        //       Schooling = x.Schooling,
+        //       CommentsPerson = x.CommentsPerson,
+        //       CommentsManager = x.CommentsManager,
+        //       Praise = x.Praise,
+        //       Comments = x.Comments,
+        //       StatusViewManager = x.StatusViewManager,
+        //       StatusViewPerson = x.StatusViewPerson,
+        //       Plans = null
+        //     }),
+        //     Activities = onb.Activities.Select(x => new MonitoringActivities()
+        //     {
+        //       Activities = x.Activities,
+        //       CommentsPerson = x.CommentsPerson,
+        //       CommentsManager = x.CommentsManager,
+        //       Praise = x.Praise,
+        //       Comments = x.Comments,
+        //       StatusViewManager = x.StatusViewManager,
+        //       StatusViewPerson = x.StatusViewPerson,
+        //       Plans = null
+        //     }),
+        //     StatusMonitoring = onb.StatusMonitoring
+        //   })
+        //  .ToList();
+
+        var monitorings = monitoringOldService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled).ToList();
+
+        foreach (var item in monitorings)
+        {
+          var personOld = (from old in personOldService.GetAuthentication(p => p._id == item.Person._id)
+                           select new
+                           {
+                             Mail = old.Mail
+                           }
+                          ).FirstOrDefault();
+          Person person = null;
+          if (personOld != null)
+          {
+            person = personService.GetAuthentication(p => p.User.Mail == personOld.Mail).FirstOrDefault();
+
+            var monitoring = new Monitoring()
+            {
+              _id = item._id,
+              Person = person,
+              DateBeginPerson = item.DateBeginPerson,
+              DateBeginManager = item.DateBeginManager,
+              DateBeginEnd = item.DateBeginEnd,
+              DateEndPerson = item.DateEndPerson,
+              DateEndManager = item.DateEndManager,
+              DateEndEnd = item.DateEndEnd,
+              CommentsPerson = item.CommentsPerson,
+              CommentsManager = item.CommentsManager,
+              CommentsEnd = item.CommentsEnd,
+              StatusMonitoring = item.StatusMonitoring,
+              Status = item.Status,
+              _idAccount = item._idAccount
+            };
+
+            if (item.SkillsCompany != null)
+            {
+              foreach (var row in item.SkillsCompany.ToList())
+              {
+                var view = new MonitoringSkills();
+                monitoring.SkillsCompany = new List<MonitoringSkills>();
+                view.Skill = row.Skill;
+                view.Praise = row.Praise;
+                view.Status = row.Status;
+                view._id = row._id;
+                view._idAccount = row._idAccount;
+                view.Comments = row.Comments;
+                view.CommentsManager = row.CommentsManager;
+                view.CommentsPerson = row.CommentsPerson;
+                view.StatusViewManager = row.StatusViewManager;
+                view.StatusViewPerson = row.StatusViewPerson;
+                foreach (var plan in row.Plans)
+                {
+                  var planNew = new Plan();
+                  view.Plans = new List<Plan>();
+
+                  planNew.Name = plan.Name;
+                  planNew.Description = plan.Description;
+                  planNew.Deadline = plan.Deadline;
+                  planNew.Skills = plan.Skills;
+                  planNew.UserInclude = person;
+                  planNew.DateInclude = plan.DateInclude;
+                  planNew.TypePlan = plan.TypePlan;
+                  planNew.SourcePlan = plan.SourcePlan;
+                  planNew.TypeAction = plan.TypeAction;
+                  planNew.StatusPlan = plan.StatusPlan;
+                  planNew.TextEnd = plan.TextEnd;
+                  planNew.TextEndManager = plan.TextEndManager;
+                  planNew.DateEnd = plan.DateEnd;
+                  planNew.Evaluation = plan.Evaluation;
+                  planNew.Result = plan.Result;
+                  planNew.StatusPlanApproved = plan.StatusPlanApproved;
+                  planNew.Attachments = plan.Attachments;
+                  planNew.NewAction = plan.NewAction;
+                  planNew.StructPlans = plan.StructPlans;
+                  view.Plans.Add(ScriptPlan(planNew));
+                }
+
+                monitoring.SkillsCompany.Add(view);
+
+              };
+            }
+
+            if (item.Schoolings != null)
+            {
+              foreach (var row in item.Schoolings.ToList())
+              {
+                var view = new MonitoringSchooling();
+                monitoring.Schoolings = new List<MonitoringSchooling>();
+                view.Schooling = row.Schooling;
+                view.Praise = row.Praise;
+                view.Status = row.Status;
+                view._id = row._id;
+                view._idAccount = row._idAccount;
+                view.Comments = row.Comments;
+                view.CommentsManager = row.CommentsManager;
+                view.CommentsPerson = row.CommentsPerson;
+                view.StatusViewManager = row.StatusViewManager;
+                view.StatusViewPerson = row.StatusViewPerson;
+                foreach (var plan in row.Plans)
+                {
+                  var planNew = new Plan();
+                  view.Plans = new List<Plan>();
+
+                  planNew.Name = plan.Name;
+                  planNew.Description = plan.Description;
+                  planNew.Deadline = plan.Deadline;
+                  planNew.Skills = plan.Skills;
+                  planNew.UserInclude = person;
+                  planNew.DateInclude = plan.DateInclude;
+                  planNew.TypePlan = plan.TypePlan;
+                  planNew.SourcePlan = plan.SourcePlan;
+                  planNew.TypeAction = plan.TypeAction;
+                  planNew.StatusPlan = plan.StatusPlan;
+                  planNew.TextEnd = plan.TextEnd;
+                  planNew.TextEndManager = plan.TextEndManager;
+                  planNew.DateEnd = plan.DateEnd;
+                  planNew.Evaluation = plan.Evaluation;
+                  planNew.Result = plan.Result;
+                  planNew.StatusPlanApproved = plan.StatusPlanApproved;
+                  planNew.Attachments = plan.Attachments;
+                  planNew.NewAction = plan.NewAction;
+                  planNew.StructPlans = plan.StructPlans;
+                  view.Plans.Add(ScriptPlan(planNew));
+                }
+
+                monitoring.Schoolings.Add(view);
+
+              };
+            }
+
+            if (item.Activities != null)
+            {
+              foreach (var row in item.Activities.ToList())
+              {
+                var view = new MonitoringActivities();
+                monitoring.Activities = new List<MonitoringActivities>();
+                view.Activities = row.Activities;
+                view.Praise = row.Praise;
+                view.Status = row.Status;
+                view._id = row._id;
+                view._idAccount = row._idAccount;
+                view.Comments = row.Comments;
+                view.CommentsManager = row.CommentsManager;
+                view.CommentsPerson = row.CommentsPerson;
+                view.StatusViewManager = row.StatusViewManager;
+                view.StatusViewPerson = row.StatusViewPerson;
+                foreach (var plan in row.Plans)
+                {
+                  var planNew = new Plan();
+                  view.Plans = new List<Plan>();
+
+                  planNew.Name = plan.Name;
+                  planNew.Description = plan.Description;
+                  planNew.Deadline = plan.Deadline;
+                  planNew.Skills = plan.Skills;
+                  planNew.UserInclude = person;
+                  planNew.DateInclude = plan.DateInclude;
+                  planNew.TypePlan = plan.TypePlan;
+                  planNew.SourcePlan = plan.SourcePlan;
+                  planNew.TypeAction = plan.TypeAction;
+                  planNew.StatusPlan = plan.StatusPlan;
+                  planNew.TextEnd = plan.TextEnd;
+                  planNew.TextEndManager = plan.TextEndManager;
+                  planNew.DateEnd = plan.DateEnd;
+                  planNew.Evaluation = plan.Evaluation;
+                  planNew.Result = plan.Result;
+                  planNew.StatusPlanApproved = plan.StatusPlanApproved;
+                  planNew.Attachments = plan.Attachments;
+                  planNew.NewAction = plan.NewAction;
+                  planNew.StructPlans = plan.StructPlans;
+                  view.Plans.Add(ScriptPlan(planNew));
+                }
+
+                monitoring.Activities.Add(view);
+
+              };
+            }
+
+            monitoringService.InsertAccountId(monitoring);
+          }
+
+
+
+        }
+
+        return "ok";
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
 
-    public string ScriptPlan()
+    private Plan ScriptPlan(Plan plan)
     {
-      throw new NotImplementedException();
+      try
+      {
+        return planService.Insert(plan);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
 
     public string ScriptLog()

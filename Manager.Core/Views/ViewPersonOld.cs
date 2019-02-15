@@ -1,25 +1,23 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Views.Enumns;
-using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
-namespace Manager.Core.Business
+namespace Manager.Core.Views
 {
-  public class PersonOld : BaseEntity
+  public class ViewPersonOld: BaseEntity
   {
     public EnumStatusUser StatusUser { get; set; }
     public Company Company { get; set; }
     public Occupation Occupation { get; set; }
-    public PersonOld Manager { get; set; }
+    public string Manager { get; set; }
     public string DocumentManager { get; set; }
     public DateTime? DateLastOccupation { get; set; }
     public decimal Salary { get; set; }
     public DateTime? DateLastReadjust { get; set; }
     public DateTime? DateResignation { get; set; }
-    [BsonIgnore]
-    public decimal SalaryScale { get; set; }
     public EnumTypeJourney TypeJourney { get; set; }
     public Establishment Establishment { get; set; }
     public DateTime? HolidayReturn { get; set; }

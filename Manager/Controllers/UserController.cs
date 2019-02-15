@@ -163,6 +163,19 @@ namespace Manager.Controllers
       return service.ScriptOnBoarding();
     }
 
+    [HttpPut]
+    [Route("scriptcheckpoint")]
+    public string ScriptCheckpoint()
+    {
+      return service.ScriptCheckpoint();
+    }
+
+    [HttpPut]
+    [Route("scriptmonitoring")]
+    public string ScriptMonitoring()
+    {
+      return service.ScriptMonitoring();
+    }
 
   }
 }
