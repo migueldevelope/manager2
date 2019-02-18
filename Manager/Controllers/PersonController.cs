@@ -157,7 +157,21 @@ namespace Manager.Controllers
       return result;
     }
 
+    [Authorize]
+    [HttpPost]
+    [Route("addpersonuser")]
+    public string AddPersonUser(ViewPersonUser view)
+    {
+      return service.AddPersonUser(view);
+    }
 
+    [Authorize]
+    [HttpPut]
+    [Route("updatepersonuser")]
+    public string UpdatePersonUser(ViewPersonUser view)
+    {
+      return service.UpdatePersonUser(view);
+    }
 
   }
 }

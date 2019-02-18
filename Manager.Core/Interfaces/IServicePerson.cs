@@ -36,5 +36,7 @@ namespace Manager.Core.Interfaces
     List<Company> ListCompany(ref long total, string filter, int count, int page);
     List<Person> ListAll();
 
+    string AddPersonUser(ViewPersonUser view);
+    string UpdatePersonUser(ViewPersonUser view);
   }
 }

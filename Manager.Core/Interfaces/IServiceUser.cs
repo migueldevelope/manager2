@@ -40,6 +40,5 @@ namespace Manager.Core.Interfaces
     string ScriptMonitoring();
     string ScriptLog();
 
-
   }
 }

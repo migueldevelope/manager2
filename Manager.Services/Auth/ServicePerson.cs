@@ -20,11 +20,13 @@ namespace Manager.Services.Auth
 {
   public class ServicePerson : Repository<Person>, IServicePerson
   {
+    private ServiceGeneric<User> userService;
     private ServiceGeneric<Person> personService;
     private ServiceGeneric<Attachments> attachmentService;
     private ServiceGeneric<Company> companyService;
     private ServiceGeneric<Occupation> occupationService;
     private ServiceSendGrid mailService;
+    private ServiceGeneric<Parameter> parameterService;
 
     public BaseUser user { get => _user; set => user = _user; }
 
@@ -38,7 +40,9 @@ namespace Manager.Services.Auth
         mailService._user = _user;
         companyService._user = _user;
         occupationService._user = _user;
-
+        userService._user = _user;
+        parameterService._user = _user;
+        DefaultTypeRegisterPerson();
       }
       catch (Exception e)
       {
@@ -51,11 +55,14 @@ namespace Manager.Services.Auth
     {
       try
       {
+        userService = new ServiceGeneric<User>(context);
         personService = new ServiceGeneric<Person>(context);
         attachmentService = new ServiceGeneric<Attachments>(context);
         mailService = new ServiceSendGrid(context);
         companyService = new ServiceGeneric<Company>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
+        parameterService = new ServiceGeneric<Parameter>(context);
+        DefaultTypeRegisterPerson();
       }
       catch (Exception e)
       {
@@ -73,6 +80,8 @@ namespace Manager.Services.Auth
         mailService._user = _user;
         companyService._user = _user;
         occupationService._user = _user;
+        userService._user = _user;
+        parameterService._user = _user;
       }
       catch (Exception e)
       {
@@ -154,20 +163,20 @@ namespace Manager.Services.Auth
           User = person.User
         };
 
-        
-        
+
+
         if (person.Manager != null)
         {
           var manager = personService.GetAll(p => p._id == model.Manager._id).FirstOrDefault();
-          if(manager != null)
+          if (manager != null)
           {
             if (manager.User != null)
               model.DocumentManager = manager.User.Document;
           }
         }
-          
 
-        
+
+
         return personService.Insert(model);
       }
       catch (Exception e)
@@ -183,7 +192,7 @@ namespace Manager.Services.Auth
       {
         Person model = personService.GetAll(p => p._id == id).FirstOrDefault();
 
-        
+
         model.Manager = person.Manager;
         model.Occupation = person.Occupation;
         model.Company = person.Company;
@@ -468,5 +477,77 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+
+    public string AddPersonUser(ViewPersonUser view)
+    {
+      try
+      {
+        var authMaristas = false;
+        var authPUC = false;
+        try
+        {
+          authMaristas = view.User.Mail.Substring(view.User.Mail.IndexOf("@"), view.User.Mail.Length - view.User.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+          authPUC = view.User.Mail.Substring(view.User.Mail.IndexOf("@"), view.User.Mail.Length - view.User.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+        }
+        catch (Exception)
+        {
+
+        }
+
+        view.User.Password = EncryptServices.GetMD5Hash(view.User.Password);
+        view.User.ChangePassword = EnumChangePassword.AccessFirst;
+        view.User.Status = EnumStatus.Enabled;
+        view.Person.Status = EnumStatus.Enabled;
+
+        if ((authMaristas) || (authPUC))
+          view.User.ChangePassword = EnumChangePassword.No;
+
+        personService.Insert(view.Person);
+        userService.Insert(view.User);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdatePersonUser(ViewPersonUser view)
+    {
+      try
+      {
+        var pass = userService.GetAll(p => p._id == view.User._id).SingleOrDefault().Password;
+        if (view.User.Password != EncryptServices.GetMD5Hash(pass))
+          view.User.Password = EncryptServices.GetMD5Hash(view.User.Password);
+
+        personService.Update(view.Person, null);
+        userService.Update(view.User, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private void DefaultTypeRegisterPerson()
+    {
+      try
+      {
+        var parameter = parameterService.GetAll(p => p.Name == "typeregisterperson").FirstOrDefault();
+        if (parameter == null)
+          parameterService.Insert(new Parameter()
+          {
+            Name = "typeregisterperson",
+            Content = "0",
+            Status = EnumStatus.Enabled
+          });
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
   }
 }
