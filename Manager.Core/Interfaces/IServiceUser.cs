@@ -39,6 +39,7 @@ namespace Manager.Core.Interfaces
     string ScriptCheckpoint();
     string ScriptMonitoring();
     string ScriptLog();
+    List<Person> ListPerson(string iduser, ref long total, string filter, int count, int page);
 
   }
 }

@@ -110,10 +110,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string Put([FromBody] User user)
+    public User Put([FromBody] User user)
     {
-      service.UpdateUserView(user);
-      return "ok";
+      return service.UpdateUserView(user);
     }
 
     [Authorize]
@@ -123,6 +122,17 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.ListOccupation(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listperson/{iduser}")]
+    public List<Person> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListPerson(iduser, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

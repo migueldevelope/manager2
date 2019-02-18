@@ -642,6 +642,15 @@ namespace Manager.Services.Auth
       return detail;
     }
 
+    public List<Person> ListPerson(string iduser, ref long total, string filter, int count, int page)
+    {
+      int skip = (count * (page - 1));
+      var detail = personService.GetAll(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+      total = personService.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+      return detail;
+    }
+
     public List<User> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
