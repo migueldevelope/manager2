@@ -502,6 +502,7 @@ namespace Manager.Services.Auth
         if ((authMaristas) || (authPUC))
           view.User.ChangePassword = EnumChangePassword.No;
 
+        view.Person.User = view.User;
         personService.Insert(view.Person);
         userService.Insert(view.User);
         return "ok";
@@ -520,6 +521,7 @@ namespace Manager.Services.Auth
         if (view.User.Password != EncryptServices.GetMD5Hash(pass))
           view.User.Password = EncryptServices.GetMD5Hash(view.User.Password);
 
+        view.Person.User = view.User;
         personService.Update(view.Person, null);
         userService.Update(view.User, null);
         return "update";

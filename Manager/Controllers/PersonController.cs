@@ -160,7 +160,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addpersonuser")]
-    public string AddPersonUser(ViewPersonUser view)
+    public string AddPersonUser([FromBody]ViewPersonUser view)
     {
       return service.AddPersonUser(view);
     }
@@ -168,7 +168,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatepersonuser")]
-    public string UpdatePersonUser(ViewPersonUser view)
+    public string UpdatePersonUser([FromBody]ViewPersonUser view)
     {
       return service.UpdatePersonUser(view);
     }
