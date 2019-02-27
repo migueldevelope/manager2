@@ -61,7 +61,9 @@ namespace Manager
       IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
       IServiceUser serviceUser = new ServiceUser(_context);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany,serviceUser);
+      IServiceCertification serviceCertification = new ServiceCertification(_context, conn.TokenServer);
 
+      services.AddSingleton(_ => serviceCertification);
       services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceDictionarySystem);
       services.AddSingleton(_ => serviceSalaryScale);
