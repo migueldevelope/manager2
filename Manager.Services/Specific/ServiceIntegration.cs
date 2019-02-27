@@ -18,6 +18,7 @@ namespace Manager.Services.Specific
   public class ServiceIntegration : Repository<Person>, IServiceIntegration
   {
     private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<User> userService;
     private readonly ServiceGeneric<Schooling> schoolingService;
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceGeneric<Establishment> establishmentService;
@@ -38,6 +39,7 @@ namespace Manager.Services.Specific
       try
       {
         personService = new ServiceGeneric<Person>(context);
+        userService = new ServiceGeneric<User>(context);
         schoolingService = new ServiceGeneric<Schooling>(context);
         companyService = new ServiceGeneric<Company>(context);
         establishmentService = new ServiceGeneric<Establishment>(context);
@@ -692,6 +694,7 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
       personService._user = _user;
+      userService._user = _user;
       schoolingService._user = _user;
       companyService._user = _user;
       accountService._user = _user;
@@ -723,6 +726,18 @@ namespace Manager.Services.Specific
       parameterService._user = _user;
     }
     #endregion
+
+    public User GetUserByKey(string document)
+    {
+      try
+      {
+        return userService.GetAll(p => p.Document == document).SingleOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
 
     public Person GetPersonByKey(string idcompany, string idestablishment, string document, long registration)
     {

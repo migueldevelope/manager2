@@ -40,8 +40,8 @@ namespace Manager.Views.Integration
     public string ChaveEstabelecimento { get { return string.Format("{0};{1}", Empresa, Estabelecimento); } }
     public string ChaveGrauInstrucao { get { return GrauInstrucao; } }
     public string ChaveCargo { get { return (string.Format("{0};{1}", Empresa, Cargo)); } }
-    public string ChaveColaborador { get { return string.Format("{0};{1};{2}", Documento, Empresa, Estabelecimento, Matricula); } }
+    public string ChaveColaborador { get { return string.Format("{0};{1};{2};{3}", Documento, Empresa, Estabelecimento, Matricula); } }
     public string ChaveEmpresaGestor { get { return EmpresaGestor; } }
-    public string ChaveGestor { get { return string.Format("{0};{1};{2}", DocumentoGestor, EmpresaGestor, EstabelecimentoGestor, MatriculaGestor); } }
+    public string ChaveGestor { get { return string.Format("{0};{1};{2};{3}", DocumentoGestor, EmpresaGestor, EstabelecimentoGestor, MatriculaGestor); } }
   }
 }

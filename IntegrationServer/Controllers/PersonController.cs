@@ -20,16 +20,19 @@ namespace IntegrationServer.InfraController
   {
     private readonly IServiceIntegration service;
     private readonly IServicePerson servicePerson;
+    private readonly IServiceUser serviceUser;
 
     public PersonController(IServiceIntegration _service, IServicePerson _servicePerson, IServiceCompany _serviceCompany,
-      IHttpContextAccessor contextAccessor)
+      IServiceUser _serviceUser, IHttpContextAccessor contextAccessor)
     {
       try
       {
         service = _service;
         servicePerson = _servicePerson;
+        serviceUser = _serviceUser;
         service.SetUser(contextAccessor);
         servicePerson.SetUser(contextAccessor);
+        serviceUser.SetUser(contextAccessor);
       }
       catch (Exception)
       {
@@ -133,7 +136,7 @@ namespace IntegrationServer.InfraController
 
         Person personManager = null;
         if (companyManager != null && !string.IsNullOrEmpty(view.Colaborador.DocumentoGestor))
-          personManager = service.GetPersonByKey(companyManager.IdCompany, string.Empty, view.Colaborador.DocumentoGestor, view.Colaborador.MatriculaGestor);
+          personManager = service.GetPersonByKey(companyManager.IdCompany, establishment.IdEstablishment, view.Colaborador.DocumentoGestor, view.Colaborador.MatriculaGestor);
 
         if (company.IdCompany.Equals("000000000000000000000000"))
         {
@@ -190,8 +193,6 @@ namespace IntegrationServer.InfraController
           }
         };
 
-        // Testar se o que está vindo é igual ao que já tinha antes
-        Person person = service.GetPersonByKey(company.IdCompany, establishment.IdEstablishment, view.Colaborador.Documento, view.Colaborador.Matricula);
         if (view.Colaborador.DataAdmissao != null)
           view.Colaborador.DataAdmissao = ((DateTime)view.Colaborador.DataAdmissao).ToUniversalTime();
         if (view.Colaborador.DataNascimento != null)
@@ -202,26 +203,76 @@ namespace IntegrationServer.InfraController
           view.Colaborador.DataUltimoReajuste = ((DateTime)view.Colaborador.DataUltimoReajuste).ToUniversalTime();
         if (view.Colaborador.DataDemissao != null)
           view.Colaborador.DataDemissao = ((DateTime)view.Colaborador.DataDemissao).ToUniversalTime();
+
+        // Testar se o usuário já existe
+        User user = service.GetUserByKey(view.Colaborador.Documento);
+        if (user == null)
+        {
+          user = new User()
+          {
+            Name = view.Colaborador.Nome,
+            Document = view.Colaborador.Documento,
+            Mail = view.Colaborador.Email,
+            Phone = view.Colaborador.Celular,
+            DateAdm = view.Colaborador.DataAdmissao,
+            DateBirth = view.Colaborador.DataNascimento,
+            Schooling = service.GetSchooling(schooling.IdSchooling),
+            PhoneFixed = view.Colaborador.Telefone,
+            DocumentID = view.Colaborador.Identidade,
+            DocumentCTPF = view.Colaborador.CarteiraProfissional,
+            Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
+            Password = view.Colaborador.Documento,
+          };
+          user = serviceUser.NewUserView(user);
+        }
+        else
+        {
+          if (view.CamposAlterados.Count > 0)
+          {
+            user.Document = view.Colaborador.Documento;
+            if (view.CamposAlterados.Contains("Nome"))
+              user.Name = view.Colaborador.Nome;
+
+            if (view.CamposAlterados.Contains("Email"))
+              user.Mail = view.Colaborador.Email;
+
+            if (view.CamposAlterados.Contains("Celular"))
+              user.Phone = view.Colaborador.Celular;
+
+            if (view.CamposAlterados.Contains("DataNascimento"))
+              user.DateBirth = view.Colaborador.DataNascimento;
+
+            if (view.CamposAlterados.Contains("DataAdmissao"))
+              user.DateAdm = view.Colaborador.DataAdmissao;
+
+            if (view.CamposAlterados.Contains("GrauInstrucao"))
+              user.Schooling = service.GetSchooling(schooling.IdSchooling);
+
+            if (view.CamposAlterados.Contains("Telefone"))
+              user.PhoneFixed = view.Colaborador.Telefone;
+
+            if (view.CamposAlterados.Contains("Identidade"))
+              user.DocumentID = view.Colaborador.Identidade;
+
+            if (view.CamposAlterados.Contains("CarteiraProfissional"))
+              user.DocumentCTPF = view.Colaborador.CarteiraProfissional;
+
+            if (view.CamposAlterados.Contains("Sexo"))
+              user.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
+            user = serviceUser.UpdateUserView(user);
+          }
+        }
+        // Testar se a person já existe
+        Person person = service.GetPersonByKey(company.IdCompany, establishment.IdEstablishment, view.Colaborador.Documento, view.Colaborador.Matricula);
         if (person == null)
         {
           person = new Person
           {
-            //Name = view.Colaborador.Nome,
-            //Document = view.Colaborador.Documento,
-            //Mail = view.Colaborador.Email,
-            //Phone = view.Colaborador.Celular,
-            //TypeUser = EnumTypeUser.Employee,
+            TypeUser = EnumTypeUser.Employee,
             Company = service.GetCompany(company.IdCompany),
             Establishment = string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) ? null : service.GetEstablishment(establishment.IdEstablishment),
             Occupation = service.GetOccupation(occupation.IdOccupation),
             Registration = view.Colaborador.Matricula.ToString(),
-            //DateBirth = view.Colaborador.DataNascimento,
-            //DateAdm = view.Colaborador.DataAdmissao,
-            //Schooling = service.GetSchooling(schooling.IdSchooling),
-            //PhoneFixed = view.Colaborador.Telefone,
-            //DocumentID = view.Colaborador.Identidade,
-            //DocumentCTPF = view.Colaborador.CarteiraProfissional,
-            //Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
             HolidayReturn = view.Colaborador.DataRetornoFerias,
             MotiveAside = view.Colaborador.MotivoAfastamento,
             DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo,
@@ -231,7 +282,6 @@ namespace IntegrationServer.InfraController
             TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
             Manager = new BaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id },
             DocumentManager = personManager?.DocumentManager,
-            //Password = view.Colaborador.Documento
           };
           switch (view.Colaborador.Situacao.ToLower())
           {
@@ -248,6 +298,7 @@ namespace IntegrationServer.InfraController
               person.StatusUser = EnumStatusUser.Enabled;
               break;
           }
+          person.User = user;
           person = servicePerson.NewPersonView(person);
           view.Message = string.Empty;
           view.IdPerson = person._id;
@@ -256,7 +307,6 @@ namespace IntegrationServer.InfraController
         {
           if (view.CamposAlterados.Count > 0)
           {
-            //person.Document = view.Colaborador.Documento;
             person.Registration = view.Colaborador.Matricula.ToString();
 
             if (view.CamposAlterados.Contains("Nome"))
@@ -264,9 +314,6 @@ namespace IntegrationServer.InfraController
 
             if (view.CamposAlterados.Contains("Email"))
               person.User.Mail = view.Colaborador.Email;
-
-            //if (view.CamposAlterados.Contains("Celular"))
-            //person.Phone = view.Colaborador.Celular;
 
             if (view.CamposAlterados.Contains("Empresa"))
               person.Company = service.GetCompany(company.IdCompany);
@@ -277,26 +324,8 @@ namespace IntegrationServer.InfraController
             if (view.CamposAlterados.Contains("Cargo"))
               person.Occupation = service.GetOccupation(occupation.IdOccupation);
 
-            //if (view.CamposAlterados.Contains("DataNascimento"))
-            //person.DateBirth = view.Colaborador.DataNascimento;
-
             if (view.CamposAlterados.Contains("DataAdmissao"))
               person.User.DateAdm = view.Colaborador.DataAdmissao;
-
-            //if (view.CamposAlterados.Contains("GrauInstrucao"))
-            //person.Schooling = service.GetSchooling(schooling.IdSchooling);
-
-            //if (view.CamposAlterados.Contains("Telefone"))
-            //person.PhoneFixed = view.Colaborador.Telefone;
-
-            //if (8view.CamposAlterados.Contains("Identidade"))
-            //person.DocumentID = view.Colaborador.Identidade;
-
-            //if (view.CamposAlterados.Contains("CarteiraProfissional"))
-            //person.DocumentCTPF = view.Colaborador.CarteiraProfissional;
-
-            //if (view.CamposAlterados.Contains("Sexo"))
-            //person.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
 
             if (view.CamposAlterados.Contains("DataRetornoFerias"))
               person.HolidayReturn = view.Colaborador.DataRetornoFerias;
@@ -337,8 +366,8 @@ namespace IntegrationServer.InfraController
             if (person.Manager == null)
             {
               person.Manager = new BaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
-              //person.DocumentManager = personManager?.Document;
             }
+            person.User = user;
             person = servicePerson.UpdatePersonView(person);
             view.IdPerson = person._id;
           }

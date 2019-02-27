@@ -21,6 +21,7 @@ namespace Manager.Core.Interfaces
     IntegrationSchooling GetIntegrationSchooling(string key, string name);
     IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany);
     Person GetPersonByKey(string idcompany, string idestablishment, string document, long registration);
+    User GetUserByKey(string document);
     Schooling GetSchooling(string id);
     Company GetCompany(string id);
     Establishment GetEstablishment(string id);
