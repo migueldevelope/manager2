@@ -411,6 +411,8 @@ namespace Manager.Services.Specific
       try
       {
         var person = personService.GetAll(p => p._id == idperson).FirstOrDefault();
+        item._id = ObjectId.GenerateNewId().ToString();
+
         var certification = new Certification()
         {
           CertificationItem = item,
@@ -540,12 +542,21 @@ namespace Manager.Services.Specific
       {
         var person = personService.GetAll(p => p._id == idperson).FirstOrDefault();
         List<Certification> list = new List<Certification>();
-        foreach (var item in certificationPersonService.GetAll(p => p.IdPerson == idperson & p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).ToList())
+
+        //load certification guest
+        foreach (var item in certificationPersonService.GetAll(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).ToList())
         {
           var certification = certificationService.GetAll(
           p => p.ListPersons.Contains(item)).FirstOrDefault();
           list.Add(certification);
         };
+
+        //load certification manager
+        foreach (var item in certificationService.GetAll(p => p.Person.Manager._id == idperson & p.StatusCertification == EnumStatusCertification.Wait).ToList())
+        {
+          list.Add(item);
+        };
+
 
         return list;
       }

@@ -7,7 +7,6 @@ namespace Manager.Core.Business
 {
   public class CertificationPerson: BaseEntity
   {
-    [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string IdPerson { get; set; }
     public string Name { get; set; }
