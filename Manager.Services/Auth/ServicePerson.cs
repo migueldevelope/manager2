@@ -503,8 +503,10 @@ namespace Manager.Services.Auth
           view.User.ChangePassword = EnumChangePassword.No;
 
         view.Person.User = view.User;
+        view.Person.User = userService.Insert(view.User);
+
         personService.Insert(view.Person);
-        userService.Insert(view.User);
+        
         return "ok";
       }
       catch (Exception e)
