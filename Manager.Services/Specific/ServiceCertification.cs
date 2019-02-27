@@ -383,9 +383,10 @@ namespace Manager.Services.Specific
           });
         }
 
+        view.ItemActivitie = new List<CertificationItem>();
         foreach (var item in occupation.Activities)
         {
-          view.ItemSkill.Add(new CertificationItem()
+          view.ItemActivitie.Add(new CertificationItem()
           {
             IdItem = item._id,
             Name = item.Name,
@@ -536,25 +537,25 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Certification> ListCertificationsWaitPerson(string idperson)
+    public List<ViewCertification> ListCertificationsWaitPerson(string idperson)
     {
       try
       {
         var person = personService.GetAll(p => p._id == idperson).FirstOrDefault();
-        List<Certification> list = new List<Certification>();
+        List<ViewCertification> list = new List<ViewCertification>();
 
         //load certification guest
         foreach (var item in certificationPersonService.GetAll(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).ToList())
         {
           var certification = certificationService.GetAll(
           p => p.ListPersons.Contains(item)).FirstOrDefault();
-          list.Add(certification);
+          list.Add(new ViewCertification() { _id = certification._id, Name = certification.Person.User.Name, NameItem = certification.CertificationItem.Name});
         };
 
         //load certification manager
         foreach (var item in certificationService.GetAll(p => p.Person.Manager._id == idperson & p.StatusCertification == EnumStatusCertification.Wait).ToList())
         {
-          list.Add(item);
+          list.Add(new ViewCertification() { _id = item._id, Name = item.Person.User.Name, NameItem = item.CertificationItem.Name });
         };
 
 
@@ -565,6 +566,19 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public Certification CertificationsWaitPerson(string idcertification)
+    {
+      try
+      {
+        return certificationService.GetAll(p => p._id == idcertification).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
   }
 #pragma warning restore 1998
 }

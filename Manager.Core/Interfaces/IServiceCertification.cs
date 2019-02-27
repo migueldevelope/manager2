@@ -19,6 +19,7 @@ namespace Manager.Core.Interfaces
     string RemoveCertification(string idcertification);
     List<Certification> GetListExclud(ref long total, string filter, int count, int page);
     void SetUser(IHttpContextAccessor contextAccessor);
-    List<Certification> ListCertificationsWaitPerson(string idperson);
+    List<ViewCertification> ListCertificationsWaitPerson(string idperson);
+    Certification CertificationsWaitPerson(string idcertification);
   }
 }

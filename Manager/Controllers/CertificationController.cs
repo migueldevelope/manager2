@@ -61,9 +61,17 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcertificationswaitperson/{idperson}")]
-    public List<Certification> ListCertificationsWaitPerson(string idperson)
+    public List<ViewCertification> ListCertificationsWaitPerson(string idperson)
     {
       return service.ListCertificationsWaitPerson(idperson);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("certificationswaitperson/{idcertification}")]
+    public Certification CertificationsWaitPerson(string idcertification)
+    {
+      return service.CertificationsWaitPerson(idcertification);
     }
 
     [Authorize]
