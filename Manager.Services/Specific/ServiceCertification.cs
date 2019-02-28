@@ -394,7 +394,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.Certification).FirstOrDefault();
+        var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.CertificationHead).FirstOrDefault();
         if (text != null)
           view.TextDefault = text.Content.Replace("{company_name}", person.Company.Name).Replace("{employee_name}", person.User.Name)
             .Replace("{manager_name}", person.Manager.Name);
