@@ -95,7 +95,7 @@ namespace Manager.Services.Specific
               _idAccount = item._idAccount,
               Company = item.Company,
               Content = item.Content.Replace("{company_name}", certification.Person.Company.Name)
-              .Replace("{employee_name}", certification.Person.User.Name).Replace("{item_name};", certification.CertificationItem.Name),
+              .Replace("{employee_name}", certification.Person.User.Name).Replace("{item_name}", certification.CertificationItem.Name),
               Name = item.Name,
               Order = item.Order,
               Status = item.Status,
@@ -111,7 +111,7 @@ namespace Manager.Services.Specific
         var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.Certification).FirstOrDefault();
         if (text != null)
           certification.TextDefault = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name};", certification.CertificationItem.Name);
+            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
 
         return certification;
       }
@@ -130,7 +130,7 @@ namespace Manager.Services.Specific
         var itens = new List<CertificationQuestions>();
 
 
-        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Text & p.TypeRotine == EnumTypeRotine.Certification).ToList())
+        foreach (var item in questionsService.GetAll(p => p.TypeRotine == EnumTypeRotine.Certification).OrderBy(p => p.Order).ToList())
         {
           certification.Questions.Add(new CertificationQuestions()
           {
@@ -141,7 +141,7 @@ namespace Manager.Services.Specific
               _idAccount = item._idAccount,
               Company = item.Company,
               Content = item.Content.Replace("{company_name}", certification.Person.Company.Name)
-              .Replace("{employee_name}", certification.Person.User.Name).Replace("{item_name};", certification.CertificationItem.Name),
+              .Replace("{employee_name}", certification.Person.User.Name).Replace("{item_name}", certification.CertificationItem.Name),
               Name = item.Name,
               Order = item.Order,
               Status = item.Status,
@@ -157,7 +157,7 @@ namespace Manager.Services.Specific
         var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.Certification).FirstOrDefault();
         if (text != null)
           certification.TextDefault = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name};", certification.CertificationItem.Name);
+            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
 
         return certification;
       }
@@ -443,12 +443,12 @@ namespace Manager.Services.Specific
         var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.CertificationPerson).FirstOrDefault();
         if (text != null)
           text.Content = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name};", certification.CertificationItem.Name);
+            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
 
         var textEnd = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.CertificationPerson).FirstOrDefault();
         if (textEnd != null)
           textEnd.Content = textEnd.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name};", certification.CertificationItem.Name);
+            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
 
 
         var cerPerson = new CertificationPerson()
