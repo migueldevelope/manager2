@@ -584,7 +584,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public void SetAttachment(string idquestion, string idcertification, string url, string fileName, string attachmentid)
+    public void SetAttachment(string idcertification, string url, string fileName, string attachmentid)
     {
       try
       {

@@ -393,8 +393,8 @@ namespace EdeskIntegration.Controllers
 
 
     [Authorize]
-    [HttpPost("{idcertification}/certification/{idquestion}")]
-    public async Task<ObjectResult> PostCertification(string idcertification, string idquestion)
+    [HttpPost("certification/{idcertification}")]
+    public async Task<ObjectResult> PostCertification(string idcertification)
     {
       foreach (var file in HttpContext.Request.Form.Files)
       {
@@ -439,7 +439,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        certificationService.SetAttachment(idquestion, idcertification, url, file.FileName, attachment._id);
+        certificationService.SetAttachment(idcertification, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);

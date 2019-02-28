@@ -21,7 +21,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     List<ViewCertification> ListCertificationsWaitPerson(string idperson);
     Certification CertificationsWaitPerson(string idcertification);
-    void SetAttachment(string idquestion, string idcertification, string url, string fileName, string attachmentid);
+    void SetAttachment(string idcertification, string url, string fileName, string attachmentid);
 
   }
 }
