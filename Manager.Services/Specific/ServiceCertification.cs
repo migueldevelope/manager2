@@ -472,7 +472,7 @@ namespace Manager.Services.Specific
 
         certification.ListPersons.Add(cerPerson);
 
-        
+
 
         certificationService.Update(certification, null);
 
@@ -560,13 +560,31 @@ namespace Manager.Services.Specific
       {
         var certification = certificationService.GetAll(p => p._id == viewcertification._idCertification).FirstOrDefault();
 
-        foreach(var item in certification.ListPersons)
+        foreach (var item in certification.ListPersons)
         {
-          if(item.IdPerson == idperson)
+          if (item.IdPerson == idperson)
           {
             item.StatusCertificationPerson = viewcertification.StatusCertificationPerson;
             item.Comments = viewcertification.Comments;
+
+            certificationPersonService.Update(item, null);
+
             certificationService.Update(certification, null);
+
+
+
+            var open = certification.ListPersons.Where(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).Count();
+            if (open == 0)
+            {
+              var disapproved = certification.ListPersons.Where(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Disapproved).Count();
+              if (disapproved > 0)
+                certification.StatusCertification = EnumStatusCertification.Disaproved;
+              else
+                certification.StatusCertification = EnumStatusCertification.Approved;
+
+              certificationService.Update(certification, null);
+            }
+
             return "update";
 
           }
@@ -590,11 +608,15 @@ namespace Manager.Services.Specific
         List<ViewCertification> list = new List<ViewCertification>();
 
         //load certification guest
-        foreach (var item in certificationPersonService.GetAll(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).ToList())
+        foreach (var item in certificationPersonService.GetAll(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait & p.IdPerson == idperson).ToList())
         {
           var certification = certificationService.GetAll(
           p => p.ListPersons.Contains(item)).FirstOrDefault();
-          list.Add(new ViewCertification() { _id = certification._id, Name = certification.Person.User.Name, NameItem = certification.CertificationItem.Name, Manager = false });
+          if (certification != null)
+          {
+            list.Add(new ViewCertification() { _id = certification._id, Name = certification.Person.User.Name, NameItem = certification.CertificationItem.Name, Manager = false });
+          }
+
         };
 
         //load certification manager
@@ -603,15 +625,40 @@ namespace Manager.Services.Specific
           list.Add(new ViewCertification() { _id = item._id, Name = item.Person.User.Name, NameItem = item.CertificationItem.Name, Manager = true });
         };
 
-        total = list.Count();
 
-        return list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        var result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        result = result.Distinct(new ViewCertificationComparer()).ToList();
+        total = result.Count();
+
+
+        return result;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+
+    public class ViewCertificationComparer : IEqualityComparer<ViewCertification>
+    {
+      public bool Equals(ViewCertification x, ViewCertification y)
+      {
+        if (x._id == y._id & x.Manager == y.Manager)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
+
+      public int GetHashCode(ViewCertification obj)
+      {
+        return obj._id.GetHashCode();
+      }
+    }
+
 
     public Certification CertificationsWaitPerson(string idcertification)
     {
