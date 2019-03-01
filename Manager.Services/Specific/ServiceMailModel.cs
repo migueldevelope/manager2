@@ -260,6 +260,54 @@ namespace Manager.Services.Specific
       }
     }
 
+    public MailModel Certification(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "certification");
+        if (model.Count() == 0)
+          return DefaultCertification(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel CertificationDisapproval(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "certificationdisapproval");
+        if (model.Count() == 0)
+          return DefaultCertificationDisapproval(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel CertificationApproval(string path)
+    {
+      try
+      {
+        var model = mailModelService.GetAll(p => p.Name == "certificationapproval");
+        if (model.Count() == 0)
+          return DefaultCertificationApproval(path);
+        else
+          return model.FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public MailModel OnBoardingApproval(string path)
     {
       try
@@ -770,6 +818,72 @@ namespace Manager.Services.Specific
           Message = "Ola <strong>{Manager}</strong>,</br></br>O seu subordinado {Person} não concordou com o OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
           Subject = "Aprovação de OnBoarding",
           Name = "onboardingdisapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultCertificationDisapproval(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>O {Person} enviou a acreditação.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
+          Subject = "Acreditação",
+          Name = "certificationdisapproval",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultCertification(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Guest}</strong>,</br></br>{Manager} enviou a acreditação do colaborador {Person}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
+          Subject = "Acreditação",
+          Name = "certification",
+          Link = path
+        };
+        // Insert
+        mailModelService.Insert(model);
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public MailModel DefaultCertificationApproval(string path)
+    {
+      try
+      {
+        var model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>O {Person} enviou a acreditação.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
+          Subject = "Acreditação",
+          Name = "certificationapproval",
           Link = path
         };
         // Insert

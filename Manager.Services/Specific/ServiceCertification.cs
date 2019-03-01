@@ -204,51 +204,51 @@ namespace Manager.Services.Specific
       mailModelService.SetUser(contextAccessor);
     }
 
-    // send mail
-    //public async void Mail(Person person)
-    //{
-    //  try
-    //  {
-    //    //searsh model mail database
-    //    var model = mailModelService.CertificationApproval(path);
-    //    if (model.StatusMail == EnumStatus.Disabled)
-    //      return;
+    //send mail
+    public async void Mail(Person person, BaseFields guest)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.Certification(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
 
-    //    var url = "";
-    //    var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
-    //    var message = new MailMessage
-    //    {
-    //      Type = EnumTypeMailMessage.Put,
-    //      Name = model.Name,
-    //      Url = url,
-    //      Body = body
-    //    };
-    //    var idMessage = mailMessageService.Insert(message)._id;
-    //    var sendMail = new MailLog
-    //    {
-    //      From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-    //      To = new List<MailLogAddress>(){
-    //                    new MailLogAddress(person.User.Mail, person.User.Name)
-    //                },
-    //      Priority = EnumPriorityMail.Low,
-    //      _idPerson = person._id,
-    //      NamePerson = person.User.Name,
-    //      Body = body,
-    //      StatusMail = EnumStatusMail.Sended,
-    //      Included = DateTime.Now,
-    //      Subject = model.Subject
-    //    };
-    //    var mailObj = mailService.Insert(sendMail);
-    //    var token = SendMail(path, person, mailObj._id.ToString());
-    //    var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
-    //    messageEnd.Token = token;
-    //    mailMessageService.Update(messageEnd, null);
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Guest}", guest.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(guest.Mail, guest.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
 
     public string SendMail(string link, Person person, string idmail)
     {
@@ -535,6 +535,14 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (certification.StatusCertification == EnumStatusCertification.Wait)
+        {
+          foreach (var item in certification.ListPersons)
+          {
+            Mail(certification.Person, new BaseFields() { Name = item.Name, Mail = item.Mail });
+          }
+        }
+
         certificationService.Update(certification, null);
         return "update";
       }
