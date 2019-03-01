@@ -458,8 +458,6 @@ namespace Manager.Services.Specific
 
         var cerPerson = new CertificationPerson()
         {
-          _id = ObjectId.GenerateNewId().ToString(),
-          _idAccount = _user._idAccount,
           IdPerson = person._id,
           Name = person.Name,
           Mail = person.Name,
@@ -470,7 +468,11 @@ namespace Manager.Services.Specific
           TextDefaultEnd = textEnd.Content
         };
 
+        cerPerson = certificationPersonService.Insert(cerPerson);
+
         certification.ListPersons.Add(cerPerson);
+
+        
 
         certificationService.Update(certification, null);
 
