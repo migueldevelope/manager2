@@ -544,10 +544,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCertification> ListCertificationsWaitPerson(string idperson)
+    public List<ViewCertification> ListCertificationsWaitPerson(string idperson, ref long total, string filter, int count, int page)
     {
       try
       {
+        int skip = (count * (page - 1));
+
         var person = personService.GetAll(p => p._id == idperson).FirstOrDefault();
         List<ViewCertification> list = new List<ViewCertification>();
 
@@ -565,8 +567,9 @@ namespace Manager.Services.Specific
           list.Add(new ViewCertification() { _id = item._id, Name = item.Person.User.Name, NameItem = item.CertificationItem.Name });
         };
 
+        total = list.Count();
 
-        return list;
+        return list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {

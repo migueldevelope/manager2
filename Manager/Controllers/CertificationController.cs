@@ -61,9 +61,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcertificationswaitperson/{idperson}")]
-    public List<ViewCertification> ListCertificationsWaitPerson(string idperson)
+    public List<ViewCertification> ListCertificationsWaitPerson(string idperson, string filter = "", int count = 10, int page = 1)
     {
-      return service.ListCertificationsWaitPerson(idperson);
+      long total = 0;
+      var result = service.ListCertificationsWaitPerson(idperson, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
     [Authorize]
