@@ -639,6 +639,29 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        var result = certificationService.GetAll(p => p.Person._id == idperson & p.StatusCertification == EnumStatusCertification.Approved
+        & p.CertificationItem.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.CertificationItem.Name).Skip(skip).Take(count)
+        .Select(p => new ViewCertificationItem
+        {
+          NameItem = p.CertificationItem.Name
+        }).ToList();
+
+        total = result.Count();
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public class ViewCertificationComparer : IEqualityComparer<ViewCertification>
     {
       public bool Equals(ViewCertification x, ViewCertification y)

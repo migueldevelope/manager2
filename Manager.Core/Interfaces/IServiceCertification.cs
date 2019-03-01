@@ -23,5 +23,6 @@ namespace Manager.Core.Interfaces
     Certification CertificationsWaitPerson(string idcertification);
     void SetAttachment(string idcertification, string url, string fileName, string attachmentid);
     string UpdateStatusCertification(ViewCertificationStatus viewcertification, string idperson);
+    List<ViewCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page);
   }
 }
