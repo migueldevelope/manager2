@@ -425,7 +425,7 @@ namespace Manager.Services.Specific
           Person = person,
           Status = EnumStatus.Enabled,
           ListPersons = new List<CertificationPerson>(),
-          StatusCertification = EnumStatusCertification.Wait,
+          StatusCertification = EnumStatusCertification.Open,
           Attachments = new List<AttachmentField>()
         };
 
