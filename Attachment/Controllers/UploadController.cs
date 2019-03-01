@@ -29,12 +29,13 @@ namespace EdeskIntegration.Controllers
     private readonly IServicePerson personService;
     private readonly IServiceCompany companyService;
     private readonly IServicePlan planService;
+    private readonly IServiceCertification certificationService;
     private readonly IServiceEvent eventService;
     private readonly DataContext context;
     private readonly string blobKey;
 
     public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _companyService, IServicePerson _personService, IServicePlan _planService,
-      IServiceEvent _serviceEvent)
+      IServiceEvent _serviceEvent, IServiceCertification _serviceCertification)
     {
       BaseUser baseUser = new BaseUser();
       var user = contextAccessor.HttpContext.User;
@@ -65,6 +66,9 @@ namespace EdeskIntegration.Controllers
       planService = _planService;
       service._user = baseUser;
       eventService = _serviceEvent;
+      certificationService = _serviceCertification;
+
+      certificationService.SetUser(contextAccessor);
       eventService.SetUser(baseUser);
       eventService.SetUser(contextAccessor);
       personService.SetUser(contextAccessor);
@@ -224,7 +228,9 @@ namespace EdeskIntegration.Controllers
       }
       return Ok(listAttachments);
     }
-    
+
+
+
 
     [Authorize]
     [HttpPost("{idevent}/event")]
@@ -380,6 +386,60 @@ namespace EdeskIntegration.Controllers
         }
 
         planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
+        listAttachments.Add(attachment);
+      }
+      return Ok(listAttachments);
+    }
+
+
+    [Authorize]
+    [HttpPost("certification/{idcertification}")]
+    public async Task<ObjectResult> PostCertification(string idcertification)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return BadRequest("Bad file type.");
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      var url = "";
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        this.service.Insert(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+          if (await cloudBlobContainer.CreateIfNotExistsAsync())
+          {
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          url = blockBlob.Uri.ToString();
+        }
+        catch (Exception e)
+        {
+          attachment.Saved = false;
+          service.Update(attachment, null);
+          throw e;
+        }
+
+        certificationService.SetAttachment(idcertification, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);

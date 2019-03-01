@@ -44,7 +44,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public List<Certification> GetListExclud(string filter, int count, int page)
+    public List<Certification> GetListExclud(string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
       return service.GetListExclud(ref total, filter, count, page);
@@ -61,9 +61,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcertificationswaitperson/{idperson}")]
-    public List<ViewCertification> ListCertificationsWaitPerson(string idperson)
+    public List<ViewCertification> ListCertificationsWaitPerson(string idperson, string filter = "", int count = 10, int page = 1)
     {
-      return service.ListCertificationsWaitPerson(idperson);
+      long total = 0;
+      var result = service.ListCertificationsWaitPerson(idperson, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
     [Authorize]
@@ -77,7 +80,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersons/{idcertification}")]
-    public List<BaseFields> ListPersons(string idcertification, string filter, int count, int page)
+    public List<BaseFields> ListPersons(string idcertification, string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
       return service.ListPersons(idcertification, ref total, filter, count, page);

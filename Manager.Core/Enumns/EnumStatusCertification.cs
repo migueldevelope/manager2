@@ -2,6 +2,6 @@
 {
   public enum EnumStatusCertification : byte
   {
-    Wait = 0, Approved = 1, Disaproved = 2
+    Open = 0, Wait = 1, Approved = 2, Disaproved = 3
   }
 }
