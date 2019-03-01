@@ -118,5 +118,13 @@ namespace Manager.Controllers
     {
       return service.UpdateCertification(certification, idperson);
     }
+    [Authorize]
+    [HttpPut]
+    [Route("updatestatuscertification/{idperson}")]
+    public string UpdateStatusCertification([FromBody]ViewCertificationStatus certification, string idperson)
+    {
+      return service.UpdateStatusCertification(certification, idperson);
+    }
+
   }
 }

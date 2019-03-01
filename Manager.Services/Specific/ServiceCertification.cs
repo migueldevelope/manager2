@@ -450,7 +450,7 @@ namespace Manager.Services.Specific
           text.Content = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
             .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
 
-        var textEnd = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.CertificationPerson).FirstOrDefault();
+        var textEnd = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.CertificationPersonEnd).FirstOrDefault();
         if (textEnd != null)
           textEnd.Content = textEnd.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
             .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
@@ -545,6 +545,32 @@ namespace Manager.Services.Specific
 
         certificationService.Update(certification, null);
         return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateStatusCertification(ViewCertificationStatus viewcertification, string idperson)
+    {
+      try
+      {
+        var certification = certificationService.GetAll(p => p._id == viewcertification._idCertification).FirstOrDefault();
+
+        foreach(var item in certification.ListPersons)
+        {
+          if(item.IdPerson == idperson)
+          {
+            item.StatusCertificationPerson = viewcertification.StatusCertificationPerson;
+            item.Comments = viewcertification.Comments;
+            certificationService.Update(certification, null);
+            return "update";
+
+          }
+        }
+
+        return "not found";
       }
       catch (Exception e)
       {
