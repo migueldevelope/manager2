@@ -566,13 +566,13 @@ namespace Manager.Services.Specific
         {
           var certification = certificationService.GetAll(
           p => p.ListPersons.Contains(item)).FirstOrDefault();
-          list.Add(new ViewCertification() { _id = certification._id, Name = certification.Person.User.Name, NameItem = certification.CertificationItem.Name });
+          list.Add(new ViewCertification() { _id = certification._id, Name = certification.Person.User.Name, NameItem = certification.CertificationItem.Name, Manager = false });
         };
 
         //load certification manager
         foreach (var item in certificationService.GetAll(p => p.Person.Manager._id == idperson & p.StatusCertification == EnumStatusCertification.Wait).ToList())
         {
-          list.Add(new ViewCertification() { _id = item._id, Name = item.Person.User.Name, NameItem = item.CertificationItem.Name });
+          list.Add(new ViewCertification() { _id = item._id, Name = item.Person.User.Name, NameItem = item.CertificationItem.Name, Manager = true });
         };
 
         total = list.Count();
