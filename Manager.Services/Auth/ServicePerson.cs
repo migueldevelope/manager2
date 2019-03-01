@@ -495,12 +495,12 @@ namespace Manager.Services.Auth
         }
 
         view.User.Password = EncryptServices.GetMD5Hash(view.User.Password);
-        view.User.ChangePassword = EnumChangePassword.AccessFirst;
+        view.User.ChangePassword = Manager.Views.Enumns.EnumChangePassword.AccessFirst;
         view.User.Status = EnumStatus.Enabled;
         view.Person.Status = EnumStatus.Enabled;
 
         if ((authMaristas) || (authPUC))
-          view.User.ChangePassword = EnumChangePassword.No;
+          view.User.ChangePassword = Manager.Views.Enumns.EnumChangePassword.No;
 
         view.Person.User = view.User;
         view.Person.User = userService.Insert(view.User);

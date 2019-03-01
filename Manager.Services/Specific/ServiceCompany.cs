@@ -4,6 +4,7 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;

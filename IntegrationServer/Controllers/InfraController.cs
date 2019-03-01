@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
-using Manager.Services.Commons;
+using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

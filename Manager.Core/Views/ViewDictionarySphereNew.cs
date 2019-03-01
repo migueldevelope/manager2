@@ -1,7 +1,4 @@
-﻿using Manager.Core.Enumns;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Manager.Views.Enumns;
 
 namespace Manager.Core.Views
 {

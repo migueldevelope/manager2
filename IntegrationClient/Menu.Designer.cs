@@ -42,6 +42,7 @@
       this.tbarAccount = new System.Windows.Forms.ToolStripLabel();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.tbarPerson = new System.Windows.Forms.ToolStripLabel();
+      this.impColDePara = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip1.SuspendLayout();
       this.toolStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -62,6 +63,7 @@
       // 
       this.impCol.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.impColConfig,
+            this.impColDePara,
             this.impColImport});
       this.impCol.Name = "impCol";
       this.impCol.Size = new System.Drawing.Size(221, 24);
@@ -156,6 +158,13 @@
       this.tbarPerson.Size = new System.Drawing.Size(84, 22);
       this.tbarPerson.Text = "Usuário: {0}";
       // 
+      // impColDePara
+      // 
+      this.impColDePara.Name = "impColDePara";
+      this.impColDePara.Size = new System.Drawing.Size(216, 26);
+      this.impColDePara.Text = "De -> Para";
+      this.impColDePara.Click += new System.EventHandler(this.ImpColDePara_Click);
+      // 
       // Menu
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -194,5 +203,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripLabel tbarAccount;
     private System.Windows.Forms.ToolStripMenuItem impColImport;
+    private System.Windows.Forms.ToolStripMenuItem impColDePara;
   }
 }

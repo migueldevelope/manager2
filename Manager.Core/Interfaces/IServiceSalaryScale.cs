@@ -1,6 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.Enumns;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 

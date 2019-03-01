@@ -65,5 +65,15 @@ namespace IntegrationClient
       };
       form.Show();
     }
+
+    private void ImpColDePara_Click(object sender, EventArgs e)
+    {
+      IntegracaoDePara form = new IntegracaoDePara
+      {
+        MdiParent = this,
+        WindowState = FormWindowState.Normal
+      };
+      form.Show();
+    }
   }
 }

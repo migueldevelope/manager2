@@ -45,47 +45,50 @@ namespace IntegrationClient
       if (cboMode.SelectedItem.ToString().StartsWith("DataBase"))
       {
         grpBD.Visible = true;
-        if (serviceConfiguration.Param.ConnectionString.StartsWith("ODBC"))
+        if (serviceConfiguration.Param.ConnectionString != null)
         {
-          cboDatabaseType.SelectedIndex = cboDatabaseType.FindStringExact(serviceConfiguration.Param.ConnectionString.Split('|')[0]);
-          txtStr.Text = serviceConfiguration.Param.ConnectionString.Split('|')[1];
-          lblHostName.Visible = false;
-          txtHostName.Visible = false;
-          lblUser.Visible = false;
-          txtUser.Visible = false;
-          lblPassword.Visible = false;
-          txtPassword.Visible = false;
-          lblDefault.Visible = false;
-          txtDefault.Visible = false;
-          txtHostName.Text = string.Empty;
-          txtUser.Text = string.Empty;
-          txtPassword.Text = string.Empty;
-          txtDefault.Text = string.Empty;
-          lblDefault.Visible = false;
-          txtDefault.Visible = false;
-          lblStr.Visible = true;
-          txtStr.Visible = true;
-        }
-        else
-        {
-          lblHostName.Visible = true;
-          txtHostName.Visible = true;
-          lblUser.Visible = true;
-          txtUser.Visible = true;
-          lblPassword.Visible = true;
-          txtPassword.Visible = true;
-          lblDefault.Visible = true;
-          txtDefault.Visible = true;
-          lblStr.Visible = false;
-          txtStr.Visible = false;
-          txtStr.Text = string.Empty;
-          if (!string.IsNullOrEmpty(serviceConfiguration.Param.ConnectionString))
+          if (serviceConfiguration.Param.ConnectionString.StartsWith("ODBC"))
           {
-            cboDatabaseType.SelectedIndex = cboDatabaseType.FindStringExact(serviceConfiguration.Param.ConnectionString.Split(';')[0]);
-            txtHostName.Text = serviceConfiguration.Param.ConnectionString.Split(';')[1];
-            txtUser.Text = serviceConfiguration.Param.ConnectionString.Split(';')[2];
-            txtPassword.Text = serviceConfiguration.Param.ConnectionString.Split(';')[3];
-            txtDefault.Text = serviceConfiguration.Param.ConnectionString.Split(';')[4];
+            cboDatabaseType.SelectedIndex = cboDatabaseType.FindStringExact(serviceConfiguration.Param.ConnectionString.Split('|')[0]);
+            txtStr.Text = serviceConfiguration.Param.ConnectionString.Split('|')[1];
+            lblHostName.Visible = false;
+            txtHostName.Visible = false;
+            lblUser.Visible = false;
+            txtUser.Visible = false;
+            lblPassword.Visible = false;
+            txtPassword.Visible = false;
+            lblDefault.Visible = false;
+            txtDefault.Visible = false;
+            txtHostName.Text = string.Empty;
+            txtUser.Text = string.Empty;
+            txtPassword.Text = string.Empty;
+            txtDefault.Text = string.Empty;
+            lblDefault.Visible = false;
+            txtDefault.Visible = false;
+            lblStr.Visible = true;
+            txtStr.Visible = true;
+          }
+          else
+          {
+            lblHostName.Visible = true;
+            txtHostName.Visible = true;
+            lblUser.Visible = true;
+            txtUser.Visible = true;
+            lblPassword.Visible = true;
+            txtPassword.Visible = true;
+            lblDefault.Visible = true;
+            txtDefault.Visible = true;
+            lblStr.Visible = false;
+            txtStr.Visible = false;
+            txtStr.Text = string.Empty;
+            if (!string.IsNullOrEmpty(serviceConfiguration.Param.ConnectionString))
+            {
+              cboDatabaseType.SelectedIndex = cboDatabaseType.FindStringExact(serviceConfiguration.Param.ConnectionString.Split(';')[0]);
+              txtHostName.Text = serviceConfiguration.Param.ConnectionString.Split(';')[1];
+              txtUser.Text = serviceConfiguration.Param.ConnectionString.Split(';')[2];
+              txtPassword.Text = serviceConfiguration.Param.ConnectionString.Split(';')[3];
+              txtDefault.Text = serviceConfiguration.Param.ConnectionString.Split(';')[4];
+            }
           }
         }
         txtSql.Text = serviceConfiguration.Param.SqlCommand;
