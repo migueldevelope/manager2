@@ -2,6 +2,7 @@
 using System.Net.Http;
 using Newtonsoft.Json;
 using Manager.Views.Integration;
+using Manager.Views.BusinessCrud;
 
 namespace IntegrationService.Api
 {
@@ -21,54 +22,26 @@ namespace IntegrationService.Api
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
     }
 
-    public ViewIntegrationParameter GetParameter()
+    public ViewCrudIntegrationParameter GetParameter()
     {
       try
       {
         var result = clientSkill.GetAsync("configuration").Result;
-        return JsonConvert.DeserializeObject<ViewIntegrationParameter>(result.Content.ReadAsStringAsync().Result);
+        return JsonConvert.DeserializeObject<ViewCrudIntegrationParameter>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {
         return null;
       }
     }
-    public ViewIntegrationParameter SetParameter(ViewIntegrationParameterMode view)
+    public ViewCrudIntegrationParameter SetParameter(ViewCrudIntegrationParameter view)
     {
       try
       {
         StringContent content = new StringContent(JsonConvert.SerializeObject(view));
         content.Headers.ContentType.MediaType = "application/json";
         var result = clientSkill.PostAsync("configuration/mode", content).Result;
-        return JsonConvert.DeserializeObject<ViewIntegrationParameter>(result.Content.ReadAsStringAsync().Result);
-      }
-      catch (Exception)
-      {
-        return null;
-      }
-    }
-    public ViewIntegrationParameter SetParameter(ViewIntegrationParameterPack view)
-    {
-      try
-      {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
-        content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("configuration/pack", content).Result;
-        return JsonConvert.DeserializeObject<ViewIntegrationParameter>(result.Content.ReadAsStringAsync().Result);
-      }
-      catch (Exception)
-      {
-        return null;
-      }
-    }
-    public ViewIntegrationParameter SetParameter(ViewIntegrationParameterExecution view)
-    {
-      try
-      {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
-        content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("configuration/execution", content).Result;
-        return JsonConvert.DeserializeObject<ViewIntegrationParameter>(result.Content.ReadAsStringAsync().Result);
+        return JsonConvert.DeserializeObject<ViewCrudIntegrationParameter>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {

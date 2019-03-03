@@ -1,6 +1,9 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Business.Integration;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -16,6 +19,24 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
+
+    #region ConfigurationController
+    ViewCrudIntegrationParameter GetIntegrationParameter();
+    ViewCrudIntegrationParameter SetIntegrationParameter(ViewCrudIntegrationParameter view);
+    #endregion
+
+    #region IntegrationController
+    ViewIntegrationDashboard GetStatusDashboard();
+    List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
+    ViewListIntegrationCompany CompanyUpdate(string idIntegration, string idCompany);
+    List<ViewListIntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
+    ViewListIntegrationEstablishment EstablishmentUpdate(string idIntegration, string idEstablishment);
+    List<ViewListIntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
+    ViewListIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation);
+    List<ViewListIntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
+    ViewListIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling);
+    #endregion
+
     IntegrationCompany GetIntegrationCompany(string key, string name);
     IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany);
     IntegrationSchooling GetIntegrationSchooling(string key, string name);
@@ -26,23 +47,11 @@ namespace Manager.Core.Interfaces
     Company GetCompany(string id);
     Establishment GetEstablishment(string id);
     Occupation GetOccupation(string id);
-    IntegrationParameter GetIntegrationParameter();
-    IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterMode view);
-    IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterPack view);
-    IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterExecution view);
+
     IntegrationPerson GetIntegrationPerson(string key);
     void PostIntegrationPerson(IntegrationPerson integrationPerson);
     void PutIntegrationPerson(IntegrationPerson integrationPerson);
     List<string> EmployeeChange(ViewColaborador oldEmployee, ViewColaborador newEmployee);
     string GetStatusIntegration();
-    List<ViewIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
-    List<ViewIntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
-    List<ViewIntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
-    List<ViewIntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
-    ViewIntegrationCompany CompanyUpdate(string idIntegration, string idCompany);
-    ViewIntegrationEstablishment EstablishmentUpdate(string idIntegration, string idEstablishment);
-    ViewIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation);
-    ViewIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling);
-    ViewIntegrationDashboard GetStatusDashboard();
   }
 }

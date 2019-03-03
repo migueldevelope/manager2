@@ -123,30 +123,26 @@ namespace IntegrationService.Service
         }
         LoadLists();
         FinalImport();
-        service.SetParameter(new ViewIntegrationParameterExecution()
-        {
-          CriticalError = string.Empty,
-          MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME"),
-          StatusExecution = "Ok",
-          CustomVersionExecution = string.Empty,
-          UploadNextLog = false,
-          ProgramVersionExecution = VersionProgram.ToString()
-        });
+        service.Param.CriticalError = string.Empty;
+        service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        service.Param.StatusExecution = "Ok";
+        service.Param.CustomVersionExecution = string.Empty;
+        service.Param.UploadNextLog = false;
+        service.Param.ProgramVersionExecution = VersionProgram.ToString();
+        service.SetParameter(service.Param);
 
       }
       catch (Exception ex)
       {
         if (string.IsNullOrEmpty(Message))
           Message = ex.Message;
-        service.SetParameter(new ViewIntegrationParameterExecution()
-        {
-          CriticalError = Message,
-          MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME"),
-          StatusExecution = "Critical Error",
-          CustomVersionExecution = string.Empty,
-          UploadNextLog = false,
-          ProgramVersionExecution = VersionProgram.ToString()
-        });
+        service.Param.CriticalError = Message;
+        service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        service.Param.StatusExecution = "Critical Error";
+        service.Param.CustomVersionExecution = string.Empty;
+        service.Param.UploadNextLog = false;
+        service.Param.ProgramVersionExecution = VersionProgram.ToString();
+        service.SetParameter(service.Param);
         throw;
       }
     }

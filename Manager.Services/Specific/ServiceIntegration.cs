@@ -5,6 +5,9 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Http;
@@ -53,19 +56,24 @@ namespace Manager.Services.Specific
         integrationPersonService = new ServiceGeneric<IntegrationPerson>(context);
         logService = new ServiceLog(context);
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
     #endregion
 
+    // Ok
     #region IntegrationStatus
+    /// <summary>
+    /// Retornar a situação da integração na tela de Dashboard de integração
+    /// </summary>
+    /// <returns></returns>
     public ViewIntegrationDashboard GetStatusDashboard()
     {
       try
       {
-        IntegrationParameter param = GetIntegrationParameter();
+        ViewCrudIntegrationParameter param = GetIntegrationParameter();
         ViewIntegrationDashboard view = new ViewIntegrationDashboard
         {
           CompanyError = integrationCompanyService.GetAll(p => p.IdCompany == "000000000000000000000000").Count(),
@@ -83,6 +91,10 @@ namespace Manager.Services.Specific
         throw;
       }
     }
+    /// <summary>
+    /// Validar se existe informação pendente de parametrização da importação
+    /// </summary>
+    /// <returns></returns>
     public string GetStatusIntegration()
     {
       try
@@ -112,6 +124,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+    // Parcial
     #region IntegrationCompany
     public IntegrationCompany GetIntegrationCompany(string key, string name)
     {
@@ -144,13 +157,13 @@ namespace Manager.Services.Specific
         }
         return item;
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
 
-    public List<ViewIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -166,15 +179,16 @@ namespace Manager.Services.Specific
           detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
           total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").Count();
         }
-        List<ViewIntegrationCompany> result = new List<ViewIntegrationCompany>();
+        List<ViewListIntegrationCompany> result = new List<ViewListIntegrationCompany>();
         foreach (var item in detail)
         {
-          result.Add(new ViewIntegrationCompany()
+          result.Add(new ViewListIntegrationCompany()
           {
-            IdIntegration = item._id,
-            NameIntegration = item.Name,
+            _id = item._id,
+            Name = item.Name,
+            Key = item.Key,
             IdCompany = item.IdCompany.Equals("000000000000000000000000") ? string.Empty : item.IdCompany,
-            NameCompany = item.NameCompany
+            NameCompany = item.NameCompany            
           });
         }
         return result;
@@ -184,31 +198,33 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public ViewIntegrationCompany CompanyUpdate(string idIntegration, string idCompany)
+    public ViewListIntegrationCompany CompanyUpdate(string idIntegration, string idCompany)
     {
       try
       {
         IntegrationCompany item = integrationCompanyService.GetAll(p => p._id == idIntegration).FirstOrDefault();
         if (item == null)
-          throw new Exception("Id não localizado!");
+          throw new Exception("Id integration not found!");
         item.IdCompany = idCompany;
         item.NameCompany = companyService.GetAll(p => p._id == idCompany).FirstOrDefault().Name;
         integrationCompanyService.Update(item, null);
-        return new ViewIntegrationCompany()
+        return new ViewListIntegrationCompany()
         {
-          IdCompany = item.IdCompany,
-          IdIntegration = item._id,
-          NameCompany = item.NameCompany,
-          NameIntegration = item.Name
+          _id = item._id,
+          Name = item.Name,
+          Key = item.Key,
+          IdCompany = item.IdCompany.Equals("000000000000000000000000") ? string.Empty : item.IdCompany,
+          NameCompany = item.NameCompany
         };
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
     #endregion
 
+    // Parcial
     #region IntegrationEstablishment
     public IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany)
     {
@@ -242,12 +258,12 @@ namespace Manager.Services.Specific
         }
         return item;
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
-    public List<ViewIntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -263,13 +279,16 @@ namespace Manager.Services.Specific
           detail = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
           total = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").Count();
         }
-        List<ViewIntegrationEstablishment> result = new List<ViewIntegrationEstablishment>();
+        List<ViewListIntegrationEstablishment> result = new List<ViewListIntegrationEstablishment>();
         foreach (var item in detail)
         {
-          result.Add(new ViewIntegrationEstablishment()
+          result.Add(new ViewListIntegrationEstablishment()
           {
-            IdIntegration = item._id,
-            NameIntegration = item.Name,
+            _id = item._id,
+            Name = item.Name,
+            Key = item.Key,
+            IdCompany = item._idCompany,
+            NameCompany = companyService.GetAll(p => p._id == item._idCompany).FirstOrDefault().Name,
             IdEstablishment = item.IdEstablishment.Equals("000000000000000000000000") ? string.Empty : item.IdEstablishment,
             NameEstablishment = item.NameEstablishment
           });
@@ -281,31 +300,35 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public ViewIntegrationEstablishment EstablishmentUpdate(string idIntegration, string idEstablishment)
+    public ViewListIntegrationEstablishment EstablishmentUpdate(string idIntegration, string idEstablishment)
     {
       try
       {
         IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p._id == idIntegration).FirstOrDefault();
         if (item == null)
-          throw new Exception("Id não localizado!");
+          throw new Exception("Id integration not found!");
         item.IdEstablishment = idEstablishment;
         item.NameEstablishment = establishmentService.GetAll(p => p._id == idEstablishment).FirstOrDefault().Name;
         integrationEstablishmentService.Update(item, null);
-        return new ViewIntegrationEstablishment()
+        return new ViewListIntegrationEstablishment()
         {
-          IdEstablishment = item.IdEstablishment,
-          IdIntegration = item._id,
-          NameEstablishment = item.NameEstablishment,
-          NameIntegration = item.Name
+          _id = item._id,
+          Name = item.Name,
+          Key = item.Key,
+          IdCompany = item._idCompany,
+          NameCompany = companyService.GetAll(p => p._id == item._idCompany).FirstOrDefault().Name,
+          IdEstablishment = item.IdEstablishment.Equals("000000000000000000000000") ? string.Empty : item.IdEstablishment,
+          NameEstablishment = item.NameEstablishment
         };
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
     #endregion
 
+    // Parcial
     #region IntegrationOccupation
     public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany)
     {
@@ -339,12 +362,12 @@ namespace Manager.Services.Specific
         }
         return item;
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
-    public List<ViewIntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -360,13 +383,16 @@ namespace Manager.Services.Specific
           detail = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
           total = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").Count();
         }
-        List<ViewIntegrationOccupation> result = new List<ViewIntegrationOccupation>();
+        List<ViewListIntegrationOccupation> result = new List<ViewListIntegrationOccupation>();
         foreach (var item in detail)
         {
-          result.Add(new ViewIntegrationOccupation()
+          result.Add(new ViewListIntegrationOccupation()
           {
-            IdIntegration = item._id,
-            NameIntegration = item.Name,
+            _id = item._id,
+            Name = item.Name,
+            Key = item.Key,
+            IdCompany = item._idCompany,
+            NameCompany = companyService.GetAll(p => p._id == item._idCompany).FirstOrDefault().Name,
             IdOccupation = item.IdOccupation.Equals("000000000000000000000000") ? string.Empty : item.IdOccupation,
             NameOccupation = item.NameOccupation
           });
@@ -378,31 +404,35 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public ViewIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation)
+    public ViewListIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation)
     {
       try
       {
         IntegrationOccupation item = integrationOccupationService.GetAll(p => p._id == idIntegration).FirstOrDefault();
         if (item == null)
-          throw new Exception("Id não localizado!");
+          throw new Exception("Id integration not found!");
         item.IdOccupation = idOccupation;
         item.NameOccupation = item.Name;
         integrationOccupationService.Update(item, null);
-        return new ViewIntegrationOccupation()
+        return new ViewListIntegrationOccupation()
         {
-          IdIntegration = item._id,
-          IdOccupation = item.IdOccupation,
-          NameIntegration = item.Name,
+          _id = item._id,
+          Name = item.Name,
+          Key = item.Key,
+          IdCompany = item._idCompany,
+          NameCompany = companyService.GetAll(p => p._id == item._idCompany).FirstOrDefault().Name,
+          IdOccupation = item.IdOccupation.Equals("000000000000000000000000") ? string.Empty : item.IdOccupation,
           NameOccupation = item.NameOccupation
         };
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
     #endregion
 
+    // Parcial
     #region IntegrationSchooling
     public IntegrationSchooling GetIntegrationSchooling(string key, string name)
     {
@@ -435,12 +465,12 @@ namespace Manager.Services.Specific
         }
         return item;
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
-    public List<ViewIntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -456,13 +486,14 @@ namespace Manager.Services.Specific
           detail = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
           total = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").Count();
         }
-        List<ViewIntegrationSchooling> result = new List<ViewIntegrationSchooling>();
+        List<ViewListIntegrationSchooling> result = new List<ViewListIntegrationSchooling>();
         foreach (var item in detail)
         {
-          result.Add(new ViewIntegrationSchooling()
+          result.Add(new ViewListIntegrationSchooling()
           {
-            IdIntegration = item._id,
-            NameIntegration = item.Name,
+            _id = item._id,
+            Name = item.Name,
+            Key = item.Key,
             IdSchooling = item.IdSchooling.Equals("000000000000000000000000") ? string.Empty : item.IdSchooling,
             NameSchooling = item.NameSchooling
           });
@@ -474,37 +505,43 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public ViewIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling)
+    public ViewListIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling)
     {
       try
       {
         IntegrationSchooling item = integrationSchoolingService.GetAll(p => p._id == idIntegration).FirstOrDefault();
         if (item == null)
-          throw new Exception("Id não localizado!");
+          throw new Exception("Id integration not found!");
         item.IdSchooling = idSchooling;
         item.NameSchooling = item.Name;
         integrationSchoolingService.Update(item, null);
-        return new ViewIntegrationSchooling()
+        return new ViewListIntegrationSchooling()
         {
-          IdIntegration = item._id,
-          IdSchooling = item.IdSchooling,
-          NameIntegration = item.Name,
+          _id = item._id,
+          Name = item.Name,
+          Key = item.Key,
+          IdSchooling = item.IdSchooling.Equals("000000000000000000000000") ? string.Empty : item.IdSchooling,
           NameSchooling = item.NameSchooling
         };
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw;
       }
     }
     #endregion
 
+    // ok
     #region IntegrationParameter
-    public IntegrationParameter GetIntegrationParameter()
+    /// <summary>
+    /// Localizar os parâmetros de integração
+    /// </summary>
+    /// <returns></returns>
+    public ViewCrudIntegrationParameter GetIntegrationParameter()
     {
       try
       {
-        var param = parameterService.GetAll().FirstOrDefault();
+        IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
         if (param == null)
         {
           param = parameterService.Insert(new IntegrationParameter()
@@ -514,18 +551,47 @@ namespace Manager.Services.Specific
             Status = EnumStatus.Enabled
           });
         }
-        return param;
+        return new ViewCrudIntegrationParameter()
+        {
+          ConnectionString = param.ConnectionString,
+          CriticalError = param.CriticalError,
+          CustomVersionExecution = param.CustomVersionExecution,
+          FilePathLocal = param.FilePathLocal,
+          SheetName = param.SheetName,
+          LastExecution = param.LastExecution,
+          LinkPackCustom = param.LinkPackCustom,
+          LinkPackProgram = param.LinkPackProgram,
+          MachineIdentity = param.MachineIdentity,
+          MessageAtualization = param.MessageAtualization,
+          Process = param.Process,
+          Mode = param.Mode,
+          ProgramVersionExecution = param.ProgramVersionExecution,
+          SqlCommand = param.SqlCommand,
+          StatusExecution = param.StatusExecution,
+          Type = param.Type,
+          UploadNextLog = param.UploadNextLog,
+          VersionPackCustom = param.VersionPackCustom,
+          VersionPackProgram = param.VersionPackProgram,
+          _id = param._id
+        };
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterMode view)
+    /// <summary>
+    /// Atualizar os parâmetros de integração
+    /// </summary>
+    /// <param name="view">View de manutenção dos parâmetros de integração</param>
+    /// <returns>View de manutenção dos parâmetros de integração</returns>
+    public ViewCrudIntegrationParameter SetIntegrationParameter(ViewCrudIntegrationParameter view)
     {
       try
       {
         IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
+        if (param == null)
+          throw new Exception("Parameter Integration not found!");
         param.Mode = view.Mode;
         param.Process = view.Process;
         param.Type = view.Type;
@@ -533,37 +599,11 @@ namespace Manager.Services.Specific
         param.SqlCommand = view.SqlCommand;
         param.FilePathLocal = view.FilePathLocal;
         param.SheetName = view.SheetName;
-        parameterService.Update(param, null);
-        return param;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-    public IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterPack view)
-    {
-      try
-      {
-        IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
         param.VersionPackProgram = view.VersionPackProgram;
         param.LinkPackProgram = view.LinkPackProgram;
         param.VersionPackCustom = view.VersionPackCustom;
         param.LinkPackCustom = view.LinkPackCustom;
         param.MessageAtualization = view.MessageAtualization;
-        parameterService.Update(param, null);
-        return param;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-    public IntegrationParameter SetIntegrationParameter(ViewIntegrationParameterExecution view)
-    {
-      try
-      {
-        IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
         param.StatusExecution = view.StatusExecution;
         param.ProgramVersionExecution = view.ProgramVersionExecution;
         param.CustomVersionExecution = view.CustomVersionExecution;
@@ -572,7 +612,29 @@ namespace Manager.Services.Specific
         param.UploadNextLog = view.UploadNextLog;
         param.LinkLogExecution = view.LinkLogExecution;
         parameterService.Update(param, null);
-        return param;
+        return new ViewCrudIntegrationParameter()
+        {
+          ConnectionString = param.ConnectionString,
+          CriticalError = param.CriticalError,
+          CustomVersionExecution = param.CustomVersionExecution,
+          FilePathLocal = param.FilePathLocal,
+          SheetName = param.SheetName,
+          LastExecution = param.LastExecution,
+          LinkPackCustom = param.LinkPackCustom,
+          LinkPackProgram = param.LinkPackProgram,
+          MachineIdentity = param.MachineIdentity,
+          MessageAtualization = param.MessageAtualization,
+          Process = param.Process,
+          Mode = param.Mode,
+          ProgramVersionExecution = param.ProgramVersionExecution,
+          SqlCommand = param.SqlCommand,
+          StatusExecution = param.StatusExecution,
+          Type = param.Type,
+          UploadNextLog = param.UploadNextLog,
+          VersionPackCustom = param.VersionPackCustom,
+          VersionPackProgram = param.VersionPackProgram,
+          _id = param._id
+        };
       }
       catch (Exception)
       {

@@ -93,12 +93,6 @@
     <Compile Include="ImportarMapasManual.Designer.cs">
       <DependentUpon>ImportarMapasManual.cs</DependentUpon>
     </Compile>
-    <Compile Include="IntegracaoDePara.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="IntegracaoDePara.Designer.cs">
-      <DependentUpon>IntegracaoDePara.cs</DependentUpon>
-    </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,9 +133,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImportarMapasManual.resx">
       <DependentUpon>ImportarMapasManual.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="IntegracaoDePara.resx">
-      <DependentUpon>IntegracaoDePara.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>

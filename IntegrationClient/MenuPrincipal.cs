@@ -154,15 +154,13 @@ namespace IntegrationClient
           txtSql.Focus();
           return;
         }
-        serviceConfiguration.SetParameter(new ViewIntegrationParameterMode()
-        {
-          ConnectionString = string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text),
-          FilePathLocal = txtFileName.Text,
-          Process = (EnumIntegrationProcess)cboProc.SelectedItem,
-          Mode = (EnumIntegrationMode)cboMode.SelectedItem,
-          Type = (EnumIntegrationType)cboType.SelectedItem,
-          SqlCommand = txtSql.Text
-        });
+        serviceConfiguration.Param.ConnectionString = string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text);
+        serviceConfiguration.Param.FilePathLocal = txtFileName.Text;
+        serviceConfiguration.Param.Process = (EnumIntegrationProcess)cboProc.SelectedItem;
+        serviceConfiguration.Param.Mode = (EnumIntegrationMode)cboMode.SelectedItem;
+        serviceConfiguration.Param.Type = (EnumIntegrationType)cboType.SelectedItem;
+        serviceConfiguration.Param.SqlCommand = txtSql.Text;
+        serviceConfiguration.SetParameter(serviceConfiguration.Param);
         MessageBox.Show("Parâmetro atualizado!");
       }
       catch (Exception ex)
@@ -239,15 +237,13 @@ namespace IntegrationClient
           txtFileName.Focus();
           return;
         }
-        serviceConfiguration.SetParameter(new ViewIntegrationParameterMode()
-        {
-          ConnectionString = string.Empty,
-          FilePathLocal = txtFileName.Text,
-          Process = (EnumIntegrationProcess)cboProc.SelectedItem,
-          Mode = (EnumIntegrationMode)cboMode.SelectedItem,
-          Type = (EnumIntegrationType)cboType.SelectedItem,
-          SqlCommand = string.Empty
-        });
+        serviceConfiguration.Param.ConnectionString = string.Empty;
+        serviceConfiguration.Param.FilePathLocal = txtFileName.Text;
+        serviceConfiguration.Param.Process = (EnumIntegrationProcess)cboProc.SelectedItem;
+        serviceConfiguration.Param.Mode = (EnumIntegrationMode)cboMode.SelectedItem;
+        serviceConfiguration.Param.Type = (EnumIntegrationType)cboType.SelectedItem;
+        serviceConfiguration.Param.SqlCommand = string.Empty;
+        serviceConfiguration.SetParameter(serviceConfiguration.Param);
         MessageBox.Show("Parâmetro atualizado!");
       }
       catch (Exception ex)

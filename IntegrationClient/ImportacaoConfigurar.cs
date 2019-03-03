@@ -167,16 +167,14 @@ namespace IntegrationClient
             throw new Exception("Informe o comando para retornar a lista de colaboradores!!");
           }
         }
-        serviceConfiguration.SetParameter(new ViewIntegrationParameterMode()
-        {
-          ConnectionString = cboDatabaseType.SelectedItem.ToString().Equals("ODBC") ? string.Format("{0}|{1}", cboDatabaseType.SelectedItem, txtStr.Text) : string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text),
-          FilePathLocal = txtFileName.Text,
-          SqlCommand = txtSql.Text,
-          SheetName = string.Empty,
-          Process = (EnumIntegrationProcess)cboProc.SelectedItem,
-          Mode = (EnumIntegrationMode)cboMode.SelectedItem,
-          Type = (EnumIntegrationType)cboType.SelectedItem
-        });
+        serviceConfiguration.Param.ConnectionString = cboDatabaseType.SelectedItem.ToString().Equals("ODBC") ? string.Format("{0}|{1}", cboDatabaseType.SelectedItem, txtStr.Text) : string.Format("{0};{1};{2};{3};{4}", cboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text);
+        serviceConfiguration.Param.FilePathLocal = txtFileName.Text;
+        serviceConfiguration.Param.SqlCommand = txtSql.Text;
+        serviceConfiguration.Param.SheetName = string.Empty;
+        serviceConfiguration.Param.Process = (EnumIntegrationProcess)cboProc.SelectedItem;
+        serviceConfiguration.Param.Mode = (EnumIntegrationMode)cboMode.SelectedItem;
+        serviceConfiguration.Param.Type = (EnumIntegrationType)cboType.SelectedItem;
+        serviceConfiguration.SetParameter(serviceConfiguration.Param);
         MessageBox.Show("Parâmetro atualizado!",Text,MessageBoxButtons.OK,MessageBoxIcon.Information);
       }
       catch (Exception ex)
@@ -204,16 +202,14 @@ namespace IntegrationClient
           txtSheetName.Focus();
           throw new Exception("Informe o nome da planilha de colaboradores.");
         }
-        serviceConfiguration.SetParameter(new ViewIntegrationParameterMode()
-        {
-          ConnectionString = string.Empty,
-          FilePathLocal = txtFileName.Text,
-          Process = (EnumIntegrationProcess)cboProc.SelectedItem,
-          Mode = (EnumIntegrationMode)cboMode.SelectedItem,
-          Type = (EnumIntegrationType)cboType.SelectedItem,
-          SqlCommand = string.Empty,
-          SheetName = txtSheetName.Text
-        });
+        serviceConfiguration.Param.ConnectionString = string.Empty;
+        serviceConfiguration.Param.FilePathLocal = txtFileName.Text;
+        serviceConfiguration.Param.Process = (EnumIntegrationProcess)cboProc.SelectedItem;
+        serviceConfiguration.Param.Mode = (EnumIntegrationMode)cboMode.SelectedItem;
+        serviceConfiguration.Param.Type = (EnumIntegrationType)cboType.SelectedItem;
+        serviceConfiguration.Param.SqlCommand = string.Empty;
+        serviceConfiguration.Param.SheetName = txtSheetName.Text;
+        serviceConfiguration.SetParameter(serviceConfiguration.Param);
         MessageBox.Show("Parâmetro atualizado!",Text, MessageBoxButtons.OK,MessageBoxIcon.Information);
       }
       catch (Exception ex)

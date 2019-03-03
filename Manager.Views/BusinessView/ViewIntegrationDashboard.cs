@@ -1,4 +1,4 @@
-﻿namespace Manager.Views.Integration
+﻿namespace Manager.Views.BusinessView
 {
   public class ViewIntegrationDashboard
   {
