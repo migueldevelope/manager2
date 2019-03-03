@@ -204,51 +204,51 @@ namespace Manager.Services.Specific
       mailModelService.SetUser(contextAccessor);
     }
 
-    // send mail
-    //public async void Mail(Person person)
-    //{
-    //  try
-    //  {
-    //    //searsh model mail database
-    //    var model = mailModelService.CertificationApproval(path);
-    //    if (model.StatusMail == EnumStatus.Disabled)
-    //      return;
+    //send mail
+    public async void Mail(Person person, BaseFields guest)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = mailModelService.Certification(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
 
-    //    var url = "";
-    //    var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
-    //    var message = new MailMessage
-    //    {
-    //      Type = EnumTypeMailMessage.Put,
-    //      Name = model.Name,
-    //      Url = url,
-    //      Body = body
-    //    };
-    //    var idMessage = mailMessageService.Insert(message)._id;
-    //    var sendMail = new MailLog
-    //    {
-    //      From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-    //      To = new List<MailLogAddress>(){
-    //                    new MailLogAddress(person.User.Mail, person.User.Name)
-    //                },
-    //      Priority = EnumPriorityMail.Low,
-    //      _idPerson = person._id,
-    //      NamePerson = person.User.Name,
-    //      Body = body,
-    //      StatusMail = EnumStatusMail.Sended,
-    //      Included = DateTime.Now,
-    //      Subject = model.Subject
-    //    };
-    //    var mailObj = mailService.Insert(sendMail);
-    //    var token = SendMail(path, person, mailObj._id.ToString());
-    //    var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
-    //    messageEnd.Token = token;
-    //    mailMessageService.Update(messageEnd, null);
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Guest}", guest.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = mailMessageService.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(guest.Mail, guest.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = mailService.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        mailMessageService.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
 
     public string SendMail(string link, Person person, string idmail)
     {
@@ -425,7 +425,7 @@ namespace Manager.Services.Specific
           Person = person,
           Status = EnumStatus.Enabled,
           ListPersons = new List<CertificationPerson>(),
-          StatusCertification = EnumStatusCertification.Wait,
+          StatusCertification = EnumStatusCertification.Open,
           Attachments = new List<AttachmentField>()
         };
 
@@ -450,7 +450,7 @@ namespace Manager.Services.Specific
           text.Content = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
             .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
 
-        var textEnd = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.CertificationPerson).FirstOrDefault();
+        var textEnd = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.CertificationPersonEnd).FirstOrDefault();
         if (textEnd != null)
           textEnd.Content = textEnd.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
             .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
@@ -458,8 +458,6 @@ namespace Manager.Services.Specific
 
         var cerPerson = new CertificationPerson()
         {
-          _id = ObjectId.GenerateNewId().ToString(),
-          _idAccount = _user._idAccount,
           IdPerson = person._id,
           Name = person.Name,
           Mail = person.Name,
@@ -470,7 +468,11 @@ namespace Manager.Services.Specific
           TextDefaultEnd = textEnd.Content
         };
 
+        cerPerson = certificationPersonService.Insert(cerPerson);
+
         certification.ListPersons.Add(cerPerson);
+
+
 
         certificationService.Update(certification, null);
 
@@ -535,8 +537,60 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (certification.StatusCertification == EnumStatusCertification.Wait)
+        {
+          foreach (var item in certification.ListPersons)
+          {
+            Mail(certification.Person, new BaseFields() { Name = item.Name, Mail = item.Mail });
+          }
+        }
+
         certificationService.Update(certification, null);
         return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateStatusCertification(ViewCertificationStatus viewcertification, string idperson)
+    {
+      try
+      {
+        var certification = certificationService.GetAll(p => p._id == viewcertification._idCertification).FirstOrDefault();
+
+        foreach (var item in certification.ListPersons)
+        {
+          if (item.IdPerson == idperson)
+          {
+            item.StatusCertificationPerson = viewcertification.StatusCertificationPerson;
+            item.Comments = viewcertification.Comments;
+
+            certificationPersonService.Update(item, null);
+
+            certificationService.Update(certification, null);
+
+
+
+            var open = certification.ListPersons.Where(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).Count();
+            if (open == 0)
+            {
+              var disapproved = certification.ListPersons.Where(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Disapproved).Count();
+              if (disapproved > 0)
+                certification.StatusCertification = EnumStatusCertification.Disaproved;
+              else
+                certification.StatusCertification = EnumStatusCertification.Approved;
+
+              certificationService.Update(certification, null);
+            }
+
+            return "update";
+
+          }
+        }
+
+        return "not found";
       }
       catch (Exception e)
       {
@@ -554,28 +608,80 @@ namespace Manager.Services.Specific
         List<ViewCertification> list = new List<ViewCertification>();
 
         //load certification guest
-        foreach (var item in certificationPersonService.GetAll(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).ToList())
+        foreach (var item in certificationPersonService.GetAll(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait & p.IdPerson == idperson).ToList())
         {
           var certification = certificationService.GetAll(
           p => p.ListPersons.Contains(item)).FirstOrDefault();
-          list.Add(new ViewCertification() { _id = certification._id, Name = certification.Person.User.Name, NameItem = certification.CertificationItem.Name });
+          if (certification != null)
+          {
+            list.Add(new ViewCertification() { _id = certification._id, Name = certification.Person.User.Name, NameItem = certification.CertificationItem.Name, Manager = false });
+          }
+
         };
 
         //load certification manager
         foreach (var item in certificationService.GetAll(p => p.Person.Manager._id == idperson & p.StatusCertification == EnumStatusCertification.Wait).ToList())
         {
-          list.Add(new ViewCertification() { _id = item._id, Name = item.Person.User.Name, NameItem = item.CertificationItem.Name });
+          list.Add(new ViewCertification() { _id = item._id, Name = item.Person.User.Name, NameItem = item.CertificationItem.Name, Manager = true });
         };
 
-        total = list.Count();
 
-        return list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        var result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        result = result.Distinct(new ViewCertificationComparer()).ToList();
+        total = result.Count();
+
+
+        return result;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+
+    public List<ViewCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        var result = certificationService.GetAll(p => p.Person._id == idperson & p.StatusCertification == EnumStatusCertification.Approved
+        & p.CertificationItem.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.CertificationItem.Name).Skip(skip).Take(count)
+        .Select(p => new ViewCertificationItem
+        {
+          NameItem = p.CertificationItem.Name
+        }).ToList();
+
+        total = result.Count();
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public class ViewCertificationComparer : IEqualityComparer<ViewCertification>
+    {
+      public bool Equals(ViewCertification x, ViewCertification y)
+      {
+        if (x._id == y._id & x.Manager == y.Manager)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
+
+      public int GetHashCode(ViewCertification obj)
+      {
+        return obj._id.GetHashCode();
+      }
+    }
+
 
     public Certification CertificationsWaitPerson(string idcertification)
     {
