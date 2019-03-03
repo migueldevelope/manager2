@@ -222,6 +222,21 @@ namespace Manager.Services.Specific
         throw;
       }
     }
+    public string CompanyDelete(string idIntegration)
+    {
+      try
+      {
+        IntegrationCompany item = integrationCompanyService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id integration not found!");
+        integrationCompanyService.Delete(idIntegration,false);
+        return "Ok";
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     #endregion
 
     // Parcial
@@ -308,7 +323,9 @@ namespace Manager.Services.Specific
         if (item == null)
           throw new Exception("Id integration not found!");
         item.IdEstablishment = idEstablishment;
-        item.NameEstablishment = establishmentService.GetAll(p => p._id == idEstablishment).FirstOrDefault().Name;
+        Establishment establishment = establishmentService.GetAll(p => p._id == idEstablishment).FirstOrDefault();
+        item.NameEstablishment = establishment.Name;
+        item._idCompany = establishment.Company._id;
         integrationEstablishmentService.Update(item, null);
         return new ViewListIntegrationEstablishment()
         {
@@ -320,6 +337,21 @@ namespace Manager.Services.Specific
           IdEstablishment = item.IdEstablishment.Equals("000000000000000000000000") ? string.Empty : item.IdEstablishment,
           NameEstablishment = item.NameEstablishment
         };
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public string EstablishmentDelete(string idIntegration)
+    {
+      try
+      {
+        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id integration not found!");
+        integrationEstablishmentService.Delete(idIntegration, false);
+        return "Ok";
       }
       catch (Exception)
       {
@@ -412,7 +444,9 @@ namespace Manager.Services.Specific
         if (item == null)
           throw new Exception("Id integration not found!");
         item.IdOccupation = idOccupation;
-        item.NameOccupation = item.Name;
+        Occupation occupation = occupationService.GetAll(p => p._id == idOccupation).FirstOrDefault();
+        item.NameOccupation = occupation.Name;
+        item._idCompany = occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id;
         integrationOccupationService.Update(item, null);
         return new ViewListIntegrationOccupation()
         {
@@ -424,6 +458,21 @@ namespace Manager.Services.Specific
           IdOccupation = item.IdOccupation.Equals("000000000000000000000000") ? string.Empty : item.IdOccupation,
           NameOccupation = item.NameOccupation
         };
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public string OccupationDelete(string idIntegration)
+    {
+      try
+      {
+        IntegrationOccupation item = integrationOccupationService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id integration not found!");
+        integrationOccupationService.Delete(idIntegration, false);
+        return "Ok";
       }
       catch (Exception)
       {
@@ -523,6 +572,21 @@ namespace Manager.Services.Specific
           IdSchooling = item.IdSchooling.Equals("000000000000000000000000") ? string.Empty : item.IdSchooling,
           NameSchooling = item.NameSchooling
         };
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public string SchoolingDelete(string idIntegration)
+    {
+      try
+      {
+        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id integration not found!");
+        integrationSchoolingService.Delete(idIntegration, false);
+        return "Ok";
       }
       catch (Exception)
       {

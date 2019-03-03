@@ -6,12 +6,7 @@ using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
 {
@@ -29,12 +24,16 @@ namespace Manager.Core.Interfaces
     ViewIntegrationDashboard GetStatusDashboard();
     List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationCompany CompanyUpdate(string idIntegration, string idCompany);
+    string CompanyDelete(string idIntegration);
     List<ViewListIntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationEstablishment EstablishmentUpdate(string idIntegration, string idEstablishment);
+    string EstablishmentDelete(string idIntegration);
     List<ViewListIntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation);
+    string OccupationDelete(string idIntegration);
     List<ViewListIntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling);
+    string SchoolingDelete(string idIntegration);
     #endregion
 
     IntegrationCompany GetIntegrationCompany(string key, string name);

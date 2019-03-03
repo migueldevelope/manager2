@@ -42,7 +42,7 @@ namespace IntegrationServer.InfraController
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("status")]
+    [Route("dashboard")]
     [ProducesResponseType(typeof(ViewIntegrationDashboard), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult GetStatusDashboard()
@@ -108,6 +108,27 @@ namespace IntegrationServer.InfraController
         return BadRequest(e.Message);
       }
     }
+    /// <summary>
+    /// Excluir uma empresa da integração de funcionários
+    /// </summary>
+    /// <param name="idintegration">Identificador da integração da empresa da folha de pagamento</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("company/delete/{idintegration}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult DeleteCompany(string idintegration)
+    {
+      try
+      {
+        return Ok(service.CompanyDelete(idintegration));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
     #endregion
 
     #region Schooling
@@ -154,6 +175,27 @@ namespace IntegrationServer.InfraController
       try
       {
         return Ok(service.SchoolingUpdate(idintegration, idschooling));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+    /// <summary>
+    /// Excluir uma escolaridade da integração de funcionários
+    /// </summary>
+    /// <param name="idintegration">Identificador da integração da escolaridade da folha de pagamento</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("schooling/delete/{idintegration}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult SchoolingCompany(string idintegration)
+    {
+      try
+      {
+        return Ok(service.SchoolingDelete(idintegration));
       }
       catch (Exception e)
       {
@@ -212,6 +254,27 @@ namespace IntegrationServer.InfraController
         return BadRequest(e.Message);
       }
     }
+    /// <summary>
+    /// Excluir um estabelecimento da integração de funcionários
+    /// </summary>
+    /// <param name="idintegration">Identificador da integração do estabelecimento da folha de pagamento</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("establishment/delete/{idintegration}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult EstablishmentCompany(string idintegration)
+    {
+      try
+      {
+        return Ok(service.EstablishmentDelete(idintegration));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
     #endregion
 
     #region Occupation
@@ -258,6 +321,27 @@ namespace IntegrationServer.InfraController
       try
       {
         return Ok(service.OccupationUpdate(idintegration, idoccupation));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+    /// <summary>
+    /// Excluir um cargo da integração de funcionários
+    /// </summary>
+    /// <param name="idintegration">Identificador do cargo da folha de pagamento</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("occupation/delete/{idintegration}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult OccupationCompany(string idintegration)
+    {
+      try
+      {
+        return Ok(service.OccupationDelete(idintegration));
       }
       catch (Exception e)
       {
