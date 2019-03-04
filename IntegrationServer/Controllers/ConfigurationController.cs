@@ -15,6 +15,8 @@ namespace IntegrationServer.Controllers
   public class ConfigurationController : Controller
   {
     private readonly IServiceIntegration service;
+
+    #region Constructor
     /// <summary>
     /// Inicializador do controlador de configuração da integração
     /// </summary>
@@ -32,24 +34,18 @@ namespace IntegrationServer.Controllers
         throw;
       }
     }
+    #endregion
+
+    #region Parameter
     /// <summary>
     /// Ler todos parâmetros de integração
     /// </summary>
     /// <returns>View dos parâmetros de integração</returns>
     [Authorize]
     [HttpGet]
-    [ProducesResponseType(typeof(ViewCrudIntegrationParameter), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult GetParameter()
+    public ViewCrudIntegrationParameter GetParameter()
     {
-      try
-      {
-        return Ok(service.GetIntegrationParameter());
-      }
-      catch (Exception ex)
-      {
-        return BadRequest(ex.Message);
-      }
+      return service.GetIntegrationParameter();
     }
     /// <summary>
     /// Atualizar os parâmetros de integração
@@ -59,18 +55,11 @@ namespace IntegrationServer.Controllers
     [Authorize]
     [HttpPost]
     [Route("mode")]
-    [ProducesResponseType(typeof(ViewCrudIntegrationParameter), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult SetParameterMode([FromBody]ViewCrudIntegrationParameter view)
+    public ViewCrudIntegrationParameter SetParameterMode([FromBody]ViewCrudIntegrationParameter view)
     {
-      try
-      {
-        return Ok(service.SetIntegrationParameter(view));
-      }
-      catch (Exception ex)
-      {
-        return BadRequest(ex.Message);
-      }
+      return service.SetIntegrationParameter(view);
     }
+    #endregion
+
   }
 }

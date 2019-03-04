@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Business.Integration;
@@ -14,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IntegrationServer.InfraController
 {
+  /// <summary>
+  /// Controlador para integração de funcionários
+  /// </summary>
   [Produces("application/json")]
   [Route("person")]
   public class PersonController : Controller
@@ -22,6 +23,15 @@ namespace IntegrationServer.InfraController
     private readonly IServicePerson servicePerson;
     private readonly IServiceUser serviceUser;
 
+    #region Constructor
+    /// <summary>
+    /// Construtor do controlador
+    /// </summary>
+    /// <param name="_service">Serviço de integração</param>
+    /// <param name="_servicePerson">Serviço específico da pessoa</param>
+    /// <param name="_serviceCompany">Serviço da empresa</param>
+    /// <param name="_serviceUser">Serviço do Usuário</param>
+    /// <param name="contextAccessor">Token de segurança</param>
     public PersonController(IServiceIntegration _service, IServicePerson _servicePerson, IServiceCompany _serviceCompany,
       IServiceUser _serviceUser, IHttpContextAccessor contextAccessor)
     {
@@ -39,81 +49,18 @@ namespace IntegrationServer.InfraController
         throw;
       }
     }
+    #endregion
 
     #region Person
+    /// <summary>
+    /// Integração de funcionário
+    /// </summary>
+    /// <param name="view">Objeto de integração do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
     [Authorize]
-    [HttpGet]
-    public IActionResult GetPersonByKey([FromBody]ViewIntegrationMapPersonV1 view)
-    {
-      try
-      {
-        view.IdPerson = string.Empty;
-        view.IdContract = string.Empty;
-        view.Message = string.Empty;
-        IntegrationCompany company = service.GetIntegrationCompany(view.CompanyKey, view.CompanyName);
-        if (string.IsNullOrEmpty(company.IdCompany))
-        {
-          view.Message = "Falta integração da empresa!";
-          throw new Exception(view.Message);
-        }
-        Person person = service.GetPersonByKey(company.IdCompany, string.Empty, view.Document, view.Registration);
-        if (person == null)
-        {
-          view.Message = "Pessoa não encontrada!";
-          throw new Exception(view.Message);
-        }
-        view.IdPerson = person._id;
-        view.Person = new ViewIntegrationPerson()
-        {
-          Name = person.User.Name,
-          //Document = person.Document,
-          Mail = person.User.Mail,
-          //Phone = person.Phone,
-          IdCompany = person.Company?._id,
-          IdOccupation = person.Occupation?._id,
-          //Registration = person.Registration,
-          IdManager = person.Manager?._id,
-          //DateBirth = person.DateBirth,
-          DateAdm = person.User.DateAdm,
-          DocumentManager = person.DocumentManager,
-          //IdSchooling = person.Schooling?._id,
-          //PhoneFixed = person.PhoneFixed,
-          //DocumentID = person.DocumentID,
-          //DocumentCTPF = person.DocumentCTPF,
-          //Sex = (int)person.Sex,
-          HolidayReturn = person.HolidayReturn,
-          MotiveAside = person.MotiveAside,
-          DateLastOccupation = person.DateLastOccupation,
-          Salary = person.Salary,
-          DateLastReadjust = person.DateLastReadjust,
-          DateResignation = person.DateResignation
-        };
-        return Ok(view);
-      }
-      catch (Exception)
-      {
-        return BadRequest(view);
-      }
-    }
-    [Authorize]
-    [HttpGet]
-    [Route("statusintegration")]
-    public IActionResult GetStatusIntegration()
-    {
-      try
-      {
-        return Ok(service.GetStatusIntegration());
-      }
-      catch (Exception e)
-      {
-        return BadRequest(e.Message);
-      }
-    }
-
-    [Authorize]
-    [HttpPost]
+    [HttpPut]
     [Route("update")]
-    public IActionResult PutPerson([FromBody]ViewIntegrationColaborador view)
+    public ViewIntegrationColaborador PutPerson([FromBody]ViewIntegrationColaborador view)
     {
       try
       {
@@ -141,47 +88,47 @@ namespace IntegrationServer.InfraController
         if (company.IdCompany.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração da empresa!";
-          return BadRequest(view);
+          return view;
         }
         if (schooling.IdSchooling.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração do grau de instrução!";
-          return BadRequest(view);
+          return view;
         }
         if (occupation.IdOccupation.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração do cargo!";
-          return BadRequest(view);
+          return view;
         }
         if (establishment.IdEstablishment.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração do estabelecimento!";
-          return BadRequest(view);
+          return view;
         }
         if (string.IsNullOrEmpty(view.Colaborador.Documento))
         {
           view.Message = "Documento deve ser informado!";
-          return BadRequest(view);
+          return view;
         }
         if (string.IsNullOrEmpty(view.Colaborador.Nome))
         {
           view.Message = "Nome deve ser informado!";
-          return BadRequest(view);
+          return view;
         }
         if (view.Colaborador.DataAdmissao == null)
         {
           view.Message = "Data de admissão não informada!";
-          return BadRequest(view);
+          return view;
         }
         if (string.IsNullOrEmpty(view.Colaborador.NomeCargo))
         {
           view.Message = "Descrição do cargo deve ser informado!";
-          return BadRequest(view);
+          return view;
         }
         if (string.IsNullOrEmpty(view.Colaborador.NomeGrauInstrucao))
         {
           view.Message = "Descrição do grau de instrução deve ser informado!";
-          return BadRequest(view);
+          return view;
         }
         // Ler histórico de carga
         IntegrationPerson integrationPerson = service.GetIntegrationPerson(view.Colaborador.ChaveColaborador);
@@ -335,13 +282,13 @@ namespace IntegrationServer.InfraController
           service.PutIntegrationPerson(integrationPerson);
         }
         view.Situacao = EnumColaboradorSituacao.Atualized;
-        return Ok(view);
       }
-      catch (Exception ex)
+      catch (Exception e)
       {
+        view.Message = e.Message;
         view.Situacao = EnumColaboradorSituacao.ServerError;
-        return BadRequest(ex.Message);
       }
+      return view;
     }
 
     private string Capitalization(string nome)
@@ -358,33 +305,6 @@ namespace IntegrationServer.InfraController
       }
     }
     #endregion
-
-    [Authorize]
-    [HttpPost]
-    [Route("ajuste")]
-    public IActionResult Ajuste()
-    {
-      try
-      {
-        List<Person> persons = servicePerson.GetPersons("5b91299a17858f95ffdb79f7", string.Empty);
-        foreach (Person person in persons)
-        {
-          if (person.User.Name.Equals(person.User.Name.ToUpper()))
-          {
-            person.User.Name = Capitalization(person.User.Name);
-            if (person.Manager != null)
-              person.Manager.Name = Capitalization(person.Manager.Name);
-            person.TypeJourney = EnumTypeJourney.OnBoardingOccupation;
-            var x = servicePerson.UpdatePersonView(person);
-          }
-        }
-        return Ok("Fim");
-      }
-      catch (Exception ex)
-      {
-        return BadRequest(ex.ToString());
-      }
-    }
 
   }
 }

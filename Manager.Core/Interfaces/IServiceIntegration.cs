@@ -22,6 +22,8 @@ namespace Manager.Core.Interfaces
 
     #region IntegrationController
     ViewIntegrationDashboard GetStatusDashboard();
+    string GetStatusIntegration();
+
     List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationCompany CompanyUpdate(string idIntegration, string idCompany);
     string CompanyDelete(string idIntegration);
@@ -51,6 +53,5 @@ namespace Manager.Core.Interfaces
     void PostIntegrationPerson(IntegrationPerson integrationPerson);
     void PutIntegrationPerson(IntegrationPerson integrationPerson);
     List<string> EmployeeChange(ViewColaborador oldEmployee, ViewColaborador newEmployee);
-    string GetStatusIntegration();
   }
 }

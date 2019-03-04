@@ -119,16 +119,15 @@ namespace IntegrationServer
         c.SwaggerDoc("v1",
             new Info
             {
-              Title = "Conversor de Temperaturas",
+              Title = "Integration Server - Integração de Funcionários",
               Version = "v1",
-              Description = "Exemplo de API REST criada com o ASP.NET Core",
+              Description = "Responsável pelas ferramentas de integração de funcionários do ANALISA Fluid Careers",
               Contact = new Contact
               {
-                Name = "Renato Groffe",
-                Url = "https://github.com/renatogroffe"
+                Name = "Jm Soft Informática Ltda",
+                Url = "http://www.jmsoft.com.br"
               }
             });
-
         string caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
         string nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
         string caminhoXmlDoc = Path.Combine(caminhoAplicacao, $"{nomeAplicacao}.xml");
@@ -150,7 +149,8 @@ namespace IntegrationServer
       app.UseSwagger();
       app.UseSwaggerUI(c =>
       {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Integration Server");
+        c.RoutePrefix = "help";
+        c.SwaggerEndpoint("../swagger/v1/swagger.json", "Integration Server");
       });
       //app.UseSignalR(routes =>
       //{
