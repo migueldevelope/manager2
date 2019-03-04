@@ -321,6 +321,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
+        var certificaiton = certificationService.GetAll(p => p._id == idcertification).FirstOrDefault();
+
         var details = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.StatusUser != EnumStatusUser.Disabled
         & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator
         ).OrderBy(p => p.User.Name).Select(p => new BaseFields() { _id = p._id, Name = p.User.Name, Mail = p.User.Mail }).ToList();
@@ -334,6 +336,8 @@ namespace Manager.Services.Specific
         {
           detail.RemoveAll(p => p._id == item.IdPerson);
         }
+        detail.RemoveAll(p => p._id == certificaiton.Person._id);
+
         return detail;
       }
       catch (Exception e)
@@ -348,61 +352,80 @@ namespace Manager.Services.Specific
       {
         var person = personService.GetAll(p => p._id == idperson).FirstOrDefault();
         var occupation = occupationService.GetAll(p => p._id == person.Occupation._id).FirstOrDefault();
+        var remove = certificationService.GetAll(p => p.Person._id == idperson 
+        & p.StatusCertification != EnumStatusCertification.Disaproved
+        & p.StatusCertification != EnumStatusCertification.Open).ToList();
+
 
         var view = new ViewCertificationProfile();
         view.ItemSkill = new List<CertificationItem>();
 
         foreach (var item in occupation.Group.Company.Skills)
         {
-          view.ItemSkill.Add(new CertificationItem()
+          if (remove.Where(p => p.CertificationItem.IdItem == item._id).Count() == 0)
           {
-            _idAccount = item._idAccount,
-            _id = ObjectId.GenerateNewId().ToString(),
-            Status = EnumStatus.Enabled,
-            Concept = item.Concept,
-            IdItem = item._id,
-            Name = item.Name,
-            ItemCertification = item.TypeSkill == EnumTypeSkill.Hard ? EnumItemCertification.SkillCompanyHard : EnumItemCertification.SkillCompanySoft
-          });
+            view.ItemSkill.Add(new CertificationItem()
+            {
+              _idAccount = item._idAccount,
+              _id = ObjectId.GenerateNewId().ToString(),
+              Status = EnumStatus.Enabled,
+              Concept = item.Concept,
+              IdItem = item._id,
+              Name = item.Name,
+              ItemCertification = item.TypeSkill == EnumTypeSkill.Hard ? EnumItemCertification.SkillCompanyHard : EnumItemCertification.SkillCompanySoft
+            });
+          }
         }
 
         foreach (var item in occupation.Group.Skills)
         {
-          view.ItemSkill.Add(new CertificationItem()
+          if (remove.Where(p => p.CertificationItem.IdItem == item._id).Count() == 0)
           {
-            Concept = item.Concept,
-            IdItem = item._id,
-            Name = item.Name,
-            ItemCertification = item.TypeSkill == EnumTypeSkill.Hard ? EnumItemCertification.SkillGroupHard : EnumItemCertification.SkillGroupSoft
-          });
+            view.ItemSkill.Add(new CertificationItem()
+            {
+              Concept = item.Concept,
+              IdItem = item._id,
+              Name = item.Name,
+              ItemCertification = item.TypeSkill == EnumTypeSkill.Hard ? EnumItemCertification.SkillGroupHard : EnumItemCertification.SkillGroupSoft
+            });
+          }
         }
 
         foreach (var item in occupation.Skills)
         {
-          view.ItemSkill.Add(new CertificationItem()
+          if (remove.Where(p => p.CertificationItem.IdItem == item._id).Count() == 0)
           {
-            Concept = item.Concept,
-            IdItem = item._id,
-            Name = item.Name,
-            ItemCertification = item.TypeSkill == EnumTypeSkill.Hard ? EnumItemCertification.SkillOccupationHard : EnumItemCertification.SkillOccupationSoft
-          });
+            view.ItemSkill.Add(new CertificationItem()
+            {
+              Concept = item.Concept,
+              IdItem = item._id,
+              Name = item.Name,
+              ItemCertification = item.TypeSkill == EnumTypeSkill.Hard ? EnumItemCertification.SkillOccupationHard : EnumItemCertification.SkillOccupationSoft
+            });
+          }
+
         }
 
         view.ItemActivitie = new List<CertificationItem>();
         foreach (var item in occupation.Activities)
         {
-          view.ItemActivitie.Add(new CertificationItem()
+          if (remove.Where(p => p.CertificationItem.IdItem == item._id).Count() == 0)
           {
-            IdItem = item._id,
-            Name = item.Name,
-            ItemCertification = EnumItemCertification.Activitie
-          });
+            view.ItemActivitie.Add(new CertificationItem()
+            {
+              IdItem = item._id,
+              Name = item.Name,
+              ItemCertification = EnumItemCertification.Activitie
+            });
+          }
         }
 
         var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.CertificationHead).FirstOrDefault();
         if (text != null)
           view.TextDefault = text.Content.Replace("{company_name}", person.Company.Name).Replace("{employee_name}", person.User.Name)
             .Replace("{manager_name}", person.Manager.Name);
+
+
 
         return view;
       }
