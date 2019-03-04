@@ -11,16 +11,28 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controle de Autenticação
+  /// </summary>
   [Produces("application/json")]
   [Route("authentication")]
   public class AuthenticationController : Controller
   {
     private readonly IServiceAuthentication service;
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
+    /// <summary>
+    /// Contrutor do controle
+    /// </summary>
+    /// <param name="_service">Serviço de autenticação</param>
     public AuthenticationController(IServiceAuthentication _service)
     {
       service = _service;
     }
+    /// <summary>
+    /// Autenticação de usuário
+    /// </summary>
+    /// <param name="user">Objeto de autenticação de usuário</param>
+    /// <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
     [AllowAnonymous]
     [HttpPost]
     public ObjectResult Post([FromBody]ViewAuthentication user)
@@ -65,6 +77,11 @@ namespace Manager.Controllers
         return BadRequest(ex.Message);
       }
     }
+    /// <summary>
+    /// Autenticação com criptografia já ativada
+    /// </summary>
+    /// <param name="user">Objeto de autenticação de usuário</param>
+    /// <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
     [AllowAnonymous]
     [HttpPost]
     [Route("encrypt")]
