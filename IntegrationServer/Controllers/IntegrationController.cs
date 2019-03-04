@@ -59,9 +59,16 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("status")]
-    public string GetStatusIntegration()
+    public IActionResult GetStatusIntegration()
     {
-      return service.GetStatusIntegration();
+      try
+      {
+        return Ok(service.GetStatusIntegration());
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
     }
     #endregion
 

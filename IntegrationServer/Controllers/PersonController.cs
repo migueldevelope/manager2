@@ -205,9 +205,11 @@ namespace IntegrationServer.InfraController
             DateLastReadjust = view.Colaborador.DataUltimoReajuste,
             DateResignation = view.Colaborador.DataDemissao,
             TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
-            Manager = new BaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id },
             DocumentManager = personManager?.DocumentManager,
           };
+          if (personManager != null)
+            person.Manager = new BaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
+
           switch (view.Colaborador.Situacao.ToLower())
           {
             case "férias": case "ferias":
@@ -259,9 +261,8 @@ namespace IntegrationServer.InfraController
               break;
           }
           if (personManager != null)
-          {
             person.Manager = new BaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
-          }
+
           person.User = user;
           person = servicePerson.UpdatePersonView(person);
           view.IdPerson = person._id;

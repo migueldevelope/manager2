@@ -674,7 +674,7 @@ namespace IntegrationService.Service
                 Situacao = ControleColaboradores[search].Situacao,
                 Message = string.Empty
               };
-              viewColaborador = personIntegration.PostPerson(viewColaborador);
+              viewColaborador = personIntegration.PutPerson(viewColaborador);
               search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == ControleColaboradores[search].Colaborador.ChaveColaborador);
               ControleColaboradores[search].Message = viewColaborador.Message;
               ControleColaboradores[search].Situacao = viewColaborador.Situacao;

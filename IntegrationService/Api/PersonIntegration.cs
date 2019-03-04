@@ -20,13 +20,13 @@ namespace IntegrationService.Api
       clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
     }
-    public ViewIntegrationColaborador PostPerson(ViewIntegrationColaborador view)
+    public ViewIntegrationColaborador PutPerson(ViewIntegrationColaborador view)
     {
       try
       {
         StringContent content = new StringContent(JsonConvert.SerializeObject(view));
         content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("person/update", content).Result;
+        var result = clientSkill.PutAsync("person/update", content).Result;
         return JsonConvert.DeserializeObject<ViewIntegrationColaborador>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
@@ -39,7 +39,7 @@ namespace IntegrationService.Api
     {
       try
       {
-        var result = clientSkill.GetAsync("person/statusintegration").Result;
+        var result = clientSkill.GetAsync("integration/status").Result;
         if (!result.IsSuccessStatusCode)
           throw new Exception(result.Content.ReadAsStringAsync().Result);
       }

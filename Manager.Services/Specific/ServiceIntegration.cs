@@ -117,9 +117,9 @@ namespace Manager.Services.Specific
 
         return string.Empty;
       }
-      catch (Exception)
+      catch (Exception e)
       {
-        throw;
+        return e.Message;
       }
     }
     #endregion
