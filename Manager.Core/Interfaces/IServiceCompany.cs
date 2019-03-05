@@ -25,5 +25,6 @@ namespace Manager.Core.Interfaces
     Establishment GetEstablishment(string id);
     Establishment GetEstablishmentByName(string idCompany, string name);
     List<Establishment> ListEstablishment(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Establishment> ListEstablishment(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

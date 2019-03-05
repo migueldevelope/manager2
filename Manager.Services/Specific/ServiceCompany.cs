@@ -281,5 +281,28 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<Establishment> ListEstablishment(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        try
+        {
+          int skip = (count * (page - 1));
+          var detail = establishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = establishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+          return detail.ToList();
+        }
+        catch (Exception e)
+        {
+          throw new ServiceException(_user, e, this._context);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
   }
 }
