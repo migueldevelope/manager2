@@ -62,6 +62,8 @@ namespace Manager.Controllers
       return result;
     }
 
+    [Authorize]
+    [HttpGet]
     [Route("personend/{idmanager}")]
     public List<OnBoarding> PersonOnBoardingsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
