@@ -85,6 +85,17 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("listestablishment")]
+    public List<Establishment> ListEstablishment(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEstablishment(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("getestablishment/{id}")]
     public Establishment ListEstablishment(string id)
     {
