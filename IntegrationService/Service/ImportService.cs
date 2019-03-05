@@ -683,7 +683,7 @@ namespace IntegrationService.Service
                 ControleColaboradores[search].IdPerson = viewColaborador.IdPerson;
                 ControleColaboradores[search].IdContract = viewColaborador.IdContract;
                 ControleColaboradores[search].Message = viewColaborador.Message;
-                FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, "Pessoa atualizada."), EnumTypeLog.Information);
+                FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, viewColaborador.Message), EnumTypeLog.Information);
               }
               else
               {

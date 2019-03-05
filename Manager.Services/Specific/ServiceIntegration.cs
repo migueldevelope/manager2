@@ -446,7 +446,7 @@ namespace Manager.Services.Specific
         item.IdOccupation = idOccupation;
         Occupation occupation = occupationService.GetAll(p => p._id == idOccupation).FirstOrDefault();
         item.NameOccupation = occupation.Name;
-        item._idCompany = occupation.ProcessLevelTwo.ProcessLevelOne.Area.Company._id;
+        item._idCompany = occupation.Group.Company._id;
         integrationOccupationService.Update(item, null);
         return new ViewListIntegrationOccupation()
         {
@@ -562,7 +562,7 @@ namespace Manager.Services.Specific
         if (item == null)
           throw new Exception("Id integration not found!");
         item.IdSchooling = idSchooling;
-        item.NameSchooling = item.Name;
+        item.NameSchooling = schoolingService.GetAll(p => p._id == idSchooling).FirstOrDefault().Name;
         integrationSchoolingService.Update(item, null);
         return new ViewListIntegrationSchooling()
         {

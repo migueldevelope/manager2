@@ -227,7 +227,7 @@ namespace IntegrationServer.InfraController
           }
           person.User = user;
           person = servicePerson.NewPersonView(person);
-          view.Message = string.Empty;
+          view.Message = "Nova pessoa incluída!";
           view.IdPerson = person._id;
         }
         else
@@ -266,6 +266,7 @@ namespace IntegrationServer.InfraController
           person.User = user;
           person = servicePerson.UpdatePersonView(person);
           view.IdPerson = person._id;
+          view.Message = "Pessoa atualizada!";
         }
         if (integrationPerson == null)
         {
