@@ -562,6 +562,7 @@ namespace Manager.Services.Specific
       {
         if (certification.StatusCertification == EnumStatusCertification.Wait)
         {
+          certification.DateBegin = DateTime.Now;
           foreach (var item in certification.ListPersons)
           {
             Mail(certification.Person, new BaseFields() { Name = item.Name, Mail = item.Mail });
@@ -589,7 +590,7 @@ namespace Manager.Services.Specific
           {
             item.StatusCertificationPerson = viewcertification.StatusCertificationPerson;
             item.Comments = viewcertification.Comments;
-
+            item.DateApprovation = DateTime.Now;
             certificationPersonService.Update(item, null);
 
             certificationService.Update(certification, null);
@@ -604,6 +605,8 @@ namespace Manager.Services.Specific
                 certification.StatusCertification = EnumStatusCertification.Disaproved;
               else
                 certification.StatusCertification = EnumStatusCertification.Approved;
+
+              certification.DateEnd = DateTime.Now;
 
               certificationService.Update(certification, null);
             }
