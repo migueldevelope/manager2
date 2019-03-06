@@ -1,11 +1,11 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;
+using Manager.Views.BusinessNew;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
