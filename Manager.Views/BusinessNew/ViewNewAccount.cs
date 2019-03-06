@@ -1,4 +1,4 @@
-﻿namespace Manager.Core.Views
+﻿namespace Manager.Views.BusinessNew
 {
   public class ViewNewAccount
   {
@@ -6,6 +6,5 @@
     public string Mail { get; set; }
     public string NameCompany { get; set; }
     public string Password { get; set; }
-    public string Document { get; set; }
   }
 }

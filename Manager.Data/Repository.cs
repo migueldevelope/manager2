@@ -9,6 +9,7 @@ using System.Linq;
 using Manager.Core.Enumns;
 using System.Linq.Expressions;
 using Manager.Core.Interfaces;
+using System.Threading.Tasks;
 
 namespace Manager.Data
 {
@@ -332,5 +333,73 @@ namespace Manager.Data
         throw;
       }
     }
+
+    #region Account New Version
+    public async Task<T> InsertAccountNewVersion(T entity)
+    {
+      try
+      {
+        entity._id = ObjectId.GenerateNewId().ToString();
+        entity._idAccount = entity._id;
+        entity.Status = EnumStatus.Enabled;
+        await _collection.InsertOneAsync(entity);
+        return entity;
+      }
+      catch
+      {
+        throw;
+      }
+    }
+    public async Task<List<T>> GetAllFreeNewVersion(Expression<Func<T, bool>> filter, int count, int skip, string sort)
+    {
+      try
+      {
+        Collation _caseInsensitiveCollation = new Collation("en", strength: CollationStrength.Primary);
+        var findOptions = new FindOptions<T>
+        {
+          Collation = _caseInsensitiveCollation,
+          Limit = count,
+          Skip = skip,
+          Sort = new BsonDocument(sort, 1)
+        };
+        IAsyncCursor<T> result = await _collection.FindAsync(filter, findOptions);
+        return result.ToList();
+      }
+      catch
+      {
+        throw;
+      }
+    }
+    public async Task<long> CountFreeNewVersion(Expression<Func<T, bool>> filter)
+    {
+      try
+      {
+        long result = await _collection.CountDocumentsAsync(filter);
+        return result;
+      }
+      catch
+      {
+        throw;
+      }
+    }
+
+    #endregion
+
+    #region Insert New Version
+    public async Task<T> InsertNewVersion(T entity)
+    {
+      try
+      {
+        entity._idAccount = _user._idAccount;
+        entity.Status = EnumStatus.Enabled;
+        await _collection.InsertOneAsync(entity);
+        return entity;
+      }
+      catch
+      {
+        throw;
+      }
+    }
+    #endregion
   }
 }

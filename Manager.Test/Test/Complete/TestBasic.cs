@@ -46,8 +46,7 @@ namespace Manager.Test.Test.Complete
           Mail = "suporte@jmsoft.com.br",
           NameAccount = "Support",
           NameCompany = "Support",
-          Password = "1234",
-          Document = "1234"
+          Password = "1234"
         };
         this.serviceAccount.NewAccount(view);
       }

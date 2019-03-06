@@ -5,6 +5,8 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessList;
+using Manager.Views.BusinessNew;
 using Manager.Views.Enumns;
 using Newtonsoft.Json;
 using System;
@@ -12,12 +14,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Tools;
 
 namespace Manager.Services.Specific
 {
-#pragma warning disable 1998
-#pragma warning disable 4014
   public class ServiceAccount : Repository<Account>, IServiceAccount
   {
     private readonly ServiceGeneric<Account> accountService;
@@ -28,6 +29,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Parameter> parameterService;
     private IServiceLog logService;
 
+    #region Constructor
     public ServiceAccount(DataContext context)
       : base(context)
     {
@@ -46,96 +48,95 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+    #endregion
+
+    #region New account
+    public async Task<string> NewAccount(ViewNewAccount view)
+    {
+      try
+      {
+        // Criar uma nova conta
+        Account account = new Account()
+        {
+          Name = view.NameAccount,
+          Status = EnumStatus.Enabled
+        };
+        account = accountService.InsertAccountNewVersion(account).Result;
+        accountService._user = new BaseUser()
+        {
+          _idAccount = account._id,
+          NameAccount = account.Name,
+          Mail = view.Mail,
+          NamePerson = view.NameCompany
+        };
+        // Criar o usuário para autenticação
+        userService._user = accountService._user;
+        User user = new User()
+        {
+          Name = view.NameAccount,
+          Mail = view.Mail,
+          Password = EncryptServices.GetMD5Hash(view.Password)
+        };
+        user = userService.InsertNewVersion(user).Result;
+        // Criar a empresa nesta conta
+        companyService._user = accountService._user;
+        Company company = new Company()
+        {
+          Name = view.NameCompany,
+          Skills = new List<Skill>()
+        };
+        company = companyService.InsertNewVersion(company).Result;
+        // Criar a pessoa para autenticação
+        personService._user = accountService._user;
+        Person person = new Person()
+        {
+          TypeUser = EnumTypeUser.Administrator,
+          StatusUser = EnumStatusUser.Enabled,
+          Company = company,
+          User = user
+        };
+        person = personService.InsertNewVersion(person).Result;
+        accountService._user._idPerson = person._id;
+        // Criar os parâmetros básicos
+        // TODO: validar a rotina de cópia de infraestrutura
+        infraService._idAccount = account._id;
+        await infraService.CopyTemplateInfra(company);
+        return "Account created!";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, _context);
+      }
+    }
+    #endregion
+
+    #region Get
+    public List<ViewListAccount> GetAll(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        Task<List<Account>> detail = accountService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name");
+        total = accountService.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail.Result
+          .Select(x => new ViewListAccount()
+          {
+            _id = x._id,
+            Name = x.Name
+          }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    #endregion
 
     public Account GeAccount(Expression<Func<Account, bool>> filter)
     {
       return accountService.GetAuthentication(filter).FirstOrDefault();
     }
 
-    public void NewAccount(ViewNewAccount view)
-    {
-      try
-      {
-        var account = new Account()
-        {
-          Name = view.NameAccount,
-          Status = EnumStatus.Enabled
-        };
-        var id = accountService.Insert(account)._id;
-        account._idAccount = id;
-        accountService.UpdateAccount(account, null);
 
-        var company = new Company()
-        {
-          Name = view.NameCompany,
-          _idAccount = id,
-          Skills = new List<Skill>(),
-          Status = EnumStatus.Enabled
-        };
-        var _company = companyService.InsertAccount(company);
-        var user = new User()
-        {
-          _idAccount = id,
-          Name = view.NameAccount,
-          Mail = view.Mail,
-          Document = view.Document,
-          Status = EnumStatus.Enabled,
-          Password = EncryptServices.GetMD5Hash(view.Password)
-        };
-        userService.InsertAccount(user);
-
-        var person = new Person()
-        {
-          _idAccount = id,
-          Status = EnumStatus.Enabled,
-          TypeUser = EnumTypeUser.Administrator,
-          StatusUser = EnumStatusUser.Enabled,
-          Company = company,
-          User = user,
-        };
-        personService.InsertAccount(person);
-
-        infraService._idAccount = account._id;
-        infraService.CopyTemplateInfra(company);
-
-
-        var parameter = parameterService.GetAuthentication(p => p.Name == "viewlo" & p._idAccount == id).FirstOrDefault();
-        if (parameter == null)
-        {
-          parameter = new Parameter
-          {
-            _idAccount = id,
-            Name = "viewlo",
-            Content = "show",
-            Status = EnumStatus.Enabled
-          };
-          parameterService.InsertAccount(parameter);
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<Account> GeAccounts(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var detail = accountService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-
-        total = accountService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-
-        return detail;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
 
     public ViewPerson AlterAccount(string idaccount, string link)
     {
