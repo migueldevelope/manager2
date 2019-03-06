@@ -99,7 +99,7 @@ namespace Manager.Services.Specific
             }
             row.StatusViewManager = EnumStatusView.View;
             row.StatusViewPerson = EnumStatusView.View;
-            
+
           }
 
           foreach (var row in item.Schoolings)
@@ -178,7 +178,7 @@ namespace Manager.Services.Specific
                 row.Comments.Add(commentPerson);
             }
 
-            
+
             row.StatusViewManager = EnumStatusView.View;
             row.StatusViewPerson = EnumStatusView.View;
 
@@ -387,6 +387,7 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+     
         foreach (var item in monitoring.Activities)
         {
           if (item._id == activitie._id)
@@ -406,14 +407,27 @@ namespace Manager.Services.Specific
       }
     }
 
-
-
     public string AddMonitoringActivities(string idmonitoring, Activitie activitie)
     {
       try
       {
 
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+        {
+          if (monitoring.Person._id == _user._idPerson)
+          {
+            monitoring.DateBeginPerson = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+          }
+          else
+          {
+            monitoring.DateBeginManager = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+          }
+        }
+
         var monitoringActivitie = new MonitoringActivities();
 
         var activities = new List<Activitie>();
@@ -500,16 +514,10 @@ namespace Manager.Services.Specific
         {
           LoadMap(monitoring);
 
-          if (monitoring.Person._id == idperson)
-          {
-            monitoring.DateBeginPerson = DateTime.Now;
-            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
-          }
-          else
-          {
-            monitoring.DateBeginManager = DateTime.Now;
-            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
-          }
+
+          monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
+
+
 
           monitoringService.Insert(monitoring);
         }
@@ -534,6 +542,20 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+        {
+          if (monitoring.Person._id == _user._idPerson)
+          {
+            monitoring.DateBeginPerson = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+          }
+          else
+          {
+            monitoring.DateBeginManager = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+          }
+        }
+
         var userInclude = personService.GetAll(p => p._id == idperson).FirstOrDefault();
 
         if (monitoring.Person._id != idperson)
@@ -652,16 +674,31 @@ namespace Manager.Services.Specific
       {
         var userInclude = personService.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+
+        if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+        {
+          if (monitoring.Person._id == _user._idPerson)
+          {
+            monitoring.DateBeginPerson = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+          }
+          else
+          {
+            monitoring.DateBeginManager = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+          }
+        }
+
         logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
 
-        
-        var newPlan = AddPlan(plan, userInclude); 
+
+        var newPlan = AddPlan(plan, userInclude);
 
         if (plan.SourcePlan == EnumSourcePlan.Activite)
         {
           foreach (var item in monitoring.Activities)
           {
-            if(item._id == iditem)
+            if (item._id == iditem)
             {
               if (item.Plans == null)
                 item.Plans = new List<Plan>();
@@ -705,7 +742,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        
+
         return null;
       }
       catch (Exception e)
@@ -723,7 +760,7 @@ namespace Manager.Services.Specific
         logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
 
 
-        
+
 
         if (plan.SourcePlan == EnumSourcePlan.Activite)
         {
@@ -731,9 +768,9 @@ namespace Manager.Services.Specific
           {
             if (item._id == iditem)
             {
-              foreach(var row in item.Plans)
+              foreach (var row in item.Plans)
               {
-                if(row._id == plan._id)
+                if (row._id == plan._id)
                 {
                   item.Plans.Remove(row);
                   item.Plans.Add(plan);
@@ -743,7 +780,7 @@ namespace Manager.Services.Specific
                 }
               }
 
-              
+
             }
           }
         }
@@ -816,6 +853,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         plan.DateInclude = DateTime.Now;
         plan.UserInclude = person;
         return planService.Insert(plan);
@@ -1151,6 +1189,21 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = monitoringService.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+        {
+          if (monitoring.Person._id == _user._idPerson)
+          {
+            monitoring.DateBeginPerson = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+          }
+          else
+          {
+            monitoring.DateBeginManager = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+          }
+        }
+          
+
         foreach (var item in monitoring.Activities)
         {
           if (item._id == iditem)

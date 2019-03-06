@@ -15,5 +15,7 @@ namespace Manager.Core.Business
     public EnumStatusCertification StatusCertification { get; set; }
     public List<AttachmentField> Attachments { get; set; }
     public string TextDefault { get; set; }
+    public DateTime? DateBegin { get; set; }
+    public DateTime? DateEnd { get; set; }
   }
 }

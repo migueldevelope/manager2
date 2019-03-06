@@ -2,6 +2,7 @@
 using Manager.Core.Enumns;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace Manager.Core.Business
 {
@@ -15,6 +16,7 @@ namespace Manager.Core.Business
     public string TextDefaultEnd { get; set; }
     public EnumStatusCertificationPerson StatusCertificationPerson { get; set; }
     public string Comments { get; set; }
+    public DateTime? DateApprovation { get; set; }
 
   }
 }

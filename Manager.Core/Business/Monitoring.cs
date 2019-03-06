@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
-    public class Monitoring : BaseEntity
+  public class Monitoring : BaseEntity
   {
     public Person Person { get; set; }
     public DateTime? DateBeginPerson { get; set; }

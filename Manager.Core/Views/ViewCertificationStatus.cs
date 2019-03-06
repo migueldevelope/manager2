@@ -8,5 +8,6 @@ namespace Manager.Core.Views
     public string _idCertification { get; set; }
     public EnumStatusCertificationPerson StatusCertificationPerson { get; set; }
     public string Comments { get; set; }
+    public string IdMonitoring { get; set; }
   }
 }
