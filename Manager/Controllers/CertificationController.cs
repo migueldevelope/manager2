@@ -124,10 +124,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("updatecertification/{idperson}")]
-    public string UpdateCertification([FromBody]Certification certification, string idperson)
+    [Route("updatecertification/{idperson}/{idmonitoring}")]
+    public string UpdateCertification([FromBody]Certification certification, string idperson, string idmonitoring)
     {
-      return service.UpdateCertification(certification, idperson);
+      return service.UpdateCertification(certification, idperson, idmonitoring);
     }
     [Authorize]
     [HttpPut]

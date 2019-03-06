@@ -559,10 +559,19 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateCertification(Certification certification, string idperson)
+    public string UpdateCertification(Certification certification, string idperson, string idmonitoring)
     {
       try
       {
+        if (certification.StatusCertification == EnumStatusCertification.Wait)
+        {
+          var monitoring = monitoringService.GetAll(p => p._id == idmonitoring & p.StatusMonitoring == EnumStatusMonitoring.Show).FirstOrDefault();
+          if (monitoring != null)
+          {
+            monitoringService.Delete(idmonitoring, true);
+          }
+        }
+
         if (certification.StatusCertification == EnumStatusCertification.Wait)
         {
           certification.DateBegin = DateTime.Now;
@@ -587,14 +596,7 @@ namespace Manager.Services.Specific
       {
         var certification = certificationService.GetAll(p => p._id == viewcertification._idCertification).FirstOrDefault();
 
-        if(viewcertification.StatusCertificationPerson == EnumStatusCertificationPerson.Wait)
-        {
-          var monitoring = monitoringService.GetAll(p => p._id == viewcertification.IdMonitoring & p.StatusMonitoring == EnumStatusMonitoring.Show).FirstOrDefault();
-          if (monitoring != null)
-          {
-            monitoringService.Delete(viewcertification.IdMonitoring, true);
-          }
-        }
+        
         
 
         foreach (var item in certification.ListPersons)

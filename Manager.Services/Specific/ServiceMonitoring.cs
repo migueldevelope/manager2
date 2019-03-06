@@ -514,15 +514,14 @@ namespace Manager.Services.Specific
         {
           LoadMap(monitoring);
 
-
           monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
-
-
-
           monitoringService.Insert(monitoring);
         }
         else
         {
+          if(monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+            LoadMap(monitoring);
+
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.Wait)
           {
             monitoring.DateBeginEnd = DateTime.Now;

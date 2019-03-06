@@ -15,7 +15,7 @@ namespace Manager.Core.Interfaces
     string AddPerson(string idcertification, BaseFields person);
     string ApprovedCertification(string idcertificationperson, CertificationPerson view);
     string RemovePerson(string idcertifcation, string idcertificationperson);
-    string UpdateCertification(Certification certification, string idperson);
+    string UpdateCertification(Certification certification, string idperson, string idmonitoring);
     string RemoveCertification(string idcertification);
     List<Certification> GetListExclud(ref long total, string filter, int count, int page);
     void SetUser(IHttpContextAccessor contextAccessor);
