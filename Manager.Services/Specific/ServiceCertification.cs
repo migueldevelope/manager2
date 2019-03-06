@@ -20,6 +20,7 @@ namespace Manager.Services.Specific
   public class ServiceCertification : Repository<Certification>, IServiceCertification
   {
     private readonly ServiceGeneric<Certification> certificationService;
+    private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly ServiceGeneric<CertificationPerson> certificationPersonService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceLog logService;
@@ -50,6 +51,7 @@ namespace Manager.Services.Specific
         parameterService = new ServiceGeneric<Parameter>(context);
         logMessagesService = new ServiceLogMessages(context);
         occupationService = new ServiceGeneric<Occupation>(context);
+        monitoringService = new ServiceGeneric<Monitoring>(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -199,6 +201,7 @@ namespace Manager.Services.Specific
       textDefaultService._user = _user;
       parameterService._user = _user;
       occupationService._user = _user;
+      monitoringService._user = _user;
       certificationPersonService._user = _user;
       logMessagesService.SetUser(_user);
       mailModelService.SetUser(contextAccessor);
@@ -583,6 +586,16 @@ namespace Manager.Services.Specific
       try
       {
         var certification = certificationService.GetAll(p => p._id == viewcertification._idCertification).FirstOrDefault();
+
+        if(viewcertification.StatusCertificationPerson == EnumStatusCertificationPerson.Wait)
+        {
+          var monitoring = monitoringService.GetAll(p => p._id == viewcertification.IdMonitoring & p.StatusMonitoring == EnumStatusMonitoring.Show).FirstOrDefault();
+          if (monitoring != null)
+          {
+            monitoringService.Delete(viewcertification.IdMonitoring, true);
+          }
+        }
+        
 
         foreach (var item in certification.ListPersons)
         {
