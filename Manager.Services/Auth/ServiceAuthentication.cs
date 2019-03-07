@@ -60,13 +60,13 @@ namespace Manager.Services.Auth
         if (userLogin.Mail.IndexOf("@maristas.org.br") != -1 || userLogin.Mail.IndexOf("@pucrs.br") != -1)
         {
           GetMaristasAsync(userLogin.Mail, userLogin.Password);
-          user = serviceUser.GetAuthentication(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).FirstOrDefault();
+          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
           if (user == null)
             throw new Exception("User not authorized!");
         }
         else
         {
-          user = serviceUser.GetAuthentication(userLogin.Mail, EncryptServices.GetMD5Hash(userLogin.Password));
+          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
           if (user == null)
             throw new Exception("User/Password invalid!");
         }

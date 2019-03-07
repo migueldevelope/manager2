@@ -230,7 +230,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Skill & p.TypeRotine == EnumTypeRotine.Certification).ToList())
+        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Skill & p.TypeRotine == EnumTypeRotine.Checkpoint).ToList())
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
@@ -254,7 +254,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Certification).ToList())
+        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Checkpoint).ToList())
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
