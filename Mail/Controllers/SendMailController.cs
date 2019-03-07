@@ -17,7 +17,6 @@ namespace EvaluationMail.Controllers
       service = _service;
       service.SetUser(contextAccessor);
     }
-
     [Authorize]
     [HttpPost]
     [Route("{idmail}")]

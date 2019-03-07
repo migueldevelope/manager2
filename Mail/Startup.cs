@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mail.Web;
 using Manager.Core.Interfaces;
 using Manager.Data;
-using Manager.Services.Auth;
 using Manager.Services.Specific;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -21,13 +17,14 @@ namespace Mail
 {
   public class Startup
   {
+
+    public IConfiguration Configuration { get; }
+    private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
+
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
     }
-    public IConfiguration Configuration { get; }
-    private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
-
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
@@ -39,21 +36,12 @@ namespace Mail
       IServiceSendGrid serviceSendGrid = new ServiceSendGrid(_context);
       IServiceMailModel serviceMailModel = new ServiceMailModel(_context);
       IServiceMail serviceMail = new ServiceMail(_context);
-      IServicePerson servicePerson = new ServicePerson(_context);
-      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, conn.SignalRService);
-      IServiceUser serviceUser = new ServiceUser(_context);
 
-      services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceMailMessage);
       services.AddSingleton(_ => serviceSendGrid);
       services.AddSingleton(_ => serviceMailModel);
       services.AddSingleton(_ => serviceMail);
-      services.AddSingleton(_ => servicePerson);
-      services.AddSingleton(_ => serviceIndicators);
-
     }
-
-
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
@@ -90,12 +78,7 @@ namespace Mail
           .AllowAnyHeader()
           .AllowCredentials()
       ));
-
-
       services.AddMvc();
-
-      services.AddSignalR();
-
       RegistreServices(services);
     }
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,10 +89,6 @@ namespace Mail
       app.UseAuthentication();
       app.UseCors("AllowAll");
       app.UseMvc();
-      app.UseSignalR(routes =>
-      {
-        routes.MapHub<MessagesHub>("/messagesHub");
-      });
     }
   }
 }

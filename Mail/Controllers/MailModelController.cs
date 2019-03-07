@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -16,20 +12,17 @@ namespace Mail.Controllers
   public class MailModelController : Controller
   {
     private readonly IServiceMailModel service;
-
     public MailModelController(IServiceMailModel _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
-
     [HttpPost]
     [Route("new")]
     public string Post([FromBody]MailModel view)
     {
       return service.New(view);
     }
-
     [Authorize]
     [HttpGet]
     [Route("list")]
@@ -40,7 +33,6 @@ namespace Mail.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     [Authorize]
     [HttpGet]
     [Route("get")]
@@ -48,7 +40,6 @@ namespace Mail.Controllers
     {
       return service.Get(id);
     }
-
     [Authorize]
     [HttpPut]
     [Route("update")]
@@ -56,7 +47,6 @@ namespace Mail.Controllers
     {
       return service.Update(view);
     }
-
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]

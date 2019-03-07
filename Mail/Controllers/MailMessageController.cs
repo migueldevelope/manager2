@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Manager.Core.Views;
 using Manager.Core.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace EvaluationMail.Controllers
 {
@@ -11,12 +10,11 @@ namespace EvaluationMail.Controllers
   public class MailMessageController : Controller
   {
     private readonly IServiceMailMessage service;
-
-    public MailMessageController(IServiceMailMessage _service)
+    public MailMessageController(IServiceMailMessage _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
+      service.SetUser(contextAccessor);
     }
-
     [HttpGet]
     [Route("{id}")]
     public ViewMailMessage Get(string id)
