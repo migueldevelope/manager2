@@ -4,6 +4,7 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ namespace Manager.Services.Specific
 #pragma warning disable 1998
   public class ServiceCertification : Repository<Certification>, IServiceCertification
   {
+    private readonly ServiceAuthentication serviceAuthentication;
     private readonly ServiceGeneric<Certification> certificationService;
     private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly ServiceGeneric<CertificationPerson> certificationPersonService;
@@ -52,6 +54,7 @@ namespace Manager.Services.Specific
         logMessagesService = new ServiceLogMessages(context);
         occupationService = new ServiceGeneric<Occupation>(context);
         monitoringService = new ServiceGeneric<Monitoring>(context);
+        serviceAuthentication = new ServiceAuthentication(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -257,24 +260,25 @@ namespace Manager.Services.Specific
     {
       try
       {
+        ViewPerson view = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            mail = person.User.Mail,
-            password = person.User.Password
-          };
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
+          //var data = new
+          //{
+          //  mail = person.User.Mail,
+          //  password = person.User.Password
+          //};
+          //var json = JsonConvert.SerializeObject(data);
+          //var content = new StringContent(json);
+          //content.Headers.ContentType.MediaType = "application/json";
+          //client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          //var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+          //var resultContent = result.Content.ReadAsStringAsync().Result;
+          //var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + view.Token);
           var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
-          return auth.Token;
+          return view.Token;
         }
       }
       catch (Exception e)
@@ -360,8 +364,10 @@ namespace Manager.Services.Specific
         & p.StatusCertification != EnumStatusCertification.Open).ToList();
 
 
-        var view = new ViewCertificationProfile();
-        view.ItemSkill = new List<CertificationItem>();
+        var view = new ViewCertificationProfile
+        {
+          ItemSkill = new List<CertificationItem>()
+        };
 
         foreach (var item in occupation.Group.Company.Skills)
         {

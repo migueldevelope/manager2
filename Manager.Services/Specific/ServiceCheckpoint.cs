@@ -3,6 +3,7 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +19,7 @@ namespace Manager.Services.Specific
 #pragma warning disable 1998
   public class ServiceCheckpoint : Repository<Checkpoint>, IServiceCheckpoint
   {
+    private readonly ServiceAuthentication serviceAuthentication;
     private readonly ServiceGeneric<Checkpoint> checkpointService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceLog logService;
@@ -45,6 +47,7 @@ namespace Manager.Services.Specific
         mailService = new ServiceGeneric<MailLog>(context);
         parameterService = new ServiceGeneric<Parameter>(context);
         logMessagesService = new ServiceLogMessages(context);
+        serviceAuthentication = new ServiceAuthentication(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -564,8 +567,10 @@ namespace Manager.Services.Specific
           Body = body
         };
 
-        List<MailLogAddress> listMail = new List<MailLogAddress>();
-        listMail.Add(new MailLogAddress(person.User.Mail, person.User.Name));
+        List<MailLogAddress> listMail = new List<MailLogAddress>
+        {
+          new MailLogAddress(person.User.Mail, person.User.Name)
+        };
 
         var idMessage = mailMessageService.Insert(message)._id;
         var sendMail = new MailLog
@@ -596,24 +601,25 @@ namespace Manager.Services.Specific
     {
       try
       {
+        ViewPerson view = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            mail = person.User.Mail,
-            password = person.User.Password
-          };
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
+          //var data = new
+          //{
+          //  mail = person.User.Mail,
+          //  password = person.User.Password
+          //};
+          //var json = JsonConvert.SerializeObject(data);
+          //var content = new StringContent(json);
+          //content.Headers.ContentType.MediaType = "application/json";
+          //client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          //var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+          //var resultContent = result.Content.ReadAsStringAsync().Result;
+          //var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + view.Token);
           var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
-          return auth.Token;
+          return view.Token;
         }
       }
       catch (Exception e)

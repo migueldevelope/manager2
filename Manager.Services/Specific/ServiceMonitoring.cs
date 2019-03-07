@@ -3,6 +3,7 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +19,7 @@ namespace Manager.Services.Specific
 #pragma warning disable 1998
   public class ServiceMonitoring : Repository<Monitoring>, IServiceMonitoring
   {
+    private readonly ServiceAuthentication serviceAuthentication;
     private readonly ServiceGeneric<Monitoring> monitoringService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<Occupation> occupationService;
@@ -46,6 +48,7 @@ namespace Manager.Services.Specific
         monitoringActivitiesService = new ServiceGeneric<MonitoringActivities>(context);
         mailService = new ServiceGeneric<MailLog>(context);
         logMessagesService = new ServiceLogMessages(context);
+        serviceAuthentication = new ServiceAuthentication(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -65,21 +68,25 @@ namespace Manager.Services.Specific
           foreach (var row in item.Activities)
           {
             row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
+            var commentPerson = new ListComments
+            {
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = item._idAccount,
+              Comments = row.CommentsPerson,
+              StatusView = EnumStatusView.View,
+              Date = item.DateBeginPerson,
+              UserComment = EnumUserComment.Person
+            };
 
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
+            var commentManager = new ListComments
+            {
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = item._idAccount,
+              Comments = row.CommentsManager,
+              StatusView = EnumStatusView.View,
+              Date = item.DateBeginManager,
+              UserComment = EnumUserComment.Manager
+            };
 
             if (item.DateBeginPerson > item.DateBeginManager)
             {
@@ -105,21 +112,25 @@ namespace Manager.Services.Specific
           foreach (var row in item.Schoolings)
           {
             row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
+            var commentPerson = new ListComments
+            {
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = item._idAccount,
+              Comments = row.CommentsPerson,
+              StatusView = EnumStatusView.View,
+              Date = item.DateBeginPerson,
+              UserComment = EnumUserComment.Person
+            };
 
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
+            var commentManager = new ListComments
+            {
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = item._idAccount,
+              Comments = row.CommentsManager,
+              StatusView = EnumStatusView.View,
+              Date = item.DateBeginManager,
+              UserComment = EnumUserComment.Manager
+            };
 
             if (item.DateBeginPerson > item.DateBeginManager)
             {
@@ -145,21 +156,25 @@ namespace Manager.Services.Specific
           foreach (var row in item.SkillsCompany)
           {
             row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
+            var commentPerson = new ListComments
+            {
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = item._idAccount,
+              Comments = row.CommentsPerson,
+              StatusView = EnumStatusView.View,
+              Date = item.DateBeginPerson,
+              UserComment = EnumUserComment.Person
+            };
 
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
+            var commentManager = new ListComments
+            {
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = item._idAccount,
+              Comments = row.CommentsManager,
+              StatusView = EnumStatusView.View,
+              Date = item.DateBeginManager,
+              UserComment = EnumUserComment.Manager
+            };
 
             if (item.DateBeginPerson > item.DateBeginManager)
             {
@@ -1086,24 +1101,25 @@ namespace Manager.Services.Specific
     {
       try
       {
+        ViewPerson view = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            mail = person.User.Mail,
-            password = person.User.Password
-          };
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
+          //var data = new
+          //{
+          //  mail = person.User.Mail,
+          //  password = person.User.Password
+          //};
+          //var json = JsonConvert.SerializeObject(data);
+          //var content = new StringContent(json);
+          //content.Headers.ContentType.MediaType = "application/json";
+          //client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          //var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+          //var resultContent = result.Content.ReadAsStringAsync().Result;
+          //var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + view.Token);
           var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
-          return auth.Token;
+          return view.Token;
         }
       }
       catch (Exception e)

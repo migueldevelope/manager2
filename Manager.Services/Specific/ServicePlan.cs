@@ -4,6 +4,7 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -17,6 +18,7 @@ namespace Manager.Services.Specific
 #pragma warning disable 1998
   public class ServicePlan : Repository<Plan>, IServicePlan
   {
+    private readonly ServiceAuthentication serviceAuthentication;
     private ServiceGeneric<Person> personService;
     private ServiceGeneric<Monitoring> monitoringService;
     private ServiceGeneric<Plan> planService;
@@ -50,6 +52,7 @@ namespace Manager.Services.Specific
         structPlanService = new ServiceGeneric<StructPlan>(context);
         planActivityService = new ServiceGeneric<PlanActivity>(context);
         logMessagesService = new ServiceLogMessages(context);
+        serviceAuthentication = new ServiceAuthentication(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -597,29 +600,31 @@ namespace Manager.Services.Specific
             {
               foreach (var res in plan)
               {
-                var view = new ViewPlanStruct();
-                view._id = res._id;
-                view._idAccount = res._idAccount;
-                view.Name = res.Name;
-                view.DateInclude = res.DateInclude;
-                view.Deadline = res.Deadline;
-                view.Description = res.Description;
-                view.Skills = res.Skills;
-                view.UserInclude = res.UserInclude;
-                view.TypePlan = res.TypePlan;
-                view.IdPerson = item.Person._id;
-                view.NamePerson = item.Person.User.Name;
-                view.SourcePlan = res.SourcePlan;
-                view.IdMonitoring = item._id;
-                view.Evaluation = res.Evaluation;
-                view.StatusPlan = res.StatusPlan;
-                view.TypeAction = res.TypeAction;
-                view.StatusPlanApproved = res.StatusPlanApproved;
-                view.TextEnd = res.TextEnd;
-                view.TextEndManager = res.TextEndManager;
-                view.Status = res.Status;
-                view.DateEnd = res.DateEnd;
-                view.NewAction = res.NewAction;
+                var view = new ViewPlanStruct
+                {
+                  _id = res._id,
+                  _idAccount = res._idAccount,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.User.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
+                  TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
+                  Status = res.Status,
+                  DateEnd = res.DateEnd,
+                  NewAction = res.NewAction
+                };
                 if (res.StructPlans != null)
                 {
                   if (res.StructPlans.Count() == 0)
@@ -643,29 +648,31 @@ namespace Manager.Services.Specific
             {
               foreach (var res in plan)
               {
-                var view = new ViewPlanStruct();
-                view._id = res._id;
-                view._idAccount = res._idAccount;
-                view.Name = res.Name;
-                view.DateInclude = res.DateInclude;
-                view.Deadline = res.Deadline;
-                view.Description = res.Description;
-                view.Skills = res.Skills;
-                view.UserInclude = res.UserInclude;
-                view.TypePlan = res.TypePlan;
-                view.IdPerson = item.Person._id;
-                view.NamePerson = item.Person.User.Name;
-                view.SourcePlan = res.SourcePlan;
-                view.IdMonitoring = item._id;
-                view.Evaluation = res.Evaluation;
-                view.StatusPlan = res.StatusPlan;
-                view.TypeAction = res.TypeAction;
-                view.StatusPlanApproved = res.StatusPlanApproved;
-                view.TextEnd = res.TextEnd;
-                view.TextEndManager = res.TextEndManager;
-                view.Status = res.Status;
-                view.DateEnd = res.DateEnd;
-                view.NewAction = res.NewAction;
+                var view = new ViewPlanStruct
+                {
+                  _id = res._id,
+                  _idAccount = res._idAccount,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.User.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
+                  TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
+                  Status = res.Status,
+                  DateEnd = res.DateEnd,
+                  NewAction = res.NewAction
+                };
                 if (res.StructPlans != null)
                 {
                   if (res.StructPlans.Count() == 0)
@@ -690,29 +697,31 @@ namespace Manager.Services.Specific
             {
               foreach (var res in plan)
               {
-                var view = new ViewPlanStruct();
-                view._id = res._id;
-                view._idAccount = res._idAccount;
-                view.Name = res.Name;
-                view.DateInclude = res.DateInclude;
-                view.Deadline = res.Deadline;
-                view.Description = res.Description;
-                view.Skills = res.Skills;
-                view.UserInclude = res.UserInclude;
-                view.TypePlan = res.TypePlan;
-                view.IdPerson = item.Person._id;
-                view.NamePerson = item.Person.User.Name;
-                view.SourcePlan = res.SourcePlan;
-                view.IdMonitoring = item._id;
-                view.Evaluation = res.Evaluation;
-                view.StatusPlan = res.StatusPlan;
-                view.TypeAction = res.TypeAction;
-                view.StatusPlanApproved = res.StatusPlanApproved;
-                view.TextEnd = res.TextEnd;
-                view.TextEndManager = res.TextEndManager;
-                view.Status = res.Status;
-                view.DateEnd = res.DateEnd;
-                view.NewAction = res.NewAction;
+                var view = new ViewPlanStruct
+                {
+                  _id = res._id,
+                  _idAccount = res._idAccount,
+                  Name = res.Name,
+                  DateInclude = res.DateInclude,
+                  Deadline = res.Deadline,
+                  Description = res.Description,
+                  Skills = res.Skills,
+                  UserInclude = res.UserInclude,
+                  TypePlan = res.TypePlan,
+                  IdPerson = item.Person._id,
+                  NamePerson = item.Person.User.Name,
+                  SourcePlan = res.SourcePlan,
+                  IdMonitoring = item._id,
+                  Evaluation = res.Evaluation,
+                  StatusPlan = res.StatusPlan,
+                  TypeAction = res.TypeAction,
+                  StatusPlanApproved = res.StatusPlanApproved,
+                  TextEnd = res.TextEnd,
+                  TextEndManager = res.TextEndManager,
+                  Status = res.Status,
+                  DateEnd = res.DateEnd,
+                  NewAction = res.NewAction
+                };
                 if (res.StructPlans != null)
                 {
                   if (res.StructPlans.Count() == 0)
@@ -1149,13 +1158,15 @@ namespace Manager.Services.Specific
 
         if (structplan.Course != null)
         {
-          var trainingPlan = new TrainingPlan();
-          trainingPlan.Course = structplan.Course;
-          trainingPlan.Deadline = deadline;
-          trainingPlan.Origin = EnumOrigin.Monitoring;
-          trainingPlan.Person = monitoring.Person;
-          trainingPlan.Include = DateTime.Now;
-          trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+          var trainingPlan = new TrainingPlan
+          {
+            Course = structplan.Course,
+            Deadline = deadline,
+            Origin = EnumOrigin.Monitoring,
+            Person = monitoring.Person,
+            Include = DateTime.Now,
+            StatusTrainingPlan = EnumStatusTrainingPlan.Open
+          };
           serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
         }
 
@@ -1346,13 +1357,15 @@ namespace Manager.Services.Specific
 
                     if ((structplan.Course == null) & (structplanedit.Course != null))
                     {
-                      var trainingPlan = new TrainingPlan();
-                      trainingPlan.Course = structplan.Course;
-                      trainingPlan.Deadline = plan.Deadline;
-                      trainingPlan.Origin = EnumOrigin.Monitoring;
-                      trainingPlan.Person = monitoring.Person;
-                      trainingPlan.Include = DateTime.Now;
-                      trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+                      var trainingPlan = new TrainingPlan
+                      {
+                        Course = structplan.Course,
+                        Deadline = plan.Deadline,
+                        Origin = EnumOrigin.Monitoring,
+                        Person = monitoring.Person,
+                        Include = DateTime.Now,
+                        StatusTrainingPlan = EnumStatusTrainingPlan.Open
+                      };
                       if (trainingPlanService.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
@@ -1386,13 +1399,15 @@ namespace Manager.Services.Specific
 
                     if ((structplan.Course == null) & (structplanedit.Course != null))
                     {
-                      var trainingPlan = new TrainingPlan();
-                      trainingPlan.Course = structplan.Course;
-                      trainingPlan.Deadline = plan.Deadline;
-                      trainingPlan.Origin = EnumOrigin.Monitoring;
-                      trainingPlan.Person = monitoring.Person;
-                      trainingPlan.Include = DateTime.Now;
-                      trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+                      var trainingPlan = new TrainingPlan
+                      {
+                        Course = structplan.Course,
+                        Deadline = plan.Deadline,
+                        Origin = EnumOrigin.Monitoring,
+                        Person = monitoring.Person,
+                        Include = DateTime.Now,
+                        StatusTrainingPlan = EnumStatusTrainingPlan.Open
+                      };
                       if (trainingPlanService.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
@@ -1426,13 +1441,15 @@ namespace Manager.Services.Specific
 
                     if ((structplan.Course == null) & (structplanedit.Course != null))
                     {
-                      var trainingPlan = new TrainingPlan();
-                      trainingPlan.Course = structplan.Course;
-                      trainingPlan.Deadline = plan.Deadline;
-                      trainingPlan.Origin = EnumOrigin.Monitoring;
-                      trainingPlan.Person = monitoring.Person;
-                      trainingPlan.Include = DateTime.Now;
-                      trainingPlan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+                      var trainingPlan = new TrainingPlan
+                      {
+                        Course = structplan.Course,
+                        Deadline = plan.Deadline,
+                        Origin = EnumOrigin.Monitoring,
+                        Person = monitoring.Person,
+                        Include = DateTime.Now,
+                        StatusTrainingPlan = EnumStatusTrainingPlan.Open
+                      };
                       if (trainingPlanService.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
@@ -2053,24 +2070,25 @@ namespace Manager.Services.Specific
     {
       try
       {
+        ViewPerson view = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
-          client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            mail = person.User.Mail,
-            password = person.User.Password
-          };
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
+          //client.BaseAddress = new Uri(link);
+          //var data = new
+          //{
+          //  mail = person.User.Mail,
+          //  password = person.User.Password
+          //};
+          //var json = JsonConvert.SerializeObject(data);
+          //var content = new StringContent(json);
+          //content.Headers.ContentType.MediaType = "application/json";
+          //client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          //var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+          //var resultContent = result.Content.ReadAsStringAsync().Result;
+          //var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + view.Token);
           var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
-          return auth.Token;
+          return view.Token;
         }
       }
       catch (Exception e)

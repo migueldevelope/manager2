@@ -3,6 +3,7 @@ using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -14,6 +15,7 @@ namespace Manager.Services.Specific
 {
   public class ServiceMail : Repository<MailMessage>, IServiceMail
   {
+    private readonly ServiceAuthentication serviceAuthentication;
     private readonly ServiceMailMessage mailMessageService;
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailLog> mailService;
@@ -34,7 +36,7 @@ namespace Manager.Services.Specific
         mailService = new ServiceGeneric<MailLog>(context);
         personService = new ServiceGeneric<Person>(context);
         serviceSendGrid = new ServiceSendGrid(context);
-
+        serviceAuthentication = new ServiceAuthentication(context);
       }
       catch (Exception e)
       {
@@ -46,27 +48,29 @@ namespace Manager.Services.Specific
     {
       try
       {
-        using (var client = new HttpClient())
-        {
-          client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            Mail = mail,
-            Password = password
-          };
-          //Authentication
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+        //ViewPerson view = serviceAuthentication.AuthenticationMail(person);
+        //using (var client = new HttpClient())
+        //{
+        //  client.BaseAddress = new Uri(link);
+        //  //var data = new
+        //  //{
+        //  //  Mail = mail,
+        //  //  Password = password
+        //  //};
+        //  ////Authentication
+        //  //var json = JsonConvert.SerializeObject(data);
+        //  //var content = new StringContent(json);
+        //  //content.Headers.ContentType.MediaType = "application/json";
+        //  //client.DefaultRequestHeaders.Add("ContentType", "application/json");
+        //  //var result = client.PostAsync("manager/authentication/encrypt", content).Result;
 
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
-          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null);
-          return auth.Token;
-        }
+        //  //var resultContent = result.Content.ReadAsStringAsync().Result;
+        //  //var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+        //  client.DefaultRequestHeaders.Add("Authorization", "Bearer " + view.Token);
+        //  var resultMail = client.PostAsync("mail/sendmail/" + idmail, null);
+        //  return view.Token;
+        //}
+        throw new Exception("Not Implemented!");
       }
       catch (Exception e)
       {

@@ -4,16 +4,16 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessNew;
 using Manager.Views.Enumns;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Tools;
 
@@ -21,13 +21,14 @@ namespace Manager.Services.Specific
 {
   public class ServiceAccount : Repository<Account>, IServiceAccount
   {
-    private readonly ServiceGeneric<Account> accountService;
-    private readonly ServiceGeneric<Person> personService;
-    private readonly ServiceGeneric<User> userService;
-    private readonly ServiceGeneric<Company> companyService;
-    private readonly ServiceInfra infraService;
-    private readonly ServiceGeneric<Parameter> parameterService;
-    private IServiceLog logService;
+
+    private readonly ServiceGeneric<Account> serviceAccount;
+    private readonly ServiceAuthentication serviceAuthentication;
+    private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<User> serviceUser;
+    private readonly ServiceGeneric<Company> serviceCompany;
+    private readonly ServiceInfra serviceInfra;
+    private readonly ServiceLog serviceLog;
 
     #region Constructor
     public ServiceAccount(DataContext context)
@@ -35,18 +36,23 @@ namespace Manager.Services.Specific
     {
       try
       {
-        accountService = new ServiceGeneric<Account>(context);
-        personService = new ServiceGeneric<Person>(context);
-        userService = new ServiceGeneric<User>(context);
-        companyService = new ServiceGeneric<Company>(context);
-        infraService = new ServiceInfra(context);
-        parameterService = new ServiceGeneric<Parameter>(context);
-        logService = new ServiceLog(context);
+        serviceAccount = new ServiceGeneric<Account>(context);
+        serviceAuthentication = new ServiceAuthentication(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceUser = new ServiceGeneric<User>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
+        serviceInfra = new ServiceInfra(context);
+        serviceLog = new ServiceLog(context);
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
+    }
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      servicePerson._user = _user;
     }
     #endregion
 
@@ -61,8 +67,8 @@ namespace Manager.Services.Specific
           Name = view.NameAccount,
           Status = EnumStatus.Enabled
         };
-        account = accountService.InsertAccountNewVersion(account).Result;
-        accountService._user = new BaseUser()
+        account = serviceAccount.InsertAccountNewVersion(account).Result;
+        serviceAccount._user = new BaseUser()
         {
           _idAccount = account._id,
           NameAccount = account.Name,
@@ -70,24 +76,24 @@ namespace Manager.Services.Specific
           NamePerson = view.NameCompany
         };
         // Criar o usuário para autenticação
-        userService._user = accountService._user;
+        serviceUser._user = serviceAccount._user;
         User user = new User()
         {
           Name = view.NameAccount,
           Mail = view.Mail,
           Password = EncryptServices.GetMD5Hash(view.Password)
         };
-        user = userService.InsertNewVersion(user).Result;
+        user = serviceUser.InsertNewVersion(user).Result;
         // Criar a empresa nesta conta
-        companyService._user = accountService._user;
+        serviceCompany._user = serviceAccount._user;
         Company company = new Company()
         {
           Name = view.NameCompany,
           Skills = new List<Skill>()
         };
-        company = companyService.InsertNewVersion(company).Result;
+        company = serviceCompany.InsertNewVersion(company).Result;
         // Criar a pessoa para autenticação
-        personService._user = accountService._user;
+        servicePerson._user = serviceAccount._user;
         Person person = new Person()
         {
           TypeUser = EnumTypeUser.Administrator,
@@ -95,12 +101,12 @@ namespace Manager.Services.Specific
           Company = company,
           User = user
         };
-        person = personService.InsertNewVersion(person).Result;
-        accountService._user._idPerson = person._id;
+        person = servicePerson.InsertNewVersion(person).Result;
+        serviceAccount._user._idPerson = person._id;
         // Criar os parâmetros básicos
         // TODO: validar a rotina de cópia de infraestrutura
-        infraService._idAccount = account._id;
-        await infraService.CopyTemplateInfra(company);
+        serviceInfra._idAccount = account._id;
+        await serviceInfra.CopyTemplateInfra(company);
         return "Account created!";
       }
       catch (Exception e)
@@ -110,13 +116,13 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    #region Get
+    #region List Account
     public List<ViewListAccount> GetAll(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        Task<List<Account>> detail = accountService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name");
-        total = accountService.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        Task<List<Account>> detail = serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name");
+        total = serviceAccount.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.Result
           .Select(x => new ViewListAccount()
           {
@@ -131,131 +137,60 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    public Account GeAccount(Expression<Func<Account, bool>> filter)
-    {
-      return accountService.GetAuthentication(filter).FirstOrDefault();
-    }
-
-
-
-    public ViewPerson AlterAccount(string idaccount, string link)
+    #region Change Account Authentication or Person Authentication
+    public ViewPerson AlterAccount(string idaccount)
     {
       try
       {
-        var user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Administrator).FirstOrDefault();
-        if (user == null)
-        {
-          user = personService.GetAuthentication(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).FirstOrDefault();
-        }
-
-        var parameter = parameterService.GetAuthentication(p => p.Name == "viewlo" & p._idAccount == idaccount).FirstOrDefault();
-        if (parameter == null)
-        {
-          parameter = new Parameter
-          {
-            _idAccount = idaccount,
-            Name = "viewlo",
-            Content = "show",
-            Status = EnumStatus.Enabled
-          };
-          parameterService.InsertAccount(parameter);
-        }
-
-        var userPerson = userService.GetAuthentication(p => p._id == user.User._id).FirstOrDefault();
-
-        LogSave(user);
-
-        using (var client = new HttpClient())
-        {
-          client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            userPerson.Mail,
-            userPerson.Password
-          };
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-
-          return auth;
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public ViewPerson AlterAccountPerson(string idperson, string link)
-    {
-      try
-      {
-        var user = personService.GetAuthentication(p => p._id == idperson).FirstOrDefault();
-        var userPerson = userService.GetAuthentication(p => p._id == user.User._id).FirstOrDefault();
-        LogSave(user);
-
-        using (var client = new HttpClient())
-        {
-          client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            userPerson.Mail,
-            userPerson.Password
-          };
-
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-
-          return auth;
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-
-    public async void LogSave(Person user)
-    {
-      try
-      {
-        var _user = new BaseUser()
-        {
-          _idAccount = user._idAccount,
-          NamePerson = user.User.Name,
-          Mail = user.User.Mail,
-          _idPerson = user._id
-        };
-        logService = new ServiceLog(_context);
-        var log = new ViewLog()
-        {
-          Description = "Alter Account/User out: " + user.User.Name + "/" + user._idAccount
-          + " - in: " + _user.NamePerson + "/" + _user._idAccount,
-          Local = "Authentication",
-          Person = user
-        };
-        logService.NewLog(log);
+        Person person = servicePerson.GetFreeNewVersion(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Administrator).Result;
+        if (person == null)
+          person = servicePerson.GetFreeNewVersion(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).Result;
+        User user = serviceUser.GetFreeNewVersion(p => p._id == person.User._id).Result;
+        LogSave(person, "Authentication Change Account");
+        return serviceAuthentication.Authentication(user, false);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    public ViewPerson AlterAccountPerson(string idperson)
+    {
+      try
+      {
+        Person person = servicePerson.GetFreeNewVersion(p => p._id == idperson).Result;
+        User user = serviceUser.GetAuthentication(p => p._id == person.User._id).FirstOrDefault();
+        LogSave(person, "Authentication Change Person");
+        return serviceAuthentication.Authentication(user, false);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public void LogSave(Person person, string local)
+    {
+      try
+      {
+        serviceLog.NewLog(
+          new ViewLog()
+          {
+            Description = string.Format("Alter Account/User out: {0}/{1} - in: {2}/{3}", servicePerson._user.NameAccount, servicePerson._user.NamePerson, serviceAccount.GetFreeNewVersion(p => p._id == person._idAccount).Result.Name, person.User.Name),
+            Local = local,
+            Person = person
+          });
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
+    public Account GeAccount(Expression<Func<Account, bool>> filter)
+    {
+      return serviceAccount.GetAuthentication(filter).FirstOrDefault();
+    }
+
   }
-#pragma warning restore 1998
-#pragma warning restore 4014
 }

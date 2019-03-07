@@ -355,12 +355,14 @@ namespace Manager.Data
       try
       {
         Collation _caseInsensitiveCollation = new Collation("en", strength: CollationStrength.Primary);
+        string[] fieldName = sort.Split(' ');
+        int order = fieldName.Count() == 1 ? 1 : fieldName[1].ToUpper().Equals("DESC") ? -1 : 1;
         var findOptions = new FindOptions<T>
         {
           Collation = _caseInsensitiveCollation,
           Limit = count,
           Skip = skip,
-          Sort = new BsonDocument(sort, 1)
+          Sort = new BsonDocument(fieldName[0], order)
         };
         IAsyncCursor<T> result = await _collection.FindAsync(filter, findOptions);
         return result.ToList();

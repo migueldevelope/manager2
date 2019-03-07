@@ -4,6 +4,7 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ namespace Manager.Services.Specific
 {
   public class ServiceNotification : Repository<ConfigurationNotifications>, IServiceNotification
   {
+    private readonly ServiceAuthentication serviceAuthentication;
     private readonly ServiceGeneric<ConfigurationNotifications> configurationNotificationsService;
     private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<OnBoarding> onBoardingService;
@@ -52,6 +54,7 @@ namespace Manager.Services.Specific
         checkpointService = new ServiceGeneric<Checkpoint>(context);
         monitoringService = new ServiceGeneric<Monitoring>(context);
         logMessagesService = new ServiceLogMessages(context);
+        serviceAuthentication = new ServiceAuthentication(context);
       }
       catch (Exception e)
       {
@@ -1274,24 +1277,25 @@ namespace Manager.Services.Specific
     {
       try
       {
+        ViewPerson view = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
-          var data = new
-          {
-            mail = person.User.Mail,
-            password = person.User.Password
-          };
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-          var resultContent = result.Content.ReadAsStringAsync().Result;
-          var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth.Token);
+          //var data = new
+          //{
+          //  mail = person.User.Mail,
+          //  password = person.User.Password
+          //};
+          //var json = JsonConvert.SerializeObject(data);
+          //var content = new StringContent(json);
+          //content.Headers.ContentType.MediaType = "application/json";
+          //client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          //var result = client.PostAsync("manager/authentication/encrypt", content).Result;
+          //var resultContent = result.Content.ReadAsStringAsync().Result;
+          //var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + view.Token);
           var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
-          return auth.Token;
+          return view.Token;
         }
       }
       catch (Exception e)
