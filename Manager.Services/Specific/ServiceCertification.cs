@@ -492,7 +492,7 @@ namespace Manager.Services.Specific
         {
           IdPerson = person._id,
           Name = person.Name,
-          Mail = person.Name,
+          Mail = person.Mail,
           Status = EnumStatus.Enabled,
           StatusCertificationPerson = EnumStatusCertificationPerson.Wait,
           Comments = null,
@@ -583,7 +583,15 @@ namespace Manager.Services.Specific
           certification.DateBegin = DateTime.Now;
           foreach (var item in certification.ListPersons)
           {
-            Mail(certification.Person, new BaseFields() { Name = item.Name, Mail = item.Mail });
+            try
+            {
+              Mail(certification.Person, new BaseFields() { Name = item.Name, Mail = item.Mail });
+            }
+            catch (Exception)
+            {
+
+            }
+            
           }
         }
 
