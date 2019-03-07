@@ -50,7 +50,7 @@ namespace Attachment
       IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer, serviceMandatoryTraining);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
       IServiceUser serviceUser = new ServiceUser(_context);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany, serviceUser);
+      //IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany, serviceUser);
       IServiceCertification serviceCertification = new ServiceCertification(_context, conn.TokenServer);
 
       services.AddSingleton(_ => serviceCertification);
@@ -58,7 +58,7 @@ namespace Attachment
       services.AddSingleton(_ => serviceMandatoryTraining);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceCompany);
-      services.AddSingleton(_ => serviceAuthentication);
+      //services.AddSingleton(_ => serviceAuthentication);
       services.AddSingleton(_ => servicePerson);
       services.AddSingleton(_ => serviceWorkflow);
       services.AddSingleton(_ => serviceAutoManager);

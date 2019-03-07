@@ -10,48 +10,46 @@ using Manager.Services.Specific;
 using Tools;
 using System.Net.Http;
 using Manager.Core.Enumns;
-using Manager.Views.Enumns;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Manager.Views.Enumns;
 
 namespace Manager.Services.Auth
 {
-#pragma warning disable 1998
   public class ServiceAuthentication : IServiceAuthentication
   {
-    private readonly IServicePerson servicePerson;
-    private readonly ServiceGeneric<Person> personService;
-    private readonly ServiceGeneric<User> userService;
+
+    #region Constructior + Fields
+    private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
+    private readonly ServicePerson personService;
+    private readonly ServiceUser userService;
+    private readonly ServiceLog logService;
     private ServiceGeneric<Account> accountService;
     private ServiceDictionarySystem dictionarySystemService;
-    private IServiceCompany companyService;
-    private IServiceLog logService;
-    private IServiceUser serviceUser;
     private DataContext _context;
 
-    public ServiceAuthentication(DataContext context, IServiceLog _logService,
-      IServicePerson _servicePerson, IServiceCompany _companyService, IServiceUser _serviceUser)
+    public ServiceAuthentication(DataContext context)
     {
       try
       {
-        servicePerson = _servicePerson;
         accountService = new ServiceGeneric<Account>(context);
-        companyService = _companyService;
-        logService = _logService;
-        serviceUser = _serviceUser;
-        personService = new ServiceGeneric<Person>(context);
-        userService = new ServiceGeneric<User>(context);
+        logService = new ServiceLog(context);
+        personService = new ServicePerson(context);
+        userService = new ServiceUser(context);
         dictionarySystemService = new ServiceDictionarySystem(context);
         _context = context;
       }
-      catch (Exception)
+      catch (Exception e)
       {
-        //throw new ServiceException(null, e);
+        throw e;
       }
     }
+    #endregion
 
-
-
-
+    #region Old Authentication
     public ViewPerson AuthenticationMaristas(string mail, string password)
     {
       try
@@ -66,7 +64,7 @@ namespace Manager.Services.Auth
         var persons = personService.GetAuthentication(p => p.User._id == user._id).ToList();
 
         var _user = new BaseUser { _idAccount = user._idAccount };
-        companyService.SetUser(_user);
+        //companyService.SetUser(_user);
         dictionarySystemService.SetUser(_user);
         long total = 0;
         var listDictionary = dictionarySystemService.List(ref total, 9999999, 1, "");
@@ -165,15 +163,14 @@ namespace Manager.Services.Auth
 
         person.DictionarySystem = listDictionary;
 
-        logService = new ServiceLog(_context);
-
+        //logService = new ServiceLog(_context);
         var log = new ViewLog()
         {
           Description = "Login",
           Local = "Authentication",
           Person = persons.FirstOrDefault()
         };
-        logService.NewLog(log);
+        //logService.NewLog(log);
 
         return person;
       }
@@ -187,14 +184,14 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = serviceUser.GetAuthentication(mail, EncryptServices.GetMD5Hash(password));
+        var user = userService.GetAuthentication(mail, EncryptServices.GetMD5Hash(password));
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
 
         var persons = personService.GetAuthentication(p => p.User._id == user._id).ToList();
         var _user = new BaseUser { _idAccount = user._idAccount };
-        companyService.SetUser(_user);
+        //companyService.SetUser(_user);
         dictionarySystemService.SetUser(_user);
         long total = 0;
         var listDictionary = dictionarySystemService.List(ref total, 9999999, 1, "");
@@ -241,7 +238,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = serviceUser.GetAuthentication(mail, password);
+        var user = userService.GetAuthentication(mail, password);
         if (user == null)
           throw new ServiceException(new BaseUser() { _idAccount = "000000000000000000000000" }, new Exception("Usuário/Senha inválido!"), _context);
 
@@ -288,7 +285,7 @@ namespace Manager.Services.Auth
 
         person.DictionarySystem = listDictionary;
 
-        logService = new ServiceLog(_context);
+        //logService = new ServiceLog(_context);
 
         var log = new ViewLog()
         {
@@ -296,7 +293,7 @@ namespace Manager.Services.Auth
           Local = "Authentication",
           Person = persons.FirstOrDefault()
         };
-        logService.NewLog(log);
+        //logService.NewLog(log);
 
         return person;
       }
@@ -310,7 +307,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = servicePerson.GetPerson(idPerson);
+        var user = personService.GetPerson(idPerson);
         //ViewPerson person = new ViewPerson()
         //{
         //  IdPerson = user._id.ToString(),
@@ -325,7 +322,7 @@ namespace Manager.Services.Auth
         //  _idPerson = user._id
         //};
 
-        logService = new ServiceLog(_context);
+        //logService = new ServiceLog(_context);
 
         var log = new ViewLog()
         {
@@ -354,7 +351,7 @@ namespace Manager.Services.Auth
           Mail = user.User.Mail,
           _idPerson = user._id
         };
-        logService = new ServiceLog(_context);
+        //logService = new ServiceLog(_context);
         var log = new ViewLog()
         {
           Description = "Login",
@@ -391,6 +388,181 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+    #endregion
+
+    #region Authentication
+    public ViewPerson Authentication(ViewAuthentication userLogin)
+    {
+      try
+      {
+        if (string.IsNullOrEmpty(userLogin.Mail))
+          throw new Exception("MSG1");
+        if (string.IsNullOrEmpty(userLogin.Password))
+          throw new Exception("MSG2");
+
+        User user = null;
+        if (userLogin.Mail.IndexOf("@maristas.org.br") != -1 || userLogin.Mail.IndexOf("@pucrs.br") != -1)
+        {
+          GetMaristasAsync(userLogin.Mail, userLogin.Password);
+          user = userService.GetAuthentication(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).FirstOrDefault();
+          if (user == null)
+            throw new Exception("User not authorized!");
+        }
+        else {
+          user = userService.GetAuthentication(userLogin.Mail, EncryptServices.GetMD5Hash(userLogin.Password));
+          if (user == null)
+            throw new Exception("User/Password invalid!");
+        }
+        return Authentication(user);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewPerson Authentication(User user)
+    {
+      try
+      {
+        BaseUser _user = new BaseUser()
+        {
+          _idAccount = user._idAccount
+        };
+
+        dictionarySystemService.SetUser(_user);
+        List<DictionarySystem> listDictionary = dictionarySystemService.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
+
+        ViewPerson person = new ViewPerson()
+        {
+          IdUser = user._id,
+          Name = user.Name,
+          IdAccount = user._idAccount,
+          ChangePassword = user.ChangePassword,
+          Photo = user.PhotoUrl,
+          NameAccount = accountService.GetFreeNewVersion(p => p._id == user._idAccount).Result.Name,
+          DictionarySystem = listDictionary
+        };
+        List<Person> persons = personService.GetAllFreeNewVersion(p => p.User._id == user._id).Result;
+
+        person.Contracts = new List<ViewContract>();
+        foreach (Person item in persons)
+        {
+          ViewContract view = new ViewContract()
+          {
+            IdPerson = item._id,
+            Logo = item.Company.Logo,
+            TypeUser = item.TypeUser,
+            Registration = item.Registration.ToString(),
+            Occupation = item.Occupation?.Name
+          };
+          person.Contracts.Add(view);
+        }
+
+        LogSave(persons.FirstOrDefault());
+
+        // Token
+        Claim[] claims = new[]
+        {
+        new Claim(ClaimTypes.Name, person.Name),
+        new Claim(ClaimTypes.Hash, person.IdAccount),
+        new Claim(ClaimTypes.Email, user.Mail),
+        new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
+        new Claim(ClaimTypes.UserData, person.Contracts.FirstOrDefault().IdPerson)
+        };
+        JwtSecurityToken token = new JwtSecurityToken(
+            issuer: "localhost",
+            audience: "localhost",
+            claims: claims,
+            expires: DateTime.Now.AddYears(1),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
+        );
+        person.Token = new JwtSecurityTokenHandler().WriteToken(token);
+        //
+
+        return person;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewPerson AuthenticationMail(Person loginPerson)
+    {
+      try
+      {
+        BaseUser _user = new BaseUser()
+        {
+          _idAccount = loginPerson._idAccount
+        };
+
+        ViewPerson person = new ViewPerson()
+        {
+          IdUser = loginPerson._id,
+          Name = loginPerson.User.Name,
+          IdAccount = loginPerson._idAccount,
+          ChangePassword = EnumChangePassword.No,
+          Photo = string.Empty,
+          NameAccount = string.Empty,
+          DictionarySystem = new List<DictionarySystem>()
+        };
+        ViewContract view = new ViewContract()
+        {
+          IdPerson = loginPerson._id,
+          Logo = string.Empty,
+          TypeUser = loginPerson.TypeUser,
+          Registration = loginPerson.Registration,
+          Occupation = loginPerson.Occupation?.Name
+        };
+        person.Contracts.Add(view);
+
+        // Token
+        Claim[] claims = new[]
+        {
+        new Claim(ClaimTypes.Name, person.Name),
+        new Claim(ClaimTypes.Hash, person.IdAccount),
+        new Claim(ClaimTypes.Email, loginPerson.User.Mail),
+        new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
+        new Claim(ClaimTypes.UserData, person.Contracts.FirstOrDefault().IdPerson)
+        };
+        JwtSecurityToken token = new JwtSecurityToken(
+            issuer: "localhost",
+            audience: "localhost",
+            claims: claims,
+            expires: DateTime.Now.AddYears(1),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
+        );
+        person.Token = new JwtSecurityTokenHandler().WriteToken(token);
+        //
+
+        return person;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public async void GetMaristasAsync(string login, string senha)
+    {
+      try
+      {
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri("http://integracoes.maristas.org.br");
+          var content = new StringContent("login=" + login + "&senha=" + senha);
+          content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
+          client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
+          HttpResponseMessage result = await client.PostAsync("wspucsede/WService.asmx/ValidateUser", content);
+          if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            throw new Exception("User/Password invalid!");
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
   }
-#pragma warning restore 1998
 }

@@ -18,6 +18,8 @@ namespace Manager.Controllers
   [Route("authentication")]
   public class AuthenticationController : Controller
   {
+
+    #region Constructor + Fields
     private readonly IServiceAuthentication service;
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
     /// <summary>
@@ -28,6 +30,9 @@ namespace Manager.Controllers
     {
       service = _service;
     }
+    #endregion
+
+    #region Old Authentication
     /// <summary>
     /// Autenticação de usuário
     /// </summary>
@@ -35,6 +40,7 @@ namespace Manager.Controllers
     /// <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
     [AllowAnonymous]
     [HttpPost]
+    [Route("old")]
     public ObjectResult Post([FromBody]ViewAuthentication user)
     {
       try
@@ -128,5 +134,28 @@ namespace Manager.Controllers
         return BadRequest(ex.Message);
       }
     }
+    #endregion
+
+    #region Authentication
+    /// <summary>
+    /// Autenticação de usuário
+    /// </summary>
+    /// <param name="userLogin">Objeto de autenticação de usuário</param>
+    /// <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
+    [AllowAnonymous]
+    [HttpPost]
+    public ObjectResult PostNewAuthentication([FromBody]ViewAuthentication userLogin)
+    {
+      try
+      {
+        return Ok(service.Authentication(userLogin));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+    #endregion
+
   }
 }
