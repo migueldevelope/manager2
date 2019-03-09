@@ -504,16 +504,16 @@ namespace Manager.Controllers
       return service.GetOccupations();
     }
 
-    [Authorize]
-    [HttpGet]
-    [Route("getoccupationsinfra")]
-    public List<Occupation> GetOccupationsInfra(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.GetOccupationsInfra(ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
+    //[Authorize]
+    //[HttpGet]
+    //[Route("getoccupationsinfra")]
+    //public List<Occupation> GetOccupationsInfra(int count = 10, int page = 1, string filter = "")
+    //{
+    //  long total = 0;
+    //  var result = service.GetOccupationsInfra(ref total, filter, count, page);
+    //  Response.Headers.Add("x-total-count", total.ToString());
+    //  return result;
+    //}
 
     [Authorize]
     [HttpGet]
@@ -553,16 +553,16 @@ namespace Manager.Controllers
       return result;
     }
 
-    [Authorize]
-    [HttpGet]
-    [Route("getskillsinfra")]
-    public List<Skill> GetSkillsinfra(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.GetSkillsInfra(ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
+    //[Authorize]
+    //[HttpGet]
+    //[Route("getskillsinfra")]
+    //public List<Skill> GetSkillsinfra(int count = 10, int page = 1, string filter = "")
+    //{
+    //  long total = 0;
+    //  var result = service.GetSkillsInfra(ref total, filter, count, page);
+    //  Response.Headers.Add("x-total-count", total.ToString());
+    //  return result;
+    //}
 
     [Authorize]
     [HttpGet]

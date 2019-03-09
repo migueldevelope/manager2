@@ -11,7 +11,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     List<Company> GetCompanies();
     Skill GetSkill(string filterName);
-    List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page);
+    //List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page);
     List<Skill> GetSkills(ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkills(string company, ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkillsGroup(string idgroup, string idcompany, ref long total, string filter, int count, int page);
@@ -37,7 +37,7 @@ namespace Manager.Core.Interfaces
     TextDefault GetTextDefault(string idcompany, string name);
     TextDefault GetTextDefault(string id);
     List<TextDefault> ListTextDefault(string idcompany);
-    List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page);
+    //List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page);
     List<Occupation> GetOccupations(string idcompany, string idarea);
     //List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
     ProcessLevelTwo GetProcessLevelTwo(string id);

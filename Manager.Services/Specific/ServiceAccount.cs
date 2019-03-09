@@ -104,10 +104,8 @@ namespace Manager.Services.Specific
         person = servicePerson.InsertNewVersion(person).Result;
         serviceAccount._user._idPerson = person._id;
         // Criar os parâmetros básicos
-        // TODO: validar a rotina de cópia de infraestrutura
-        serviceInfra._idAccount = account._id;
-        await serviceInfra.CopyTemplateInfra(company);
-        return "Account created!";
+        serviceInfra._user = serviceAccount._user;
+        return await serviceInfra.CopyTemplateInfraAsync(company);
       }
       catch (Exception e)
       {

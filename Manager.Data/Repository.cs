@@ -422,6 +422,18 @@ namespace Manager.Data
     #endregion
 
     #region Insert New Version
+    public async Task<T> InsertFreeNewVersion(T entity)
+    {
+      try
+      {
+        await _collection.InsertOneAsync(entity);
+        return entity;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public async Task<T> InsertNewVersion(T entity)
     {
       try
@@ -431,9 +443,9 @@ namespace Manager.Data
         await _collection.InsertOneAsync(entity);
         return entity;
       }
-      catch
+      catch (Exception e)
       {
-        throw;
+        throw e;
       }
     }
     #endregion

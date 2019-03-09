@@ -103,8 +103,8 @@ namespace Manager.Services.Auth
             IdPerson = x._id,
             Logo = x.Company.Logo,
             TypeUser = x.TypeUser,
-            Registration = x.Registration.ToString(),
-            Occupation = x.Occupation?.Name
+            Registration = x.Registration,
+            Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name
           }).ToList();
 
         // TODO: ajustar melhor o LOG de authenticação
