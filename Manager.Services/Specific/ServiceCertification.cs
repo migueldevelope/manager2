@@ -359,7 +359,7 @@ namespace Manager.Services.Specific
       {
         var person = personService.GetAll(p => p._id == idperson).FirstOrDefault();
         var occupation = occupationService.GetAll(p => p._id == person.Occupation._id).FirstOrDefault();
-        var remove = certificationService.GetAll(p => p.Person._id == idperson 
+        var remove = certificationService.GetAll(p => p.Person._id == idperson
         & p.StatusCertification != EnumStatusCertification.Disaproved
         & p.StatusCertification != EnumStatusCertification.Open).ToList();
 
@@ -591,7 +591,7 @@ namespace Manager.Services.Specific
             {
 
             }
-            
+
           }
         }
 
@@ -610,8 +610,8 @@ namespace Manager.Services.Specific
       {
         var certification = certificationService.GetAll(p => p._id == viewcertification._idCertification).FirstOrDefault();
 
-        
-        
+
+
 
         foreach (var item in certification.ListPersons)
         {
@@ -704,7 +704,13 @@ namespace Manager.Services.Specific
         & p.CertificationItem.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.CertificationItem.Name).Skip(skip).Take(count)
         .Select(p => new ViewCertificationItem
         {
-          NameItem = p.CertificationItem.Name
+          NameItem = p.CertificationItem.Name,
+          ItemCertificationView =
+          (p.CertificationItem.ItemCertification == EnumItemCertification.SkillCompanyHard) ? EnumItemCertificationView.Company :
+            (p.CertificationItem.ItemCertification == EnumItemCertification.SkillCompanySoft) ? EnumItemCertificationView.Company :
+              (p.CertificationItem.ItemCertification == EnumItemCertification.SkillGroupSoft) ? EnumItemCertificationView.Soft :
+                (p.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationSoft) ? EnumItemCertificationView.Soft :
+                EnumItemCertificationView.Hard
         }).ToList();
 
         total = result.Count();
