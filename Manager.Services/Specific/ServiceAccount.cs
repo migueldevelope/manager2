@@ -27,6 +27,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<User> serviceUser;
     private readonly ServiceGeneric<Company> serviceCompany;
+    private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceInfra serviceInfra;
     private readonly ServiceLog serviceLog;
 
@@ -43,6 +44,7 @@ namespace Manager.Services.Specific
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceInfra = new ServiceInfra(context);
         serviceLog = new ServiceLog(context);
+        serviceParameter = new ServiceGeneric<Parameter>(context);
       }
       catch (Exception e)
       {
@@ -105,6 +107,16 @@ namespace Manager.Services.Specific
         serviceAccount._user._idPerson = person._id;
         // Criar os parâmetros básicos
         serviceInfra._user = serviceAccount._user;
+
+        // Use parameter
+        serviceParameter.InsertAccount(new Parameter()
+        {
+          _idAccount = account._id,
+          Status = EnumStatus.Enabled,
+          Name = "servicemailmessage",
+          Content = "false"
+        });
+
         return await serviceInfra.CopyTemplateInfraAsync(company);
       }
       catch (Exception e)
