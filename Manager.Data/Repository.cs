@@ -10,6 +10,7 @@ using Manager.Core.Enumns;
 using System.Linq.Expressions;
 using Manager.Core.Interfaces;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Manager.Data
 {
@@ -334,7 +335,7 @@ namespace Manager.Data
       }
     }
 
-    #region Account New Version
+    #region Methods Free Account
     public async Task<T> InsertAccountNewVersion(T entity)
     {
       try
@@ -367,9 +368,9 @@ namespace Manager.Data
         IAsyncCursor<T> result = await _collection.FindAsync(filter, findOptions);
         return result.ToList();
       }
-      catch
+      catch (Exception e)
       {
-        throw;
+        throw e;
       }
     }
     public async Task<List<T>> GetAllFreeNewVersion(Expression<Func<T, bool>> filter)
@@ -418,7 +419,6 @@ namespace Manager.Data
         throw;
       }
     }
-
     #endregion
 
     #region Insert New Version
@@ -446,6 +446,150 @@ namespace Manager.Data
       catch (Exception e)
       {
         throw e;
+      }
+    }
+    public async Task<T> UpdateNewVersion(T entity, T entityOld)
+    {
+      try
+      {
+        Type type = entity.GetType();
+        IEnumerable<string> unequalProperties =
+            from pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            let selfValue = type.GetProperty(pi.Name).GetValue(entityOld, null)
+            let toValue = type.GetProperty(pi.Name).GetValue(entity, null)
+            where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
+            select pi.Name;
+        if (unequalProperties.Count() != 0)
+        {
+          FilterDefinition<T> filter = Builders<T>.Filter.Where(p => p._idAccount == _user._idAccount && p._id == entity._id);
+          List<UpdateDefinition<T>> entityChange = new List<UpdateDefinition<T>>();
+          foreach (string item in unequalProperties)
+            entityChange.Add(Builders<T>.Update.Set(item, entity.GetType().GetProperty(item).GetValue(entity, null)));
+          entity = await _collection.FindOneAndUpdateAsync(filter, Builders<T>.Update.Combine(entityChange));
+        }
+        return entity;
+      }
+      catch
+      {
+        throw;
+      }
+    }
+
+    public async Task<List<T>> GetAllNewVersion(Expression<Func<T, bool>> filter, int count, int skip, string sort)
+    {
+      try
+      {
+        var @params = filter.Parameters;
+        // Account, Status
+        var checkNotDeleted = Expression.Equal(Expression.PropertyOrField(@params[0], "Status"), Expression.Constant(EnumStatus.Enabled));
+        var checkAccount = Expression.Equal(Expression.PropertyOrField(@params[0], "_idAccount"), Expression.Constant(_user._idAccount));
+        var originalBody = filter.Body;
+        var midleExpr = Expression.And(originalBody, checkAccount);
+        var fullExpr = Expression.And(midleExpr, checkNotDeleted);
+        var lambda = Expression.Lambda<Func<T, bool>>(fullExpr, @params);
+        Collation _caseInsensitiveCollation = new Collation("en", strength: CollationStrength.Primary);
+        string[] fieldName = sort.Split(' ');
+        int order = fieldName.Count() == 1 ? 1 : fieldName[1].ToUpper().Equals("DESC") ? -1 : 1;
+        var findOptions = new FindOptions<T>
+        {
+          Collation = _caseInsensitiveCollation,
+          Limit = count,
+          Skip = skip,
+          Sort = new BsonDocument(fieldName[0], order)
+        };
+        IAsyncCursor<T> result = await _collection.FindAsync(lambda, findOptions);
+        return result.ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public async Task<List<T>> GetAllNewVersion(Expression<Func<T, bool>> filter)
+    {
+      try
+      {
+        var @params = filter.Parameters;
+        // Account, Status
+        var checkNotDeleted = Expression.Equal(Expression.PropertyOrField(@params[0], "Status"), Expression.Constant(EnumStatus.Enabled));
+        var checkAccount = Expression.Equal(Expression.PropertyOrField(@params[0], "_idAccount"), Expression.Constant(_user._idAccount));
+        var originalBody = filter.Body;
+        var midleExpr = Expression.And(originalBody, checkAccount);
+        var fullExpr = Expression.And(midleExpr, checkNotDeleted);
+        var lambda = Expression.Lambda<Func<T, bool>>(fullExpr, @params);
+        Collation _caseInsensitiveCollation = new Collation("en", strength: CollationStrength.Primary);
+        var findOptions = new FindOptions<T>
+        {
+          Collation = _caseInsensitiveCollation
+        };
+        IAsyncCursor<T> result = await _collection.FindAsync(lambda, findOptions);
+        return result.ToList();
+      }
+      catch
+      {
+        throw;
+      }
+    }
+    public async Task<long> CountNewVersion(Expression<Func<T, bool>> filter)
+    {
+      try
+      {
+        var @params = filter.Parameters;
+        // Account, Status
+        var checkNotDeleted = Expression.Equal(Expression.PropertyOrField(@params[0], "Status"), Expression.Constant(EnumStatus.Enabled));
+        var checkAccount = Expression.Equal(Expression.PropertyOrField(@params[0], "_idAccount"), Expression.Constant(_user._idAccount));
+        var originalBody = filter.Body;
+        var midleExpr = Expression.And(originalBody, checkAccount);
+        var fullExpr = Expression.And(midleExpr, checkNotDeleted);
+        var lambda = Expression.Lambda<Func<T, bool>>(fullExpr, @params);
+        long result = await _collection.CountDocumentsAsync(lambda);
+        return result;
+      }
+      catch
+      {
+        throw;
+      }
+    }
+    public async Task<T> GetNewVersion(Expression<Func<T, bool>> filter)
+    {
+      try
+      {
+        var @params = filter.Parameters;
+        // Account, Status
+        var checkNotDeleted = Expression.Equal(Expression.PropertyOrField(@params[0], "Status"), Expression.Constant(EnumStatus.Enabled));
+        var checkAccount = Expression.Equal(Expression.PropertyOrField(@params[0], "_idAccount"), Expression.Constant(_user._idAccount));
+        var originalBody = filter.Body;
+        var midleExpr = Expression.And(originalBody, checkAccount);
+        var fullExpr = Expression.And(midleExpr, checkNotDeleted);
+        var lambda = Expression.Lambda<Func<T, bool>>(fullExpr, @params);
+        Collation _caseInsensitiveCollation = new Collation("en", strength: CollationStrength.Primary);
+        var findOptions = new FindOptions<T>
+        {
+          Collation = _caseInsensitiveCollation
+        };
+        IAsyncCursor<T> result = await _collection.FindAsync(lambda, findOptions);
+        return result.FirstOrDefault();
+      }
+      catch
+      {
+        throw;
+      }
+    }
+    public async Task<T> GetNewVersion(string id)
+    {
+      try
+      {
+        Collation _caseInsensitiveCollation = new Collation("en", strength: CollationStrength.Primary);
+        var findOptions = new FindOptions<T>
+        {
+          Collation = _caseInsensitiveCollation
+        };
+        IAsyncCursor<T> result = await _collection.FindAsync(p => p._idAccount == _user._idAccount && p._id == id && p.Status == EnumStatus.Enabled, findOptions);
+        return result.FirstOrDefault();
+      }
+      catch
+      {
+        throw;
       }
     }
     #endregion

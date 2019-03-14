@@ -35,6 +35,7 @@
       this.perfil = new System.Windows.Forms.ToolStripMenuItem();
       this.perfilTrocar = new System.Windows.Forms.ToolStripMenuItem();
       this.perfilSair = new System.Windows.Forms.ToolStripMenuItem();
+      this.testeDeLeituraEmExcelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
       this.tbarUrl = new System.Windows.Forms.ToolStripLabel();
       this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
@@ -51,7 +52,8 @@
       this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.impCol,
-            this.perfil});
+            this.perfil,
+            this.testeDeLeituraEmExcelToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
       this.menuStrip1.Size = new System.Drawing.Size(800, 28);
@@ -70,7 +72,7 @@
       // impColConfig
       // 
       this.impColConfig.Name = "impColConfig";
-      this.impColConfig.Size = new System.Drawing.Size(216, 26);
+      this.impColConfig.Size = new System.Drawing.Size(207, 26);
       this.impColConfig.Text = "&Configuração";
       this.impColConfig.Click += new System.EventHandler(this.ImpColConfig_Click);
       // 
@@ -78,7 +80,7 @@
       // 
       this.impColImport.Name = "impColImport";
       this.impColImport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-      this.impColImport.Size = new System.Drawing.Size(216, 26);
+      this.impColImport.Size = new System.Drawing.Size(207, 26);
       this.impColImport.Text = "&Importação";
       this.impColImport.Click += new System.EventHandler(this.ImpColImport_Click);
       // 
@@ -106,6 +108,14 @@
       this.perfilSair.Size = new System.Drawing.Size(182, 26);
       this.perfilSair.Text = "Sai&r";
       this.perfilSair.Click += new System.EventHandler(this.PerfilSair_Click);
+      // 
+      // testeDeLeituraEmExcelToolStripMenuItem
+      // 
+      this.testeDeLeituraEmExcelToolStripMenuItem.Name = "testeDeLeituraEmExcelToolStripMenuItem";
+      this.testeDeLeituraEmExcelToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
+      this.testeDeLeituraEmExcelToolStripMenuItem.Text = "Teste de Leitura em Excel";
+      this.testeDeLeituraEmExcelToolStripMenuItem.Visible = false;
+      this.testeDeLeituraEmExcelToolStripMenuItem.Click += new System.EventHandler(this.testeDeLeituraEmExcelToolStripMenuItem_Click);
       // 
       // toolStrip1
       // 
@@ -194,5 +204,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripLabel tbarAccount;
     private System.Windows.Forms.ToolStripMenuItem impColImport;
+    private System.Windows.Forms.ToolStripMenuItem testeDeLeituraEmExcelToolStripMenuItem;
   }
 }
