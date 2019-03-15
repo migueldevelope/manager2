@@ -497,8 +497,8 @@ namespace Manager.Services.Specific
         {
           result.Add(new
           {
-            NamePerson = item.Person.User.Name,
             NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+            NamePerson = item.Person.User.Name,
             Status = item.Checkpoint == null ? "Aguardando para iniciar" :
               item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
                 item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
