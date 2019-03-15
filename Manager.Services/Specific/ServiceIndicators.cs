@@ -404,7 +404,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = certificationService.GetAll().ToList();
+        var list = certificationService.GetAll(p => p.StatusCertification != EnumStatusCertification.Open).ToList();
         List<dynamic> result = new List<dynamic>();
 
         foreach (var item in list)
@@ -435,7 +435,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = certificationService.GetAll(p => p.Person._id == idperson).ToList();
+        var list = certificationService.GetAll(p => p.Person._id == idperson & p.StatusCertification != EnumStatusCertification.Open).ToList();
         List<dynamic> result = new List<dynamic>();
 
         foreach (var item in list)

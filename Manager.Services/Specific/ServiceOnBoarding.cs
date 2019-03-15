@@ -1562,7 +1562,7 @@ namespace Manager.Services.Specific
         ViewPerson view = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
-          //client.BaseAddress = new Uri(link);
+          client.BaseAddress = new Uri(link);
           //var data = new
           //{
           //  mail = person.User.Mail,
@@ -1582,7 +1582,8 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        //throw new ServiceException(_user, e, this._context);
+        return "none";
       }
     }
 
