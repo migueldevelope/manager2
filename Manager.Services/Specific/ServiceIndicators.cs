@@ -430,6 +430,34 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<dynamic> ExportStatusCertification(string idperson)
+    {
+      try
+      {
+
+        var list = certificationService.GetAll(p => p.Person._id == idperson).ToList();
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          result.Add(new
+          {
+            IdCertification = item._id,
+            NamePerson = item.Person.User.Name,
+            NameItem = item.CertificationItem.Name,
+            Status = item.StatusCertification,
+            DateEnd = item.DateEnd
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<dynamic> ExportStatusOnboarding()
     {
       try

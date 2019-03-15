@@ -83,6 +83,14 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("exportstatuscertification/{idperson}")]
+    public List<dynamic> ExportStatusCertification(string idperson)
+    {
+      return service.ExportStatusCertification(idperson);
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("exportmonitoring")]
     public List<dynamic> ExportStatusMonitoring()
     {
