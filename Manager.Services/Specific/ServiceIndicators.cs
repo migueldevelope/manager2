@@ -447,32 +447,39 @@ namespace Manager.Services.Specific
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Select(p => new { Person = p, OnBoardings = onboardingService.GetAll(x => x.Person._id == p._id).ToList() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
 
-        foreach (var item in list)
+        foreach (var rows in list)
         {
-          result.Add(new
+          if (rows.OnBoardings != null)
           {
-            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-            NamePerson = item.Person.User.Name,
-            Type = item.OnBoarding == null ? "Admissão" :
-              item.OnBoarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
-            Occupation = item.Person.Occupation.Name,
-            Status =
-              item.OnBoarding == null ? "Aguardando para iniciar" :
-                item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.Open ? "Aguardando para iniciar" :
-                  item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
-                    item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
-                      item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.Wait ? "Em andamento pelo gestor" :
-                        item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
-                          item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
-                            item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
-            DateBegin = item.OnBoarding?.DateBeginPerson,
-            DateEnd = item.OnBoarding?.DateEndEnd,
+            foreach (var item in rows.OnBoardings)
+            {
+              result.Add(new
+              {
+                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+                NamePerson = item.Person.User.Name,
+                Type = item == null ? "Admissão" :
+                item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
+                Occupation = item.Person.Occupation.Name,
+                Status =
+                item == null ? "Aguardando para iniciar" :
+                  item.StatusOnBoarding == EnumStatusOnBoarding.Open ? "Aguardando para iniciar" :
+                    item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
+                      item.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
+                        item.StatusOnBoarding == EnumStatusOnBoarding.Wait ? "Em andamento pelo gestor" :
+                          item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
+                            item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
+                              item.StatusOnBoarding == EnumStatusOnBoarding.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+                DateBegin = item?.DateBeginPerson,
+                DateEnd = item?.DateEndEnd,
 
-          });
+              });
+            }
+          }
+
         }
 
         return result;
@@ -525,29 +532,37 @@ namespace Manager.Services.Specific
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Select(p => new { Person = p, Monitorings = monitoringService.GetAll(x => x.Person._id == p._id).ToList() })
         .ToList();
         List<dynamic> result = new List<dynamic>();
 
-        foreach (var item in list)
+        foreach (var rows in list)
         {
-          result.Add(new
+          if (rows.Monitorings != null)
           {
-            NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-            NamePerson = item.Person.User.Name,
-            Occupation = item.Person.Occupation.Name,
-            Status =
-              item.Monitoring == null ? "Aguardando para iniciar" :
-                item.Monitoring.StatusMonitoring == EnumStatusMonitoring.Open ? "Aguardando para iniciar" :
-                  item.Monitoring.StatusMonitoring == EnumStatusMonitoring.InProgressPerson ? "Em andamento pelo colaborador" :
-                    item.Monitoring.StatusMonitoring == EnumStatusMonitoring.InProgressManager ? "Em andamento pelo gestor" :
-                      item.Monitoring.StatusMonitoring == EnumStatusMonitoring.Wait ? "Em andamento pelo gestor" :
-                        item.Monitoring.StatusMonitoring == EnumStatusMonitoring.End ? "Finalizado" :
-                          item.Monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager ? "Aguardando continuação pelo gestor" :
-                            item.Monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
-            DateBegin = item.Monitoring?.DateBeginPerson,
-            DateEnd = item.Monitoring?.DateEndEnd
-          });
+            foreach (var item in rows.Monitorings)
+            {
+              result.Add(new
+              {
+                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+                NamePerson = item.Person.User.Name,
+                Occupation = item.Person.Occupation.Name,
+                Status =
+              item == null ? "Aguardando para iniciar" :
+                item.StatusMonitoring == EnumStatusMonitoring.Open ? "Aguardando para iniciar" :
+                  item.StatusMonitoring == EnumStatusMonitoring.InProgressPerson ? "Em andamento pelo colaborador" :
+                    item.StatusMonitoring == EnumStatusMonitoring.InProgressManager ? "Em andamento pelo gestor" :
+                      item.StatusMonitoring == EnumStatusMonitoring.Wait ? "Em andamento pelo gestor" :
+                        item.StatusMonitoring == EnumStatusMonitoring.End ? "Finalizado" :
+                          item.StatusMonitoring == EnumStatusMonitoring.WaitManager ? "Aguardando continuação pelo gestor" :
+                            item.StatusMonitoring == EnumStatusMonitoring.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+                DateBegin = item?.DateBeginPerson,
+                DateEnd = item?.DateEndEnd
+              });
+            }
+          }
+
+
         }
 
         return result;
