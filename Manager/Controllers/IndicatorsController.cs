@@ -75,10 +75,33 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
+    [Route("exportstatuscertification")]
+    public List<dynamic> ExportStatusCertification()
+    {
+      return service.ExportStatusCertification();
+    }
+
+    [Authorize]
+    [HttpGet]
     [Route("exportmonitoring")]
     public List<dynamic> ExportStatusMonitoring()
     {
       return service.ExportStatusMonitoring();
+    }
+
+    [HttpGet]
+    [Route("exportonboarding/{idperson}")]
+    public List<dynamic> ExportStatusOnboarding(string idperson)
+    {
+      return service.ExportStatusOnboarding(idperson);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("exportmonitoring/{idperson}")]
+    public List<dynamic> ExportStatusMonitoring(string idperson)
+    {
+      return service.ExportStatusMonitoring(idperson);
     }
 
     [Authorize]

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
-  #pragma warning disable 4014
+#pragma warning disable 4014
   public class ServiceIndicators : Repository<Monitoring>, IServiceIndicators
   {
     private readonly ServiceGeneric<Monitoring> monitoringService;
@@ -29,6 +29,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
     private readonly ServiceGeneric<Account> accountService;
+    private readonly ServiceGeneric<Certification> certificationService;
     public string path;
     private HubConnection hubConnection;
 
@@ -48,6 +49,8 @@ namespace Manager.Services.Specific
         mailService = new ServiceGeneric<MailLog>(context);
         workflowService = new ServiceGeneric<Workflow>(context);
         accountService = new ServiceGeneric<Account>(context);
+        certificationService = new ServiceGeneric<Certification>(context);
+
         path = pathToken;
       }
       catch (Exception e)
@@ -68,6 +71,7 @@ namespace Manager.Services.Specific
       mailMessageService._user = _user;
       workflowService._user = _user;
       mailService._user = _user;
+      certificationService._user = _user;
       checkpointService._user = _user;
     }
 
@@ -338,6 +342,105 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<dynamic> ExportStatusMonitoring(string idperson)
+    {
+      try
+      {
+
+        var list = monitoringService.GetAll(p => p.Person._id == idperson).ToList();
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          result.Add(new
+          {
+            IdMonitoring = item._id,
+            NamePerson = item.Person.User.Name,
+            Status =
+                item.StatusMonitoring == EnumStatusMonitoring.Open ? "Aguardando para iniciar" :
+                  item.StatusMonitoring == EnumStatusMonitoring.InProgressPerson ? "Em andamento pelo colaborador" :
+                    item.StatusMonitoring == EnumStatusMonitoring.InProgressManager ? "Em andamento pelo gestor" :
+                      item.StatusMonitoring == EnumStatusMonitoring.Wait ? "Em andamento pelo gestor" :
+                        item.StatusMonitoring == EnumStatusMonitoring.End ? "Finalizado" :
+                          item.StatusMonitoring == EnumStatusMonitoring.WaitManager ? "Aguardando continuação pelo gestor" :
+                            item.StatusMonitoring == EnumStatusMonitoring.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+            Occupation = item.Person.Occupation.Name
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<dynamic> ExportStatusOnboarding(string idperson)
+    {
+      try
+      {
+
+        var list = onboardingService.GetAll(p => p.Person._id == idperson).ToList();
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          result.Add(new
+          {
+            IdOnboarding = item._id,
+            NamePerson = item.Person.User.Name,
+            Status =
+                item.StatusOnBoarding == EnumStatusOnBoarding.Open ? "Aguardando para iniciar" :
+                  item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
+                    item.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
+                      item.StatusOnBoarding == EnumStatusOnBoarding.Wait ? "Em andamento pelo gestor" :
+                        item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
+                          item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
+                            item.StatusOnBoarding == EnumStatusOnBoarding.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+            Occupation = item.Person.Occupation.Name
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<dynamic> ExportStatusCertification()
+    {
+      try
+      {
+
+        var list = certificationService.GetAll().ToList();
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in list)
+        {
+          result.Add(new
+          {
+            NameManager = item.Person.Manager.Name,
+            NamePerson = item.Person.User.Name,
+            NameItem = item.CertificationItem.Name,
+            Status =
+                item.StatusCertification == EnumStatusCertification.Open ? "Aguardando Aprovação" :
+                  item.StatusCertification == EnumStatusCertification.Wait ? "Aguardando Aprovação" :
+                    item.StatusCertification == EnumStatusCertification.Approved ? "Aprovado" : "Reprovado",
+            Date = item.DateBegin
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<dynamic> ExportStatusOnboarding()
     {
       try
@@ -352,10 +455,23 @@ namespace Manager.Services.Specific
         {
           result.Add(new
           {
-            item.Person.User.Name,
             NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-            Status = item.OnBoarding == null ? EnumStatusOnBoarding.Open.ToString() : item.OnBoarding.StatusOnBoarding.ToString(),
-            Date = item.OnBoarding?.DateEndEnd
+            NamePerson = item.Person.User.Name,
+            Type = item.OnBoarding == null ? "Admissão" :
+              item.OnBoarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
+            Occupation = item.Person.Occupation.Name,
+            Status =
+              item.OnBoarding == null ? "Aguardando para iniciar" :
+                item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.Open ? "Aguardando para iniciar" :
+                  item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
+                    item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
+                      item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.Wait ? "Em andamento pelo gestor" :
+                        item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
+                          item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
+                            item.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+            DateBegin = item.OnBoarding?.DateBeginPerson,
+            DateEnd = item.OnBoarding?.DateEndEnd,
+
           });
         }
 
@@ -381,10 +497,17 @@ namespace Manager.Services.Specific
         {
           result.Add(new
           {
-            item.Person.User.Name,
+            NamePerson = item.Person.User.Name,
             NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-            Status = item.Checkpoint == null ? EnumStatusCheckpoint.Open.ToString() : item.Checkpoint.StatusCheckpoint.ToString(),
-            Date = item.Checkpoint?.DateEnd
+            Status = item.Checkpoint == null ? "Aguardando para iniciar" :
+              item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
+                item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
+            DateBegin = item.Checkpoint?.DateBegin,
+            DateEnd = item.Checkpoint?.DateEnd,
+            Occupation = item.Person.Occupation.Name,
+            Result = item.Checkpoint == null ? "Não iniciado" :
+              item.Checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
+                item.Checkpoint.TypeCheckpoint == EnumCheckpoint.Disapproved ? "Não Efetivado" : "Aguardando Definição"
           });
         }
 
@@ -410,10 +533,20 @@ namespace Manager.Services.Specific
         {
           result.Add(new
           {
-            item.Person.User.Name,
             NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-            Status = item.Monitoring == null ? EnumStatusOnBoarding.Open.ToString() : item.Monitoring.StatusMonitoring.ToString(),
-            Date = item.Monitoring?.DateEndEnd
+            NamePerson = item.Person.User.Name,
+            Occupation = item.Person.Occupation.Name,
+            Status =
+              item.Monitoring == null ? "Aguardando para iniciar" :
+                item.Monitoring.StatusMonitoring == EnumStatusMonitoring.Open ? "Aguardando para iniciar" :
+                  item.Monitoring.StatusMonitoring == EnumStatusMonitoring.InProgressPerson ? "Em andamento pelo colaborador" :
+                    item.Monitoring.StatusMonitoring == EnumStatusMonitoring.InProgressManager ? "Em andamento pelo gestor" :
+                      item.Monitoring.StatusMonitoring == EnumStatusMonitoring.Wait ? "Em andamento pelo gestor" :
+                        item.Monitoring.StatusMonitoring == EnumStatusMonitoring.End ? "Finalizado" :
+                          item.Monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager ? "Aguardando continuação pelo gestor" :
+                            item.Monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+            DateBegin = item.Monitoring?.DateBeginPerson,
+            DateEnd = item.Monitoring?.DateEndEnd
           });
         }
 
@@ -424,6 +557,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+
 
     public List<dynamic> ExportStatusPlan()
     {
@@ -445,13 +579,15 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
                   NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  plan?.Description,
-                  Evalutions = plan == null ? 0 : plan.Evaluation,
-                  Approved = plan?.StatusPlanApproved.ToString(),
-                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
-                  Date = plan?.DateEnd
+                  NamePerson = item.Person.User.Name,
+                  What = rows.Schooling.Name,
+                  Description = plan?.Description,
+                  Deadline = plan.Deadline,
+                  Status = plan == null ? "Em aberto" :
+                    plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado",
+                  Obs = plan.TextEnd,
+                  DateEnd = plan?.DateEnd
                 });
               }
             }
@@ -462,13 +598,15 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
                   NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  plan?.Description,
-                  Evalutions = plan == null ? 0 : plan.Evaluation,
-                  Approved = plan?.StatusPlanApproved.ToString(),
-                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
-                  Date = plan?.DateEnd
+                  NamePerson = item.Person.User.Name,
+                  What = rows.Skill.Name,
+                  Description = plan?.Description,
+                  Deadline = plan.Deadline,
+                  Status = plan == null ? "Em aberto" :
+                    plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado",
+                  Obs = plan.TextEnd,
+                  DateEnd = plan?.DateEnd
                 });
               }
             }
@@ -479,13 +617,15 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
                   NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  plan?.Description,
-                  Evalutions = plan == null ? 0 : plan.Evaluation,
-                  Approved = plan?.StatusPlanApproved.ToString(),
-                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString(),
-                  Date = plan?.DateEnd
+                  NamePerson = item.Person.User.Name,
+                  What = rows.Activities.Name,
+                  Description = plan?.Description,
+                  Deadline = plan.Deadline,
+                  Status = plan == null ? "Em aberto" :
+                    plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado",
+                  Obs = plan.TextEnd,
+                  DateEnd = plan?.DateEnd
                 });
               }
             }
@@ -862,5 +1002,5 @@ namespace Manager.Services.Specific
       }
     }
   }
-  #pragma warning restore 4014
+#pragma warning restore 4014
 }
