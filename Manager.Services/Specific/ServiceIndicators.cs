@@ -356,15 +356,9 @@ namespace Manager.Services.Specific
           {
             IdMonitoring = item._id,
             NamePerson = item.Person.User.Name,
-            Status =
-                item.StatusMonitoring == EnumStatusMonitoring.Open ? "Aguardando para iniciar" :
-                  item.StatusMonitoring == EnumStatusMonitoring.InProgressPerson ? "Em andamento pelo colaborador" :
-                    item.StatusMonitoring == EnumStatusMonitoring.InProgressManager ? "Em andamento pelo gestor" :
-                      item.StatusMonitoring == EnumStatusMonitoring.Wait ? "Em andamento pelo gestor" :
-                        item.StatusMonitoring == EnumStatusMonitoring.End ? "Finalizado" :
-                          item.StatusMonitoring == EnumStatusMonitoring.WaitManager ? "Aguardando continuação pelo gestor" :
-                            item.StatusMonitoring == EnumStatusMonitoring.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
-            Occupation = item.Person.Occupation.Name
+            Status = item.StatusMonitoring,
+            Occupation = item.Person.Occupation.Name,
+            DataEnd = item.DateEndEnd
           });
         }
 
@@ -390,15 +384,10 @@ namespace Manager.Services.Specific
           {
             IdOnboarding = item._id,
             NamePerson = item.Person.User.Name,
-            Status =
-                item.StatusOnBoarding == EnumStatusOnBoarding.Open ? "Aguardando para iniciar" :
-                  item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
-                    item.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
-                      item.StatusOnBoarding == EnumStatusOnBoarding.Wait ? "Em andamento pelo gestor" :
-                        item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
-                          item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
-                            item.StatusOnBoarding == EnumStatusOnBoarding.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
-            Occupation = item.Person.Occupation.Name
+
+            Status = item.StatusOnBoarding,
+            Occupation = item.Person.Occupation.Name,
+            DataEnd = item.DateEndEnd
           });
         }
 
