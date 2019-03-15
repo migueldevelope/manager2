@@ -565,69 +565,77 @@ namespace Manager.Services.Specific
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Select(p => new { Person = p, Monitorings = monitoringService.GetAll(x => x.Person._id == p._id).ToList() })
         .ToList();
+
         List<dynamic> result = new List<dynamic>();
 
         foreach (var item in list)
         {
-          if (item.Monitoring != null)
+          foreach (var monit in item.Monitorings)
           {
-            foreach (var rows in item.Monitoring.Schoolings)
+            if (monit != null)
             {
-              foreach (var plan in rows.Plans)
+              foreach (var rows in monit.Schoolings)
               {
-                result.Add(new
+                foreach (var plan in rows.Plans)
                 {
-                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  NamePerson = item.Person.User.Name,
-                  What = rows.Schooling.Name,
-                  Description = plan?.Description,
-                  Deadline = plan.Deadline,
-                  Status = plan == null ? "Em aberto" :
-                    plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado",
-                  Obs = plan.TextEnd,
-                  DateEnd = plan?.DateEnd
-                });
+                  result.Add(new
+                  {
+                    NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+                    NamePerson = item.Person.User.Name,
+                    What = rows.Schooling.Name,
+                    Description = plan?.Description,
+                    Deadline = plan.Deadline,
+                    Status = plan == null ? "Em aberto" :
+                      plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
+                        plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
+                    Obs = plan?.TextEnd,
+                    DateEnd = plan?.DateEnd
+                  });
+                }
               }
-            }
 
-            foreach (var rows in item.Monitoring.SkillsCompany)
-            {
-              foreach (var plan in rows.Plans)
+              foreach (var rows in monit.SkillsCompany)
               {
-                result.Add(new
+                foreach (var plan in rows.Plans)
                 {
-                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  NamePerson = item.Person.User.Name,
-                  What = rows.Skill.Name,
-                  Description = plan?.Description,
-                  Deadline = plan.Deadline,
-                  Status = plan == null ? "Em aberto" :
-                    plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado",
-                  Obs = plan.TextEnd,
-                  DateEnd = plan?.DateEnd
-                });
+                  result.Add(new
+                  {
+                    NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+                    NamePerson = item.Person.User.Name,
+                    What = rows.Skill.Name,
+                    Description = plan?.Description,
+                    Deadline = plan.Deadline,
+                    Status = plan == null ? "Em aberto" :
+                      plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
+                        plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
+                    Obs = plan?.TextEnd,
+                    DateEnd = plan?.DateEnd
+                  });
+                }
               }
-            }
 
-            foreach (var rows in item.Monitoring.Activities)
-            {
-              foreach (var plan in rows.Plans)
+              foreach (var rows in monit.Activities)
               {
-                result.Add(new
+                foreach (var plan in rows.Plans)
                 {
-                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                  NamePerson = item.Person.User.Name,
-                  What = rows.Activities.Name,
-                  Description = plan?.Description,
-                  Deadline = plan.Deadline,
-                  Status = plan == null ? "Em aberto" :
-                    plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado",
-                  Obs = plan.TextEnd,
-                  DateEnd = plan?.DateEnd
-                });
+                  result.Add(new
+                  {
+                    NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
+                    NamePerson = item.Person.User.Name,
+                    What = rows.Activities.Name,
+                    Description = plan?.Description,
+                    Deadline = plan.Deadline,
+                    Status = plan == null ? "Em aberto" :
+                      plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
+                        plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
+                    Obs = plan?.TextEnd,
+                    DateEnd = plan?.DateEnd
+                  });
+                }
               }
+
             }
           }
         }
