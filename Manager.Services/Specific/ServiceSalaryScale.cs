@@ -176,10 +176,10 @@ namespace Manager.Services.Specific
         }
 
         view.ListSteps = list;
-        gradeService.Insert(view);
+        var grade = gradeService.Insert(view);
 
 
-        salaryScale.Grades.Add(view);
+        salaryScale.Grades.Add(grade);
         salaryScaleService.Update(salaryScale, null);
 
         return "add success";
@@ -217,6 +217,7 @@ namespace Manager.Services.Specific
             item.Order = grade.Order;
             item.StepMedium = grade.StepMedium;
             item.ListSteps = grade.ListSteps;
+            item.Status = grade.Status;
             salaryScaleService.Update(salaryScale, null);
           }
 
@@ -237,13 +238,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string RemoveGrade(string id)
+    public string RemoveGrade(string id, string idsalaryscale)
     {
       try
       {
         var item = gradeService.GetAll(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
         gradeService.Update(item, null);
+        UpdateAllGrade(item, idsalaryscale);
         return "deleted";
       }
       catch (Exception e)

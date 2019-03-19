@@ -20,7 +20,7 @@ namespace Manager.Core.Interfaces
     string UpdateGrade(Grade view, string idsalaryscale);
     string NewSalaryScale(ViewNewSalaryScale view);
     string UpdateSalaryScale(ViewUpdateSalaryScale view);
-    string RemoveGrade(string id);
+    string RemoveGrade(string id, string idsalaryscale);
     Grade GetGrade(string id);
     List<Grade> ListGrade(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "");
   }

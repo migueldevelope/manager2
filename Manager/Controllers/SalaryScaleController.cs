@@ -114,10 +114,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
-    [Route("deletegrade/{id}")]
-    public string DeleteGrade(string id)
+    [Route("deletegrade/{id}/{idsalaryscale}")]
+    public string DeleteGrade(string id, string idsalaryscale)
     {
-      return service.RemoveGrade(id);
+      return service.RemoveGrade(id, idsalaryscale);
     }
   }
 }
