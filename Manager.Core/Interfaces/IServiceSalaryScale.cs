@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.Views;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -11,14 +12,16 @@ namespace Manager.Core.Interfaces
     BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
-    string UpdateStep(string idestablishment, string idgrade, EnumSteps step, decimal salary);
+    string UpdateStep(string idsalaryscale, string idgrade, EnumSteps step, decimal salary);
     string Remove(string id);
     SalaryScale Get(string id);
-    List<SalaryScale> List(string idcompany, string idestablishment, ref long total, int count = 10, int page = 1, string filter = "");
-    string NewGrade(Grade view);
-    string UpdateGrade(Grade view);
+    List<SalaryScale> List(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+    string AddGrade(Grade view, string idsalaryscale);
+    string UpdateGrade(Grade view, string idsalaryscale);
+    string NewSalaryScale(ViewNewSalaryScale view);
+    string UpdateSalaryScale(ViewUpdateSalaryScale view);
     string RemoveGrade(string id);
     Grade GetGrade(string id);
-    List<Grade> ListGrade(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<Grade> ListGrade(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

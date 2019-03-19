@@ -26,11 +26,11 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("list/{idcompany}/{idestablishment}")]
+    [Route("list/{idcompany}")]
     public List<SalaryScale> List(string idcompany, string idestablishment, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(idcompany, idestablishment, ref total, count, page, filter);
+      var result = service.List(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -52,20 +52,37 @@ namespace Manager.Controllers
       return service.Remove(id);
     }
 
+    [Authorize]
     [HttpPost]
-    [Route("newgrade")]
-    public string PostGrade([FromBody]Grade view)
+    [Route("addgrade/{idsalaryscale}")]
+    public string PostGrade([FromBody]Grade view, string idsalaryscale)
     {
-      return service.NewGrade(view);
+      return service.AddGrade(view,idsalaryscale );
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatesalaryscale")]
+    public string UpdateSalary([FromBody]ViewUpdateSalaryScale view)
+    {
+      return service.UpdateSalaryScale(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("newsalaryscale")]
+    public string PostSalary([FromBody]ViewNewSalaryScale view)
+    {
+      return service.NewSalaryScale(view);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("listgrade/{idcompany}")]
-    public List<Grade> ListGrade(string idcompany, int count = 10, int page = 1, string filter = "")
+    [Route("listgrade/{idsalaryscale}")]
+    public List<Grade> ListGrade(string idsalaryscale, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGrade(idcompany, ref total, count, page, filter);
+      var result = service.ListGrade(idsalaryscale, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -75,7 +92,7 @@ namespace Manager.Controllers
     [Route("updatestep")]
     public string UpdateGrade([FromBody]ViewStep view)
     {
-      return service.UpdateStep(view.idestablishment, view.idgrade, view.Step, view.Salary);
+      return service.UpdateStep(view.idsalaryscale, view.idgrade, view.Step, view.Salary);
     }
 
 
@@ -89,10 +106,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("updategrade")]
-    public string UpdateGrade([FromBody]Grade view)
+    [Route("updategrade/{idsalaryscale}")]
+    public string UpdateGrade([FromBody]Grade view, string idsalaryscale)
     {
-      return service.UpdateGrade(view);
+      return service.UpdateGrade(view,idsalaryscale);
     }
 
     [Authorize]

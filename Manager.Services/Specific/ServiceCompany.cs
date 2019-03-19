@@ -173,31 +173,31 @@ namespace Manager.Services.Specific
       {
         establishmentService.Insert(view);
 
-        var grades = gradeService.GetAll(p => p.Company._id == view.Company._id).ToList();
-        foreach (var grade in grades)
-        {
-          var list = new List<ListSteps>();
-          for (var step = 0; step <= 7; step++)
-          {
-            list.Add(new ListSteps()
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = _user._idAccount,
-              Status = EnumStatus.Enabled,
-              Salary = 0,
-              Step = (EnumSteps)step,
-            });
-          }
+        //var grades = gradeService.GetAll(p => p.Company._id == view.Company._id).ToList();
+        //foreach (var grade in grades)
+        //{
+        //  var list = new List<ListSteps>();
+        //  for (var step = 0; step <= 7; step++)
+        //  {
+        //    list.Add(new ListSteps()
+        //    {
+        //      _id = ObjectId.GenerateNewId().ToString(),
+        //      _idAccount = _user._idAccount,
+        //      Status = EnumStatus.Enabled,
+        //      Salary = 0,
+        //      Step = (EnumSteps)step,
+        //    });
+        //  }
 
-          var item = new SalaryScale()
-          {
-            Grade = grade,
-            Establishment = view,
-            ListSteps = list
-          };
-          salaryScaleService.Insert(item);
+        //  var item = new SalaryScale()
+        //  {
+        //    Grade = grade,
+        //    Establishment = view,
+        //    ListSteps = list
+        //  };
+        //  salaryScaleService.Insert(item);
 
-        }
+        //}
 
         return "add success";
       }

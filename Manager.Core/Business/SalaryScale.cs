@@ -5,8 +5,8 @@ namespace Manager.Core.Business
 {
   public class SalaryScale : BaseEntity
   {
-    public Establishment Establishment { get; set; }
-    public Grade Grade { get; set; }
-    public List<ListSteps> ListSteps { get; set; }
+    public Company Company { get; set; }
+    public string Name { get; set; }
+    public List<Grade> Grades { get; set; }
   }
 }
