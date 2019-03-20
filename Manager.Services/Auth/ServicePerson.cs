@@ -238,6 +238,10 @@ namespace Manager.Services.Auth
           TypeUser = view.TypeUser,
           User = user
         };
+
+        foreach (var item in view.SalaryScales)
+          person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
+        
         /// TODO: Manager
         person = personService.InsertNewVersion(person).Result;
         return new ViewCrudPerson()
@@ -318,6 +322,9 @@ namespace Manager.Services.Auth
         person.TypeJourney = view.TypeJourney;
         person.TypeUser = view.TypeUser;
         person.User = user;
+        foreach (var item in view.SalaryScales)
+          person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
+
         /// TODO: Manager
         person = personService.UpdateNewVersion(person).Result;
         return new ViewCrudPerson()
@@ -783,7 +790,7 @@ namespace Manager.Services.Auth
         view.Person.User = userService.Insert(view.User);
 
         personService.Insert(view.Person);
-        
+
         return "ok";
       }
       catch (Exception e)

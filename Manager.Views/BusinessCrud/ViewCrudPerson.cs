@@ -1,6 +1,8 @@
 ﻿using Manager.Views.BusinessList;
+using Manager.Views.BusinessNew;
 using Manager.Views.Enumns;
 using System;
+using System.Collections.Generic;
 
 namespace Manager.Views.BusinessCrud
 {
@@ -21,5 +23,6 @@ namespace Manager.Views.BusinessCrud
     public EnumTypeUser TypeUser { get; set; }
     public string Registration { get; set; }
     public ViewCrudUser User { get; set; }
+    public List<ViewSalaryScalePerson> SalaryScales { get; set; }
   }
 }
