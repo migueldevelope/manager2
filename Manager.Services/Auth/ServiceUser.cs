@@ -6,6 +6,8 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -22,20 +24,38 @@ namespace Manager.Services.Auth
   {
     private ServiceGeneric<User> userService;
     private ServiceGeneric<Person> personService;
-    private ServiceGeneric<PersonOld> personOldService;
     private ServiceGeneric<Attachments> attachmentService;
     private ServiceGeneric<Company> companyService;
     private ServiceGeneric<Occupation> occupationService;
     private ServiceGeneric<OnBoarding> onboardingService;
     private ServiceGeneric<Monitoring> monitoringService;
-    private ServiceGeneric<MonitoringOld> monitoringOldService;
     private ServiceGeneric<Checkpoint> checkpointService;
     private ServiceGeneric<Plan> planService;
     private ServiceGeneric<Log> logService;
     private ServiceSendGrid mailService;
 
-    public BaseUser user { get => _user; set => user = _user; }
-
+    #region Constructor
+    public ServiceUser(DataContext context) : base(context)
+    {
+      try
+      {
+        userService = new ServiceGeneric<User>(context);
+        attachmentService = new ServiceGeneric<Attachments>(context);
+        mailService = new ServiceSendGrid(context);
+        companyService = new ServiceGeneric<Company>(context);
+        occupationService = new ServiceGeneric<Occupation>(context);
+        personService = new ServiceGeneric<Person>(context);
+        onboardingService = new ServiceGeneric<OnBoarding>(context);
+        monitoringService = new ServiceGeneric<Monitoring>(context);
+        checkpointService = new ServiceGeneric<Checkpoint>(context);
+        planService = new ServiceGeneric<Plan>(context);
+        logService = new ServiceGeneric<Log>(context);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       try
@@ -47,45 +67,17 @@ namespace Manager.Services.Auth
         companyService._user = _user;
         occupationService._user = _user;
         personService._user = _user;
-        personOldService._user = _user;
         onboardingService._user = _user;
         monitoringService._user = _user;
-        monitoringOldService._user = _user;
         checkpointService._user = _user;
         planService._user = _user;
         logService._user = _user;
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
-
-    public ServiceUser(DataContext context)
-      : base(context)
-    {
-      try
-      {
-        userService = new ServiceGeneric<User>(context);
-        attachmentService = new ServiceGeneric<Attachments>(context);
-        mailService = new ServiceSendGrid(context);
-        companyService = new ServiceGeneric<Company>(context);
-        occupationService = new ServiceGeneric<Occupation>(context);
-        personService = new ServiceGeneric<Person>(context);
-        personOldService = new ServiceGeneric<PersonOld>(context);
-        onboardingService = new ServiceGeneric<OnBoarding>(context);
-        monitoringService = new ServiceGeneric<Monitoring>(context);
-        monitoringOldService = new ServiceGeneric<MonitoringOld>(context);
-        checkpointService = new ServiceGeneric<Checkpoint>(context);
-        planService = new ServiceGeneric<Plan>(context);
-        logService = new ServiceGeneric<Log>(context);
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
     private void Init(DataContext context, BaseUser user)
     {
       try
@@ -101,205 +93,268 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
+    #endregion
 
-    public string ScriptPerson()
+    #region User
+    public List<ViewListUser> GetUsers(ref long total, int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
-        //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount & p.User == null).ToList();
-        //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == idaccount).ToList();
-        //var persons = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
-        var persons =
-          (from per in personOldService.GetAuthentication(p => p.Status == EnumStatus.Enabled)
-           select new ViewPersonOld
-           {
-             Status = per.Status,
-             _idAccount = per._idAccount,
-             _id = per._id,
-             StatusUser = per.StatusUser,
-             Manager = per.Manager._id,
-             Company = per.Company,
-             Occupation = per.Occupation,
-             DocumentManager = per.DocumentManager,
-             DateLastOccupation = per.DateLastOccupation,
-             Salary = per.Salary,
-             DateLastReadjust = per.DateLastReadjust,
-             DateResignation = per.DateResignation,
-             TypeJourney = per.TypeJourney,
-             Establishment = per.Establishment,
-             HolidayReturn = per.HolidayReturn,
-             MotiveAside = per.MotiveAside,
-             Name = per.Name,
-             TypeUser = per.TypeUser,
-             Registration = per.Registration,
-             DateBirth = per.DateBirth,
-             DateAdm = per.DateAdm,
-             Schooling = per.Schooling,
-             PhotoUrl = per.PhotoUrl,
-             Coins = per.Coins,
-             ChangePassword = per.ChangePassword,
-             ForeignForgotPassword = per.ForeignForgotPassword,
-             PhoneFixed = per.PhoneFixed,
-             DocumentID = per.DocumentID,
-             DocumentCTPF = per.DocumentCTPF,
-             Sex = per.Sex,
-             Document = per.Document,
-             Mail = per.Mail,
-             Phone = per.Phone,
-             Password = per.Password
-           }
-          ).ToList();
-
-
-
-        foreach (var item in persons)
+        switch (type)
         {
-          var user = new User()
-          {
-            _id = ObjectId.GenerateNewId().ToString(),
-            _idAccount = item._idAccount,
-            Status = EnumStatus.Enabled,
-            ChangePassword = item.ChangePassword,
-            Coins = item.Coins,
-            DateAdm = item.DateAdm,
-            DateBirth = item.DateBirth,
-            Document = item.Document,
-            DocumentCTPF = item.DocumentCTPF,
-            DocumentID = item.DocumentID,
-            ForeignForgotPassword = item.ForeignForgotPassword,
-            Mail = item.Mail,
-            Name = item.Name,
-            Password = item.Password,
-            Phone = item.Phone,
-            PhoneFixed = item.PhoneFixed,
-            PhotoUrl = item.PhotoUrl,
-            Schooling = item.Schooling,
-            Sex = item.Sex
-          };
-
-          userService.InsertAccount(user);
-
-          var person = new Person()
-          {
-            Company = item.Company,
-            DateLastOccupation = item.DateLastOccupation,
-            DateLastReadjust = item.DateLastReadjust,
-            DateResignation = item.DateResignation,
-            DocumentManager = item.DocumentManager,
-            Establishment = item.Establishment,
-            HolidayReturn = item.HolidayReturn,
-            MotiveAside = item.MotiveAside,
-            Occupation = item.Occupation,
-            Registration = item.Registration.ToString(),
-            Salary = item.Salary,
-            Status = item.Status,
-            StatusUser = item.StatusUser,
-            TypeJourney = item.TypeJourney,
-            TypeUser = item.TypeUser,
-            User = user,
-            _id = item._id,
-            _idAccount = item._idAccount
-          };
-          var manager = (from man in personOldService.GetAuthentication(p => p._id == item.Manager)
-                         select new
-                         {
-                           Name = man.Name,
-                           Mail = man.Mail,
-                           _id = man._id
-                         }).FirstOrDefault();
-
-          if (manager != null)
-            person.Manager = new BaseFields() { Name = manager.Name, Mail = manager.Mail };
-
-          personService.InsertAccountId(person);
+          case EnumTypeUser.Support:
+          case EnumTypeUser.Administrator:
+            total = userService.CountNewVersion(p => p.Name.Contains(filter)).Result;
+            return userService.GetAllNewVersion(p => p.Name.Contains(filter)).Result
+            .Select(x => new ViewListUser()
+            {
+              _id = x._id,
+              Document = x.Document,
+              Mail = x.Mail,
+              Name = x.Name,
+              Phone = x.Phone
+            }).ToList();
+          default:
+            // TODO: colocar o flag de usuário administrativo
+            total = userService.CountNewVersion(p => p.Name.Contains(filter)).Result;
+            return userService.GetAllNewVersion(p => p.Name.Contains(filter)).Result
+            .Select(x => new ViewListUser()
+            {
+              _id = x._id,
+              Document = x.Document,
+              Mail = x.Mail,
+              Name = x.Name,
+              Phone = x.Phone
+            }).ToList();
         }
-
-        var list = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
-        foreach (var item in list)
-        {
-          if (item.Manager != null)
-          {
-            var idmanager = personService.GetAuthentication(p => p.User.Mail == item.Manager.Mail).FirstOrDefault()._id;
-            item.Manager._id = idmanager;
-            personService.UpdateAccount(item, null);
-          }
-
-        }
-        return "ok";
-
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    public ViewCrudUser GetUserCrud(string iduser)
+    {
+      try
+      {
+        User user =  userService.GetNewVersion(p => p._id == iduser).Result;
+        return new ViewCrudUser()
+        {
+          _id = user._id,
+          Document = user.Document,
+          Mail = user.Mail,
+          Name = user.Name,
+          Phone = user.Phone,
+          DateAdm = user.DateAdm,
+          DateBirth = user.DateBirth,
+          DocumentCTPF = user.DocumentCTPF,
+          DocumentID = user.DocumentCTPF,
+          PhoneFixed = user.PhoneFixed,
+          Schooling = new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order},
+          Sex = user.Sex,
+          PhotoUrl = user.PhotoUrl,
+          Password = string.Empty
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudUser NewUser(ViewCrudUser view)
+    {
+      try
+      {
+        User user = new User()
+        {
+          DateAdm = view.DateAdm,
+          DateBirth = view.DateBirth,
+          Document = view.Document,
+          DocumentCTPF = view.DocumentCTPF,
+          DocumentID = view.DocumentID,
+          Mail = view.Mail,
+          Name = view.Name,
+          Password = EncryptServices.GetMD5Hash(view.Password),
+          ForeignForgotPassword = string.Empty,
+          Coins = 0,
+          Phone = view.Phone,
+          PhoneFixed = view.PhoneFixed,
+          PhotoUrl = view.PhotoUrl,
+          Schooling = new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order },
+          Sex = view.Sex,
+          ChangePassword = EnumChangePassword.AccessFirst
+        };
 
-    //private async Task UpdateManager(User user, string idperson)
-    //{
-    //  var managers = personService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == user._idAccount).ToList();
-    //  foreach (var item in managers)
-    //  {
-    //    try
-    //    {
-    //      if (item.Manager._id == idperson)
-    //      {
-    //        item.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
-    //      else if (item.Manager.Manager._id == idperson)
-    //      {
-    //        item.Manager.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
-    //      else if (item.Manager.Manager.Manager._id == idperson)
-    //      {
-    //        item.Manager.Manager.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
-    //      else if (item.Manager.Manager._id == idperson)
-    //      {
-    //        item.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
-    //      else if (item.Manager.Manager.Manager.Manager._id == idperson)
-    //      {
-    //        item.Manager.Manager.Manager.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
-    //      else if (item.Manager.Manager._id == idperson)
-    //      {
-    //        item.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
-    //      else if (item.Manager.Manager.Manager.Manager.Manager._id == idperson)
-    //      {
-    //        item.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
-    //      else if (item.Manager.Manager.Manager.Manager.Manager.Manager.Manager._id == idperson)
-    //      {
-    //        item.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
-    //      else if (item.Manager.Manager.Manager.Manager.Manager.Manager.Manager.Manager._id == idperson)
-    //      {
-    //        item.Manager.Manager.Manager.Manager.Manager.Manager.Manager.User = user;
-    //        personService.UpdateAccount(item, null);
-    //      }
+        if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
+          user.ChangePassword = EnumChangePassword.No;
 
+        user = userService.InsertNewVersion(user).Result;
+        return new ViewCrudUser()
+        {
+          _id = user._id,
+          Document = user.Document,
+          Mail = user.Mail,
+          Name = user.Name,
+          Phone = user.Phone,
+          DateAdm = user.DateAdm,
+          DateBirth = user.DateBirth,
+          DocumentCTPF = user.DocumentCTPF,
+          DocumentID = user.DocumentCTPF,
+          PhoneFixed = user.PhoneFixed,
+          Schooling = new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
+          Sex = user.Sex,
+          PhotoUrl = user.PhotoUrl,
+          Password = string.Empty
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudUser UpdateUser(ViewCrudUser view)
+    {
+      try
+      {
+        User user = userService.GetNewVersion(p => p._id == view._id).Result;
+        user.DateAdm = view.DateAdm;
+        user.DateBirth = view.DateBirth;
+        user.Document = view.Document;
+        user.DocumentCTPF = view.DocumentCTPF;
+        user.DocumentID = view.DocumentID;
+        user.Mail = view.Mail;
+        user.Name = view.Name;
+        user.Phone = view.Phone;
+        user.PhoneFixed = view.PhoneFixed;
+        user.PhotoUrl = view.PhotoUrl;
+        user.Schooling = new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
+        user.Sex = view.Sex;
+        user = userService.UpdateNewVersion(user).Result;
+        return new ViewCrudUser()
+        {
+          _id = user._id,
+          Document = user.Document,
+          Mail = user.Mail,
+          Name = user.Name,
+          Phone = user.Phone,
+          DateAdm = user.DateAdm,
+          DateBirth = user.DateBirth,
+          DocumentCTPF = user.DocumentCTPF,
+          DocumentID = user.DocumentCTPF,
+          PhoneFixed = user.PhoneFixed,
+          Schooling = new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
+          Sex = user.Sex,
+          PhotoUrl = user.PhotoUrl,
+          Password = string.Empty
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
 
-    //    }
-    //    catch
-    //    {
+    #region Password
+    public string AlterPassword(ViewAlterPass resetPass, string idUser)
+    {
+      try
+      {
+        User user = userService.GetNewVersion(p => p._id == idUser).Result;
+        string oldPass = EncryptServices.GetMD5Hash(resetPass.OldPassword);
+        if (user.ChangePassword == EnumChangePassword.AlterPass && user.Password != oldPass)
+          return "error_old_password";
+        string newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
+        user.Password = newPass;
+        user.ChangePassword = EnumChangePassword.No;
+        user = userService.UpdateNewVersion(user).Result;
+        return "Password changed!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string AlterPasswordForgot(ViewAlterPass resetPass, string foreign)
+    {
+      try
+      {
+        User user = userService.GetFreeNewVersion(p => p.ForeignForgotPassword == foreign).Result;
+        if (user == null)
+          return "error_valid";
+        userService._user = new BaseUser()
+        {
+          _idAccount = user._idAccount,
+          NamePerson = user.Name,
+          Mail = user.Mail,
+          _idPerson = user._id
+        };
+        string newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
+        user.Password = newPass;
+        user.ChangePassword = EnumChangePassword.No;
+        user.ForeignForgotPassword = string.Empty;
+        user = userService.UpdateNewVersion(user).Result;
+        return "Password changed!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public async Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid)
+    {
+      try
+      {
+        User user = userService.GetFreeNewVersion(p => p.Mail == mail).Result;
+        if (user == null)
+          return "error_email";
+        string guid = string.Concat(Guid.NewGuid().ToString(), user._id);
+        string message = "";
+        if (forgotPassword.Message == string.Empty)
+          message = string.Format("Hello {0}<br>To reset your password click the link below<br>http://{1}/evaluation_f/forgot", user.Name, forgotPassword.Link);
+        else
+          message = forgotPassword.Message.Replace("{User}", user.Name).Replace("{Link}", forgotPassword.Link + "/" + guid);
 
-    //    }
+        userService._user = new BaseUser()
+        {
+          _idAccount = user._idAccount,
+          NamePerson = user.Name,
+          Mail = user.Mail,
+          _idPerson = user._id
+        };
+        mailService._user = userService._user;
 
-    //  }
-    //}
+        MailLog sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>()
+            { new MailLogAddress(user.Mail, user.Name) },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = user._id,
+          NamePerson = user.Name,
+          Body = message,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = forgotPassword.Subject
+        };
+        sendMail = mailService.InsertNewVersion(sendMail).Result;
+        user.ChangePassword = EnumChangePassword.ForgotPassword;
+        user.ForeignForgotPassword = guid;
+        user = userService.UpdateNewVersion(user).Result;
+        await mailService.Send(sendMail, pathSendGrid);
+        return "Email sent successfully!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
 
+    #region Old
     public User NewUser(User user)
     {
       try
@@ -454,116 +509,6 @@ namespace Manager.Services.Auth
       }
     }
 
-    public string AlterPassword(ViewAlterPass resetPass, string idUser)
-    {
-      try
-      {
-        var user = userService.GetAll(p => p._id == idUser).FirstOrDefault();
-        var oldPass = EncryptServices.GetMD5Hash(resetPass.OldPassword);
-        if (user.ChangePassword == EnumChangePassword.AlterPass)
-        {
-          if (user.Password != oldPass)
-            return "error_old_password";
-        }
-        var newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
-        user.Password = newPass;
-        user.ChangePassword = EnumChangePassword.No;
-        userService.Update(user, null);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AlterPasswordForgot(ViewAlterPass resetPass, string foreign)
-    {
-      try
-      {
-        DataContext context = _context;
-        var user = userService.GetAuthentication(p => p.ForeignForgotPassword == foreign).FirstOrDefault();
-        var userBase = new BaseUser()
-        {
-          _idAccount = user._idAccount,
-          NamePerson = user.Name,
-          Mail = user.Mail,
-          _idPerson = user._id
-        };
-
-        Init(context, userBase);
-        if (user == null)
-          return "error_valid";
-        var newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
-        user.Password = newPass;
-        user.ChangePassword = EnumChangePassword.No;
-        user.ForeignForgotPassword = "";
-        userService.Update(user, null);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public async Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid)
-    {
-      try
-      {
-        DataContext context = base._context;
-        var user = userService.GetAuthentication(p => p.Mail == mail).FirstOrDefault();
-
-        var userBase = new BaseUser()
-        {
-          _idAccount = user._idAccount,
-          NamePerson = user.Name,
-          Mail = user.Mail,
-          _idPerson = user._id
-        };
-
-        Init(context, userBase);
-        var guid = Guid.NewGuid().ToString() + user._id.ToString();
-        var message = "";
-        if (forgotPassword.Message == string.Empty)
-        {
-          message = "Hello " + user.Name;
-          message += "<br> To reset your password click the link below";
-          message += "<br> " + "http://" + forgotPassword.Link + "/evaluation_f/forgot";
-        }
-        else
-        {
-          message = forgotPassword.Message.Replace("{User}", user.Name);
-          message = message.Replace("{Link}", forgotPassword.Link + "/" + guid);
-        }
-        var sendMail = new MailLog
-        {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-          To = new List<MailLogAddress>(){
-                    new MailLogAddress(user.Mail, user.Name)
-                },
-          Priority = EnumPriorityMail.Low,
-          _idPerson = user._id,
-          NamePerson = user.Name,
-          Body = message,
-          StatusMail = EnumStatusMail.Sended,
-          Included = DateTime.Now,
-          Subject = forgotPassword.Subject
-        };
-        var mailObj = mailService.Insert(sendMail);
-        user.ChangePassword = EnumChangePassword.ForgotPassword;
-        user.ForeignForgotPassword = guid;
-
-        await mailService.Send(mailObj, pathSendGrid);
-
-        userService.Update(user, null);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
 
     public User GetUser(string id)
     {
@@ -589,7 +534,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<User> GetUsersCrud(EnumTypeUser typeUser, ref long total, string filter, int count, int page)
+    public List<User> GetUsersCrudOld(EnumTypeUser typeUser, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -621,7 +566,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public User GetUserCrud(string iduser)
+    public User GetUserCrudOld(string iduser)
     {
       try
       {
@@ -698,497 +643,10 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-
-    public string ScriptOnBoarding()
-    {
-      try
-      {
-        //var valid = onboardingService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled).ToList();
-
-        var onboardings =
-          (from onb in onboardingService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
-           select new
-           {
-             _id = onb._id,
-             _idAccount = onb._idAccount,
-             Status = onb.Status,
-             Person = onb.Person._id,
-             DateBeginPerson = onb.DateBeginPerson,
-             DateBeginManager = onb.DateBeginManager,
-             DateBeginEnd = onb.DateBeginEnd,
-             DateEndPerson = onb.DateEndPerson,
-             DateEndManager = onb.DateEndManager,
-             DateEndEnd = onb.DateEndEnd,
-             CommentsPerson = onb.CommentsPerson,
-             CommentsManager = onb.CommentsManager,
-             CommentsEnd = onb.CommentsEnd,
-             SkillsCompany = onb.SkillsCompany,
-             SkillsGroup = onb.SkillsGroup,
-             SkillsOccupation = onb.SkillsOccupation,
-             Scopes = onb.Scopes,
-             Schoolings = onb.Schoolings,
-             Activities = onb.Activities,
-             StatusOnBoarding = onb.StatusOnBoarding
-           })
-          .ToList();
-        foreach (var item in onboardings)
-        {
-          var personOld = (from old in personOldService.GetAuthentication(p => p._id == item.Person)
-                           select new
-                           {
-                             Mail = old.Mail
-                           }
-                           ).FirstOrDefault();
-          Person person = null;
-          if (personOld != null)
-          {
-            person = personService.GetAuthentication(p => p.User.Mail == personOld.Mail).FirstOrDefault();
-
-            var onboarding = new OnBoarding()
-            {
-              _id = item._id,
-              Person = person,
-              DateBeginPerson = item.DateBeginPerson,
-              DateBeginManager = item.DateBeginManager,
-              DateBeginEnd = item.DateBeginEnd,
-              DateEndPerson = item.DateEndPerson,
-              DateEndManager = item.DateEndManager,
-              DateEndEnd = item.DateEndEnd,
-              CommentsPerson = item.CommentsPerson,
-              CommentsManager = item.CommentsManager,
-              CommentsEnd = item.CommentsEnd,
-              SkillsCompany = item.SkillsCompany,
-              SkillsGroup = item.SkillsGroup,
-              SkillsOccupation = item.SkillsOccupation,
-              Scopes = item.Scopes,
-              Schoolings = item.Schoolings,
-              Activities = item.Activities,
-              StatusOnBoarding = item.StatusOnBoarding,
-              Status = item.Status,
-              _idAccount = item._idAccount
-            };
-            onboardingService.UpdateAccount(onboarding, null);
-          }
+    #endregion
 
 
 
-        }
 
-        return "ok";
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string ScriptCheckpoint()
-    {
-      try
-      {
-        //var valid = checkpointService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled).ToList();
-
-        var checkpoints =
-          (from onb in checkpointService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
-           select new
-           {
-             _id = onb._id,
-             _idAccount = onb._idAccount,
-             Status = onb.Status,
-             Person = onb.Person._id,
-             DateBegin = onb.DateBegin,
-             DateEnd = onb.DateEnd,
-             Comments = onb.Comments,
-             TextDefault = onb.TextDefault,
-             Questions = onb.Questions,
-             StatusCheckpoint = onb.StatusCheckpoint,
-             DataAccess = onb.DataAccess,
-             TypeCheckpoint = onb.TypeCheckpoint
-           })
-          .ToList();
-        foreach (var item in checkpoints)
-        {
-          var personOld = (from old in personOldService.GetAuthentication(p => p._id == item.Person)
-                           select new
-                           {
-                             Mail = old.Mail
-                           }
-                           ).FirstOrDefault();
-          Person person = null;
-          if (personOld != null)
-          {
-            person = personService.GetAuthentication(p => p.User.Mail == personOld.Mail).FirstOrDefault();
-
-            var checkpoint = new Checkpoint()
-            {
-              _id = item._id,
-              Person = person,
-              DateBegin = item.DateBegin,
-              DateEnd = item.DateEnd,
-              Comments = item.Comments,
-              TextDefault = item.TextDefault,
-              Questions = item.Questions,
-              StatusCheckpoint = item.StatusCheckpoint,
-              DataAccess = item.DataAccess,
-              TypeCheckpoint = item.TypeCheckpoint,
-              Status = item.Status,
-              _idAccount = item._idAccount
-            };
-            checkpointService.UpdateAccount(checkpoint, null);
-          }
-
-
-
-        }
-
-        return "ok";
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string ScriptMonitoring()
-    {
-      try
-      {
-        //var valid = monitoringService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled).ToList();
-
-        //var monitorings =
-        //  (from onb in monitoringService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
-        //   select new
-        //   {
-        //     _id = onb._id,
-        //     _idAccount = onb._idAccount,
-        //     Status = onb.Status,
-        //     Person = onb.Person._id,
-        //     DateBeginPerson = onb.DateBeginPerson,
-        //     DateBeginManager = onb.DateBeginManager,
-        //     DateBeginEnd = onb.DateBeginEnd,
-        //     DateEndPerson = onb.DateEndPerson,
-        //     DateEndManager = onb.DateEndManager,
-        //     DateEndEnd = onb.DateEndEnd,
-        //     CommentsPerson = onb.CommentsPerson,
-        //     CommentsManager = onb.CommentsManager,
-        //     CommentsEnd = onb.CommentsEnd,
-        //     SkillsCompany = onb.SkillsCompany.Select(x => new MonitoringSkills()
-        //     {
-        //       Skill = x.Skill,
-        //       CommentsPerson = x.CommentsPerson,
-        //       CommentsManager = x.CommentsManager,
-        //       Praise = x.Praise,
-        //       Comments = x.Comments,
-        //       StatusViewManager = x.StatusViewManager,
-        //       StatusViewPerson = x.StatusViewPerson,
-        //       Plans = null
-        //     }),
-        //     Schoolings = onb.Schoolings.Select(x => new MonitoringSchooling()
-        //     {
-        //       Schooling = x.Schooling,
-        //       CommentsPerson = x.CommentsPerson,
-        //       CommentsManager = x.CommentsManager,
-        //       Praise = x.Praise,
-        //       Comments = x.Comments,
-        //       StatusViewManager = x.StatusViewManager,
-        //       StatusViewPerson = x.StatusViewPerson,
-        //       Plans = null
-        //     }),
-        //     Activities = onb.Activities.Select(x => new MonitoringActivities()
-        //     {
-        //       Activities = x.Activities,
-        //       CommentsPerson = x.CommentsPerson,
-        //       CommentsManager = x.CommentsManager,
-        //       Praise = x.Praise,
-        //       Comments = x.Comments,
-        //       StatusViewManager = x.StatusViewManager,
-        //       StatusViewPerson = x.StatusViewPerson,
-        //       Plans = null
-        //     }),
-        //     StatusMonitoring = onb.StatusMonitoring
-        //   })
-        //  .ToList();
-
-        var monitorings = monitoringOldService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled).ToList();
-
-        foreach (var item in monitorings)
-        {
-          var personOld = (from old in personOldService.GetAuthentication(p => p._id == item.Person._id)
-                           select new
-                           {
-                             Mail = old.Mail
-                           }
-                          ).FirstOrDefault();
-          Person person = null;
-          if (personOld != null)
-          {
-            person = personService.GetAuthentication(p => p.User.Mail == personOld.Mail).FirstOrDefault();
-
-            var monitoring = new Monitoring()
-            {
-              _id = item._id,
-              Person = person,
-              DateBeginPerson = item.DateBeginPerson,
-              DateBeginManager = item.DateBeginManager,
-              DateBeginEnd = item.DateBeginEnd,
-              DateEndPerson = item.DateEndPerson,
-              DateEndManager = item.DateEndManager,
-              DateEndEnd = item.DateEndEnd,
-              CommentsPerson = item.CommentsPerson,
-              CommentsManager = item.CommentsManager,
-              CommentsEnd = item.CommentsEnd,
-              StatusMonitoring = item.StatusMonitoring,
-              Status = item.Status,
-              _idAccount = item._idAccount
-            };
-
-            if (item.SkillsCompany != null)
-            {
-              monitoring.SkillsCompany = new List<MonitoringSkills>();
-              foreach (var row in item.SkillsCompany.ToList())
-              {
-                var view = new MonitoringSkills();
-                view.Skill = row.Skill;
-                view.Praise = row.Praise;
-                view.Status = row.Status;
-                view._id = row._id;
-                view._idAccount = row._idAccount;
-                view.Comments = row.Comments;
-                view.CommentsManager = row.CommentsManager;
-                view.CommentsPerson = row.CommentsPerson;
-                view.StatusViewManager = row.StatusViewManager;
-                view.StatusViewPerson = row.StatusViewPerson;
-                if (row.Plans.Count() == 0)
-                {
-                  view.Plans = new List<Plan>();
-                }
-                else
-                {
-                  foreach (var plan in row.Plans)
-                  {
-                    var planNew = new Plan();
-                    view.Plans = new List<Plan>();
-
-                    planNew.Name = plan.Name;
-                    planNew.Description = plan.Description;
-                    planNew.Deadline = plan.Deadline;
-                    planNew.Skills = plan.Skills;
-                    planNew.UserInclude = person;
-                    planNew.DateInclude = plan.DateInclude;
-                    planNew.TypePlan = plan.TypePlan;
-                    planNew.SourcePlan = plan.SourcePlan;
-                    planNew.TypeAction = plan.TypeAction;
-                    planNew.StatusPlan = plan.StatusPlan;
-                    planNew.TextEnd = plan.TextEnd;
-                    planNew.TextEndManager = plan.TextEndManager;
-                    planNew.DateEnd = plan.DateEnd;
-                    planNew.Evaluation = plan.Evaluation;
-                    planNew.Result = plan.Result;
-                    planNew.StatusPlanApproved = plan.StatusPlanApproved;
-                    planNew.Attachments = plan.Attachments;
-                    planNew.NewAction = plan.NewAction;
-                    planNew.StructPlans = plan.StructPlans;
-                    view.Plans.Add(ScriptPlan(planNew));
-                  }
-                }
-
-
-                monitoring.SkillsCompany.Add(view);
-
-              };
-            }
-
-            if (item.Schoolings != null)
-            {
-              monitoring.Schoolings = new List<MonitoringSchooling>();
-              foreach (var row in item.Schoolings.ToList())
-              {
-                var view = new MonitoringSchooling();
-                view.Schooling = row.Schooling;
-                view.Praise = row.Praise;
-                view.Status = row.Status;
-                view._id = row._id;
-                view._idAccount = row._idAccount;
-                view.Comments = row.Comments;
-                view.CommentsManager = row.CommentsManager;
-                view.CommentsPerson = row.CommentsPerson;
-                view.StatusViewManager = row.StatusViewManager;
-                view.StatusViewPerson = row.StatusViewPerson;
-                if (row.Plans.Count() == 0)
-                {
-                  view.Plans = new List<Plan>();
-                }
-                else
-                {
-                  foreach (var plan in row.Plans)
-                  {
-                    var planNew = new Plan();
-                    view.Plans = new List<Plan>();
-
-                    planNew.Name = plan.Name;
-                    planNew.Description = plan.Description;
-                    planNew.Deadline = plan.Deadline;
-                    planNew.Skills = plan.Skills;
-                    planNew.UserInclude = person;
-                    planNew.DateInclude = plan.DateInclude;
-                    planNew.TypePlan = plan.TypePlan;
-                    planNew.SourcePlan = plan.SourcePlan;
-                    planNew.TypeAction = plan.TypeAction;
-                    planNew.StatusPlan = plan.StatusPlan;
-                    planNew.TextEnd = plan.TextEnd;
-                    planNew.TextEndManager = plan.TextEndManager;
-                    planNew.DateEnd = plan.DateEnd;
-                    planNew.Evaluation = plan.Evaluation;
-                    planNew.Result = plan.Result;
-                    planNew.StatusPlanApproved = plan.StatusPlanApproved;
-                    planNew.Attachments = plan.Attachments;
-                    planNew.NewAction = plan.NewAction;
-                    planNew.StructPlans = plan.StructPlans;
-                    view.Plans.Add(ScriptPlan(planNew));
-                  }
-                }
-                monitoring.Schoolings.Add(view);
-
-              };
-            }
-
-            if (item.Activities != null)
-            {
-              monitoring.Activities = new List<MonitoringActivities>();
-              foreach (var row in item.Activities.ToList())
-              {
-                var view = new MonitoringActivities();
-                view.Activities = row.Activities;
-                view.Praise = row.Praise;
-                view.Status = row.Status;
-                view._id = row._id;
-                view._idAccount = row._idAccount;
-                view.Comments = row.Comments;
-                view.CommentsManager = row.CommentsManager;
-                view.CommentsPerson = row.CommentsPerson;
-                view.StatusViewManager = row.StatusViewManager;
-                view.StatusViewPerson = row.StatusViewPerson;
-
-                if (row.Plans.Count() == 0)
-                {
-                  view.Plans = new List<Plan>();
-                }
-                else
-                {
-                  foreach (var plan in row.Plans)
-                  {
-                    var planNew = new Plan();
-                    view.Plans = new List<Plan>();
-
-                    planNew.Name = plan.Name;
-                    planNew.Description = plan.Description;
-                    planNew.Deadline = plan.Deadline;
-                    planNew.Skills = plan.Skills;
-                    planNew.UserInclude = person;
-                    planNew.DateInclude = plan.DateInclude;
-                    planNew.TypePlan = plan.TypePlan;
-                    planNew.SourcePlan = plan.SourcePlan;
-                    planNew.TypeAction = plan.TypeAction;
-                    planNew.StatusPlan = plan.StatusPlan;
-                    planNew.TextEnd = plan.TextEnd;
-                    planNew.TextEndManager = plan.TextEndManager;
-                    planNew.DateEnd = plan.DateEnd;
-                    planNew.Evaluation = plan.Evaluation;
-                    planNew.Result = plan.Result;
-                    planNew.StatusPlanApproved = plan.StatusPlanApproved;
-                    planNew.Attachments = plan.Attachments;
-                    planNew.NewAction = plan.NewAction;
-                    planNew.StructPlans = plan.StructPlans;
-                    view.Plans.Add(ScriptPlan(planNew));
-                  }
-                }
-
-                monitoring.Activities.Add(view);
-
-              };
-            }
-
-            monitoringService.InsertAccountId(monitoring);
-          }
-
-
-
-        }
-
-        return "ok";
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private Plan ScriptPlan(Plan plan)
-    {
-      try
-      {
-        return planService.Insert(plan);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string ScriptLog()
-    {
-      try
-      {
-        var logs =
-          (from onb in logService.GetAuthentication(p => p.Status == EnumStatus.Enabled || p.Status == EnumStatus.Disabled)
-           select new
-           {
-             _id = onb._id,
-             _idAccount = onb._idAccount,
-             Status = onb.Status,
-             Person = onb.Person._id,
-             DataLog = onb.DataLog,
-             Description = onb.Description,
-             Local = onb.Local
-           })
-          .ToList();
-        foreach (var item in logs)
-        {
-          var personOld = (from old in personOldService.GetAuthentication(p => p._id == item.Person)
-                           select new
-                           {
-                             Mail = old.Mail
-                           }
-                           ).FirstOrDefault();
-          Person person = null;
-          if (personOld != null)
-          {
-            person = personService.GetAuthentication(p => p.User.Mail == personOld.Mail).FirstOrDefault();
-
-            var log = new Log()
-            {
-              _id = item._id,
-              Person = person,
-              Status = item.Status,
-              _idAccount = item._idAccount,
-              DataLog = item.DataLog,
-              Description = item.Description,
-              Local = item.Local
-            };
-            logService.UpdateAccount(log, null);
-          }
-        }
-
-        return "ok";
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
   }
 }

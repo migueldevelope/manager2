@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -42,11 +44,115 @@ namespace Manager.Controllers
 
     #region User
     /// <summary>
-    /// Listar os usuarios de uma empresa
+    /// Listar usuários da base de dados
     /// </summary>
-    /// <param name="idcompany">Identificador da empresa</param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
+    /// <param name="type">Tipo do usuário que está fazendo a consulta</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do usuário</param>
+    /// <returns>Lista de usuários da conta</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("n/list/{type}")]
+    public List<ViewListUser> GetList(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetUsers(ref total, count, page, filter, type);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Buscar informações para edição do usuário
+    /// </summary>
+    /// <param name="iduser">Identificador do usuário</param>
+    /// <returns>Objeto CRUD do usuário</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("n/edit/{iduser}")]
+    public ViewCrudUser GetEdit(string iduser)
+    {
+      return service.GetUserCrud(iduser);
+    }
+    /// <summary>
+    /// Inclusão de novo usuário
+    /// </summary>
+    /// <param name="view">Objeto CRUD do usuário</param>
+    /// <returns>Objeto CRUD incluído do usuário</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("n/new")]
+    public ViewCrudUser Post([FromBody] ViewCrudUser view)
+    {
+      return service.NewUser(view);
+    }
+    /// <summary>
+    /// Alteração de usuário
+    /// </summary>
+    /// <param name="view">Objeto CRUD do usuário para alterar</param>
+    /// <returns>Objeto CRUD atualizado do usuário</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("n/update")]
+    public ViewCrudUser Put([FromBody] ViewCrudUser view)
+    {
+      return service.UpdateUser(view);
+    }
+    /// <summary>
+    /// Foto do perfil do usuário
+    /// </summary>
+    /// <param name="iduser">Identificador do usuário</param>
+    /// <returns>URL da imagem da foto do perfil</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("photo/{iduser}")]
+    public string GetPhoto(string iduser)
+    {
+      return service.GetPhoto(iduser);
+    }
+    #endregion
+
+    #region Password
+    /// <summary>
+    /// Alterar o password do usuário
+    /// </summary>
+    /// <param name="view">Objeto com senhas novas</param>
+    /// <param name="idUser">Identificador do usuário</param>
+    /// <returns>Mensagem de sucesso, ou error_old_password</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("alterpass/{idUser}")]
+    public string AlterPassword([FromBody]ViewAlterPass view, string idUser)
+    {
+      return service.AlterPassword(view, idUser);
+    }
+    /// <summary>
+    /// Alterar o password do usuário pelo esqueci minha senha
+    /// </summary>
+    /// <param name="view">Objeto com senhas novas</param>
+    /// <param name="foreign">Identificador do esquecer senha</param>
+    /// <returns>Mensagem de sucesso, ou error_valid</returns>
+    [HttpPut]
+    [Route("forgotpassword/{foreign}/alter")]
+    public string AlterPasswordForgot([FromBody]ViewAlterPass view, string foreign)
+    {
+      return service.AlterPasswordForgot(view, foreign);
+    }
+    /// <summary>
+    /// Enviar e-mail de esqueci minha senha
+    /// </summary>
+    /// <param name="view">Objeto com mensagens para o usuário</param>
+    /// <param name="mail">E-mail para onde enviar a mensagem</param>
+    /// <returns>Mensagem de sucesso!</returns>
+    [HttpPut]
+    [Route("forgotpassword/{mail}")]
+    public string ForgotPassword([FromBody]ViewForgotPassword view, string mail)
+    {
+      var conn = ConnectionNoSqlService.GetConnetionServer();
+      return service.ForgotPassword(mail, view, conn.SendGridKey).Result;
+    }
+    #endregion
+
+    #region User Old
     [Authorize]
     [HttpGet]
     [Route("listusers/{idcompany}")]
@@ -59,59 +165,20 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public List<User> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public List<User> ListOld(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetUsersCrud(type, ref total, filter, count, page);
+      var result = service.GetUsersCrudOld(type, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
-    #endregion
-
-
-    [Authorize]
-    [HttpGet]
-    [Route("photo/{idUser}")]
-    public string GetPhoto(string idUser)
-    {
-      return service.GetPhoto(idUser);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("alterpass/{idUser}")]
-    public string AlterPass([FromBody]ViewAlterPass view, string idUser)
-    {
-      return service.AlterPassword(view, idUser);
-    }
-
-
-    [HttpPut]
-    [Route("forgotpassword/{foreign}/alter")]
-    public string ForgotPassword([FromBody]ViewAlterPass view, string foreign)
-    {
-      return service.AlterPasswordForgot(view, foreign);
-    }
-
-    [HttpPut]
-    [Route("forgotpassword/{mail}")]
-    public string ForgotPassword([FromBody]ViewForgotPassword view, string mail)
-    {
-      var conn = ConnectionNoSqlService.GetConnetionServer();
-      var sendGridKey = conn.SendGridKey;
-      return service.ForgotPassword(mail, view, sendGridKey).Result;
-    }
-
-
-
-
     [Authorize]
     [HttpGet]
     [Route("{iduser}/edit")]
-    public User GetEdit(string iduser)
+    public User GetEditOld(string iduser)
     {
-      return service.GetUserCrud(iduser); ;
+      return service.GetUserCrudOld(iduser); ;
     }
 
     [Authorize]
@@ -173,43 +240,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
-    #region Scripts (apagar?)
-    [HttpPut]
-    [Route("scriptperson")]
-    public string ScriptPerson()
-    {
-      return service.ScriptPerson();
-    }
-
-    [HttpPut]
-    [Route("scriptonboarding")]
-    public string ScriptOnBoarding()
-    {
-      return service.ScriptOnBoarding();
-    }
-
-    [HttpPut]
-    [Route("scriptcheckpoint")]
-    public string ScriptCheckpoint()
-    {
-      return service.ScriptCheckpoint();
-    }
-
-    [HttpPut]
-    [Route("scriptmonitoring")]
-    public string ScriptMonitoring()
-    {
-      return service.ScriptMonitoring();
-    }
-
-    [HttpPut]
-    [Route("scriptlog")]
-    public string ScriptLog()
-    {
-      return service.ScriptLog();
-    }
     #endregion
-
   }
 }

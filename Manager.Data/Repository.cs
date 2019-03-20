@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.Linq;
 using Manager.Core.Enumns;
 using System.Linq.Expressions;
-using Manager.Core.Interfaces;
 using System.Threading.Tasks;
 using System.Reflection;
 
@@ -22,6 +21,7 @@ namespace Manager.Data
     public string _idAccount;
     public BaseUser _user;
 
+    #region Contructor
     public Repository(DataContext context)
     {
       try
@@ -31,20 +31,13 @@ namespace Manager.Data
         if (_user != null)
           _user._idAccount = _user._idAccount;
         else
-        {
-          _user = new BaseUser()
-          {
-            _idAccount = "000000000000000000000000"
-          };
-        }
-
+          _user = new BaseUser() { _idAccount = "000000000000000000000000" };
       }
       catch
       {
         throw;
       }
     }
-
     public Repository(DataContext context, string idAccount)
     {
       try
@@ -54,19 +47,13 @@ namespace Manager.Data
         if (_user != null)
           _user._idAccount = _user._idAccount;
         else
-        {
-          _user = new BaseUser()
-          {
-            _idAccount = "000000000000000000000000"
-          };
-        }
+          _user = new BaseUser() { _idAccount = "000000000000000000000000" };
       }
       catch
       {
         throw;
       }
     }
-
     public Repository(DataContext context, Object service)
     {
       try
@@ -77,19 +64,13 @@ namespace Manager.Data
         if (_user != null)
           _user._idAccount = _user._idAccount;
         else
-        {
-          _user = new BaseUser()
-          {
-            _idAccount = "000000000000000000000000"
-          };
-        }
+          _user = new BaseUser() { _idAccount = "000000000000000000000000" };
       }
       catch
       {
         throw;
       }
     }
-
     public Repository(DataContext context, string idAccount, Object service)
     {
       try
@@ -100,45 +81,33 @@ namespace Manager.Data
         if (_user != null)
           _user._idAccount = _user._idAccount;
         else
-        {
-          _user = new BaseUser()
-          {
-            _idAccount = idAccount
-          };
-        }
+          _user = new BaseUser() { _idAccount = idAccount };
       }
       catch
       {
         throw;
       }
     }
-
     public void User(IHttpContextAccessor contextAccessor)
     {
-      BaseUser baseUser = new BaseUser();
-      var user = contextAccessor.HttpContext.User;
-      foreach (Claim ci in user.Claims)
+      _user = new BaseUser();
+      foreach (Claim ci in contextAccessor.HttpContext.User.Claims)
       {
         if (ci.Type == ClaimTypes.Name)
-          baseUser.NamePerson = ci.Value;
-
+          _user.NamePerson = ci.Value;
         if (ci.Type == ClaimTypes.Hash)
-          baseUser._idAccount = ci.Value;
-
+          _user._idAccount = ci.Value;
         if (ci.Type == ClaimTypes.Email)
-          baseUser.Mail = ci.Value;
-
+          _user.Mail = ci.Value;
         if (ci.Type == ClaimTypes.NameIdentifier)
-          baseUser.NameAccount = ci.Value;
-
+          _user.NameAccount = ci.Value;
         if (ci.Type == ClaimTypes.UserData)
-          baseUser._idPerson = ci.Value;
-
+          _user._idPerson = ci.Value;
       }
-
-      _user = baseUser;
     }
+    #endregion
 
+    #region Old
     private IQueryable<T> CreateSet()
     {
       try
@@ -334,6 +303,7 @@ namespace Manager.Data
         throw;
       }
     }
+    #endregion
 
     #region Methods Free Account
     public async Task<T> InsertAccountNewVersion(T entity)
@@ -349,6 +319,18 @@ namespace Manager.Data
       catch
       {
         throw;
+      }
+    }
+    public async Task<T> InsertFreeNewVersion(T entity)
+    {
+      try
+      {
+        await _collection.InsertOneAsync(entity);
+        return entity;
+      }
+      catch (Exception e)
+      {
+        throw e;
       }
     }
     public async Task<List<T>> GetAllFreeNewVersion(Expression<Func<T, bool>> filter, int count, int skip, string sort)
@@ -421,19 +403,7 @@ namespace Manager.Data
     }
     #endregion
 
-    #region Insert New Version
-    public async Task<T> InsertFreeNewVersion(T entity)
-    {
-      try
-      {
-        await _collection.InsertOneAsync(entity);
-        return entity;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    #region Methods
     public async Task<T> InsertNewVersion(T entity)
     {
       try
@@ -448,10 +418,11 @@ namespace Manager.Data
         throw e;
       }
     }
-    public async Task<T> UpdateNewVersion(T entity, T entityOld)
+    public async Task<T> UpdateNewVersion(T entity)
     {
       try
       {
+        T entityOld = GetNewVersion(p => p._id == entity._id).Result;
         Type type = entity.GetType();
         IEnumerable<string> unequalProperties =
             from pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -474,7 +445,6 @@ namespace Manager.Data
         throw;
       }
     }
-
     public async Task<List<T>> GetAllNewVersion(Expression<Func<T, bool>> filter, int count, int skip, string sort)
     {
       try

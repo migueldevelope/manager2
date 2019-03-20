@@ -1,10 +1,7 @@
-﻿using Manager.Views.Enumns;
-
-namespace Manager.Views.BusinessList
+﻿namespace Manager.Views.BusinessList
 {
-  public class ViewListPerson : _ViewListBase 
+  public class ViewListPerson : _ViewList
   {
-    public EnumStatusUser StatusUser { get; set; }
     public ViewListCompany Company { get; set; }
     public ViewListEstablishment Establishment { get; set; }
     public string Registration { get; set; }

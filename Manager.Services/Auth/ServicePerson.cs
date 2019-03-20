@@ -6,6 +6,8 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -23,13 +25,33 @@ namespace Manager.Services.Auth
     private ServiceGeneric<User> userService;
     private ServiceGeneric<Person> personService;
     private ServiceGeneric<Attachments> attachmentService;
+    private ServiceGeneric<Schooling> schoolingService;
+    private ServiceGeneric<Establishment> establishmentService;
     private ServiceGeneric<Company> companyService;
     private ServiceGeneric<Occupation> occupationService;
     private ServiceSendGrid mailService;
     private ServiceGeneric<Parameter> parameterService;
 
-    public BaseUser user { get => _user; set => user = _user; }
-
+    #region Constructor
+    public ServicePerson(DataContext context) : base(context)
+    {
+      try
+      {
+        userService = new ServiceGeneric<User>(context);
+        personService = new ServiceGeneric<Person>(context);
+        attachmentService = new ServiceGeneric<Attachments>(context);
+        mailService = new ServiceSendGrid(context);
+        companyService = new ServiceGeneric<Company>(context);
+        occupationService = new ServiceGeneric<Occupation>(context);
+        parameterService = new ServiceGeneric<Parameter>(context);
+        schoolingService = new ServiceGeneric<Schooling>(context);
+        establishmentService = new ServiceGeneric<Establishment>(context);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       try
@@ -42,34 +64,15 @@ namespace Manager.Services.Auth
         occupationService._user = _user;
         userService._user = _user;
         parameterService._user = _user;
+        schoolingService._user = _user;
+        establishmentService._user = _user;
         DefaultTypeRegisterPerson();
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
-
-    public ServicePerson(DataContext context)
-      : base(context)
-    {
-      try
-      {
-        userService = new ServiceGeneric<User>(context);
-        personService = new ServiceGeneric<Person>(context);
-        attachmentService = new ServiceGeneric<Attachments>(context);
-        mailService = new ServiceSendGrid(context);
-        companyService = new ServiceGeneric<Company>(context);
-        occupationService = new ServiceGeneric<Occupation>(context);
-        parameterService = new ServiceGeneric<Parameter>(context);
-        DefaultTypeRegisterPerson();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
     private void Init(DataContext context, BaseUser user)
     {
       try
@@ -82,13 +85,287 @@ namespace Manager.Services.Auth
         occupationService._user = _user;
         userService._user = _user;
         parameterService._user = _user;
+        schoolingService._user = _user;
+        establishmentService._user = _user;
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
+      }
+    }
+    public BaseUser user { get => _user; set => user = _user; }
+    #endregion
+
+    #region Person
+    public List<ViewListPersonCrud> GetPersons(ref long total, int count, int page, string filter, EnumTypeUser type)
+    {
+      try
+      {
+        switch (type)
+        {
+          case EnumTypeUser.Support:
+          case EnumTypeUser.Administrator:
+            total = personService.CountNewVersion(p => p.User.Name.Contains(filter)).Result;
+            return personService.GetAllNewVersion(p => p.User.Name.Contains(filter), count, count * (page - 1), "User.Name").Result
+            .Select(x => new ViewListPersonCrud()
+            {
+              _id = x._id,
+              Registration = x.Registration,
+              User = new ViewListUser() { _id = x.User._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone },
+              Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
+              Establishment = x.Establishment == null ? null : new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
+              StatusUser = x.StatusUser,
+              TypeJourney = x.TypeJourney,
+              TypeUser = x.TypeUser
+            }).ToList();
+          case EnumTypeUser.HR:
+          case EnumTypeUser.ManagerHR:
+            total = personService.CountNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;
+            return personService.GetAllNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
+            .Select(x => new ViewListPersonCrud()
+            {
+              _id = x._id,
+              Registration = x.Registration,
+              User = new ViewListUser() { _id = x.User._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone },
+              Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
+              Establishment = x.Establishment == null ? null : new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
+              StatusUser = x.StatusUser,
+              TypeJourney = x.TypeJourney,
+              TypeUser = x.TypeUser
+            }).ToList();
+          default:
+            total = 0;
+            return new List<ViewListPersonCrud>();
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudPerson GetPersonCrud(string id)
+    {
+      try
+      {
+        Person person = personService.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudPerson()
+        {
+          _id = person._id,
+          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          DateLastOccupation = person.DateLastOccupation,
+          DateLastReadjust = person.DateLastReadjust,
+          DateResignation = person.DateResignation,
+          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
+          HolidayReturn = person.HolidayReturn,
+          Manager = null,
+          MotiveAside = person.MotiveAside,
+          Occupation = null,
+          Registration = person.Registration,
+          Salary = person.Salary,
+          StatusUser = person.StatusUser,
+          TypeJourney = person.TypeJourney,
+          TypeUser = person.TypeUser,
+          User = new ViewCrudUser()
+          {
+            Name = person.User.Name,
+            DateAdm = person.User.DateAdm,
+            DateBirth = person.User.DateBirth,
+            Document = person.User.Document,
+            DocumentCTPF = person.User.DocumentCTPF,
+            DocumentID = person.User.DocumentID,
+            Mail = person.User.Mail,
+            Password = string.Empty,
+            Phone = person.User.Phone,
+            PhoneFixed = person.User.PhoneFixed,
+            PhotoUrl = person.User.PhotoUrl,
+            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
+            Sex = person.User.Sex,
+            _id = person.User._id
+          }
+        };
+        // TODO: Manager, Occupation
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudPerson NewPerson(ViewCrudPerson view)
+    {
+      try
+      {
+        User user = new User()
+        {
+          DateAdm = view.User.DateAdm,
+          DateBirth = view.User.DateBirth,
+          Document = view.User.Document,
+          DocumentCTPF = view.User.DocumentCTPF,
+          DocumentID = view.User.DocumentID,
+          Mail = view.User.Mail,
+          Name = view.User.Name,
+          Password = EncryptServices.GetMD5Hash(view.User.Password),
+          ForeignForgotPassword = string.Empty,
+          Coins = 0,
+          Phone = view.User.Phone,
+          PhoneFixed = view.User.PhoneFixed,
+          PhotoUrl = view.User.PhotoUrl,
+          Schooling = view.User.Schooling == null ? null : schoolingService.GetNewVersion(p => p._id == view.User._id).Result,
+          Sex = view.User.Sex,
+          ChangePassword = EnumChangePassword.AccessFirst
+        };
+
+        if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
+          user.ChangePassword = EnumChangePassword.No;
+
+        user = userService.InsertNewVersion(user).Result;
+
+        Person person = new Person()
+        {
+          Company = companyService.GetNewVersion(p => p._id == view.Company._id).Result,
+          DateLastOccupation = view.DateLastOccupation,
+          DateLastReadjust = view.DateLastReadjust,
+          DateResignation = view.DateResignation,
+          Establishment = view.Establishment == null ? null : establishmentService.GetNewVersion(p => p._id == view.Establishment._id).Result,
+          HolidayReturn = view.HolidayReturn,
+          Manager = null,
+          MotiveAside = view.MotiveAside,
+          Occupation = view.Occupation == null ? null : occupationService.GetNewVersion(p => p._id == view.Occupation._id).Result,
+          Registration = view.Registration,
+          Salary = view.Salary,
+          DocumentManager = null,
+          StatusUser = view.StatusUser,
+          TypeJourney = view.TypeJourney,
+          TypeUser = view.TypeUser,
+          User = user
+        };
+        /// TODO: Manager
+        person = personService.InsertNewVersion(person).Result;
+        return new ViewCrudPerson()
+        {
+          _id = person._id,
+          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          DateLastOccupation = person.DateLastOccupation,
+          DateLastReadjust = person.DateLastReadjust,
+          DateResignation = person.DateResignation,
+          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
+          HolidayReturn = person.HolidayReturn,
+          Manager = null,
+          MotiveAside = person.MotiveAside,
+          Occupation = null,
+          Registration = person.Registration,
+          Salary = person.Salary,
+          StatusUser = person.StatusUser,
+          TypeJourney = person.TypeJourney,
+          TypeUser = person.TypeUser,
+          User = new ViewCrudUser()
+          {
+            Name = person.User.Name,
+            DateAdm = person.User.DateAdm,
+            DateBirth = person.User.DateBirth,
+            Document = person.User.Document,
+            DocumentCTPF = person.User.DocumentCTPF,
+            DocumentID = person.User.DocumentID,
+            Mail = person.User.Mail,
+            Password = string.Empty,
+            Phone = person.User.Phone,
+            PhoneFixed = person.User.PhoneFixed,
+            PhotoUrl = person.User.PhotoUrl,
+            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
+            Sex = person.User.Sex,
+            _id = person.User._id
+          }
+        };
+        // TODO: Manager, Occupation
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudPerson UpdatePerson(ViewCrudPerson view)
+    {
+      try
+      {
+        User user = userService.GetNewVersion(p => p._id == view.User._id).Result;
+        user.DateAdm = view.User.DateAdm;
+        user.DateBirth = view.User.DateBirth;
+        user.Document = view.User.Document;
+        user.DocumentCTPF = view.User.DocumentCTPF;
+        user.DocumentID = view.User.DocumentID;
+        user.Mail = view.User.Mail;
+        user.Name = view.User.Name;
+        user.Phone = view.User.Phone;
+        user.PhoneFixed = view.User.PhoneFixed;
+        user.PhotoUrl = view.User.PhotoUrl;
+        user.Schooling = view.User.Schooling == null ? null : schoolingService.GetNewVersion(p => p._id == view.User._id).Result;
+        user.Sex = view.User.Sex;
+        user = userService.UpdateNewVersion(user).Result;
+
+        Person person = personService.GetNewVersion(p => p._id == view._id).Result;
+        person.Company = companyService.GetNewVersion(p => p._id == view.Company._id).Result;
+        person.DateLastOccupation = view.DateLastOccupation;
+        person.DateLastReadjust = view.DateLastReadjust;
+        person.DateResignation = view.DateResignation;
+        person.Establishment = view.Establishment == null ? null : establishmentService.GetNewVersion(p => p._id == view.Establishment._id).Result;
+        person.HolidayReturn = view.HolidayReturn;
+        person.Manager = null;
+        person.MotiveAside = view.MotiveAside;
+        person.Occupation = view.Occupation == null ? null : occupationService.GetNewVersion(p => p._id == view.Occupation._id).Result;
+        person.Registration = view.Registration;
+        person.Salary = view.Salary;
+        person.DocumentManager = null;
+        person.StatusUser = view.StatusUser;
+        person.TypeJourney = view.TypeJourney;
+        person.TypeUser = view.TypeUser;
+        person.User = user;
+        /// TODO: Manager
+        person = personService.UpdateNewVersion(person).Result;
+        return new ViewCrudPerson()
+        {
+          _id = person._id,
+          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          DateLastOccupation = person.DateLastOccupation,
+          DateLastReadjust = person.DateLastReadjust,
+          DateResignation = person.DateResignation,
+          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
+          HolidayReturn = person.HolidayReturn,
+          Manager = null,
+          MotiveAside = person.MotiveAside,
+          Occupation = null,
+          Registration = person.Registration,
+          Salary = person.Salary,
+          StatusUser = person.StatusUser,
+          TypeJourney = person.TypeJourney,
+          TypeUser = person.TypeUser,
+          User = new ViewCrudUser()
+          {
+            Name = person.User.Name,
+            DateAdm = person.User.DateAdm,
+            DateBirth = person.User.DateBirth,
+            Document = person.User.Document,
+            DocumentCTPF = person.User.DocumentCTPF,
+            DocumentID = person.User.DocumentID,
+            Mail = person.User.Mail,
+            Password = string.Empty,
+            Phone = person.User.Phone,
+            PhoneFixed = person.User.PhoneFixed,
+            PhotoUrl = person.User.PhotoUrl,
+            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
+            Sex = person.User.Sex,
+            _id = person.User._id
+          }
+        };
+        // TODO: Manager, Occupation
+      }
+      catch (Exception e)
+      {
+        throw e;
       }
     }
 
+    #endregion
+
+    #region Person Old
     public ViewPersonHead Head(string idperson)
     {
       try
@@ -108,7 +385,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public Person NewPerson(Person person)
+    public Person NewPersonOld(Person person)
     {
       try
       {
@@ -186,7 +463,7 @@ namespace Manager.Services.Auth
     }
 
 
-    public string UpdatePerson(string id, ViewPersonsCrud person)
+    public string UpdatePersonOld(string id, ViewPersonsCrud person)
     {
       try
       {
@@ -241,7 +518,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public Person UpdatePerson(Person person)
+    public Person UpdatePersonOld(Person person)
     {
       try
       {
@@ -409,7 +686,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public Person GetPersonCrud(string idperson)
+    public Person GetPersonCrudOld(string idperson)
     {
       try
       {
@@ -552,6 +829,6 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-
+    #endregion
   }
 }

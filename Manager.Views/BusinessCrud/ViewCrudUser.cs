@@ -14,9 +14,6 @@ namespace Manager.Views.BusinessCrud
     public DateTime? DateAdm { get; set; }
     public ViewListSchooling Schooling { get; set; }
     public string PhotoUrl { get; set; }
-    public long Coins { get; set; }
-    public EnumChangePassword ChangePassword { get; set; }
-    public string ForeignForgotPassword { get; set; }
     public string PhoneFixed { get; set; }
     public string DocumentID { get; set; }
     public string DocumentCTPF { get; set; }

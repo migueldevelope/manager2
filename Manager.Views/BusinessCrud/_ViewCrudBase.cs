@@ -1,8 +1,7 @@
 ﻿namespace Manager.Views.BusinessCrud
 {
-  public class _ViewCrudBase
+  public class _ViewCrudBase : _ViewCrud
   {
-    public string _id { get; set; }
     public string Name { get; set; }
   }
 }

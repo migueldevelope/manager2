@@ -6,6 +6,8 @@ using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,26 +16,81 @@ using Tools;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador de Pessoas
+  /// </summary>
   [Produces("application/json")]
   [Route("person")]
   public class PersonController : Controller
   {
     private readonly IServicePerson service;
 
-    public PersonController(IHttpContextAccessor contextAccessor, IServicePerson _service)
+    #region Constructor
+    /// <summary>
+    /// Contrutor do controlador
+    /// </summary>
+    /// <param name="_service">Serviço da pessoa</param>
+    /// <param name="contextAccessor">Autorização</param>
+    public PersonController(IServicePerson _service, IHttpContextAccessor contextAccessor)
     {
       try
       {
         service = _service;
         service.SetUser(contextAccessor);
       }
-      catch (Exception)
+      catch (Exception e)
       {
-        throw;
+        throw e;
       }
-
     }
+    #endregion
 
+    #region Person
+    /// <summary>
+    /// Listar pessoas da base de dados
+    /// </summary>
+    /// <param name="type">Tipo do usuário que está fazendo a consulta</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da pessoa</param>
+    /// <returns>Lista de pessoas da tela de manutenção</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("n/list/{type}")]
+    public List<ViewListPersonCrud> GetList(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetPersons(ref total, count, page, filter, type);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Buscar informações da pessoa para alteração
+    /// </summary>
+    /// <param name="id">Identificador da pessoa</param>
+    /// <returns>Objeto de alteração da pessoa</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("n/edit/{idperson}")]
+    public ViewCrudPerson GetEdit(string id)
+    {
+      return service.GetPersonCrud(id);
+    }
+    /// <summary>
+    /// Incluir uma nova pessoa
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da pessoa</param>
+    /// <returns>Objeto da pessoa incluído</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("n/new")]
+    public ViewCrudPerson Post([FromBody] ViewCrudPerson view)
+    {
+      return service.NewPerson(view);
+    }
+    #endregion
+
+    #region Person Old
     [Authorize]
     [HttpGet]
     [Route("personalinformation/{idPerson}")]
@@ -91,7 +148,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public List<Person> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public List<Person> ListOld(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetPersonsCrud(type, ref total, filter, count, page);
@@ -102,9 +159,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idperson}/edit")]
-    public Person GetEdit(string idperson)
+    public Person GetEditOld(string idperson)
     {
-      return service.GetPersonCrud(idperson); ;
+      return service.GetPersonCrudOld(idperson); ;
     }
 
     [Authorize]
@@ -172,6 +229,7 @@ namespace Manager.Controllers
     {
       return service.UpdatePersonUser(view);
     }
+    #endregion
 
   }
 }

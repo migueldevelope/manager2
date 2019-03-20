@@ -4,7 +4,7 @@ using System;
 
 namespace Manager.Views.BusinessCrud
 {
-  public class ViewCrudPerson : _ViewCrudBase
+  public class ViewCrudPerson : _ViewCrud
   {
     public EnumStatusUser StatusUser { get; set; }
     public ViewListCompany Company { get; set; }
