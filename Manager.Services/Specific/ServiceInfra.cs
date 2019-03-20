@@ -2197,9 +2197,9 @@ namespace Manager.Services.Specific
         }
 
         occupation.Areas = areas;
-
+        var list = occupation.SalaryScales;
         occupation.SalaryScales = new List<SalaryScaleGrade>();
-        foreach (var item in occupation.SalaryScales)
+        foreach (var item in list)
         {
           if(item._id == null)
             item._id = ObjectId.GenerateNewId().ToString();
