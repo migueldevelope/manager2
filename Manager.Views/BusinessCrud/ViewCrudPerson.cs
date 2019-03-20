@@ -23,6 +23,6 @@ namespace Manager.Views.BusinessCrud
     public EnumTypeUser TypeUser { get; set; }
     public string Registration { get; set; }
     public ViewCrudUser User { get; set; }
-    public List<ViewSalaryScalePerson> SalaryScales { get; set; }
+    public ViewSalaryScalePerson SalaryScales { get; set; }
   }
 }

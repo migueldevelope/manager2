@@ -240,12 +240,13 @@ namespace Manager.Services.Auth
           StatusUser = view.StatusUser,
           TypeJourney = view.TypeJourney,
           TypeUser = view.TypeUser,
-          User = user
+          User = user,
+          SalaryScales = new SalaryScalePerson() { _idSalaryScale = view.SalaryScales._idSalaryScale, NameSalaryScale = view.SalaryScales.NameSalaryScale }
         };
 
-        foreach (var item in view.SalaryScales)
+        /*foreach (var item in view.SalaryScales)
           person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
-
+          */
         /// TODO: Manager
         person = personService.InsertNewVersion(person).Result;
         return new ViewCrudPerson()
@@ -326,9 +327,11 @@ namespace Manager.Services.Auth
         person.TypeJourney = view.TypeJourney;
         person.TypeUser = view.TypeUser;
         person.User = user;
-        foreach (var item in view.SalaryScales)
-          person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
+        person.SalaryScales = new SalaryScalePerson() { _idSalaryScale = view.SalaryScales._idSalaryScale, NameSalaryScale = view.SalaryScales.NameSalaryScale };
 
+        /*foreach (var item in view.SalaryScales)
+          person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
+          */
         /// TODO: Manager
         person = personService.UpdateNewVersion(person).Result;
         return new ViewCrudPerson()
@@ -464,11 +467,12 @@ namespace Manager.Services.Auth
           DateResignation = person.DateResignation,
           Registration = person.Registration,
           TypeUser = person.TypeUser,
-          User = person.User
+          User = person.User,
+          SalaryScales = new SalaryScalePerson() { _idSalaryScale = person.SalaryScales._idSalaryScale, NameSalaryScale = person.SalaryScales.NameSalaryScale }
         };
-        foreach (var item in person.SalaryScales)
+        /*foreach (var item in person.SalaryScales)
           model.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
-
+          */
 
 
         if (person.Manager != null)
