@@ -90,13 +90,25 @@ namespace Manager.Controllers
     /// Incluir uma nova pessoa
     /// </summary>
     /// <param name="view">Objeto de manutenção da pessoa</param>
-    /// <returns>Objeto da pessoa incluído</returns>
+    /// <returns>Objeto da pessoa incluída</returns>
     [Authorize]
     [HttpPost]
     [Route("n/new")]
     public ViewCrudPerson Post([FromBody] ViewCrudPerson view)
     {
       return service.NewPerson(view);
+    }
+    /// <summary>
+    /// Alterar uma pessoa
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da pessoa</param>
+    /// <returns>Objeto da pessoa alterada</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("n/update")]
+    public ViewCrudPerson Put([FromBody] ViewCrudPerson view)
+    {
+      return service.UpdatePerson(view);
     }
     #endregion
 

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
-using Manager.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +11,21 @@ using Tools;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controle da Infra Estrutura
+  /// </summary>
   [Produces("application/json")]
   [Route("infra")]
   public class InfraController : Controller
   {
     private readonly IServiceInfra service;
 
+    #region Constructor
+    /// <summary>
+    /// Construtor da infra estrutura
+    /// </summary>
+    /// <param name="_service">Servico associado</param>
+    /// <param name="contextAccessor">Token de autenticação</param>
     public InfraController(IServiceInfra _service, IHttpContextAccessor contextAccessor)
     {
       try
@@ -32,6 +38,12 @@ namespace Manager.Controllers
         throw;
       }
     }
+    #endregion
+
+    #region Infra Estrutura
+    #endregion
+
+    #region Old
 
     [Authorize]
     [HttpPost]
@@ -812,7 +824,7 @@ namespace Manager.Controllers
     {
       return service.GetCourseOccupation(idoccupation, type);
     }
-
+    #endregion
 
   }
 }

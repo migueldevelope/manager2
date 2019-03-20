@@ -8,6 +8,8 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceInfra
   {
+
+    #region Old
     void SetUser(IHttpContextAccessor contextAccessor);
     List<Company> GetCompanies();
     Skill GetSkill(string filterName);
@@ -110,5 +112,7 @@ namespace Manager.Core.Interfaces
     string GetCSVCompareGroup(string idcompany, string link);
     List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref long total, string filter, int count, int page, string filterGroup);
     List<Course> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type);
+    #endregion
+
   }
 }
