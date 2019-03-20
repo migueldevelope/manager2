@@ -18,6 +18,7 @@ namespace Manager.Core.Interfaces
     ViewCrudPerson GetPersonCrud(string id);
     ViewCrudPerson NewPerson(ViewCrudPerson view);
     ViewCrudPerson UpdatePerson(ViewCrudPerson person);
+    List<SalaryScalePerson> ListSalaryScale(string idoccupation);
 
     #region Old
     List<Person> ListPerson(Expression<Func<Person, bool>> filter);

@@ -64,6 +64,16 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("n/listsalaryscale/{idoccupation}")]
+    public List<SalaryScalePerson> ListSalaryScale(string idoccupation)
+    {
+      return service.ListSalaryScale(idoccupation);
+    }
+
     /// <summary>
     /// Buscar informações da pessoa para alteração
     /// </summary>

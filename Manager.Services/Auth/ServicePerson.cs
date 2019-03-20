@@ -31,6 +31,8 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Occupation> occupationService;
     private ServiceSendGrid mailService;
     private ServiceGeneric<Parameter> parameterService;
+    private ServiceGeneric<SalaryScale> salaryScaleService;
+
 
     #region Constructor
     public ServicePerson(DataContext context) : base(context)
@@ -46,6 +48,7 @@ namespace Manager.Services.Auth
         parameterService = new ServiceGeneric<Parameter>(context);
         schoolingService = new ServiceGeneric<Schooling>(context);
         establishmentService = new ServiceGeneric<Establishment>(context);
+        salaryScaleService = new ServiceGeneric<SalaryScale>(context);
       }
       catch (Exception e)
       {
@@ -66,6 +69,7 @@ namespace Manager.Services.Auth
         parameterService._user = _user;
         schoolingService._user = _user;
         establishmentService._user = _user;
+        salaryScaleService._user = _user;
         DefaultTypeRegisterPerson();
       }
       catch (Exception e)
@@ -241,7 +245,7 @@ namespace Manager.Services.Auth
 
         foreach (var item in view.SalaryScales)
           person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
-        
+
         /// TODO: Manager
         person = personService.InsertNewVersion(person).Result;
         return new ViewCrudPerson()
@@ -370,6 +374,22 @@ namespace Manager.Services.Auth
       }
     }
 
+    public List<SalaryScalePerson> ListSalaryScale(string idoccupation)
+    {
+      try
+      {
+        return occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault().SalaryScales
+          .Select(p => new SalaryScalePerson
+          {
+            _idSalaryScale = p._idSalaryScale,
+            NameSalaryScale = p.NameSalaryScale
+          }).OrderBy(p => p.NameSalaryScale).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     #endregion
 
     #region Person Old
@@ -446,6 +466,8 @@ namespace Manager.Services.Auth
           TypeUser = person.TypeUser,
           User = person.User
         };
+        foreach (var item in person.SalaryScales)
+          model.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
 
 
 
