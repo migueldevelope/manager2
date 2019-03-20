@@ -242,10 +242,21 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var salaryscale = salaryScaleService.GetAll(p => p._id == idsalaryscale).FirstOrDefault();
         var item = gradeService.GetAll(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
         gradeService.Update(item, null);
-        UpdateAllGrade(item, idsalaryscale);
+
+        foreach(var grad in salaryscale.Grades)
+        {
+          if(grad._id == item._id)
+          {
+            salaryscale.Grades.Remove(grad);
+            salaryScaleService.Update(salaryscale, null);
+            return "deleted";
+          }
+        }
+        
         return "deleted";
       }
       catch (Exception e)

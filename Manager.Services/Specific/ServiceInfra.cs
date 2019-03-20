@@ -541,7 +541,7 @@ namespace Manager.Services.Specific
         var areas = new List<Area>();
         foreach (var item in view.Process)
           areas.Add(item.ProcessLevelOne.Area);
-
+        
         var occupation = new Occupation()
         {
           Name = view.Name,
@@ -554,9 +554,16 @@ namespace Manager.Services.Specific
           Schooling = view.Group.Schooling,
           Skills = new List<Skill>(),
           Process = view.Process,
-          Grade = view.Grade,
-          Areas = areas
+          Areas = areas,
+          SalaryScales = new List<SalaryScaleGrade>()
         };
+        foreach (var item in view.SalaryScales)
+        {
+          item._id = ObjectId.GenerateNewId().ToString();
+          item._idAccount = _user._idAccount;
+          occupation.SalaryScales.Add(item);
+        }
+
         occupationService.Insert(occupation);
         return "ok";
       }
@@ -1483,7 +1490,7 @@ namespace Manager.Services.Specific
             _idAccount = p._idAccount,
             Status = p.Status,
             Name = p.Name,
-            Grade = p.Grade,
+            SalaryScales = p.SalaryScales,
             Group = new Group()
             {
               _id = p.Group._id,
@@ -1567,7 +1574,7 @@ namespace Manager.Services.Specific
             _idAccount = p._idAccount,
             Status = p.Status,
             Name = p.Name,
-            Grade = p.Grade,
+            SalaryScales = p.SalaryScales,
             Group = new Group()
             {
               _id = p.Group._id,
@@ -1715,7 +1722,7 @@ namespace Manager.Services.Specific
                   _idAccount = item._idAccount,
                   Status = item.Status,
                   Areas = item.Areas,
-                  Grade = item.Grade
+                  SalaryScales = item.SalaryScales, 
                 });
               }
           }
@@ -2190,7 +2197,19 @@ namespace Manager.Services.Specific
         }
 
         occupation.Areas = areas;
+
+        occupation.SalaryScales = new List<SalaryScaleGrade>();
+        foreach (var item in occupation.SalaryScales)
+        {
+          if(item._id == null)
+            item._id = ObjectId.GenerateNewId().ToString();
+
+          item._idAccount = _user._idAccount;
+          occupation.SalaryScales.Add(item);
+        }
+
         occupationService.Update(occupation, null);
+
         UpdateOccupationAll(occupation);
         return "update";
       }

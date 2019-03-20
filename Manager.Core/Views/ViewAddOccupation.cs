@@ -9,7 +9,7 @@ namespace Manager.Core.Views
     public string Name { get; set; }
     public long Line { get; set; }
     public Area Area { get; set; }
-    public Grade Grade { get; set; }
+    public List<SalaryScaleGrade> SalaryScales { get; set; }
     public ProcessLevelTwo ProcessLevelTwo { get; set; }
     public List<ProcessLevelTwo> Process { get; set; }
   }
