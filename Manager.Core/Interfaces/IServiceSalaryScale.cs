@@ -23,5 +23,6 @@ namespace Manager.Core.Interfaces
     string RemoveGrade(string id, string idsalaryscale);
     Grade GetGrade(string id);
     List<Grade> ListGrade(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "");
+    List<SalaryScaleGrade> ListGrades(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

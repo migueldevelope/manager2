@@ -88,6 +88,18 @@ namespace Manager.Controllers
     }
 
     [Authorize]
+    [HttpGet]
+    [Route("listgrades/{idcompany}")]
+    public List<SalaryScaleGrade> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListGrades(idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+
+    [Authorize]
     [HttpPut]
     [Route("updatestep")]
     public string UpdateGrade([FromBody]ViewStep view)

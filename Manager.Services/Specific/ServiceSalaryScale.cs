@@ -108,6 +108,39 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<SalaryScaleGrade> ListGrades(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var list = salaryScaleService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+
+        var detail = new List<SalaryScaleGrade>();
+        foreach (var item in list)
+        {
+          foreach (var grade in item.Grades)
+          {
+            var view = new SalaryScaleGrade();
+            view._idSalaryScale = item._id;
+            view.NameSalaryScale = item.Name;
+            view._idGrade = grade._id;
+            view.NameGrade = grade.Name;
+            detail.Add(view);
+          }
+        }
+
+
+        total = detail.Count();
+
+        return detail.ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string NewSalaryScale(ViewNewSalaryScale view)
     {
       try
