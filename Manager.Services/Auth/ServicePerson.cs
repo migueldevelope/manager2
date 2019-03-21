@@ -381,12 +381,16 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault().SalaryScales
-          .Select(p => new SalaryScalePerson
-          {
-            _idSalaryScale = p._idSalaryScale,
-            NameSalaryScale = p.NameSalaryScale
-          }).OrderBy(p => p.NameSalaryScale).ToList();
+        var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        if (occupation.SalaryScales != null)
+          return occupation.SalaryScales
+            .Select(p => new SalaryScalePerson
+            {
+              _idSalaryScale = p._idSalaryScale,
+              NameSalaryScale = p.NameSalaryScale
+            }).OrderBy(p => p.NameSalaryScale).ToList();
+        else
+          return null;
       }
       catch (Exception e)
       {
