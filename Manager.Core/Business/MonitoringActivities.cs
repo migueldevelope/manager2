@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para entregas de monitoring
+  /// </summary>
   public class MonitoringActivities: BaseEntity
   {
     public Activitie Activities { get; set; }

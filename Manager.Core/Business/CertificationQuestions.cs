@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para acreditação
+  /// </summary>
   public class CertificationQuestions: BaseEntity
   {
     public Questions Question { get; set; }

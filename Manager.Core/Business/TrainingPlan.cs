@@ -4,6 +4,9 @@ using System;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados
+  /// </summary>
   public class TrainingPlan : BaseEntity
   {
     public Person Person { get; set; }

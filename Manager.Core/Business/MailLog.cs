@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Objeto persiste no banco de dados
+  /// </summary>
   public class MailLog: BaseEntity
   {
     public string Subject { get; set; }

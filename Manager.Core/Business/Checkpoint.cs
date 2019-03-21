@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Objeto persiste no banco de dados
+  /// </summary>
   public class Checkpoint : BaseEntity
   {
     public Person Person { get; set; }

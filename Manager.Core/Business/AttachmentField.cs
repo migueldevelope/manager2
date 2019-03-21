@@ -1,5 +1,8 @@
 ﻿namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para lista de anexos utilizado em todas os locais de lista de anexos
+  /// </summary>
   public class AttachmentField
   {
     public string Url { get; set; }

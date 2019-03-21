@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para escolaridade de monitoring
+  /// </summary>
   public class MonitoringSchooling : BaseEntity
   {
     public Schooling Schooling { get; set; }

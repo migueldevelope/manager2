@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados
+  /// </summary>
   public class Person : BaseEntity
   {
     public EnumStatusUser StatusUser { get; set; }

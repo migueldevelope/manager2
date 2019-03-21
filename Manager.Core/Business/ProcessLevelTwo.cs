@@ -2,6 +2,9 @@
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados e coleção
+  /// </summary>
   public class ProcessLevelTwo : BaseEntity
   {
     public string Name { get; set; }

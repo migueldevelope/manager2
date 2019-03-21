@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para skills de onboarding
+  /// </summary>
   public class OnBoardingSkills : BaseEntity
   {
     public Skill Skill { get; set; }

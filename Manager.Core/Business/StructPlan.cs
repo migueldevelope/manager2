@@ -3,6 +3,9 @@ using Manager.Core.Enumns;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados e Coleção para planos
+  /// </summary>
   public class StructPlan : BaseEntity
   {
     public Course Course { get; set; }

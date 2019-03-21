@@ -3,6 +3,9 @@ using Manager.Views.Enumns;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados
+  /// </summary>
   public class Sphere : BaseEntity
   {
     public string Name { get; set; }

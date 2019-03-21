@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados e também uma coleção do monitoring
+  /// </summary>
   public class Plan : BaseEntity
   {
     public string Name { get; set; }

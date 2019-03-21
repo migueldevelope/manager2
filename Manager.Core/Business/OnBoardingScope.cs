@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para escopo do onboarding
+  /// </summary>
   public class OnBoardingScope : BaseEntity
   {
     public Scope Scope { get; set; }

@@ -3,6 +3,9 @@ using Manager.Core.Enumns;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados - perguntas
+  /// </summary>
   public class Questions : BaseEntity
   {
     public string Name { get; set; }

@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Objeto persiste no banco de dados para auto gestão
+  /// </summary>
   public class AutoManager : BaseEntity
   {
     public Person Person { get; set; }

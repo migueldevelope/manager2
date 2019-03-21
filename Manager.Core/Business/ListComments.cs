@@ -4,6 +4,9 @@ using System;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para comentarios onboarding/monitoring
+  /// </summary>
   public class ListComments : BaseEntity
   {
     public string Comments { get; set; }

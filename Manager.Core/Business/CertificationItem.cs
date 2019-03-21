@@ -6,6 +6,9 @@ using System;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para o item da acreditação
+  /// </summary>
   public class CertificationItem : BaseEntity
   {
     public EnumItemCertification ItemCertification { get; set; }

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Objeto persiste no banco de dados e é também é uma coleção da tabela salarial
+  /// </summary>
   public class Grade : BaseEntity
   {
     public string Name { get; set; }

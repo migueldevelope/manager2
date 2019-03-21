@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  coleção
+  /// </summary>
   public class SalaryScaleGrade : BaseEntity
   {
     public string _idGrade { get; set; }

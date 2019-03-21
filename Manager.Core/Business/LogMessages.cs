@@ -3,6 +3,10 @@ using Manager.Core.Enumns;
 
 namespace Manager.Core.Business
 {
+
+  /// <summary>
+  /// Objeto persiste no banco de dados - Logs para mensageria
+  /// </summary>
   public class LogMessages : BaseEntity
   {
     public Person Person { get; set; }

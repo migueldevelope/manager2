@@ -3,7 +3,10 @@ using Manager.Views.Enumns;
 
 namespace Manager.Core.Business
 {
-    public class Schooling : BaseEntity
+  /// <summary>
+  ///  Objeto persiste no banco de dados
+  /// </summary>
+  public class Schooling : BaseEntity
   {
     public string Name { get; set; }
     public string Complement { get; set; }

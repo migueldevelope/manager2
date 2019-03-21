@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Objeto persiste no banco de dados - turma
+  /// </summary>
   public class Event : BaseEntity
   {
     public Course Course { get; set; }

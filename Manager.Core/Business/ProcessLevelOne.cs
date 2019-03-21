@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados e coleção 
+  /// </summary>
   public class ProcessLevelOne : BaseEntity
   {
     public string Name { get; set; }

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Objeto persiste no banco de dados - histórico de treinamentos
+  /// </summary>
   public class EventHistoric : BaseEntity
   {
     public Person Person { get; set; }

@@ -3,6 +3,9 @@ using Manager.Core.Enumns;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para turma
+  /// </summary>
   public class Instructor : BaseEntity
   {
     public Person Person { get; set; }

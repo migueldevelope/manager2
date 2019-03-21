@@ -4,6 +4,9 @@ using System;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Este iria utilizar para gerenciar o serviço de email, porém acabei não utilizando
+  /// </summary>
   public class ConfigurationNotifications : BaseEntity
   {
     public string Name { get; set; }

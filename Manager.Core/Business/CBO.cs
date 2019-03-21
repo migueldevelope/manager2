@@ -2,7 +2,10 @@
 
 namespace Manager.Core.Business
 {
-  public class Cbo : BaseEntity
+  /// <summary>
+  /// Objeto persiste no banco de dados
+  /// </summary>
+  public class CBO : BaseEntity
   {
     public string Name { get; set; }
     public string Code { get; set; }

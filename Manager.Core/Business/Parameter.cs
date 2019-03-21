@@ -2,6 +2,9 @@
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados
+  /// </summary>
   public class Parameter : BaseEntity
   {
     public string Name { get; set; }

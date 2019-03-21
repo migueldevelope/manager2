@@ -3,6 +3,9 @@ using Manager.Core.Enumns;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados - textos
+  /// </summary>
   public class TextDefault : BaseEntity
   {
     public string Name { get; set; }

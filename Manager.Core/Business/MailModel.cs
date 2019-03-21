@@ -3,6 +3,9 @@ using Manager.Core.Enumns;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  ///  Objeto persiste no banco de dados - modelos de email
+  /// </summary>
   public class MailModel : BaseEntity
   {
     public string Name { get; set; }

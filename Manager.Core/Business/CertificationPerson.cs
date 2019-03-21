@@ -6,6 +6,9 @@ using System;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para acreditação porém também persiste no banco de dados
+  /// </summary>
   public class CertificationPerson: BaseEntity
   {
     [BsonRepresentation(BsonType.ObjectId)]

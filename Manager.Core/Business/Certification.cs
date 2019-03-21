@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Objeto persiste no banco de dados
+  /// </summary>
   public class Certification : BaseEntity
   {
     public Person Person { get; set; }

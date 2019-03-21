@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para escolaridade do onboarding
+  /// </summary>
   public class OnBoardingSchooling : BaseEntity
   {
     public Schooling Schooling { get; set; }

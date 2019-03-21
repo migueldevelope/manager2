@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Coleção para skills de monitoring
+  /// </summary>
   public class MonitoringSkills : BaseEntity
   {
     public Skill Skill { get; set; }

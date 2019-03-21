@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// coleção para participantes da turma
+  /// </summary>
   public class Participant : BaseEntity
   {
     public Person Person { get; set; }

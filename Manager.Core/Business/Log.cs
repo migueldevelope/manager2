@@ -2,6 +2,9 @@
 using System;
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// Objeto persiste no banco de dados
+  /// </summary>
   public class Log : BaseEntity
   {
     public Person Person { get; set; }

@@ -3,6 +3,9 @@ using Manager.Views.Enumns;
 
 namespace Manager.Core.Business
 {
+  /// <summary>
+  /// coleção para steps de um grade da tabela salarial
+  /// </summary>
   public class ListSteps : BaseEntity
   {
     public EnumSteps Step { get; set; }
