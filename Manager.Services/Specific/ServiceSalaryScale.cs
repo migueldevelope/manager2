@@ -317,8 +317,11 @@ namespace Manager.Services.Specific
         try
         {
           var salaryScale = salaryScaleService.GetAll(p => p._id == idsalaryscale).FirstOrDefault();
-          if (salaryScale.Grades != null)
-            return salaryScale.Grades.OrderBy(p => p.Order).ToList();
+          if (salaryScale != null)
+            if (salaryScale.Grades != null)
+              return salaryScale.Grades.OrderBy(p => p.Order).ToList();
+            else
+              return null;
           else
             return null;
         }
