@@ -39,7 +39,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<ProcessLevelTwo> processLevelTwoService;
     private readonly ServiceGeneric<Questions> questionsService;
     private readonly ServiceGeneric<TextDefault> textDefaultService;
-    private readonly ServiceGeneric<CBO> cboService;
+    private readonly ServiceGeneric<Cbo> cboService;
     private readonly ServiceGeneric<OccupationMandatory> occupationMandatoryService;
     private readonly ServiceGeneric<CompanyMandatory> companyMandatoryService;
 
@@ -62,7 +62,7 @@ namespace Manager.Services.Specific
         processLevelTwoService = new ServiceGeneric<ProcessLevelTwo>(context);
         questionsService = new ServiceGeneric<Questions>(context);
         textDefaultService = new ServiceGeneric<TextDefault>(context);
-        cboService = new ServiceGeneric<CBO>(context);
+        cboService = new ServiceGeneric<Cbo>(context);
         occupationMandatoryService = new ServiceGeneric<OccupationMandatory>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
         companyMandatoryService = new ServiceGeneric<CompanyMandatory>(context);
@@ -279,7 +279,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddCBO(CBO view)
+    public string AddCBO(Cbo view)
     {
       try
       {
@@ -901,7 +901,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task UpdateCBOAll(CBO cbo)
+    private async Task UpdateCBOAll(Cbo cbo)
     {
       try
       {
@@ -1382,7 +1382,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public CBO GetCBO(string id)
+    public Cbo GetCBO(string id)
     {
       try
       {
@@ -1395,7 +1395,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<CBO> ListCBO()
+    public List<Cbo> ListCBO()
     {
       try
       {
@@ -2084,7 +2084,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateCBO(CBO model)
+    public string UpdateCBO(Cbo model)
     {
       try
       {

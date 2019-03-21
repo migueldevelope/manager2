@@ -57,7 +57,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcbo")]
-    public string AddCbo([FromBody]CBO view)
+    public string AddCbo([FromBody]Cbo view)
     {
       return service.AddCBO(view);
     }
@@ -380,7 +380,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcbo")]
-    public List<CBO> ListCBO()
+    public List<Cbo> ListCBO()
     {
       return service.ListCBO();
     }
@@ -388,7 +388,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getcbo/{id}")]
-    public CBO GetCBO(string id)
+    public Cbo GetCBO(string id)
     {
       return service.GetCBO(id);
     }
@@ -763,7 +763,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecbo")]
-    public string UpdateCBO([FromBody]CBO model)
+    public string UpdateCBO([FromBody]Cbo model)
     {
       return service.UpdateCBO(model);
     }

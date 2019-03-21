@@ -9,7 +9,7 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Document { get; set; }
     public string Schooling { get; set; }
-    public CBO CBO { get; set; }
+    public Cbo CBO { get; set; }
     public string Content { get; set; }
     public EnumTypeInstructor TypeInstructor { get; set; }
   }
