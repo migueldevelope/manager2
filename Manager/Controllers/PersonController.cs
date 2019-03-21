@@ -64,16 +64,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
-
-    [Authorize]
-    [HttpGet]
-    [Route("n/listsalaryscale/{idoccupation}")]
-    public List<SalaryScalePerson> ListSalaryScale(string idoccupation)
-    {
-      return service.ListSalaryScale(idoccupation);
-    }
-
     /// <summary>
     /// Buscar informações da pessoa para alteração
     /// </summary>
@@ -110,6 +100,7 @@ namespace Manager.Controllers
     {
       return service.UpdatePerson(view);
     }
+
     #endregion
 
     #region Person Old
@@ -250,6 +241,14 @@ namespace Manager.Controllers
     public string UpdatePersonUser([FromBody]ViewPersonUser view)
     {
       return service.UpdatePersonUser(view);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("n/listsalaryscale/{idoccupation}")]
+    public List<SalaryScalePerson> ListSalaryScale(string idoccupation)
+    {
+      return service.ListSalaryScale(idoccupation);
     }
     #endregion
 

@@ -5,7 +5,7 @@ namespace Manager.Views.BusinessCrud
 {
   public class ViewCrudSphere : _ViewCrudBase
   {
-    public EnumTypeSphere TypeSphere { get; set; }
     public ViewListCompany Company { get; set; }
+    public EnumTypeSphere TypeSphere { get; set; }
   }
 }
