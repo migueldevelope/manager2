@@ -280,16 +280,16 @@ namespace Manager.Services.Specific
         item.Status = EnumStatus.Disabled;
         gradeService.Update(item, null);
 
-        foreach(var grad in salaryscale.Grades)
+        foreach (var grad in salaryscale.Grades)
         {
-          if(grad._id == item._id)
+          if (grad._id == item._id)
           {
             salaryscale.Grades.Remove(grad);
             salaryScaleService.Update(salaryscale, null);
             return "deleted";
           }
         }
-        
+
         return "deleted";
       }
       catch (Exception e)
@@ -317,7 +317,10 @@ namespace Manager.Services.Specific
         try
         {
           var salaryScale = salaryScaleService.GetAll(p => p._id == idsalaryscale).FirstOrDefault();
-          return salaryScale.Grades.OrderBy(p => p.Order).ToList();
+          if (salaryScale.Grades != null)
+            return salaryScale.Grades.OrderBy(p => p.Order).ToList();
+          else
+            return null;
         }
         catch (Exception e)
         {
