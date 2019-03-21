@@ -193,7 +193,7 @@ namespace Manager.Services.Specific
           item.Template = new Axis()
           {
             Name = item.Name,
-            Sphere = item.Sphere,
+            Company = item.Company,
             Status = item.Status,
             TypeAxis = item.TypeAxis,
             _id = item._id,
@@ -202,7 +202,7 @@ namespace Manager.Services.Specific
           };
           item._idAccount = _user._idAccount;
           item._id = ObjectId.GenerateNewId().ToString();
-          item.Sphere = sphereService.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Sphere._id).Result;
+          item.Company = companyService.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Company._id).Result;
           axisService.InsertFreeNewVersion(item);
         }
 
@@ -812,9 +812,9 @@ namespace Manager.Services.Specific
           sphereService.Update(item, null);
         }
 
-        foreach (var item in axisService.GetAll(p => p.Sphere.Company._id == company._id).ToList())
+        foreach (var item in axisService.GetAll(p => p.Company._id == company._id).ToList())
         {
-          item.Sphere.Company = company;
+          item.Company = company;
           axisService.Update(item, null);
         }
 
@@ -1114,10 +1114,10 @@ namespace Manager.Services.Specific
       {
         var sphere = sphereService.GetAll(p => p._id == idsphere).FirstOrDefault();
 
-        foreach (var item in axisService.GetAll(p => p.Sphere._id == sphere._id).ToList())
-        {
-          return "error_exists_register";
-        }
+        //foreach (var item in axisService.GetAll(p => p.Sphere._id == sphere._id).ToList())
+        //{
+        //  return "error_exists_register";
+        //}
 
         foreach (var item in groupService.GetAll(p => p.Sphere._id == sphere._id).ToList())
         {
@@ -1251,7 +1251,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return axisService.GetAll(p => p.Sphere.Company._id == idcompany).OrderBy(p => p.TypeAxis).ToList();
+        return axisService.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.TypeAxis).ToList();
       }
       catch (Exception e)
       {
@@ -2262,15 +2262,15 @@ namespace Manager.Services.Specific
 
     private async Task UpdateSphereAll(Sphere sphere, bool remove)
     {
-      foreach (var item in axisService.GetAll(p => p.Sphere._id == sphere._id).ToList())
-      {
-        if (remove == true)
-          item.Sphere = null;
-        else
-          item.Sphere = sphere;
+      //foreach (var item in axisService.GetAll(p => p.Sphere._id == sphere._id).ToList())
+      //{
+      //  if (remove == true)
+      //    item.Sphere = null;
+      //  else
+      //    item.Sphere = sphere;
 
-        this.axisService.Update(item, null);
-      }
+      //  this.axisService.Update(item, null);
+      //}
 
       foreach (var item in groupService.GetAll(p => p.Sphere._id == sphere._id).ToList())
       {
