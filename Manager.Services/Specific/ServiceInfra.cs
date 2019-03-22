@@ -1710,7 +1710,7 @@ namespace Manager.Services.Specific
                   _idOccupation = item._id,
                   NameOccupation = item.Name,
                   _idProcessLevelTwo = proc._id,
-                  _idGroup = proc.Name
+                  _idGroup = item.Group._id
                 });
               }
           }
