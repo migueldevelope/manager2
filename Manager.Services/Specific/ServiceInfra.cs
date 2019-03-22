@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Manager.Views.Enumns;
+using Manager.Views.BusinessView;
 
 namespace Manager.Services.Specific
 {
@@ -1687,7 +1688,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Occupation> GetOccupations(string idcompany, string idarea)
+    public List<ViewGetOccupation> GetOccupations(string idcompany, string idarea)
     {
       try
       {
@@ -1695,7 +1696,7 @@ namespace Manager.Services.Specific
         var area = areaService.GetAll(p => p._id == idarea).FirstOrDefault();
         //return occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
         var itens = occupationService.GetAll(p => p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
-        List<Occupation> list = new List<Occupation>();
+        List<ViewGetOccupation> list = new List<ViewGetOccupation>();
         foreach (var item in itens)
         {
           foreach (var proc in item.Process)
@@ -1704,30 +1705,17 @@ namespace Manager.Services.Specific
               if (proc.ProcessLevelOne.Area._id == area._id)
               {
                 //item.ProcessLevelTwo = proc;
-                list.Add(new Occupation()
+                list.Add(new ViewGetOccupation()
                 {
-                  Name = item.Name,
-                  Group = item.Group,
-                  //Area = proc.ProcessLevelOne.Area,
-                  Line = item.Line,
-                  Skills = item.Skills,
-                  Schooling = item.Schooling,
-                  Activities = item.Activities,
-                  Template = item.Template,
-                  //ProcessLevelTwo = proc,
-                  CBO = item.CBO,
-                  SpecificRequirements = item.SpecificRequirements,
-                  Process = item.Process,
-                  _id = item._id,
-                  _idAccount = item._idAccount,
-                  Status = item.Status,
-                  //Areas = item.Areas,
-                  SalaryScales = item.SalaryScales, 
+                  _idOccupation = item._id,
+                  NameOccupation = item.Name,
+                  _idProcessLevelTwo = proc._id,
+                  _idGroup = proc.Name
                 });
               }
           }
         }
-        return list.OrderBy(p => p.Name).ToList();
+        return list.OrderBy(p => p.NameOccupation).ToList();
       }
       catch (Exception e)
       {
