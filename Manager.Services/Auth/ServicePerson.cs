@@ -472,7 +472,7 @@ namespace Manager.Services.Auth
           Registration = person.Registration,
           TypeUser = person.TypeUser,
           User = person.User,
-          SalaryScales = new SalaryScalePerson() { _idSalaryScale = person.SalaryScales._idSalaryScale, NameSalaryScale = person.SalaryScales.NameSalaryScale }
+          SalaryScales = person.SalaryScales == null ? null : new SalaryScalePerson() { _idSalaryScale = person.SalaryScales._idSalaryScale, NameSalaryScale = person.SalaryScales.NameSalaryScale }
         };
         /*foreach (var item in person.SalaryScales)
           model.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
