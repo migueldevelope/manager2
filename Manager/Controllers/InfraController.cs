@@ -4,6 +4,7 @@ using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -541,7 +542,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getoccupations/{idcompany}/{idarea}")]
-    public List<Occupation> GetOccupations(string idcompany, string idarea)
+    public List<ViewGetOccupation> GetOccupations(string idcompany, string idarea)
     {
       return service.GetOccupations(idcompany, idarea);
     }

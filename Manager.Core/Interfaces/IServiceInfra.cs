@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Views;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
@@ -40,7 +41,7 @@ namespace Manager.Core.Interfaces
     TextDefault GetTextDefault(string id);
     List<TextDefault> ListTextDefault(string idcompany);
     //List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page);
-    List<Occupation> GetOccupations(string idcompany, string idarea);
+    List<ViewGetOccupation> GetOccupations(string idcompany, string idarea);
     //List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
     ProcessLevelTwo GetProcessLevelTwo(string id);
     List<ProcessLevelTwo> GetProcessLevelTwo();
