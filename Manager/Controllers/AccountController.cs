@@ -89,6 +89,17 @@ namespace Manager.Controllers
     {
       return service.AlterAccountPerson(idperson);
     }
+    /// <summary>
+    /// Trocar de pessoa conectada (apenas usuário administrador/suporte)
+    /// </summary>
+    /// <returns>Autorização de conexão da pessoa</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("synchronize")]
+    public string SynchronizeParameters()
+    {
+      return service.SynchronizeParameters().Result;
+    }
     #endregion
 
     #region Logs

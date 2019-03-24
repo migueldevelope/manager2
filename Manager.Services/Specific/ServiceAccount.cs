@@ -32,8 +32,7 @@ namespace Manager.Services.Specific
     private readonly ServiceLog serviceLog;
 
     #region Constructor
-    public ServiceAccount(DataContext context)
-      : base(context)
+    public ServiceAccount(DataContext context) : base(context)
     {
       try
       {
@@ -117,11 +116,12 @@ namespace Manager.Services.Specific
           Content = "false"
         });
 
-        return await serviceInfra.CopyTemplateInfraAsync(company);
+        await serviceInfra.CopyTemplateInfraAsync(company);
+        return "Account created!";
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, _context);
+        throw e;
       }
     }
     #endregion
@@ -194,6 +194,14 @@ namespace Manager.Services.Specific
       {
         throw e;
       }
+    }
+    #endregion
+
+    #region 
+    public async Task<string> SynchronizeParameters()
+    {
+      await serviceInfra.SynchronizeParametersAsync();
+      return "Parameters synchonized!";
     }
     #endregion
 

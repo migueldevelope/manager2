@@ -500,6 +500,17 @@ namespace Manager.Data
         throw;
       }
     }
+    public List<T> GetAllNewVersion()
+    {
+      try
+      {
+        return _collection.AsQueryable<T>().Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled).ToList();
+      }
+      catch
+      {
+        throw;
+      }
+    }
     public async Task<long> CountNewVersion(Expression<Func<T, bool>> filter)
     {
       try

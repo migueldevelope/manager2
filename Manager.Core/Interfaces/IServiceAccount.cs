@@ -17,7 +17,7 @@ namespace Manager.Core.Interfaces
     List<ViewListAccount> GetAll(ref long total, int count = 10, int page = 1, string filter = "");
     ViewPerson AlterAccount(string idaccount);
     ViewPerson AlterAccountPerson(string idperson);
-
+    Task<string> SynchronizeParameters();
     Account GeAccount(Expression<Func<Account, bool>> filter);
   }
 }

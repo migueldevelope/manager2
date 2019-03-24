@@ -25,48 +25,52 @@ namespace Manager.Services.Specific
 #pragma warning disable 4014
   public class ServiceInfra : Repository<Group>, IServiceInfra
   {
-    private readonly ServiceGeneric<Sphere> sphereService;
-    private readonly ServiceGeneric<DictionarySphere> dictionarySphereService;
-    private readonly ServiceGeneric<Axis> axisService;
-    private readonly ServiceGeneric<Group> groupService;
-    private readonly ServiceGeneric<Occupation> occupationService;
+    private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceGeneric<Area> areaService;
+    private readonly ServiceGeneric<Axis> axisService;
+    private readonly ServiceGeneric<Cbo> cboService;
     private readonly ServiceGeneric<Company> companyService;
-    private readonly ServiceGeneric<Skill> skillService;
-    private readonly ServiceGeneric<Schooling> schoolingService;
-    private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<CompanyMandatory> companyMandatoryService;
+    private readonly ServiceGeneric<DictionarySphere> dictionarySphereService;
+    private readonly ServiceGeneric<Group> groupService;
+    private readonly ServiceGeneric<MailModel> mailModelService;
+    private readonly ServiceGeneric<Occupation> occupationService;
+    private readonly ServiceGeneric<OccupationMandatory> occupationMandatoryService;
     private readonly ServiceGeneric<Parameter> parameterService;
+    private readonly ServiceGeneric<Person> personService;
     private readonly ServiceGeneric<ProcessLevelOne> processLevelOneService;
     private readonly ServiceGeneric<ProcessLevelTwo> processLevelTwoService;
     private readonly ServiceGeneric<Questions> questionsService;
+    private readonly ServiceGeneric<Schooling> schoolingService;
+    private readonly ServiceGeneric<Skill> skillService;
+    private readonly ServiceGeneric<Sphere> sphereService;
     private readonly ServiceGeneric<TextDefault> textDefaultService;
-    private readonly ServiceGeneric<Cbo> cboService;
-    private readonly ServiceGeneric<OccupationMandatory> occupationMandatoryService;
-    private readonly ServiceGeneric<CompanyMandatory> companyMandatoryService;
 
     public ServiceInfra(DataContext context)
       : base(context)
     {
       try
       {
-        sphereService = new ServiceGeneric<Sphere>(context);
-        dictionarySphereService = new ServiceGeneric<DictionarySphere>(context);
-        axisService = new ServiceGeneric<Axis>(context);
-        groupService = new ServiceGeneric<Group>(context);
+        accountService = new ServiceGeneric<Account>(context);
         areaService = new ServiceGeneric<Area>(context);
+        axisService = new ServiceGeneric<Axis>(context);
+        cboService = new ServiceGeneric<Cbo>(context);
         companyService = new ServiceGeneric<Company>(context);
-        skillService = new ServiceGeneric<Skill>(context);
-        schoolingService = new ServiceGeneric<Schooling>(context);
-        personService = new ServiceGeneric<Person>(context);
+        companyMandatoryService = new ServiceGeneric<CompanyMandatory>(context);
+        dictionarySphereService = new ServiceGeneric<DictionarySphere>(context);
+        groupService = new ServiceGeneric<Group>(context);
+        mailModelService = new ServiceGeneric<MailModel>(context);
+        occupationService = new ServiceGeneric<Occupation>(context);
+        occupationMandatoryService = new ServiceGeneric<OccupationMandatory>(context);
         parameterService = new ServiceGeneric<Parameter>(context);
+        personService = new ServiceGeneric<Person>(context);
         processLevelOneService = new ServiceGeneric<ProcessLevelOne>(context);
         processLevelTwoService = new ServiceGeneric<ProcessLevelTwo>(context);
         questionsService = new ServiceGeneric<Questions>(context);
+        schoolingService = new ServiceGeneric<Schooling>(context);
+        skillService = new ServiceGeneric<Skill>(context);
+        sphereService = new ServiceGeneric<Sphere>(context);
         textDefaultService = new ServiceGeneric<TextDefault>(context);
-        cboService = new ServiceGeneric<Cbo>(context);
-        occupationMandatoryService = new ServiceGeneric<OccupationMandatory>(context);
-        occupationService = new ServiceGeneric<Occupation>(context);
-        companyMandatoryService = new ServiceGeneric<CompanyMandatory>(context);
       }
       catch (Exception e)
       {
@@ -74,8 +78,8 @@ namespace Manager.Services.Specific
       }
     }
 
-    #region Copy Tamplate New Account
-    public async Task<string> CopyTemplateInfraAsync(Company company)
+    #region Copy Template New Account
+    public async Task CopyTemplateInfraAsync(Company company)
     {
       try
       {
@@ -107,7 +111,15 @@ namespace Manager.Services.Specific
           item.Company = company;
           item._idAccount = _user._idAccount;
           item._id = ObjectId.GenerateNewId().ToString();
-          textDefaultService.InsertAccount(item);
+          textDefaultService.InsertFreeNewVersion(item);
+        }
+
+        // MailModel
+        foreach (MailModel item in mailModelService.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          item._idAccount = _user._idAccount;
+          item._id = ObjectId.GenerateNewId().ToString();
+          mailModelService.InsertFreeNewVersion(item);
         }
 
         // Questions
@@ -251,7 +263,6 @@ namespace Manager.Services.Specific
           item._id = ObjectId.GenerateNewId().ToString();
           groupService.InsertFreeNewVersion(item);
         }
-        return "Account created!";
       }
       catch (Exception e)
       {
@@ -260,7 +271,114 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+    #region Synchronize Parameters
+    public async Task SynchronizeParametersAsync()
+    {
+      try
+      {
+        // Identificação da conta raiz do ANALISA
+        var idresolution = "5b6c4f47d9090156f08775aa";
+        // TODO: ver multi empresas
+        Company company = companyService.GetAllNewVersion().FirstOrDefault();
 
+        List<Account> accounts = accountService.GetAllFreeNewVersion(p => p._id != idresolution).Result;
+
+        // Parameter
+        foreach (Parameter item in parameterService.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          Parameter local;
+          foreach (Account subitem in accounts)
+          {
+            local = parameterService.GetFreeNewVersion(p => p._idAccount == subitem._id && p.Name == item.Name).Result;
+            if (local == null)
+            {
+              item._id = ObjectId.GenerateNewId().ToString();
+              item._idAccount = subitem._id;
+              parameterService.InsertFreeNewVersion(item);
+            }
+          }
+        }
+
+        // Text default
+        foreach (TextDefault item in textDefaultService.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          TextDefault local;
+          foreach (Account subitem in accounts)
+          {
+            company = companyService.GetAllFreeNewVersion(p => p._idAccount == subitem._id).Result.FirstOrDefault();
+            local = textDefaultService.GetFreeNewVersion(p => p._idAccount == subitem._id && p.TypeText == item.TypeText).Result;
+            if (local == null)
+            {
+              item.Template = new TextDefault()
+              {
+                _id = item._id,
+                _idAccount = item._idAccount,
+                Company = item.Company,
+                Name = item.Name,
+                TypeText = item.TypeText,
+                Content = item.Content,
+                Status = item.Status,
+                Template = null
+              };
+              item.Company = company;
+              item._idAccount = subitem._id;
+              item._id = ObjectId.GenerateNewId().ToString();
+              textDefaultService.InsertFreeNewVersion(item);
+            }
+          }
+        }
+        // MailModel
+        foreach (MailModel item in mailModelService.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          MailModel local;
+          foreach (Account subitem in accounts)
+          {
+            local = mailModelService.GetFreeNewVersion(p => p._idAccount == subitem._idAccount && p.Name == item.Name).Result;
+            if (local == null)
+            {
+              item._idAccount = subitem._id;
+              item._id = ObjectId.GenerateNewId().ToString();
+              mailModelService.InsertFreeNewVersion(item);
+            }
+          }
+        }
+        // Questions
+        foreach (Questions item in questionsService.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          Questions local;
+          foreach (Account subitem in accounts)
+          {
+            company = companyService.GetAllFreeNewVersion(p => p._idAccount == subitem._id).Result.FirstOrDefault();
+            local = questionsService.GetFreeNewVersion(p => p._idAccount == subitem._idAccount && p.Name == item.Name).Result;
+            if (local == null)
+            {
+              item.Template = new Questions()
+              {
+                Content = item.Content,
+                Company = item.Company,
+                Name = item.Name,
+                Order = item.Order,
+                Status = item.Status,
+                TypeQuestion = item.TypeQuestion,
+                TypeRotine = item.TypeRotine,
+                _idAccount = item._idAccount,
+                _id = item._id,
+                Template = null
+              };
+              item.Company = company;
+              item._idAccount = subitem._id;
+              item._id = ObjectId.GenerateNewId().ToString();
+              questionsService.InsertFreeNewVersion(item);
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
 
     public string AddArea(Area view)
     {
@@ -558,13 +676,15 @@ namespace Manager.Services.Specific
           //Areas = areas,
           SalaryScales = new List<SalaryScaleGrade>()
         };
-        foreach (var item in view.SalaryScales)
+        if (view.SalaryScales != null)
         {
-          item._id = ObjectId.GenerateNewId().ToString();
-          item._idAccount = _user._idAccount;
-          occupation.SalaryScales.Add(item);
+          foreach (var item in view.SalaryScales)
+          {
+            item._id = ObjectId.GenerateNewId().ToString();
+            item._idAccount = _user._idAccount;
+            occupation.SalaryScales.Add(item);
+          }
         }
-
         occupationService.Insert(occupation);
         return "ok";
       }
@@ -2187,13 +2307,16 @@ namespace Manager.Services.Specific
         //occupation.Areas = areas;
         var list = occupation.SalaryScales;
         occupation.SalaryScales = new List<SalaryScaleGrade>();
-        foreach (var item in list)
+        if (list != null)
         {
-          if(item._id == null)
-            item._id = ObjectId.GenerateNewId().ToString();
+          foreach (var item in list)
+          {
+            if (item._id == null)
+              item._id = ObjectId.GenerateNewId().ToString();
 
-          item._idAccount = _user._idAccount;
-          occupation.SalaryScales.Add(item);
+            item._idAccount = _user._idAccount;
+            occupation.SalaryScales.Add(item);
+          }
         }
 
         occupationService.Update(occupation, null);
