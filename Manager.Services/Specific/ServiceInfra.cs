@@ -18,6 +18,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Manager.Views.Enumns;
 using Manager.Views.BusinessView;
+using Manager.Core.BusinessModel;
 
 namespace Manager.Services.Specific
 {
@@ -1026,9 +1027,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in occupationService.GetAuthentication(p => p.CBO._id == cbo._id).ToList())
+        foreach (var item in occupationService.GetAuthentication(p => p.Cbo._id == cbo._id).ToList())
         {
-          item.CBO = cbo;
+          item.Cbo = cbo;
           occupationService.UpdateAccount(item, null);
           UpdateOccupationAllCBO(item);
         }
@@ -1867,7 +1868,7 @@ namespace Manager.Services.Specific
                   Schooling = item.Schooling,
                   Activities = item.Activities,
                   Template = item.Template,
-                  CBO = item.CBO,
+                  Cbo = item.Cbo,
                   SpecificRequirements = item.SpecificRequirements,
                   Process = item.Process,
                   _id = item._id,

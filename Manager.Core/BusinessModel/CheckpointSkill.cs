@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.Business;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// Coleção para o checkpoint

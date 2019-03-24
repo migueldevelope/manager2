@@ -2,7 +2,7 @@
 using Manager.Core.Enumns;
 using System;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// Coleção para comentarios onboarding/monitoring

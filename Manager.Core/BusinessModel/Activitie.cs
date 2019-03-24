@@ -1,11 +1,11 @@
 ﻿using Manager.Core.Base;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
-  ///  Coleção para grupo de cargo
+  /// Coleção utilizada paras entregas
   /// </summary>
-  public class Scope : BaseEntity
+  public class Activitie : BaseEntity
   {
     public string Name { get; set; }
     public long Order { get; set; }

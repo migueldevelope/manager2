@@ -1,7 +1,8 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using System.Collections.Generic;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// Coleção para perguntas do checkpoint

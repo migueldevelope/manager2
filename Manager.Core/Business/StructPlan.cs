@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 
 namespace Manager.Core.Business

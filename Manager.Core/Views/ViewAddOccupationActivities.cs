@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Business;
+using Manager.Core.BusinessModel;
 
 namespace Manager.Core.Views
 {

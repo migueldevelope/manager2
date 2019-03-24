@@ -1,6 +1,6 @@
 ﻿using Manager.Core.Base;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// Coleção para presenças de treinamento

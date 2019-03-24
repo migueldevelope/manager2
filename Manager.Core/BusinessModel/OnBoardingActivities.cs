@@ -2,7 +2,7 @@
 using Manager.Core.Enumns;
 using System.Collections.Generic;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// Coleção para entregas de onboarding

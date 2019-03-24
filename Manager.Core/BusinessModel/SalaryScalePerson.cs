@@ -1,4 +1,4 @@
-﻿namespace Manager.Core.Business
+﻿namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// coleção

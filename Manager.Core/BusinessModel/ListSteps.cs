@@ -1,7 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.Enumns;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// coleção para steps de um grade da tabela salarial

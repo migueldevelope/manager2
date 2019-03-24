@@ -1,15 +1,16 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using System.Collections.Generic;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
-  /// Coleção para escolaridade do onboarding
+  /// Coleção para skills de onboarding
   /// </summary>
-  public class OnBoardingSchooling : BaseEntity
+  public class OnBoardingSkills : BaseEntity
   {
-    public Schooling Schooling { get; set; }
+    public Skill Skill { get; set; }
     public string CommentsManager { get; set; }
     public string CommentsPerson { get; set; }
     public List<ListComments> Comments { get; set; }

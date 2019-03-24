@@ -1,9 +1,10 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// Coleção para acreditação

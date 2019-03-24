@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Business;
+using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Views;
 using Manager.Views.BusinessView;

@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.BusinessModel;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 

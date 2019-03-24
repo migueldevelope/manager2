@@ -1,7 +1,7 @@
 ﻿using Manager.Core.Base;
 using System;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
   /// Coleção para dias de treinamento da turma
