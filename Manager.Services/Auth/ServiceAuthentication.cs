@@ -222,7 +222,7 @@ namespace Manager.Services.Auth
         {
           Description = "Login",
           Local = "Authentication",
-          Person = user
+          _idPerson = user._id
         });
       }
       catch (Exception e)

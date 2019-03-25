@@ -114,7 +114,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlogs/{idaccount}")]
-    public List<Log> GetLogs(string idaccount, int count = 10, int page = 1, string filter = "")
+    public List<ViewListLog> GetLogs(string idaccount, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = serviceLog.GetLogs(idaccount, ref total, count, page, filter);

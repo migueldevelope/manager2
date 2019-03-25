@@ -1266,7 +1266,7 @@ namespace Manager.Services.Specific
         {
           Description = "Access OnBoarding ",
           Local = local,
-          Person = user
+          _idPerson = user._id
         };
         logService.NewLog(log);
       }

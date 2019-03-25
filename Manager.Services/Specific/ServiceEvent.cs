@@ -1119,7 +1119,7 @@ namespace Manager.Services.Specific
         {
           Description = "Access Event ",
           Local = local,
-          Person = user
+          _idPerson = user._id
         };
         logService.NewLog(log);
       }

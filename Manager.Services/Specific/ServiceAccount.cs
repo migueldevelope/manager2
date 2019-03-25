@@ -187,7 +187,7 @@ namespace Manager.Services.Specific
           {
             Description = string.Format("Alter Account/User out: {0}/{1} - in: {2}/{3}", servicePerson._user.NameAccount, servicePerson._user.NamePerson, serviceAccount.GetFreeNewVersion(p => p._id == person._idAccount).Result.Name, person.User.Name),
             Local = local,
-            Person = person
+            _idPerson = person._id
           });
       }
       catch (Exception e)

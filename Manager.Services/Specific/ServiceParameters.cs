@@ -4,6 +4,8 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Parameter> parameterService;
     private readonly ServiceGeneric<Person> personService;
 
+    #region Constructor
     public BaseUser user { get => _user; set => user = _user; }
 
     public ServiceParameters(DataContext context)
@@ -46,31 +49,10 @@ namespace Manager.Services.Specific
       personService._user = baseUser;
     }
 
-    public string New(Parameter view)
-    {
-      try
-      {
-        parameterService.Insert(view);
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
 
-    public string Update(Parameter view)
-    {
-      try
-      {
-        parameterService.Update(view, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    #endregion
+
+
 
     public string Remove(string id)
     {
@@ -87,7 +69,118 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Parameter Get(string id)
+    public string New(ViewCrudParameter view)
+    {
+      try
+      {
+        parameterService.Insert(new Parameter() { _id = view._id, Name = view.Name, Content = view.Content });
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string Update(ViewCrudParameter view)
+    {
+      try
+      {
+        var parameter = parameterService.GetAll(p => p._id == view._id).FirstOrDefault();
+        parameter.Name = view.Name;
+        parameter.Content = view.Content;
+        parameterService.Update(parameter, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudParameter Get(string id)
+    {
+      try
+      {
+        return parameterService.GetAll(p => p._id == id).Select(p => new ViewCrudParameter()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Content = p.Content
+        }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudParameter GetName(string name)
+    {
+      try
+      {
+        return parameterService.GetAll(p => p.Name == name).Select(p => new ViewCrudParameter()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Content = p.Content
+        }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListParameter> List(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = parameterService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = parameterService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail.Select(p => new ViewListParameter()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Content = p.Content
+        }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    #region Old
+    public string NewOld(Parameter view)
+    {
+      try
+      {
+        parameterService.Insert(view);
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateOld(Parameter view)
+    {
+      try
+      {
+        parameterService.Update(view, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public Parameter GetOld(string id)
     {
       try
       {
@@ -99,7 +192,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Parameter GetName(string name)
+    public Parameter GetNameOld(string name)
     {
       try
       {
@@ -111,7 +204,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Parameter> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<Parameter> ListOld(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -126,6 +219,8 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+    #endregion
+
   }
 
 }

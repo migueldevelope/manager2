@@ -7,7 +7,7 @@ namespace Manager.Core.Views
 {
   public class ViewLog
   {
-    public Person Person { get; set; }
+    public string _idPerson { get; set; }
     public string Local { get; set; }
     public string Description { get; set; }
   }

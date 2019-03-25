@@ -91,16 +91,7 @@ namespace Manager.Services.Specific
         var log = new ViewLog
         {
           Description = "Service Notification",
-          Person = new Person()
-          {
-            User = new User
-            {
-              Name = "Service",
-              Mail = "suporte@jmsoft.com.br"
-            },
-            Status = EnumStatus.Enabled,
-            StatusUser = EnumStatusUser.Enabled
-          },
+          _idPerson = null,
           Local = "ManagerMessages"
         };
 

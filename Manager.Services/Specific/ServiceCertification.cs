@@ -182,7 +182,7 @@ namespace Manager.Services.Specific
         {
           Description = "Access Certification ",
           Local = local,
-          Person = user
+          _idPerson = user._id
         };
         logService.NewLog(log);
       }

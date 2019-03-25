@@ -2003,7 +2003,7 @@ namespace Manager.Services.Specific
         {
           Description = "Access Plan ",
           Local = local,
-          Person = user
+          _idPerson = user._id
         };
         logService.NewLog(log);
       }

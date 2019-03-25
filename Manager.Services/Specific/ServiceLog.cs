@@ -4,6 +4,7 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace Manager.Services.Specific
   {
 
     private readonly ServiceGeneric<Log> serviceLog;
+    private readonly ServiceGeneric<Person> personService;
 
     #region Constructor
     public ServiceLog(DataContext context) : base(context)
@@ -22,6 +24,7 @@ namespace Manager.Services.Specific
       try
       {
         serviceLog = new ServiceGeneric<Log>(context);
+        personService = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
       {
@@ -32,6 +35,7 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
       serviceLog._user = _user;
+      personService._user = _user;
     }
     #endregion
 
@@ -40,9 +44,10 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var person = personService.GetAll(p => p._id == view._idPerson).FirstOrDefault();
         var log = new Log
         {
-          Person = view.Person,
+          Person = person,
           DataLog = DateTime.Now,
           Description = view.Description,
           Status = EnumStatus.Enabled,
@@ -55,14 +60,20 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<Log> GetLogs(string idaccount, ref long total, int count, int page, string filter)
+    public List<ViewListLog> GetLogs(string idaccount, ref long total, int count, int page, string filter)
     {
       try
       {
         int skip = (count * (page - 1));
         List<Log> detail = serviceLog.GetAllFreeNewVersion(p => p.Person._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "DataLog DESC").Result;
         total = serviceLog.CountFreeNewVersion(p => p.Person._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail.ToList();
+        return detail.Select(p => new ViewListLog()
+        {
+          DataLog = p.DataLog,
+          Description = p.Description,
+          Local = p.Local,
+          Person = (p.Person == null)? "Service" : p.Person.User.Name
+        }).ToList();
       }
       catch (Exception e)
       {
