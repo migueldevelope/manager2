@@ -620,11 +620,21 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<Person> GetPersons(string idcompany, string filter)
+    public List<ViewListPerson> GetPersons(string idcompany, string filter)
     {
       try
       {
-        return personService.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        return personService.GetAll(p => p.Company._id == idcompany & p.StatusUser
+        != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
+        & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+         .Select(item => new ViewListPerson()
+         {
+           _id = item._id,
+           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+           Establishment = new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
+           Registration = item.Registration,
+           User = new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
+         }).ToList();
       }
       catch (Exception e)
       {
@@ -736,32 +746,57 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<Occupation> ListOccupation(ref long total, string filter, int count, int page)
+    public List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = occupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+      var detail = occupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
+        .Skip(skip).Take(count).ToList()
+        ;
       total = occupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-      return detail;
+      return detail.Select(p => new ViewListOccupation()
+      {
+        _id = p._id,
+        Name = p.Name,
+        Company = new ViewListCompany() { _id = p.Group.Company._id, Name = p.Group.Company.Name },
+        Group = new ViewListGroup()
+        {
+          _id = p.Group._id,
+          Name = p.Group.Name,
+          Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
+          Line = p.Group.Line,
+          Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, TypeSphere = p.Group.Sphere.TypeSphere, Name = p.Group.Sphere.Name },
+        }
+      }).ToList();
+
     }
 
-    public List<Person> ListManager(ref long total, string filter, int count, int page)
+    public List<ViewListPerson> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).ToList();
+      var detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+        .OrderBy(p => p.User.Name)
+         .Select(item => new ViewListPerson()
+         {
+           _id = item._id,
+           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+           Establishment = new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
+           Registration = item.Registration,
+           User = new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
+         }).ToList();
       //var detail = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       //total = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
       return detail;
     }
 
-    public List<Company> ListCompany(ref long total, string filter, int count, int page)
+    public List<ViewListCompany> ListCompany(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
       var detail = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
       total = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).Count();
 
-      return detail;
+      return detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name }).ToList();
     }
 
     public void SetUser(BaseUser baseUser)

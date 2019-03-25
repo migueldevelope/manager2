@@ -21,6 +21,12 @@ namespace Manager.Core.Interfaces
     ViewCrudPerson UpdatePerson(ViewCrudPerson person);
     List<SalaryScalePerson> ListSalaryScale(string idoccupation);
 
+    List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page);
+    List<ViewListPerson> ListManager(ref long total, string filter, int count, int page);
+    List<ViewListCompany> ListCompany(ref long total, string filter, int count, int page);
+
+    List<ViewListPerson> GetPersons(string idcompany, string filter);
+
     #region Old
     List<Person> ListPerson(Expression<Func<Person, bool>> filter);
     BaseUser user { get; set; }
@@ -37,13 +43,10 @@ namespace Manager.Core.Interfaces
     List<ViewPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page);
     string GetPhoto(string idPerson);
     List<ViewPersonList> GetPersons(string filter);
-    List<Person> GetPersons(string idcompany, string filter);
     List<Person> GetPersonsCrud(EnumTypeUser type, ref long total, string filter, int count, int page);
     Person GetPersonCrudOld(string idperson);
     Person GetPerson(string id);
-    List<Occupation> ListOccupation(ref long total, string filter, int count, int page);
-    List<Person> ListManager(ref long total, string filter, int count, int page);
-    List<Company> ListCompany(ref long total, string filter, int count, int page);
+
     List<Person> ListAll();
 
     string AddPersonUser(ViewPersonUser view);

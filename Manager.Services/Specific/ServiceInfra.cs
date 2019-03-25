@@ -1027,9 +1027,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in occupationService.GetAuthentication(p => p.Cbo._id == cbo._id).ToList())
+        foreach (var item in occupationService.GetAuthentication(p => p.CBO._id == cbo._id).ToList())
         {
-          item.Cbo = cbo;
+          item.CBO = cbo;
           occupationService.UpdateAccount(item, null);
           UpdateOccupationAllCBO(item);
         }
@@ -1868,7 +1868,7 @@ namespace Manager.Services.Specific
                   Schooling = item.Schooling,
                   Activities = item.Activities,
                   Template = item.Template,
-                  Cbo = item.Cbo,
+                  CBO = item.CBO,
                   SpecificRequirements = item.SpecificRequirements,
                   Process = item.Process,
                   _id = item._id,

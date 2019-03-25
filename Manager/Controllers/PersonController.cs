@@ -57,7 +57,7 @@ namespace Manager.Controllers
     /// <returns>Lista de pessoas da tela de manutenção</returns>
     [Authorize]
     [HttpGet]
-    [Route("n/list/{type}")]
+    [Route("list/{type}")]
     public List<ViewListPersonCrud> GetList(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
@@ -72,7 +72,7 @@ namespace Manager.Controllers
     /// <returns>Objeto de alteração da pessoa</returns>
     [Authorize]
     [HttpGet]
-    [Route("n/edit/{idperson}")]
+    [Route("edit/{idperson}")]
     public ViewCrudPerson GetEdit(string id)
     {
       return service.GetPersonCrud(id);
@@ -84,7 +84,7 @@ namespace Manager.Controllers
     /// <returns>Objeto da pessoa incluída</returns>
     [Authorize]
     [HttpPost]
-    [Route("n/new")]
+    [Route("new")]
     public ViewCrudPerson Post([FromBody] ViewCrudPerson view)
     {
       return service.NewPerson(view);
@@ -96,7 +96,7 @@ namespace Manager.Controllers
     /// <returns>Objeto da pessoa alterada</returns>
     [Authorize]
     [HttpPut]
-    [Route("n/update")]
+    [Route("update")]
     public ViewCrudPerson Put([FromBody] ViewCrudPerson view)
     {
       return service.UpdatePerson(view);
@@ -146,7 +146,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersons/{idcompany}")]
-    public List<Person> ListPersons(string idcompany, string filter = "")
+    public List<ViewListPerson> ListPersons(string idcompany, string filter = "")
     {
       return service.GetPersons(idcompany, filter);
     }
@@ -161,7 +161,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("list/{type}")]
+    [Route("old/list/{type}")]
     public List<Person> ListOld(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
@@ -172,7 +172,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("{idperson}/edit")]
+    [Route("old/{idperson}/edit")]
     public Person GetEditOld(string idperson)
     {
       return service.GetPersonCrudOld(idperson); ;
@@ -180,7 +180,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("new")]
+    [Route("old/new")]
     public Person Post([FromBody] Person person)
     {
       return service.NewPersonView(person);
@@ -188,7 +188,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("update")]
+    [Route("old/update")]
     public string Put([FromBody] Person person)
     {
       service.UpdatePersonView(person);
@@ -198,7 +198,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupation")]
-    public List<Occupation> ListOccupation(int count = 10, int page = 1, string filter = "")
+    public List<ViewListOccupation> ListOccupation(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListOccupation(ref total, filter, count, page);
@@ -209,7 +209,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcompany")]
-    public List<Company> ListCompany(int count = 10, int page = 1, string filter = "")
+    public List<ViewListCompany> ListCompany(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListCompany(ref total, filter, count, page);
@@ -220,7 +220,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager")]
-    public List<Person> ListManager(int count = 10, int page = 1, string filter = "")
+    public List<ViewListPerson> ListManager(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListManager(ref total, filter, count, page);
@@ -246,7 +246,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("n/listsalaryscale/{idoccupation}")]
+    [Route("listsalaryscale/{idoccupation}")]
     public List<SalaryScalePerson> ListSalaryScale(string idoccupation)
     {
       return service.ListSalaryScale(idoccupation);

@@ -79,7 +79,7 @@ namespace Manager.Controllers
 
     #region Old
     [HttpPost]
-    [Route("new")]
+    [Route("old/new")]
     public string PostOld([FromBody]Parameter view)
     {
       return service.NewOld(view);
@@ -87,7 +87,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("list")]
+    [Route("old/list")]
     public List<Parameter> ListOld(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
@@ -98,7 +98,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("get/{id}")]
+    [Route("old/get/{id}")]
     public Parameter ListOld(string id)
     {
       return service.GetOld(id);
@@ -106,7 +106,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getname/{name}")]
+    [Route("old/getname/{name}")]
     public Parameter GetNameOld(string name)
     {
       return service.GetNameOld(name);
@@ -114,7 +114,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("update")]
+    [Route("old/update")]
     public string UpdateOld([FromBody]Parameter view)
     {
       return service.UpdateOld(view);
