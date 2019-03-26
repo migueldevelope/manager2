@@ -1,12 +1,9 @@
-﻿using Manager.Core.Enumns;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using Manager.Views.Enumns;
 
-namespace Manager.Core.Views
+namespace Manager.Views.BusinessView
 {
   public class ViewAutoManagerPerson
   {
-    [BsonRepresentation(BsonType.ObjectId)]
     public string IdPerson { get; set; }
     public string NamePerson { get; set; }
     public EnumStatusAutoManagerView Status { get; set; }

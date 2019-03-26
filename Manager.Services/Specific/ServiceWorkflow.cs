@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Manager.Core.Base;
+using Manager.Views.BusinessView;
 
 namespace Manager.Services.Specific
 {

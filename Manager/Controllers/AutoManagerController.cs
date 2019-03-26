@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Manager.Core.Interfaces;
-using Manager.Core.Views;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,36 +8,49 @@ using Tools;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador para auto gestão de equipe
+  /// </summary>
   [Produces("application/json")]
   [Route("automanager")]
   public class AutoManagerController : Controller
   {
     private readonly IServiceAutoManager service;
 
-
-    public AutoManagerController(IHttpContextAccessor contextAccessor, IServiceAutoManager _service)
+    #region Constructor
+    /// <summary>
+    /// Construtor do controlador
+    /// </summary>
+    /// <param name="_service">Serviço de auto gestão de equipe</param>
+    /// <param name="contextAccessor">Token de segurança</param>
+    public AutoManagerController(IServiceAutoManager _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
+    #endregion
 
-    [Authorize]
-    [HttpDelete]
-    [Route("{idperson}/delete")]
-    public ObjectResult Delete(string idperson)
-    {
-      service.DeleteManager(idperson);
-      return Ok("Person deleted!");
-    }
-
+    #region Auto Gestão
+    /// <summary>
+    /// Retornar lista de aprovações para o gestor
+    /// </summary>
+    /// <param name="idmanager">Identificador do gestor</param>
+    /// <returns>Lista de aprovações pendentes</returns>
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/listapproved")]
-    public List<ViewAutoManager> GetList(string idmanager)
+    public List<ViewAutoManager> GetListApproved(string idmanager)
     {
       return service.GetApproved(idmanager);
     }
-
+    /// <summary>
+    /// Listar colaboradores sem gestão
+    /// </summary>
+    /// <param name="idmanager">Identificação do gestor</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do usuário</param>
+    /// <returns>Lista de colaboradores sem gestão</returns>
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/list")]
@@ -48,42 +61,79 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
+    /// <summary>
+    /// Alterar o gestor do colaborador
+    /// </summary>
+    /// <param name="view">Informações do gestor</param>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
     [Route("{idperson}/new")]
-    public string PutNew([FromBody]ViewManager view, string idperson)
+    public IActionResult PutNew([FromBody]ViewManager view, string idperson)
     {
-      var conn = ConnectionNoSqlService.GetConnetionServer();
-      service.SetManagerPerson(view, idperson, conn.TokenServer);
-      return "ok";
+      service.SetManagerPerson(view, idperson, ConnectionNoSqlService.GetConnetionServer().TokenServer);
+      return Ok("Auto manager added!");
     }
-
+    /// <summary>
+    /// Aprovar o gestor do colaborador
+    /// </summary>
+    /// <param name="view">Workflow para aprovação</param>
+    /// <param name="idperson">Identificador do colaborador</param>
+    /// <param name="idmanager">Identificador do gestor</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
     [Route("{idperson}/approved/{idmanager}")]
-    public string PutApproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
+    public IActionResult PutApproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
       service.Approved(view, idperson, idmanager);
-      return "ok";
+      return Ok("Auto manager approved!");
     }
-
+    /// <summary>
+    /// Não aprovar o colaborador para o gestor
+    /// </summary>
+    /// <param name="view">Workflow para negação</param>
+    /// <param name="idperson">Identificador do colaborador</param>
+    /// <param name="idmanager">Identificador do gestor</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
     [Route("{idperson}/disapproved/{idmanager}")]
-    public string PutDisapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
+    public IActionResult PutDisapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
       service.Disapproved(view, idperson, idmanager);
-      return "ok";
+      return Ok("Auto manager disapproved!");
     }
+    /// <summary>
+    /// Exclusão do colaborador da equipe
+    /// </summary>
+    /// <param name="idperson">Identificação do colaborador</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("{idperson}/delete")]
+    public IActionResult Delete(string idperson)
+    {
+      service.DeleteManager(idperson);
+      return Ok("Person deleted!");
+    }
+    #endregion
 
+    /// <summary>
+    /// NÃO UTILIZANDO: Cancelar a solicitação de equipe
+    /// </summary>
+    /// <param name="idperson">Identificador do colaborador</param>
+    /// <param name="idmanager">Identificador do gestor</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("{idperson}/canceled/{idmanager}")]
-    public string PutCanceled(string idperson, string idmanager)
+    public IActionResult PutCanceled(string idperson, string idmanager)
     {
       service.Canceled(idperson, idmanager);
-      return "ok";
+      return Ok("Auto manager canceled!");
     }
+
   }
 }

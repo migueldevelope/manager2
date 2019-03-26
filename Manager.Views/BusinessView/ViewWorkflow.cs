@@ -1,4 +1,4 @@
-﻿namespace Manager.Core.Views
+﻿namespace Manager.Views.BusinessView
 {
   public class ViewWorkflow
   {

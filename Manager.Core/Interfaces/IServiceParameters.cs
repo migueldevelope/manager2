@@ -1,5 +1,4 @@
-﻿using Manager.Core.Base;
-using Manager.Core.Business;
+﻿using Manager.Core.Business;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
@@ -9,11 +8,8 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceParameters
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser baseUser);
     string Remove(string id);
-
     string New(ViewCrudParameter view);
     string Update(ViewCrudParameter view);
     ViewCrudParameter Get(string id);
@@ -27,7 +23,6 @@ namespace Manager.Core.Interfaces
     Parameter GetNameOld(string name);
     List<Parameter> ListOld(ref long total, int count = 10, int page = 1, string filter = "");
     #endregion
-
 
   }
 }

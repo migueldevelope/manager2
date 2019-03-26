@@ -5,6 +5,7 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;
+using Manager.Views.BusinessView;
 using System;
 using System.Collections.Generic;
 using System.Linq;

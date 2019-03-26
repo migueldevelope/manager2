@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
@@ -12,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador de Parâmetros
+  /// </summary>
   [Produces("application/json")]
   [Route("parameters")]
   public class ParametersController : Controller
@@ -19,6 +19,11 @@ namespace Manager.Controllers
     private readonly IServiceParameters service;
 
     #region Constructor
+    /// <summary>
+    /// Contrutor de parâmetros
+    /// </summary>
+    /// <param name="_service">Serviço de parâmetros</param>
+    /// <param name="contextAccessor">Token de segurança</param>
     public ParametersController(IServiceParameters _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
@@ -26,13 +31,25 @@ namespace Manager.Controllers
     }
     #endregion
 
+    #region Parameters
+    /// <summary>
+    /// Incluir um novo parâmetro
+    /// </summary>
+    /// <param name="view">Objeto de manutenção de parâmetros</param>
+    /// <returns>Mensagem de sucesso</returns>
     [HttpPost]
     [Route("new")]
-    public string Post([FromBody]ViewCrudParameter view)
+    public IActionResult Post([FromBody]ViewCrudParameter view)
     {
-      return service.New(view);
+      return Ok(service.New(view));
     }
-
+    /// <summary>
+    /// Lista de parâmetros
+    /// </summary>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do parâmetro</param>
+    /// <returns>Lista de parâmetros</returns>
     [Authorize]
     [HttpGet]
     [Route("list")]
@@ -43,7 +60,11 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
+    /// <summary>
+    /// Buscar um parâmetro para alteração
+    /// </summary>
+    /// <param name="id">Identificador do parâmetro</param>
+    /// <returns>Objeto de manutenão do parâmetro</returns>
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
@@ -51,7 +72,11 @@ namespace Manager.Controllers
     {
       return service.Get(id);
     }
-
+    /// <summary>
+    /// Buscar um parâmetro pelo nome
+    /// </summary>
+    /// <param name="name">Nome para pesquisar</param>
+    /// <returns>Objeto de parâmetro para manutenção</returns>
     [Authorize]
     [HttpGet]
     [Route("getname/{name}")]
@@ -59,23 +84,31 @@ namespace Manager.Controllers
     {
       return service.GetName(name);
     }
-
+    /// <summary>
+    /// Alterar um parâmetro
+    /// </summary>
+    /// <param name="view">Objeto de manutenção do parâmetro</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string Update([FromBody]ViewCrudParameter view)
+    public IActionResult Update([FromBody]ViewCrudParameter view)
     {
-      return service.Update(view);
+      return Ok(service.Update(view));
     }
-
-
+    /// <summary>
+    /// Excluir um parâmetro
+    /// </summary>
+    /// <param name="id">Identificador do parâmetro</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public string Delete(string id)
+    public IActionResult Delete(string id)
     {
-      return service.Remove(id);
+      return Ok(service.Remove(id));
     }
+    #endregion
 
     #region Old
     [HttpPost]

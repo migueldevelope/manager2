@@ -1,6 +1,6 @@
-﻿using Manager.Core.Enumns;
+﻿using Manager.Views.Enumns;
 
-namespace Manager.Core.Views
+namespace Manager.Views.BusinessView
 {
   public class ViewManager
   {

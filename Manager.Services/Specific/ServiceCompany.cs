@@ -6,9 +6,7 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
-using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,26 +15,22 @@ namespace Manager.Services.Specific
 {
   public class ServiceCompany : Repository<Company>, IServiceCompany
   {
-    private readonly ServiceGeneric<Company> companyService;
-    private readonly ServiceGeneric<Establishment> establishmentService;
-    private readonly ServiceGeneric<Person> personService;
-    private readonly ServiceGeneric<SalaryScale> salaryScaleService;
-    private readonly ServiceGeneric<Grade> gradeService;
+    private readonly ServiceGeneric<Company> serviceCompany;
+    private readonly ServiceGeneric<Establishment> serviceEstablishment;
+    private readonly ServiceGeneric<Grade> serviceGrade;
+    private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
 
     #region Constructor
-    public BaseUser user { get => _user; set => user = _user; }
-
-
-    public ServiceCompany(DataContext context)
-      : base(context)
+    public ServiceCompany(DataContext context) : base(context)
     {
       try
       {
-        companyService = new ServiceGeneric<Company>(context);
-        personService = new ServiceGeneric<Person>(context);
-        establishmentService = new ServiceGeneric<Establishment>(context);
-        salaryScaleService = new ServiceGeneric<SalaryScale>(context);
-        gradeService = new ServiceGeneric<Grade>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
+        serviceEstablishment = new ServiceGeneric<Establishment>(context);
+        serviceGrade = new ServiceGeneric<Grade>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
       }
       catch (Exception e)
       {
@@ -47,21 +41,21 @@ namespace Manager.Services.Specific
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
-      companyService._user = _user;
-      personService._user = _user;
-      establishmentService._user = _user;
-      salaryScaleService._user = _user;
-      gradeService._user = _user;
+      serviceCompany._user = _user;
+      servicePerson._user = _user;
+      serviceEstablishment._user = _user;
+      serviceSalaryScale._user = _user;
+      serviceGrade._user = _user;
     }
 
     public void SetUser(BaseUser baseUser)
     {
       _user = baseUser;
-      companyService._user = baseUser;
-      personService._user = baseUser;
-      establishmentService._user = baseUser;
-      salaryScaleService._user = baseUser;
-      gradeService._user = baseUser;
+      serviceCompany._user = baseUser;
+      servicePerson._user = baseUser;
+      serviceEstablishment._user = baseUser;
+      serviceSalaryScale._user = baseUser;
+      serviceGrade._user = baseUser;
     }
     #endregion
 
@@ -70,24 +64,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = companyService.GetAll(p => p._id == id).FirstOrDefault();
+        Company item = serviceCompany.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        companyService.Update(item, null);
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string RemoveEstablishment(string id)
-    {
-      try
-      {
-        var item = establishmentService.GetAll(p => p._id == id).FirstOrDefault();
-        item.Status = EnumStatus.Disabled;
-        establishmentService.Update(item, null);
-        return "deleted";
+        item = serviceCompany.UpdateNewVersion(item).Result;
+        return "Company deleted!";
       }
       catch (Exception e)
       {
@@ -98,67 +78,69 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var company = companyService.GetAll(p => p._id == idCompany).SingleOrDefault();
+        Company company = serviceCompany.GetNewVersion(p => p._id == idCompany).Result;
         company.Logo = url;
-        companyService.Update(company, null);
+        company = serviceCompany.UpdateNewVersion(company).Result;
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string GetLogo(string idCompany)
     {
       try
       {
-        var company = companyService.GetAll(p => p._id == idCompany).SingleOrDefault();
-        return company.Logo;
+        return serviceCompany.GetNewVersion(p => p._id == idCompany).Result.Logo;
       }
       catch (Exception)
       {
-        return "";
+        return string.Empty;
       }
     }
-
     public string New(ViewCrudCompany view)
     {
       try
       {
-        companyService.Insert(new Company() { _id = view._id, Name = view.Name, Logo = view.Logo });
-        return "add success";
+        Company company = serviceCompany.InsertNewVersion(new Company()
+          {
+            _id = view._id,
+            Name = view.Name,
+            Logo = view.Logo
+          }).Result;
+        return "Company added!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     public string Update(ViewCrudCompany view)
     {
       try
       {
-        var company = companyService.GetAll(p => p._id == view._id).FirstOrDefault();
+        Company company = serviceCompany.GetNewVersion(p => p._id == view._id).Result;
         company.Name = view.Name;
         company.Logo = view.Logo;
-        companyService.Update(company, null);
-        return "update";
+        company = serviceCompany.UpdateNewVersion(company).Result;
+        return "Company altered!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     public ViewCrudCompany Get(string id)
     {
       try
       {
-        return companyService.GetAll(p => p._id == id).Select(p => new ViewCrudCompany()
+        Company company = serviceCompany.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudCompany()
         {
-          _id = p._id,
-          Name = p.Name,
-          Logo = p.Logo
-        }).FirstOrDefault();
+          _id = company._id,
+          Name = company.Name,
+          Logo = company.Logo
+        };
       }
       catch (Exception e)
       {
@@ -169,12 +151,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return companyService.GetAll(p => p.Name.ToLower() == name.ToLower()).Select(p => new ViewCrudCompany()
+        Company company = serviceCompany.GetNewVersion(p => p.Name.ToLower() == name.ToLower()).Result;
+        return new ViewCrudCompany()
         {
-          _id = p._id,
-          Name = p.Name,
-          Logo = p.Logo
-        }).FirstOrDefault();
+          _id = company._id,
+          Name = company.Name,
+          Logo = company.Logo
+        };
       }
       catch (Exception e)
       {
@@ -185,152 +168,150 @@ namespace Manager.Services.Specific
     {
       try
       {
-        int skip = (count * (page - 1));
-        var detail = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail.Select(p => new ViewListCompany
-        {
-          _id = p._id,
-          Name = p.Name
-        }).ToList();
-
+        List<ViewListCompany> detail = serviceCompany.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(x => new ViewListCompany()
+          {
+            _id = x._id,
+            Name = x.Name            
+          }).ToList();
+        total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    #endregion
 
+    #region Establishment
+    public string RemoveEstablishment(string id)
+    {
+      try
+      {
+        Establishment item = serviceEstablishment.GetNewVersion(p => p._id == id).Result;
+        item.Status = EnumStatus.Disabled;
+        item = serviceEstablishment.UpdateNewVersion(item).Result;
+        return "Establishment deleted!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public string NewEstablishment(ViewCrudEstablishment view)
     {
       try
       {
-        var company = companyService.GetAll(p => p._id == view.Company._id).FirstOrDefault();
-        establishmentService.Insert(new Establishment() { _id = view._id, Name = view.Name, Company = company });
-        return "add success";
+        Company company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
+        Establishment establishment = serviceEstablishment.InsertNewVersion(
+          new Establishment()
+          {
+            _id = view._id,
+            Name = view.Name,
+            Company = company
+          }).Result;
+        return "Establishment added!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     public string UpdateEstablishment(ViewCrudEstablishment view)
     {
       try
       {
-        var company = companyService.GetAll(p => p._id == view.Company._id).FirstOrDefault();
-        var establishment = establishmentService.GetAll(p => p._id == view._id).FirstOrDefault();
+        Company company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
+        Establishment establishment = serviceEstablishment.GetNewVersion(p => p._id == view._id).Result;
         establishment.Name = view.Name;
         establishment.Company = company;
-        establishmentService.Update(establishment, null);
-        return "update";
+        establishment = serviceEstablishment.UpdateNewVersion(establishment).Result;
+        return "Establishment altered!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     public ViewCrudEstablishment GetEstablishment(string id)
     {
       try
       {
-        return establishmentService.GetAll(p => p._id == id).Select(p => new ViewCrudEstablishment()
+        Establishment establishment = serviceEstablishment.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudEstablishment()
         {
-          _id = p._id,
-          Name = p.Name,
-          Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name }
-        }).FirstOrDefault();
+          _id = establishment._id,
+          Name = establishment.Name,
+          Company = new ViewListCompany() { _id = establishment.Company._id, Name = establishment.Company.Name }
+        };
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     public ViewCrudEstablishment GetEstablishmentByName(string idCompany, string name)
     {
       try
       {
-        return establishmentService.GetAll(p => p.Name.ToLower() == name.ToLower()).Select(p => new ViewCrudEstablishment()
+        Establishment establishment = serviceEstablishment.GetNewVersion(p => p.Name.ToLower() == name.ToLower() && p.Company._id == idCompany).Result;
+        return new ViewCrudEstablishment()
         {
-          _id = p._id,
-          Name = p.Name,
-          Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name }
-        }).FirstOrDefault();
+          _id = establishment._id,
+          Name = establishment.Name,
+          Company = new ViewListCompany() { _id = establishment.Company._id, Name = establishment.Company.Name }
+        };
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     public List<ViewListEstablishment> ListEstablishment(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        try
-        {
-          int skip = (count * (page - 1));
-          var detail = establishmentService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = establishmentService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-          return detail.Select(p => new ViewListEstablishment
+        List<ViewListEstablishment> detail = serviceEstablishment.GetAllNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(p => new ViewListEstablishment
           {
             _id = p._id,
             Name = p.Name
           }).ToList();
-        }
-        catch (Exception e)
-        {
-          throw new ServiceException(_user, e, this._context);
-        }
+        total = serviceEstablishment.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     public List<ViewListEstablishment> ListEstablishment(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        try
-        {
-          int skip = (count * (page - 1));
-          var detail = establishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = establishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-          return detail.Select(p => new ViewListEstablishment
+        List<ViewListEstablishment> detail = serviceEstablishment.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(p => new ViewListEstablishment
           {
             _id = p._id,
             Name = p.Name
           }).ToList();
-        }
-        catch (Exception e)
-        {
-          throw new ServiceException(_user, e, this._context);
-        }
+        total = serviceEstablishment.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-
     #endregion
-
 
     #region Company Old
     public string NewOld(Company view)
     {
       try
       {
-        companyService.Insert(view);
+        serviceCompany.Insert(view);
         return "add success";
       }
       catch (Exception e)
@@ -343,7 +324,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        companyService.Update(view, null);
+        serviceCompany.Update(view, null);
         return "update";
       }
       catch (Exception e)
@@ -356,7 +337,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return companyService.GetAll(p => p._id == id).FirstOrDefault();
+        return serviceCompany.GetAll(p => p._id == id).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -367,7 +348,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return companyService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+        return serviceCompany.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -379,8 +360,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
 
@@ -395,7 +376,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        establishmentService.Insert(view);
+        serviceEstablishment.Insert(view);
 
         //var grades = gradeService.GetAll(p => p.Company._id == view.Company._id).ToList();
         //foreach (var grade in grades)
@@ -435,7 +416,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        establishmentService.Update(view, null);
+        serviceEstablishment.Update(view, null);
         return "update";
       }
       catch (Exception e)
@@ -448,7 +429,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return establishmentService.GetAll(p => p._id == id).FirstOrDefault();
+        return serviceEstablishment.GetAll(p => p._id == id).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -460,7 +441,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return establishmentService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+        return serviceEstablishment.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -475,8 +456,8 @@ namespace Manager.Services.Specific
         try
         {
           int skip = (count * (page - 1));
-          var detail = establishmentService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = establishmentService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          var detail = serviceEstablishment.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceEstablishment.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
           return detail.ToList();
         }
@@ -498,8 +479,8 @@ namespace Manager.Services.Specific
         try
         {
           int skip = (count * (page - 1));
-          var detail = establishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = establishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          var detail = serviceEstablishment.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceEstablishment.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
           return detail.ToList();
         }
