@@ -5,6 +5,8 @@ using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -42,8 +44,218 @@ namespace Manager.Controllers
     }
     #endregion
 
-    #region Infra Estrutura
+    #region Infra 
+    /// <summary>
+    /// Lista de esferas
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getspheres")]
+    public List<ViewListSphere> GetSpheres()
+    {
+      return service.GetSpheres();
+    }
+
+    /// <summary>
+    /// Lista de esferas filtrando pela empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getspheres/{idcompany}")]
+    public List<ViewListSphere> GetSpheres(string idcompany)
+    {
+      return service.GetSpheres(idcompany);
+    }
+
+    /// <summary>
+    /// Lista escolaridades
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getschooling")]
+    public List<ViewListSchooling> GetSchooling()
+    {
+      return service.GetSchooling();
+    }
+
+    /// <summary>
+    /// Lista perfuntas filtrando pela empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listquestions/{idcompany}")]
+    public List<ViewListQuestions> GetQuestions(string idcompany)
+    {
+      return service.ListQuestions(idcompany);
+    }
+
+    /// <summary>
+    /// Lista CBO's
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listcbo")]
+    public List<ViewListCbo> ListCBO()
+    {
+      return service.ListCBO();
+    }
+
+    /// <summary>
+    /// Busca informações de CBO para editar
+    /// </summary>
+    /// <param name="id">Identificador do CBO</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getcbo/{id}")]
+    public ViewCrudCbo GetCBO(string id)
+    {
+      return service.GetCBO(id);
+    }
+
+    /// <summary>
+    /// Lista areas
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getareas")]
+    public List<ViewListArea> GetAreas()
+    {
+      return service.GetAreas();
+    }
+
+    /// <summary>
+    /// Lista areas filtrando pela empresa
+    /// </summary>
+    /// <param name="idcompany">Indetificador da empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getareas/{idcompany}")]
+    public List<ViewListArea> GetAreas(string idcompany)
+    {
+      return service.GetAreas(idcompany);
+    }
+
+    /// <summary>
+    /// Lista Eixos
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getaxis")]
+    public List<ViewListAxis> GetAxis()
+    {
+      return service.GetAxis();
+    }
+
+    /// <summary>
+    /// Lista eixos filtrando pela empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getaxis/{idcompany}")]
+    public List<ViewListAxis> GetAxis(string idcompany)
+    {
+      return service.GetAxis(idcompany);
+    }
+
+    /// <summary>
+    /// Busca informações da pergunta para editar
+    /// </summary>
+    /// <param name="id">Identificador da pergunta</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getquestions/{id}")]
+    public ViewCrudQuestions GetQuestionsId(string id)
+    {
+      return service.GetQuestions(id);
+    }
+
+    /// <summary>
+    /// Lista as empresas
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getcompanies")]
+    public List<ViewListCompany> GetCompanies()
+    {
+      return service.GetCompanies();
+    }
+
+    /// <summary>
+    /// Lista as skill's
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getskills")]
+    public List<ViewListSkill> GetSkills(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetSkills(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    /// <summary>
+    /// Listas os processos nivel 2 filtrando pela area
+    /// </summary>
+    /// <param name="idarea">Identificador da Area</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getprocessleveltwo/{idarea}")]
+    public List<ViewListProcessLevelTwo> GetProcessLevelTwo(string idarea)
+    {
+      return service.GetProcessLevelTwoFilter(idarea);
+    }
+
+    /// <summary>
+    /// Lista os processos nivel 2
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getprocessleveltwo")]
+    public List<ViewListProcessLevelTwo> GetProcessLevelTwo()
+    {
+      return service.GetProcessLevelTwo();
+    }
+
+    /// <summary>
+    /// Inclusao de nova skill
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addskill")]
+    public ViewCrudSkill AddSkill([FromBody]ViewAddSkill view)
+    {
+      return service.AddSkill(view);
+    }
+
+
     #endregion
+
+
+
 
     #region Old
 
@@ -155,10 +367,10 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("addskill")]
-    public Skill AddSkill([FromBody]ViewAddSkill view)
+    [Route("old/addskill")]
+    public Skill AddSkillOld([FromBody]ViewAddSkill view)
     {
-      return service.AddSkill(view);
+      return service.AddSkillOld(view);
     }
 
     [Authorize]
@@ -373,34 +585,34 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listquestions/{idcompany}")]
-    public List<Questions> GetQuestions(string idcompany)
+    [Route("old/listquestions/{idcompany}")]
+    public List<Questions> GetQuestionsOld(string idcompany)
     {
-      return service.ListQuestions(idcompany);
+      return service.ListQuestionsOld(idcompany);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("listcbo")]
-    public List<Cbo> ListCBO()
+    [Route("old/listcbo")]
+    public List<Cbo> ListCBOOld()
     {
-      return service.ListCBO();
+      return service.ListCBOOld();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getcbo/{id}")]
-    public Cbo GetCBO(string id)
+    [Route("old/getcbo/{id}")]
+    public Cbo GetCBOOld(string id)
     {
-      return service.GetCBO(id);
+      return service.GetCBOOld(id);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getquestions/{id}")]
-    public Questions GetQuestionsId(string id)
+    [Route("old/getquestions/{id}")]
+    public Questions GetQuestionsIdOld(string id)
     {
-      return service.GetQuestions(id);
+      return service.GetQuestionsOld(id);
     }
 
 
@@ -431,42 +643,42 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getareas")]
-    public List<Area> GetAreas()
+    [Route("old/getareas")]
+    public List<Area> GetAreasOld()
     {
-      return service.GetAreas();
+      return service.GetAreasOld();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getareas/{idcompany}")]
-    public List<Area> GetAreas(string idcompany)
+    [Route("old/getareas/{idcompany}")]
+    public List<Area> GetAreasOld(string idcompany)
     {
-      return service.GetAreas(idcompany);
+      return service.GetAreasOld(idcompany);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getaxis")]
-    public List<Axis> GetAxis()
+    [Route("old/getaxis")]
+    public List<Axis> GetAxisOld()
     {
-      return service.GetAxis();
+      return service.GetAxisOld();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getaxis/{idcompany}")]
-    public List<Axis> GetAxis(string idcompany)
+    [Route("old/getaxis/{idcompany}")]
+    public List<Axis> GetAxisOld(string idcompany)
     {
-      return service.GetAxis(idcompany);
+      return service.GetAxisOld(idcompany);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getcompanies")]
-    public List<Company> GetCompanies()
+    [Route("old/getcompanies")]
+    public List<Company> GetCompaniesOld()
     {
-      return service.GetCompanies();
+      return service.GetCompaniesOld();
     }
 
     [Authorize]
@@ -550,19 +762,19 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getschooling")]
-    public List<Schooling> GetSchooling()
+    [Route("old/getschooling")]
+    public List<Schooling> GetSchoolingOld()
     {
-      return service.GetSchooling();
+      return service.GetSchoolingOld();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getskills")]
-    public List<Skill> GetSkills(int count = 10, int page = 1, string filter = "")
+    [Route("old/getskills")]
+    public List<Skill> GetSkillsOld(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetSkills(ref total, filter, count, page);
+      var result = service.GetSkillsOld(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -613,33 +825,33 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getspheres")]
-    public List<Sphere> GetSpheres()
+    [Route("old/getspheres")]
+    public List<Sphere> GetSpheresOld()
     {
-      return service.GetSpheres();
+      return service.GetSpheresOld();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getprocessleveltwo/{idarea}")]
-    public List<ProcessLevelTwo> GetProcessLevelTwo(string idarea)
+    [Route("old/getprocessleveltwo/{idarea}")]
+    public List<ProcessLevelTwo> GetProcessLevelTwoOld(string idarea)
     {
-      return service.GetProcessLevelTwoFilter(idarea);
+      return service.GetProcessLevelTwoFilterOld(idarea);
     }
     [Authorize]
     [HttpGet]
-    [Route("getprocessleveltwo")]
-    public List<ProcessLevelTwo> GetProcessLevelTwo()
+    [Route("old/getprocessleveltwo")]
+    public List<ProcessLevelTwo> GetProcessLevelTwoOld()
     {
-      return service.GetProcessLevelTwo();
+      return service.GetProcessLevelTwoOld();
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getspheres/{idcompany}")]
-    public List<Sphere> GetSpheres(string idcompany)
+    [Route("old/getspheres/{idcompany}")]
+    public List<Sphere> GetSpheresOld(string idcompany)
     {
-      return service.GetSpheres(idcompany);
+      return service.GetSpheresOld(idcompany);
     }
 
     [Authorize]
