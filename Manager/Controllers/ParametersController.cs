@@ -56,7 +56,7 @@ namespace Manager.Controllers
     public List<ViewListParameter> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(ref total, count, page, filter);
+      List<ViewListParameter> result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

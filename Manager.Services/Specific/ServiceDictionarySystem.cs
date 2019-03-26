@@ -1,148 +1,164 @@
-﻿using Manager.Core.Base;
-using Manager.Core.Business;
+﻿using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Manager.Services.Specific
 {
   public class ServiceDictionarySystem : Repository<DictionarySystem>, IServiceDictionarySystem
   {
-    private readonly ServiceGeneric<DictionarySystem> dictionarySystemService;
-    private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<DictionarySystem> serviceDictionarySystem;
+    private readonly ServiceGeneric<Person> servicePerson;
 
-    public BaseUser user { get => _user; set => user = _user; }
-
-    public ServiceDictionarySystem(DataContext context)
-      : base(context)
+    public ServiceDictionarySystem(DataContext context) : base(context)
     {
       try
       {
-        dictionarySystemService = new ServiceGeneric<DictionarySystem>(context);
-        personService = new ServiceGeneric<Person>(context);
+        serviceDictionarySystem = new ServiceGeneric<DictionarySystem>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
-
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
-      dictionarySystemService._user = _user;
-      personService._user = _user;
+      serviceDictionarySystem._user = _user;
+      servicePerson._user = _user;
     }
 
-    public void SetUser(BaseUser baseUser)
-    {
-      dictionarySystemService._user = baseUser;
-      personService._user = baseUser;
-    }
-
-    public string New(DictionarySystem view)
+    public string New(ViewCrudDictionarySystem view)
     {
       try
       {
-        dictionarySystemService.Insert(view);
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public string New(List<DictionarySystem> list)
-    {
-      try
-      {
-        foreach(var view in list)
+        DictionarySystem dictionarySystem = new DictionarySystem()
         {
-          dictionarySystemService.Insert(view);
-        }
-        return "add success";
+          Name = view.Name,
+          Description = view.Description          
+        };
+        dictionarySystem = serviceDictionarySystem.InsertNewVersion(dictionarySystem).Result;
+        return "Dictionary system added!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public string Update(DictionarySystem view)
+    public string Update(ViewCrudDictionarySystem view)
     {
       try
       {
-        dictionarySystemService.Update(view, null);
-        return "update";
+        DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p._id == view._id).Result;
+        dictionarySystem.Description = view.Description;
+        dictionarySystem = serviceDictionarySystem.UpdateNewVersion(dictionarySystem).Result;
+        return "Dictionary system altered!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     public string Remove(string id)
     {
       try
       {
-        var item = dictionarySystemService.GetAll(p => p._id == id).FirstOrDefault();
+        DictionarySystem item = serviceDictionarySystem.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        dictionarySystemService.Update(item, null);
-        return "deleted";
+        item = serviceDictionarySystem.UpdateNewVersion(item).Result;
+        return "Dictionary system deleted!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public DictionarySystem Get(string id)
+    public ViewCrudDictionarySystem Get(string id)
     {
       try
       {
-        return dictionarySystemService.GetAll(p => p._id == id).FirstOrDefault();
+        DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudDictionarySystem()
+        {
+          _id = dictionarySystem._id,
+          Name = dictionarySystem.Name,
+          Description = dictionarySystem.Description
+        };
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public DictionarySystem GetName(string name)
+    public ViewListDictionarySystem GetName(string name)
     {
       try
       {
-        return dictionarySystemService.GetAll(p => p.Name == name).FirstOrDefault();
+        DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p.Name == name).Result;
+        return new ViewListDictionarySystem()
+        {
+          _id = dictionarySystem._id,
+          Name = dictionarySystem.Name,
+          Description = dictionarySystem.Description
+        };
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public List<DictionarySystem> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListDictionarySystem> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = dictionarySystemService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = dictionarySystemService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
+        var detail = serviceDictionarySystem.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Name").Result
+            .Select(x => new ViewListDictionarySystem()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Description = x.Description
+            }).ToList();
+        total = serviceDictionarySystem.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
-  }
 
+    #region Old
+    public string New(List<ViewListDictionarySystem> list)
+    {
+      try
+      {
+        DictionarySystem dictionarySystem;
+        foreach (var view in list)
+        {
+          dictionarySystem = new DictionarySystem()
+          {
+            Name = view.Name,
+            Description = view.Description
+          };
+          dictionarySystem = serviceDictionarySystem.InsertNewVersion(dictionarySystem).Result;
+        }
+        return "List dictionary system added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
+  }
 }

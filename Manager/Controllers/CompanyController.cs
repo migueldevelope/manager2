@@ -45,7 +45,7 @@ namespace Manager.Controllers
     public List<ViewListCompany> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(ref total, count, page, filter);
+      List<ViewListCompany> result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -112,7 +112,7 @@ namespace Manager.Controllers
     public List<ViewListEstablishment> ListEstablishment(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEstablishment(ref total, count, page, filter);
+      List<ViewListEstablishment> result = service.ListEstablishment(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -130,7 +130,7 @@ namespace Manager.Controllers
     public List<ViewListEstablishment> ListEstablishment(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEstablishment(idcompany, ref total, count, page, filter);
+      List<ViewListEstablishment> result = service.ListEstablishment(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

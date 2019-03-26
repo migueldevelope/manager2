@@ -86,7 +86,7 @@ namespace Manager.Services.Auth
           _idAccount = user._idAccount
         };
 
-        serviceDictionarySystem.SetUser(_user);
+        serviceDictionarySystem._user = _user;
         ViewPerson person = new ViewPerson()
         {
           IdUser = user._id,

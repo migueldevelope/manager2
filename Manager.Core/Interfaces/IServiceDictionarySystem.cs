@@ -1,5 +1,5 @@
-﻿using Manager.Core.Base;
-using Manager.Core.Business;
+﻿using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
@@ -7,16 +7,13 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceDictionarySystem
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser baseUser);
-    string New(DictionarySystem view);
-    string New(List<DictionarySystem> list);
-    string Update(DictionarySystem view);
+    string New(ViewCrudDictionarySystem view);
+    string New(List<ViewListDictionarySystem> list);
+    string Update(ViewCrudDictionarySystem view);
     string Remove(string id);
-    DictionarySystem Get(string id);
-    DictionarySystem GetName(string name);
-    List<DictionarySystem> List(ref long total, int count = 10, int page = 1, string filter = "");
-
+    ViewCrudDictionarySystem Get(string id);
+    ViewListDictionarySystem GetName(string name);
+    List<ViewListDictionarySystem> List(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }
