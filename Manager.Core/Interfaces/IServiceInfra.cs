@@ -12,7 +12,26 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceInfra
   {
+
+    #region Infra
     ViewCrudAxis GetAxisById(string id);
+    ViewCrudSphere GetSphereById(string id);
+    ViewCrudSkill GetSkillById(string id);
+    ViewCrudGroup GetGroup(string id);
+    ViewCrudGroup GetGroup(string idcompany, string filterName);
+    ViewCrudOccupation GetOccupation(string id);
+    ViewCrudOccupation GetOccupation(string idcompany, string filterName);
+    List<ViewListGroup> GetGroups();
+    List<ViewListOccupation> GetOccupations();
+    ViewCrudTextDefault GetTextDefault(string idcompany, string name);
+    ViewCrudTextDefault GetTextDefault(string id);
+    List<ViewListTextDefault> ListTextDefault(string idcompany);
+
+    List<ViewListGroup> GetGroupsPrint(string idcompany);
+    List<ViewListCourse> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type);
+
+    List<ViewGetOccupation> GetOccupations(string idcompany, string idarea);
+
 
     List<ViewListSchooling> GetSchooling();
     List<ViewListSphere> GetSpheres();
@@ -77,6 +96,9 @@ namespace Manager.Core.Interfaces
     string AddOccupationActivities(ViewAddOccupationActivities view);
     string AddOccupationActivitiesList(List<ViewAddOccupationActivities> list);
 
+    #endregion
+
+
     #region Old
     List<Company> GetCompaniesOld();
     Skill GetSkillOld(string filterName);
@@ -92,22 +114,21 @@ namespace Manager.Core.Interfaces
     List<Area> GetAreasOld(string idcompany);
     List<Questions> ListQuestionsOld(string idcompany);
     Questions GetQuestionsOld(string id);
-
-    Group GetGroup(string id);
-    Group GetGroup(string idcompany, string filterName);
-    Occupation GetOccupation(string id);
-    Occupation GetOccupation(string idcompany, string filterName);
-    List<Group> GetGroups();
-    List<Occupation> GetOccupations();
-    TextDefault GetTextDefault(string idcompany, string name);
-    TextDefault GetTextDefault(string id);
-    List<TextDefault> ListTextDefault(string idcompany);
-    //List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page);
-    List<ViewGetOccupation> GetOccupations(string idcompany, string idarea);
-    //List<ProcessLevelTwo> GetProcessLevelTwo(string idarea);
     ProcessLevelTwo GetProcessLevelTwoOld(string id);
     List<ProcessLevelTwo> GetProcessLevelTwoOld();
     List<ProcessLevelTwo> GetProcessLevelTwoFilterOld(string idarea);
+
+    Group GetGroupOld(string id);
+    Group GetGroupOld(string idcompany, string filterName);
+    Occupation GetOccupationOld(string id);
+    Occupation GetOccupationOld(string idcompany, string filterName);
+    List<Group> GetGroupsOld();
+    List<Occupation> GetOccupationsOld();
+    TextDefault GetTextDefaultOld(string idcompany, string name);
+    TextDefault GetTextDefaultOld(string id);
+    List<TextDefault> ListTextDefaultOld(string idcompany);
+    List<Group> GetGroupsPrintOld(string idcompany);
+    List<Course> GetCourseOccupationOld(string idoccuation, EnumTypeMandatoryTraining type);
 
     Skill AddSkillOld(ViewAddSkill view);
     Group AddGroupOld(ViewAddGroup view);
@@ -116,16 +137,16 @@ namespace Manager.Core.Interfaces
     string AddCBO(Cbo model);
     Schooling AddSchooling(Schooling schooling);
     string AddAxis(Axis view);
-    
-   
+
+
     string AddArea(Area view);
     string AddSphere(Sphere view);
     string AddOccupation(Occupation occupation);
-   
+
     string AddProcessLevelOne(ProcessLevelOne model);
     string AddProcessLevelTwo(ProcessLevelTwo model);
     string AddQuestions(Questions view);
-   
+
     string UpdateTextDefault(TextDefault textDefault);
     string UpdateSkill(Skill skill);
     string UpdateSphere(Sphere sphere);
@@ -142,8 +163,6 @@ namespace Manager.Core.Interfaces
     string UpdateProcessLevelOne(ProcessLevelOne model);
     string UpdateProcessLevelTwo(ProcessLevelTwo model);
     string UpdateCBO(Cbo model);
-    List<Group> GetGroupsPrint(string idcompany);
-    List<Course> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type);
     #endregion
 
   }

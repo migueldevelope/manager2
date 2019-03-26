@@ -1366,6 +1366,44 @@ namespace Manager.Services.Specific
       }
     }
 
+    public ViewCrudSphere GetSphereById(string id)
+    {
+      try
+      {
+        var item = sphereService.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+        return new ViewCrudSphere()
+        {
+          _id = item._id,
+          Name = item.Name,
+          Company = new ViewListCompany() { _id = item._id, Name = item.Name },
+          TypeSphere = item.TypeSphere
+        };
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewCrudSkill GetSkillById(string id)
+    {
+      try
+      {
+        var item = skillService.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+        return new ViewCrudSkill()
+        {
+          _id = item._id,
+          Name = item.Name,
+          Concept = item.Concept,
+          TypeSkill = item.TypeSkill
+        };
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<ViewListArea> GetAreas(string idcompany)
     {
       try
@@ -2721,6 +2759,337 @@ namespace Manager.Services.Specific
 
     }
 
+    public ViewCrudGroup GetGroup(string id)
+    {
+      try
+      {
+        var group = groupService.GetAll(p => p._id == id).ToList().Select(
+          p => new ViewCrudGroup()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Company = new ViewListCompany()
+            {
+              _id = p.Company._id,
+              Name = p.Company.Name,
+            },
+            Axis = new ViewListAxis() { _id = p.Axis._id, Name = p.Axis.Name, TypeAxis = p.Axis.TypeAxis },
+            Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
+            Line = p.Line
+          }).FirstOrDefault();
+        //group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
+        return group;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewCrudGroup GetGroup(string idCompany, string filterName)
+    {
+      try
+      {
+        var group = groupService.GetAll(p => p.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).ToList().Select(
+            p => new ViewCrudGroup()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Company = new ViewListCompany()
+              {
+                _id = p.Company._id,
+                Name = p.Company.Name,
+              },
+              Axis = new ViewListAxis() { _id = p.Axis._id, Name = p.Axis.Name, TypeAxis = p.Axis.TypeAxis },
+              Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
+              Line = p.Line
+            }).FirstOrDefault();
+        //group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
+        return group;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<ViewListGroup> GetGroups()
+    {
+      try
+      {
+
+        //var groups = new List<Group>();
+        //foreach (var item in groupService.GetAll())
+        //{
+        //  item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
+        //  groups.Add(item);
+        //}
+        //return groups.OrderBy(p => p.Name)
+        //  .Select()
+        //  .ToList();
+        return groupService.GetAll().Select(p => new ViewListGroup()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Axis = new ViewListAxis() { _id = p.Axis._id, Name = p.Axis.Name, TypeAxis = p.Axis.TypeAxis },
+          Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
+          Line = p.Line
+        }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<ViewListGroup> GetGroupsPrint(string idcompany)
+    {
+      try
+      {
+        List<Group> groups = new List<Group>();
+        foreach (var item in groupService.GetAll(p => p.Company._id == idcompany))
+        {
+          item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).ToList();
+          groups.Add(item);
+        }
+        return groups.Select(p => new ViewListGroup()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Axis = new ViewListAxis() { _id = p.Axis._id, Name = p.Axis.Name, TypeAxis = p.Axis.TypeAxis },
+          Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
+          Line = p.Line
+        }).OrderByDescending(p => p.Sphere.TypeSphere).ThenByDescending(p => p.Axis.TypeAxis).ThenByDescending(p => p.Line).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewCrudOccupation GetOccupation(string id)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p._id == id).ToList().Select(p =>
+          new ViewCrudOccupation()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Group = new ViewListGroup()
+            {
+              _id = p.Group._id,
+              Name = p.Group.Name,
+              Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
+              Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, Name = p.Group.Sphere.Name, TypeSphere = p.Group.Sphere.TypeSphere },
+              Line = p.Group.Line,
+            },
+            Line = p.Line,
+            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
+            .Select(x => new ViewListProcessLevelTwo()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Order = x.Order,
+              ProcessLevelOne = new
+            ViewListProcessLevelOne()
+              {
+                _id = x.ProcessLevelOne._id,
+                Name = x.ProcessLevelOne.Name,
+                Order = x.ProcessLevelOne.Order,
+                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+              }
+            })
+            .ToList() : null
+          }).FirstOrDefault();
+
+        return occupation;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<ViewListCourse> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type)
+    {
+      try
+      {
+
+        var list = new List<ViewListCourse>();
+        var idcompany = occupationService.GetAll(p => p._id == idoccuation).FirstOrDefault().Group.Company._id;
+        var occupations = occupationMandatoryService.GetAll(p => p.Occupation._id == idoccuation & p.TypeMandatoryTraining == type).ToList();
+        var company = companyMandatoryService.GetAll(p => p.Company._id == idcompany & p.TypeMandatoryTraining == type).ToList();
+
+        foreach (var item in occupations)
+        {
+          list.Add(new ViewListCourse()
+          {
+            _id = item.Course._id,
+            Name = item.Course.Name
+          });
+        }
+
+        foreach (var item in company)
+        {
+          list.Add(new ViewListCourse()
+          {
+            _id = item.Course._id,
+            Name = item.Course.Name
+          });
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewCrudOccupation GetOccupation(string idCompany, string filterName)
+    {
+      try
+      {
+        return occupationService.GetAll(p => p.Group.Company._id == idCompany && p.Name.ToUpper() == filterName.ToUpper()).ToList().Select(p =>
+          new ViewCrudOccupation()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Group = new ViewListGroup()
+            {
+              _id = p.Group._id,
+              Name = p.Group.Name,
+              Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
+              Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, Name = p.Group.Sphere.Name, TypeSphere = p.Group.Sphere.TypeSphere },
+              Line = p.Group.Line,
+            },
+            Line = p.Line,
+            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
+            .Select(x => new ViewListProcessLevelTwo()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Order = x.Order,
+              ProcessLevelOne = new
+            ViewListProcessLevelOne()
+              {
+                _id = x.ProcessLevelOne._id,
+                Name = x.ProcessLevelOne.Name,
+                Order = x.ProcessLevelOne.Order,
+                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+              }
+            })
+            .ToList() : null
+          }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<ViewListOccupation> GetOccupations()
+    {
+      try
+      {
+        return occupationService.GetAll().OrderBy(p => p.Name)
+          .Select(p => new ViewListOccupation()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Line = p.Line,
+            Company = new ViewListCompany() { _id = p.Group.Company._id, Name = p.Group.Company.Name },
+            Group = new ViewListGroup()
+            {
+              _id = p.Group._id,
+              Name = p.Group.Name,
+              Line = p.Group.Line,
+              Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
+              Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, Name = p.Group.Sphere.Name, TypeSphere = p.Group.Sphere.TypeSphere }
+            },
+            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
+            .Select(x => new ViewListProcessLevelTwo()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Order = x.Order,
+              ProcessLevelOne = new
+            ViewListProcessLevelOne()
+              {
+                _id = x.ProcessLevelOne._id,
+                Name = x.ProcessLevelOne.Name,
+                Order = x.ProcessLevelOne.Order,
+                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+              }
+            })
+            .ToList() : null
+          })
+          .ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public ViewCrudTextDefault GetTextDefault(string idcompany, string name)
+    {
+      try
+      {
+        var item = textDefaultService.GetAll(p => p.Company._id == idcompany & p.Name == name).FirstOrDefault();
+        return new ViewCrudTextDefault()
+        {
+          Name = item.Name,
+          Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+          Content = item.Content,
+          TypeText = item.TypeText
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudTextDefault GetTextDefault(string id)
+    {
+      try
+      {
+        var item = textDefaultService.GetAll(p => p._id == id).FirstOrDefault();
+        return new ViewCrudTextDefault()
+        {
+          Name = item.Name,
+          Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+          Content = item.Content,
+          TypeText = item.TypeText
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListTextDefault> ListTextDefault(string idcompany)
+    {
+      try
+      {
+        return textDefaultService.GetAll(p => p.Company._id == idcompany)
+          .Select(p => new ViewListTextDefault()
+          {
+            _id = p._id,
+            Name = p.Name,
+          })
+          .ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion Infra
 
     #region Old
@@ -3144,7 +3513,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public Group GetGroup(string id)
+    public Group GetGroupOld(string id)
     {
       try
       {
@@ -3183,7 +3552,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Group GetGroup(string idCompany, string filterName)
+    public Group GetGroupOld(string idCompany, string filterName)
     {
       try
       {
@@ -3222,7 +3591,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Group> GetGroups()
+    public List<Group> GetGroupsOld()
     {
       try
       {
@@ -3241,7 +3610,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Group> GetGroupsPrint(string idcompany)
+    public List<Group> GetGroupsPrintOld(string idcompany)
     {
       try
       {
@@ -3259,7 +3628,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Occupation GetOccupation(string id)
+    public Occupation GetOccupationOld(string id)
     {
       try
       {
@@ -3316,7 +3685,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Course> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type)
+    public List<Course> GetCourseOccupationOld(string idoccuation, EnumTypeMandatoryTraining type)
     {
       try
       {
@@ -3343,7 +3712,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Occupation GetOccupation(string idCompany, string filterName)
+    public Occupation GetOccupationOld(string idCompany, string filterName)
     {
       try
       {
@@ -3398,7 +3767,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Occupation> GetOccupations()
+    public List<Occupation> GetOccupationsOld()
     {
       try
       {
@@ -3407,6 +3776,43 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public TextDefault GetTextDefaultOld(string idcompany, string name)
+    {
+      try
+      {
+        return textDefaultService.GetAll(p => p.Company._id == idcompany & p.Name == name).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public TextDefault GetTextDefaultOld(string id)
+    {
+      try
+      {
+        return textDefaultService.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<TextDefault> ListTextDefaultOld(string idcompany)
+    {
+      try
+      {
+        return textDefaultService.GetAll(p => p.Company._id == idcompany).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
       }
     }
 
@@ -3836,41 +4242,6 @@ namespace Manager.Services.Specific
       }
     }
 
-    public TextDefault GetTextDefault(string idcompany, string name)
-    {
-      try
-      {
-        return textDefaultService.GetAll(p => p.Company._id == idcompany & p.Name == name).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public TextDefault GetTextDefault(string id)
-    {
-      try
-      {
-        return textDefaultService.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<TextDefault> ListTextDefault(string idcompany)
-    {
-      try
-      {
-        return textDefaultService.GetAll(p => p.Company._id == idcompany).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
 
     public string UpdateTextDefault(TextDefault textDefault)
     {

@@ -264,38 +264,285 @@ namespace Manager.Controllers
       return service.GetAxisById(id);
     }
 
+    /// <summary>
+    /// Busca informações para editar Skill
+    /// </summary>
+    /// <param name="id">Identificador</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getskillbyid/{id}")]
+    public ViewCrudSkill GetSkillById(string id)
+    {
+      return service.GetSkillById(id);
+    }
 
-    #endregion
+    /// <summary>
+    /// Busca informações para editar Sphere
+    /// </summary>
+    /// <param name="id">Identificador</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getspherebyid/{id}")]
+    public ViewCrudSphere GetSphereById(string id)
+    {
+      return service.GetSphereById(id);
+    }
+
+    /// <summary>
+    /// Busca informações
+    /// </summary>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="name">Nome texto</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("gettextdefault/{idcompany}/{name}")]
+    public ViewCrudTextDefault GetTextDefault(string idcompany, string name)
+    {
+      return service.GetTextDefault(idcompany, name);
+    }
+
+    /// <summary>
+    /// Busca informações para editar
+    /// </summary>
+    /// <param name="id">Identificador</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("gettextdefault/{id}")]
+    public ViewCrudTextDefault GetTextDefault(string id)
+    {
+      return service.GetTextDefault(id);
+    }
+
+    /// <summary>
+    /// Lista textos
+    /// </summary>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listtextdefault/{idcompany}")]
+    public List<ViewListTextDefault> ListTextDefault(string idcompany)
+    {
+      return service.ListTextDefault(idcompany);
+    }
+
+    /// <summary>
+    /// Lista cursos por cargos
+    /// </summary>
+    /// <param name="idoccupation">Identificador cargo</param>
+    /// <param name="type">Tipo de treinamento obrigatório</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getcourseoccupation/{idoccupation}/{type}")]
+    public List<ViewListCourse> GetCourseOccupation(string idoccupation, EnumTypeMandatoryTraining type)
+    {
+      return service.GetCourseOccupation(idoccupation, type);
+    }
+
+    /// <summary>
+    /// Busca informações grupo para editar
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getgroup/{id}")]
+    public ViewCrudGroup GetGroup(string id)
+    {
+      return service.GetGroup(id);
+    }
+
+    /// <summary>
+    /// Lista grupos
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getgroups")]
+    public List<ViewListGroup> GetGroups()
+    {
+      return service.GetGroups();
+    }
+
+    /// <summary>
+    /// Lista grupos filtrando pela empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getgroups/{idcompany}")]
+    public List<ViewGroupList> GetGroups(string idcompany)
+    {
+      return service.GetGroups(idcompany);
+    }
+
+    /// <summary>
+    /// Lista cargos para visualização impressão
+    /// </summary>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getgroupsprint/{idcompany}")]
+    public List<ViewListGroup> GetGroupsPrint(string idcompany)
+    {
+      return service.GetGroupsPrint(idcompany);
+    }
+
+
+    /// <summary>
+    /// Busca informações de cargos para editar
+    /// </summary>
+    /// <param name="id">Identificador cargo</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getoccupation/{id}")]
+    public ViewCrudOccupation GetOccupation(string id)
+    {
+      return service.GetOccupation(id);
+    }
+
+    /// <summary>
+    /// Lista cargos
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getoccupations")]
+    public List<ViewListOccupation> GetOccupations()
+    {
+      return service.GetOccupations();
+    }
 
 
 
+    /// <summary>
+    /// Lista cargos com filtro de empresa e a area para editar
+    /// </summary>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="idarea">Identificador Area</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <param name="filterGroup"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listoccupationedit/{idcompany}/{idarea}")]
+    public List<ViewOccupationListEdit> ListOccupationEdit(string idcompany, string idarea, int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    {
+      long total = 0;
+      var result = service.ListOccupationsEdit(idcompany, idarea, ref total, filter, count, page, filterGroup);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
 
-    #region Old
+    /// <summary>
+    /// Lista cargos com filtro de empresa e area
+    /// </summary>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="idarea">Identificador Area</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getoccupations/{idcompany}/{idarea}")]
+    public List<ViewGetOccupation> GetOccupations(string idcompany, string idarea)
+    {
+      return service.GetOccupations(idcompany, idarea);
+    }
+
+
 
     [Authorize]
-    [HttpPost]
-    [Route("addarea")]
-    public string AddArea([FromBody]Area view)
+    [HttpGet]
+    [Route("getskills/{company}")]
+    public List<ViewSkills> GetSkills(string company, int count = 10, int page = 1, string filter = "")
     {
-      return service.AddArea(view);
+      long total = 0;
+      var result = service.GetSkills(company, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getskills/{idcompany}/{idgroup}")]
+    public List<ViewSkills> GetSkills(string idcompany, string idgroup, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetSkillsGroup(idgroup, idcompany, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getskills/{idcompany}/{idgroup}/{idoccupation}")]
+    public List<ViewSkills> GetSkills(string idcompany, string idgroup, string idoccupation, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetSkillsOccupation(idgroup, idcompany, idoccupation, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
 
     [Authorize]
-    [HttpPost]
-    [Route("addcbo")]
-    public string AddCbo([FromBody]Cbo view)
+    [HttpPut]
+    [Route("areaorder/{idcompany}/{idarea}/{order}/{sum}")]
+    public string AreaOrder(string idcompany, string idarea, long order, bool sum)
     {
-      return service.AddCBO(view);
+      return service.AreaOrder(idcompany, idarea, order, sum);
     }
 
     [Authorize]
-    [HttpPost]
-    [Route("addaxis")]
-    public string AddAxis([FromBody]Axis view)
+    [HttpPut]
+    [Route("reordergroupscope/{idcompany}/{idgroup}/{idscope}/{sum}")]
+    public string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
     {
-      return service.AddAxis(view);
+      return service.ReorderGroupScope(idcompany, idgroup, idscope, sum);
     }
+
+    [Authorize]
+    [HttpPut]
+    [Route("reorderoccupationactivitie/{idcompany}/{idoccupation}/{idactivitie}/{sum}")]
+    public string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
+    {
+      return service.ReorderOccupationActivitie(idcompany, idoccupation, idactivitie, sum);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("reordergroupscopemanual/{idcompany}/{idgroup}/{idscope}/{order}")]
+    public string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
+    {
+      return service.ReorderGroupScopeManual(idcompany, idgroup, idscope, order);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("reorderoccupationactivitiemanual/{idcompany}/{idoccupation}/{idactivitie}/{order}")]
+    public string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
+    {
+      return service.ReorderOccupationActivitieManual(idcompany, idoccupation, idactivitie, order);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getcsvcomparegroup/{idcompany}")]
+    public string GetCSVCompareGroup(string idcompany)
+    {
+      var conn = ConnectionNoSqlService.GetConnetionServer();
+      return service.GetCSVCompareGroup(idcompany, conn.BlobKey);
+    }
+
 
     [Authorize]
     [HttpPost]
@@ -376,77 +623,6 @@ namespace Manager.Controllers
     public string AddOccupationSkill([FromBody]ViewAddOccupationSkill view)
     {
       return service.AddOccupationSkill(view);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("old/addskill")]
-    public Skill AddSkillOld([FromBody]ViewAddSkill view)
-    {
-      return service.AddSkillOld(view);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addskills")]
-    public string AddSkills([FromBody]List<ViewAddSkill> view)
-    {
-      service.AddSkills(view);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addsphere")]
-    public string AddSphere([FromBody]Sphere view)
-    {
-      return service.AddSphere(view);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addschooling")]
-    public string AddSchooling([FromBody]Schooling schooling)
-    {
-      service.AddSchooling(schooling);
-      return "ok";
-    }
-
-
-    [Authorize]
-    [HttpPost]
-    [Route("addprocesslevelone")]
-    public string AddProcessLevelOne([FromBody]ProcessLevelOne processLevelOne)
-    {
-      service.AddProcessLevelOne(processLevelOne);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addprocessleveltwo")]
-    public string AddProcessLevelTwo([FromBody]ProcessLevelTwo processLevelTwo)
-    {
-      service.AddProcessLevelTwo(processLevelTwo);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addquestions")]
-    public string AddQuestions([FromBody]Questions questions)
-    {
-      service.AddQuestions(questions);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addtextdefault")]
-    public string AddTextDefault([FromBody]TextDefault textDefault)
-    {
-      service.AddTextDefault(textDefault);
-      return "ok";
     }
 
     [Authorize]
@@ -595,6 +771,112 @@ namespace Manager.Controllers
     {
       return service.DeleteProcessLevelTwo(id);
     }
+    #endregion
+
+
+
+    //################################################# Old #################################################
+    #region Old
+
+    [Authorize]
+    [HttpPost]
+    [Route("addarea")]
+    public string AddArea([FromBody]Area view)
+    {
+      return service.AddArea(view);
+    }
+
+
+    [Authorize]
+    [HttpPost]
+    [Route("addcbo")]
+    public string AddCbo([FromBody]Cbo view)
+    {
+      return service.AddCBO(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addaxis")]
+    public string AddAxis([FromBody]Axis view)
+    {
+      return service.AddAxis(view);
+    }
+
+
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addskill")]
+    public Skill AddSkillOld([FromBody]ViewAddSkill view)
+    {
+      return service.AddSkillOld(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addskills")]
+    public string AddSkills([FromBody]List<ViewAddSkill> view)
+    {
+      service.AddSkills(view);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addsphere")]
+    public string AddSphere([FromBody]Sphere view)
+    {
+      return service.AddSphere(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addschooling")]
+    public string AddSchooling([FromBody]Schooling schooling)
+    {
+      service.AddSchooling(schooling);
+      return "ok";
+    }
+
+
+    [Authorize]
+    [HttpPost]
+    [Route("addprocesslevelone")]
+    public string AddProcessLevelOne([FromBody]ProcessLevelOne processLevelOne)
+    {
+      service.AddProcessLevelOne(processLevelOne);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addprocessleveltwo")]
+    public string AddProcessLevelTwo([FromBody]ProcessLevelTwo processLevelTwo)
+    {
+      service.AddProcessLevelTwo(processLevelTwo);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addquestions")]
+    public string AddQuestions([FromBody]Questions questions)
+    {
+      service.AddQuestions(questions);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addtextdefault")]
+    public string AddTextDefault([FromBody]TextDefault textDefault)
+    {
+      service.AddTextDefault(textDefault);
+      return "ok";
+    }
+
+
 
     [Authorize]
     [HttpGet]
@@ -631,26 +913,26 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("gettextdefault/{idcompany}/{name}")]
-    public TextDefault GetTextDefault(string idcompany, string name)
+    [Route("old/gettextdefault/{idcompany}/{name}")]
+    public TextDefault GetTextDefaultOld(string idcompany, string name)
     {
-      return service.GetTextDefault(idcompany, name);
+      return service.GetTextDefaultOld(idcompany, name);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("gettextdefault/{id}")]
-    public TextDefault GetTextDefault(string id)
+    [Route("old/gettextdefault/{id}")]
+    public TextDefault GetTextDefaultOld(string id)
     {
-      return service.GetTextDefault(id);
+      return service.GetTextDefaultOld(id);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("listtextdefault/{idcompany}")]
-    public List<TextDefault> ListTextDefault(string idcompany)
+    [Route("old/listtextdefault/{idcompany}")]
+    public List<TextDefault> ListTextDefaultOld(string idcompany)
     {
-      return service.ListTextDefault(idcompany);
+      return service.ListTextDefaultOld(idcompany);
     }
 
 
@@ -696,51 +978,44 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getgroup/{id}")]
-    public Group GetGroup(string id)
+    [Route("old/getgroup/{id}")]
+    public Group GetGroupOld(string id)
     {
-      return service.GetGroup(id);
+      return service.GetGroupOld(id);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getgroups")]
-    public List<Group> GetGroups()
+    [Route("old/getgroups")]
+    public List<Group> GetGroupsOld()
     {
-      return service.GetGroups();
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("getgroups/{idcompany}")]
-    public List<ViewGroupList> GetGroups(string idcompany)
-    {
-      return service.GetGroups(idcompany);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("getgroupsprint/{idcompany}")]
-    public List<Group> GetGroupsPrint(string idcompany)
-    {
-      return service.GetGroupsPrint(idcompany);
+      return service.GetGroupsOld();
     }
 
 
     [Authorize]
     [HttpGet]
-    [Route("getoccupation/{id}")]
-    public Occupation GetOccupation(string id)
+    [Route("old/getgroupsprint/{idcompany}")]
+    public List<Group> GetGroupsPrintOld(string idcompany)
     {
-      return service.GetOccupation(id);
+      return service.GetGroupsPrintOld(idcompany);
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("old/getoccupation/{id}")]
+    public Occupation GetOccupationOld(string id)
+    {
+      return service.GetOccupationOld(id);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getoccupations")]
-    public List<Occupation> GetOccupations()
+    [Route("old/getoccupations")]
+    public List<Occupation> GetOccupationsOld()
     {
-      return service.GetOccupations();
+      return service.GetOccupationsOld();
     }
 
     //[Authorize]
@@ -754,24 +1029,6 @@ namespace Manager.Controllers
     //  return result;
     //}
 
-    [Authorize]
-    [HttpGet]
-    [Route("listoccupationedit/{idcompany}/{idarea}")]
-    public List<ViewOccupationListEdit> ListOccupationEdit(string idcompany, string idarea, int count = 10, int page = 1, string filter = "", string filterGroup = "")
-    {
-      long total = 0;
-      var result = service.ListOccupationsEdit(idcompany, idarea, ref total, filter, count, page, filterGroup);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("getoccupations/{idcompany}/{idarea}")]
-    public List<ViewGetOccupation> GetOccupations(string idcompany, string idarea)
-    {
-      return service.GetOccupations(idcompany, idarea);
-    }
 
     [Authorize]
     [HttpGet]
@@ -803,38 +1060,6 @@ namespace Manager.Controllers
     //  return result;
     //}
 
-    [Authorize]
-    [HttpGet]
-    [Route("getskills/{company}")]
-    public List<ViewSkills> GetSkills(string company, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.GetSkills(company, ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("getskills/{idcompany}/{idgroup}")]
-    public List<ViewSkills> GetSkills(string idcompany, string idgroup, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.GetSkillsGroup(idgroup, idcompany, ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("getskills/{idcompany}/{idgroup}/{idoccupation}")]
-    public List<ViewSkills> GetSkills(string idcompany, string idgroup, string idoccupation, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.GetSkillsOccupation(idgroup, idcompany, idoccupation, ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
 
     [Authorize]
     [HttpGet]
@@ -996,60 +1221,11 @@ namespace Manager.Controllers
     }
 
     [Authorize]
-    [HttpPut]
-    [Route("areaorder/{idcompany}/{idarea}/{order}/{sum}")]
-    public string AreaOrder(string idcompany, string idarea, long order, bool sum)
-    {
-      return service.AreaOrder(idcompany, idarea, order, sum);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("reordergroupscope/{idcompany}/{idgroup}/{idscope}/{sum}")]
-    public string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
-    {
-      return service.ReorderGroupScope(idcompany, idgroup, idscope, sum);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("reorderoccupationactivitie/{idcompany}/{idoccupation}/{idactivitie}/{sum}")]
-    public string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
-    {
-      return service.ReorderOccupationActivitie(idcompany, idoccupation, idactivitie, sum);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("reordergroupscopemanual/{idcompany}/{idgroup}/{idscope}/{order}")]
-    public string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
-    {
-      return service.ReorderGroupScopeManual(idcompany, idgroup, idscope, order);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("reorderoccupationactivitiemanual/{idcompany}/{idoccupation}/{idactivitie}/{order}")]
-    public string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
-    {
-      return service.ReorderOccupationActivitieManual(idcompany, idoccupation, idactivitie, order);
-    }
-
-    [Authorize]
     [HttpGet]
-    [Route("getcsvcomparegroup/{idcompany}")]
-    public string GetCSVCompareGroup(string idcompany)
+    [Route("old/getcourseoccupation/{idoccupation}/{type}")]
+    public List<Course> GetCourseOccupationOld(string idoccupation, EnumTypeMandatoryTraining type)
     {
-      var conn = ConnectionNoSqlService.GetConnetionServer();
-      return service.GetCSVCompareGroup(idcompany, conn.BlobKey);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("getcourseoccupation/{idoccupation}/{type}")]
-    public List<Course> GetCourseOccupation(string idoccupation, EnumTypeMandatoryTraining type)
-    {
-      return service.GetCourseOccupation(idoccupation, type);
+      return service.GetCourseOccupationOld(idoccupation, type);
     }
     #endregion
 
