@@ -83,7 +83,7 @@ namespace Manager.Controllers
     }
 
     /// <summary>
-    /// Lista perfuntas filtrando pela empresa
+    /// Lista perguntas filtrando pela empresa
     /// </summary>
     /// <param name="idcompany">Identificador da empresa</param>
     /// <returns></returns>
@@ -249,6 +249,19 @@ namespace Manager.Controllers
     public ViewCrudSkill AddSkill([FromBody]ViewAddSkill view)
     {
       return service.AddSkill(view);
+    }
+
+    /// <summary>
+    /// Busca informações para editar Area
+    /// </summary>
+    /// <param name="idarea">Identificador da area</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getareasbyid/{idarea}")]
+    public ViewCrudArea GetAreasById(string idarea)
+    {
+      return service.GetAreasById(idarea);
     }
 
 

@@ -882,7 +882,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    
+
     private async Task UpdateCompanyAll(Company company)
     {
       try
@@ -1236,7 +1236,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    
+
     public List<ViewListCbo> ListCBO()
     {
       try
@@ -1339,6 +1339,40 @@ namespace Manager.Services.Specific
              _id = p._id,
              Name = p.Name
            }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public ViewCrudArea GetAreasById(string id)
+    {
+      try
+      {
+        var item = areaService.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+
+        item.ProcessLevelOnes = new List<ProcessLevelOne>();
+        var process = processLevelOneService.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
+        foreach (var row in process)
+        {
+          row.Process = new List<ProcessLevelTwo>();
+          foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
+          {
+            row.Process.Add(leveltwo);
+          }
+
+          item.ProcessLevelOnes.Add(row);
+        }
+
+        return new ViewCrudArea
+        {
+          _id = item._id,
+          Name = item.Name,
+          Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+          Order = item.Order
+        };
       }
       catch (Exception e)
       {
@@ -1903,7 +1937,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    
+
     public string DeleteGroup(string idgroup)
     {
       try
@@ -3415,7 +3449,7 @@ namespace Manager.Services.Specific
     //}
 
 
-   
+
 
     //public List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page)
     //{
