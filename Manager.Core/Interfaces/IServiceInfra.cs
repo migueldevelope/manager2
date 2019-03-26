@@ -97,6 +97,17 @@ namespace Manager.Core.Interfaces
     string AddOccupationActivities(ViewAddOccupationActivities view);
     string AddOccupationActivitiesList(List<ViewAddOccupationActivities> list);
 
+    string AddTextDefault(ViewCrudTextDefault model);
+    string AddCBO(ViewCrudCbo model);
+    Schooling AddSchooling(ViewCrudSchooling schooling);
+    string AddAxis(ViewCrudAxis view);
+    string AddArea(ViewCrudArea view);
+    string AddSphere(ViewCrudSphere view);
+    string AddOccupation(ViewCrudOccupation occupation);
+    string AddProcessLevelOne(ViewCrudProcessLevelOne model);
+    string AddProcessLevelTwo(ViewCrudProcessLevelTwo model);
+    string AddQuestions(ViewCrudQuestions view);
+
     #endregion
 
 
@@ -134,19 +145,16 @@ namespace Manager.Core.Interfaces
     Skill AddSkillOld(ViewAddSkill view);
     Group AddGroupOld(ViewAddGroup view);
 
-    string AddTextDefault(TextDefault model);
-    string AddCBO(Cbo model);
-    Schooling AddSchooling(Schooling schooling);
-    string AddAxis(Axis view);
-
-
-    string AddArea(Area view);
-    string AddSphere(Sphere view);
-    string AddOccupation(Occupation occupation);
-
-    string AddProcessLevelOne(ProcessLevelOne model);
-    string AddProcessLevelTwo(ProcessLevelTwo model);
-    string AddQuestions(Questions view);
+    string AddTextDefaultOld(TextDefault model);
+    string AddCBOOld(Cbo model);
+    Schooling AddSchoolingOld(Schooling schooling);
+    string AddAxisOld(Axis view);
+    string AddAreaOld(Area view);
+    string AddSphereOld(Sphere view);
+    string AddOccupationOld(Occupation occupation);
+    string AddProcessLevelOneOld(ProcessLevelOne model);
+    string AddProcessLevelTwoOld(ProcessLevelTwo model);
+    string AddQuestionsOld(Questions view);
 
     string UpdateTextDefault(TextDefault textDefault);
     string UpdateSkill(Skill skill);

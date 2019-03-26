@@ -86,7 +86,7 @@ namespace Manager.Test.Test.Complete
         var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).FirstOrDefault();
         //serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
         var sphere = serviceInfra.GetSpheres().FirstOrDefault();
-        serviceInfra.AddAxis(new Axis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator });
+        //serviceInfra.AddAxis(new Axis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator });
         var axis = serviceInfra.GetAxis().FirstOrDefault();
         //serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
 

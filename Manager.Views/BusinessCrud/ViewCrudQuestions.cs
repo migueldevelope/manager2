@@ -7,6 +7,7 @@ namespace Manager.Views.BusinessCrud
   {
     public string _id { get; set; }
     public string Name { get; set; }
+    public string Content { get; set; }
     public ViewListCompany Company { get; set; }
     public EnumTypeQuestion TypeQuestion { get; set; }
     public long Order { get; set; }

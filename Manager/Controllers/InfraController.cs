@@ -459,6 +459,129 @@ namespace Manager.Controllers
       return service.GetOccupations(idcompany, idarea);
     }
 
+    /// <summary>
+    /// Inclusão area
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addarea")]
+    public string AddArea([FromBody]ViewCrudArea view)
+    {
+      return service.AddArea(view);
+    }
+
+
+    /// <summary>
+    /// Inclusão cbo
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addcbo")]
+    public string AddCbo([FromBody]ViewCrudCbo view)
+    {
+      return service.AddCBO(view);
+    }
+
+    /// <summary> eixo
+    /// Inclusão
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addaxis")]
+    public string AddAxis([FromBody]ViewCrudAxis view)
+    {
+      return service.AddAxis(view);
+    }
+
+    /// <summary>
+    /// Inclusão esfera
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addsphere")]
+    public string AddSphere([FromBody]ViewCrudSphere view)
+    {
+      return service.AddSphere(view);
+    }
+
+    /// <summary>
+    /// Inclusão escolaridade
+    /// </summary>
+    /// <param name="schooling">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addschooling")]
+    public string AddSchooling([FromBody]ViewCrudSchooling schooling)
+    {
+      service.AddSchooling(schooling);
+      return "ok";
+    }
+
+
+    /// <summary>
+    /// Inclusão processo nivel 1
+    /// </summary>
+    /// <param name="processLevelOne">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addprocesslevelone")]
+    public string AddProcessLevelOne([FromBody]ViewCrudProcessLevelOne processLevelOne)
+    {
+      service.AddProcessLevelOne(processLevelOne);
+      return "ok";
+    }
+
+    /// <summary>
+    /// Inclusão processo nivel 2
+    /// </summary>
+    /// <param name="processLevelTwo">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addprocessleveltwo")]
+    public string AddProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo processLevelTwo)
+    {
+      service.AddProcessLevelTwo(processLevelTwo);
+      return "ok";
+    }
+
+    /// <summary>
+    /// Inclusão
+    /// </summary>
+    /// <param name="questions">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addquestions")]
+    public string AddQuestions([FromBody]ViewCrudQuestions questions)
+    {
+      service.AddQuestions(questions);
+      return "ok";
+    }
+
+    /// <summary>
+    /// Inclusao textos
+    /// </summary>
+    /// <param name="textDefault">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addtextdefault")]
+    public string AddTextDefault([FromBody]ViewCrudTextDefault textDefault)
+    {
+      service.AddTextDefault(textDefault);
+      return "ok";
+    }
 
 
     [Authorize]
@@ -782,28 +905,81 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addarea")]
-    public string AddArea([FromBody]Area view)
+    public string AddAreaOld([FromBody]Area view)
     {
-      return service.AddArea(view);
+      return service.AddAreaOld(view);
     }
 
 
     [Authorize]
     [HttpPost]
-    [Route("addcbo")]
-    public string AddCbo([FromBody]Cbo view)
+    [Route("old/addcbo")]
+    public string AddCboOld([FromBody]Cbo view)
     {
-      return service.AddCBO(view);
+      return service.AddCBOOld(view);
     }
 
     [Authorize]
     [HttpPost]
-    [Route("addaxis")]
-    public string AddAxis([FromBody]Axis view)
+    [Route("old/addaxis")]
+    public string AddAxisOld([FromBody]Axis view)
     {
-      return service.AddAxis(view);
+      return service.AddAxisOld(view);
     }
 
+    [Authorize]
+    [HttpPost]
+    [Route("old/addsphere")]
+    public string AddSphereOld([FromBody]Sphere view)
+    {
+      return service.AddSphereOld(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addschooling")]
+    public string AddSchoolingOld([FromBody]Schooling schooling)
+    {
+      service.AddSchoolingOld(schooling);
+      return "ok";
+    }
+
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addprocesslevelone")]
+    public string AddProcessLevelOneOld([FromBody]ProcessLevelOne processLevelOne)
+    {
+      service.AddProcessLevelOneOld(processLevelOne);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addprocessleveltwo")]
+    public string AddProcessLevelTwoOld([FromBody]ProcessLevelTwo processLevelTwo)
+    {
+      service.AddProcessLevelTwoOld(processLevelTwo);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addquestions")]
+    public string AddQuestionsOld([FromBody]Questions questions)
+    {
+      service.AddQuestionsOld(questions);
+      return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addtextdefault")]
+    public string AddTextDefaultOld([FromBody]TextDefault textDefault)
+    {
+      service.AddTextDefaultOld(textDefault);
+      return "ok";
+    }
 
 
     [Authorize]
@@ -822,62 +998,6 @@ namespace Manager.Controllers
       service.AddSkills(view);
       return "ok";
     }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addsphere")]
-    public string AddSphere([FromBody]Sphere view)
-    {
-      return service.AddSphere(view);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addschooling")]
-    public string AddSchooling([FromBody]Schooling schooling)
-    {
-      service.AddSchooling(schooling);
-      return "ok";
-    }
-
-
-    [Authorize]
-    [HttpPost]
-    [Route("addprocesslevelone")]
-    public string AddProcessLevelOne([FromBody]ProcessLevelOne processLevelOne)
-    {
-      service.AddProcessLevelOne(processLevelOne);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addprocessleveltwo")]
-    public string AddProcessLevelTwo([FromBody]ProcessLevelTwo processLevelTwo)
-    {
-      service.AddProcessLevelTwo(processLevelTwo);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addquestions")]
-    public string AddQuestions([FromBody]Questions questions)
-    {
-      service.AddQuestions(questions);
-      return "ok";
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addtextdefault")]
-    public string AddTextDefault([FromBody]TextDefault textDefault)
-    {
-      service.AddTextDefault(textDefault);
-      return "ok";
-    }
-
-
 
     [Authorize]
     [HttpGet]

@@ -1498,6 +1498,7 @@ namespace Manager.Services.Specific
         {
           _id = p._id,
           Name = p.Name,
+          Content = p.Content,
           Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
           Order = p.Order,
           TypeQuestion = p.TypeQuestion,
@@ -1883,6 +1884,236 @@ namespace Manager.Services.Specific
           Concept = skill.Concept,
           TypeSkill = skill.TypeSkill
         };
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public string AddArea(ViewCrudArea view)
+    {
+      try
+      {
+        //var item = areaService.GetAll(p => p.Order == view.Order).Count();
+        //if (item > 0)
+        //  return "error_line";
+
+
+        areaService.Insert(new Area()
+        {
+          Name = view.Name,
+          Order = view.Order,
+          Status = EnumStatus.Enabled,
+          Company = companyService.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
+          ProcessLevelOnes = new List<ProcessLevelOne>()
+        });
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddCBO(ViewCrudCbo view)
+    {
+      try
+      {
+        cboService.InsertAccount(new Cbo()
+        {
+          Name = view.Name,
+          Code = view.Code,
+          Status = EnumStatus.Enabled
+        });
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddAxis(ViewCrudAxis view)
+    {
+      try
+      {
+        axisService.Insert(new Axis()
+        {
+          Name = view.Name,
+          TypeAxis = view.TypeAxis,
+          Status = EnumStatus.Enabled,
+          Company = companyService.GetAll(p => p._id == view.Company._id).FirstOrDefault()
+        });
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupation(ViewCrudOccupation occupation)
+    {
+      try
+      {
+        occupationService.Insert(new Occupation()
+        {
+          Name = occupation.Name,
+          Line = occupation.Line,
+          Status = EnumStatus.Enabled,
+          Group = groupService.GetAll(p=> p._id == occupation.Group._id).FirstOrDefault(),
+          Skills = new List<Skill>(),
+          CBO = cboService.GetAll(p => p._id == occupation.Cbo._id).FirstOrDefault(),
+          Activities = new List<Activitie>(),
+          SalaryScales = new List<SalaryScaleGrade>(),
+          Schooling = new List<Schooling>(),
+          Process = new List<ProcessLevelTwo>()
+        });
+        return "ok";
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    public Schooling AddSchooling(ViewCrudSchooling schooling)
+    {
+      try
+      {
+
+        return schoolingService.Insert(new Schooling()
+        {
+          Name = schooling.Name,
+          Order = schooling.Order,
+          Complement = schooling.Complement,
+          Type = schooling.Type,
+          Status = EnumStatus.Enabled
+        });
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddSphere(ViewCrudSphere view)
+    {
+      try
+      {
+        sphereService.Insert(new Sphere()
+        {
+          Name = view.Name,
+          TypeSphere = view.TypeSphere,
+          Company = companyService.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
+          Status = EnumStatus.Enabled
+        });
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddQuestions(ViewCrudQuestions view)
+    {
+      try
+      {
+        questionsService.Insert(new Questions()
+        {
+          Name = view.Name,
+          Order = view.Order,
+          TypeQuestion = view.TypeQuestion,
+          TypeRotine = view.TypeRotine,
+          Status = EnumStatus.Enabled,
+          Company = companyService.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
+          Content = view.Content
+        });
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddProcessLevelOne(ViewCrudProcessLevelOne model)
+    {
+      try
+      {
+        try
+        {
+          var order = processLevelOneService.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
+          model.Order = order;
+        }
+        catch (Exception)
+        {
+          model.Order = 1;
+        }
+
+
+        processLevelOneService.Insert(new ProcessLevelOne()
+        {
+          Name = model.Name,
+          Area = areaService.GetAll(p => p._id == model.Area._id).FirstOrDefault(),
+          Process = new List<ProcessLevelTwo>(),
+          Order = model.Order,
+          Status = EnumStatus.Enabled
+        });
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddTextDefault(ViewCrudTextDefault model)
+    {
+      try
+      {
+        textDefaultService.Insert(new TextDefault()
+        {
+          Name = model.Name,
+          Company = companyService.GetAll(p => p._id == model.Company._id).FirstOrDefault(),
+          Content = model.Content,
+          TypeText = model.TypeText,
+          Status = EnumStatus.Enabled
+        });
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddProcessLevelTwo(ViewCrudProcessLevelTwo model)
+    {
+      try
+      {
+        try
+        {
+          var order = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
+          model.Order = order;
+        }
+        catch (Exception)
+        {
+          model.Order = 1;
+        }
+
+        processLevelTwoService.Insert(new ProcessLevelTwo()
+        {
+          Name = model.Name,
+          Comments = model.Comments,
+          Order = model.Order,
+          ProcessLevelOne = processLevelOneService.GetAll(p => p._id == model.ProcessLevelOne._id).FirstOrDefault(),
+          Status = EnumStatus.Enabled
+        });
+        return "ok";
       }
       catch (Exception e)
       {
@@ -3033,7 +3264,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
     public ViewCrudTextDefault GetTextDefault(string idcompany, string name)
     {
       try
@@ -3417,102 +3647,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-
-    public string AddArea(Area view)
-    {
-      try
-      {
-        //var item = areaService.GetAll(p => p.Order == view.Order).Count();
-        //if (item > 0)
-        //  return "error_line";
-
-
-        areaService.Insert(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddCBO(Cbo view)
-    {
-      try
-      {
-        cboService.InsertAccount(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddAxis(Axis view)
-    {
-      try
-      {
-        axisService.Insert(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddOccupation(Occupation occupation)
-    {
-      try
-      {
-        occupationService.Insert(occupation);
-        return "ok";
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-
-    public Schooling AddSchooling(Schooling schooling)
-    {
-      try
-      {
-        return schoolingService.Insert(schooling);
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddSphere(Sphere view)
-    {
-      try
-      {
-        sphereService.Insert(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddQuestions(Questions view)
-    {
-      try
-      {
-        questionsService.Insert(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
     public Group GetGroupOld(string id)
     {
       try
@@ -3868,6 +4002,163 @@ namespace Manager.Services.Specific
     //}
 
 
+
+    public string AddAreaOld(Area view)
+    {
+      try
+      {
+        //var item = areaService.GetAll(p => p.Order == view.Order).Count();
+        //if (item > 0)
+        //  return "error_line";
+
+
+        areaService.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddCBOOld(Cbo view)
+    {
+      try
+      {
+        cboService.InsertAccount(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddAxisOld(Axis view)
+    {
+      try
+      {
+        axisService.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupationOld(Occupation occupation)
+    {
+      try
+      {
+        occupationService.Insert(occupation);
+        return "ok";
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    public Schooling AddSchoolingOld(Schooling schooling)
+    {
+      try
+      {
+        return schoolingService.Insert(schooling);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddSphereOld(Sphere view)
+    {
+      try
+      {
+        sphereService.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddQuestionsOld(Questions view)
+    {
+      try
+      {
+        questionsService.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddProcessLevelOneOld(ProcessLevelOne model)
+    {
+      try
+      {
+        try
+        {
+          var order = processLevelOneService.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
+          model.Order = order;
+        }
+        catch (Exception)
+        {
+          model.Order = 1;
+        }
+
+
+        model.Process = new List<ProcessLevelTwo>();
+        processLevelOneService.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddTextDefaultOld(TextDefault model)
+    {
+      try
+      {
+        textDefaultService.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddProcessLevelTwoOld(ProcessLevelTwo model)
+    {
+      try
+      {
+        try
+        {
+          var order = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
+          model.Order = order;
+        }
+        catch (Exception)
+        {
+          model.Order = 1;
+        }
+
+        processLevelTwoService.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public string UpdateArea(Area area)
     {
       try
@@ -4152,68 +4443,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-    public string AddProcessLevelOne(ProcessLevelOne model)
-    {
-      try
-      {
-        try
-        {
-          var order = processLevelOneService.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
-          model.Order = order;
-        }
-        catch (Exception)
-        {
-          model.Order = 1;
-        }
-
-
-        model.Process = new List<ProcessLevelTwo>();
-        processLevelOneService.Insert(model);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddTextDefault(TextDefault model)
-    {
-      try
-      {
-        textDefaultService.Insert(model);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddProcessLevelTwo(ProcessLevelTwo model)
-    {
-      try
-      {
-        try
-        {
-          var order = processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
-          model.Order = order;
-        }
-        catch (Exception)
-        {
-          model.Order = 1;
-        }
-
-        processLevelTwoService.Insert(model);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
 
     public string UpdateProcessLevelOne(ProcessLevelOne model)
     {
