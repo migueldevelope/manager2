@@ -29,9 +29,7 @@ namespace Manager.Core.Interfaces
 
     #region Old
     List<Person> ListPerson(Expression<Func<Person, bool>> filter);
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser baseUser);
     ViewPersonHead Head(string idperson);
     Person NewPersonOld(Person person);
     Person NewPersonView(Person person);

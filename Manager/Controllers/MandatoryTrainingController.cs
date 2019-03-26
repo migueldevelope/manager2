@@ -8,6 +8,7 @@ using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +31,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcompany")]
-    public string AddCompany([FromBody] ViewAddCompanyMandatory view)
+    public string AddCompany([FromBody] ViewCrudCompanyMandatory view)
     {
       return service.AddCompany(view);
     }
@@ -38,15 +39,15 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addoccuaption")]
-    public string AddOccuaption([FromBody]ViewAddOccupationMandatory view)
+    public string AddOccuaption([FromBody]ViewCrudOccupationMandatory view)
     {
-      return service.AddOccuaption(view);
+      return service.AddOccupation(view);
     }
 
     [Authorize]
     [HttpPost]
     [Route("addperson")]
-    public string AddPerson([FromBody]ViewAddPersonMandatory view)
+    public string AddPerson([FromBody]ViewCrudPersonMandatory view)
     {
       return service.AddPerson(view);
     }

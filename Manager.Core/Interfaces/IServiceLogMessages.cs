@@ -7,9 +7,7 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceLogMessages
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser baseUser);
     string New(LogMessages view);
     void NewLogMessage(string subject, string message, Person person);
     string Update(LogMessages view);

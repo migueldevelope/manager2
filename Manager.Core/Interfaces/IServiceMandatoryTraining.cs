@@ -2,6 +2,7 @@
 using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -10,12 +11,10 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceMandatoryTraining
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser baseUser);
-    string AddOccuaption(ViewAddOccupationMandatory view);
-    string AddPerson(ViewAddPersonMandatory view);
-    string AddCompany(ViewAddCompanyMandatory view);
+    string AddOccupation(ViewCrudOccupationMandatory view);
+    string AddPerson(ViewCrudPersonMandatory view);
+    string AddCompany(ViewCrudCompanyMandatory view);
     string RemoveOccupation(string idcourse, string idoccupation);
     string RemovePerson(string idcourse, string idperson);
     string RemoveCompany(string idcourse, string idcompany);

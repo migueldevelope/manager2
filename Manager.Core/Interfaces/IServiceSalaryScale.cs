@@ -10,9 +10,7 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceSalaryScale
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser baseUser);
     string UpdateStep(string idsalaryscale, string idgrade, EnumSteps step, decimal salary);
     string Remove(string id);
     SalaryScale Get(string id);

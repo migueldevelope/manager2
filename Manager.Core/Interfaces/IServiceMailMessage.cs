@@ -6,7 +6,6 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceMailMessage
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
     ViewMailMessage GetMessage(string id);
   }

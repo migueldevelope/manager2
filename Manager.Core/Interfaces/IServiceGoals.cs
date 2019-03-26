@@ -8,7 +8,6 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceGoals
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
     string New(Goals view);

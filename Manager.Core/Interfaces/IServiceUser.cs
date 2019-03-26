@@ -27,7 +27,6 @@ namespace Manager.Core.Interfaces
     List<User> ListUser(Expression<Func<User, bool>> filter);
     //BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser baseUser);
     User NewUser(User user);
     User NewUserView(User user);
     User UpdateUser(User user);

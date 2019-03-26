@@ -1,5 +1,4 @@
-﻿using Manager.Core.Business;
-using Manager.Core.Views;
+﻿using Manager.Core.Views;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;

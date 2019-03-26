@@ -9,7 +9,6 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceWorkflow
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
     List<Workflow> NewFlow(ViewFlow view);
     List<Workflow> Manager(ViewFlow view);

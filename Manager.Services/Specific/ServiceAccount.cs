@@ -197,7 +197,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    #region 
+    #region Syncronize Parameters
     public async Task<string> SynchronizeParameters()
     {
       await serviceInfra.SynchronizeParametersAsync();
@@ -205,10 +205,12 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+    #region Old
     public Account GeAccount(Expression<Func<Account, bool>> filter)
     {
       return serviceAccount.GetAuthentication(filter).FirstOrDefault();
     }
+    #endregion
 
   }
 }

@@ -7,9 +7,7 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceMailModel
   {
-    BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser user);
     MailModel AutoManager(string path);
     MailModel DefaultAutoManager(string path);
     MailModel DevelopmentPlan(string path);
