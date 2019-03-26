@@ -258,10 +258,10 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("getareasbyid/{idarea}")]
-    public ViewCrudArea GetAreasById(string idarea)
+    [Route("getaxisbyid/{id}")]
+    public ViewCrudAxis GetAreasById(string id)
     {
-      return service.GetAreasById(idarea);
+      return service.GetAxisById(id);
     }
 
 

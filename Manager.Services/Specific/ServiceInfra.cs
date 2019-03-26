@@ -1347,31 +1347,17 @@ namespace Manager.Services.Specific
     }
 
 
-    public ViewCrudArea GetAreasById(string id)
+    public ViewCrudAxis GetAxisById(string id)
     {
       try
       {
-        var item = areaService.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
-
-        item.ProcessLevelOnes = new List<ProcessLevelOne>();
-        var process = processLevelOneService.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
-        foreach (var row in process)
-        {
-          row.Process = new List<ProcessLevelTwo>();
-          foreach (var leveltwo in processLevelTwoService.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
-          {
-            row.Process.Add(leveltwo);
-          }
-
-          item.ProcessLevelOnes.Add(row);
-        }
-
-        return new ViewCrudArea
+        var item = axisService.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+        return new ViewCrudAxis()
         {
           _id = item._id,
           Name = item.Name,
-          Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
-          Order = item.Order
+          Company = new ViewListCompany() { _id = item._id, Name = item.Name },
+          TypeAxis = item.TypeAxis
         };
       }
       catch (Exception e)

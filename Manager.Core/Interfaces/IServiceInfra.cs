@@ -12,7 +12,7 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceInfra
   {
-    ViewCrudArea GetAreasById(string id);
+    ViewCrudAxis GetAxisById(string id);
 
     List<ViewListSchooling> GetSchooling();
     List<ViewListSphere> GetSpheres();
