@@ -8,6 +8,7 @@ using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -45,15 +45,15 @@ namespace Manager.Test.Test.Complete
         var course = serviceEvent.ListCourse(ref total, 1, 1, "").FirstOrDefault();
         var listperson = serviceMandatoryTraining.ListPerson(course._id, person.Company._id, ref total, 10, 1, "");
 
-        var view = new ViewAddPersonMandatory()
-        {
-          Person = person,
-          BeginDate = DateTime.Now,
-          Course = course,
-          TypeMandatoryTraining = EnumTypeMandatoryTraining.Mandatory
-        };
+        //var view = new ViewAddPersonMandatory()
+        //{
+        //  Person = person,
+        //  BeginDate = DateTime.Now,
+        //  Course = course,
+        //  TypeMandatoryTraining = EnumTypeMandatoryTraining.Mandatory
+        //};
 
-        serviceMandatoryTraining.AddPerson(view);
+        //serviceMandatoryTraining.AddPerson(view);
         var list = serviceMandatoryTraining.List(ref total, 1, 1, "");
 
         var listPlan = serviceMandatoryTraining.ListTrainingPlan(person.Company._id, ref total, 1, 1, "");

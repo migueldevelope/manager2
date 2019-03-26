@@ -84,11 +84,11 @@ namespace Manager.Test.Test.Complete
         serviceInfra.AddSkill(new ViewAddSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
         long total = 0;
         var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).FirstOrDefault();
-        serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
+        //serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
         var sphere = serviceInfra.GetSpheres().FirstOrDefault();
         serviceInfra.AddAxis(new Axis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator });
         var axis = serviceInfra.GetAxis().FirstOrDefault();
-        serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
+        //serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
 
       }
       catch (Exception e)
@@ -140,7 +140,7 @@ namespace Manager.Test.Test.Complete
 
         var schooling = serviceInfra.GetSchooling().Where(p => p.Name.Contains("Teste")).FirstOrDefault();
         schooling.Name = schooling.Name + " Teste 1";
-        serviceInfra.UpdateSchooling(schooling);
+        //serviceInfra.UpdateSchooling(schooling);
         var company = serviceInfra.GetCompanies().FirstOrDefault();
         var area = serviceInfra.GetAreas().FirstOrDefault();
         var map = serviceInfra.GetOccupations(company._id, area._id);
@@ -278,15 +278,15 @@ namespace Manager.Test.Test.Complete
         var sphere = serviceInfra.GetSpheres(company._id).FirstOrDefault();
         long total = 0;
 
-        var viewGroup = new ViewAddGroup()
-        {
-          Axis = axis,
-          Sphere = sphere,
-          Company = company,
-          Line = 0,
-          Name = "Teste group miguel"
-        };
-        serviceInfra.AddGroup(viewGroup);
+        //var viewGroup = new ViewAddGroup()
+        //{
+        //  Axis = axis,
+        //  Sphere = sphere,
+        //  Company = company,
+        //  Line = 0,
+        //  Name = "Teste group miguel"
+        //};
+       // serviceInfra.AddGroup(viewGroup);
         var group = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault();
 
 
@@ -352,7 +352,7 @@ namespace Manager.Test.Test.Complete
       {
         var item = serviceInfra.GetAreas().Where(p => p._id == "5ba8d349ea4b69b2d3e2408d").FirstOrDefault();
         item.Name = "nv area 51 v5";
-        serviceInfra.UpdateArea(item);
+        //serviceInfra.UpdateArea(item);
 
       }
       catch (Exception e)
@@ -376,7 +376,7 @@ namespace Manager.Test.Test.Complete
         var axis = serviceInfra.GetAxis().FirstOrDefault();
 
         sphere.Name = sphere.Name + " test";
-        serviceInfra.UpdateSphere(sphere);
+        //serviceInfra.UpdateSphere(sphere);
 
         var idcompany = "5b59d5bda49e0f344cd97fb6";
         var id = "5b5a23bd3ac6f1466cdd7d3d";

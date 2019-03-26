@@ -33,7 +33,7 @@ namespace Manager.Web
         _idAccount = idaccount
       };
       service.SetUser(baseUser);
-      servicePerson.SetUser(baseUser);
+      //servicePerson._user;
 
 
       await Clients.All.SendAsync("ReceiveMessageNotes" + idperson + idaccount, service.GetNotes(idperson));
@@ -49,7 +49,7 @@ namespace Manager.Web
         _idAccount = idaccount
       };
       service.SetUser(baseUser);
-      servicePerson.SetUser(baseUser);
+      //servicePerson.SetUser(baseUser);
 
 
       await Clients.All.SendAsync("ReceiveMessageNotesPerson" + idperson + idaccount, service.GetNotesPerson(idperson));
