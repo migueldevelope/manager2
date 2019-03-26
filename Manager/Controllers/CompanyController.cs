@@ -13,10 +13,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
-    [Produces("application/json")]
-    [Route("company")]
-    public class CompanyController : Controller
-    {
+  /// <summary>
+  /// Controlador do cadastro de empresas
+  /// </summary>
+  [Produces("application/json")]
+  [Route("company")]
+  public class CompanyController : Controller
+  {
     private readonly IServiceCompany service;
 
     #region Constructor
@@ -28,6 +31,12 @@ namespace Manager.Controllers
 
     #endregion
 
+
+    /// <summary>
+    /// Inclusão de nova empresa
+    /// </summary>
+    /// <param name="view">Objeto do CRUD</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("new")]
     public string Post([FromBody]ViewCrudCompany view)
@@ -35,6 +44,13 @@ namespace Manager.Controllers
       return service.New(view);
     }
 
+    /// <summary>
+    /// Lista as empresas
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("list")]
@@ -46,6 +62,11 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Busca informações para editar uma empresa
+    /// </summary>
+    /// <param name="id">Identificador da empresa</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
@@ -54,6 +75,11 @@ namespace Manager.Controllers
       return service.Get(id);
     }
 
+    /// <summary>
+    /// Atualiza informações de uma empresa
+    /// </summary>
+    /// <param name="view">Objeto do CRUD</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("update")]
@@ -62,6 +88,11 @@ namespace Manager.Controllers
       return service.Update(view);
     }
 
+    /// <summary>
+    /// Excluí uma empresa
+    /// </summary>
+    /// <param name="id">Identificador da empresa</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
@@ -70,6 +101,11 @@ namespace Manager.Controllers
       return service.Remove(id);
     }
 
+    /// <summary>
+    /// Inclui um novo estabelecimento
+    /// </summary>
+    /// <param name="view">Objeto do CRUD</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("newestablishment")]
     public string PostEstablishment([FromBody]ViewCrudEstablishment view)
@@ -77,6 +113,14 @@ namespace Manager.Controllers
       return service.NewEstablishment(view);
     }
 
+    /// <summary>
+    /// Lista os estabelecimentos filtrando por empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listestablishment/{idcompany}")]
@@ -88,6 +132,13 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista os estabelecimentos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listestablishment")]
@@ -99,6 +150,11 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Busca informações para editar um estabelecimento
+    /// </summary>
+    /// <param name="id">Identificador</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getestablishment/{id}")]
@@ -107,6 +163,12 @@ namespace Manager.Controllers
       return service.GetEstablishment(id);
     }
 
+
+    /// <summary>
+    /// Atualiza informações de um estabelecimento
+    /// </summary>
+    /// <param name="view">Objeto do CRUD</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updateestablishment")]
@@ -115,6 +177,11 @@ namespace Manager.Controllers
       return service.UpdateEstablishment(view);
     }
 
+    /// <summary>
+    /// Exclui um estabelecimento
+    /// </summary>
+    /// <param name="id">Identificador</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("deleteestablishment/{id}")]
