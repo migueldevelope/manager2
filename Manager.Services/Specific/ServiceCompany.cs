@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -119,10 +120,19 @@ namespace Manager.Services.Specific
     {
       try
       {
+        bool propag = false;
         Company company = serviceCompany.GetNewVersion(p => p._id == view._id).Result;
+        if (!company.Name.ToLower().Equals(view.Name.ToLower()))
+          propag = true;
         company.Name = view.Name;
         company.Logo = view.Logo;
         company = serviceCompany.UpdateNewVersion(company).Result;
+
+        if (propag)
+        {
+          Task.Run(PropagInfoCompany);
+        }
+
         return "Company altered!";
       }
       catch (Exception e)
@@ -181,6 +191,11 @@ namespace Manager.Services.Specific
       {
         throw e;
       }
+    }
+
+    private async Task PropagInfoCompany()
+    {
+
     }
     #endregion
 

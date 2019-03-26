@@ -1,11 +1,11 @@
-﻿using Manager.Core.Base;
-using Manager.Core.Business;
+﻿using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -18,15 +18,16 @@ namespace Manager.Services.Specific
   public class ServiceMandatoryTraining : Repository<MandatoryTraining>, IServiceMandatoryTraining
   {
     private readonly ServiceGeneric<Company> serviceCompany;
-    private readonly ServiceGeneric<Person> servicePerson;
-    private readonly ServiceGeneric<Occupation> serviceOccupation;
-    private readonly ServiceGeneric<CompanyMandatory> serviceCompanyMandatory;
-    private readonly ServiceGeneric<PersonMandatory> servicePersonMandatory;
-    private readonly ServiceGeneric<OccupationMandatory> serviceOccupationMandatory;
-    private readonly ServiceGeneric<MandatoryTraining> serviceMandatoryTraining;
-    private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlan;
-    private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
     private readonly ServiceGeneric<Course> serviceCourse;
+    private readonly ServiceGeneric<CompanyMandatory> serviceCompanyMandatory;
+    private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
+    private readonly ServiceGeneric<MandatoryTraining> serviceMandatoryTraining;
+    private readonly ServiceGeneric<Occupation> serviceOccupation;
+    private readonly ServiceGeneric<OccupationMandatory> serviceOccupationMandatory;
+    private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<PersonMandatory> servicePersonMandatory;
+    private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlan;
+
 
     public ServiceMandatoryTraining(DataContext context) : base(context)
     {
@@ -45,7 +46,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -863,14 +864,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Occupation> ListOccupation(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListOccupation> ListOccupation(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         List<string> filters = new List<string>();
 
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
         if (mandatory != null)
         {
           foreach (var item in mandatory.Occupations)
@@ -879,28 +880,30 @@ namespace Manager.Services.Specific
           }
         }
 
-        var detail = serviceOccupation.GetAll(p => p.Group.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
-          .Where(x => !filters.Contains(x._id)).ToList();
-
+        var detail = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result
+          .Where(x => !filters.Contains(x._id))
+          .Select(x => new ViewListOccupation()
+          {
+            _id = x._id,
+            Name = x.Name            
+          }).ToList();
         total = detail.Count();
-
         return detail.Skip(skip).Take(count).ToList();
-
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
-    public List<Person> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListPerson> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         List<string> filters = new List<string>();
 
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
         if (mandatory != null)
         {
           foreach (var item in mandatory.Persons)
@@ -910,7 +913,15 @@ namespace Manager.Services.Specific
         }
 
         var detail = servicePerson.GetAll(p => p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
-          .Where(x => !filters.Contains(x._id)).ToList();
+          .Where(x => !filters.Contains(x._id))
+          .Select(x => new ViewListPerson()
+          {
+            _id = x._id,
+            Company = new ViewListCompany(){ _id = x.Company._id, Name = x.Company.Name },
+            Establishment = new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
+            Registration = x.Registration,
+            User = new ViewListUser() { _id = x._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone }
+          }).ToList();
 
         total = detail.Count();
 
@@ -919,18 +930,18 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
-    public List<Company> ListCompany(string idcourse, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCompany> ListCompany(string idcourse, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         List<string> filters = new List<string>();
 
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
         if (mandatory != null)
         {
           foreach (var item in mandatory.Companys)
@@ -939,8 +950,14 @@ namespace Manager.Services.Specific
           }
         }
 
-        var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
-          .Where(x => !filters.Contains(x._id)).ToList();
+        var detail = serviceCompany.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result
+          .Where(x => !filters.Contains(x._id))
+          .Select(x => new ViewListCompany()
+          {
+            _id = x._id,
+            Name = x.Name
+          }).ToList();
+        ;
 
         total = detail.Count();
 
@@ -949,7 +966,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
   }

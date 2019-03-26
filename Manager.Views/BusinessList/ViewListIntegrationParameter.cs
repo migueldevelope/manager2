@@ -3,9 +3,8 @@ using System;
 
 namespace Manager.Views.BusinessList
 {
-  public class ViewListIntegrationParameter : _ViewListBase
+  public class ViewListIntegrationParameter : _ViewList
   {
-    public string _id { get; set; }
     public EnumIntegrationType Type { get; set; }
     public EnumIntegrationProcess Process { get; set; }
     public EnumIntegrationMode Mode { get; set; }

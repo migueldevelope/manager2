@@ -9,6 +9,7 @@ using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -83,7 +84,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcompany/{idcourse}")]
-    public List<Company> ListCompany(string idcourse, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCompany> ListCompany(string idcourse, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListCompany(idcourse, ref total, count, page, filter);
@@ -94,7 +95,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupation/{idcourse}/{idcompany}")]
-    public List<Occupation> ListOccupation(string idcourse, string idcompany, int count = 10, int page = 1, string filter = "")
+    public List<ViewListOccupation> ListOccupation(string idcourse, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListOccupation(idcourse, idcompany, ref total, count, page, filter);
@@ -116,7 +117,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listperson/{idcourse}/{idcompany}")]
-    public List<Person> ListPerson(string idcourse, string idcompany, int count = 10, int page = 1, string filter = "")
+    public List<ViewListPerson> ListPerson(string idcourse, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPerson(idcourse, idcompany, ref total, count, page, filter);
