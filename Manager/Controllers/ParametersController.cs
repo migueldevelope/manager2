@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador de parametros
+  /// </summary>
   [Produces("application/json")]
   [Route("parameters")]
   public class ParametersController : Controller
@@ -26,6 +29,11 @@ namespace Manager.Controllers
     }
     #endregion
 
+    /// <summary>
+    /// Inclusão de novo parametro 
+    /// </summary>
+    /// <param name="view">Objeto de CRUD</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("new")]
     public string Post([FromBody]ViewCrudParameter view)
@@ -33,6 +41,13 @@ namespace Manager.Controllers
       return service.New(view);
     }
 
+    /// <summary>
+    /// Lista parametros
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("list")]
@@ -44,6 +59,11 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Busca informações para editar parametro
+    /// </summary>
+    /// <param name="id">Identificador</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
@@ -52,6 +72,11 @@ namespace Manager.Controllers
       return service.Get(id);
     }
 
+    /// <summary>
+    /// Buscar informações para editar parametro
+    /// </summary>
+    /// <param name="name">Descriação do parametro</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getname/{name}")]
@@ -60,6 +85,11 @@ namespace Manager.Controllers
       return service.GetName(name);
     }
 
+    /// <summary>
+    /// Atualiza informações de parametro
+    /// </summary>
+    /// <param name="view">Objeto de CRUD</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("update")]
@@ -69,6 +99,11 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// Exclui um parametro
+    /// </summary>
+    /// <param name="id">Identificador</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]

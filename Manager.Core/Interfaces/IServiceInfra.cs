@@ -2,6 +2,8 @@
 using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
