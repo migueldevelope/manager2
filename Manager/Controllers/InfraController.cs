@@ -895,6 +895,205 @@ namespace Manager.Controllers
     {
       return service.DeleteProcessLevelTwo(id);
     }
+    [Authorize]
+    [HttpPut]
+    [Route("updatemapgroupscope/{idgroup}")]
+    public string UpdateMapGroupScope([FromBody]Scope scope, string idgroup)
+    {
+      return service.UpdateMapGroupScope(idgroup, scope);
+    }
+    [Authorize]
+    [HttpPut]
+    [Route("updatemapgroupschooling/{idgroup}")]
+    public string UpdateMapGroupSchooling([FromBody]Schooling schooling, string idgroup)
+    {
+      return service.UpdateMapGroupSchooling(idgroup, schooling);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatemapoccupationschooling/{idoccupation}")]
+    public string UpdateMapOccupationSchooling([FromBody]Schooling schooling, string idoccupation)
+    {
+      return service.UpdateMapOccupationSchooling(idoccupation, schooling);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatemapoccupationactivities/{idoccupation}")]
+    public string UpdateMapOccupationActivities([FromBody]Activitie activitie, string idoccupation)
+    {
+      return service.UpdateMapOccupationActivities(idoccupation, activitie);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatearea")]
+    public string UpdateArea([FromBody]ViewCrudArea view)
+    {
+      return service.UpdateArea(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateaxis")]
+    public string UpdateAxis([FromBody]ViewCrudAxis view)
+    {
+      return service.UpdateAxis(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updategroup")]
+    public string UpdateGroup([FromBody]ViewCrudGroup view)
+    {
+      return service.UpdateGroup(view);
+    }
+
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateoccupation")]
+    public string UpdateOccupation([FromBody]ViewCrudOccupation view)
+    {
+      return service.UpdateOccupation(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateskill")]
+    public string UpdateSkill([FromBody]ViewCrudSkill view)
+    {
+      return service.UpdateSkill(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatequestions")]
+    public string UpdateQuestions([FromBody]ViewCrudQuestions view)
+    {
+      return service.UpdateQuestions(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatetextdefault")]
+    public string UpdateTextDefault([FromBody]ViewCrudTextDefault view)
+    {
+      return service.UpdateTextDefault(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatesphere")]
+    public string UpdateSphere([FromBody]ViewCrudSphere view)
+    {
+      return service.UpdateSphere(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateschooling")]
+    public string UpdateSchooling([FromBody]ViewCrudSchooling view)
+    {
+      return service.UpdateSchooling(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateprocesslevelone")]
+    public string UpdateProcessLevelOne([FromBody]ViewCrudProcessLevelOne view)
+    {
+      return service.UpdateProcessLevelOne(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateprocessleveltwo")]
+    public string UpdateProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo view)
+    {
+      return service.UpdateProcessLevelTwo(view);
+    }
+
+    /// <summary>
+    /// Atualização de dados 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatecbo")]
+    public string UpdateCBO([FromBody]ViewCrudCbo view)
+    {
+      return service.UpdateCBO(view);
+    }
+
+
+
+    [Authorize]
+    [HttpPost]
+    [Route("addskills")]
+    public string AddSkills([FromBody]List<ViewAddSkill> view)
+    {
+      service.AddSkills(view);
+      return "ok";
+    }
+
     #endregion
 
 
@@ -904,7 +1103,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("addarea")]
+    [Route("old/addarea")]
     public string AddAreaOld([FromBody]Area view)
     {
       return service.AddAreaOld(view);
@@ -982,22 +1181,6 @@ namespace Manager.Controllers
     }
 
 
-    [Authorize]
-    [HttpPost]
-    [Route("old/addskill")]
-    public Skill AddSkillOld([FromBody]ViewAddSkill view)
-    {
-      return service.AddSkillOld(view);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addskills")]
-    public string AddSkills([FromBody]List<ViewAddSkill> view)
-    {
-      service.AddSkills(view);
-      return "ok";
-    }
 
     [Authorize]
     [HttpGet]
@@ -1215,130 +1398,101 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("updatearea")]
-    public string UpdateArea([FromBody]Area area)
+    [Route("old/updatearea")]
+    public string UpdateAreaOld([FromBody]Area area)
     {
-      return service.UpdateArea(area);
+      return service.UpdateAreaOld(area);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updateaxis")]
-    public string UpdateAxis([FromBody]Axis axis)
+    [Route("old/updateaxis")]
+    public string UpdateAxisOld([FromBody]Axis axis)
     {
-      return service.UpdateAxis(axis);
+      return service.UpdateAxisOld(axis);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updategroup")]
-    public string UpdateGroup([FromBody]Group group)
+    [Route("old/updategroup")]
+    public string UpdateGroupOld([FromBody]Group group)
     {
-      return service.UpdateGroup(group);
+      return service.UpdateGroupOld(group);
+    }
+
+   
+
+    [Authorize]
+    [HttpPut]
+    [Route("old/updateoccupation")]
+    public string UpdateOccupationOld([FromBody]Occupation occupation)
+    {
+      return service.UpdateOccupationOld(occupation);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updatemapgroupscope/{idgroup}")]
-    public string UpdateMapGroupScope([FromBody]Scope scope, string idgroup)
+    [Route("old/updateskill")]
+    public string UpdateSkillOld([FromBody]Skill skill)
     {
-      return service.UpdateMapGroupScope(idgroup, scope);
+      return service.UpdateSkillOld(skill);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updateoccupation")]
-    public string UpdateOccupation([FromBody]Occupation occupation)
+    [Route("old/updatequestions")]
+    public string UpdateQuestionsOld([FromBody]Questions questions)
     {
-      return service.UpdateOccupation(occupation);
+      return service.UpdateQuestionsOld(questions);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updateskill")]
-    public string UpdateSkill([FromBody]Skill skill)
+    [Route("old/updatetextdefault")]
+    public string UpdateTextDefaultOld([FromBody]TextDefault textDefault)
     {
-      return service.UpdateSkill(skill);
+      return service.UpdateTextDefaultOld(textDefault);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updatequestions")]
-    public string UpdateQuestions([FromBody]Questions questions)
+    [Route("old/updatesphere")]
+    public string UpdateSphereOld([FromBody]Sphere sphere)
     {
-      return service.UpdateQuestions(questions);
+      return service.UpdateSphereOld(sphere);
+    }
+
+    
+    [Authorize]
+    [HttpPut]
+    [Route("old/updateschooling")]
+    public string UpdateSchoolingOld([FromBody]Schooling schooling)
+    {
+      return service.UpdateSchoolingOld(schooling);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updatetextdefault")]
-    public string UpdateTextDefault([FromBody]TextDefault textDefault)
+    [Route("old/updateprocesslevelone")]
+    public string UpdateProcessLevelOneOld([FromBody]ProcessLevelOne processLevelOne)
     {
-      return service.UpdateTextDefault(textDefault);
+      return service.UpdateProcessLevelOneOld(processLevelOne);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updatesphere")]
-    public string UpdateSphere([FromBody]Sphere sphere)
+    [Route("old/updateprocessleveltwo")]
+    public string UpdateProcessLevelTwoOld([FromBody]ProcessLevelTwo processLevelTwo)
     {
-      return service.UpdateSphere(sphere);
+      return service.UpdateProcessLevelTwoOld(processLevelTwo);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updatemapgroupschooling/{idgroup}")]
-    public string UpdateMapGroupSchooling([FromBody]Schooling schooling, string idgroup)
+    [Route("old/updatecbo")]
+    public string UpdateCBOOld([FromBody]Cbo model)
     {
-      return service.UpdateMapGroupSchooling(idgroup, schooling);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("updatemapoccupationschooling/{idoccupation}")]
-    public string UpdateMapOccupationSchooling([FromBody]Schooling schooling, string idoccupation)
-    {
-      return service.UpdateMapOccupationSchooling(idoccupation, schooling);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("updatemapoccupationactivities/{idoccupation}")]
-    public string UpdateMapOccupationActivities([FromBody]Activitie activitie, string idoccupation)
-    {
-      return service.UpdateMapOccupationActivities(idoccupation, activitie);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("updateschooling")]
-    public string UpdateSchooling([FromBody]Schooling schooling)
-    {
-      return service.UpdateSchooling(schooling);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("updateprocesslevelone")]
-    public string UpdateProcessLevelOne([FromBody]ProcessLevelOne processLevelOne)
-    {
-      return service.UpdateProcessLevelOne(processLevelOne);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("updateprocessleveltwo")]
-    public string UpdateProcessLevelTwo([FromBody]ProcessLevelTwo processLevelTwo)
-    {
-      return service.UpdateProcessLevelTwo(processLevelTwo);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("updatecbo")]
-    public string UpdateCBO([FromBody]Cbo model)
-    {
-      return service.UpdateCBO(model);
+      return service.UpdateCBOOld(model);
     }
 
     [Authorize]

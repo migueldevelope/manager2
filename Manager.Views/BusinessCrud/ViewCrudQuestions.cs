@@ -3,10 +3,8 @@ using Manager.Views.Enumns;
 
 namespace Manager.Views.BusinessCrud
 {
-  public class ViewCrudQuestions
+  public class ViewCrudQuestions: _ViewCrudBase
   {
-    public string _id { get; set; }
-    public string Name { get; set; }
     public string Content { get; set; }
     public ViewListCompany Company { get; set; }
     public EnumTypeQuestion TypeQuestion { get; set; }

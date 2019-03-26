@@ -162,7 +162,7 @@ namespace Manager.Test.Test.Complete
         var occupations = serviceOccupation.GetAll(p => p.Status == EnumStatus.Enabled).ToList();
         foreach (var item in occupations)
         {
-          serviceInfra.UpdateOccupation(item);
+          //serviceInfra.UpdateOccupation(item);
         }
       }
       catch (Exception e)

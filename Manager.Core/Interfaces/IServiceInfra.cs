@@ -108,6 +108,24 @@ namespace Manager.Core.Interfaces
     string AddProcessLevelTwo(ViewCrudProcessLevelTwo model);
     string AddQuestions(ViewCrudQuestions view);
 
+    string UpdateMapGroupSchooling(string idgroup, Schooling schooling);
+    string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling);
+    string UpdateMapOccupationActivities(string idoccupation, Activitie activitie);
+    string UpdateMapGroupScope(string idgroup, Scope scope);
+
+
+    string UpdateTextDefault(ViewCrudTextDefault view);
+    string UpdateSkill(ViewCrudSkill view);
+    string UpdateSphere(ViewCrudSphere view);
+    string UpdateAxis(ViewCrudAxis view);
+    string UpdateQuestions(ViewCrudQuestions view);
+    string UpdateGroup(ViewCrudGroup view);
+    string UpdateArea(ViewCrudArea view);
+    string UpdateOccupation(ViewCrudOccupation view);
+    string UpdateSchooling(ViewCrudSchooling view);
+    string UpdateProcessLevelOne(ViewCrudProcessLevelOne view);
+    string UpdateProcessLevelTwo(ViewCrudProcessLevelTwo view);
+    string UpdateCBO(ViewCrudCbo view);
     #endregion
 
 
@@ -156,22 +174,18 @@ namespace Manager.Core.Interfaces
     string AddProcessLevelTwoOld(ProcessLevelTwo model);
     string AddQuestionsOld(Questions view);
 
-    string UpdateTextDefault(TextDefault textDefault);
-    string UpdateSkill(Skill skill);
-    string UpdateSphere(Sphere sphere);
-    string UpdateAxis(Axis axis);
-    string UpdateQuestions(Questions questions);
-    string UpdateGroup(Group group);
-    string UpdateMapGroupScope(string idgroup, Scope scope);
-    string UpdateArea(Area area);
-    string UpdateOccupation(Occupation occupation);
-    string UpdateMapGroupSchooling(string idgroup, Schooling schooling);
-    string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling);
-    string UpdateMapOccupationActivities(string idoccupation, Activitie activitie);
-    string UpdateSchooling(Schooling schooling);
-    string UpdateProcessLevelOne(ProcessLevelOne model);
-    string UpdateProcessLevelTwo(ProcessLevelTwo model);
-    string UpdateCBO(Cbo model);
+    string UpdateTextDefaultOld(TextDefault textDefault);
+    string UpdateSkillOld(Skill skill);
+    string UpdateSphereOld(Sphere sphere);
+    string UpdateAxisOld(Axis axis);
+    string UpdateQuestionsOld(Questions questions);
+    string UpdateGroupOld(Group group);
+    string UpdateAreaOld(Area area);
+    string UpdateOccupationOld(Occupation occupation);
+    string UpdateSchoolingOld(Schooling schooling);
+    string UpdateProcessLevelOneOld(ProcessLevelOne model);
+    string UpdateProcessLevelTwoOld(ProcessLevelTwo model);
+    string UpdateCBOOld(Cbo model);
     #endregion
 
   }
