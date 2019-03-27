@@ -46,6 +46,20 @@ namespace Manager.Controllers
     #endregion
 
     #region Infra 
+
+    /// <summary>
+    /// Lista os processos nivel 1 filtrando pela area
+    /// </summary>
+    /// <param name="idarea">Identificador da area</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getlistprocessleveonebyarea/{idarea}")]
+    public List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea)
+    {
+      return service.GetListProcessLevelOneByArea(idarea);
+    }
+
     /// <summary>
     /// Lista de esferas
     /// </summary>

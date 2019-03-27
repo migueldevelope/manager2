@@ -16,6 +16,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
 
+    List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea);
     List<ViewListSkill> GetEssential(string idcompany);
     ViewCrudAxis GetAxisById(string id);
     ViewCrudSphere GetSphereById(string id);
