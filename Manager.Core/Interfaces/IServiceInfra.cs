@@ -15,6 +15,8 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
+
+    List<ViewListSkill> GetEssential(string idcompany);
     ViewCrudAxis GetAxisById(string id);
     ViewCrudSphere GetSphereById(string id);
     ViewCrudSkill GetSkillById(string id);
@@ -149,6 +151,7 @@ namespace Manager.Core.Interfaces
     ProcessLevelTwo GetProcessLevelTwoOld(string id);
     List<ProcessLevelTwo> GetProcessLevelTwoOld();
     List<ProcessLevelTwo> GetProcessLevelTwoFilterOld(string idarea);
+
 
     Group GetGroupOld(string id);
     Group GetGroupOld(string idcompany, string filterName);
