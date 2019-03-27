@@ -47,6 +47,20 @@ namespace Manager.Controllers
 
     #region Infra 
 
+
+    /// <summary>
+    /// Busca informações da area para editar
+    /// </summary>
+    /// <param name="idarea">Indetificador da area</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getareasbyid/{idarea}")]
+    public ViewCrudArea GetAreasById(string idarea)
+    {
+      return service.GetAreasById(idarea);
+    }
+
     /// <summary>
     /// Lista os processos nivel 1 filtrando pela area
     /// </summary>

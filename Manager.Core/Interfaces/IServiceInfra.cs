@@ -18,6 +18,7 @@ namespace Manager.Core.Interfaces
 
     List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea);
     List<ViewListSkill> GetEssential(string idcompany);
+    ViewCrudArea GetAreasById(string id);
     ViewCrudAxis GetAxisById(string id);
     ViewCrudSphere GetSphereById(string id);
     ViewCrudSkill GetSkillById(string id);

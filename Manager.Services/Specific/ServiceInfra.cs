@@ -5380,17 +5380,22 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceGroup.GetAll(p => p._id == id).FirstOrDefault().Scope
-          .Select(p => new ViewCrudMapGroupScope()
+        var group = serviceGroup.GetAll(p => p._id == id).FirstOrDefault();
+
+        if (group == null)
+          return null;
+
+        return group.Scope
+        .Select(p => new ViewCrudMapGroupScope()
+        {
+          _idGroup = id,
+          Scope = new ViewCrudScope()
           {
-            _idGroup = id,
-            Scope = new ViewCrudScope()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Order = p.Order
-            }
-          }).ToList();
+            _id = p._id,
+            Name = p.Name,
+            Order = p.Order
+          }
+        }).ToList();
       }
       catch (Exception e)
       {
@@ -5423,6 +5428,25 @@ namespace Manager.Services.Specific
             }
           }).ToList()
         }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudArea GetAreasById(string id)
+    {
+      try
+      {
+        var area = serviceArea.GetAll(p => p._id == id).FirstOrDefault();
+        return new ViewCrudArea()
+        {
+          _id = area._id,
+          Name = area.Name,
+          Order = area.Order,
+          Company = new ViewListCompany() { _id = area.Company._id, Name = area.Company.Name }
+        };
       }
       catch (Exception e)
       {

@@ -1,5 +1,7 @@
 ﻿using Manager.Core.Business;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -20,28 +22,46 @@ namespace Manager.Core.Interfaces
     string RemoveMonitoringActivities(string idmonitoring, string idactivitie);
 
 
-    List<Monitoring> ListMonitoringsWait(string idmanager, ref long total, string filter, int count, int page);
-    List<Monitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page);
-    Monitoring GetMonitorings(string id);
-    List<Skill> GetSkills(string idperson);
-    Monitoring PersonMonitoringsWait(string idmanager);
-    List<Monitoring> PersonMonitoringsEnd(string idmanager);
-    Monitoring NewMonitoring(Monitoring monitoring, string idperson);
-    string UpdateMonitoring(Monitoring monitoring, string idperson);
-    List<Monitoring> GetListExclud(ref long total, string filter, int count, int page);
-    MonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie);
-    string UpdateMonitoringActivities(string idmonitoring, MonitoringActivities activitie);
-    string AddMonitoringActivities(string idmonitoring, Activitie activitie);
-    List<ListComments> AddComments(string idmonitoring, string iditem, ListComments comments);
-    string UpdateComments(string idmonitoring, string iditem, ListComments comments);
-    List<ListComments> GetListComments(string idmonitoring, string iditem);
-    List<Plan> AddPlan(string idmonitoring, string iditem, Plan plan);
-    List<Plan> UpdatePlan(string idmonitoring, string iditem, Plan plan);
+    List<ViewListMonitoring> ListMonitoringsWait(string idmanager, ref long total, string filter, int count, int page);
+    List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page);
+    ViewCrudMonitoring GetMonitorings(string id);
+    List<ViewListSkill> GetSkills(string idperson);
+    ViewListMonitoring PersonMonitoringsWait(string idmanager);
+    List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager);
+    ViewListMonitoring NewMonitoring(Monitoring monitoring, string idperson);
+    //string UpdateMonitoring(ViewCrudMonitoring monitoring, string idperson);
+    List<ViewListMonitoring> GetListExclud(ref long total, string filter, int count, int page);
+    ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie);
+    string UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view);
+    string AddMonitoringActivities(string idmonitoring, ViewCrudActivities view);
+    List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments);
+    string UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments);
+    List<ViewCrudComment> GetListComments(string idmonitoring, string iditem);
+    //List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan);
+    //List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan plan);
+
     #endregion
 
 
 
     #region Old
+    List<Monitoring> ListMonitoringsWaitOld(string idmanager, ref long total, string filter, int count, int page);
+    List<Monitoring> ListMonitoringsEndOld(string idmanager, ref long total, string filter, int count, int page);
+    Monitoring GetMonitoringsOld(string id);
+    List<Skill> GetSkillsOld(string idperson);
+    Monitoring PersonMonitoringsWaitOld(string idmanager);
+    List<Monitoring> PersonMonitoringsEndOld(string idmanager);
+    Monitoring NewMonitoringOld(Monitoring monitoring, string idperson);
+    string UpdateMonitoringOld(Monitoring monitoring, string idperson);
+    List<Monitoring> GetListExcludOld(ref long total, string filter, int count, int page);
+    MonitoringActivities GetMonitoringActivitiesOld(string idmonitoring, string idactivitie);
+    string UpdateMonitoringActivitiesOld(string idmonitoring, MonitoringActivities activitie);
+    string AddMonitoringActivitiesOld(string idmonitoring, Activitie activitie);
+    List<ListComments> AddCommentsOld(string idmonitoring, string iditem, ListComments comments);
+    string UpdateCommentsOld(string idmonitoring, string iditem, ListComments comments);
+    List<ListComments> GetListCommentsOld(string idmonitoring, string iditem);
+    List<Plan> AddPlanOld(string idmonitoring, string iditem, Plan plan);
+    List<Plan> UpdatePlanOld(string idmonitoring, string iditem, Plan plan);
     #endregion
   }
 }
