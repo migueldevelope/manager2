@@ -4,6 +4,7 @@ using Manager.Core.Enumns;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;
+using Manager.Views.Enumns;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;

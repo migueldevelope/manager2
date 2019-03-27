@@ -6,7 +6,9 @@ using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -78,6 +80,18 @@ namespace Manager.Controllers
     {
       return service.NewOnBoarding(idperson);
     }
+    /// <summary>
+    /// Iniciar o processo de onboarding do colaborador
+    /// </summary>
+    /// <param name="id">Identificador do colaborador</param>
+    /// <returns>Objeto de listagem do OnBoarding</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("get/{id}")]
+    public ViewCrudOnboarding GetOnBoarding(string id)
+    {
+      return service.GetOnBoarding(id);
+    }
 
     #endregion
 
@@ -142,7 +156,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("old/get/{id}")]
-    public OnBoarding GetOnBoarding(string id)
+    public OnBoarding GetOnBoardingOld(string id)
     {
       return service.GetOnBoardings(id);
     }

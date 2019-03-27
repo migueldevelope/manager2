@@ -1,9 +1,8 @@
 ﻿using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Manager.Core.Interfaces
 {

@@ -1,8 +1,9 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
@@ -15,6 +16,8 @@ namespace Manager.Core.Interfaces
     List<ViewListOnBoarding> ListOnBoarding(string idmanager, ref long total, string filter, int count, int page);
     ViewListOnBoarding PersonOnBoardingWait(string idperson);
     ViewListOnBoarding NewOnBoarding(string idperson);
+    ViewCrudOnboarding GetOnBoarding(string id);
+
 
     #region Old
     string RemoveOnBoarding(string idperson);

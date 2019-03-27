@@ -1,6 +1,6 @@
 ﻿namespace Manager.Views.BusinessList
 {
-  public class ViewListActivitie : _ViewListBase
+  public class ViewListScope : _ViewListBase
   {
     public long Order { get; set; }
   }
