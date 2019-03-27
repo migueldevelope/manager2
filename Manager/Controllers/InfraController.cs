@@ -59,6 +59,19 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// Lista escopos do grupo
+    /// </summary>
+    /// <param name="id">Identificador grupo</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getmapgroupscope/{id}")]
+    public List<ViewCrudMapGroupScope> GetMapGroupScopeById(string id)
+    {
+      return service.GetMapGroupScopeById(id);
+    }
+
+    /// <summary>
     /// Lista de esferas filtrando pela empresa
     /// </summary>
     /// <param name="idcompany">Identificador da empresa</param>
@@ -397,6 +410,19 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// Busca informações para editar mapa do grupo
+    /// </summary>
+    /// <param name="id">Identificador grupo</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getmapgroup/{id}")]
+    public ViewMapGroup GetMapGroup(string id)
+    {
+      return service.GetMapGroup(id);
+    }
+
+    /// <summary>
     /// Lista grupos filtrando pela empresa
     /// </summary>
     /// <param name="idcompany">Identificador empresa</param>
@@ -404,7 +430,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgroups/{idcompany}")]
-    public List<ViewGroupList> GetGroups(string idcompany)
+    public List<ViewGroupListLO> GetGroups(string idcompany)
     {
       return service.GetGroups(idcompany);
     }

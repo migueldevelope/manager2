@@ -8,6 +8,7 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceMonitoring
   {
+    #region Monitoring
     List<Monitoring> ListMonitoringsWait(string idmanager, ref long total, string filter, int count, int page);
     List<Monitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page);
     Monitoring GetMonitorings(string id);
@@ -34,5 +35,11 @@ namespace Manager.Core.Interfaces
     List<Plan> AddPlan(string idmonitoring, string iditem, Plan plan);
     List<Plan> UpdatePlan(string idmonitoring, string iditem, Plan plan);
     string ScriptComments();
+    #endregion
+
+
+
+    #region Old
+    #endregion
   }
 }
