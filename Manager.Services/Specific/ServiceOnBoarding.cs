@@ -314,6 +314,93 @@ namespace Manager.Services.Specific
           }
           result.SkillsOccupation.Add(newSkill);
         }
+
+        ViewCrudOnboardingScope newScope = new ViewCrudOnboardingScope();
+        foreach (OnBoardingScope scope in onBoarding.Scopes)
+        {
+          newScope = new ViewCrudOnboardingScope()
+          {
+            _id = scope._id,
+            Scope = new ViewListScope() { _id = scope.Scope._id, Name = scope.Scope.Name, Order = scope.Scope.Order },
+            CommentsManager = scope.CommentsManager,
+            CommentsPerson = scope.CommentsPerson,
+            StatusViewManager = scope.StatusViewManager,
+            StatusViewPerson = scope.StatusViewPerson,
+            Comments = new List<ViewCrudComment>()
+          };
+          ViewCrudComment newComment;
+          foreach (var comment in scope.Comments)
+          {
+            newComment = new ViewCrudComment()
+            {
+              _id = comment._id,
+              Date = comment.Date,
+              StatusView = comment.StatusView,
+              UserComment = comment.UserComment,
+              Comments = comment.Comments
+            };
+            newScope.Comments.Add(newComment);
+          }
+          result.Scopes.Add(newScope);
+        }
+
+        ViewCrudOnboardingSchooling newSchooling = new ViewCrudOnboardingSchooling();
+        foreach (OnBoardingSchooling schooling in onBoarding.Schoolings)
+        {
+          newSchooling = new ViewCrudOnboardingSchooling()
+          {
+            _id = schooling._id,
+            Schooling = new ViewListSchooling() { _id = schooling.Schooling._id, Name = schooling.Schooling.Name, Order = schooling.Schooling.Order },
+            CommentsManager = schooling.CommentsManager,
+            CommentsPerson = schooling.CommentsPerson,
+            StatusViewManager = schooling.StatusViewManager,
+            StatusViewPerson = schooling.StatusViewPerson,
+            Comments = new List<ViewCrudComment>()
+          };
+          ViewCrudComment newComment;
+          foreach (var comment in schooling.Comments)
+          {
+            newComment = new ViewCrudComment()
+            {
+              _id = comment._id,
+              Date = comment.Date,
+              StatusView = comment.StatusView,
+              UserComment = comment.UserComment,
+              Comments = comment.Comments
+            };
+            newSchooling.Comments.Add(newComment);
+          }
+          result.Schoolings.Add(newSchooling);
+        }
+
+        ViewCrudOnboardingActivitie newActivitie = new ViewCrudOnboardingActivitie();
+        foreach (OnBoardingActivities activitie in onBoarding.Activities)
+        {
+          newActivitie = new ViewCrudOnboardingActivitie()
+          {
+            _id = activitie._id,
+            Activitie = new ViewListActivitie() { _id = activitie.Activitie._id, Name = activitie.Activitie.Name, Order = activitie.Activitie.Order },
+            CommentsManager = activitie.CommentsManager,
+            CommentsPerson = activitie.CommentsPerson,
+            StatusViewManager = activitie.StatusViewManager,
+            StatusViewPerson = activitie.StatusViewPerson,
+            Comments = new List<ViewCrudComment>()
+          };
+          ViewCrudComment newComment;
+          foreach (var comment in activitie.Comments)
+          {
+            newComment = new ViewCrudComment()
+            {
+              _id = comment._id,
+              Date = comment.Date,
+              StatusView = comment.StatusView,
+              UserComment = comment.UserComment,
+              Comments = comment.Comments
+            };
+            newActivitie.Comments.Add(newComment);
+          }
+          result.Activities.Add(newActivitie);
+        }
         return result;
       }
       catch (Exception e)
