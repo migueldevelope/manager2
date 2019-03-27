@@ -292,34 +292,34 @@ namespace Manager.Test.Test.Complete
 
         var view = new ViewAddMapGroupScope()
         {
-          Group = group,
+          //Group = group,
           Scope = new Scope() { Name = "teste", Order = 99 }
         };
         //serviceInfra.AddMapGroupScope(view);
 
         var view2 = new ViewAddMapGroupScope()
         {
-          Group = group,
+          //Group = group,
           Scope = new Scope() { Name = "teste scope 2", Order = 99 }
         };
 
         //serviceInfra.AddMapGroupScope(view2);
 
-        var scopeS = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 1).FirstOrDefault();
+        //var scopeS = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 1).FirstOrDefault();
 
-        serviceInfra.ReorderGroupScope(company._id, group._id, scopeS._id, true);
+       // serviceInfra.ReorderGroupScope(company._id, group._id, scopeS._id, true);
 
         var view3 = new ViewAddMapGroupScope()
         {
-          Group = group,
+          //Group = group,
           Scope = new Scope() { Name = "teste scope 3", Order = 99 }
         };
 
         //serviceInfra.AddMapGroupScope(view3);
 
-        var scopeD = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 3).FirstOrDefault();
+        //var scopeD = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 3).FirstOrDefault();
 
-        serviceInfra.ReorderGroupScope(company._id, group._id, scopeD._id, false);
+        //serviceInfra.ReorderGroupScope(company._id, group._id, scopeD._id, false);
 
       }
       catch (Exception e)
