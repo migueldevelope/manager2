@@ -117,7 +117,7 @@ namespace Manager.Test.Test.Complete
           Schooling = schooling
         };
 
-        var test = serviceInfra.AddMapGroupSchooling(view);
+        //var test = serviceInfra.AddMapGroupSchooling(view);
 
 
       }
@@ -295,7 +295,7 @@ namespace Manager.Test.Test.Complete
           Group = group,
           Scope = new Scope() { Name = "teste", Order = 99 }
         };
-        serviceInfra.AddMapGroupScope(view);
+        //serviceInfra.AddMapGroupScope(view);
 
         var view2 = new ViewAddMapGroupScope()
         {
@@ -303,7 +303,7 @@ namespace Manager.Test.Test.Complete
           Scope = new Scope() { Name = "teste scope 2", Order = 99 }
         };
 
-        serviceInfra.AddMapGroupScope(view2);
+        //serviceInfra.AddMapGroupScope(view2);
 
         var scopeS = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 1).FirstOrDefault();
 
@@ -315,7 +315,7 @@ namespace Manager.Test.Test.Complete
           Scope = new Scope() { Name = "teste scope 3", Order = 99 }
         };
 
-        serviceInfra.AddMapGroupScope(view3);
+        //serviceInfra.AddMapGroupScope(view3);
 
         var scopeD = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 3).FirstOrDefault();
 

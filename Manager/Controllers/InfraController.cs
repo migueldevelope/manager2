@@ -676,18 +676,54 @@ namespace Manager.Controllers
       return service.AddSpecificRequirements(idoccupation, view);
     }
 
+    /// <summary>
+    /// Inclusão
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addmapgroupschooling")]
+    public string AddMapGroupSchooling([FromBody]ViewCrudMapGroupSchooling view)
+    {
+      return service.AddMapGroupSchooling(view);
+    }
+
+    /// <summary>
+    /// Inclusão
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addoccupationactivities")]
+    public string AddOccupationActivities([FromBody]ViewCrudOccupationActivities view)
+    {
+      return service.AddOccupationActivities(view);
+    }
+
+    /// <summary>
+    /// Inclusao skill essencial
+    /// </summary>
+    /// <param name="view">Objeto CRUD</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addessential")]
-    public string AddEssential([FromBody]ViewAddEssential view)
+    public string AddEssential([FromBody]ViewCrudEssential view)
     {
       return service.AddEssential(view);
     }
 
+    /// <summary>
+    /// Inclusao grupo
+    /// </summary>
+    /// <param name="view">Objeto CRUD</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addgroup")]
-    public string AddGroup([FromBody]ViewAddGroup view)
+    public string AddGroup([FromBody]ViewCrudGroup view)
     {
       service.AddGroup(view);
       return "OK";
@@ -695,51 +731,45 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("addmapgroupschooling")]
-    public string AddMapGroupSchooling([FromBody]ViewAddMapGroupSchooling view)
-    {
-      return service.AddMapGroupSchooling(view);
-    }
-
-    [Authorize]
-    [HttpPost]
     [Route("addmapgroupscope")]
-    public string AddMapGroupScope([FromBody]ViewAddMapGroupScope view)
+    public string AddMapGroupScope([FromBody]ViewCrudMapGroupScope view)
     {
       return service.AddMapGroupScope(view);
     }
 
+    /// <summary>
+    /// Inclusao skill no grupo
+    /// </summary>
+    /// <param name="view">Objeto CRUD</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addmapgroupskill")]
-    public string AddMapGroupSkill([FromBody]ViewAddMapGroupSkill view)
+    public string AddMapGroupSkill([FromBody]ViewCrudMapGroupSkill view)
     {
       return service.AddMapGroupSkill(view);
     }
 
+    /// <summary>
+    /// Inclusao cargo
+    /// </summary>
+    /// <param name="view">Objeto CRUD</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addoccupation")]
-    public string AddOccupation([FromBody]ViewAddOccupation view)
+    public string AddOccupation([FromBody]ViewCrudOccupation view)
     {
       return service.AddOccupation(view);
     }
 
-    [Authorize]
-    [HttpPost]
-    [Route("addoccupationactivities")]
-    public string AddOccupationActivities([FromBody]ViewAddOccupationActivities view)
-    {
-      return service.AddOccupationActivities(view);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("addoccupationactivitieslist")]
-    public string AddOccupationActivitiesList([FromBody]List<ViewAddOccupationActivities> list)
-    {
-      return service.AddOccupationActivitiesList(list);
-    }
+    //[Authorize]
+    //[HttpPost]
+    //[Route("addoccupationactivitieslist")]
+    //public string AddOccupationActivitiesList([FromBody]List<ViewCrudOccupationActivities> list)
+    //{
+    //  return service.AddOccupationActivitiesList(list);
+    //}
 
     [Authorize]
     [HttpPost]
@@ -895,17 +925,30 @@ namespace Manager.Controllers
     {
       return service.DeleteProcessLevelTwo(id);
     }
+
+    /// <summary>
+    /// Atualiza informações do scopo no grupo
+    /// </summary>
+    /// <param name="scope">Objeto Crud</param>
+    /// <param name="idgroup">Identificador Grupo</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatemapgroupscope/{idgroup}")]
-    public string UpdateMapGroupScope([FromBody]Scope scope, string idgroup)
+    public string UpdateMapGroupScope([FromBody]ViewCrudScope scope, string idgroup)
     {
       return service.UpdateMapGroupScope(idgroup, scope);
     }
+    /// <summary>
+    /// Atualiza inforamções de escolaridade no grupo
+    /// </summary>
+    /// <param name="schooling">Objeto do Crud</param>
+    /// <param name="idgroup">Identificador do grupo</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatemapgroupschooling/{idgroup}")]
-    public string UpdateMapGroupSchooling([FromBody]Schooling schooling, string idgroup)
+    public string UpdateMapGroupSchooling([FromBody]ViewCrudSchooling schooling, string idgroup)
     {
       return service.UpdateMapGroupSchooling(idgroup, schooling);
     }
@@ -913,15 +956,21 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatemapoccupationschooling/{idoccupation}")]
-    public string UpdateMapOccupationSchooling([FromBody]Schooling schooling, string idoccupation)
+    public string UpdateMapOccupationSchooling([FromBody]ViewCrudSchooling schooling, string idoccupation)
     {
       return service.UpdateMapOccupationSchooling(idoccupation, schooling);
     }
 
+    /// <summary>
+    /// Atualizar informações de entragas no cargo
+    /// </summary>
+    /// <param name="activitie">Objeto CRUD</param>
+    /// <param name="idoccupation">Identificador do cargo</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatemapoccupationactivities/{idoccupation}")]
-    public string UpdateMapOccupationActivities([FromBody]Activitie activitie, string idoccupation)
+    public string UpdateMapOccupationActivities([FromBody]ViewCrudActivities activitie, string idoccupation)
     {
       return service.UpdateMapOccupationActivities(idoccupation, activitie);
     }
@@ -1100,6 +1149,88 @@ namespace Manager.Controllers
 
     //################################################# Old #################################################
     #region Old
+
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addessential")]
+    public string AddEssentialOld([FromBody]ViewAddEssential view)
+    {
+      return service.AddEssentialOld(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addgroup")]
+    public string AddGroupOld([FromBody]ViewAddGroup view)
+    {
+      service.AddGroupOld(view);
+      return "OK";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addmapgroupscope")]
+    public string AddMapGroupScopeOld([FromBody]ViewAddMapGroupScope view)
+    {
+      return service.AddMapGroupScopeOld(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addmapgroupskill")]
+    public string AddMapGroupSkillOld([FromBody]ViewAddMapGroupSkill view)
+    {
+      return service.AddMapGroupSkillOld(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addoccupation")]
+    public string AddOccupationOld([FromBody]ViewAddOccupation view)
+    {
+      return service.AddOccupationOld(view);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addoccupationactivitieslist")]
+    public string AddOccupationActivitiesListOld([FromBody]List<ViewAddOccupationActivities> list)
+    {
+      return service.AddOccupationActivitiesListOld(list);
+    }
+
+
+    [Authorize]
+    [HttpPut]
+    [Route("old/updatemapgroupscope/{idgroup}")]
+    public string UpdateMapGroupScopeOld([FromBody]Scope scope, string idgroup)
+    {
+      return service.UpdateMapGroupScopeOld(idgroup, scope);
+    }
+    [Authorize]
+    [HttpPut]
+    [Route("old/updatemapgroupschooling/{idgroup}")]
+    public string UpdateMapGroupSchoolingOld([FromBody]Schooling schooling, string idgroup)
+    {
+      return service.UpdateMapGroupSchoolingOld(idgroup, schooling);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("old/updatemapoccupationschooling/{idoccupation}")]
+    public string UpdateMapOccupationSchoolingOld([FromBody]Schooling schooling, string idoccupation)
+    {
+      return service.UpdateMapOccupationSchoolingOld(idoccupation, schooling);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("old/updatemapoccupationactivities/{idoccupation}")]
+    public string UpdateMapOccupationActivitiesOld([FromBody]Activitie activitie, string idoccupation)
+    {
+      return service.UpdateMapOccupationActivitiesOld(idoccupation, activitie);
+    }
 
     [Authorize]
     [HttpPost]

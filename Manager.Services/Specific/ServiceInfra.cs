@@ -1594,33 +1594,28 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddEssential(ViewAddEssential view)
+    public string AddEssential(ViewCrudEssential view)
     {
       try
       {
+        var company = companyService.GetAll(p => p._id == view._idCompany).FirstOrDefault();
+
+        Skill skill = skillService.GetAll(p => p._id == view.Skill._id).FirstOrDefault();
+
         if (view.Skill._id == null)
         {
-          var skill = AddSkill(new ViewAddSkill()
+          skill = AddSkillInternal(new ViewAddSkill()
           {
             Name = view.Skill.Name,
             Concept = view.Skill.Concept,
             TypeSkill = view.Skill.TypeSkill
           });
-          view.Skill = new Skill()
-          {
-            _id = skill._id,
-            Name = skill.Name,
-            Concept = skill.Concept,
-            _idAccount = _user._idAccount,
-            Status = EnumStatus.Enabled,
-            TypeSkill = skill.TypeSkill
-          };
         }
 
-        view.Company.Skills.Add(view.Skill);
-        companyService.Update(view.Company, null);
+        company.Skills.Add(skill);
+        companyService.Update(company, null);
 
-        UpdateCompanyAll(view.Company);
+        UpdateCompanyAll(company);
         return "ok";
       }
       catch (Exception e)
@@ -1630,19 +1625,74 @@ namespace Manager.Services.Specific
     }
 
 
-    public string AddMapGroupSchooling(ViewAddMapGroupSchooling view)
+
+    public ViewCrudGroup AddGroup(ViewCrudGroup view)
+    {
+      try
+      {
+        long line = 0;
+        try
+        {
+          line = groupService.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line);
+          if (line == 0)
+            line = 1;
+          else
+            line += 1;
+        }
+        catch (Exception)
+        {
+          line = 1;
+        }
+
+
+        var group = new Group()
+        {
+          Name = view.Name,
+          Axis = axisService.GetAll(p => p._id == view.Axis._id).FirstOrDefault(),
+          Sphere = sphereService.GetAll(p => p._id == view.Sphere._id).FirstOrDefault(),
+          Status = EnumStatus.Enabled,
+          Skills = new List<Skill>(),
+          Schooling = new List<Schooling>(),
+          Line = line,
+          Company = companyService.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
+          Scope = new List<Scope>()
+        };
+        var result = groupService.Insert(group);
+
+        return new ViewCrudGroup()
+        {
+          _id = result._id,
+          Name = result.Name,
+          Line = result.Line,
+          Company = new ViewListCompany() { _id = result.Company._id, Name = result.Company.Name },
+          Axis = new ViewListAxis() { _id = result.Axis._id, Name = result.Axis.Name },
+          Sphere = new ViewListSphere() { _id = result.Sphere._id, Name = result.Sphere.Name }
+        };
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddMapGroupSchooling(ViewCrudMapGroupSchooling view)
     {
       try
       {
 
+        var group = groupService.GetAll(p => p._id == view.idGroup).FirstOrDefault();
+        var schooling = schoolingService.GetAll(p => p._id == view.Schooling._id).FirstOrDefault();
+
+        schooling.Complement = view.Schooling.Complement;
+        schooling.Type = view.Schooling.Type;
 
         //if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
         //  return "error_exists_schooling";
 
         //view.Group.Schooling.Add(AddSchooling(view.Schooling));
-        view.Group.Schooling.Add(view.Schooling);
-        groupService.Update(view.Group, null);
-        UpdateGroupAll(view.Group);
+        group.Schooling.Add(schooling);
+        groupService.Update(group, null);
+        UpdateGroupAll(group);
         return "ok";
       }
       catch (Exception e)
@@ -1651,15 +1701,16 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddMapGroupScope(ViewAddMapGroupScope view)
+    public string AddMapGroupScope(ViewCrudMapGroupScope view)
     {
       try
       {
+        var group = groupService.GetAll(p => p._id == view._idGroup).FirstOrDefault();
 
         long order = 1;
         try
         {
-          order = groupService.GetAll(p => p._id == view.Group._id).FirstOrDefault().Scope.Max(p => p.Order) + 1;
+          order = group.Scope.Max(p => p.Order) + 1;
           if (order == 0)
           {
             order = 1;
@@ -1670,16 +1721,21 @@ namespace Manager.Services.Specific
           order = 1;
         }
 
-        view.Scope._id = ObjectId.GenerateNewId().ToString();
-        view.Scope._idAccount = view.Group._idAccount;
-        view.Scope.Order = order;
+        var scope = new Scope()
+        {
+          _id = view.Scope._id,
+          _idAccount = _user._idAccount,
+          Order = order,
+          Name = view.Scope.Name,
+          Status = EnumStatus.Enabled
+        };
 
-        view.Group.Scope.Add(view.Scope);
+        if (scope._id == null)
+          scope._id = ObjectId.GenerateNewId().ToString();
 
-
-
-        groupService.Update(view.Group, null);
-        UpdateGroupAll(view.Group);
+        group.Scope.Add(scope);
+        groupService.Update(group, null);
+        UpdateGroupAll(group);
         return "ok";
       }
       catch (Exception e)
@@ -1688,32 +1744,26 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddMapGroupSkill(ViewAddMapGroupSkill view)
+    public string AddMapGroupSkill(ViewCrudMapGroupSkill view)
     {
       try
       {
+        var group = groupService.GetAll(p => p._id == view._idGroup).FirstOrDefault();
+        Skill skill = skillService.GetAll(p => p._id == view.Skill._id).FirstOrDefault();
+
         if (view.Skill._id == null)
         {
-          var skill = AddSkill(new ViewAddSkill()
+          skill = AddSkillInternal(new ViewAddSkill()
           {
             Name = view.Skill.Name,
             Concept = view.Skill.Concept,
             TypeSkill = view.Skill.TypeSkill
           });
-          view.Skill = new Skill()
-          {
-            _id = skill._id,
-            Name = skill.Name,
-            Concept = skill.Concept,
-            _idAccount = _user._idAccount,
-            Status = EnumStatus.Enabled,
-            TypeSkill = skill.TypeSkill
-          };
         }
 
-        view.Group.Skills.Add(view.Skill);
-        groupService.Update(view.Group, null);
-        UpdateGroupAll(view.Group);
+        group.Skills.Add(skill);
+        groupService.Update(group, null);
+        UpdateGroupAll(group);
         return "ok";
       }
       catch (Exception e)
@@ -1722,56 +1772,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddOccupation(ViewAddOccupation view)
+    public string AddOccupationActivities(ViewCrudOccupationActivities view)
     {
       try
       {
-        //var item = occupationService.GetAll(p => p.Line == view.Line).Count();
-        //if (item > 0)
-        //  return "error_line";
-
-        //var areas = new List<Area>();
-        //foreach (var item in view.Process)
-        //  areas.Add(item.ProcessLevelOne.Area);
-
-        var occupation = new Occupation()
-        {
-          Name = view.Name,
-          Group = view.Group,
-          //Area = view.Area,
-          Line = view.Line,
-          //ProcessLevelTwo = view.ProcessLevelTwo,
-          Status = EnumStatus.Enabled,
-          Activities = new List<Activitie>(),
-          Schooling = view.Group.Schooling,
-          Skills = new List<Skill>(),
-          Process = view.Process,
-          //Areas = areas,
-          SalaryScales = new List<SalaryScaleGrade>()
-        };
-        if (view.SalaryScales != null)
-        {
-          foreach (var item in view.SalaryScales)
-          {
-            item._id = ObjectId.GenerateNewId().ToString();
-            item._idAccount = _user._idAccount;
-            occupation.SalaryScales.Add(item);
-          }
-        }
-        occupationService.Insert(occupation);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddOccupationActivities(ViewAddOccupationActivities view)
-    {
-      try
-      {
-        var occupation = occupationService.GetAll(p => p._id == view.Occupation._id).FirstOrDefault();
+        var occupation = occupationService.GetAll(p => p._id == view.idOccupation).FirstOrDefault();
         long order = 1;
         try
         {
@@ -1786,10 +1791,17 @@ namespace Manager.Services.Specific
           order = 1;
         }
 
-        view.Activities.Order = order;
-        view.Activities._id = ObjectId.GenerateNewId().ToString();
-        view.Activities._idAccount = view.Occupation._idAccount;
-        occupation.Activities.Add(view.Activities);
+        var activitie = new Activitie()
+        {
+          Order = order,
+          _id = ObjectId.GenerateNewId().ToString(),
+          _idAccount = _user._idAccount,
+          Name = view.Activities.Name,
+          Status = EnumStatus.Enabled
+        };
+
+
+        occupation.Activities.Add(activitie);
         occupationService.Update(occupation, null);
         UpdateOccupationAll(occupation);
         return "ok";
@@ -1800,7 +1812,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddOccupationActivitiesList(List<ViewAddOccupationActivities> list)
+    public string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list)
     {
       try
       {
@@ -1887,6 +1899,25 @@ namespace Manager.Services.Specific
           Concept = skill.Concept,
           TypeSkill = skill.TypeSkill
         };
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private Skill AddSkillInternal(ViewAddSkill view)
+    {
+      try
+      {
+        var skill = new Skill()
+        {
+          Name = view.Name,
+          Concept = view.Concept,
+          TypeSkill = view.TypeSkill,
+          Status = EnumStatus.Enabled
+        };
+        return skillService.Insert(skill);
       }
       catch (Exception e)
       {
@@ -3323,11 +3354,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling)
+    public string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view)
     {
       try
       {
         var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var schooling = schoolingService.GetAll(p => p._id == view._id).FirstOrDefault();
+
+        schooling.Complement = view.Complement;
+        schooling.Type = view.Type;
 
         var schoolOld = occupation.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
         occupation.Schooling.Remove(schoolOld);
@@ -3343,11 +3378,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateMapOccupationActivities(string idoccupation, Activitie activitie)
+    public string UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view)
     {
       try
       {
         var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var activitie = new Activitie()
+        {
+          Name = view.Name,
+          Order = view.Order,
+          Status = EnumStatus.Enabled,
+          _idAccount = _user._idAccount,
+          _id = view._id
+        };
+        if (activitie._id == null)
+          activitie._id = ObjectId.GenerateNewId().ToString();
 
         var activitieOld = occupation.Activities.Where(p => p._id == activitie._id).FirstOrDefault();
         occupation.Activities.Remove(activitieOld);
@@ -3363,11 +3408,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateMapGroupScope(string idgroup, Scope scope)
+    public string UpdateMapGroupScope(string idgroup, ViewCrudScope view)
     {
       try
       {
         var group = groupService.GetAll(p => p._id == idgroup).FirstOrDefault();
+        var scope = new Scope()
+        {
+          Name = view.Name,
+          Order = view.Order,
+          Status = EnumStatus.Enabled,
+          _idAccount = _user._idAccount,
+          _id = view._id
+        };
+        if (scope._id == null)
+          scope._id = ObjectId.GenerateNewId().ToString();
 
         var scopeOld = group.Scope.Where(p => p._id == scope._id).FirstOrDefault();
         group.Scope.Remove(scopeOld);
@@ -3383,11 +3438,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateMapGroupSchooling(string idgroup, Schooling schooling)
+    public string UpdateMapGroupSchooling(string idgroup, ViewCrudSchooling view)
     {
       try
       {
         var group = groupService.GetAll(p => p._id == idgroup).FirstOrDefault();
+        var schooling = schoolingService.GetAll(p => p._id == view._id).FirstOrDefault();
+
+        schooling.Complement = view.Complement;
+        schooling.Type = view.Type;
 
         var schoolOld = group.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
         group.Schooling.Remove(schoolOld);
@@ -3739,7 +3798,31 @@ namespace Manager.Services.Specific
 
     #region Old
 
-    public Group AddGroupOld(ViewAddGroup view)
+    public string AddSkillsOld(List<ViewAddSkill> view)
+    {
+      try
+      {
+        foreach (var item in view)
+        {
+          var skill = new Skill()
+          {
+            Name = item.Name,
+            Concept = item.Concept,
+            TypeSkill = item.TypeSkill,
+            Status = EnumStatus.Enabled
+          };
+          skillService.Insert(skill);
+        }
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewCrudGroup AddGroupOld(ViewAddGroup view)
     {
       try
       {
@@ -3770,13 +3853,65 @@ namespace Manager.Services.Specific
           Company = view.Company,
           Scope = new List<Scope>()
         };
-        return groupService.Insert(group);
+        var result = groupService.Insert(group);
+
+        return new ViewCrudGroup()
+        {
+          _id = result._id,
+          Name = result.Name,
+          Line = result.Line,
+          Company = new ViewListCompany() { _id = result.Company._id, Name = result.Company.Name },
+          Axis = new ViewListAxis() { _id = result.Axis._id, Name = result.Axis.Name },
+          Sphere = new ViewListSphere() { _id = result.Sphere._id, Name = result.Sphere.Name }
+        };
       }
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
       }
     }
+
+    public string AddOccupationActivitiesListOld(List<ViewAddOccupationActivities> list)
+    {
+      try
+      {
+        foreach (var view in list)
+        {
+          AddOccupationActivitiesOld(view);
+        }
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateMapOccupationSchoolingOld(string idoccupation, Schooling view)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var schooling = schoolingService.GetAll(p => p._id == view._id).FirstOrDefault();
+
+        schooling.Complement = view.Complement;
+        schooling.Type = view.Type;
+
+        var schoolOld = occupation.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
+        occupation.Schooling.Remove(schoolOld);
+        occupation.Schooling.Add(schooling);
+
+        occupationService.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<Area> GetAreasOld()
     {
       try
@@ -4783,6 +4918,359 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateMapOccupationActivitiesOld(string idoccupation, Activitie activitie)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+
+        var activitieOld = occupation.Activities.Where(p => p._id == activitie._id).FirstOrDefault();
+        occupation.Activities.Remove(activitieOld);
+        occupation.Activities.Add(activitie);
+
+        occupationService.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateMapGroupScopeOld(string idgroup, Scope scope)
+    {
+      try
+      {
+        var group = groupService.GetAll(p => p._id == idgroup).FirstOrDefault();
+
+        var scopeOld = group.Scope.Where(p => p._id == scope._id).FirstOrDefault();
+        group.Scope.Remove(scopeOld);
+        group.Scope.Add(scope);
+
+        groupService.Update(group, null);
+        UpdateGroupAll(group);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateMapGroupSchoolingOld(string idgroup, Schooling schooling)
+    {
+      try
+      {
+        var group = groupService.GetAll(p => p._id == idgroup).FirstOrDefault();
+
+        var schoolOld = group.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
+        group.Schooling.Remove(schoolOld);
+        group.Schooling.Add(schooling);
+
+        groupService.Update(group, null);
+        UpdateGroupAll(group);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public string UpdateGroupSphereAxisOld(Group group, Group groupOld)
+    {
+      try
+      {
+        //var groupOld = groupService.GetAll(p => p._id == group._id).FirstOrDefault();
+        groupOld.Status = EnumStatus.Disabled;
+        groupService.Update(groupOld, null);
+
+        var groupnew = AddGroupInternal(new ViewAddGroup()
+        {
+          Axis = group.Axis,
+          Sphere = group.Sphere,
+          Company = group.Company,
+          Line = group.Line,
+          Name = group.Name
+        });
+
+        groupnew.Schooling = groupOld.Schooling;
+        groupnew.Skills = groupOld.Skills;
+        groupnew.Scope = groupOld.Scope;
+        groupnew.Template = groupOld.Template;
+
+        groupService.Update(groupnew, null);
+
+        UpdateGroupAll(groupnew);
+        UpdateGroupOccupationAll(groupnew, groupOld);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public string AddEssentialOld(ViewAddEssential view)
+    {
+      try
+      {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            TypeSkill = view.Skill.TypeSkill
+          });
+          view.Skill = new Skill()
+          {
+            _id = skill._id,
+            Name = skill.Name,
+            Concept = skill.Concept,
+            _idAccount = _user._idAccount,
+            Status = EnumStatus.Enabled,
+            TypeSkill = skill.TypeSkill
+          };
+        }
+
+        view.Company.Skills.Add(view.Skill);
+        companyService.Update(view.Company, null);
+
+        UpdateCompanyAll(view.Company);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public string AddMapGroupSchoolingOld(ViewAddMapGroupSchooling view)
+    {
+      try
+      {
+
+
+        //if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
+        //  return "error_exists_schooling";
+
+        //view.Group.Schooling.Add(AddSchooling(view.Schooling));
+        view.Group.Schooling.Add(view.Schooling);
+        groupService.Update(view.Group, null);
+        UpdateGroupAll(view.Group);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddMapGroupScopeOld(ViewAddMapGroupScope view)
+    {
+      try
+      {
+
+        long order = 1;
+        try
+        {
+          order = groupService.GetAll(p => p._id == view.Group._id).FirstOrDefault().Scope.Max(p => p.Order) + 1;
+          if (order == 0)
+          {
+            order = 1;
+          }
+        }
+        catch (Exception)
+        {
+          order = 1;
+        }
+
+        view.Scope._id = ObjectId.GenerateNewId().ToString();
+        view.Scope._idAccount = view.Group._idAccount;
+        view.Scope.Order = order;
+
+        view.Group.Scope.Add(view.Scope);
+
+
+
+        groupService.Update(view.Group, null);
+        UpdateGroupAll(view.Group);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddMapGroupSkillOld(ViewAddMapGroupSkill view)
+    {
+      try
+      {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            TypeSkill = view.Skill.TypeSkill
+          });
+          view.Skill = new Skill()
+          {
+            _id = skill._id,
+            Name = skill.Name,
+            Concept = skill.Concept,
+            _idAccount = _user._idAccount,
+            Status = EnumStatus.Enabled,
+            TypeSkill = skill.TypeSkill
+          };
+        }
+
+        view.Group.Skills.Add(view.Skill);
+        groupService.Update(view.Group, null);
+        UpdateGroupAll(view.Group);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupationOld(ViewAddOccupation view)
+    {
+      try
+      {
+        //var item = occupationService.GetAll(p => p.Line == view.Line).Count();
+        //if (item > 0)
+        //  return "error_line";
+
+        //var areas = new List<Area>();
+        //foreach (var item in view.Process)
+        //  areas.Add(item.ProcessLevelOne.Area);
+
+        var occupation = new Occupation()
+        {
+          Name = view.Name,
+          Group = view.Group,
+          //Area = view.Area,
+          Line = view.Line,
+          //ProcessLevelTwo = view.ProcessLevelTwo,
+          Status = EnumStatus.Enabled,
+          Activities = new List<Activitie>(),
+          Schooling = view.Group.Schooling,
+          Skills = new List<Skill>(),
+          Process = view.Process,
+          //Areas = areas,
+          SalaryScales = new List<SalaryScaleGrade>()
+        };
+        if (view.SalaryScales != null)
+        {
+          foreach (var item in view.SalaryScales)
+          {
+            item._id = ObjectId.GenerateNewId().ToString();
+            item._idAccount = _user._idAccount;
+            occupation.SalaryScales.Add(item);
+          }
+        }
+        occupationService.Insert(occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupationActivitiesOld(ViewAddOccupationActivities view)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p._id == view.Occupation._id).FirstOrDefault();
+        long order = 1;
+        try
+        {
+          order = occupation.Activities.Max(p => p.Order) + 1;
+          if (order == 0)
+          {
+            order = 1;
+          }
+        }
+        catch (Exception)
+        {
+          order = 1;
+        }
+
+        view.Activities.Order = order;
+        view.Activities._id = ObjectId.GenerateNewId().ToString();
+        view.Activities._idAccount = view.Occupation._idAccount;
+        occupation.Activities.Add(view.Activities);
+        occupationService.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public string AddSpecificRequirementsOld(string idoccupation, ViewAddSpecificRequirements view)
+    {
+      try
+      {
+        var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        occupation.SpecificRequirements = view.Name;
+        occupationService.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string AddOccupationSkillOld(ViewAddOccupationSkill view)
+    {
+      try
+      {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            TypeSkill = view.Skill.TypeSkill
+          });
+          view.Skill = new Skill()
+          {
+            _id = skill._id,
+            Name = skill.Name,
+            Concept = skill.Concept,
+            _idAccount = _user._idAccount,
+            Status = EnumStatus.Enabled,
+            TypeSkill = skill.TypeSkill
+          };
+        }
+
+        view.Occupation.Skills.Add(view.Skill);
+        occupationService.Update(view.Occupation, null);
+        UpdateOccupationAll(view.Occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
 
     #endregion
 

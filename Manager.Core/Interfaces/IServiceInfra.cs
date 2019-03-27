@@ -84,18 +84,25 @@ namespace Manager.Core.Interfaces
     string GetCSVCompareGroup(string idcompany, string link);
     List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref long total, string filter, int count, int page, string filterGroup);
     List<ViewGroupList> GetGroups(string idcompany);
-    string AddMapGroupScope(ViewAddMapGroupScope view);
-    string AddMapGroupSchooling(ViewAddMapGroupSchooling view);
-
-    string AddEssential(ViewAddEssential view);
-    string AddSkills(List<ViewAddSkill> view);
-    string AddMapGroupSkill(ViewAddMapGroupSkill view);
     ViewCrudSkill AddSkill(ViewAddSkill view);
-    ViewCrudGroup AddGroup(ViewAddGroup view);
-    string AddOccupation(ViewAddOccupation view);
+
+    ViewCrudGroup AddGroup(ViewCrudGroup view);
+    string AddMapGroupScope(ViewCrudMapGroupScope view);
+    string AddMapGroupSchooling(ViewCrudMapGroupSchooling view);
+    string AddEssential(ViewCrudEssential view);
+    string AddSkills(List<ViewAddSkill> view);
+    string AddMapGroupSkill(ViewCrudMapGroupSkill view);
+    //string AddOccupation(ViewAddOccupation view);
     string AddOccupationSkill(ViewAddOccupationSkill view);
-    string AddOccupationActivities(ViewAddOccupationActivities view);
-    string AddOccupationActivitiesList(List<ViewAddOccupationActivities> list);
+    string AddOccupationActivities(ViewCrudOccupationActivities view);
+    string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list);
+
+
+    string UpdateMapGroupSchooling(string idgroup, ViewCrudSchooling view);
+    string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view);
+    string UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view);
+    string UpdateMapGroupScope(string idgroup, ViewCrudScope view);
+
 
     string AddTextDefault(ViewCrudTextDefault model);
     string AddCBO(ViewCrudCbo model);
@@ -107,12 +114,6 @@ namespace Manager.Core.Interfaces
     string AddProcessLevelOne(ViewCrudProcessLevelOne model);
     string AddProcessLevelTwo(ViewCrudProcessLevelTwo model);
     string AddQuestions(ViewCrudQuestions view);
-
-    string UpdateMapGroupSchooling(string idgroup, Schooling schooling);
-    string UpdateMapOccupationSchooling(string idoccupation, Schooling schooling);
-    string UpdateMapOccupationActivities(string idoccupation, Activitie activitie);
-    string UpdateMapGroupScope(string idgroup, Scope scope);
-
 
     string UpdateTextDefault(ViewCrudTextDefault view);
     string UpdateSkill(ViewCrudSkill view);
@@ -130,6 +131,23 @@ namespace Manager.Core.Interfaces
 
 
     #region Old
+
+    ViewCrudGroup AddGroupOld(ViewAddGroup view);
+    string AddMapGroupScopeOld(ViewAddMapGroupScope view);
+    string AddMapGroupSchoolingOld(ViewAddMapGroupSchooling view);
+    string AddEssentialOld(ViewAddEssential view);
+    string AddSkillsOld(List<ViewAddSkill> view);
+    string AddMapGroupSkillOld(ViewAddMapGroupSkill view);
+    string AddOccupationOld(ViewAddOccupation view);
+    string AddOccupationSkillOld(ViewAddOccupationSkill view);
+    string AddOccupationActivitiesOld(ViewAddOccupationActivities view);
+    string AddOccupationActivitiesListOld(List<ViewAddOccupationActivities> list);
+
+    string UpdateMapGroupSchoolingOld(string idgroup, Schooling schooling);
+    string UpdateMapOccupationSchoolingOld(string idoccupation, Schooling schooling);
+    string UpdateMapOccupationActivitiesOld(string idoccupation, Activitie activitie);
+    string UpdateMapGroupScopeOld(string idgroup, Scope scope);
+
     List<Company> GetCompaniesOld();
     Skill GetSkillOld(string filterName);
     List<Skill> GetSkillsOld(ref long total, string filter, int count, int page);
@@ -161,7 +179,7 @@ namespace Manager.Core.Interfaces
     List<Course> GetCourseOccupationOld(string idoccuation, EnumTypeMandatoryTraining type);
 
     Skill AddSkillOld(ViewAddSkill view);
-    Group AddGroupOld(ViewAddGroup view);
+    //Group AddGroupOld(ViewAddGroup view);
 
     string AddTextDefaultOld(TextDefault model);
     string AddCBOOld(Cbo model);
