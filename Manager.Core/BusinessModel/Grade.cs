@@ -1,15 +1,15 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.BusinessModel;
 using Manager.Views.Enumns;
 using System.Collections.Generic;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   /// <summary>
-  /// Objeto persiste no banco de dados e é também é uma coleção da tabela salarial
+  /// Objeto coleção da tabela salarial
   /// </summary>
-  public class Grade : BaseEntity
+  public class Grade
   {
+    public string _id { get; set; }
     public string Name { get; set; }
     public EnumSteps StepMedium { get; set; }
     public List<ListSteps> ListSteps { get; set; }

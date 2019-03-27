@@ -7,130 +7,189 @@ using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador de tabela salarial
+  /// </summary>
   [Produces("application/json")]
   [Route("salaryscale")]
   public class SalaryScaleController : Controller
   {
     private readonly IServiceSalaryScale service;
 
+    #region Constructor
+    /// <summary>
+    /// Construtor do controlador
+    /// </summary>
+    /// <param name="_service">Serviço da tabela salarial</param>
+    /// <param name="contextAccessor">Token de segurança</param>
     public SalaryScaleController(IServiceSalaryScale _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
+    #endregion
 
+    #region Salary Scale
+    /// <summary>
+    /// Listar todas as tabelas salariais da empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da tabela salarial</param>
+    /// <returns>Lista de tabelas salariais</returns>
     [Authorize]
     [HttpGet]
     [Route("list/{idcompany}")]
-    public List<SalaryScale> List(string idcompany, string idestablishment, int count = 10, int page = 1, string filter = "")
+    public List<ViewListSalaryScale> List(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
+    /// <summary>
+    /// Buscar objeto de manutenção da tabela salarial
+    /// </summary>
+    /// <param name="id">Identificador da tabela salarial</param>
+    /// <returns>Objeto de menutenção da tabela salarial</returns>
     [Authorize]
     [HttpGet]
-    [Route("get/{id}")]
-    public SalaryScale List(string id)
+    [Route("edit/{id}")]
+    public ViewCrudSalaryScale List(string id)
     {
       return service.Get(id);
     }
-
-
+    /// <summary>
+    /// Incluir nova tabela salarial
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da tabela salarial</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("new")]
+    public IActionResult PostSalary([FromBody]ViewCrudSalaryScale view)
+    {
+      return Ok(service.NewSalaryScale(view));
+    }
+    /// <summary>
+    /// Atualizar uma tabela salarial
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da tabela salarial</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("update")]
+    public IActionResult UpdateSalary([FromBody]ViewCrudSalaryScale view)
+    {
+      return Ok(service.UpdateSalaryScale(view));
+    }
+    /// <summary>
+    /// Excluir uma tabela salarial
+    /// </summary>
+    /// <param name="id">Identificador da tabela salarial</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public string Delete(string id)
+    public IActionResult Delete(string id)
     {
-      return service.Remove(id);
+      return Ok(service.Remove(id));
     }
+    #endregion
 
-    [Authorize]
-    [HttpPost]
-    [Route("addgrade/{idsalaryscale}")]
-    public string PostGrade([FromBody]Grade view, string idsalaryscale)
-    {
-      return service.AddGrade(view,idsalaryscale );
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("updatesalaryscale")]
-    public string UpdateSalary([FromBody]ViewUpdateSalaryScale view)
-    {
-      return service.UpdateSalaryScale(view);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("newsalaryscale")]
-    public string PostSalary([FromBody]ViewNewSalaryScale view)
-    {
-      return service.NewSalaryScale(view);
-    }
-
+    #region Grade
+    /// <summary>
+    /// Listar todos os grades de uma tabela salarial
+    /// </summary>
+    /// <param name="idsalaryscale">Identificador da tabela salarial</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da tabela salarial</param>
+    /// <returns>Matriz de grades de uma tabela salarial</returns>
     [Authorize]
     [HttpGet]
     [Route("listgrade/{idsalaryscale}")]
-    public List<Grade> ListGrade(string idsalaryscale, int count = 10, int page = 1, string filter = "")
+    public List<ViewListGrade> ListGrade(string idsalaryscale, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGrade(idsalaryscale, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
+    /// <summary>
+    /// Buscar grade para alteração
+    /// </summary>
+    /// <param name="idsalaryscale">Identificador da tabela salarial</param>
+    /// <param name="id">Identificador do Grade</param>
+    /// <returns>Objeto de manutenção do grade</returns>
     [Authorize]
     [HttpGet]
-    [Route("listgrades/{idcompany}")]
-    public List<SalaryScaleGrade> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
+    [Route("editgrade/{idsalaryscale}/{id}")]
+    public ViewCrudGrade GetGrade(string idsalaryscale, string id)
     {
-      long total = 0;
-      var result = service.ListGrades(idcompany, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return service.GetGrade(idsalaryscale, id);
     }
+    /// <summary>
+    /// Incluir um novo grade na tabela salarial
+    /// </summary>
+    /// <param name="view">Informações do novo grade</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addgrade")]
+    public IActionResult PostGrade([FromBody]ViewCrudGrade view)
+    {
+      return Ok(service.AddGrade(view));
+    }
+    /// <summary>
+    /// Alterar um grade da tabela salarial
+    /// </summary>
+    /// <param name="view">Grade para alterar</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updategrade")]
+    public IActionResult UpdateGrade([FromBody]ViewCrudGrade view)
+    {
+      return Ok(service.UpdateGrade(view));
+    }
+    /// <summary>
+    /// Remover um grade da tabela salarial
+    /// </summary>
+    /// <param name="idsalaryscale">Identificador da tabela salarial</param>
+    /// <param name="id">Identificador do grade</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deletegrade/{idsalaryscale}/{id}")]
+    public string DeleteGrade(string idsalaryscale, string id)
+    {
+      return service.RemoveGrade(idsalaryscale, id);
+    }
+    #endregion
 
-
+    #region Step
+    /// <summary>
+    /// Alterar o salário de um step do grade da tabela salarial
+    /// </summary>
+    /// <param name="view">Objeto de alteração de salário</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
     [Route("updatestep")]
-    public string UpdateGrade([FromBody]ViewStep view)
+    public IActionResult UpdateGrade([FromBody]ViewCrudStep view)
     {
-      return service.UpdateStep(view.idsalaryscale, view.idgrade, view.Step, view.Salary);
+      return Ok(service.UpdateStep(view));
     }
-
-
-    [Authorize]
-    [HttpGet]
-    [Route("getgrade/{id}")]
-    public Grade ListGrade(string id)
-    {
-      return service.GetGrade(id);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("updategrade/{idsalaryscale}")]
-    public string UpdateGrade([FromBody]Grade view, string idsalaryscale)
-    {
-      return service.UpdateGrade(view,idsalaryscale);
-    }
-
-    [Authorize]
-    [HttpDelete]
-    [Route("deletegrade/{id}/{idsalaryscale}")]
-    public string DeleteGrade(string id, string idsalaryscale)
-    {
-      return service.RemoveGrade(id, idsalaryscale);
-    }
+    #endregion
   }
 }

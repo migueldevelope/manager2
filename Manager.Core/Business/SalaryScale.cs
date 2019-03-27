@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.BusinessModel;
 using System.Collections.Generic;
 
 namespace Manager.Core.Business

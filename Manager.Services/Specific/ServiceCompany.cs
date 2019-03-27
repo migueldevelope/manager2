@@ -18,7 +18,6 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<Company> serviceCompany;
     private readonly ServiceGeneric<Establishment> serviceEstablishment;
-    private readonly ServiceGeneric<Grade> serviceGrade;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
 
@@ -29,7 +28,6 @@ namespace Manager.Services.Specific
       {
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceEstablishment = new ServiceGeneric<Establishment>(context);
-        serviceGrade = new ServiceGeneric<Grade>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
       }
@@ -46,7 +44,6 @@ namespace Manager.Services.Specific
       servicePerson._user = _user;
       serviceEstablishment._user = _user;
       serviceSalaryScale._user = _user;
-      serviceGrade._user = _user;
     }
 
     public void SetUser(BaseUser baseUser)
@@ -56,7 +53,6 @@ namespace Manager.Services.Specific
       servicePerson._user = baseUser;
       serviceEstablishment._user = baseUser;
       serviceSalaryScale._user = baseUser;
-      serviceGrade._user = baseUser;
     }
     #endregion
 

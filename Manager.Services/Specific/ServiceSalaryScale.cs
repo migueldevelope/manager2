@@ -1,382 +1,312 @@
-﻿using Manager.Core.Base;
-using Manager.Core.Business;
+﻿using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
-using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
   public class ServiceSalaryScale : Repository<SalaryScale>, IServiceSalaryScale
   {
-    private readonly ServiceGeneric<SalaryScale> salaryScaleService;
-    private readonly ServiceGeneric<Grade> gradeService;
+    private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceGeneric<Occupation> occupationService;
     private readonly ServiceGeneric<Person> personService;
-    private readonly ServiceGeneric<Establishment> establishmentService;
+    private readonly ServiceGeneric<SalaryScale> salaryScaleService;
 
-    public BaseUser user { get => _user; set => user = _user; }
-
-    public ServiceSalaryScale(DataContext context)
-      : base(context)
+    #region Constructor
+    public ServiceSalaryScale(DataContext context) : base(context)
     {
       try
       {
-        salaryScaleService = new ServiceGeneric<SalaryScale>(context);
-        personService = new ServiceGeneric<Person>(context);
-        gradeService = new ServiceGeneric<Grade>(context);
-        establishmentService = new ServiceGeneric<Establishment>(context);
+        companyService = new ServiceGeneric<Company>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
+        personService = new ServiceGeneric<Person>(context);
+        salaryScaleService = new ServiceGeneric<SalaryScale>(context);
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
-
-
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
-      salaryScaleService._user = _user;
-      personService._user = _user;
-      gradeService._user = _user;
-      establishmentService._user = _user;
+      companyService._user = _user;
       occupationService._user = _user;
+      personService._user = _user;
+      salaryScaleService._user = _user;
     }
+    #endregion
 
-    public void SetUser(BaseUser baseUser)
+    #region Salary Scale
+    public List<ViewListSalaryScale> List(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
-      _user = baseUser;
-      salaryScaleService._user = baseUser;
-      personService._user = baseUser;
-      gradeService._user = baseUser;
-      establishmentService._user = baseUser;
-      occupationService._user = baseUser;
+      try
+      {
+        List<ViewListSalaryScale> detail = salaryScaleService.GetAllNewVersion(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "Name").Result
+          .Select(x => new ViewListSalaryScale()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name }
+          }).ToList();
+        total = salaryScaleService.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
-
-
-
+    public ViewCrudSalaryScale Get(string id)
+    {
+      try
+      {
+        SalaryScale item = salaryScaleService.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudSalaryScale()
+        {
+          Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+          Name = item.Name,
+          _id = item._id
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string NewSalaryScale(ViewCrudSalaryScale view)
+    {
+      try
+      {
+        SalaryScale salaryScale = new SalaryScale()
+        {
+          Name = view.Name,
+          Company = companyService.GetNewVersion(p => p._id == view.Company._id).Result,
+          Grades = new List<Grade>()
+        };
+        salaryScale = salaryScaleService.InsertNewVersion(salaryScale).Result;
+        return "Salary scale added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string UpdateSalaryScale(ViewCrudSalaryScale view)
+    {
+      try
+      {
+        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == view._id).Result;
+        salaryScale.Name = view.Name;
+        salaryScaleService.Update(salaryScale, null);
+        return "Salary scale altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public string Remove(string id)
     {
       try
       {
-        var item = salaryScaleService.GetAll(p => p._id == id).FirstOrDefault();
-        item.Status = EnumStatus.Disabled;
-        salaryScaleService.Update(item, null);
-        return "deleted";
+        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == id).Result;
+        salaryScale.Status = EnumStatus.Disabled;
+        salaryScaleService.Update(salaryScale, null);
+        return "Salary scale deleted";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    #endregion
 
-    public SalaryScale Get(string id)
+    #region Grades
+    public List<ViewListGrade> ListGrade(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        return salaryScaleService.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public List<SalaryScale> List(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var detail = salaryScaleService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = salaryScaleService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        SalaryScale item = salaryScaleService.GetNewVersion(p => p._id == idsalaryscale).Result;
+        if (item == null)
+          throw new Exception("Salary scale not found!");
 
-        return detail.ToList();
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<SalaryScaleGrade> ListGrades(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var list = salaryScaleService.GetAll(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-
-        var detail = new List<SalaryScaleGrade>();
-        foreach (var item in list)
+        var detail = new List<ViewListGrade>();
+        foreach (var grade in item.Grades)
         {
-          foreach (var grade in item.Grades)
+          var view = new ViewListGrade
           {
-            var view = new SalaryScaleGrade();
-            view._idSalaryScale = item._id;
-            view.NameSalaryScale = item.Name;
-            view._idGrade = grade._id;
-            view.NameGrade = grade.Name;
-            detail.Add(view);
+            _id = grade._id,
+            Name = grade.Name,
+            StepMedium = grade.StepMedium,
+            Order = grade.Order,
+            Steps = new List<ViewListStep>()
+          };
+          foreach (var step in grade.ListSteps)
+          {
+            var newStep = new ViewListStep()
+            {
+              Step = step.Step,
+              Salary = step.Salary
+            };
+            view.Steps.Add(newStep);
           }
+          detail.Add(view);
         }
-
-
-        total = detail.Count();
-
-        return detail.ToList();
-
+        total = 1;
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public string NewSalaryScale(ViewNewSalaryScale view)
+    public string AddGrade(ViewCrudGrade view)
     {
       try
       {
+        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == view.SalaryScale._id).Result;
+        view.Order = 1;
+        if (salaryScale.Grades.Count != 0)
+          view.Order = salaryScale.Grades.Max(p => p.Order)+1;
 
-
-        var item = new SalaryScale()
+        Grade grade = new Grade
         {
+          _id = ObjectId.GenerateNewId().ToString(),
           Name = view.Name,
-          Company = view.Company,
-          Grades = new List<Grade>()
+          Order = view.Order,
+          StepMedium = view.StepMedium,
+          ListSteps = new List<ListSteps>()
         };
-        salaryScaleService.Insert(item);
-
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateSalaryScale(ViewUpdateSalaryScale view)
-    {
-      try
-      {
-        var item = salaryScaleService.GetAll(p => p._id == view._id).FirstOrDefault();
-        item.Name = view.Name;
-        salaryScaleService.Update(item, null);
-
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string AddGrade(Grade view, string idsalaryscale)
-    {
-      try
-      {
-        var salaryScale = salaryScaleService.GetAll(p => p._id == idsalaryscale).FirstOrDefault();
-        try
-        {
-          var order = salaryScale.Grades.Max(p => p.Order);
-          view.Order = order + 1;
-        }
-        catch (Exception)
-        {
-          view.Order = 1;
-        }
-
-
-        var list = new List<ListSteps>();
         for (var step = 0; step <= 7; step++)
         {
-          list.Add(new ListSteps()
+          grade.ListSteps.Add(new ListSteps()
           {
-            _id = ObjectId.GenerateNewId().ToString(),
-            _idAccount = _user._idAccount,
-            Status = EnumStatus.Enabled,
             Salary = 0,
             Step = (EnumSteps)step,
           });
         }
-
-        view.ListSteps = list;
-        var grade = gradeService.Insert(view);
-
-
         salaryScale.Grades.Add(grade);
+        // TODO: problema de persistência para array vazio
         salaryScaleService.Update(salaryScale, null);
-
-        return "add success";
+        return "Grade added!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public string UpdateGrade(Grade view, string idsalaryscale)
+    public string UpdateGrade(ViewCrudGrade view)
     {
       try
       {
-        gradeService.Update(view, null);
-        UpdateAllGrade(view, idsalaryscale);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async void UpdateAllGrade(Grade grade, string idsalaryscale)
-    {
-      try
-      {
-        var salaryScale = salaryScaleService.GetAll(p => p._id == idsalaryscale).FirstOrDefault();
-        foreach (var item in salaryScale.Grades)
+        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == view.SalaryScale._id).Result;
+        var list = new List<Grade>();
+        foreach (var grade in salaryScale.Grades)
         {
-          if (grade._id == item._id)
+          if (grade._id == view._id)
           {
-            item.Name = grade.Name;
-            item.Order = grade.Order;
-            item.StepMedium = grade.StepMedium;
-            item.ListSteps = grade.ListSteps;
-            item.Status = grade.Status;
-            salaryScaleService.Update(salaryScale, null);
+            grade.Name = view.Name;
+            grade.Order = view.Order;
+            grade.StepMedium = view.StepMedium;
           }
-
+          list.Add(grade);
         }
-
-
-        //foreach (var item in occupationService.GetAll(p => p.Grade._id == grade._id))
-        //{
-        //  item.Grade = grade;
-        //  occupationService.Update(item, null);
-        //  UpdateOccupationAll(item);
-        //}
-
+        salaryScale.Grades = list;
+        salaryScaleService.Update(salaryScale, null);
+        return "Grade altered!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public string RemoveGrade(string id, string idsalaryscale)
+    public string RemoveGrade(string idsalaryscale, string id)
     {
       try
       {
-        var salaryscale = salaryScaleService.GetAll(p => p._id == idsalaryscale).FirstOrDefault();
-        var item = gradeService.GetAll(p => p._id == id).FirstOrDefault();
-        item.Status = EnumStatus.Disabled;
-        gradeService.Update(item, null);
-
-        foreach (var grad in salaryscale.Grades)
-        {
-          if (grad._id == item._id)
+        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == idsalaryscale).Result;
+        var list = new List<Grade>();
+        foreach (var grade in salaryScale.Grades)
+          if (grade._id != id)
+            list.Add(grade);
+        salaryScale.Grades = list;
+        salaryScaleService.Update(salaryScale, null);
+        return "Grade deleted!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudGrade GetGrade(string idsalaryscale, string id)
+    {
+      try
+      {
+        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == idsalaryscale).Result;
+        var result = new ViewCrudGrade();
+        foreach (var grade in salaryScale.Grades)
+          if (grade._id == id)
           {
-            salaryscale.Grades.Remove(grad);
-            salaryScaleService.Update(salaryscale, null);
-            return "deleted";
+            result = new ViewCrudGrade()
+            {
+              _id = grade._id,
+              Name = grade.Name,
+              Order = grade.Order,
+              StepMedium = grade.StepMedium,
+              SalaryScale = new ViewListSalaryScale() { _id = salaryScale._id, Name = salaryScale.Name, Company = new ViewListCompany() { _id = salaryScale.Company._id, Name = salaryScale.Company.Name } }
+            };
+            break;
           }
-        }
-
-        return "deleted";
+        return result;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public Grade GetGrade(string id)
+    public string UpdateStep(ViewCrudStep view)
     {
       try
       {
-        return gradeService.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<Grade> ListGrade(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        try
+        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == view._idSalaryScale).Result;
+        var list = new List<Grade>();
+        foreach (var grade in salaryScale.Grades)
         {
-          var salaryScale = salaryScaleService.GetAll(p => p._id == idsalaryscale).FirstOrDefault();
-          if (salaryScale != null)
-            if (salaryScale.Grades != null)
-              return salaryScale.Grades.OrderBy(p => p.Order).ToList();
-            else
-              return null;
-          else
-            return null;
-        }
-        catch (Exception e)
-        {
-          throw new ServiceException(_user, e, this._context);
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateStep(string idsalaryscale, string idgrade, EnumSteps step, decimal salary)
-    {
-      try
-      {
-        var view = salaryScaleService.GetAll(p => p._id == idsalaryscale).FirstOrDefault();
-        var grade = view.Grades.Where(p => p._id == idgrade).FirstOrDefault();
-
-        foreach (var item in grade.ListSteps)
-        {
-          if (item.Step == step)
+          if (grade._id == view._idGrade)
           {
-            item.Salary = salary;
-            UpdateGrade(grade, idsalaryscale);
-            return "update";
+            var listStep = new List<ListSteps>();
+            foreach (var item in grade.ListSteps)
+            {
+              if (item.Step == view.Step)
+              {
+                item.Salary = view.Salary;
+              }
+              listStep.Add(item);
+            }
+            grade.ListSteps = listStep;
           }
+          list.Add(grade);
         }
-
-        return "step not found";
+        salaryScale.Grades = list;
+        salaryScaleService.Update(salaryScale,null);
+        return "Step altered!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    private async Task UpdateOccupationAll(Occupation occupation)
-    {
-      try
-      {
-        foreach (var item in personService.GetAll(p => p.StatusUser != Manager.Views.Enumns.EnumStatusUser.Disabled & p.StatusUser != Manager.Views.Enumns.EnumStatusUser.ErrorIntegration & p.TypeUser != Manager.Views.Enumns.EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
-        {
-          item.Occupation = occupation;
-          personService.Update(item, null);
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
+    #endregion
   }
 }
