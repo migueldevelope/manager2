@@ -10,6 +10,7 @@ namespace Manager.Core.Interfaces
   public interface IServiceAutoManager
   {
     void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser user);
     List<ViewAutoManagerPerson> List(string idManager, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewAutoManagerPerson> ListOpen(string idManager, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewAutoManagerPerson> ListEnd(string idManager, string filter);

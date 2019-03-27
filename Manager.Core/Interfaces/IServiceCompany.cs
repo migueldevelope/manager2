@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ namespace Manager.Core.Interfaces
   public interface IServiceCompany
   {
     void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser user);
     void SetLogo(string idCompany, string url);
     string GetLogo(string idCompany);
     string Remove(string id);

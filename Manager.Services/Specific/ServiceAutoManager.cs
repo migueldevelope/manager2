@@ -28,7 +28,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceWorkflow serviceWorkflow;
 
-    public ServiceAutoManager(DataContext context, IServicePerson _servicePerson) : base(context)
+    #region Constructor
+    public ServiceAutoManager(DataContext context) : base(context)
     {
       try
       {
@@ -38,13 +39,35 @@ namespace Manager.Services.Specific
         serviceMailModel = new ServiceMailModel(context);
         serviceMailMessage = new ServiceGeneric<MailMessage>(context);
         servicePerson = new ServiceGeneric<Person>(context);
-        serviceWorkflow = new ServiceWorkflow(context, _servicePerson);
+        serviceWorkflow = new ServiceWorkflow(context);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      serviceAutoManager._user = _user;
+      serviceMailLog._user = _user;
+      serviceMailMessage._user = _user;
+      serviceMailModel.SetUser(_user);
+      servicePerson._user = _user;
+      serviceWorkflow.SetUser(_user);
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceAutoManager._user = user;
+      serviceMailLog._user = user;
+      serviceMailMessage._user = user;
+      serviceMailModel.SetUser(user);
+      servicePerson._user = user;
+      serviceWorkflow.SetUser(user);
+    }
+    #endregion
+
+    #region AutoManager
     public List<ViewAutoManagerPerson> List(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -309,14 +332,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void SetUser(IHttpContextAccessor contextAccessor)
-    {
-      User(contextAccessor);
-      serviceMailLog._user = _user;
-      serviceMailModel._user = _user;
-      serviceMailMessage._user = _user;
-      servicePerson._user = _user;
-      serviceWorkflow._user = _user;
-    }
+    #endregion
+
   }
 }

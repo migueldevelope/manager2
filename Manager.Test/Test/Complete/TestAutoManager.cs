@@ -24,7 +24,7 @@ namespace Manager.Test.Test.Complete
       base.Init();
       servicePerson = new ServicePerson(base.context);
       servicePerson.SetUser(base.contextAccessor);
-      serviceAutoManager = new ServiceAutoManager(base.context, servicePerson);
+      serviceAutoManager = new ServiceAutoManager(base.context);
       serviceAutoManager.SetUser(base.contextAccessor);
     }
 

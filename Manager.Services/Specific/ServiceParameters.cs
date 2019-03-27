@@ -39,10 +39,10 @@ namespace Manager.Services.Specific
       servicePerson._user = _user;
     }
 
-    public void SetUser(BaseUser baseUser)
+    public void SetUser(BaseUser user)
     {
-      serviceParameter._user = baseUser;
-      servicePerson._user = baseUser;
+      serviceParameter._user = user;
+      servicePerson._user = user;
     }
     #endregion
 

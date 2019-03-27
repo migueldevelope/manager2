@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
@@ -17,6 +18,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<DictionarySystem> serviceDictionarySystem;
     private readonly ServiceGeneric<Person> servicePerson;
 
+    #region Constructor
     public ServiceDictionarySystem(DataContext context) : base(context)
     {
       try
@@ -35,7 +37,14 @@ namespace Manager.Services.Specific
       serviceDictionarySystem._user = _user;
       servicePerson._user = _user;
     }
+    public void SetUser(BaseUser user)
+    {
+      serviceDictionarySystem._user = user;
+      servicePerson._user = user;
+    }
+    #endregion
 
+    #region Dictonary System
     public string New(ViewCrudDictionarySystem view)
     {
       try
@@ -135,6 +144,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    #endregion
 
     #region Old
     public string New(List<ViewListDictionarySystem> list)

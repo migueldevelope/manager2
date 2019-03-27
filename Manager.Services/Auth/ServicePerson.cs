@@ -11,45 +11,42 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Tools;
 
 namespace Manager.Services.Auth
 {
   public class ServicePerson : Repository<Person>, IServicePerson
   {
-    private ServiceGeneric<User> userService;
-    private ServiceGeneric<Person> personService;
-    private ServiceGeneric<Attachments> attachmentService;
-    private ServiceGeneric<Schooling> schoolingService;
-    private ServiceGeneric<Establishment> establishmentService;
-    private ServiceGeneric<Company> companyService;
-    private ServiceGeneric<Occupation> occupationService;
-    private ServiceSendGrid mailService;
-    private ServiceGeneric<Parameter> parameterService;
-    private ServiceGeneric<SalaryScale> salaryScaleService;
-
-
+    private ServiceGeneric<Attachments> serviceAttachment;
+    private ServiceGeneric<Company> serviceCompany;
+    private ServiceGeneric<Establishment> serviceEstablishment;
+    private ServiceSendGrid serviceMail;
+    private ServiceGeneric<Occupation> serviceOccupation;
+    private ServiceGeneric<Parameter> serviceParameter;
+    private ServiceGeneric<Person> servicePerson;
+    private ServiceGeneric<SalaryScale> serviceSalaryScale;
+    private ServiceGeneric<Schooling> serviceSchooling;
+    private ServiceGeneric<User> serviceUser;
+    
     #region Constructor
     public ServicePerson(DataContext context) : base(context)
     {
       try
       {
-        userService = new ServiceGeneric<User>(context);
-        personService = new ServiceGeneric<Person>(context);
-        attachmentService = new ServiceGeneric<Attachments>(context);
-        mailService = new ServiceSendGrid(context);
-        companyService = new ServiceGeneric<Company>(context);
-        occupationService = new ServiceGeneric<Occupation>(context);
-        parameterService = new ServiceGeneric<Parameter>(context);
-        schoolingService = new ServiceGeneric<Schooling>(context);
-        establishmentService = new ServiceGeneric<Establishment>(context);
-        salaryScaleService = new ServiceGeneric<SalaryScale>(context);
+        serviceAttachment = new ServiceGeneric<Attachments>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
+        serviceEstablishment = new ServiceGeneric<Establishment>(context);
+        serviceMail = new ServiceSendGrid(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceParameter = new ServiceGeneric<Parameter>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
+        serviceSchooling = new ServiceGeneric<Schooling>(context);
+        serviceUser = new ServiceGeneric<User>(context);
       }
       catch (Exception e)
       {
@@ -58,47 +55,33 @@ namespace Manager.Services.Auth
     }
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
-      try
-      {
-        User(contextAccessor);
-        personService._user = _user;
-        attachmentService._user = _user;
-        mailService._user = _user;
-        companyService._user = _user;
-        occupationService._user = _user;
-        userService._user = _user;
-        parameterService._user = _user;
-        schoolingService._user = _user;
-        establishmentService._user = _user;
-        salaryScaleService._user = _user;
-        DefaultTypeRegisterPerson();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
+      User(contextAccessor);
+      serviceAttachment._user = _user;
+      serviceCompany._user = _user;
+      serviceEstablishment._user = _user;
+      serviceMail.SetUser(_user);
+      serviceOccupation._user = _user;
+      serviceParameter._user = _user;
+      servicePerson._user = _user;
+      serviceSalaryScale._user = _user;
+      serviceSchooling._user = _user;
+      serviceUser._user = _user;
+      DefaultTypeRegisterPerson();
     }
-    private void Init(DataContext context, BaseUser user)
+    public void SetUser(BaseUser user)
     {
-      try
-      {
-        _user = user;
-        personService._user = _user;
-        attachmentService._user = _user;
-        mailService._user = _user;
-        companyService._user = _user;
-        occupationService._user = _user;
-        userService._user = _user;
-        parameterService._user = _user;
-        schoolingService._user = _user;
-        establishmentService._user = _user;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
+      serviceAttachment._user = user;
+      serviceCompany._user = user;
+      serviceEstablishment._user = user;
+      serviceMail.SetUser(user);
+      serviceOccupation._user = user;
+      serviceParameter._user = user;
+      servicePerson._user = user;
+      serviceSalaryScale._user = user;
+      serviceSchooling._user = user;
+      serviceUser._user = user;
+      DefaultTypeRegisterPerson();
     }
-    public BaseUser user { get => _user; set => user = _user; }
     #endregion
 
     #region Person
@@ -110,8 +93,8 @@ namespace Manager.Services.Auth
         {
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
-            total = personService.CountNewVersion(p => p.User.Name.Contains(filter)).Result;
-            return personService.GetAllNewVersion(p => p.User.Name.Contains(filter), count, count * (page - 1), "User.Name").Result
+            total = servicePerson.CountNewVersion(p => p.User.Name.Contains(filter)).Result;
+            return servicePerson.GetAllNewVersion(p => p.User.Name.Contains(filter), count, count * (page - 1), "User.Name").Result
             .Select(x => new ViewListPersonCrud()
             {
               _id = x._id,
@@ -125,8 +108,8 @@ namespace Manager.Services.Auth
             }).ToList();
           case EnumTypeUser.HR:
           case EnumTypeUser.ManagerHR:
-            total = personService.CountNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;
-            return personService.GetAllNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
+            total = servicePerson.CountNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;
+            return servicePerson.GetAllNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
             .Select(x => new ViewListPersonCrud()
             {
               _id = x._id,
@@ -152,7 +135,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        Person person = personService.GetNewVersion(p => p._id == id).Result;
+        Person person = servicePerson.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudPerson()
         {
           _id = person._id,
@@ -214,7 +197,7 @@ namespace Manager.Services.Auth
           Phone = view.User.Phone,
           PhoneFixed = view.User.PhoneFixed,
           PhotoUrl = view.User.PhotoUrl,
-          Schooling = view.User.Schooling == null ? null : schoolingService.GetNewVersion(p => p._id == view.User._id).Result,
+          Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User._id).Result,
           Sex = view.User.Sex,
           ChangePassword = EnumChangePassword.AccessFirst
         };
@@ -222,19 +205,19 @@ namespace Manager.Services.Auth
         if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
           user.ChangePassword = EnumChangePassword.No;
 
-        user = userService.InsertNewVersion(user).Result;
+        user = serviceUser.InsertNewVersion(user).Result;
 
         Person person = new Person()
         {
-          Company = companyService.GetNewVersion(p => p._id == view.Company._id).Result,
+          Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result,
           DateLastOccupation = view.DateLastOccupation,
           DateLastReadjust = view.DateLastReadjust,
           DateResignation = view.DateResignation,
-          Establishment = view.Establishment == null ? null : establishmentService.GetNewVersion(p => p._id == view.Establishment._id).Result,
+          Establishment = view.Establishment == null ? null : serviceEstablishment.GetNewVersion(p => p._id == view.Establishment._id).Result,
           HolidayReturn = view.HolidayReturn,
           Manager = null,
           MotiveAside = view.MotiveAside,
-          Occupation = view.Occupation == null ? null : occupationService.GetNewVersion(p => p._id == view.Occupation._id).Result,
+          Occupation = view.Occupation == null ? null : serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result,
           Registration = view.Registration,
           Salary = view.Salary,
           DocumentManager = null,
@@ -249,7 +232,7 @@ namespace Manager.Services.Auth
           person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
           */
         /// TODO: Manager
-        person = personService.InsertNewVersion(person).Result;
+        person = servicePerson.InsertNewVersion(person).Result;
         return new ViewCrudPerson()
         {
           _id = person._id,
@@ -296,7 +279,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user = userService.GetNewVersion(p => p._id == view.User._id).Result;
+        User user = serviceUser.GetNewVersion(p => p._id == view.User._id).Result;
         user.DateAdm = view.User.DateAdm;
         user.DateBirth = view.User.DateBirth;
         user.Document = view.User.Document;
@@ -307,20 +290,20 @@ namespace Manager.Services.Auth
         user.Phone = view.User.Phone;
         user.PhoneFixed = view.User.PhoneFixed;
         user.PhotoUrl = view.User.PhotoUrl;
-        user.Schooling = view.User.Schooling == null ? null : schoolingService.GetNewVersion(p => p._id == view.User._id).Result;
+        user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User._id).Result;
         user.Sex = view.User.Sex;
-        user = userService.UpdateNewVersion(user).Result;
+        user = serviceUser.UpdateNewVersion(user).Result;
 
-        Person person = personService.GetNewVersion(p => p._id == view._id).Result;
-        person.Company = companyService.GetNewVersion(p => p._id == view.Company._id).Result;
+        Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
+        person.Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
         person.DateLastOccupation = view.DateLastOccupation;
         person.DateLastReadjust = view.DateLastReadjust;
         person.DateResignation = view.DateResignation;
-        person.Establishment = view.Establishment == null ? null : establishmentService.GetNewVersion(p => p._id == view.Establishment._id).Result;
+        person.Establishment = view.Establishment == null ? null : serviceEstablishment.GetNewVersion(p => p._id == view.Establishment._id).Result;
         person.HolidayReturn = view.HolidayReturn;
         person.Manager = null;
         person.MotiveAside = view.MotiveAside;
-        person.Occupation = view.Occupation == null ? null : occupationService.GetNewVersion(p => p._id == view.Occupation._id).Result;
+        person.Occupation = view.Occupation == null ? null : serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result;
         person.Registration = view.Registration;
         person.Salary = view.Salary;
         person.DocumentManager = null;
@@ -334,7 +317,7 @@ namespace Manager.Services.Auth
           person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
           */
         /// TODO: Manager
-        person = personService.UpdateNewVersion(person).Result;
+        person = servicePerson.UpdateNewVersion(person).Result;
         return new ViewCrudPerson()
         {
           _id = person._id,
@@ -382,7 +365,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var occupation = occupationService.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
         if (occupation.SalaryScales != null)
           return occupation.SalaryScales
             .Select(p => new SalaryScalePerson
@@ -405,7 +388,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p._id == idperson).ToList().Select(
+        return servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p._id == idperson).ToList().Select(
         person => new ViewPersonHead
         {
           IdPerson = idperson,
@@ -426,7 +409,7 @@ namespace Manager.Services.Auth
       {
         person.StatusUser = EnumStatusUser.Enabled;
         person.Status = EnumStatus.Enabled;
-        personService.Insert(person);
+        servicePerson.Insert(person);
         return person;
       }
       catch (Exception e)
@@ -444,8 +427,8 @@ namespace Manager.Services.Auth
         var authPUC = false;
         try
         {
-          authMaristas = person.User.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
-          authPUC = person.User.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+          authMaristas = person.User.Mail.Substring(_user.Mail.IndexOf("@"), _user.Mail.Length - _user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+          authPUC = person.User.Mail.Substring(_user.Mail.IndexOf("@"), _user.Mail.Length - _user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
         }
         catch (Exception)
         {
@@ -482,7 +465,7 @@ namespace Manager.Services.Auth
 
         if (person.Manager != null)
         {
-          var manager = personService.GetAll(p => p._id == model.Manager._id).FirstOrDefault();
+          var manager = servicePerson.GetAll(p => p._id == model.Manager._id).FirstOrDefault();
           if (manager != null)
           {
             if (manager.User != null)
@@ -492,7 +475,7 @@ namespace Manager.Services.Auth
 
 
 
-        return personService.Insert(model);
+        return servicePerson.Insert(model);
       }
       catch (Exception e)
       {
@@ -505,7 +488,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        Person model = personService.GetAll(p => p._id == id).FirstOrDefault();
+        Person model = servicePerson.GetAll(p => p._id == id).FirstOrDefault();
 
 
         model.Manager = person.Manager;
@@ -525,7 +508,7 @@ namespace Manager.Services.Auth
 
         if (person.Manager != null)
         {
-          var manager = personService.GetAll(p => p._id == model.Manager._id).FirstOrDefault();
+          var manager = servicePerson.GetAll(p => p._id == model.Manager._id).FirstOrDefault();
           if (manager != null)
           {
             if (manager.User != null)
@@ -533,7 +516,7 @@ namespace Manager.Services.Auth
           }
         }
 
-        personService.Update(model, null);
+        servicePerson.Update(model, null);
         return "ok";
       }
       catch (Exception e)
@@ -546,8 +529,8 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var pass = personService.GetAll(p => p._id == person._id).SingleOrDefault().User.Password;
-        personService.Update(person, null);
+        var pass = servicePerson.GetAll(p => p._id == person._id).SingleOrDefault().User.Password;
+        servicePerson.Update(person, null);
         return person;
       }
       catch (Exception e)
@@ -560,7 +543,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        personService.Update(person, null);
+        servicePerson.Update(person, null);
         return person;
       }
       catch (Exception e)
@@ -573,8 +556,8 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var person = personService.GetAll(p => p._id == idPerson).SingleOrDefault();
-        personService.Update(person, null);
+        var person = servicePerson.GetAll(p => p._id == idPerson).SingleOrDefault();
+        servicePerson.Update(person, null);
       }
       catch (Exception e)
       {
@@ -587,7 +570,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p._id == idPerson).ToList().Select(
+        return servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p._id == idPerson).ToList().Select(
         detail => new ViewPersonDetail()
         {
           Birth = detail.User.DateBirth,
@@ -607,7 +590,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList()
+        return servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList()
           .Select(item => new ViewPersonList()
           {
             IdPerson = item._id,
@@ -624,7 +607,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p.Company._id == idcompany & p.StatusUser
+        return servicePerson.GetAll(p => p.Company._id == idcompany & p.StatusUser
         != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
         & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
          .Select(item => new ViewListPerson()
@@ -647,8 +630,8 @@ namespace Manager.Services.Auth
       try
       {
         int skip = (count * (page - 1));
-        var detail = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
-        total = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+        total = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail
           .Select(item => new ViewPersonTeam()
@@ -669,7 +652,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return this.personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p._id == idPerson).FirstOrDefault().User.PhotoUrl;
+        return this.servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p._id == idPerson).FirstOrDefault().User.PhotoUrl;
       }
       catch (Exception e)
       {
@@ -682,7 +665,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p._id == id).FirstOrDefault();
+        return servicePerson.GetAll(p => p._id == id).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -694,7 +677,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(filter).ToList();
+        return servicePerson.GetAll(filter).ToList();
       }
       catch (Exception e)
       {
@@ -710,20 +693,20 @@ namespace Manager.Services.Auth
         List<Person> detail = null;
         if (typeUser == EnumTypeUser.Support)
         {
-          detail = personService.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
-          total = personService.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = servicePerson.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+          total = servicePerson.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         else if (typeUser == EnumTypeUser.Administrator)
         {
-          detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
-          total = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = servicePerson.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+          total = servicePerson.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         else
         {
-          detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
-          total = personService.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = servicePerson.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+          total = servicePerson.GetAll(p => p.TypeUser != EnumTypeUser.Support & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         return detail;
@@ -738,7 +721,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return personService.GetAll(p => p._id == idperson).FirstOrDefault();
+        return servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -749,10 +732,10 @@ namespace Manager.Services.Auth
     public List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = occupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
+      var detail = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
         .Skip(skip).Take(count).ToList()
         ;
-      total = occupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+      total = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
       return detail.Select(p => new ViewListOccupation()
       {
@@ -774,7 +757,7 @@ namespace Manager.Services.Auth
     public List<ViewListPerson> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = personService.GetAll(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+      var detail = servicePerson.GetAll(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
         .OrderBy(p => p.User.Name)
          .Select(item => new ViewListPerson()
          {
@@ -793,34 +776,17 @@ namespace Manager.Services.Auth
     public List<ViewListCompany> ListCompany(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-      total = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).Count();
+      var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+      total = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).Count();
 
       return detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name }).ToList();
-    }
-
-    public void SetUser(BaseUser baseUser)
-    {
-      try
-      {
-        _user = baseUser;
-        personService._user = _user;
-        attachmentService._user = _user;
-        mailService._user = _user;
-        companyService._user = _user;
-        occupationService._user = _user;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
     }
 
     public List<Person> ListAll()
     {
       try
       {
-        return personService.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration).ToList();
+        return servicePerson.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration).ToList();
       }
       catch (Exception e)
       {
@@ -853,9 +819,9 @@ namespace Manager.Services.Auth
           view.User.ChangePassword = Manager.Views.Enumns.EnumChangePassword.No;
 
         view.Person.User = view.User;
-        view.Person.User = userService.Insert(view.User);
+        view.Person.User = serviceUser.Insert(view.User);
 
-        personService.Insert(view.Person);
+        servicePerson.Insert(view.Person);
 
         return "ok";
       }
@@ -869,13 +835,13 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var pass = userService.GetAll(p => p._id == view.User._id).SingleOrDefault().Password;
+        var pass = serviceUser.GetAll(p => p._id == view.User._id).SingleOrDefault().Password;
         if (view.User.Password != EncryptServices.GetMD5Hash(pass))
           view.User.Password = EncryptServices.GetMD5Hash(view.User.Password);
 
         view.Person.User = view.User;
-        personService.Update(view.Person, null);
-        userService.Update(view.User, null);
+        servicePerson.Update(view.Person, null);
+        serviceUser.Update(view.User, null);
         return "update";
       }
       catch (Exception e)
@@ -888,9 +854,9 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var parameter = parameterService.GetAll(p => p.Name == "typeregisterperson").FirstOrDefault();
+        var parameter = serviceParameter.GetAll(p => p.Name == "typeregisterperson").FirstOrDefault();
         if (parameter == null)
-          parameterService.Insert(new Parameter()
+          serviceParameter.Insert(new Parameter()
           {
             Name = "typeregisterperson",
             Content = "0",

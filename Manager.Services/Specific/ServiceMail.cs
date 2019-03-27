@@ -1,49 +1,60 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
-using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
-using System.Linq;
-using System.Net.Http;
 
 namespace Manager.Services.Specific
 {
   public class ServiceMail : Repository<MailMessage>, IServiceMail
   {
     private readonly ServiceAuthentication serviceAuthentication;
-    private readonly ServiceMailMessage mailMessageService;
-    private readonly ServiceMailModel mailModelService;
-    private readonly ServiceGeneric<MailLog> mailService;
-    private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceMailMessage serviceMailMessage;
+    private readonly ServiceMailModel serviceMailModel;
+    private readonly ServiceGeneric<MailLog> serviceMail;
+    private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceSendGrid serviceSendGrid;
-    private new readonly DataContext _context;
 
-    public BaseUser user { get => _user; set => user = _user; }
-
-    public ServiceMail(DataContext context)
-      : base(context)
+    #region Constructor
+    public ServiceMail(DataContext context) : base(context)
     {
       try
       {
-        _context = context;
-        mailMessageService = new ServiceMailMessage(context);
-        mailModelService = new ServiceMailModel(context);
-        mailService = new ServiceGeneric<MailLog>(context);
-        personService = new ServiceGeneric<Person>(context);
-        serviceSendGrid = new ServiceSendGrid(context);
         serviceAuthentication = new ServiceAuthentication(context);
+        serviceMail = new ServiceGeneric<MailLog>(context);
+        serviceMailMessage = new ServiceMailMessage(context);
+        serviceMailModel = new ServiceMailModel(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceSendGrid = new ServiceSendGrid(context);
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      serviceMail._user = _user;
+      serviceMailMessage._user = _user;
+      serviceMailModel._user = _user;
+      servicePerson._user = _user;
+      serviceSendGrid.SetUser(_user);
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceMail._user = user;
+      serviceMailMessage._user = user;
+      serviceMailModel._user = user;
+      servicePerson._user = user;
+      serviceSendGrid.SetUser(user);
+    }
+    #endregion
 
+    #region Mail
     public string SendMail(string link, string mail, string password, string idmail)
     {
       try
@@ -77,16 +88,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-    public void SetUser(IHttpContextAccessor contextAccessor)
-    {
-      User(contextAccessor);
-      mailMessageService._user = _user;
-      mailModelService._user = _user;
-      mailService._user = _user;
-      personService._user = _user;
-      serviceSendGrid._user = _user;
-    }
+    #endregion
 
   }
 }

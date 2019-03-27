@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
@@ -16,7 +17,7 @@ namespace Manager.Services.Specific
   {
 
     private readonly ServiceGeneric<Log> serviceLog;
-    private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<Person> servicePerson;
 
     #region Constructor
     public ServiceLog(DataContext context) : base(context)
@@ -24,7 +25,7 @@ namespace Manager.Services.Specific
       try
       {
         serviceLog = new ServiceGeneric<Log>(context);
-        personService = new ServiceGeneric<Person>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
       {
@@ -35,7 +36,12 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
       serviceLog._user = _user;
-      personService._user = _user;
+      servicePerson._user = _user;
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceLog._user = user;
+      servicePerson._user = user;
     }
     #endregion
 
@@ -44,7 +50,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = personService.GetAll(p => p._id == view._idPerson).FirstOrDefault();
+        var person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault();
         var log = new Log
         {
           Person = person,

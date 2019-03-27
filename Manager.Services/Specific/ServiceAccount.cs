@@ -54,6 +54,23 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
       servicePerson._user = _user;
+      servicePerson._user = _user;
+      serviceUser._user = _user;
+      serviceCompany._user = _user;
+      serviceInfra.SetUser(_user);
+      serviceLog.SetUser(_user);
+      serviceParameter._user = _user;
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceAccount._user = _user;
+      servicePerson._user = user;
+      servicePerson._user = user;
+      serviceUser._user = user;
+      serviceCompany._user = user;
+      serviceInfra.SetUser(user);
+      serviceLog.SetUser(user);
+      serviceParameter._user = user;
     }
     #endregion
 

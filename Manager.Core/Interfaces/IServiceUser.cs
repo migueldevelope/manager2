@@ -14,6 +14,8 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceUser
   {
+    void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser user);
     List<ViewListUser> GetUsers(ref long total, int count, int page, string filter, EnumTypeUser type);
     ViewCrudUser GetUserCrud(string iduser);
     ViewCrudUser NewUser(ViewCrudUser view);
@@ -26,7 +28,6 @@ namespace Manager.Core.Interfaces
     #region Old
     List<User> ListUser(Expression<Func<User, bool>> filter);
     //BaseUser user { get; set; }
-    void SetUser(IHttpContextAccessor contextAccessor);
     User NewUser(User user);
     User NewUserView(User user);
     User UpdateUser(User user);

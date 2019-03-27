@@ -5,36 +5,47 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using Manager.Core.Base;
 using Manager.Views.BusinessView;
+using Manager.Services.Auth;
 
 namespace Manager.Services.Specific
 {
   public class ServiceWorkflow : Repository<Workflow>, IServiceWorkflow
   {
-    private readonly IServicePerson personService;
-    private readonly ServiceGeneric<Workflow> workflowService;
+    private readonly ServicePerson servicePerson;
+    private readonly ServiceGeneric<Workflow> serviceWorkflow;
 
-    public BaseUser user { get => _user; set => user = _user; }
-
-    public ServiceWorkflow(DataContext context, IServicePerson _personService)
-      : base(context)
+    #region Constructor
+    public ServiceWorkflow(DataContext context) : base(context)
     {
       try
       {
-        workflowService = new ServiceGeneric<Workflow>(context);
-        personService = _personService;
+        servicePerson = new ServicePerson(context);
+        serviceWorkflow = new ServiceGeneric<Workflow>(context);
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      serviceWorkflow._user = _user;
+      servicePerson.SetUser(_user);
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceWorkflow._user = user;
+      servicePerson.SetUser(user);
+    }
+    #endregion
 
+    #region WorkFlow
     public List<Workflow> NewFlow(ViewFlow view)
     {
       try
@@ -48,13 +59,12 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
     public List<Workflow> Manager(ViewFlow view)
     {
       try
       {
-        var person = personService.GetPerson(view.IdPerson);
-        var manager = personService.GetPerson(person.Manager._id.ToString());
+        var person = servicePerson.GetPerson(view.IdPerson);
+        var manager = servicePerson.GetPerson(person.Manager._id.ToString());
         var result = new List<Workflow>();
         var workflow = new Workflow
         {
@@ -63,7 +73,7 @@ namespace Manager.Services.Specific
           Requestor = manager,
           Sequence = 1
         };
-        workflowService.Insert(workflow);
+        serviceWorkflow.Insert(workflow);
         result.Add(workflow);
         return result;
       }
@@ -72,16 +82,15 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
     public Workflow Approved(ViewWorkflow view)
     {
       try
       {
-        var workflow = workflowService.GetAll(p => p._id == view.IdWorkflow).FirstOrDefault();
+        var workflow = serviceWorkflow.GetAll(p => p._id == view.IdWorkflow).FirstOrDefault();
         workflow.StatusWorkflow = EnumWorkflow.Approved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
-        workflowService.Update(workflow, null);
+        serviceWorkflow.Update(workflow, null);
         return workflow;
       }
       catch (Exception e)
@@ -89,16 +98,15 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
     public Workflow Disapproved(ViewWorkflow view)
     {
       try
       {
-        var workflow = workflowService.GetAll(p => p._id == view.IdWorkflow).FirstOrDefault();
+        var workflow = serviceWorkflow.GetAll(p => p._id == view.IdWorkflow).FirstOrDefault();
         workflow.StatusWorkflow = EnumWorkflow.Disapproved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
-        workflowService.Update(workflow, null);
+        serviceWorkflow.Update(workflow, null);
         return workflow;
       }
       catch (Exception e)
@@ -106,12 +114,7 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-    public void SetUser(IHttpContextAccessor contextAccessor)
-    {
-      User(contextAccessor);
-      workflowService._user = _user;
-    }
+    #endregion
 
   }
 }

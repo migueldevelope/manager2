@@ -8,7 +8,6 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +37,11 @@ namespace Manager.Services.Specific
       User(contextAccessor);
       serviceLogMessages._user = _user;
       servicePerson._user = _user;
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceLogMessages._user = user;
+      servicePerson._user = user;
     }
     #endregion
 

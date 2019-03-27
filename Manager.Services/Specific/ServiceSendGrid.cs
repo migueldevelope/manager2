@@ -1,10 +1,10 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
@@ -16,24 +16,37 @@ namespace Manager.Services.Specific
 {
   public class ServiceSendGrid : Repository<MailLog>, IServiceSendGrid
   {
-    private ServiceGeneric<MailLog> mailService;
-    public ServiceSendGrid(DataContext context)
-      : base(context)
+    private ServiceGeneric<MailLog> serviceMail;
+
+    #region Constructor
+    public ServiceSendGrid(DataContext context) : base(context)
     {
       try
       {
-        this.mailService = new ServiceGeneric<MailLog>(context);
+        serviceMail = new ServiceGeneric<MailLog>(context);
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      serviceMail._user = _user;
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceMail._user = user;
+    }
+    #endregion
+
+    #region Send Grid
     public async Task<string> Send(string idMail, string apiKeySendGrid)
     {
       try
       {
-        return await Send(mailService.GetAll(p => p._id == idMail).FirstOrDefault(), apiKeySendGrid);
+        return await Send(serviceMail.GetAll(p => p._id == idMail).FirstOrDefault(), apiKeySendGrid);
       }
       catch (Exception)
       {
@@ -78,7 +91,7 @@ namespace Manager.Services.Specific
         if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
         {
           mailSend.StatusMail = EnumStatusMail.Error;
-          mailService.Update(mailSend, null);
+          serviceMail.Update(mailSend, null);
           throw new ServiceException(_user, new Exception(string.Format("e-mail send error: {0}", response.StatusCode)), _context);
         }
 
@@ -87,7 +100,7 @@ namespace Manager.Services.Specific
         foreach (var item in response.Headers.GetValues("X-Message-Id"))
           mailSend.KeySendGrid.Add(item);
 
-        mailService.Update(mailSend, null);
+        serviceMail.Update(mailSend, null);
         return "e-mail send sucess!";
       }
       catch (ServiceException)
@@ -95,10 +108,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public void SetUser(IHttpContextAccessor contextAccessor)
-    {
-      User(contextAccessor);
-      this.mailService._user = _user;
-    }
+    #endregion
+
   }
 }

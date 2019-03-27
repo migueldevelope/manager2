@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Views;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessNew;
@@ -13,6 +14,7 @@ namespace Manager.Core.Interfaces
   public interface IServiceAccount
   {
     void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser _user);
     Task<string> NewAccount(ViewNewAccount view);
     List<ViewListAccount> GetAll(ref long total, int count = 10, int page = 1, string filter = "");
     ViewPerson AlterAccount(string idaccount);

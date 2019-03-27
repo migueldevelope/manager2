@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
@@ -17,20 +18,20 @@ namespace Manager.Services.Specific
 {
   public class ServiceSalaryScale : Repository<SalaryScale>, IServiceSalaryScale
   {
-    private readonly ServiceGeneric<Company> companyService;
-    private readonly ServiceGeneric<Occupation> occupationService;
-    private readonly ServiceGeneric<Person> personService;
-    private readonly ServiceGeneric<SalaryScale> salaryScaleService;
+    private readonly ServiceGeneric<Company> serviceCompany;
+    private readonly ServiceGeneric<Occupation> serviceOccupation;
+    private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
 
     #region Constructor
     public ServiceSalaryScale(DataContext context) : base(context)
     {
       try
       {
-        companyService = new ServiceGeneric<Company>(context);
-        occupationService = new ServiceGeneric<Occupation>(context);
-        personService = new ServiceGeneric<Person>(context);
-        salaryScaleService = new ServiceGeneric<SalaryScale>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
       }
       catch (Exception e)
       {
@@ -40,10 +41,17 @@ namespace Manager.Services.Specific
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
-      companyService._user = _user;
-      occupationService._user = _user;
-      personService._user = _user;
-      salaryScaleService._user = _user;
+      serviceCompany._user = _user;
+      serviceOccupation._user = _user;
+      servicePerson._user = _user;
+      serviceSalaryScale._user = _user;
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceCompany._user = user;
+      servicePerson._user = user;
+      serviceOccupation._user = user;
+      serviceSalaryScale._user = user;
     }
     #endregion
 
@@ -52,14 +60,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListSalaryScale> detail = salaryScaleService.GetAllNewVersion(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "Name").Result
+        List<ViewListSalaryScale> detail = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "Name").Result
           .Select(x => new ViewListSalaryScale()
           {
             _id = x._id,
             Name = x.Name,
             Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name }
           }).ToList();
-        total = salaryScaleService.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceSalaryScale.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -71,7 +79,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale item = salaryScaleService.GetNewVersion(p => p._id == id).Result;
+        SalaryScale item = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudSalaryScale()
         {
           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
@@ -91,10 +99,10 @@ namespace Manager.Services.Specific
         SalaryScale salaryScale = new SalaryScale()
         {
           Name = view.Name,
-          Company = companyService.GetNewVersion(p => p._id == view.Company._id).Result,
+          Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result,
           Grades = new List<Grade>()
         };
-        salaryScale = salaryScaleService.InsertNewVersion(salaryScale).Result;
+        salaryScale = serviceSalaryScale.InsertNewVersion(salaryScale).Result;
         return "Salary scale added!";
       }
       catch (Exception e)
@@ -106,9 +114,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == view._id).Result;
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view._id).Result;
         salaryScale.Name = view.Name;
-        salaryScaleService.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null);
         return "Salary scale altered!";
       }
       catch (Exception e)
@@ -120,9 +128,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == id).Result;
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
         salaryScale.Status = EnumStatus.Disabled;
-        salaryScaleService.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null);
         return "Salary scale deleted";
       }
       catch (Exception e)
@@ -137,7 +145,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale item = salaryScaleService.GetNewVersion(p => p._id == idsalaryscale).Result;
+        SalaryScale item = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
         if (item == null)
           throw new Exception("Salary scale not found!");
 
@@ -175,7 +183,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == view.SalaryScale._id).Result;
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view.SalaryScale._id).Result;
         view.Order = 1;
         if (salaryScale.Grades.Count != 0)
           view.Order = salaryScale.Grades.Max(p => p.Order)+1;
@@ -198,7 +206,7 @@ namespace Manager.Services.Specific
         }
         salaryScale.Grades.Add(grade);
         // TODO: problema de persistência para array vazio
-        salaryScaleService.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null);
         return "Grade added!";
       }
       catch (Exception e)
@@ -210,7 +218,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == view.SalaryScale._id).Result;
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view.SalaryScale._id).Result;
         var list = new List<Grade>();
         foreach (var grade in salaryScale.Grades)
         {
@@ -223,7 +231,7 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        salaryScaleService.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null);
         return "Grade altered!";
       }
       catch (Exception e)
@@ -235,13 +243,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == idsalaryscale).Result;
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
         var list = new List<Grade>();
         foreach (var grade in salaryScale.Grades)
           if (grade._id != id)
             list.Add(grade);
         salaryScale.Grades = list;
-        salaryScaleService.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null);
         return "Grade deleted!";
       }
       catch (Exception e)
@@ -253,7 +261,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == idsalaryscale).Result;
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
         var result = new ViewCrudGrade();
         foreach (var grade in salaryScale.Grades)
           if (grade._id == id)
@@ -279,7 +287,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = salaryScaleService.GetNewVersion(p => p._id == view._idSalaryScale).Result;
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view._idSalaryScale).Result;
         var list = new List<Grade>();
         foreach (var grade in salaryScale.Grades)
         {
@@ -299,7 +307,7 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        salaryScaleService.Update(salaryScale,null);
+        serviceSalaryScale.Update(salaryScale,null);
         return "Step altered!";
       }
       catch (Exception e)

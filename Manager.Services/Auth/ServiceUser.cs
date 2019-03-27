@@ -21,34 +21,34 @@ namespace Manager.Services.Auth
 {
   public class ServiceUser : Repository<User>, IServiceUser
   {
-    private ServiceGeneric<User> userService;
-    private ServiceGeneric<Person> personService;
-    private ServiceGeneric<Attachments> attachmentService;
-    private ServiceGeneric<Company> companyService;
-    private ServiceGeneric<Occupation> occupationService;
-    private ServiceGeneric<OnBoarding> onboardingService;
-    private ServiceGeneric<Monitoring> monitoringService;
-    private ServiceGeneric<Checkpoint> checkpointService;
-    private ServiceGeneric<Plan> planService;
-    private ServiceGeneric<Log> logService;
-    private ServiceSendGrid mailService;
+    private ServiceGeneric<Attachments> serviceAttachment;
+    private ServiceGeneric<Checkpoint> serviceCheckpoint;
+    private ServiceGeneric<Company> serviceCompany;
+    private ServiceGeneric<Log> serviceLog;
+    private ServiceSendGrid serviceMail;
+    private ServiceGeneric<Monitoring> serviceMonitoring;
+    private ServiceGeneric<Occupation> serviceOccupation;
+    private ServiceGeneric<OnBoarding> serviceOnboarding;
+    private ServiceGeneric<Person> servicePerson;
+    private ServiceGeneric<Plan> servicePlan;
+    private ServiceGeneric<User> serviceUser;
 
     #region Constructor
     public ServiceUser(DataContext context) : base(context)
     {
       try
       {
-        userService = new ServiceGeneric<User>(context);
-        attachmentService = new ServiceGeneric<Attachments>(context);
-        mailService = new ServiceSendGrid(context);
-        companyService = new ServiceGeneric<Company>(context);
-        occupationService = new ServiceGeneric<Occupation>(context);
-        personService = new ServiceGeneric<Person>(context);
-        onboardingService = new ServiceGeneric<OnBoarding>(context);
-        monitoringService = new ServiceGeneric<Monitoring>(context);
-        checkpointService = new ServiceGeneric<Checkpoint>(context);
-        planService = new ServiceGeneric<Plan>(context);
-        logService = new ServiceGeneric<Log>(context);
+        serviceAttachment = new ServiceGeneric<Attachments>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
+        serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
+        serviceLog = new ServiceGeneric<Log>(context);
+        serviceMail = new ServiceSendGrid(context);
+        serviceMonitoring = new ServiceGeneric<Monitoring>(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        servicePlan = new ServiceGeneric<Plan>(context);
+        serviceUser = new ServiceGeneric<User>(context);
       }
       catch (Exception e)
       {
@@ -57,43 +57,32 @@ namespace Manager.Services.Auth
     }
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
-      try
-      {
-        User(contextAccessor);
-        userService._user = _user;
-        attachmentService._user = _user;
-        mailService._user = _user;
-        companyService._user = _user;
-        occupationService._user = _user;
-        personService._user = _user;
-        onboardingService._user = _user;
-        monitoringService._user = _user;
-        checkpointService._user = _user;
-        planService._user = _user;
-        logService._user = _user;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
+      User(contextAccessor);
+      serviceAttachment._user = _user;
+      serviceCheckpoint._user = _user;
+      serviceCompany._user = _user;
+      serviceLog._user = _user;
+      serviceMail._user = _user;
+      serviceMonitoring._user = _user;
+      serviceOccupation._user = _user;
+      serviceOnboarding._user = _user;
+      servicePerson._user = _user;
+      servicePlan._user = _user;
+      serviceUser._user = _user;
     }
-    private void Init(DataContext context, BaseUser user)
+    public void SetUser(BaseUser user)
     {
-      try
-      {
-        _user = user;
-        userService._user = _user;
-        attachmentService._user = _user;
-        mailService._user = _user;
-        companyService._user = _user;
-        occupationService._user = _user;
-        personService._user = _user;
-        logService._user = _user;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
+      serviceAttachment._user = user;
+      serviceCheckpoint._user = user;
+      serviceCompany._user = user;
+      serviceLog._user = user;
+      serviceMail._user = user;
+      serviceMonitoring._user = user;
+      serviceOccupation._user = user;
+      serviceOnboarding._user = user;
+      servicePerson._user = user;
+      servicePlan._user = user;
+      serviceUser._user = user;
     }
     #endregion
 
@@ -106,8 +95,8 @@ namespace Manager.Services.Auth
         {
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
-            total = userService.CountNewVersion(p => p.Name.Contains(filter)).Result;
-            return userService.GetAllNewVersion(p => p.Name.Contains(filter)).Result
+            total = serviceUser.CountNewVersion(p => p.Name.Contains(filter)).Result;
+            return serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)).Result
             .Select(x => new ViewListUser()
             {
               _id = x._id,
@@ -118,8 +107,8 @@ namespace Manager.Services.Auth
             }).ToList();
           default:
             // TODO: colocar o flag de usuário administrativo
-            total = userService.CountNewVersion(p => p.Name.Contains(filter)).Result;
-            return userService.GetAllNewVersion(p => p.Name.Contains(filter)).Result
+            total = serviceUser.CountNewVersion(p => p.Name.Contains(filter)).Result;
+            return serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)).Result
             .Select(x => new ViewListUser()
             {
               _id = x._id,
@@ -139,7 +128,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user =  userService.GetNewVersion(p => p._id == iduser).Result;
+        User user =  serviceUser.GetNewVersion(p => p._id == iduser).Result;
         return new ViewCrudUser()
         {
           _id = user._id,
@@ -190,7 +179,7 @@ namespace Manager.Services.Auth
         if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
           user.ChangePassword = EnumChangePassword.No;
 
-        user = userService.InsertNewVersion(user).Result;
+        user = serviceUser.InsertNewVersion(user).Result;
         return new ViewCrudUser()
         {
           _id = user._id,
@@ -218,7 +207,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user = userService.GetNewVersion(p => p._id == view._id).Result;
+        User user = serviceUser.GetNewVersion(p => p._id == view._id).Result;
         user.DateAdm = view.DateAdm;
         user.DateBirth = view.DateBirth;
         user.Document = view.Document;
@@ -231,7 +220,7 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.PhotoUrl;
         user.Schooling = new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
         user.Sex = view.Sex;
-        user = userService.UpdateNewVersion(user).Result;
+        user = serviceUser.UpdateNewVersion(user).Result;
         return new ViewCrudUser()
         {
           _id = user._id,
@@ -262,14 +251,14 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user = userService.GetNewVersion(p => p._id == idUser).Result;
+        User user = serviceUser.GetNewVersion(p => p._id == idUser).Result;
         string oldPass = EncryptServices.GetMD5Hash(resetPass.OldPassword);
         if (user.ChangePassword == EnumChangePassword.AlterPass && user.Password != oldPass)
           return "error_old_password";
         string newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
         user.Password = newPass;
         user.ChangePassword = EnumChangePassword.No;
-        user = userService.UpdateNewVersion(user).Result;
+        user = serviceUser.UpdateNewVersion(user).Result;
         return "Password changed!";
       }
       catch (Exception e)
@@ -281,10 +270,10 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user = userService.GetFreeNewVersion(p => p.ForeignForgotPassword == foreign).Result;
+        User user = serviceUser.GetFreeNewVersion(p => p.ForeignForgotPassword == foreign).Result;
         if (user == null)
           return "error_valid";
-        userService._user = new BaseUser()
+        serviceUser._user = new BaseUser()
         {
           _idAccount = user._idAccount,
           NamePerson = user.Name,
@@ -295,7 +284,7 @@ namespace Manager.Services.Auth
         user.Password = newPass;
         user.ChangePassword = EnumChangePassword.No;
         user.ForeignForgotPassword = string.Empty;
-        user = userService.UpdateNewVersion(user).Result;
+        user = serviceUser.UpdateNewVersion(user).Result;
         return "Password changed!";
       }
       catch (Exception e)
@@ -307,7 +296,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user = userService.GetFreeNewVersion(p => p.Mail == mail).Result;
+        User user = serviceUser.GetFreeNewVersion(p => p.Mail == mail).Result;
         if (user == null)
           return "error_email";
         string guid = string.Concat(Guid.NewGuid().ToString(), user._id);
@@ -317,14 +306,14 @@ namespace Manager.Services.Auth
         else
           message = forgotPassword.Message.Replace("{User}", user.Name).Replace("{Link}", forgotPassword.Link + "/" + guid);
 
-        userService._user = new BaseUser()
+        serviceUser._user = new BaseUser()
         {
           _idAccount = user._idAccount,
           NamePerson = user.Name,
           Mail = user.Mail,
           _idPerson = user._id
         };
-        mailService._user = userService._user;
+        serviceMail._user = serviceUser._user;
 
         MailLog sendMail = new MailLog
         {
@@ -339,11 +328,11 @@ namespace Manager.Services.Auth
           Included = DateTime.Now,
           Subject = forgotPassword.Subject
         };
-        sendMail = mailService.InsertNewVersion(sendMail).Result;
+        sendMail = serviceMail.InsertNewVersion(sendMail).Result;
         user.ChangePassword = EnumChangePassword.ForgotPassword;
         user.ForeignForgotPassword = guid;
-        user = userService.UpdateNewVersion(user).Result;
-        await mailService.Send(sendMail, pathSendGrid);
+        user = serviceUser.UpdateNewVersion(user).Result;
+        await serviceMail.Send(sendMail, pathSendGrid);
         return "Email sent successfully!";
       }
       catch (Exception e)
@@ -360,7 +349,7 @@ namespace Manager.Services.Auth
       {
         user.Password = EncryptServices.GetMD5Hash(user.Password);
         user.Status = EnumStatus.Enabled;
-        userService.Insert(user);
+        serviceUser.Insert(user);
         return user;
       }
       catch (Exception e)
@@ -417,7 +406,7 @@ namespace Manager.Services.Auth
         if ((authMaristas) || (authPUC))
           model.ChangePassword = EnumChangePassword.No;
 
-        return userService.Insert(model);
+        return serviceUser.Insert(model);
       }
       catch (Exception e)
       {
@@ -431,8 +420,8 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var pass = userService.GetAll(p => p._id == user._id).SingleOrDefault().Password;
-        userService.Update(user, null);
+        var pass = serviceUser.GetAll(p => p._id == user._id).SingleOrDefault().Password;
+        serviceUser.Update(user, null);
         return user;
       }
       catch (Exception e)
@@ -445,10 +434,10 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var pass = userService.GetAll(p => p._id == user._id).SingleOrDefault().Password;
+        var pass = serviceUser.GetAll(p => p._id == user._id).SingleOrDefault().Password;
         if (user.Password != EncryptServices.GetMD5Hash(pass))
           user.Password = EncryptServices.GetMD5Hash(user.Password);
-        userService.Update(user, null);
+        serviceUser.Update(user, null);
         return user;
       }
       catch (Exception e)
@@ -461,9 +450,9 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = userService.GetAll(p => p._id == idUser).SingleOrDefault();
+        var user = serviceUser.GetAll(p => p._id == idUser).SingleOrDefault();
         user.PhotoUrl = url;
-        userService.Update(user, null);
+        serviceUser.Update(user, null);
       }
       catch (Exception e)
       {
@@ -475,7 +464,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+        return serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
       }
       catch (Exception e)
       {
@@ -488,7 +477,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return this.userService.GetAll(p => p._id == idUser).FirstOrDefault().PhotoUrl;
+        return this.serviceUser.GetAll(p => p._id == idUser).FirstOrDefault().PhotoUrl;
       }
       catch (Exception e)
       {
@@ -500,7 +489,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return userService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p.Mail == mail && p.Password == password).SingleOrDefault();
+        return serviceUser.GetAuthentication(p => p.Status == EnumStatus.Enabled & p.Mail == mail && p.Password == password).SingleOrDefault();
       }
       catch (Exception e)
       {
@@ -513,7 +502,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return userService.GetAll(p => p._id == id).FirstOrDefault();
+        return serviceUser.GetAll(p => p._id == id).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -525,7 +514,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return userService.GetAll(filter).ToList();
+        return serviceUser.GetAll(filter).ToList();
       }
       catch (Exception e)
       {
@@ -541,20 +530,20 @@ namespace Manager.Services.Auth
         List<User> detail = null;
         if (typeUser == EnumTypeUser.Support)
         {
-          detail = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         else if (typeUser == EnumTypeUser.Administrator)
         {
-          detail = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         else
         {
-          detail = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
 
         return detail;
@@ -569,7 +558,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return userService.GetAll(p => p._id == iduser).FirstOrDefault();
+        return serviceUser.GetAll(p => p._id == iduser).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -580,8 +569,8 @@ namespace Manager.Services.Auth
     public List<Occupation> ListOccupation(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = occupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-      total = occupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+      var detail = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+      total = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
       return detail;
     }
@@ -589,8 +578,8 @@ namespace Manager.Services.Auth
     public List<Person> ListPerson(string iduser, ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = personService.GetAll(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
-      total = personService.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+      var detail = servicePerson.GetAll(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+      total = servicePerson.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
       return detail;
     }
@@ -598,7 +587,7 @@ namespace Manager.Services.Auth
     public List<User> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = userService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).ToList();
+      var detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).ToList();
       //var detail = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       //total = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
@@ -608,34 +597,17 @@ namespace Manager.Services.Auth
     public List<Company> ListCompany(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-      total = companyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).Count();
+      var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+      total = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).Count();
 
       return detail;
-    }
-
-    public void SetUser(BaseUser baseUser)
-    {
-      try
-      {
-        _user = baseUser;
-        userService._user = _user;
-        attachmentService._user = _user;
-        mailService._user = _user;
-        companyService._user = _user;
-        occupationService._user = _user;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
     }
 
     public List<User> ListAll()
     {
       try
       {
-        return userService.GetAuthentication(p => p.Status != EnumStatus.Disabled).ToList();
+        return serviceUser.GetAuthentication(p => p.Status != EnumStatus.Disabled).ToList();
       }
       catch (Exception e)
       {

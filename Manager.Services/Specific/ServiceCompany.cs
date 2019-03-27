@@ -33,26 +33,23 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
-
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
       serviceCompany._user = _user;
-      servicePerson._user = _user;
       serviceEstablishment._user = _user;
+      servicePerson._user = _user;
       serviceSalaryScale._user = _user;
     }
-
-    public void SetUser(BaseUser baseUser)
+    public void SetUser(BaseUser user)
     {
-      _user = baseUser;
-      serviceCompany._user = baseUser;
-      servicePerson._user = baseUser;
-      serviceEstablishment._user = baseUser;
-      serviceSalaryScale._user = baseUser;
+      serviceCompany._user = user;
+      serviceEstablishment._user = user;
+      servicePerson._user = user;
+      serviceSalaryScale._user = user;
     }
     #endregion
 

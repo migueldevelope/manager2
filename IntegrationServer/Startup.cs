@@ -41,7 +41,7 @@ namespace IntegrationServer
       IServiceCompany serviceCompany = new ServiceCompany(_context);
       IServicePerson servicePerson = new ServicePerson(_context);
       IServiceLog serviceLog = new ServiceLog(_context);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, servicePerson);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceIntegration serviceIntegration = new ServiceIntegration(_context);
