@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Enumns;
+using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Core.Business
 {
@@ -12,6 +13,7 @@ namespace Manager.Core.Business
     public Person Person { get; set; }
     public string Subject { get; set; }
     public string Message { get; set; }
+    public DateTime Register { get; set; }
     public EnumStatusMessage StatusMessage { get; set; }
   }
 }

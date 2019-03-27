@@ -890,7 +890,7 @@ namespace Manager.Services.Specific
       mailService._user = _user;
       occupationService._user = _user;
       monitoringActivitiesService._user = _user;
-      logMessagesService.SetUser(_user);
+      logMessagesService._user = _user;
       mailModelService.SetUser(contextAccessor);
     }
 
