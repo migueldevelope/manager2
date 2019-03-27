@@ -436,6 +436,25 @@ namespace Manager.Services.Specific
 
     #region Infra
 
+    public List<ViewListSkill> GetEssential(string idcompany)
+    {
+      try
+      {
+        return serviceCompany.GetAll(p => p._id == idcompany).FirstOrDefault()
+          .Skills.Select(p => new ViewListSkill()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Concept = p.Concept,
+            TypeSkill = p.TypeSkill
+          }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string DeleteProcessLevelOne(string id)
     {
       try

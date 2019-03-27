@@ -266,6 +266,19 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// Lista as skills da empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getessential/{idcompany}")]
+    public List<ViewListSkill> GetEssential(string idcompany)
+    {
+      return service.GetEssential(idcompany);
+    }
+
+    /// <summary>
     /// Busca informações para editar Escolaridade
     /// </summary>
     /// <param name="id">Identificador da escolaridade</param>
