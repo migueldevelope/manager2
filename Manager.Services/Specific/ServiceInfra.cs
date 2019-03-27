@@ -2532,27 +2532,20 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public List<ViewGroupList> GetGroups(string idcompany)
+    public List<ViewGroupListLO> GetGroups(string idcompany)
     {
       try
       {
-        List<ViewGroupList> groups = new List<ViewGroupList>();
+        List<ViewGroupListLO> groups = new List<ViewGroupListLO>();
         foreach (var item in serviceGroup.GetAll(p => p.Company._id == idcompany))
         {
-          var view = new ViewGroupList();
+          var view = new ViewGroupListLO();
           view._id = item._id;
-          view._idAccount = item._idAccount;
-          view.Status = item.Status;
           view.Name = item.Name;
-          view.Company = item.Company;
-          view.Axis = item.Axis;
-          view.Sphere = item.Sphere;
+          view.Axis = new ViewListAxis() { _id = item.Axis._id, Name = item.Axis.Name, TypeAxis = item.Axis.TypeAxis };
+          view.Sphere = new ViewListSphere() { _id = item.Sphere._id, Name = item.Sphere.Name, TypeSphere = item.Sphere.TypeSphere };
+          view.Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name };
           view.Line = item.Line;
-          view.Skills = item.Skills;
-          view.Schooling = item.Schooling;
-          view.Scope = item.Scope;
-          view.Template = item.Template;
-          view.Occupations = serviceOccupation.GetAll(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
           view.ScopeCount = item.Scope.Count();
           view.SchollingCount = item.Schooling.Count();
           view.SkillCount = item.Skills.Count();
@@ -5333,6 +5326,71 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewMapGroup GetMapGroup(string id)
+    {
+      try
+      {
+        var group = serviceGroup.GetAll(p => p._id == id).FirstOrDefault();
+        var company = serviceCompany.GetAll(p => p._id == group.Company._id).FirstOrDefault();
+
+        var view = new ViewMapGroup()
+        {
+          _id = group._id,
+          Name = group.Name,
+          Line = group.Line,
+          Company = new ViewListCompany() { _id = group.Company._id, Name = group.Company.Name },
+          Axis = new ViewListAxis() { _id = group.Axis._id, Name = group.Axis.Name, TypeAxis = group.Axis.TypeAxis },
+          Sphere = new ViewListSphere() { _id = group.Sphere._id, Name = group.Sphere.Name, TypeSphere = group.Sphere.TypeSphere },
+          Schooling = new List<ViewListSchooling>(),
+          Scope = new List<ViewListScope>(),
+          Skills = new List<ViewListSkill>(),
+          SkillsCompany = new List<ViewListSkill>(),
+        };
+
+
+        foreach (var item in group.Schooling)
+          view.Schooling.Add(new ViewListSchooling() { _id = item._id, Name = item.Name, Order = item.Order });
+
+        foreach (var item in group.Scope)
+          view.Scope.Add(new ViewListScope() { _id = item._id, Name = item.Name });
+
+        foreach (var item in group.Skills)
+          view.Skills.Add(new ViewListSkill() { _id = item._id, Name = item.Name, Concept = item.Concept, TypeSkill = item.TypeSkill });
+
+        foreach (var item in company.Skills)
+          view.Skills.Add(new ViewListSkill() { _id = item._id, Name = item.Name, Concept = item.Concept, TypeSkill = item.TypeSkill });
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+
+    }
+
+    public List<ViewCrudMapGroupScope> GetMapGroupScopeById(string id)
+    {
+      try
+      {
+        return serviceGroup.GetAll(p => p._id == id).FirstOrDefault().Scope
+          .Select(p => new ViewCrudMapGroupScope()
+          {
+            _idGroup = id,
+            Scope = new ViewCrudScope()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Order = p.Order
+            }
+          }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
       }
     }
 

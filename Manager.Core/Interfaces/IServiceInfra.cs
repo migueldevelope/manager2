@@ -22,6 +22,8 @@ namespace Manager.Core.Interfaces
     ViewCrudSkill GetSkillById(string id);
     ViewCrudSchooling GetSchoolingById(string id);
     ViewCrudGroup GetGroup(string id);
+    ViewMapGroup GetMapGroup(string id);
+    List<ViewCrudMapGroupScope> GetMapGroupScopeById(string id);
     ViewCrudGroup GetGroup(string idcompany, string filterName);
     ViewCrudOccupation GetOccupation(string id);
     ViewCrudOccupation GetOccupation(string idcompany, string filterName);
@@ -79,7 +81,7 @@ namespace Manager.Core.Interfaces
     string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order);
     string GetCSVCompareGroup(string idcompany, string link);
     List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref long total, string filter, int count, int page, string filterGroup);
-    List<ViewGroupList> GetGroups(string idcompany);
+    List<ViewGroupListLO> GetGroups(string idcompany);
     ViewCrudSkill AddSkill(ViewAddSkill view);
     ViewCrudGroup AddGroup(ViewCrudGroup view);
     string AddMapGroupScope(ViewCrudMapGroupScope view);
