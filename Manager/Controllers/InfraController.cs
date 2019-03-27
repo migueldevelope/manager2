@@ -676,7 +676,11 @@ namespace Manager.Controllers
       return service.AddSpecificRequirements(idoccupation, view);
     }
 
-
+    /// <summary>
+    /// Inclusão
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addmapgroupschooling")]
@@ -685,7 +689,11 @@ namespace Manager.Controllers
       return service.AddMapGroupSchooling(view);
     }
 
-
+    /// <summary>
+    /// Inclusão
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addoccupationactivities")]
