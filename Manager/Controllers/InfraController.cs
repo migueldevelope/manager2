@@ -260,9 +260,22 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getaxisbyid/{id}")]
-    public ViewCrudAxis GetAreasById(string id)
+    public ViewCrudAxis GetAxisById(string id)
     {
       return service.GetAxisById(id);
+    }
+
+    /// <summary>
+    /// Busca informações para editar Escolaridade
+    /// </summary>
+    /// <param name="id">Identificador da escolaridade</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getschoolingbyid/{id}")]
+    public ViewCrudSchooling GetSchoolingById(string id)
+    {
+      return service.GetSchoolingById(id);
     }
 
     /// <summary>

@@ -1349,6 +1349,25 @@ namespace Manager.Services.Specific
       }
     }
 
+    public ViewCrudSchooling GetSchoolingById(string id)
+    {
+      try
+      {
+        var item = schoolingService.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+        return new ViewCrudSchooling()
+        {
+          _id = item._id,
+          Name = item.Name,
+          Complement = item.Complement,
+          Order = item.Order,
+          Type = item.Type
+        };
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
 
     public ViewCrudAxis GetAxisById(string id)
     {

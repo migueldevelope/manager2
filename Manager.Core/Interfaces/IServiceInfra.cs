@@ -18,6 +18,7 @@ namespace Manager.Core.Interfaces
     ViewCrudAxis GetAxisById(string id);
     ViewCrudSphere GetSphereById(string id);
     ViewCrudSkill GetSkillById(string id);
+    ViewCrudSchooling GetSchoolingById(string id);
     ViewCrudGroup GetGroup(string id);
     ViewCrudGroup GetGroup(string idcompany, string filterName);
     ViewCrudOccupation GetOccupation(string id);
