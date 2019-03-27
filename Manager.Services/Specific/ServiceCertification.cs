@@ -207,7 +207,7 @@ namespace Manager.Services.Specific
       occupationService._user = _user;
       monitoringService._user = _user;
       certificationPersonService._user = _user;
-      logMessagesService.SetUser(_user);
+      logMessagesService._user = _user;
       mailModelService.SetUser(contextAccessor);
     }
 

@@ -170,7 +170,7 @@ namespace Manager.Services.Specific
       onBoardingService._user = _user;
       checkpointService._user = _user;
       monitoringService._user = _user;
-      logMessagesService.SetUser(_user);
+      logMessagesService._user = _user;
       mailModelService.SetUser(baseUser);
     }
 
