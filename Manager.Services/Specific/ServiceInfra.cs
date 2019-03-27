@@ -434,6 +434,1485 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+
+    #region Old
+
+    public string AddSkillsOld(List<ViewAddSkill> view)
+    {
+      try
+      {
+        foreach (var item in view)
+        {
+          var skill = new Skill()
+          {
+            Name = item.Name,
+            Concept = item.Concept,
+            TypeSkill = item.TypeSkill,
+            Status = EnumStatus.Enabled
+          };
+          serviceSkill.Insert(skill);
+        }
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public ViewCrudGroup AddGroupOld(ViewAddGroup view)
+    {
+      try
+      {
+        long line = 0;
+        try
+        {
+          line = serviceGroup.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line);
+          if (line == 0)
+            line = 1;
+          else
+            line += 1;
+        }
+        catch (Exception)
+        {
+          line = 1;
+        }
+
+
+        var group = new Group()
+        {
+          Name = view.Name,
+          Axis = view.Axis,
+          Sphere = view.Sphere,
+          Status = EnumStatus.Enabled,
+          Skills = new List<Skill>(),
+          Schooling = new List<Schooling>(),
+          Line = line,
+          Company = view.Company,
+          Scope = new List<Scope>()
+        };
+        var result = serviceGroup.Insert(group);
+
+        return new ViewCrudGroup()
+        {
+          _id = result._id,
+          Name = result.Name,
+          Line = result.Line,
+          Company = new ViewListCompany() { _id = result.Company._id, Name = result.Company.Name },
+          Axis = new ViewListAxis() { _id = result.Axis._id, Name = result.Axis.Name },
+          Sphere = new ViewListSphere() { _id = result.Sphere._id, Name = result.Sphere.Name }
+        };
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupationActivitiesListOld(List<ViewAddOccupationActivities> list)
+    {
+      try
+      {
+        foreach (var view in list)
+        {
+          AddOccupationActivitiesOld(view);
+        }
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateMapOccupationSchoolingOld(string idoccupation, Schooling view)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var schooling = serviceSchooling.GetAll(p => p._id == view._id).FirstOrDefault();
+
+        schooling.Complement = view.Complement;
+        schooling.Type = view.Type;
+
+        var schoolOld = occupation.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
+        occupation.Schooling.Remove(schoolOld);
+        occupation.Schooling.Add(schooling);
+
+        serviceOccupation.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Area> GetAreasOld()
+    {
+      try
+      {
+        var areas = serviceArea.GetAll().OrderBy(p => p.Name).ToList();
+        foreach (var item in areas)
+        {
+          item.ProcessLevelOnes = new List<ProcessLevelOne>();
+          var process = serviceProcessLevelOne.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
+          foreach (var row in process)
+          {
+            row.Process = new List<ProcessLevelTwo>();
+            foreach (var leveltwo in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
+            {
+              row.Process.Add(leveltwo);
+            }
+
+            item.ProcessLevelOnes.Add(row);
+          }
+        }
+        return areas.OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Area> GetAreasOld(string idcompany)
+    {
+      try
+      {
+        var areas = serviceArea.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        foreach (var item in areas)
+        {
+          item.ProcessLevelOnes = new List<ProcessLevelOne>();
+          var process = serviceProcessLevelOne.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
+          foreach (var row in process)
+          {
+            row.Process = new List<ProcessLevelTwo>();
+            foreach (var leveltwo in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
+            {
+              row.Process.Add(leveltwo);
+            }
+
+            item.ProcessLevelOnes.Add(row);
+          }
+        }
+        return areas.OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Axis> GetAxisOld()
+    {
+      try
+      {
+        return serviceAxis.GetAll().OrderBy(p => p.TypeAxis).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Axis> GetAxisOld(string idcompany)
+    {
+      try
+      {
+        return serviceAxis.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.TypeAxis).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Questions> ListQuestionsOld(string idcompany)
+    {
+      try
+      {
+        return serviceQuestions.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Order).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public Questions GetQuestionsOld(string id)
+    {
+      try
+      {
+        return serviceQuestions.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Company> GetCompaniesOld()
+    {
+      try
+      {
+        return serviceCompany.GetAll().ToList().Select(p => new Company()
+        {
+          _id = p._id,
+          _idAccount = p._idAccount,
+          Status = p.Status,
+          Name = p.Name,
+          Logo = p.Logo,
+          Skills = p.Skills?.OrderBy(x => x.Name).ToList(),
+          Template = p.Template
+        }).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public Skill AddSkillOld(ViewAddSkill view)
+    {
+      try
+      {
+        var skill = new Skill()
+        {
+          Name = view.Name,
+          Concept = view.Concept,
+          TypeSkill = view.TypeSkill,
+          Status = EnumStatus.Enabled
+        };
+        serviceSkill.Insert(skill);
+        return skill;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public Cbo GetCBOOld(string id)
+    {
+      try
+      {
+        var cbo = serviceCbo.GetAuthentication(p => p._id == id).FirstOrDefault();
+        return cbo;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Cbo> ListCBOOld()
+    {
+      try
+      {
+        var cbo = serviceCbo.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
+        return cbo;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Schooling> GetSchoolingOld()
+    {
+      try
+      {
+        return serviceSchooling.GetAll().OrderBy(p => p.Order).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public Skill GetSkillOld(string filterName)
+    {
+      try
+      {
+        var detail = serviceSkill.GetAll(p => p.Name.ToUpper() == filterName.ToUpper()).ToList();
+        if (detail.Count == 1)
+          return detail[0];
+        detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filterName.ToUpper())).ToList();
+        if (detail.Count == 1)
+          return detail[0];
+        if (detail.Count > 1)
+          throw new Exception("Mais de uma skill!");
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Skill> GetSkillsOld(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Sphere> GetSpheresOld()
+    {
+      try
+      {
+        return serviceSphere.GetAll().OrderBy(p => p.TypeSphere).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<Sphere> GetSpheresOld(string idcompany)
+    {
+      try
+      {
+        return serviceSphere.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.TypeSphere).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public ProcessLevelTwo GetProcessLevelTwoOld(string id)
+    {
+      try
+      {
+        var detail = serviceProcessLevelTwo.GetAll(p => p._id == id).ToList();
+        if (detail.Count == 1)
+          return detail[0];
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<ProcessLevelTwo> GetProcessLevelTwoFilterOld(string idarea)
+    {
+      try
+      {
+        //var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
+        var result = serviceProcessLevelOne.GetAll(p => p.Area._id == idarea).OrderBy(p => p.Order).ToList();
+        var list = new List<ProcessLevelTwo>();
+        foreach (var item in result)
+        {
+          foreach (var row in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).OrderBy(p => p.Order).ToList())
+          {
+            list.Add(row);
+          }
+        }
+        return list.OrderBy(p => p.ProcessLevelOne.Area.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<ProcessLevelTwo> GetProcessLevelTwoOld()
+    {
+      try
+      {
+        //var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
+        var result = serviceProcessLevelOne.GetAll().OrderBy(p => p.Order).ToList();
+        var list = new List<ProcessLevelTwo>();
+        foreach (var item in result)
+        {
+          foreach (var row in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).OrderBy(p => p.Order).ToList())
+          {
+            list.Add(row);
+          }
+        }
+        return list.OrderBy(p => p.ProcessLevelOne.Area.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public Group GetGroupOld(string id)
+    {
+      try
+      {
+        var group = serviceGroup.GetAll(p => p._id == id).ToList().Select(
+          p => new Group()
+          {
+            _id = p._id,
+            _idAccount = p._idAccount,
+            Status = p.Status,
+            Name = p.Name,
+            Company = new Company()
+            {
+              _id = p.Company._id,
+              _idAccount = p.Company._idAccount,
+              Status = p.Company.Status,
+              Name = p.Company.Name,
+              Logo = p.Company.Logo,
+              Skills = p.Company.Skills.OrderBy(x => x.Name).ToList(),
+              Template = p.Company.Template
+            },
+            Axis = p.Axis,
+            Sphere = p.Sphere,
+            Line = p.Line,
+            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
+            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
+            Scope = p.Scope.OrderBy(x => x.Order).ToList(),
+            Template = p.Template,
+            Occupations = p.Occupations
+          }).FirstOrDefault();
+        group.Occupations = serviceOccupation.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
+        return group;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public Group GetGroupOld(string idCompany, string filterName)
+    {
+      try
+      {
+        var group = serviceGroup.GetAll(p => p.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).ToList().Select(
+          p => new Group()
+          {
+            _id = p._id,
+            _idAccount = p._idAccount,
+            Status = p.Status,
+            Name = p.Name,
+            Company = new Company()
+            {
+              _id = p.Company._id,
+              _idAccount = p.Company._idAccount,
+              Status = p.Company.Status,
+              Name = p.Company.Name,
+              Logo = p.Company.Logo,
+              Skills = p.Company.Skills.OrderBy(x => x.Name).ToList(),
+              Template = p.Company.Template
+            },
+            Axis = p.Axis,
+            Sphere = p.Sphere,
+            Line = p.Line,
+            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
+            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
+            Scope = p.Scope.OrderBy(x => x.Order).ToList(),
+            Template = p.Template,
+            Occupations = p.Occupations
+          }).FirstOrDefault();
+        group.Occupations = serviceOccupation.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
+        return group;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Group> GetGroupsOld()
+    {
+      try
+      {
+
+        var groups = new List<Group>();
+        foreach (var item in serviceGroup.GetAll())
+        {
+          item.Occupations = serviceOccupation.GetAll(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
+          groups.Add(item);
+        }
+        return groups.OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Group> GetGroupsPrintOld(string idcompany)
+    {
+      try
+      {
+        List<Group> groups = new List<Group>();
+        foreach (var item in serviceGroup.GetAll(p => p.Company._id == idcompany))
+        {
+          item.Occupations = serviceOccupation.GetAll(p => p.Group._id == item._id).ToList();
+          groups.Add(item);
+        }
+        return groups.OrderByDescending(p => p.Sphere.TypeSphere).ThenByDescending(p => p.Axis.TypeAxis).ThenByDescending(p => p.Line).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public Occupation GetOccupationOld(string id)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetAll(p => p._id == id).ToList().Select(p =>
+          new Occupation()
+          {
+            _id = p._id,
+            _idAccount = p._idAccount,
+            Status = p.Status,
+            Name = p.Name,
+            SalaryScales = p.SalaryScales,
+            Group = new Group()
+            {
+              _id = p.Group._id,
+              _idAccount = p.Group._idAccount,
+              Status = p.Group.Status,
+              Name = p.Group.Name,
+              Company = new Company()
+              {
+                _id = p.Group.Company._id,
+                _idAccount = p.Group.Company._idAccount,
+                Status = p.Group.Company.Status,
+                Name = p.Group.Company.Name,
+                Logo = p.Group.Company.Logo,
+                Skills = p.Group.Company.Skills.OrderBy(x => x.Name).ToList(),
+                Template = p.Group.Company.Template
+              },
+              Axis = p.Group.Axis,
+              Sphere = p.Group.Sphere,
+              Line = p.Group.Line,
+              Skills = p.Group.Skills.OrderBy(x => x.Name).ToList(),
+              Schooling = p.Group.Schooling.OrderBy(x => x.Order).ToList(),
+              Scope = p.Group.Scope.OrderBy(x => x.Order).ToList(),
+              Template = p.Group.Template,
+              Occupations = p.Group.Occupations
+            },
+            //Area = p.Area,
+            //Areas = p.Areas,
+            Line = p.Line,
+            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
+            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
+            Activities = p.Activities.OrderBy(x => x.Order).ToList(),
+            Template = p.Template,
+            //ProcessLevelTwo = p.ProcessLevelTwo,
+            SpecificRequirements = p.SpecificRequirements,
+            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList() : null
+          }).FirstOrDefault();
+
+        return occupation;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Course> GetCourseOccupationOld(string idoccuation, EnumTypeMandatoryTraining type)
+    {
+      try
+      {
+
+        var list = new List<Course>();
+        var idcompany = serviceOccupation.GetAll(p => p._id == idoccuation).FirstOrDefault().Group.Company._id;
+        var occupations = serviceOccupationMandatory.GetAll(p => p.Occupation._id == idoccuation & p.TypeMandatoryTraining == type).ToList();
+        var company = serviceCompanyMandatory.GetAll(p => p.Company._id == idcompany & p.TypeMandatoryTraining == type).ToList();
+
+        foreach (var item in occupations)
+        {
+          list.Add(item.Course);
+        }
+        foreach (var item in company)
+        {
+          list.Add(item.Course);
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public Occupation GetOccupationOld(string idCompany, string filterName)
+    {
+      try
+      {
+        return serviceOccupation.GetAll(p => p.Group.Company._id == idCompany && p.Name.ToUpper() == filterName.ToUpper()).ToList().Select(p =>
+          new Occupation()
+          {
+            _id = p._id,
+            _idAccount = p._idAccount,
+            Status = p.Status,
+            Name = p.Name,
+            SalaryScales = p.SalaryScales,
+            Group = new Group()
+            {
+              _id = p.Group._id,
+              _idAccount = p.Group._idAccount,
+              Status = p.Group.Status,
+              Name = p.Name,
+              Company = new Company()
+              {
+                _id = p.Group.Company._id,
+                _idAccount = p.Group.Company._idAccount,
+                Status = p.Group.Company.Status,
+                Name = p.Group.Company.Name,
+                Logo = p.Group.Company.Logo,
+                Skills = p.Group.Company.Skills.OrderBy(x => x.Name).ToList(),
+                Template = p.Group.Company.Template
+              },
+              Axis = p.Group.Axis,
+              Sphere = p.Group.Sphere,
+              Line = p.Group.Line,
+              Skills = p.Group.Skills.OrderBy(x => x.Name).ToList(),
+              Schooling = p.Group.Schooling.OrderBy(x => x.Order).ToList(),
+              Scope = p.Group.Scope.OrderBy(x => x.Order).ToList(),
+              Template = p.Group.Template,
+              Occupations = p.Group.Occupations
+            },
+            //Area = p.Area,
+            //Areas = p.Areas,
+            Line = p.Line,
+            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
+            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
+            Activities = p.Activities.OrderBy(x => x.Order).ToList(),
+            Template = p.Template,
+            // ProcessLevelTwo = p.ProcessLevelTwo,
+            SpecificRequirements = p.SpecificRequirements,
+            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList() : null
+          }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<Occupation> GetOccupationsOld()
+    {
+      try
+      {
+        return serviceOccupation.GetAll().OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public TextDefault GetTextDefaultOld(string idcompany, string name)
+    {
+      try
+      {
+        return serviceTextDefault.GetAll(p => p.Company._id == idcompany & p.Name == name).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public TextDefault GetTextDefaultOld(string id)
+    {
+      try
+      {
+        return serviceTextDefault.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<TextDefault> ListTextDefaultOld(string idcompany)
+    {
+      try
+      {
+        return serviceTextDefault.GetAll(p => p.Company._id == idcompany).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    //public List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page)
+    //{
+    //  try
+    //  {
+    //    var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
+    //    var idresolution = "";
+
+    //    if (parameter.Count() == 0)
+    //      idresolution = DefaultParameter().Content;
+    //    else
+    //      idresolution = parameter.FirstOrDefault().Content;
+
+    //    int skip = (count * (page - 1));
+    //    var detail = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+    //    total = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+    //    return detail;
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw new ServiceException(_user, e, this._context);
+    //  }
+    //}
+
+
+
+
+    //public List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page)
+    //{
+    //  try
+    //  {
+    //    var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
+    //    var idresolution = "";
+
+    //    if (parameter.Count() == 0)
+    //      idresolution = DefaultParameter().Content;
+    //    else
+    //      idresolution = parameter.FirstOrDefault().Content;
+
+    //    int skip = (count * (page - 1));
+    //    var detail = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+    //    total = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+    //    return detail;
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw new ServiceException(_user, e, this._context);
+    //  }
+    //}
+
+
+
+    public string AddAreaOld(Area view)
+    {
+      try
+      {
+        //var item = areaService.GetAll(p => p.Order == view.Order).Count();
+        //if (item > 0)
+        //  return "error_line";
+
+
+        serviceArea.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddCBOOld(Cbo view)
+    {
+      try
+      {
+        serviceCbo.InsertAccount(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddAxisOld(Axis view)
+    {
+      try
+      {
+        serviceAxis.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupationOld(Occupation occupation)
+    {
+      try
+      {
+        serviceOccupation.Insert(occupation);
+        return "ok";
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    public Schooling AddSchoolingOld(Schooling schooling)
+    {
+      try
+      {
+        return serviceSchooling.Insert(schooling);
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddSphereOld(Sphere view)
+    {
+      try
+      {
+        serviceSphere.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddQuestionsOld(Questions view)
+    {
+      try
+      {
+        serviceQuestions.Insert(view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddProcessLevelOneOld(ProcessLevelOne model)
+    {
+      try
+      {
+        try
+        {
+          var order = serviceProcessLevelOne.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
+          model.Order = order;
+        }
+        catch (Exception)
+        {
+          model.Order = 1;
+        }
+
+
+        model.Process = new List<ProcessLevelTwo>();
+        serviceProcessLevelOne.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddTextDefaultOld(TextDefault model)
+    {
+      try
+      {
+        serviceTextDefault.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddProcessLevelTwoOld(ProcessLevelTwo model)
+    {
+      try
+      {
+        try
+        {
+          var order = serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
+          model.Order = order;
+        }
+        catch (Exception)
+        {
+          model.Order = 1;
+        }
+
+        serviceProcessLevelTwo.Insert(model);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateAreaOld(Area area)
+    {
+      try
+      {
+        serviceArea.Update(area, null);
+        UpdateAreaAll(area);
+        UpdateAreaProcessAll(area);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateAxisOld(Axis axis)
+    {
+      try
+      {
+        serviceAxis.Update(axis, null);
+        UpdateAxisAll(axis, false);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateCBOOld(Cbo model)
+    {
+      try
+      {
+        serviceCbo.UpdateAccount(model, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateGroupOld(Group group)
+    {
+      try
+      {
+        var groupOld = serviceGroup.GetAll(p => p._id == group._id).FirstOrDefault();
+
+        if ((groupOld.Sphere._id != group.Sphere._id) || (groupOld.Axis._id != group.Axis._id))
+        {
+          UpdateGroupSphereAxis(group, groupOld);
+          return "update";
+        }
+
+
+        serviceGroup.Update(group, null);
+        UpdateGroupAll(group);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateOccupationOld(Occupation occupation)
+    {
+      try
+      {
+        //var areas = new List<Area>();
+        var occupationOld = serviceOccupation.GetAll(p => p._id == occupation._id).FirstOrDefault();
+
+        //foreach (var item in occupation.Process)
+        //  areas.Add(item.ProcessLevelOne.Area);
+
+        if (occupationOld.Group != occupation.Group)
+        {
+          foreach (var school in occupation.Group.Schooling)
+          {
+            foreach (var schoolOccupation in occupationOld.Schooling)
+            {
+              if (school._id == schoolOccupation._id)
+                school.Complement = schoolOccupation.Complement;
+            }
+          }
+
+          occupation.Schooling = occupation.Schooling;
+        }
+
+        //occupation.Areas = areas;
+        var list = occupation.SalaryScales;
+        occupation.SalaryScales = new List<SalaryScaleGrade>();
+        if (list != null)
+        {
+          foreach (var item in list)
+          {
+            if (item._id == null)
+              item._id = ObjectId.GenerateNewId().ToString();
+
+            item._idAccount = _user._idAccount;
+            occupation.SalaryScales.Add(item);
+          }
+        }
+
+        serviceOccupation.Update(occupation, null);
+
+        UpdateOccupationAll(occupation);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateSkillOld(Skill skill)
+    {
+      try
+      {
+        serviceSkill.Update(skill, null);
+        UpdateSkillAll(skill, false);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateQuestionsOld(Questions questions)
+    {
+      try
+      {
+        serviceQuestions.Update(questions, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateSphereOld(Sphere sphere)
+    {
+      try
+      {
+        serviceSphere.Update(sphere, null);
+        UpdateSphereAll(sphere, false);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateSchoolingOld(Schooling schooling)
+    {
+      try
+      {
+        serviceSchooling.Update(schooling, null);
+        UpdateSchoolingAll(schooling);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateProcessLevelOneOld(ProcessLevelOne model)
+    {
+      try
+      {
+        serviceProcessLevelOne.Update(model, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateProcessLevelTwoOld(ProcessLevelTwo model)
+    {
+      try
+      {
+        serviceProcessLevelTwo.Update(model, null);
+        UpdateProcessLevelTwoAll(model);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateTextDefaultOld(TextDefault textDefault)
+    {
+      try
+      {
+        serviceTextDefault.Update(textDefault, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateMapOccupationActivitiesOld(string idoccupation, Activitie activitie)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+
+        var activitieOld = occupation.Activities.Where(p => p._id == activitie._id).FirstOrDefault();
+        occupation.Activities.Remove(activitieOld);
+        occupation.Activities.Add(activitie);
+
+        serviceOccupation.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateMapGroupScopeOld(string idgroup, Scope scope)
+    {
+      try
+      {
+        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
+
+        var scopeOld = group.Scope.Where(p => p._id == scope._id).FirstOrDefault();
+        group.Scope.Remove(scopeOld);
+        group.Scope.Add(scope);
+
+        serviceGroup.Update(group, null);
+        UpdateGroupAll(group);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string UpdateMapGroupSchoolingOld(string idgroup, Schooling schooling)
+    {
+      try
+      {
+        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
+
+        var schoolOld = group.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
+        group.Schooling.Remove(schoolOld);
+        group.Schooling.Add(schooling);
+
+        serviceGroup.Update(group, null);
+        UpdateGroupAll(group);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public string UpdateGroupSphereAxisOld(Group group, Group groupOld)
+    {
+      try
+      {
+        //var groupOld = groupService.GetAll(p => p._id == group._id).FirstOrDefault();
+        groupOld.Status = EnumStatus.Disabled;
+        serviceGroup.Update(groupOld, null);
+
+        var groupnew = AddGroupInternal(new ViewAddGroup()
+        {
+          Axis = group.Axis,
+          Sphere = group.Sphere,
+          Company = group.Company,
+          Line = group.Line,
+          Name = group.Name
+        });
+
+        groupnew.Schooling = groupOld.Schooling;
+        groupnew.Skills = groupOld.Skills;
+        groupnew.Scope = groupOld.Scope;
+        groupnew.Template = groupOld.Template;
+
+        serviceGroup.Update(groupnew, null);
+
+        UpdateGroupAll(groupnew);
+        UpdateGroupOccupationAll(groupnew, groupOld);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public string AddEssentialOld(ViewAddEssential view)
+    {
+      try
+      {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            TypeSkill = view.Skill.TypeSkill
+          });
+          view.Skill = new Skill()
+          {
+            _id = skill._id,
+            Name = skill.Name,
+            Concept = skill.Concept,
+            _idAccount = _user._idAccount,
+            Status = EnumStatus.Enabled,
+            TypeSkill = skill.TypeSkill
+          };
+        }
+
+        view.Company.Skills.Add(view.Skill);
+        serviceCompany.Update(view.Company, null);
+
+        UpdateCompanyAll(view.Company);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public string AddMapGroupSchoolingOld(ViewAddMapGroupSchooling view)
+    {
+      try
+      {
+
+
+        //if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
+        //  return "error_exists_schooling";
+
+        //view.Group.Schooling.Add(AddSchooling(view.Schooling));
+        view.Group.Schooling.Add(view.Schooling);
+        serviceGroup.Update(view.Group, null);
+        UpdateGroupAll(view.Group);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddMapGroupScopeOld(ViewAddMapGroupScope view)
+    {
+      try
+      {
+
+        long order = 1;
+        try
+        {
+          order = serviceGroup.GetAll(p => p._id == view.Group._id).FirstOrDefault().Scope.Max(p => p.Order) + 1;
+          if (order == 0)
+          {
+            order = 1;
+          }
+        }
+        catch (Exception)
+        {
+          order = 1;
+        }
+
+        view.Scope._id = ObjectId.GenerateNewId().ToString();
+        view.Scope._idAccount = view.Group._idAccount;
+        view.Scope.Order = order;
+
+        view.Group.Scope.Add(view.Scope);
+
+
+
+        serviceGroup.Update(view.Group, null);
+        UpdateGroupAll(view.Group);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddMapGroupSkillOld(ViewAddMapGroupSkill view)
+    {
+      try
+      {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            TypeSkill = view.Skill.TypeSkill
+          });
+          view.Skill = new Skill()
+          {
+            _id = skill._id,
+            Name = skill.Name,
+            Concept = skill.Concept,
+            _idAccount = _user._idAccount,
+            Status = EnumStatus.Enabled,
+            TypeSkill = skill.TypeSkill
+          };
+        }
+
+        view.Group.Skills.Add(view.Skill);
+        serviceGroup.Update(view.Group, null);
+        UpdateGroupAll(view.Group);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupationOld(ViewAddOccupation view)
+    {
+      try
+      {
+        //var item = occupationService.GetAll(p => p.Line == view.Line).Count();
+        //if (item > 0)
+        //  return "error_line";
+
+        //var areas = new List<Area>();
+        //foreach (var item in view.Process)
+        //  areas.Add(item.ProcessLevelOne.Area);
+
+        var occupation = new Occupation()
+        {
+          Name = view.Name,
+          Group = view.Group,
+          //Area = view.Area,
+          Line = view.Line,
+          //ProcessLevelTwo = view.ProcessLevelTwo,
+          Status = EnumStatus.Enabled,
+          Activities = new List<Activitie>(),
+          Schooling = view.Group.Schooling,
+          Skills = new List<Skill>(),
+          Process = view.Process,
+          //Areas = areas,
+          SalaryScales = new List<SalaryScaleGrade>()
+        };
+        if (view.SalaryScales != null)
+        {
+          foreach (var item in view.SalaryScales)
+          {
+            item._id = ObjectId.GenerateNewId().ToString();
+            item._idAccount = _user._idAccount;
+            occupation.SalaryScales.Add(item);
+          }
+        }
+        serviceOccupation.Insert(occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public string AddOccupationActivitiesOld(ViewAddOccupationActivities view)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetAll(p => p._id == view.Occupation._id).FirstOrDefault();
+        long order = 1;
+        try
+        {
+          order = occupation.Activities.Max(p => p.Order) + 1;
+          if (order == 0)
+          {
+            order = 1;
+          }
+        }
+        catch (Exception)
+        {
+          order = 1;
+        }
+
+        view.Activities.Order = order;
+        view.Activities._id = ObjectId.GenerateNewId().ToString();
+        view.Activities._idAccount = view.Occupation._idAccount;
+        occupation.Activities.Add(view.Activities);
+        serviceOccupation.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public string AddSpecificRequirementsOld(string idoccupation, ViewAddSpecificRequirements view)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        occupation.SpecificRequirements = view.Name;
+        serviceOccupation.Update(occupation, null);
+        UpdateOccupationAll(occupation);
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string AddOccupationSkillOld(ViewAddOccupationSkill view)
+    {
+      try
+      {
+        if (view.Skill._id == null)
+        {
+          var skill = AddSkill(new ViewAddSkill()
+          {
+            Name = view.Skill.Name,
+            Concept = view.Skill.Concept,
+            TypeSkill = view.Skill.TypeSkill
+          });
+          view.Skill = new Skill()
+          {
+            _id = skill._id,
+            Name = skill.Name,
+            Concept = skill.Concept,
+            _idAccount = _user._idAccount,
+            Status = EnumStatus.Enabled,
+            TypeSkill = skill.TypeSkill
+          };
+        }
+
+        view.Occupation.Skills.Add(view.Skill);
+        serviceOccupation.Update(view.Occupation, null);
+        UpdateOccupationAll(view.Occupation);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    #endregion
+
     #region Infra
 
     public List<ViewListSkill> GetEssential(string idcompany)
@@ -3852,1482 +5331,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    #endregion Infra
 
-    #region Old
-
-    public string AddSkillsOld(List<ViewAddSkill> view)
-    {
-      try
-      {
-        foreach (var item in view)
-        {
-          var skill = new Skill()
-          {
-            Name = item.Name,
-            Concept = item.Concept,
-            TypeSkill = item.TypeSkill,
-            Status = EnumStatus.Enabled
-          };
-          serviceSkill.Insert(skill);
-        }
-
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public ViewCrudGroup AddGroupOld(ViewAddGroup view)
-    {
-      try
-      {
-        long line = 0;
-        try
-        {
-          line = serviceGroup.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line);
-          if (line == 0)
-            line = 1;
-          else
-            line += 1;
-        }
-        catch (Exception)
-        {
-          line = 1;
-        }
-
-
-        var group = new Group()
-        {
-          Name = view.Name,
-          Axis = view.Axis,
-          Sphere = view.Sphere,
-          Status = EnumStatus.Enabled,
-          Skills = new List<Skill>(),
-          Schooling = new List<Schooling>(),
-          Line = line,
-          Company = view.Company,
-          Scope = new List<Scope>()
-        };
-        var result = serviceGroup.Insert(group);
-
-        return new ViewCrudGroup()
-        {
-          _id = result._id,
-          Name = result.Name,
-          Line = result.Line,
-          Company = new ViewListCompany() { _id = result.Company._id, Name = result.Company.Name },
-          Axis = new ViewListAxis() { _id = result.Axis._id, Name = result.Axis.Name },
-          Sphere = new ViewListSphere() { _id = result.Sphere._id, Name = result.Sphere.Name }
-        };
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddOccupationActivitiesListOld(List<ViewAddOccupationActivities> list)
-    {
-      try
-      {
-        foreach (var view in list)
-        {
-          AddOccupationActivitiesOld(view);
-        }
-
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateMapOccupationSchoolingOld(string idoccupation, Schooling view)
-    {
-      try
-      {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
-        var schooling = serviceSchooling.GetAll(p => p._id == view._id).FirstOrDefault();
-
-        schooling.Complement = view.Complement;
-        schooling.Type = view.Type;
-
-        var schoolOld = occupation.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
-        occupation.Schooling.Remove(schoolOld);
-        occupation.Schooling.Add(schooling);
-
-        serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<Area> GetAreasOld()
-    {
-      try
-      {
-        var areas = serviceArea.GetAll().OrderBy(p => p.Name).ToList();
-        foreach (var item in areas)
-        {
-          item.ProcessLevelOnes = new List<ProcessLevelOne>();
-          var process = serviceProcessLevelOne.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
-          foreach (var row in process)
-          {
-            row.Process = new List<ProcessLevelTwo>();
-            foreach (var leveltwo in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
-            {
-              row.Process.Add(leveltwo);
-            }
-
-            item.ProcessLevelOnes.Add(row);
-          }
-        }
-        return areas.OrderBy(p => p.Name).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Area> GetAreasOld(string idcompany)
-    {
-      try
-      {
-        var areas = serviceArea.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Name).ToList();
-        foreach (var item in areas)
-        {
-          item.ProcessLevelOnes = new List<ProcessLevelOne>();
-          var process = serviceProcessLevelOne.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
-          foreach (var row in process)
-          {
-            row.Process = new List<ProcessLevelTwo>();
-            foreach (var leveltwo in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
-            {
-              row.Process.Add(leveltwo);
-            }
-
-            item.ProcessLevelOnes.Add(row);
-          }
-        }
-        return areas.OrderBy(p => p.Name).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Axis> GetAxisOld()
-    {
-      try
-      {
-        return serviceAxis.GetAll().OrderBy(p => p.TypeAxis).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Axis> GetAxisOld(string idcompany)
-    {
-      try
-      {
-        return serviceAxis.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.TypeAxis).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Questions> ListQuestionsOld(string idcompany)
-    {
-      try
-      {
-        return serviceQuestions.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Order).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public Questions GetQuestionsOld(string id)
-    {
-      try
-      {
-        return serviceQuestions.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Company> GetCompaniesOld()
-    {
-      try
-      {
-        return serviceCompany.GetAll().ToList().Select(p => new Company()
-        {
-          _id = p._id,
-          _idAccount = p._idAccount,
-          Status = p.Status,
-          Name = p.Name,
-          Logo = p.Logo,
-          Skills = p.Skills?.OrderBy(x => x.Name).ToList(),
-          Template = p.Template
-        }).OrderBy(p => p.Name).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public Skill AddSkillOld(ViewAddSkill view)
-    {
-      try
-      {
-        var skill = new Skill()
-        {
-          Name = view.Name,
-          Concept = view.Concept,
-          TypeSkill = view.TypeSkill,
-          Status = EnumStatus.Enabled
-        };
-        serviceSkill.Insert(skill);
-        return skill;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public Cbo GetCBOOld(string id)
-    {
-      try
-      {
-        var cbo = serviceCbo.GetAuthentication(p => p._id == id).FirstOrDefault();
-        return cbo;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Cbo> ListCBOOld()
-    {
-      try
-      {
-        var cbo = serviceCbo.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
-        return cbo;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Schooling> GetSchoolingOld()
-    {
-      try
-      {
-        return serviceSchooling.GetAll().OrderBy(p => p.Order).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public Skill GetSkillOld(string filterName)
-    {
-      try
-      {
-        var detail = serviceSkill.GetAll(p => p.Name.ToUpper() == filterName.ToUpper()).ToList();
-        if (detail.Count == 1)
-          return detail[0];
-        detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filterName.ToUpper())).ToList();
-        if (detail.Count == 1)
-          return detail[0];
-        if (detail.Count > 1)
-          throw new Exception("Mais de uma skill!");
-        return null;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Skill> GetSkillsOld(ref long total, string filter, int count, int page)
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Sphere> GetSpheresOld()
-    {
-      try
-      {
-        return serviceSphere.GetAll().OrderBy(p => p.TypeSphere).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<Sphere> GetSpheresOld(string idcompany)
-    {
-      try
-      {
-        return serviceSphere.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.TypeSphere).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public ProcessLevelTwo GetProcessLevelTwoOld(string id)
-    {
-      try
-      {
-        var detail = serviceProcessLevelTwo.GetAll(p => p._id == id).ToList();
-        if (detail.Count == 1)
-          return detail[0];
-        return null;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public List<ProcessLevelTwo> GetProcessLevelTwoFilterOld(string idarea)
-    {
-      try
-      {
-        //var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
-        var result = serviceProcessLevelOne.GetAll(p => p.Area._id == idarea).OrderBy(p => p.Order).ToList();
-        var list = new List<ProcessLevelTwo>();
-        foreach (var item in result)
-        {
-          foreach (var row in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).OrderBy(p => p.Order).ToList())
-          {
-            list.Add(row);
-          }
-        }
-        return list.OrderBy(p => p.ProcessLevelOne.Area.Name).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<ProcessLevelTwo> GetProcessLevelTwoOld()
-    {
-      try
-      {
-        //var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
-        var result = serviceProcessLevelOne.GetAll().OrderBy(p => p.Order).ToList();
-        var list = new List<ProcessLevelTwo>();
-        foreach (var item in result)
-        {
-          foreach (var row in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).OrderBy(p => p.Order).ToList())
-          {
-            list.Add(row);
-          }
-        }
-        return list.OrderBy(p => p.ProcessLevelOne.Area.Name).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public Group GetGroupOld(string id)
-    {
-      try
-      {
-        var group = serviceGroup.GetAll(p => p._id == id).ToList().Select(
-          p => new Group()
-          {
-            _id = p._id,
-            _idAccount = p._idAccount,
-            Status = p.Status,
-            Name = p.Name,
-            Company = new Company()
-            {
-              _id = p.Company._id,
-              _idAccount = p.Company._idAccount,
-              Status = p.Company.Status,
-              Name = p.Company.Name,
-              Logo = p.Company.Logo,
-              Skills = p.Company.Skills.OrderBy(x => x.Name).ToList(),
-              Template = p.Company.Template
-            },
-            Axis = p.Axis,
-            Sphere = p.Sphere,
-            Line = p.Line,
-            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
-            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
-            Scope = p.Scope.OrderBy(x => x.Order).ToList(),
-            Template = p.Template,
-            Occupations = p.Occupations
-          }).FirstOrDefault();
-        group.Occupations = serviceOccupation.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
-        return group;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public Group GetGroupOld(string idCompany, string filterName)
-    {
-      try
-      {
-        var group = serviceGroup.GetAll(p => p.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).ToList().Select(
-          p => new Group()
-          {
-            _id = p._id,
-            _idAccount = p._idAccount,
-            Status = p.Status,
-            Name = p.Name,
-            Company = new Company()
-            {
-              _id = p.Company._id,
-              _idAccount = p.Company._idAccount,
-              Status = p.Company.Status,
-              Name = p.Company.Name,
-              Logo = p.Company.Logo,
-              Skills = p.Company.Skills.OrderBy(x => x.Name).ToList(),
-              Template = p.Company.Template
-            },
-            Axis = p.Axis,
-            Sphere = p.Sphere,
-            Line = p.Line,
-            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
-            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
-            Scope = p.Scope.OrderBy(x => x.Order).ToList(),
-            Template = p.Template,
-            Occupations = p.Occupations
-          }).FirstOrDefault();
-        group.Occupations = serviceOccupation.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
-        return group;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<Group> GetGroupsOld()
-    {
-      try
-      {
-
-        var groups = new List<Group>();
-        foreach (var item in serviceGroup.GetAll())
-        {
-          item.Occupations = serviceOccupation.GetAll(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
-          groups.Add(item);
-        }
-        return groups.OrderBy(p => p.Name).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<Group> GetGroupsPrintOld(string idcompany)
-    {
-      try
-      {
-        List<Group> groups = new List<Group>();
-        foreach (var item in serviceGroup.GetAll(p => p.Company._id == idcompany))
-        {
-          item.Occupations = serviceOccupation.GetAll(p => p.Group._id == item._id).ToList();
-          groups.Add(item);
-        }
-        return groups.OrderByDescending(p => p.Sphere.TypeSphere).ThenByDescending(p => p.Axis.TypeAxis).ThenByDescending(p => p.Line).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public Occupation GetOccupationOld(string id)
-    {
-      try
-      {
-        var occupation = serviceOccupation.GetAll(p => p._id == id).ToList().Select(p =>
-          new Occupation()
-          {
-            _id = p._id,
-            _idAccount = p._idAccount,
-            Status = p.Status,
-            Name = p.Name,
-            SalaryScales = p.SalaryScales,
-            Group = new Group()
-            {
-              _id = p.Group._id,
-              _idAccount = p.Group._idAccount,
-              Status = p.Group.Status,
-              Name = p.Group.Name,
-              Company = new Company()
-              {
-                _id = p.Group.Company._id,
-                _idAccount = p.Group.Company._idAccount,
-                Status = p.Group.Company.Status,
-                Name = p.Group.Company.Name,
-                Logo = p.Group.Company.Logo,
-                Skills = p.Group.Company.Skills.OrderBy(x => x.Name).ToList(),
-                Template = p.Group.Company.Template
-              },
-              Axis = p.Group.Axis,
-              Sphere = p.Group.Sphere,
-              Line = p.Group.Line,
-              Skills = p.Group.Skills.OrderBy(x => x.Name).ToList(),
-              Schooling = p.Group.Schooling.OrderBy(x => x.Order).ToList(),
-              Scope = p.Group.Scope.OrderBy(x => x.Order).ToList(),
-              Template = p.Group.Template,
-              Occupations = p.Group.Occupations
-            },
-            //Area = p.Area,
-            //Areas = p.Areas,
-            Line = p.Line,
-            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
-            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
-            Activities = p.Activities.OrderBy(x => x.Order).ToList(),
-            Template = p.Template,
-            //ProcessLevelTwo = p.ProcessLevelTwo,
-            SpecificRequirements = p.SpecificRequirements,
-            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList() : null
-          }).FirstOrDefault();
-
-        return occupation;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<Course> GetCourseOccupationOld(string idoccuation, EnumTypeMandatoryTraining type)
-    {
-      try
-      {
-
-        var list = new List<Course>();
-        var idcompany = serviceOccupation.GetAll(p => p._id == idoccuation).FirstOrDefault().Group.Company._id;
-        var occupations = serviceOccupationMandatory.GetAll(p => p.Occupation._id == idoccuation & p.TypeMandatoryTraining == type).ToList();
-        var company = serviceCompanyMandatory.GetAll(p => p.Company._id == idcompany & p.TypeMandatoryTraining == type).ToList();
-
-        foreach (var item in occupations)
-        {
-          list.Add(item.Course);
-        }
-        foreach (var item in company)
-        {
-          list.Add(item.Course);
-        }
-
-        return list;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public Occupation GetOccupationOld(string idCompany, string filterName)
-    {
-      try
-      {
-        return serviceOccupation.GetAll(p => p.Group.Company._id == idCompany && p.Name.ToUpper() == filterName.ToUpper()).ToList().Select(p =>
-          new Occupation()
-          {
-            _id = p._id,
-            _idAccount = p._idAccount,
-            Status = p.Status,
-            Name = p.Name,
-            SalaryScales = p.SalaryScales,
-            Group = new Group()
-            {
-              _id = p.Group._id,
-              _idAccount = p.Group._idAccount,
-              Status = p.Group.Status,
-              Name = p.Name,
-              Company = new Company()
-              {
-                _id = p.Group.Company._id,
-                _idAccount = p.Group.Company._idAccount,
-                Status = p.Group.Company.Status,
-                Name = p.Group.Company.Name,
-                Logo = p.Group.Company.Logo,
-                Skills = p.Group.Company.Skills.OrderBy(x => x.Name).ToList(),
-                Template = p.Group.Company.Template
-              },
-              Axis = p.Group.Axis,
-              Sphere = p.Group.Sphere,
-              Line = p.Group.Line,
-              Skills = p.Group.Skills.OrderBy(x => x.Name).ToList(),
-              Schooling = p.Group.Schooling.OrderBy(x => x.Order).ToList(),
-              Scope = p.Group.Scope.OrderBy(x => x.Order).ToList(),
-              Template = p.Group.Template,
-              Occupations = p.Group.Occupations
-            },
-            //Area = p.Area,
-            //Areas = p.Areas,
-            Line = p.Line,
-            Skills = p.Skills.OrderBy(x => x.Name).ToList(),
-            Schooling = p.Schooling.OrderBy(x => x.Order).ToList(),
-            Activities = p.Activities.OrderBy(x => x.Order).ToList(),
-            Template = p.Template,
-            // ProcessLevelTwo = p.ProcessLevelTwo,
-            SpecificRequirements = p.SpecificRequirements,
-            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList() : null
-          }).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<Occupation> GetOccupationsOld()
-    {
-      try
-      {
-        return serviceOccupation.GetAll().OrderBy(p => p.Name).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-
-    public TextDefault GetTextDefaultOld(string idcompany, string name)
-    {
-      try
-      {
-        return serviceTextDefault.GetAll(p => p.Company._id == idcompany & p.Name == name).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public TextDefault GetTextDefaultOld(string id)
-    {
-      try
-      {
-        return serviceTextDefault.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<TextDefault> ListTextDefaultOld(string idcompany)
-    {
-      try
-      {
-        return serviceTextDefault.GetAll(p => p.Company._id == idcompany).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    //public List<Occupation> GetOccupationsInfra(ref long total, string filter, int count, int page)
-    //{
-    //  try
-    //  {
-    //    var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
-    //    var idresolution = "";
-
-    //    if (parameter.Count() == 0)
-    //      idresolution = DefaultParameter().Content;
-    //    else
-    //      idresolution = parameter.FirstOrDefault().Content;
-
-    //    int skip = (count * (page - 1));
-    //    var detail = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-    //    total = occupationService.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-    //    return detail;
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-
-
-
-    //public List<Skill> GetSkillsInfra(ref long total, string filter, int count, int page)
-    //{
-    //  try
-    //  {
-    //    var parameter = parameterService.GetAuthentication(p => p.Name == "Account_Resolution");
-    //    var idresolution = "";
-
-    //    if (parameter.Count() == 0)
-    //      idresolution = DefaultParameter().Content;
-    //    else
-    //      idresolution = parameter.FirstOrDefault().Content;
-
-    //    int skip = (count * (page - 1));
-    //    var detail = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-    //    total = skillService.GetAuthentication(p => p._idAccount == idresolution & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-    //    return detail;
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
-
-
-    public string AddAreaOld(Area view)
-    {
-      try
-      {
-        //var item = areaService.GetAll(p => p.Order == view.Order).Count();
-        //if (item > 0)
-        //  return "error_line";
-
-
-        serviceArea.Insert(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddCBOOld(Cbo view)
-    {
-      try
-      {
-        serviceCbo.InsertAccount(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddAxisOld(Axis view)
-    {
-      try
-      {
-        serviceAxis.Insert(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddOccupationOld(Occupation occupation)
-    {
-      try
-      {
-        serviceOccupation.Insert(occupation);
-        return "ok";
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-
-    public Schooling AddSchoolingOld(Schooling schooling)
-    {
-      try
-      {
-        return serviceSchooling.Insert(schooling);
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddSphereOld(Sphere view)
-    {
-      try
-      {
-        serviceSphere.Insert(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddQuestionsOld(Questions view)
-    {
-      try
-      {
-        serviceQuestions.Insert(view);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddProcessLevelOneOld(ProcessLevelOne model)
-    {
-      try
-      {
-        try
-        {
-          var order = serviceProcessLevelOne.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
-          model.Order = order;
-        }
-        catch (Exception)
-        {
-          model.Order = 1;
-        }
-
-
-        model.Process = new List<ProcessLevelTwo>();
-        serviceProcessLevelOne.Insert(model);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddTextDefaultOld(TextDefault model)
-    {
-      try
-      {
-        serviceTextDefault.Insert(model);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddProcessLevelTwoOld(ProcessLevelTwo model)
-    {
-      try
-      {
-        try
-        {
-          var order = serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
-          model.Order = order;
-        }
-        catch (Exception)
-        {
-          model.Order = 1;
-        }
-
-        serviceProcessLevelTwo.Insert(model);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateAreaOld(Area area)
-    {
-      try
-      {
-        serviceArea.Update(area, null);
-        UpdateAreaAll(area);
-        UpdateAreaProcessAll(area);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateAxisOld(Axis axis)
-    {
-      try
-      {
-        serviceAxis.Update(axis, null);
-        UpdateAxisAll(axis, false);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateCBOOld(Cbo model)
-    {
-      try
-      {
-        serviceCbo.UpdateAccount(model, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateGroupOld(Group group)
-    {
-      try
-      {
-        var groupOld = serviceGroup.GetAll(p => p._id == group._id).FirstOrDefault();
-
-        if ((groupOld.Sphere._id != group.Sphere._id) || (groupOld.Axis._id != group.Axis._id))
-        {
-          UpdateGroupSphereAxis(group, groupOld);
-          return "update";
-        }
-
-
-        serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateOccupationOld(Occupation occupation)
-    {
-      try
-      {
-        //var areas = new List<Area>();
-        var occupationOld = serviceOccupation.GetAll(p => p._id == occupation._id).FirstOrDefault();
-
-        //foreach (var item in occupation.Process)
-        //  areas.Add(item.ProcessLevelOne.Area);
-
-        if (occupationOld.Group != occupation.Group)
-        {
-          foreach (var school in occupation.Group.Schooling)
-          {
-            foreach (var schoolOccupation in occupationOld.Schooling)
-            {
-              if (school._id == schoolOccupation._id)
-                school.Complement = schoolOccupation.Complement;
-            }
-          }
-
-          occupation.Schooling = occupation.Schooling;
-        }
-
-        //occupation.Areas = areas;
-        var list = occupation.SalaryScales;
-        occupation.SalaryScales = new List<SalaryScaleGrade>();
-        if (list != null)
-        {
-          foreach (var item in list)
-          {
-            if (item._id == null)
-              item._id = ObjectId.GenerateNewId().ToString();
-
-            item._idAccount = _user._idAccount;
-            occupation.SalaryScales.Add(item);
-          }
-        }
-
-        serviceOccupation.Update(occupation, null);
-
-        UpdateOccupationAll(occupation);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateSkillOld(Skill skill)
-    {
-      try
-      {
-        serviceSkill.Update(skill, null);
-        UpdateSkillAll(skill, false);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateQuestionsOld(Questions questions)
-    {
-      try
-      {
-        serviceQuestions.Update(questions, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateSphereOld(Sphere sphere)
-    {
-      try
-      {
-        serviceSphere.Update(sphere, null);
-        UpdateSphereAll(sphere, false);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateSchoolingOld(Schooling schooling)
-    {
-      try
-      {
-        serviceSchooling.Update(schooling, null);
-        UpdateSchoolingAll(schooling);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateProcessLevelOneOld(ProcessLevelOne model)
-    {
-      try
-      {
-        serviceProcessLevelOne.Update(model, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateProcessLevelTwoOld(ProcessLevelTwo model)
-    {
-      try
-      {
-        serviceProcessLevelTwo.Update(model, null);
-        UpdateProcessLevelTwoAll(model);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateTextDefaultOld(TextDefault textDefault)
-    {
-      try
-      {
-        serviceTextDefault.Update(textDefault, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateMapOccupationActivitiesOld(string idoccupation, Activitie activitie)
-    {
-      try
-      {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
-
-        var activitieOld = occupation.Activities.Where(p => p._id == activitie._id).FirstOrDefault();
-        occupation.Activities.Remove(activitieOld);
-        occupation.Activities.Add(activitie);
-
-        serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateMapGroupScopeOld(string idgroup, Scope scope)
-    {
-      try
-      {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
-
-        var scopeOld = group.Scope.Where(p => p._id == scope._id).FirstOrDefault();
-        group.Scope.Remove(scopeOld);
-        group.Scope.Add(scope);
-
-        serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string UpdateMapGroupSchoolingOld(string idgroup, Schooling schooling)
-    {
-      try
-      {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
-
-        var schoolOld = group.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
-        group.Schooling.Remove(schoolOld);
-        group.Schooling.Add(schooling);
-
-        serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-    public string UpdateGroupSphereAxisOld(Group group, Group groupOld)
-    {
-      try
-      {
-        //var groupOld = groupService.GetAll(p => p._id == group._id).FirstOrDefault();
-        groupOld.Status = EnumStatus.Disabled;
-        serviceGroup.Update(groupOld, null);
-
-        var groupnew = AddGroupInternal(new ViewAddGroup()
-        {
-          Axis = group.Axis,
-          Sphere = group.Sphere,
-          Company = group.Company,
-          Line = group.Line,
-          Name = group.Name
-        });
-
-        groupnew.Schooling = groupOld.Schooling;
-        groupnew.Skills = groupOld.Skills;
-        groupnew.Scope = groupOld.Scope;
-        groupnew.Template = groupOld.Template;
-
-        serviceGroup.Update(groupnew, null);
-
-        UpdateGroupAll(groupnew);
-        UpdateGroupOccupationAll(groupnew, groupOld);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-
-    public string AddEssentialOld(ViewAddEssential view)
-    {
-      try
-      {
-        if (view.Skill._id == null)
-        {
-          var skill = AddSkill(new ViewAddSkill()
-          {
-            Name = view.Skill.Name,
-            Concept = view.Skill.Concept,
-            TypeSkill = view.Skill.TypeSkill
-          });
-          view.Skill = new Skill()
-          {
-            _id = skill._id,
-            Name = skill.Name,
-            Concept = skill.Concept,
-            _idAccount = _user._idAccount,
-            Status = EnumStatus.Enabled,
-            TypeSkill = skill.TypeSkill
-          };
-        }
-
-        view.Company.Skills.Add(view.Skill);
-        serviceCompany.Update(view.Company, null);
-
-        UpdateCompanyAll(view.Company);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-
-    public string AddMapGroupSchoolingOld(ViewAddMapGroupSchooling view)
-    {
-      try
-      {
-
-
-        //if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
-        //  return "error_exists_schooling";
-
-        //view.Group.Schooling.Add(AddSchooling(view.Schooling));
-        view.Group.Schooling.Add(view.Schooling);
-        serviceGroup.Update(view.Group, null);
-        UpdateGroupAll(view.Group);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddMapGroupScopeOld(ViewAddMapGroupScope view)
-    {
-      try
-      {
-
-        long order = 1;
-        try
-        {
-          order = serviceGroup.GetAll(p => p._id == view.Group._id).FirstOrDefault().Scope.Max(p => p.Order) + 1;
-          if (order == 0)
-          {
-            order = 1;
-          }
-        }
-        catch (Exception)
-        {
-          order = 1;
-        }
-
-        view.Scope._id = ObjectId.GenerateNewId().ToString();
-        view.Scope._idAccount = view.Group._idAccount;
-        view.Scope.Order = order;
-
-        view.Group.Scope.Add(view.Scope);
-
-
-
-        serviceGroup.Update(view.Group, null);
-        UpdateGroupAll(view.Group);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddMapGroupSkillOld(ViewAddMapGroupSkill view)
-    {
-      try
-      {
-        if (view.Skill._id == null)
-        {
-          var skill = AddSkill(new ViewAddSkill()
-          {
-            Name = view.Skill.Name,
-            Concept = view.Skill.Concept,
-            TypeSkill = view.Skill.TypeSkill
-          });
-          view.Skill = new Skill()
-          {
-            _id = skill._id,
-            Name = skill.Name,
-            Concept = skill.Concept,
-            _idAccount = _user._idAccount,
-            Status = EnumStatus.Enabled,
-            TypeSkill = skill.TypeSkill
-          };
-        }
-
-        view.Group.Skills.Add(view.Skill);
-        serviceGroup.Update(view.Group, null);
-        UpdateGroupAll(view.Group);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddOccupationOld(ViewAddOccupation view)
-    {
-      try
-      {
-        //var item = occupationService.GetAll(p => p.Line == view.Line).Count();
-        //if (item > 0)
-        //  return "error_line";
-
-        //var areas = new List<Area>();
-        //foreach (var item in view.Process)
-        //  areas.Add(item.ProcessLevelOne.Area);
-
-        var occupation = new Occupation()
-        {
-          Name = view.Name,
-          Group = view.Group,
-          //Area = view.Area,
-          Line = view.Line,
-          //ProcessLevelTwo = view.ProcessLevelTwo,
-          Status = EnumStatus.Enabled,
-          Activities = new List<Activitie>(),
-          Schooling = view.Group.Schooling,
-          Skills = new List<Skill>(),
-          Process = view.Process,
-          //Areas = areas,
-          SalaryScales = new List<SalaryScaleGrade>()
-        };
-        if (view.SalaryScales != null)
-        {
-          foreach (var item in view.SalaryScales)
-          {
-            item._id = ObjectId.GenerateNewId().ToString();
-            item._idAccount = _user._idAccount;
-            occupation.SalaryScales.Add(item);
-          }
-        }
-        serviceOccupation.Insert(occupation);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public string AddOccupationActivitiesOld(ViewAddOccupationActivities view)
-    {
-      try
-      {
-        var occupation = serviceOccupation.GetAll(p => p._id == view.Occupation._id).FirstOrDefault();
-        long order = 1;
-        try
-        {
-          order = occupation.Activities.Max(p => p.Order) + 1;
-          if (order == 0)
-          {
-            order = 1;
-          }
-        }
-        catch (Exception)
-        {
-          order = 1;
-        }
-
-        view.Activities.Order = order;
-        view.Activities._id = ObjectId.GenerateNewId().ToString();
-        view.Activities._idAccount = view.Occupation._idAccount;
-        occupation.Activities.Add(view.Activities);
-        serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-
-    public string AddSpecificRequirementsOld(string idoccupation, ViewAddSpecificRequirements view)
-    {
-      try
-      {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
-        occupation.SpecificRequirements = view.Name;
-        serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
-
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string AddOccupationSkillOld(ViewAddOccupationSkill view)
-    {
-      try
-      {
-        if (view.Skill._id == null)
-        {
-          var skill = AddSkill(new ViewAddSkill()
-          {
-            Name = view.Skill.Name,
-            Concept = view.Skill.Concept,
-            TypeSkill = view.Skill.TypeSkill
-          });
-          view.Skill = new Skill()
-          {
-            _id = skill._id,
-            Name = skill.Name,
-            Concept = skill.Concept,
-            _idAccount = _user._idAccount,
-            Status = EnumStatus.Enabled,
-            TypeSkill = skill.TypeSkill
-          };
-        }
-
-        view.Occupation.Skills.Add(view.Skill);
-        serviceOccupation.Update(view.Occupation, null);
-        UpdateOccupationAll(view.Occupation);
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
 
     public ViewMapGroup GetMapGroup(string id)
     {
@@ -5394,8 +5398,40 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea)
+    {
+      try
+      {
+        return serviceProcessLevelOne.GetAll(p => p.Area._id == idarea).
+        Select(p => new ViewListProcessLevelOneByArea()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Area = new ViewListArea() { _id = p.Area._id, Name = p.Area.Name },
+          Order = p.Order,
+          Process = p.Process.Select(x => new ViewListProcessLevelTwo()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Order = x.Order,
+            ProcessLevelOne = new ViewListProcessLevelOne()
+            {
+              _id = x.ProcessLevelOne._id,
+              Name = x.Name,
+              Order = x.Order,
+              Area = new ViewListArea() { _id = p.Area._id, Name = p.Area.Name }
+            }
+          }).ToList()
+        }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
-    #endregion
+    #endregion Infra
+
 
   }
 #pragma warning restore 1998
