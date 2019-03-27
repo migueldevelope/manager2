@@ -4,6 +4,7 @@ using Manager.Core.Enumns;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;
+using Manager.Views.Enumns;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -288,14 +289,14 @@ namespace Manager.Test.Test.Complete
         long total = 0;
         var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
 
-        var list = serviceOnBoarding.ListOnBoardingsWait(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
-        var newOn = serviceOnBoarding.NewOnBoarding(list, person.Manager._id);
+        var list = serviceOnBoarding.ListOnBoardingsWaitOld(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
+        var newOn = serviceOnBoarding.NewOnBoardingOld(list, person.Manager._id);
 
         foreach(var item in newOn.SkillsCompany)
         {
           item.CommentsManager = "teste 1";
         }
-        newOn.StatusOnBoarding = EnumStatusOnBoarding.Wait;
+        newOn.StatusOnBoarding = EnumStatusOnBoarding.WaitPerson;
         serviceOnBoarding.UpdateOnBoarding(newOn, person.Manager._id);
 
 

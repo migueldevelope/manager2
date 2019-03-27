@@ -388,7 +388,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p._id == idperson).ToList().Select(
+        return servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator && p._id == idperson).ToList().Select(
         person => new ViewPersonHead
         {
           IdPerson = idperson,
@@ -570,7 +570,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p._id == idPerson).ToList().Select(
+        return servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator && p._id == idPerson).ToList().Select(
         detail => new ViewPersonDetail()
         {
           Birth = detail.User.DateBirth,

@@ -573,6 +573,18 @@ namespace Manager.Data
         throw;
       }
     }
+    public bool Exists(string name)
+    {
+      try
+      {
+        var filter = new BsonDocument("name", name);
+        return _context._db.ListCollectionsAsync(new ListCollectionsOptions { Filter = filter }).Result.Any();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     #endregion
   }
 }

@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
@@ -6,10 +7,10 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,1061 +18,283 @@ using System.Net.Http;
 
 namespace Manager.Services.Specific
 {
-#pragma warning disable 1998
   public class ServiceOnBoarding : Repository<OnBoarding>, IServiceOnBoarding
   {
     private readonly ServiceAuthentication serviceAuthentication;
-    private readonly ServiceGeneric<OnBoarding> onBoardingService;
-    private readonly ServiceGeneric<Occupation> occupationService;
-    private readonly ServiceGeneric<Person> personService;
-    private readonly ServiceLog logService;
-    private readonly ServiceMailModel mailModelService;
-    private readonly ServiceGeneric<MailMessage> mailMessageService;
-    private readonly ServiceGeneric<MailLog> mailService;
-    private readonly ServiceLogMessages logMessagesService;
-    public string path;
 
-    public ServiceOnBoarding(DataContext context, string pathToken)
-      : base(context)
+    private readonly ServiceGeneric<Company> serviceCompany;
+    private readonly ServiceGeneric<Group> serviceGroup;
+    private readonly ServiceLog serviceLog;
+    private readonly ServiceLogMessages serviceLogMessages;
+    private readonly ServiceGeneric<MailLog> serviceMailLog;
+    private readonly ServiceGeneric<MailMessage> serviceMailMessage;
+    private readonly ServiceMailModel serviceMailModel;
+    private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<Occupation> serviceOccupation;
+    private readonly ServiceGeneric<OnBoarding> serviceOnboarding;
+    public string pathToken;
+
+    #region Constructor
+    public ServiceOnBoarding(DataContext context, string _pathToken) : base(context)
     {
       try
       {
-        onBoardingService = new ServiceGeneric<OnBoarding>(context);
-        personService = new ServiceGeneric<Person>(context);
-        logService = new ServiceLog(_context);
-        mailModelService = new ServiceMailModel(context);
-        mailMessageService = new ServiceGeneric<MailMessage>(context);
-        mailService = new ServiceGeneric<MailLog>(context);
-        logMessagesService = new ServiceLogMessages(context);
-        occupationService = new ServiceGeneric<Occupation>(context);
         serviceAuthentication = new ServiceAuthentication(context);
-        path = pathToken;
+        serviceCompany = new ServiceGeneric<Company>(context);
+        serviceGroup = new ServiceGeneric<Group>(context);
+        serviceLog = new ServiceLog(_context);
+        serviceLogMessages = new ServiceLogMessages(context);
+        serviceMailLog = new ServiceGeneric<MailLog>(context);
+        serviceMailMessage = new ServiceGeneric<MailMessage>(context);
+        serviceMailModel = new ServiceMailModel(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        pathToken = _pathToken;
       }
       catch (Exception e)
       {
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-    public string ScriptComments()
+    public void SetUser(IHttpContextAccessor contextAccessor)
     {
-      try
-      {
-        var list = onBoardingService.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
-
-        foreach (var item in list)
-        {
-
-          foreach (var row in item.Activities)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsPerson,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginPerson,
-              UserComment = EnumUserComment.Person
-            };
-
-            var commentManager = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsManager,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginManager,
-              UserComment = EnumUserComment.Manager
-            };
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-
-          }
-
-          foreach (var row in item.Schoolings)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsPerson,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginPerson,
-              UserComment = EnumUserComment.Person
-            };
-
-            var commentManager = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsManager,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginManager,
-              UserComment = EnumUserComment.Manager
-            };
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-
-          }
-
-          foreach (var row in item.Scopes)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsPerson,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginPerson,
-              UserComment = EnumUserComment.Person
-            };
-
-            var commentManager = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsManager,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginManager,
-              UserComment = EnumUserComment.Manager
-            };
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-
-          }
-
-          foreach (var row in item.SkillsCompany)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsPerson,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginPerson,
-              UserComment = EnumUserComment.Person
-            };
-
-            var commentManager = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsManager,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginManager,
-              UserComment = EnumUserComment.Manager
-            };
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-
-          }
-
-          foreach (var row in item.SkillsGroup)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsPerson,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginPerson,
-              UserComment = EnumUserComment.Person
-            };
-
-            var commentManager = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsManager,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginManager,
-              UserComment = EnumUserComment.Manager
-            };
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-
-          }
-
-          foreach (var row in item.SkillsOccupation)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsPerson,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginPerson,
-              UserComment = EnumUserComment.Person
-            };
-
-            var commentManager = new ListComments
-            {
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = item._idAccount,
-              Comments = row.CommentsManager,
-              StatusView = EnumStatusView.View,
-              Date = item.DateBeginManager,
-              UserComment = EnumUserComment.Manager
-            };
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-
-          }
-
-          onBoardingService.UpdateAccount(item, null);
-        }
-
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
+      User(contextAccessor);
+      serviceCompany._user = _user;
+      serviceGroup._user = _user;
+      serviceLog.SetUser(_user);
+      serviceLogMessages.SetUser(_user);
+      serviceMailLog._user = _user;
+      serviceMailMessage._user = _user;
+      serviceMailModel.SetUser(_user);
+      serviceOccupation._user = _user;
+      serviceOnboarding._user = _user;
+      servicePerson._user = _user;
     }
-
-    public List<OnBoarding> ListOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page)
+    public void SetUser(BaseUser user)
     {
-      try
-      {
-        LogSave(idmanager, "ListEnd");
-        int skip = (count * (page - 1));
-        var detail = onBoardingService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = onBoardingService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
+      serviceCompany._user = user;
+      serviceGroup._user = user;
+      serviceLog.SetUser(user);
+      serviceLogMessages.SetUser(user);
+      serviceMailLog._user = user;
+      serviceMailMessage._user = user;
+      serviceMailModel.SetUser(user);
+      serviceOccupation._user = user;
+      serviceOnboarding._user = user;
+      servicePerson._user = user;
     }
+    #endregion
 
-    private void NewOnZero()
+    #region Onboarding
+    public List<ViewListOnBoarding> ListOnBoarding(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
-        var on = onBoardingService.GetAuthentication(p => p.Status == EnumStatus.Disabled).Count();
-        if (on == 0)
-        {
-          var person = personService.GetAll().FirstOrDefault();
-          var zero = onBoardingService.Insert(new OnBoarding() { Person = person, Status = EnumStatus.Disabled, StatusOnBoarding = EnumStatusOnBoarding.End });
-        }
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-
-    public List<ListComments> AddComments(string idonboarding, string iditem, ListComments comments)
-    {
-      try
-      {
-        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
-        foreach (var item in onboarding.Activities)
-        {
-          if (item._id == iditem)
-          {
-            if (item.Comments == null)
-              item.Comments = new List<ListComments>();
-
-            if (comments.UserComment == EnumUserComment.Person)
+        //LogSave(idmanager, "List");
+        List<ViewListOnBoarding> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
+                                             p.TypeUser > EnumTypeUser.Administrator &&
+                                             (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
+                                             p.Manager._id == idmanager &&
+                                             p.User.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "User.Name").Result
+          .Select(p => new ViewListOnBoarding()
             {
-              item.StatusViewManager = EnumStatusView.None;
-              item.StatusViewPerson = EnumStatusView.View;
+              _idPerson = p._id,
+              Name = p.User.Name,
+              StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
+            }).ToList();
+        List<ViewListOnBoarding> detail = new List<ViewListOnBoarding>();
+        if (serviceOnboarding.Exists("OnBoarding"))
+        {
+          OnBoarding onboarding;
+          foreach (var item in list)
+          {
+            onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+            if (onboarding != null)
+            {
+              item._id = onboarding._id;
+              item.StatusOnBoarding = onboarding.StatusOnBoarding;
             }
-            else
-            {
-              item.StatusViewManager = EnumStatusView.View;
-              item.StatusViewPerson = EnumStatusView.None;
-            }
-
-
-            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
-
-            onBoardingService.Update(onboarding, null);
-
-            return item.Comments;
+            detail.Add(item);
           }
-        }
-
-        foreach (var item in onboarding.Schoolings)
-        {
-          if (item._id == iditem)
-          {
-            if (item.Comments == null)
-              item.Comments = new List<ListComments>();
-
-            if (comments.UserComment == EnumUserComment.Person)
-            {
-              item.StatusViewManager = EnumStatusView.None;
-              item.StatusViewPerson = EnumStatusView.View;
-            }
-            else
-            {
-              item.StatusViewManager = EnumStatusView.View;
-              item.StatusViewPerson = EnumStatusView.None;
-            }
-
-            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
-
-            onBoardingService.Update(onboarding, null);
-
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.Scopes)
-        {
-          if (item._id == iditem)
-          {
-            if (item.Comments == null)
-              item.Comments = new List<ListComments>();
-
-            if (comments.UserComment == EnumUserComment.Person)
-            {
-              item.StatusViewManager = EnumStatusView.None;
-              item.StatusViewPerson = EnumStatusView.View;
-            }
-            else
-            {
-              item.StatusViewManager = EnumStatusView.View;
-              item.StatusViewPerson = EnumStatusView.None;
-            }
-
-            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
-
-            onBoardingService.Update(onboarding, null);
-
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.SkillsCompany)
-        {
-          if (item._id == iditem)
-          {
-            if (item.Comments == null)
-              item.Comments = new List<ListComments>();
-
-            if (comments.UserComment == EnumUserComment.Person)
-            {
-              item.StatusViewManager = EnumStatusView.None;
-              item.StatusViewPerson = EnumStatusView.View;
-            }
-            else
-            {
-              item.StatusViewManager = EnumStatusView.View;
-              item.StatusViewPerson = EnumStatusView.None;
-            }
-
-            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
-
-            onBoardingService.Update(onboarding, null);
-
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.SkillsGroup)
-        {
-          if (item._id == iditem)
-          {
-            if (item.Comments == null)
-              item.Comments = new List<ListComments>();
-
-            if (comments.UserComment == EnumUserComment.Person)
-            {
-              item.StatusViewManager = EnumStatusView.None;
-              item.StatusViewPerson = EnumStatusView.View;
-            }
-            else
-            {
-              item.StatusViewManager = EnumStatusView.View;
-              item.StatusViewPerson = EnumStatusView.None;
-            }
-            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
-
-            onBoardingService.Update(onboarding, null);
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.SkillsOccupation)
-        {
-          if (item._id == iditem)
-          {
-            if (item.Comments == null)
-              item.Comments = new List<ListComments>();
-
-            if (comments.UserComment == EnumUserComment.Person)
-            {
-              item.StatusViewManager = EnumStatusView.None;
-              item.StatusViewPerson = EnumStatusView.View;
-            }
-            else
-            {
-              item.StatusViewManager = EnumStatusView.View;
-              item.StatusViewPerson = EnumStatusView.None;
-            }
-
-            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
-
-            onBoardingService.Update(onboarding, null);
-            return item.Comments;
-          }
-        }
-
-
-        return null;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateComments(string idonboarding, string iditem, ListComments comments)
-    {
-      try
-      {
-        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
-        foreach (var item in onboarding.Activities)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == comments._id)
-              {
-                comment.StatusView = comments.StatusView;
-                comment.Comments = comments.Comments;
-                comment.Date = comment.Date;
-
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-
-        foreach (var item in onboarding.Schoolings)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == comments._id)
-              {
-                comment.StatusView = comments.StatusView;
-                comment.Comments = comments.Comments;
-                comment.Date = comment.Date;
-
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.Scopes)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == comments._id)
-              {
-                comment.StatusView = comments.StatusView;
-                comment.Comments = comments.Comments;
-                comment.Date = comment.Date;
-
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.SkillsCompany)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == comments._id)
-              {
-                comment.StatusView = comments.StatusView;
-                comment.Comments = comments.Comments;
-                comment.Date = comment.Date;
-
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.SkillsGroup)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == comments._id)
-              {
-                comment.StatusView = comments.StatusView;
-                comment.Comments = comments.Comments;
-                comment.Date = comment.Date;
-
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.SkillsOccupation)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == comments._id)
-              {
-                comment.StatusView = comments.StatusView;
-                comment.Comments = comments.Comments;
-                comment.Date = comment.Date;
-
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-        return "not found";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment)
-    {
-      try
-      {
-        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
-        foreach (var item in onboarding.Activities)
-        {
-          if (item._id == iditem)
-          {
-            if (userComment == EnumUserComment.Manager)
-              item.StatusViewManager = EnumStatusView.View;
-            else
-              item.StatusViewPerson = EnumStatusView.View;
-
-            onBoardingService.Update(onboarding, null);
-            return "ok";
-          }
-        }
-
-
-        foreach (var item in onboarding.Schoolings)
-        {
-          if (item._id == iditem)
-          {
-            if (userComment == EnumUserComment.Manager)
-              item.StatusViewManager = EnumStatusView.View;
-            else
-              item.StatusViewPerson = EnumStatusView.View;
-
-            onBoardingService.Update(onboarding, null);
-            return "ok";
-          }
-        }
-
-        foreach (var item in onboarding.Scopes)
-        {
-          if (item._id == iditem)
-          {
-            if (userComment == EnumUserComment.Manager)
-              item.StatusViewManager = EnumStatusView.View;
-            else
-              item.StatusViewPerson = EnumStatusView.View;
-
-            onBoardingService.Update(onboarding, null);
-            return "ok";
-          }
-        }
-
-        foreach (var item in onboarding.SkillsCompany)
-        {
-          if (item._id == iditem)
-          {
-            if (userComment == EnumUserComment.Manager)
-              item.StatusViewManager = EnumStatusView.View;
-            else
-              item.StatusViewPerson = EnumStatusView.View;
-
-            onBoardingService.Update(onboarding, null);
-            return "ok";
-          }
-        }
-
-        foreach (var item in onboarding.SkillsGroup)
-        {
-          if (item._id == iditem)
-          {
-            if (userComment == EnumUserComment.Manager)
-              item.StatusViewManager = EnumStatusView.View;
-            else
-              item.StatusViewPerson = EnumStatusView.View;
-
-            onBoardingService.Update(onboarding, null);
-            return "ok";
-          }
-        }
-
-        foreach (var item in onboarding.SkillsOccupation)
-        {
-          if (item._id == iditem)
-          {
-            if (userComment == EnumUserComment.Manager)
-              item.StatusViewManager = EnumStatusView.View;
-            else
-              item.StatusViewPerson = EnumStatusView.View;
-
-            onBoardingService.Update(onboarding, null);
-            return "ok";
-          }
-        }
-        return "not found";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public string DeleteComments(string idonboarding, string iditem, string idcomments)
-    {
-      try
-      {
-        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
-        foreach (var item in onboarding.Activities)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == idcomments)
-              {
-                item.Comments.Remove(comment);
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.Schoolings)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == idcomments)
-              {
-                item.Comments.Remove(comment);
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.Scopes)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == idcomments)
-              {
-                item.Comments.Remove(comment);
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.SkillsCompany)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == idcomments)
-              {
-                item.Comments.Remove(comment);
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.SkillsGroup)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == idcomments)
-              {
-                item.Comments.Remove(comment);
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        foreach (var item in onboarding.SkillsOccupation)
-        {
-          if (item._id == iditem)
-          {
-            foreach (var comment in item.Comments)
-            {
-              if (comment._id == idcomments)
-              {
-                item.Comments.Remove(comment);
-                onBoardingService.Update(onboarding, null);
-                return "ok";
-              }
-            }
-          }
-        }
-
-        return "not found";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<ListComments> GetListComments(string idonboarding, string iditem)
-    {
-      try
-      {
-        var onboarding = onBoardingService.GetAll(p => p._id == idonboarding).FirstOrDefault();
-        foreach (var item in onboarding.Activities)
-        {
-          if (item._id == iditem)
-          {
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.Scopes)
-        {
-          if (item._id == iditem)
-          {
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.Schoolings)
-        {
-          if (item._id == iditem)
-          {
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.SkillsCompany)
-        {
-          if (item._id == iditem)
-          {
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.SkillsGroup)
-        {
-          if (item._id == iditem)
-          {
-            return item.Comments;
-          }
-        }
-
-        foreach (var item in onboarding.SkillsOccupation)
-        {
-          if (item._id == iditem)
-          {
-            return item.Comments;
-          }
-        }
-
-        return null;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<OnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page)
-    {
-      try
-      {
-        LogSave(idmanager, "List");
-        NewOnZero();
-        int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p.Manager._id == idmanager
-        & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
-        .ToList();
-
-        var detail = new List<OnBoarding>();
-        foreach (var item in list)
-        {
-
-
-          if ((item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation) || (item.Person.TypeJourney == EnumTypeJourney.OnBoarding))
-          {
-            if (item.OnBoarding == null)
-              detail.Add(new OnBoarding
-              {
-                Person = item.Person,
-                _id = null,
-                StatusOnBoarding = EnumStatusOnBoarding.Open
-              });
-            else
-              detail.Add(item.OnBoarding);
-          }
-        }
-
-        total = detail.Count();
-        return detail.Skip(skip).Take(count).ToList();
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public List<OnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page)
-    {
-      try
-      {
-        LogSave(idmanager, "ListPersonEnd");
-        int skip = (count * (page - 1));
-        var detail = onBoardingService.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = onBoardingService.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail;
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
-
-    public OnBoarding PersonOnBoardingsWait(string idmanager)
-    {
-      try
-      {
-        LogSave(idmanager, "ListWait");
-        var item = personService.GetAll(p => (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p._id == idmanager)
-        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
-        .FirstOrDefault();
-
-        if (item == null)
-        {
-          item = personService.GetAll(p => (p.TypeJourney == null) & p._id == idmanager)
-        .ToList().Select(p => new { Person = p, OnBoarding = onBoardingService.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
-        .FirstOrDefault();
-          return null;
-        }
-
-        if ((item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation) || (item.Person.TypeJourney == EnumTypeJourney.OnBoarding))
-        {
-          if (item.OnBoarding == null)
-            return new OnBoarding
-            {
-              Person = item.Person,
-              _id = null,
-              StatusOnBoarding = EnumStatusOnBoarding.Open
-            };
-          else
-            return item.OnBoarding;
         }
         else
+          detail = list;
+
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator &&
+          (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
+          p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewListOnBoarding PersonOnBoardingWait(string idperson)
+    {
+      try
+      {
+        //LogSave(idperson, "ListWait");
+        Person person = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
+                                             p.TypeUser > EnumTypeUser.Administrator &&
+                                             (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
+                                             p._id == idperson).Result;
+        if (person == null)
           return null;
 
-      }
-      catch (Exception e)
-      {
-        throw new ServiceException(_user, e, this._context);
-      }
-    }
+        var result = new ViewListOnBoarding()
+        {
+          _idPerson = person._id,
+          Name = person.User.Name,
+          StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
+        };
 
-    public OnBoarding GetOnBoardings(string id)
-    {
-      try
-      {
-        return onBoardingService.GetAll(p => p._id == id)
-          .ToList().Select(p => new OnBoarding()
+        if (serviceOnboarding.Exists("OnBoarding"))
+        {
+          OnBoarding onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == result._idPerson && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+          if (onboarding != null)
           {
-            _id = p._id,
-            _idAccount = p._idAccount,
-            Status = p.Status,
-            Person = p.Person,
-            DateBeginPerson = p.DateBeginPerson,
-            DateBeginManager = p.DateBeginManager,
-            DateBeginEnd = p.DateBeginEnd,
-            DateEndPerson = p.DateEndPerson,
-            DateEndManager = p.DateEndManager,
-            DateEndEnd = p.DateEndEnd,
-            CommentsPerson = p.CommentsPerson,
-            CommentsManager = p.CommentsManager,
-            CommentsEnd = p.CommentsEnd,
-            SkillsCompany = p.SkillsCompany.OrderBy(x => x.Skill.Name).ToList(),
-            SkillsGroup = p.SkillsGroup.OrderBy(x => x.Skill.Name).ToList(),
-            SkillsOccupation = p.SkillsOccupation.OrderBy(x => x.Skill.Name).ToList(),
-            Scopes = p.Scopes.OrderBy(x => x.Scope.Order).ToList(),
-            Schoolings = p.Schoolings.OrderBy(x => x.Schooling.Order).ToList(),
-            Activities = p.Activities.OrderBy(x => x.Activitie.Order).ToList(),
-            StatusOnBoarding = p.StatusOnBoarding,
-          })
-          .FirstOrDefault();
+            result._id = onboarding._id;
+            result.StatusOnBoarding = onboarding.StatusOnBoarding;
+          }
+        }
+        return result;
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
-
-    private OnBoarding LoadMap(OnBoarding onBoarding)
+    public ViewListOnBoarding NewOnBoarding(string idperson)
     {
       try
       {
-        var occupation = occupationService.GetAll(p => p._id == onBoarding.Person.Occupation._id).FirstOrDefault();
+        Person person = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
+                                             p.TypeUser > EnumTypeUser.Administrator &&
+                                             (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
+                                             p._id == idperson).Result;
+        if (person == null)
+          throw new Exception("Person not available!");
+        LogSave(_user._idPerson, "OnBoarding Process");
+        OnBoarding onBoarding = serviceOnboarding.GetNewVersion(x => x.Person._id == idperson && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+        if (onBoarding == null)
+        {
+          onBoarding = LoadMap(person);
+          if (onBoarding.Person._id == _user._idPerson)
+          {
+            onBoarding.DateBeginPerson = DateTime.Now;
+            onBoarding.StatusOnBoarding = EnumStatusOnBoarding.InProgressPerson;
+          }
+          else
+          {
+            onBoarding.DateBeginManager = DateTime.Now;
+            onBoarding.StatusOnBoarding = EnumStatusOnBoarding.InProgressManager;
+          }
+          onBoarding = serviceOnboarding.InsertNewVersion(onBoarding).Result;
+        }
+        else
+        {
+          if (onBoarding.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson)
+          {
+            onBoarding.DateBeginEnd = DateTime.Now;
+          }
+          serviceOnboarding.Update(onBoarding, null);
+        }
+        return new ViewListOnBoarding()
+        {
+          Name = onBoarding.Person.User.Name,
+          StatusOnBoarding = onBoarding.StatusOnBoarding,
+          _id = onBoarding._id,
+          _idPerson = onBoarding.Person._id
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
+    #region Private
+    private OnBoarding LoadMap(Person person)
+    {
+      try
+      {
+        OnBoarding onBoarding = new OnBoarding
+        {
+          Person = person
+        };
+        Company company = serviceCompany.GetNewVersion(p => p._id == person.Company._id).Result;
+        onBoarding.SkillsCompany = new List<OnBoardingSkills>();
+        foreach (Skill item in company.Skills)
+          onBoarding.SkillsCompany.Add(new OnBoardingSkills()
+          {
+            Skill = item,
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          });
+
+        Group group = serviceGroup.GetNewVersion(p => p._id == person.Occupation.Group._id).Result;
+        onBoarding.SkillsGroup = new List<OnBoardingSkills>();
+        foreach (Skill item in group.Skills)
+          onBoarding.SkillsGroup.Add(new OnBoardingSkills()
+          {
+            Skill = item,
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          });
+
+        onBoarding.Scopes = new List<OnBoardingScope>();
+        foreach (Scope item in group.Scope)
+          onBoarding.Scopes.Add(new OnBoardingScope()
+          {
+            Scope = item,
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          });
+
+        Occupation occupation = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result;
+        onBoarding.SkillsOccupation = new List<OnBoardingSkills>();
+        foreach (Skill item in occupation.Skills)
+          onBoarding.SkillsOccupation.Add(new OnBoardingSkills()
+          {
+            Skill = item,
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          });
+
+        onBoarding.Activities = new List<OnBoardingActivities>();
+        foreach (Activitie item in occupation.Activities)
+          onBoarding.Activities.Add(new OnBoardingActivities()
+          {
+            Activitie = item,
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          });
+
+        onBoarding.Schoolings = new List<OnBoardingSchooling>();
+        foreach (Schooling item in occupation.Schooling)
+          onBoarding.Schoolings.Add(new OnBoardingSchooling()
+          {
+            Schooling = item,
+            _idAccount = item._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          });
+
+        return onBoarding;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private OnBoarding LoadMapOld(OnBoarding onBoarding)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetAll(p => p._id == onBoarding.Person.Occupation._id).FirstOrDefault();
 
         onBoarding.SkillsCompany = new List<OnBoardingSkills>();
         foreach (var item in occupation.Group.Company.Skills)
@@ -1116,15 +339,749 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
+    #endregion
 
-    public OnBoarding NewOnBoarding(OnBoarding onBoarding, string idperson)
+    #region Old
+
+    public List<OnBoarding> ListOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        LogSave(idmanager, "ListEnd");
+        int skip = (count * (page - 1));
+        var detail = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    private void NewOnZero()
+    {
+      try
+      {
+        var on = serviceOnboarding.GetAuthentication(p => p.Status == EnumStatus.Disabled).Count();
+        if (on == 0)
+        {
+          var person = servicePerson.GetAll().FirstOrDefault();
+          var zero = serviceOnboarding.Insert(new OnBoarding() { Person = person, Status = EnumStatus.Disabled, StatusOnBoarding = EnumStatusOnBoarding.End });
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    public List<ListComments> AddComments(string idonboarding, string iditem, ListComments comments)
+    {
+      try
+      {
+        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+
+
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+
+            serviceOnboarding.Update(onboarding, null);
+
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+
+            serviceOnboarding.Update(onboarding, null);
+
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+
+            serviceOnboarding.Update(onboarding, null);
+
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+
+            serviceOnboarding.Update(onboarding, null);
+
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+
+            serviceOnboarding.Update(onboarding, null);
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+
+            comments._id = ObjectId.GenerateNewId().ToString(); comments._idAccount = _user._idAccount; item.Comments.Add(comments);
+
+            serviceOnboarding.Update(onboarding, null);
+            return item.Comments;
+          }
+        }
+
+
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateComments(string idonboarding, string iditem, ListComments comments)
+    {
+      try
+      {
+        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment)
+    {
+      try
+      {
+        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            serviceOnboarding.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            serviceOnboarding.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            serviceOnboarding.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            serviceOnboarding.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            serviceOnboarding.Update(onboarding, null);
+            return "ok";
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            serviceOnboarding.Update(onboarding, null);
+            return "ok";
+          }
+        }
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public string DeleteComments(string idonboarding, string iditem, string idcomments)
+    {
+      try
+      {
+        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                serviceOnboarding.Update(onboarding, null);
+                return "ok";
+              }
+            }
+          }
+        }
+
+        return "not found";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ListComments> GetListComments(string idonboarding, string iditem)
+    {
+      try
+      {
+        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        foreach (var item in onboarding.Activities)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.Scopes)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.Schoolings)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        foreach (var item in onboarding.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            return item.Comments;
+          }
+        }
+
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<OnBoarding> ListOnBoardingsWaitOld(string idmanager, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        LogSave(idmanager, "List");
+        NewOnZero();
+        int skip = (count * (page - 1));
+        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p.Manager._id == idmanager
+        & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
+        .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
+        .ToList();
+
+        var detail = new List<OnBoarding>();
+        foreach (var item in list)
+        {
+
+
+          if ((item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation) || (item.Person.TypeJourney == EnumTypeJourney.OnBoarding))
+          {
+            if (item.OnBoarding == null)
+              detail.Add(new OnBoarding
+              {
+                Person = item.Person,
+                _id = null,
+                StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
+              });
+            else
+              detail.Add(item.OnBoarding);
+          }
+        }
+
+        total = detail.Count();
+        return detail.Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public List<OnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        LogSave(idmanager, "ListPersonEnd");
+        int skip = (count * (page - 1));
+        var detail = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public OnBoarding PersonOnBoardingsWaitOld(string idmanager)
+    {
+      try
+      {
+        LogSave(idmanager, "ListWait");
+        var item = servicePerson.GetAll(p => (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p._id == idmanager)
+        .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
+        .FirstOrDefault();
+
+        if (item == null)
+        {
+          item = servicePerson.GetAll(p => (p.TypeJourney == null) & p._id == idmanager)
+        .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
+        .FirstOrDefault();
+          return null;
+        }
+
+        if ((item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation) || (item.Person.TypeJourney == EnumTypeJourney.OnBoarding))
+        {
+          if (item.OnBoarding == null)
+            return new OnBoarding
+            {
+              Person = item.Person,
+              _id = null,
+              StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
+            };
+          else
+            return item.OnBoarding;
+        }
+        else
+          return null;
+
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+    public OnBoarding GetOnBoardings(string id)
+    {
+      try
+      {
+        return serviceOnboarding.GetAll(p => p._id == id)
+          .ToList().Select(p => new OnBoarding()
+          {
+            _id = p._id,
+            _idAccount = p._idAccount,
+            Status = p.Status,
+            Person = p.Person,
+            DateBeginPerson = p.DateBeginPerson,
+            DateBeginManager = p.DateBeginManager,
+            DateBeginEnd = p.DateBeginEnd,
+            DateEndPerson = p.DateEndPerson,
+            DateEndManager = p.DateEndManager,
+            DateEndEnd = p.DateEndEnd,
+            CommentsPerson = p.CommentsPerson,
+            CommentsManager = p.CommentsManager,
+            CommentsEnd = p.CommentsEnd,
+            SkillsCompany = p.SkillsCompany.OrderBy(x => x.Skill.Name).ToList(),
+            SkillsGroup = p.SkillsGroup.OrderBy(x => x.Skill.Name).ToList(),
+            SkillsOccupation = p.SkillsOccupation.OrderBy(x => x.Skill.Name).ToList(),
+            Scopes = p.Scopes.OrderBy(x => x.Scope.Order).ToList(),
+            Schoolings = p.Schoolings.OrderBy(x => x.Schooling.Order).ToList(),
+            Activities = p.Activities.OrderBy(x => x.Activitie.Order).ToList(),
+            StatusOnBoarding = p.StatusOnBoarding,
+          })
+          .FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
+
+    public OnBoarding NewOnBoardingOld(OnBoarding onBoarding, string idperson)
     {
       try
       {
         LogSave(onBoarding.Person._id, "OnBoarding Process");
         if (onBoarding._id == null)
         {
-          LoadMap(onBoarding);
+          LoadMapOld(onBoarding);
 
           if (onBoarding.Person._id == idperson)
           {
@@ -1137,15 +1094,15 @@ namespace Manager.Services.Specific
             onBoarding.StatusOnBoarding = EnumStatusOnBoarding.InProgressManager;
           }
 
-          onBoardingService.Insert(onBoarding);
+          serviceOnboarding.Insert(onBoarding);
         }
         else
         {
-          if (onBoarding.StatusOnBoarding == EnumStatusOnBoarding.Wait)
+          if (onBoarding.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson)
           {
             onBoarding.DateBeginEnd = DateTime.Now;
           }
-          onBoardingService.Update(onBoarding, null);
+          serviceOnboarding.Update(onBoarding, null);
         }
 
         return onBoarding;
@@ -1187,7 +1144,7 @@ namespace Manager.Services.Specific
 
         if (onboarding.Person._id != idperson)
         {
-          if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Wait)
+          if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson)
           {
             onboarding.DateEndManager = DateTime.Now;
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
@@ -1198,7 +1155,7 @@ namespace Manager.Services.Specific
 
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
           {
-            logMessagesService.NewLogMessage("Onboarding", "Gestor e Colaborador realizaram o Onboarding de " + onboarding.Person.User.Name, onboarding.Person);
+            serviceLogMessages.NewLogMessage("Onboarding", "Gestor e Colaborador realizaram o Onboarding de " + onboarding.Person.User.Name, onboarding.Person);
             onboarding.DateEndEnd = DateTime.Now;
 
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
@@ -1206,7 +1163,7 @@ namespace Manager.Services.Specific
             else
               onboarding.Person.TypeJourney = EnumTypeJourney.Checkpoint;
 
-            personService.Update(onboarding.Person, null);
+            servicePerson.Update(onboarding.Person, null);
           }
         }
         else
@@ -1222,7 +1179,7 @@ namespace Manager.Services.Specific
             }
             else
             {
-              logMessagesService.NewLogMessage("Onboarding", "Gestor e Colaborador realizaram o Onboarding de " + onboarding.Person.User.Name, onboarding.Person);
+              serviceLogMessages.NewLogMessage("Onboarding", "Gestor e Colaborador realizaram o Onboarding de " + onboarding.Person.User.Name, onboarding.Person);
               onboarding.DateEndEnd = DateTime.Now;
 
               if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
@@ -1230,7 +1187,7 @@ namespace Manager.Services.Specific
               else
                 onboarding.Person.TypeJourney = EnumTypeJourney.Checkpoint;
 
-              personService.Update(onboarding.Person, null);
+              servicePerson.Update(onboarding.Person, null);
             }
 
 
@@ -1248,7 +1205,7 @@ namespace Manager.Services.Specific
             MailDisapproved(onboarding.Person);
           }
         }
-        onBoardingService.Update(onboarding, null);
+        serviceOnboarding.Update(onboarding, null);
         return "update";
       }
       catch (Exception e)
@@ -1261,33 +1218,19 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = personService.GetAll(p => p._id == iduser).FirstOrDefault();
+        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
         var log = new ViewLog()
         {
           Description = "Access OnBoarding ",
           Local = local,
           _idPerson = user._id
         };
-        logService.NewLog(log);
+        serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
         throw e;
       }
-    }
-
-    public void SetUser(IHttpContextAccessor contextAccessor)
-    {
-      User(contextAccessor);
-      personService._user = _user;
-      onBoardingService._user = _user;
-      occupationService._user = _user;
-      logService._user = _user;
-      mailModelService._user = _user;
-      mailMessageService._user = _user;
-      mailService._user = _user;
-      logMessagesService._user = _user;
-      mailModelService.SetUser(contextAccessor);
     }
 
     // send mail
@@ -1296,14 +1239,14 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.OnBoardingApproval(path);
+        var model = serviceMailModel.OnBoardingApproval(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
         string managername = "";
         try
         {
-          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1319,7 +1262,7 @@ namespace Manager.Services.Specific
           Url = url,
           Body = body
         };
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -1334,11 +1277,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
-        var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var mailObj = serviceMailLog.Insert(sendMail);
+        var token = SendMail(pathToken, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -1351,14 +1294,14 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.OnBoardingApprovalManager(path);
+        var model = serviceMailModel.OnBoardingApprovalManager(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
         string managername = "";
         try
         {
-          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1374,7 +1317,7 @@ namespace Manager.Services.Specific
           Url = url,
           Body = body
         };
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -1389,11 +1332,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
-        var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var mailObj = serviceMailLog.Insert(sendMail);
+        var token = SendMail(pathToken, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -1406,7 +1349,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.OnBoardingApprovalOccupation(path);
+        var model = serviceMailModel.OnBoardingApprovalOccupation(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -1419,7 +1362,7 @@ namespace Manager.Services.Specific
           Url = url,
           Body = body
         };
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -1434,11 +1377,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
-        var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var mailObj = serviceMailLog.Insert(sendMail);
+        var token = SendMail(pathToken, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -1451,14 +1394,14 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.OnBoardingApprovalManagerOccupation(path);
+        var model = serviceMailModel.OnBoardingApprovalManagerOccupation(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
         string managername = "";
         try
         {
-          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1474,7 +1417,7 @@ namespace Manager.Services.Specific
           Url = url,
           Body = body
         };
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -1489,11 +1432,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
-        var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var mailObj = serviceMailLog.Insert(sendMail);
+        var token = SendMail(pathToken, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -1506,14 +1449,14 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.OnBoardingDisapproval(path);
+        var model = serviceMailModel.OnBoardingDisapproval(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
         string managername = "";
         try
         {
-          managername = personService.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1529,7 +1472,7 @@ namespace Manager.Services.Specific
           Url = url,
           Body = body
         };
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -1544,11 +1487,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
-        var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var mailObj = serviceMailLog.Insert(sendMail);
+        var token = SendMail(pathToken, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -1593,9 +1536,9 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(_user._idPerson, "RemoveOnboarding:" + idperson);
-        var onboarding = onBoardingService.GetAll(p => p.Person._id == idperson).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAll(p => p.Person._id == idperson).FirstOrDefault();
         onboarding.Status = EnumStatus.Disabled;
-        onBoardingService.Update(onboarding, null);
+        serviceOnboarding.Update(onboarding, null);
         return "deleted";
       }
       catch (Exception e)
@@ -1610,8 +1553,8 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "ListExclud");
         int skip = (count * (page - 1));
-        var detail = onBoardingService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = onBoardingService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }
@@ -1620,6 +1563,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    #endregion
+
   }
-#pragma warning restore 1998
 }

@@ -82,7 +82,7 @@ namespace Manager.Services.Specific
         List<ViewIndicatorsNotes> result = new List<ViewIndicatorsNotes>();
         long totalqtd = 0;
         var monitorings = monitoringService.GetAll(p => p.Person.Manager._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Count();
-        var onboardings = onboardingService.GetAll(p => p.Person.Manager._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.Wait & p.StatusOnBoarding != EnumStatusOnBoarding.End).Count();
+        var onboardings = onboardingService.GetAll(p => p.Person.Manager._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.WaitPerson & p.StatusOnBoarding != EnumStatusOnBoarding.End).Count();
         var workflows = workflowService.GetAll(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Count();
 
         totalqtd = monitorings + onboardings + workflows;
@@ -483,10 +483,10 @@ namespace Manager.Services.Specific
                 Occupation = item.Person.Occupation.Name,
                 Status =
                 item == null ? "Aguardando para iniciar" :
-                  item.StatusOnBoarding == EnumStatusOnBoarding.Open ? "Aguardando para iniciar" :
+                  item.StatusOnBoarding == EnumStatusOnBoarding.WaitBegin ? "Aguardando para iniciar" :
                     item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
                       item.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
-                        item.StatusOnBoarding == EnumStatusOnBoarding.Wait ? "Em andamento pelo gestor" :
+                        item.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson ? "Em andamento pelo gestor" :
                           item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
                             item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
                               item.StatusOnBoarding == EnumStatusOnBoarding.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
@@ -793,7 +793,7 @@ namespace Manager.Services.Specific
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-        .GroupBy(p => p.OnBoarding == null ? EnumStatusOnBoarding.Open : p.OnBoarding.StatusOnBoarding).Select(x => new
+        .GroupBy(p => p.OnBoarding == null ? EnumStatusOnBoarding.WaitBegin : p.OnBoarding.StatusOnBoarding).Select(x => new
         {
           Status = x.Key,
           Count = x.Count()

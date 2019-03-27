@@ -6,36 +6,93 @@ using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
+using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador do Onboarding
+  /// </summary>
   [Produces("application/json")]
   [Route("onboarding")]
   public class OnBoardingController : Controller
   {
     private readonly IServiceOnBoarding service;
 
+    #region Constructor
+    /// <summary>
+    /// Construtor do controlador
+    /// </summary>
+    /// <param name="_service">Serviço de Onboarding</param>
+    /// <param name="contextAccessor">Token de segurança</param>
     public OnBoardingController(IServiceOnBoarding _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
+    #endregion
 
-
+    #region Onboarding
+    /// <summary>
+    /// Listar as pendências de Onboarding para o gestor
+    /// </summary>
+    /// <param name="idmanager">Identificação do gestor</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do colaborador</param>
+    /// <returns>Lista com pendências de Onboarding</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("list/{idmanager}")]
+    public List<ViewListOnBoarding> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      List<ViewListOnBoarding> result = service.ListOnBoarding(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Consulta a situação do colaborador no Onboarding
+    /// </summary>
+    /// <param name="idperson">Identificador do colaborador</param>
+    /// <returns>Situação do Onboarding do cloaborador</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("personwait/{idmanager}")]
+    public ViewListOnBoarding ListPerson(string idperson)
+    {
+      return service.PersonOnBoardingWait(idperson);
+    }
+    /// <summary>
+    /// Inclusão de novo OnBoarding
+    /// </summary>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <returns>Objeto de listagem do OnBoarding</returns>
     [Authorize]
     [HttpPost]
     [Route("new/{idperson}")]
-    public OnBoarding Post([FromBody]OnBoarding onboarding, string idperson)
+    public ViewListOnBoarding Post(string idperson)
     {
-      return service.NewOnBoarding(onboarding, idperson);
+      return service.NewOnBoarding(idperson);
+    }
+
+    #endregion
+
+    #region Old
+    [Authorize]
+    [HttpPost]
+    [Route("old/new/{idperson}")]
+    public OnBoarding PostOld([FromBody]OnBoarding onboarding, string idperson)
+    {
+      return service.NewOnBoardingOld(onboarding, idperson);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("update/{idperson}")]
+    [Route("old/update/{idperson}")]
     public string Put([FromBody]OnBoarding onboarding, string idperson)
     {
       return service.UpdateOnBoarding(onboarding, idperson);
@@ -43,7 +100,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listend/{idmanager}")]
+    [Route("old/listend/{idmanager}")]
     public List<OnBoarding> ListEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
@@ -54,18 +111,18 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("list/{idmanager}")]
-    public List<OnBoarding> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    [Route("old/list/{idmanager}")]
+    public List<OnBoarding> ListOld(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListOnBoardingsWait(idmanager, ref total, filter, count, page);
+      var result = service.ListOnBoardingsWaitOld(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpGet]
-    [Route("personend/{idmanager}")]
+    [Route("old/personend/{idmanager}")]
     public List<OnBoarding> PersonOnBoardingsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
@@ -76,15 +133,15 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("personwait/{idmanager}")]
-    public OnBoarding ListPerson(string idmanager)
+    [Route("old/personwait/{idmanager}")]
+    public OnBoarding ListPersonOld(string idmanager)
     {
-      return service.PersonOnBoardingsWait(idmanager);
+      return service.PersonOnBoardingsWaitOld(idmanager);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("get/{id}")]
+    [Route("old/get/{id}")]
     public OnBoarding GetOnBoarding(string id)
     {
       return service.GetOnBoardings(id);
@@ -92,7 +149,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("getlistexclud")]
+    [Route("old/getlistexclud")]
     public List<OnBoarding> GetListExclud(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
@@ -103,7 +160,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
-    [Route("delete/{idperson}")]
+    [Route("old/delete/{idperson}")]
     public string RemoveOnBoarding(string idperson)
     {
       return service.RemoveOnBoarding(idperson);
@@ -112,7 +169,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("updatecomments/{idonboarding}/{iditem}")]
+    [Route("old/updatecomments/{idonboarding}/{iditem}")]
     public string UpdateComments([FromBody]ListComments comments, string idonboarding, string iditem)
     {
       return service.UpdateComments(idonboarding, iditem, comments);
@@ -120,7 +177,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("listcomments/{idonboarding}/{iditem}")]
+    [Route("old/listcomments/{idonboarding}/{iditem}")]
     public List<ListComments> GetListComments( string idonboarding, string iditem)
     {
       return service.GetListComments(idonboarding, iditem);
@@ -128,7 +185,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("addcomments/{idonboarding}/{iditem}")]
+    [Route("old/addcomments/{idonboarding}/{iditem}")]
     public List<ListComments> AddComments([FromBody]ListComments comments, string idonboarding, string iditem)
     {
       return service.AddComments(idonboarding, iditem, comments);
@@ -137,7 +194,7 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
-    [Route("deletecomments/{idonboarding}/{iditem}/{idcomments}")]
+    [Route("old/deletecomments/{idonboarding}/{iditem}/{idcomments}")]
     public string DeleteComments(string idonboarding, string iditem, string idcomments)
     {
       return service.DeleteComments(idonboarding, iditem, idcomments);
@@ -145,18 +202,12 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPut]
-    [Route("updatecommentsview/{idonboarding}/{iditem}/{usercomment}")]
+    [Route("old/updatecommentsview/{idonboarding}/{iditem}/{usercomment}")]
     public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment usercomment)
     {
       return service.UpdateCommentsView(idonboarding, iditem, usercomment);
     }
-
-    [HttpPut]
-    [Route("scriptcomments")]
-    public string GetLiScriptCommentsstComments()
-    {
-      return service.ScriptComments();
-    }
-
   }
+  #endregion
+
 }
