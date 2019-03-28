@@ -178,6 +178,10 @@ namespace Manager.Services.Specific
                                              p._id == idperson).Result;
         if (person == null)
           throw new Exception("Person not available!");
+
+        if (person._id != _user._idPerson && person.Manager._id != _user._idPerson)
+          throw new Exception("Person not available!");
+
         LogSave(_user._idPerson, "OnBoarding Process");
         OnBoarding onBoarding = serviceOnboarding.GetNewVersion(x => x.Person._id == idperson && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
         if (onBoarding == null)
@@ -200,8 +204,8 @@ namespace Manager.Services.Specific
           if (onBoarding.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson)
           {
             onBoarding.DateBeginEnd = DateTime.Now;
+            serviceOnboarding.Update(onBoarding, null);
           }
-          serviceOnboarding.Update(onBoarding, null);
         }
         return new ViewListOnBoarding()
         {
@@ -221,6 +225,8 @@ namespace Manager.Services.Specific
       try
       {
         OnBoarding onBoarding = serviceOnboarding.GetNewVersion(p => p._id == id).Result;
+        if (onBoarding == null)
+          throw new Exception("Onboarding not available!");
         ViewCrudOnboarding result = new ViewCrudOnboarding()
         {
           _id = onBoarding._id,

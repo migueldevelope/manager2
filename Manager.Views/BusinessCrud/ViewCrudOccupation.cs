@@ -9,6 +9,6 @@ namespace Manager.Views.BusinessCrud
     public long Line { get; set; }
     public ViewListCbo Cbo { get; set; }
     public List<ViewListProcessLevelTwo> Process { get; set; }
-    public List<ViewListSalaryScale> SalaryScales { get; set; }
+    public List<ViewCrudSalaryScaleOccupation> SalaryScales { get; set; }
   }
 }
