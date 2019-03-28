@@ -6,6 +6,8 @@ using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -85,138 +87,230 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// Inclusão monitoring
+    /// </summary>
+    /// <param name="monitoring">Objeto Crud</param>
+    /// <param name="idperson">Identificador contrato</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("new/{idperson}")]
+    public ViewListMonitoring NewMonitoring([FromBody]ViewCrudMonitoring monitoring, string idperson)
+    {
+      return service.NewMonitoring(monitoring, idperson);
+    }
 
-    //[Authorize]
-    //[HttpPost]
-    //[Route("new/{idperson}")]
-    //public Monitoring NewMonitoring([FromBody]Monitoring monitoring, string idperson)
-    //{
-    //  return service.NewMonitoring(monitoring, idperson);
-    //}
+    /// <summary>
+    /// Atualiza informações monitogin
+    /// </summary>
+    /// <param name="monitoring">Objeto Crud</param>
+    /// <param name="idperson">Identificador contrato</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("update/{idperson}")]
+    public string UpdateMonitoring([FromBody]ViewCrudMonitoring monitoring, string idperson)
+    {
+      return service.UpdateMonitoring(monitoring, idperson);
+    }
 
-    //[Authorize]
-    //[HttpPut]
-    //[Route("update/{idperson}")]
-    //public string UpdateMonitoring([FromBody]Monitoring monitoring, string idperson)
-    //{
-    //  return service.UpdateMonitoring(monitoring, idperson);
-    //}
-
-    //[Authorize]
-    //[HttpGet]
-    //[Route("listend/{idmanager}")]
-    //public List<Monitoring> ListMonitoringsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
-    //{
-    //  long total = 0;
-    //  var result = service.ListMonitoringsEnd(idmanager, ref total, filter, count, page);
-    //  Response.Headers.Add("x-total-count", total.ToString());
-    //  return result;
-    //}
-
-    //[Authorize]
-    //[HttpGet]
-    //[Route("getlistexclud")]
-    //public List<Monitoring> GetListExclud(int count = 10, int page = 1, string filter = "")
-    //{
-    //  long total = 0;
-    //  var result = service.GetListExclud(ref total, filter, count, page);
-    //  Response.Headers.Add("x-total-count", total.ToString());
-    //  return result;
-    //}
-
-    //[Authorize]
-    //[HttpGet]
-    //[Route("list/{idmanager}")]
-    //public List<Monitoring> ListMonitoringsWait(string idmanager, int count = 10, int page = 1, string filter = "")
-    //{
-    //  long total = 0;
-    //  var result = service.ListMonitoringsWait(idmanager, ref total, filter, count, page);
-    //  Response.Headers.Add("x-total-count", total.ToString());
-    //  return result;
-    //}
-
-    //[Authorize]
-    //[HttpGet]
-    //[Route("personend/{idmanager}")]
-    //public List<Monitoring> PersonMonitoringsEnd(string idmanager)
-    //{
-    //  return service.PersonMonitoringsEnd(idmanager);
-    //}
-
-    //[Authorize]
-    //[HttpGet]
-    //[Route("personwait/{idmanager}")]
-    //public Monitoring PersonMonitoringsWait(string idmanager)
-    //{
-    //  return service.PersonMonitoringsWait(idmanager);
-    //}
-
-    //[Authorize]
-    //[HttpGet]
-    //[Route("get/{id}")]
-    //public Monitoring GetMonitoring(string id)
-    //{
-    //  return service.GetMonitorings(id);
-    //}
-
-    //[Authorize]
-    //[HttpGet]
-    //[Route("getskills/{idperson}")]
-    //public List<Skill> GetSkills(string idperson)
-    //{
-    //  return service.GetSkills(idperson);
-    //}
+    /// <summary>
+    /// Lista monitoring finalizado para gestor
+    /// </summary>
+    /// <param name="idmanager">Identificador Gestor</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listend/{idmanager}")]
+    public List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListMonitoringsEnd(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
 
 
-    //[Authorize]
-    //[HttpGet]
-    //[Route("getmonitoringactivities/{idmonitoring}/{idactivitie}")]
-    //public MonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
-    //{
-    //  return service.GetMonitoringActivities(idmonitoring, idactivitie);
-    //}
+    /// <summary>
+    /// Lista monitoring para exclusão
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getlistexclud")]
+    public List<ViewListMonitoring> GetListExclud(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetListExclud(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    /// <summary>
+    /// Lista monitoring em andamento para gestor
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("list/{idmanager}")]
+    public List<ViewListMonitoring> ListMonitoringsWait(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListMonitoringsWait(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    /// <summary>
+    /// Lista monitoring para pessoa
+    /// </summary>
+    /// <param name="idmanager">Identificador contrato</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("personend/{idmanager}")]
+    public List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager)
+    {
+      return service.PersonMonitoringsEnd(idmanager);
+    }
+
+    /// <summary>
+    /// Lista monitoring para pessoa
+    /// </summary>
+    /// <param name="idmanager">Identificador do contrato</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("personwait/{idmanager}")]
+    public ViewListMonitoring PersonMonitoringsWait(string idmanager)
+    {
+      return service.PersonMonitoringsWait(idmanager);
+    }
+
+    /// <summary>
+    /// Busca informação monitoring para editar
+    /// </summary>
+    /// <param name="id">Identificador monitoring</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("get/{id}")]
+    public ViewCrudMonitoring GetMonitoring(string id)
+    {
+      return service.GetMonitorings(id);
+    }
+
+    /// <summary>
+    /// Lista skills
+    /// </summary>
+    /// <param name="idperson">Identificador do contrato</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getskills/{idperson}")]
+    public List<ViewListSkill> GetSkills(string idperson)
+    {
+      return service.GetSkills(idperson);
+    }
 
 
-    //[Authorize]
-    //[HttpPut]
-    //[Route("updatemonitoringactivities/{idmonitoring}")]
-    //public string UpdateMonitoringActivities([FromBody]MonitoringActivities activitie, string idmonitoring)
-    //{
-    //  return service.UpdateMonitoringActivities(idmonitoring, activitie);
-    //}
+    /// <summary>
+    /// Busca informações para editar entrega
+    /// </summary>
+    /// <param name="idmonitoring">Identificador monitoring</param>
+    /// <param name="idactivitie">Identificador entrega</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getmonitoringactivities/{idmonitoring}/{idactivitie}")]
+    public ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
+    {
+      return service.GetMonitoringActivities(idmonitoring, idactivitie);
+    }
 
-    //[Authorize]
-    //[HttpPost]
-    //[Route("addmonitoringactivities/{idmonitoring}")]
-    //public string AddMonitoringActivities([FromBody] Activitie activitie, string idmonitoring)
-    //{
-    //  return service.AddMonitoringActivities(idmonitoring, activitie);
-    //}
+    /// <summary>
+    /// Atualiza entrega monitoring
+    /// </summary>
+    /// <param name="activitie">Objeto Crud</param>
+    /// <param name="idmonitoring">Identificador monitoring</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatemonitoringactivities/{idmonitoring}")]
+    public string UpdateMonitoringActivities([FromBody]ViewCrudMonitoringActivities activitie, string idmonitoring)
+    {
+      return service.UpdateMonitoringActivities(idmonitoring, activitie);
+    }
 
-    //[Authorize]
-    //[HttpGet]
-    //[Route("listcomments/{idmonitoring}/{iditem}")]
-    //public List<ListComments> GetListComments(string idmonitoring, string iditem)
-    //{
-    //  return service.GetListCommentsOld(idmonitoring, iditem);
-    //}
+    /// <summary>
+    /// Adiciona um entrega no monitoring
+    /// </summary>
+    /// <param name="activitie">Objeto Crud</param>
+    /// <param name="idmonitoring">Identificador monitoring</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addmonitoringactivities/{idmonitoring}")]
+    public string AddMonitoringActivities([FromBody] ViewCrudActivities activitie, string idmonitoring)
+    {
+      return service.AddMonitoringActivities(idmonitoring, activitie);
+    }
 
-    //[Authorize]
-    //[HttpPost]
-    //[Route("addcomments/{idmonitoring}/{iditem}")]
-    //public List<ListComments> AddComments([FromBody]ListComments comments, string idmonitoring, string iditem)
-    //{
-    //  return service.AddComments(idmonitoring, iditem, comments);
-    //}
+    /// <summary>
+    /// Lista comentarios de um item do monitoring
+    /// </summary>
+    /// <param name="idmonitoring">Identificador monitoring</param>
+    /// <param name="iditem">Identificador Item</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listcomments/{idmonitoring}/{iditem}")]
+    public List<ListComments> GetListComments(string idmonitoring, string iditem)
+    {
+      return service.GetListCommentsOld(idmonitoring, iditem);
+    }
+
+    /// <summary>
+    /// Inclusão comentario
+    /// </summary>
+    /// <param name="comments">Objeto Crud</param>
+    /// <param name="idmonitoring">Identificador Monitoring</param>
+    /// <param name="iditem">Identificador item monitoring</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addcomments/{idmonitoring}/{iditem}")]
+    public List<ViewCrudComment> AddComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
+    {
+      return service.AddComments(idmonitoring, iditem, comments);
+    }
 
 
-    //[Authorize]
-    //[HttpPut]
-    //[Route("updatecomments/{idmonitoring}/{iditem}")]
-    //public string UpdateComments([FromBody]ListComments comments, string idmonitoring, string iditem)
-    //{
-    //  return service.UpdateComments(idmonitoring, iditem, comments);
-    //}
+    /// <summary>
+    /// Atualiza comentario item do monitoring
+    /// </summary>
+    /// <param name="comments">Objeto Crud</param>
+    /// <param name="idmonitoring">Identificador monitoring</param>
+    /// <param name="iditem">Identificador item do monitoring</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatecomments/{idmonitoring}/{iditem}")]
+    public string UpdateComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
+    {
+      return service.UpdateComments(idmonitoring, iditem, comments);
+    }
 
 
     //[Authorize]
@@ -230,7 +324,7 @@ namespace Manager.Controllers
     //[Authorize]
     //[HttpPut]
     //[Route("updateplan/{idmonitoring}/{iditem}")]
-    //public List<Plan> UpdatePlan([FromBody]Plan plan, string idmonitoring, string iditem)
+    //public List<Plan> UpdatePlan([FromBody]ViewListPlan plan, string idmonitoring, string iditem)
     //{
     //  return service.UpdatePlan(idmonitoring, iditem, plan);
     //}

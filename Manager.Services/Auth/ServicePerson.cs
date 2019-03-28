@@ -103,6 +103,7 @@ namespace Manager.Services.Auth
         }
         var user = new User()
         {
+          Name = view.User.Name,
           Document = view.User.Document,
           Mail = view.User.Mail,
           Phone = view.User.Phone,
@@ -117,13 +118,23 @@ namespace Manager.Services.Auth
           Sex = view.User.Sex
         };
 
-        var manager = servicePerson.GetAll(p => p._id == view.Person.Manager._id).
-          Select(p => new BaseFields() { _id = p._id, Name = p.User.Name, Mail = p.User.Mail
-          }).FirstOrDefault();
+        BaseFields manager = null;
+        if (view.Person.Manager != null)
+        {
+          manager = servicePerson.GetAll(p => p._id == view.Person.Manager._id).
+         Select(p => new BaseFields()
+         {
+           _id = p._id,
+           Name = p.User.Name,
+           Mail = p.User.Mail
+         }).FirstOrDefault();
+        }
 
-        var salaryScale = serviceSalaryScale.GetAll(p => p._id == view.Person.SalaryScales._idSalaryScale)
-          .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
-          .FirstOrDefault();
+        SalaryScalePerson salaryScale = null;
+        if (view.Person.SalaryScales != null)
+          salaryScale = serviceSalaryScale.GetAll(p => p._id == view.Person.SalaryScales._idSalaryScale)
+            .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
+            .FirstOrDefault();
 
         var person = new Person()
         {
@@ -175,6 +186,8 @@ namespace Manager.Services.Auth
 
         var user = new User()
         {
+          _id = view.User._id,
+          Name = view.User.Name,
           Document = view.User.Document,
           Mail = view.User.Mail,
           Phone = view.User.Phone,
@@ -189,17 +202,25 @@ namespace Manager.Services.Auth
           Sex = view.User.Sex
         };
 
-        var manager = servicePerson.GetAll(p => p._id == view.Person.Manager._id).
-          Select(p => new BaseFields()
-          {
-            _id = p._id,
-            Name = p.User.Name,
-            Mail = p.User.Mail
-          }).FirstOrDefault();
 
-        var salaryScale = serviceSalaryScale.GetAll(p => p._id == view.Person.SalaryScales._idSalaryScale)
-          .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
-          .FirstOrDefault();
+        BaseFields manager = null;
+        if (view.Person.Manager != null)
+        {
+          manager = servicePerson.GetAll(p => p._id == view.Person.Manager._id).
+         Select(p => new BaseFields()
+         {
+           _id = p._id,
+           Name = p.User.Name,
+           Mail = p.User.Mail
+         }).FirstOrDefault();
+        }
+
+
+        SalaryScalePerson salaryScale = null;
+        if (view.Person.SalaryScales != null)
+          salaryScale = serviceSalaryScale.GetAll(p => p._id == view.Person.SalaryScales._idSalaryScale)
+            .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
+            .FirstOrDefault();
 
         var person = new Person()
         {
@@ -297,7 +318,7 @@ namespace Manager.Services.Auth
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser
-            }).ToList();
+            }).OrderBy(p => p.User.Name).ToList();
           case EnumTypeUser.HR:
           case EnumTypeUser.ManagerHR:
             total = servicePerson.CountNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;

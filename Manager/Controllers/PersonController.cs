@@ -68,7 +68,7 @@ namespace Manager.Controllers
     /// <returns>Objeto de alteração da pessoa</returns>
     [Authorize]
     [HttpGet]
-    [Route("edit/{idperson}")]
+    [Route("edit/{id}")]
     public ViewCrudPerson GetEdit(string id)
     {
       return service.GetPersonCrud(id);
