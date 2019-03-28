@@ -31,7 +31,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<SalaryScale> serviceSalaryScale;
     private ServiceGeneric<Schooling> serviceSchooling;
     private ServiceGeneric<User> serviceUser;
-    
+
     #region Constructor
     public ServicePerson(DataContext context) : base(context)
     {
@@ -85,6 +85,198 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Person
+
+    public string AddPersonUser(ViewCrudPersonUser view)
+    {
+      try
+      {
+        var authMaristas = false;
+        var authPUC = false;
+        try
+        {
+          authMaristas = view.User.Mail.Substring(view.User.Mail.IndexOf("@"), view.User.Mail.Length - view.User.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+          authPUC = view.User.Mail.Substring(view.User.Mail.IndexOf("@"), view.User.Mail.Length - view.User.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
+        }
+        catch (Exception)
+        {
+
+        }
+        var user = new User()
+        {
+          Document = view.User.Document,
+          Mail = view.User.Mail,
+          Phone = view.User.Phone,
+          Password = view.User.Password,
+          DateBirth = view.User.DateBirth,
+          DateAdm = view.User.DateAdm,
+          Schooling = (view.User.Schooling == null) ? null : serviceSchooling.GetAll(p => p._id == view.User.Schooling._id).FirstOrDefault(),
+          PhotoUrl = view.User.PhotoUrl,
+          PhoneFixed = view.User.PhoneFixed,
+          DocumentID = view.User.DocumentID,
+          DocumentCTPF = view.User.DocumentCTPF,
+          Sex = view.User.Sex
+        };
+
+        var manager = servicePerson.GetAll(p => p._id == view.Person.Manager._id).
+          Select(p => new BaseFields() { _id = p._id, Name = p.User.Name, Mail = p.User.Mail
+          }).FirstOrDefault();
+
+        var salaryScale = serviceSalaryScale.GetAll(p => p._id == view.Person.SalaryScales._idSalaryScale)
+          .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
+          .FirstOrDefault();
+
+        var person = new Person()
+        {
+          StatusUser = view.Person.StatusUser,
+          Company = serviceCompany.GetAll(p => p._id == view.Person.Company._id).FirstOrDefault(),
+          Occupation = (view.Person.Occupation == null) ? null : serviceOccupation.GetAll(p => p._id == view.Person.Occupation._id).FirstOrDefault(),
+          Manager = manager,
+          DateLastOccupation = view.Person.DateLastOccupation,
+          Salary = view.Person.Salary,
+          DateLastReadjust = view.Person.DateLastReadjust,
+          DateResignation = view.Person.DateResignation,
+          TypeJourney = view.Person.TypeJourney,
+          Establishment = (view.Person.Establishment == null) ? null : serviceEstablishment.GetAll(p => p._id == view.Person.Establishment._id).FirstOrDefault(),
+          HolidayReturn = view.Person.HolidayReturn,
+          MotiveAside = view.Person.MotiveAside,
+          TypeUser = view.Person.TypeUser,
+          Registration = view.Person.Registration,
+          SalaryScales = salaryScale
+        };
+
+        user.Password = EncryptServices.GetMD5Hash(view.User.Password);
+        user.ChangePassword = Manager.Views.Enumns.EnumChangePassword.AccessFirst;
+        user.Status = EnumStatus.Enabled;
+        person.Status = EnumStatus.Enabled;
+
+        if ((authMaristas) || (authPUC))
+          user.ChangePassword = Manager.Views.Enumns.EnumChangePassword.No;
+
+        //person.User = user;
+        person.User = serviceUser.Insert(user);
+
+        servicePerson.Insert(person);
+
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdatePersonUser(ViewCrudPersonUser view)
+    {
+      try
+      {
+        var pass = serviceUser.GetAll(p => p._id == view.User._id).SingleOrDefault().Password;
+        if (view.User.Password != EncryptServices.GetMD5Hash(pass))
+          view.User.Password = EncryptServices.GetMD5Hash(view.User.Password);
+
+        var user = new User()
+        {
+          Document = view.User.Document,
+          Mail = view.User.Mail,
+          Phone = view.User.Phone,
+          Password = view.User.Password,
+          DateBirth = view.User.DateBirth,
+          DateAdm = view.User.DateAdm,
+          Schooling = (view.User.Schooling == null) ? null : serviceSchooling.GetAll(p => p._id == view.User.Schooling._id).FirstOrDefault(),
+          PhotoUrl = view.User.PhotoUrl,
+          PhoneFixed = view.User.PhoneFixed,
+          DocumentID = view.User.DocumentID,
+          DocumentCTPF = view.User.DocumentCTPF,
+          Sex = view.User.Sex
+        };
+
+        var manager = servicePerson.GetAll(p => p._id == view.Person.Manager._id).
+          Select(p => new BaseFields()
+          {
+            _id = p._id,
+            Name = p.User.Name,
+            Mail = p.User.Mail
+          }).FirstOrDefault();
+
+        var salaryScale = serviceSalaryScale.GetAll(p => p._id == view.Person.SalaryScales._idSalaryScale)
+          .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
+          .FirstOrDefault();
+
+        var person = new Person()
+        {
+          StatusUser = view.Person.StatusUser,
+          Company = serviceCompany.GetAll(p => p._id == view.Person.Company._id).FirstOrDefault(),
+          Occupation = (view.Person.Occupation == null) ? null : serviceOccupation.GetAll(p => p._id == view.Person.Occupation._id).FirstOrDefault(),
+          Manager = manager,
+          DateLastOccupation = view.Person.DateLastOccupation,
+          Salary = view.Person.Salary,
+          DateLastReadjust = view.Person.DateLastReadjust,
+          DateResignation = view.Person.DateResignation,
+          TypeJourney = view.Person.TypeJourney,
+          Establishment = (view.Person.Establishment == null) ? null : serviceEstablishment.GetAll(p => p._id == view.Person.Establishment._id).FirstOrDefault(),
+          HolidayReturn = view.Person.HolidayReturn,
+          MotiveAside = view.Person.MotiveAside,
+          TypeUser = view.Person.TypeUser,
+          Registration = view.Person.Registration,
+          SalaryScales = salaryScale
+        };
+
+        person.User = user;
+
+        servicePerson.Update(person, null);
+        serviceUser.Update(user, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        if (occupation.SalaryScales != null)
+          return occupation.SalaryScales
+            .Select(p => new ViewListSalaryScalePerson
+            {
+              _idSalaryScale = p._idSalaryScale,
+              NameSalaryScale = p.NameSalaryScale
+            }).OrderBy(p => p.NameSalaryScale).ToList();
+        else
+          return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+        total = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail
+          .Select(item => new ViewListPersonTeam()
+          {
+            Name = item.User.Name,
+            _idPerson = item._id,
+            Occupation = (item.Occupation == null) ? null : item.Occupation.Name,
+            DataAdm = item.User.DateAdm
+          }).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+
     public List<ViewListPersonCrud> GetPersons(ref long total, int count, int page, string filter, EnumTypeUser type)
     {
       try
@@ -361,7 +553,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<SalaryScalePerson> ListSalaryScale(string idoccupation)
+    public List<SalaryScalePerson> ListSalaryScaleOld(string idoccupation)
     {
       try
       {
@@ -625,7 +817,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<ViewPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page)
+    public List<ViewPersonTeam> GetPersonTeamOld(ref long total, string idPerson, string filter, int count, int page)
     {
       try
       {
@@ -794,7 +986,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public string AddPersonUser(ViewPersonUser view)
+    public string AddPersonUserOld(ViewPersonUser view)
     {
       try
       {
@@ -831,7 +1023,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public string UpdatePersonUser(ViewPersonUser view)
+    public string UpdatePersonUserOld(ViewPersonUser view)
     {
       try
       {

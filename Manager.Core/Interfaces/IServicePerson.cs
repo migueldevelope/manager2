@@ -21,7 +21,7 @@ namespace Manager.Core.Interfaces
     ViewCrudPerson GetPersonCrud(string id);
     ViewCrudPerson NewPerson(ViewCrudPerson view);
     ViewCrudPerson UpdatePerson(ViewCrudPerson person);
-    List<SalaryScalePerson> ListSalaryScale(string idoccupation);
+
 
     List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page);
     List<ViewListPerson> ListManager(ref long total, string filter, int count, int page);
@@ -29,7 +29,14 @@ namespace Manager.Core.Interfaces
 
     List<ViewListPerson> GetPersons(string idcompany, string filter);
 
+    string AddPersonUser(ViewCrudPersonUser view);
+    string UpdatePersonUser(ViewCrudPersonUser view);
+    List<ViewListPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page);
+    List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation);
+
+
     #region Old
+    List<SalaryScalePerson> ListSalaryScaleOld(string idoccupation);
     List<Person> ListPerson(Expression<Func<Person, bool>> filter);
     ViewPersonHead Head(string idperson);
     Person NewPersonOld(Person person);
@@ -39,7 +46,7 @@ namespace Manager.Core.Interfaces
     Person UpdatePersonView(Person person);
     void SetPhoto(string idPerson, string url);
     ViewPersonDetail GetPersonDetail(string idPerson);
-    List<ViewPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page);
+    List<ViewPersonTeam> GetPersonTeamOld(ref long total, string idPerson, string filter, int count, int page);
     string GetPhoto(string idPerson);
     List<ViewPersonList> GetPersons(string filter);
     List<Person> GetPersonsCrud(EnumTypeUser type, ref long total, string filter, int count, int page);
@@ -48,8 +55,8 @@ namespace Manager.Core.Interfaces
 
     List<Person> ListAll();
 
-    string AddPersonUser(ViewPersonUser view);
-    string UpdatePersonUser(ViewPersonUser view);
+    string AddPersonUserOld(ViewPersonUser view);
+    string UpdatePersonUserOld(ViewPersonUser view);
     #endregion
   }
 }

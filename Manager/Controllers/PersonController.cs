@@ -98,6 +98,66 @@ namespace Manager.Controllers
       return service.UpdatePerson(view);
     }
 
+    /// <summary>
+    /// Lista time de gestor
+    /// </summary>
+    /// <param name="idPerson">Identificador gestor</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("directteam/{idPerson}")]
+    public List<ViewListPersonTeam> GetPersonTeam(string idPerson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetPersonTeam(ref total, idPerson, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+
+    /// <summary>
+    /// Inclusao de usuario e contrato
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addpersonuser")]
+    public string AddPersonUser([FromBody]ViewCrudPersonUser view)
+    {
+      return service.AddPersonUser(view);
+    }
+
+    /// <summary>
+    /// Atualiza informãções de usuario e contrato
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatepersonuser")]
+    public string UpdatePersonUser([FromBody]ViewCrudPersonUser view)
+    {
+      return service.UpdatePersonUser(view);
+    }
+
+    /// <summary>
+    /// Lista as tabelas salarias filtrando o cargo
+    /// </summary>
+    /// <param name="idoccupation">Identificador cargo</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listsalaryscale/{idoccupation}")]
+    public List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation)
+    {
+      return service.ListSalaryScale(idoccupation);
+    }
+
+
     #endregion
 
     #region Person Old
@@ -112,11 +172,11 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("directteam/{idPerson}")]
-    public List<ViewPersonTeam> GetPersonTeam(string idPerson, int count = 10, int page = 1, string filter = "")
+    [Route("old/directteam/{idPerson}")]
+    public List<ViewPersonTeam> GetPersonTeamOld(string idPerson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetPersonTeam(ref total, idPerson, filter, count, page);
+      var result = service.GetPersonTeamOld(ref total, idPerson, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -226,26 +286,26 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpPost]
-    [Route("addpersonuser")]
-    public string AddPersonUser([FromBody]ViewPersonUser view)
+    [Route("old/addpersonuser")]
+    public string AddPersonUserOld([FromBody]ViewPersonUser view)
     {
-      return service.AddPersonUser(view);
+      return service.AddPersonUserOld(view);
     }
 
     [Authorize]
     [HttpPut]
-    [Route("updatepersonuser")]
-    public string UpdatePersonUser([FromBody]ViewPersonUser view)
+    [Route("old/updatepersonuser")]
+    public string UpdatePersonUserOld([FromBody]ViewPersonUser view)
     {
-      return service.UpdatePersonUser(view);
+      return service.UpdatePersonUserOld(view);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("listsalaryscale/{idoccupation}")]
-    public List<SalaryScalePerson> ListSalaryScale(string idoccupation)
+    [Route("old/listsalaryscale/{idoccupation}")]
+    public List<SalaryScalePerson> ListSalaryScaleOld(string idoccupation)
     {
-      return service.ListSalaryScale(idoccupation);
+      return service.ListSalaryScaleOld(idoccupation);
     }
     #endregion
 
