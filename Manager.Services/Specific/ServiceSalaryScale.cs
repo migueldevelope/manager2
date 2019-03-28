@@ -286,6 +286,8 @@ namespace Manager.Services.Specific
       try
       {
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+        if (salaryScale == null)
+          throw new Exception("Salary scale not available!");
         var result = new ViewCrudGrade();
         foreach (var grade in salaryScale.Grades)
           if (grade._id == id)

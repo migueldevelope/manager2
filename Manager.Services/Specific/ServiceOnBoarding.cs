@@ -102,6 +102,7 @@ namespace Manager.Services.Specific
             {
               _idPerson = p._id,
               Name = p.User.Name,
+              OccupationName = p.Occupation.Name,
               StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
             }).ToList();
         List<ViewListOnBoarding> detail = new List<ViewListOnBoarding>();

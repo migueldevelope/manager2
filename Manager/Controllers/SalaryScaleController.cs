@@ -182,7 +182,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de Sucesso</returns>
     [Authorize]
     [HttpPut]
-    [Route("updategradeposition")]
+    [Route("updategradeposition/{idsalaryscale}/{idgrade}")]
     public IActionResult UpdateGradePosition(string idsalaryscale, string idgrade, int position)
     {
       return Ok(service.UpdateGradePosition(idsalaryscale, idgrade, position));
@@ -216,5 +216,6 @@ namespace Manager.Controllers
       return Ok(service.UpdateStep(view));
     }
     #endregion
+
   }
 }
