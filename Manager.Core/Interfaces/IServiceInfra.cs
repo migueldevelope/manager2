@@ -30,6 +30,7 @@ namespace Manager.Core.Interfaces
     ViewCrudMapGroupScope GetMapGroupScopeById(string idgroup, string idscope);
     ViewCrudGroup GetGroup(string idcompany, string filterName);
     ViewCrudOccupation GetOccupation(string id);
+    string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list);
     ViewCrudOccupation GetOccupation(string idcompany, string filterName);
     List<ViewListGroup> GetGroups();
     List<ViewListOccupation> GetOccupations();
@@ -59,7 +60,7 @@ namespace Manager.Core.Interfaces
     List<ViewSkills> GetSkills(string company, ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkillsGroup(string idgroup, string idcompany, ref long total, string filter, int count, int page);
     List<ViewSkills> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref long total, string filter, int count, int page);
-    string AddSpecificRequirements(string idoccupation, ViewAddSpecificRequirements view);
+    string AddSpecificRequirements(string idoccupation, ViewCrudSpecificRequirements view);
     string DeleteEssential(string idcompany, string id);
     string DeleteSkill(string idskill);
     string DeleteSphere(string idsphere);
@@ -93,9 +94,8 @@ namespace Manager.Core.Interfaces
     string AddEssential(ViewCrudEssential view);
     string AddSkills(List<ViewAddSkill> view);
     string AddMapGroupSkill(ViewCrudMapGroupSkill view);
-    string AddOccupationSkill(ViewAddOccupationSkill view);
+    string AddOccupationSkill(ViewCrudOccupationSkill view);
     string AddOccupationActivities(ViewCrudOccupationActivities view);
-    string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list);
     string UpdateMapGroupSchooling(string idgroup, ViewCrudSchooling view);
     string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view);
     string UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view);
@@ -197,6 +197,7 @@ namespace Manager.Core.Interfaces
     string UpdateProcessLevelOneOld(ProcessLevelOne model);
     string UpdateProcessLevelTwoOld(ProcessLevelTwo model);
     string UpdateCBOOld(Cbo model);
+    string AddSpecificRequirementsOld(string idoccupation, ViewAddSpecificRequirements view);
     #endregion
 
   }

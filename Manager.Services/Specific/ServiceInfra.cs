@@ -3373,7 +3373,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddSpecificRequirements(string idoccupation, ViewAddSpecificRequirements view)
+    public string AddSpecificRequirements(string idoccupation, ViewCrudSpecificRequirements view)
     {
       try
       {
@@ -3390,32 +3390,26 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddOccupationSkill(ViewAddOccupationSkill view)
+    public string AddOccupationSkill(ViewCrudOccupationSkill view)
     {
       try
       {
-        if (view.Skill._id == null)
+        var occupation = serviceOccupation.GetAll(p => p._id == view._idOccupation).FirstOrDefault();
+        var skill = serviceSkill.GetAll(p => p._id == view.Skill._id).FirstOrDefault();
+
+        if (view.Skill == null)
         {
-          var skill = AddSkill(new ViewAddSkill()
+          skill = AddSkillInternal(new ViewAddSkill()
           {
             Name = view.Skill.Name,
             Concept = view.Skill.Concept,
             TypeSkill = view.Skill.TypeSkill
           });
-          view.Skill = new Skill()
-          {
-            _id = skill._id,
-            Name = skill.Name,
-            Concept = skill.Concept,
-            _idAccount = _user._idAccount,
-            Status = EnumStatus.Enabled,
-            TypeSkill = skill.TypeSkill
-          };
         }
 
-        view.Occupation.Skills.Add(view.Skill);
-        serviceOccupation.Update(view.Occupation, null);
-        UpdateOccupationAll(view.Occupation);
+        occupation.Skills.Add(skill);
+        serviceOccupation.Update(occupation, null);
+        UpdateOccupationAll(occupation);
         return "ok";
       }
       catch (Exception e)
@@ -4678,7 +4672,7 @@ namespace Manager.Services.Specific
           {
             _id = p._id,
             Name = p.Name,
-            SalaryScales = p.SalaryScales.Select(s => new ViewCrudSalaryScaleOccupation()
+            SalaryScales = (p.SalaryScales == null) ? null : p.SalaryScales.Select(s => new ViewCrudSalaryScaleOccupation()
             {
               _id = s._id,
               Name = s.NameSalaryScale,
@@ -4903,12 +4897,13 @@ namespace Manager.Services.Specific
       try
       {
         var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
-        var schooling = serviceSchooling.GetAll(p => p._id == view._id).FirstOrDefault();
+        //var schooling = serviceSchooling.GetAll(p => p._id == view._id).FirstOrDefault();
 
+        var schoolOld = occupation.Schooling.Where(p => p._id == view._id).FirstOrDefault();
+        var schooling = schoolOld;
         schooling.Complement = view.Complement;
         schooling.Type = view.Type;
 
-        var schoolOld = occupation.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
         occupation.Schooling.Remove(schoolOld);
         occupation.Schooling.Add(schooling);
 
@@ -5423,18 +5418,11 @@ namespace Manager.Services.Specific
             Name = item.Name,
             Area = new ViewListArea() { _id = item.Area._id, Name = item.Area.Name },
             Order = item.Order,
-            Process = item.Process == null ? null : item.Process.Select(x => new ViewListProcessLevelTwo()
+            Process = serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).Select(x => new ViewListProcessLevelTwo()
             {
               _id = x._id,
               Name = x.Name,
-              Order = x.Order,
-              ProcessLevelOne = new ViewListProcessLevelOne()
-              {
-                _id = x.ProcessLevelOne._id,
-                Name = x.Name,
-                Order = x.Order,
-                Area = new ViewListArea() { _id = item.Area._id, Name = item.Area.Name }
-              }
+              Order = x.Order
             }).ToList()
           };
 

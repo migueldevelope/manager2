@@ -776,10 +776,16 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// Inclui os requisitos no cargo
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <param name="idoccupation">Identificador do cargo</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addspecificrequirements/{idoccupation}")]
-    public string AddSpecificRequirements([FromBody]ViewAddSpecificRequirements view, string idoccupation)
+    public string AddSpecificRequirements([FromBody]ViewCrudSpecificRequirements view, string idoccupation)
     {
       return service.AddSpecificRequirements(idoccupation, view);
     }
@@ -871,18 +877,28 @@ namespace Manager.Controllers
       return service.AddOccupation(view);
     }
 
-    //[Authorize]
-    //[HttpPost]
-    //[Route("addoccupationactivitieslist")]
-    //public string AddOccupationActivitiesList([FromBody]List<ViewCrudOccupationActivities> list)
-    //{
-    //  return service.AddOccupationActivitiesList(list);
-    //}
+    /// <summary>
+    /// Inclusão de entregas em lote
+    /// </summary>
+    /// <param name="list">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addoccupationactivitieslist")]
+    public string AddOccupationActivitiesList([FromBody]List<ViewCrudOccupationActivities> list)
+    {
+      return service.AddOccupationActivitiesList(list);
+    }
 
+    /// <summary>
+    /// Inclusão de skill no occupation
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addoccupationskill")]
-    public string AddOccupationSkill([FromBody]ViewAddOccupationSkill view)
+    public string AddOccupationSkill([FromBody]ViewCrudOccupationSkill view)
     {
       return service.AddOccupationSkill(view);
     }
@@ -1249,6 +1265,14 @@ namespace Manager.Controllers
     {
       service.AddSkills(view);
       return "ok";
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/addspecificrequirements/{idoccupation}")]
+    public string AddSpecificRequirementsOld([FromBody]ViewAddSpecificRequirements view, string idoccupation)
+    {
+      return service.AddSpecificRequirementsOld(idoccupation, view);
     }
 
     #endregion
