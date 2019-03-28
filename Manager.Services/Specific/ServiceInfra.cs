@@ -4678,6 +4678,13 @@ namespace Manager.Services.Specific
           {
             _id = p._id,
             Name = p.Name,
+            SalaryScales = p.SalaryScales.Select(s => new ViewCrudSalaryScaleOccupation()
+              {
+                _id = s._id,
+                Name = s.NameSalaryScale,
+                NameGrade = s.NameGrade,
+                _idGrade = s._idGrade
+              }).ToList(),
             Group = new ViewListGroup()
             {
               _id = p.Group._id,
