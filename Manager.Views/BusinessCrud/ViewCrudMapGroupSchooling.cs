@@ -2,7 +2,7 @@
 {
   public class ViewCrudMapGroupSchooling
   {
-    public string idGroup { get; set; }
+    public string _idGroup { get; set; }
     public ViewCrudSchooling Schooling { get; set; }
   }
 }

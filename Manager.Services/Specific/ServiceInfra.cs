@@ -3224,7 +3224,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var group = serviceGroup.GetAll(p => p._id == view.idGroup).FirstOrDefault();
+        var group = serviceGroup.GetAll(p => p._id == view._idGroup).FirstOrDefault();
         var schooling = serviceSchooling.GetAll(p => p._id == view.Schooling._id).FirstOrDefault();
 
         schooling.Complement = view.Schooling.Complement;
@@ -5360,25 +5360,33 @@ namespace Manager.Services.Specific
           Company = new ViewListCompany() { _id = group.Company._id, Name = group.Company.Name },
           Axis = new ViewListAxis() { _id = group.Axis._id, Name = group.Axis.Name, TypeAxis = group.Axis.TypeAxis },
           Sphere = new ViewListSphere() { _id = group.Sphere._id, Name = group.Sphere.Name, TypeSphere = group.Sphere.TypeSphere },
-          Schooling = new List<ViewListSchooling>(),
-          Scope = new List<ViewListScope>(),
-          Skills = new List<ViewListSkill>(),
-          SkillsCompany = new List<ViewListSkill>(),
+          Schooling = group.Schooling?.OrderBy(o => o.Order).Select(p => new ViewListSchooling()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Order = p.Order
+          }).ToList(),
+          Scope = group.Scope?.OrderBy(o => o.Order).Select(p => new ViewListScope()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Order = p.Order
+          }).ToList(),
+          Skills = group.Skills?.OrderBy(o => o.Name).Select(p => new ViewListSkill()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Concept = p.Concept,
+            TypeSkill = p.TypeSkill
+          }).ToList(),
+          SkillsCompany = group.Company.Skills?.OrderBy(o => o.Name).Select(p => new ViewListSkill()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Concept = p.Concept,
+            TypeSkill = p.TypeSkill
+          }).ToList()
         };
-
-
-        foreach (var item in group.Schooling)
-          view.Schooling.Add(new ViewListSchooling() { _id = item._id, Name = item.Name, Order = item.Order });
-
-        foreach (var item in group.Scope)
-          view.Scope.Add(new ViewListScope() { _id = item._id, Name = item.Name });
-
-        foreach (var item in group.Skills)
-          view.Skills.Add(new ViewListSkill() { _id = item._id, Name = item.Name, Concept = item.Concept, TypeSkill = item.TypeSkill });
-
-        foreach (var item in company.Skills)
-          view.SkillsCompany.Add(new ViewListSkill() { _id = item._id, Name = item.Name, Concept = item.Concept, TypeSkill = item.TypeSkill });
-
         return view;
       }
       catch (Exception e)
@@ -5491,7 +5499,7 @@ namespace Manager.Services.Specific
             Axis = new ViewListAxis() { _id = group.Axis._id, Name = group.Axis.Name, TypeAxis = group.Axis.TypeAxis },
             Sphere = new ViewListSphere() { _id = group.Sphere._id, Name = group.Sphere.Name, TypeSphere = group.Sphere.TypeSphere }
           },
-          Activities = occupation.Activities.Select(x => new ViewListActivitie()
+          Activities = occupation.Activities?.OrderBy(o => o.Order).Select(x => new ViewListActivitie()
           {
             _id = x._id,
             Name = x.Name,
@@ -5514,7 +5522,7 @@ namespace Manager.Services.Specific
               }
             }
           }).ToList(),
-          Schooling = occupation.Schooling.Select(x => new ViewCrudSchooling()
+          Schooling = occupation.Schooling?.OrderBy(o => o.Order).Select(x => new ViewCrudSchooling()
           {
             _id = x._id,
             Name = x.Name,
@@ -5522,28 +5530,28 @@ namespace Manager.Services.Specific
             Type = x.Type,
             Order = x.Order
           }).ToList(),
-          Skills = occupation.Skills.Select(x => new ViewListSkill()
+          Skills = occupation.Skills?.OrderBy(o => o.Name).Select(x => new ViewListSkill()
           {
             _id = x._id,
             Name = x.Name,
             Concept = x.Concept,
             TypeSkill = x.TypeSkill
           }).ToList(),
-          SkillsCompany = company.Skills.Select(x => new ViewListSkill()
+          SkillsCompany = company.Skills?.OrderBy(o => o.Name).Select(x => new ViewListSkill()
           {
             _id = x._id,
             Name = x.Name,
             Concept = x.Concept,
             TypeSkill = x.TypeSkill
           }).ToList(),
-          SkillsGroup = group.Skills.Select(x => new ViewListSkill()
+          SkillsGroup = group.Skills?.OrderBy(o => o.Name).Select(x => new ViewListSkill()
           {
             _id = x._id,
             Name = x.Name,
             Concept = x.Concept,
             TypeSkill = x.TypeSkill
           }).ToList(),
-          ScopeGroup = group.Scope.Select(x => new ViewListScope()
+          ScopeGroup = group.Scope?.OrderBy(o => o.Order).Select(x => new ViewListScope()
           {
             _id = x._id,
             Name = x.Name,
