@@ -232,9 +232,13 @@ namespace Manager.Services.Specific
         ViewCrudOnboarding result = new ViewCrudOnboarding()
         {
           _id = onBoarding._id,
-          Person = new ViewListPerson()
+          Person = new ViewInfoPerson()
           {
             _id = onBoarding.Person._id,
+            TypeJourney = onBoarding.Person.TypeJourney,
+            Occupation = onBoarding.Person.Occupation.Name,
+            Name = onBoarding.Person.User.Name,
+            Manager = onBoarding.Person.Manager.Name,
             Company = new ViewListCompany() { _id = onBoarding.Person.Company._id, Name = onBoarding.Person.Company.Name },
             Establishment = new ViewListEstablishment() { _id = onBoarding.Person.Establishment._id, Name = onBoarding.Person.Establishment.Name },
             Registration = onBoarding.Person.Registration,
@@ -364,7 +368,14 @@ namespace Manager.Services.Specific
           Schoolings = onBoarding.Schoolings?.OrderBy(o => o.Schooling.Order).Select(p => new ViewCrudOnboardingSchooling()
           {
             _id = p._id,
-            Schooling = new ViewListSchooling() { _id = p.Schooling._id, Name = p.Schooling.Name, Order = p.Schooling.Order },
+            Schooling = new ViewCrudSchooling()
+            {
+              _id = p.Schooling._id,
+              Name = p.Schooling.Name,
+              Order = p.Schooling.Order,
+              Complement = p.Schooling._id,
+              Type = p.Schooling.Type
+            },
             CommentsManager = p.CommentsManager,
             CommentsPerson = p.CommentsPerson,
             StatusViewManager = p.StatusViewManager,
@@ -1178,9 +1189,13 @@ namespace Manager.Services.Specific
         var view = new ViewCrudOnboarding()
         {
           _id = onboarding._id,
-          Person = new ViewListPerson()
+          Person = new ViewInfoPerson()
           {
             _id = onboarding.Person._id,
+            TypeJourney = onboarding.Person.TypeJourney,
+            Occupation = onboarding.Person.Occupation.Name,
+            Name = onboarding.Person.User.Name,
+            Manager = onboarding.Person.Manager.Name,
             Registration = onboarding.Person.Registration,
             User = new ViewListUser()
             {
@@ -1320,11 +1335,13 @@ namespace Manager.Services.Specific
             }).ToList(),
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
-            Schooling = new ViewListSchooling()
+            Schooling = new ViewCrudSchooling()
             {
               _id = p.Schooling._id,
               Name = p.Schooling.Name,
-              Order = p.Schooling.Order
+              Order = p.Schooling.Order,
+              Complement = p.Schooling._id,
+              Type = p.Schooling.Type
             }
           }).ToList(),
           Activities = onboarding.Activities.Select(p => new ViewCrudOnboardingActivitie()
@@ -1459,6 +1476,53 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw e;
+      }
+    }
+
+    public List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        LogSave(idmanager, "List");
+        int skip = (count * (page - 1));
+        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p.Manager._id == idmanager
+        & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
+        .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
+        .ToList();
+
+        var detail = new List<OnBoarding>();
+        foreach (var item in list)
+        {
+
+
+          if ((item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation) || (item.Person.TypeJourney == EnumTypeJourney.OnBoarding))
+          {
+            if (item.OnBoarding == null)
+              detail.Add(new OnBoarding
+              {
+                Person = item.Person,
+                _id = null,
+                StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
+              });
+            else
+              detail.Add(item.OnBoarding);
+          }
+        }
+
+        total = detail.Count();
+        return detail.Skip(skip).Take(count)
+          .Select(p => new ViewListOnBoarding()
+          {
+            _id = p._id,
+            Name = p.Person.User.Name,
+            _idPerson = p.Person._id,
+            StatusOnBoarding = p.StatusOnBoarding,
+            OccupationName = p.Person.Occupation.Name
+          }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
       }
     }
 

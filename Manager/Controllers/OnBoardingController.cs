@@ -87,13 +87,11 @@ namespace Manager.Controllers
     /// <returns>Objeto de listagem do OnBoarding</returns>
     [Authorize]
     [HttpGet]
-    [Route("edit/{id}")]
+    [Route("get/{id}")]
     public ViewCrudOnboarding GetOnBoarding(string id)
     {
       return service.GetOnBoarding(id);
     }
-
-
 
     [Authorize]
     [HttpDelete]
@@ -114,10 +112,96 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpDelete]
-    [Route("old/delete/{idperson}")]
+    [Route("delete/{idperson}")]
     public string RemoveOnBoarding(string idperson)
     {
       return service.RemoveOnBoarding(idperson);
+    }
+
+
+    [Authorize]
+    [HttpPut]
+    [Route("update/{idperson}")]
+    public string UpdateOnBoarding([FromBody]ViewCrudOnboarding onboarding, string idperson)
+    {
+      return service.UpdateOnBoarding(onboarding, idperson);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listend/{idmanager}")]
+    public List<ViewListOnBoarding> ListOnBoardingsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListOnBoardingsEnd(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("list/{idmanager}")]
+    public List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListOnBoardingsWait(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("personend/{idmanager}")]
+    public List<ViewListOnBoarding> PersonOnBoardingsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.PersonOnBoardingsEnd(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("personwait/{idmanager}")]
+    public ViewListOnBoarding PersonOnBoardingWait(string idmanager)
+    {
+      return service.PersonOnBoardingWait(idmanager);
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("getlistexclud")]
+    public List<ViewListOnBoarding> GetListExclud(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetListExclud(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("updatecomments/{idonboarding}/{iditem}")]
+    public string UpdateComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
+    {
+      return service.UpdateComments(idonboarding, iditem, comments);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listcomments/{idonboarding}/{iditem}")]
+    public List<ViewCrudComment> GetListComments(string idonboarding, string iditem)
+    {
+      return service.GetListComments(idonboarding, iditem);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("addcomments/{idonboarding}/{iditem}")]
+    public List<ViewCrudComment> AddComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
+    {
+      return service.AddComments(idonboarding, iditem, comments);
     }
 
 

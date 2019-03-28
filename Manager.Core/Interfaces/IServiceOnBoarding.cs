@@ -12,6 +12,8 @@ namespace Manager.Core.Interfaces
   public interface IServiceOnBoarding
   {
     #region OnBoardgin
+    List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page);
+
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     List<ViewListOnBoarding> ListOnBoarding(string idmanager, ref long total, string filter, int count, int page);
