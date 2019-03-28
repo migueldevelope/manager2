@@ -87,7 +87,7 @@ namespace Manager.Controllers
     /// <returns>Objeto de listagem do OnBoarding</returns>
     [Authorize]
     [HttpGet]
-    [Route("get/{id}")]
+    [Route("edit/{id}")]
     public ViewCrudOnboarding GetOnBoarding(string id)
     {
       return service.GetOnBoarding(id);

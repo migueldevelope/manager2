@@ -246,6 +246,48 @@ namespace Manager.Services.Specific
               _id = onBoarding.Person.User._id
             }
           },
+          Occupation = new ViewListOccupation()
+          {
+            _id = onBoarding.Person.Occupation._id,
+            Name = onBoarding.Person.Occupation.Name,
+            Line = onBoarding.Person.Occupation.Line,
+            Company = new ViewListCompany() { _id = onBoarding.Person.Occupation.Group.Company._id, Name = onBoarding.Person.Occupation.Group.Company.Name },
+            Group = new ViewListGroup()
+            {
+              _id = onBoarding.Person.Occupation.Group._id,
+              Name = onBoarding.Person.Occupation.Group.Name,
+              Line = onBoarding.Person.Occupation.Group.Line,
+              Axis = new ViewListAxis()
+              {
+                _id = onBoarding.Person.Occupation.Group.Axis._id,
+                Name = onBoarding.Person.Occupation.Group.Axis.Name,
+                TypeAxis = onBoarding.Person.Occupation.Group.Axis.TypeAxis
+              },
+              Sphere = new ViewListSphere()
+              {
+                _id = onBoarding.Person.Occupation.Group.Sphere._id,
+                Name = onBoarding.Person.Occupation.Group.Sphere.Name,
+                TypeSphere = onBoarding.Person.Occupation.Group.Sphere.TypeSphere
+              }              
+            },
+            Process = onBoarding.Person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Order = p.Order,
+              ProcessLevelOne = new ViewListProcessLevelOne()
+              {
+                _id = p.ProcessLevelOne._id,
+                Name = p.ProcessLevelOne.Name,
+                Order = p.ProcessLevelOne.Order,
+                Area = new ViewListArea()
+                {
+                  _id = p.ProcessLevelOne.Area._id,
+                  Name = p.ProcessLevelOne.Area.Name
+                }
+              }
+            }).ToList()
+          },
           CommentsPerson = onBoarding.CommentsPerson,
           CommentsManager = onBoarding.CommentsManager,
           CommentsEnd = onBoarding.CommentsEnd,

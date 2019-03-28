@@ -7,6 +7,7 @@ namespace Manager.Views.BusinessCrud
   public class ViewCrudOnboarding : _ViewCrud
   {
     public ViewListPerson Person { get; set; }
+    public ViewListOccupation Occupation { get; set; }
     public string CommentsPerson { get; set; }
     public string CommentsManager { get; set; }
     public string CommentsEnd { get; set; }
