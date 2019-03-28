@@ -16,6 +16,8 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
 
+    ViewMapOccupation GetMapOccupation(string id);
+    ViewCrudProcessLevelTwo GetListProcessLevelTwoById(string id);
     List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea);
     List<ViewListSkill> GetEssential(string idcompany);
     ViewCrudArea GetAreasById(string id);
@@ -25,7 +27,7 @@ namespace Manager.Core.Interfaces
     ViewCrudSchooling GetSchoolingById(string id);
     ViewCrudGroup GetGroup(string id);
     ViewMapGroup GetMapGroup(string id);
-    List<ViewCrudMapGroupScope> GetMapGroupScopeById(string id);
+    ViewCrudMapGroupScope GetMapGroupScopeById(string idgroup, string idscope);
     ViewCrudGroup GetGroup(string idcompany, string filterName);
     ViewCrudOccupation GetOccupation(string id);
     ViewCrudOccupation GetOccupation(string idcompany, string filterName);

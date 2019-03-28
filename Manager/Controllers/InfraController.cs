@@ -87,16 +87,44 @@ namespace Manager.Controllers
     }
 
     /// <summary>
-    /// Lista escopos do grupo
+    /// Retorna o mapa do cargo
     /// </summary>
-    /// <param name="id">Identificador grupo</param>
+    /// <param name="id">Identificador do mapa</param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("getmapgroupscope/{id}")]
-    public List<ViewCrudMapGroupScope> GetMapGroupScopeById(string id)
+    [Route("getmapoccupation/{id}")]
+    public ViewMapOccupation GetMapOccupation(string id)
     {
-      return service.GetMapGroupScopeById(id);
+      return service.GetMapOccupation(id);
+    }
+
+
+    /// <summary>
+    /// Retorna o processo nivel 2
+    /// </summary>
+    /// <param name="id">Identificador do processo nivel 2</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getlistprocessleveltwobyid/{id}")]
+    public ViewCrudProcessLevelTwo GetListProcessLevelTwoById(string id)
+    {
+      return service.GetListProcessLevelTwoById(id);
+    }
+
+    /// <summary>
+    /// Lista escopos do grupo
+    /// </summary>
+    /// <param name="idgroup">Identificador grupo</param>
+    /// /// <param name="idscope">Identificador escopo</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getmapgroupscope/{idgroup}/{idscope}")]
+    public ViewCrudMapGroupScope GetMapGroupScopeById(string idgroup, string idscope)
+    {
+      return service.GetMapGroupScopeById(idgroup, idscope);
     }
 
     /// <summary>

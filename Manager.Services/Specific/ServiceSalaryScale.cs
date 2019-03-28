@@ -60,7 +60,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListSalaryScale> detail = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "Name").Result
+        List<ViewListSalaryScale> detail = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
           .Select(x => new ViewListSalaryScale()
           {
             _id = x._id,
@@ -186,7 +186,7 @@ namespace Manager.Services.Specific
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view.SalaryScale._id).Result;
         view.Order = 1;
         if (salaryScale.Grades.Count != 0)
-          view.Order = salaryScale.Grades.Max(p => p.Order)+1;
+          view.Order = salaryScale.Grades.Max(p => p.Order) + 1;
 
         Grade grade = new Grade
         {
@@ -307,8 +307,31 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale,null);
+        serviceSalaryScale.Update(salaryScale, null);
         return "Step altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListGradeFilter> ListGrades(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        var salaryScale = serviceSalaryScale.GetAll(p => p.Company._id == idcompany).FirstOrDefault();
+        if (salaryScale.Grades == null)
+          return null;
+
+
+        return salaryScale.Grades.Select(p => new ViewListGradeFilter()
+        {
+          idGrade = p._id,
+          NameGrade = p.Name,
+          idSalaryScale = salaryScale._id,
+          NameSalaryScale = salaryScale.Name
+        }).ToList();
       }
       catch (Exception e)
       {

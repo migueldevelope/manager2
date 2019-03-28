@@ -4679,12 +4679,12 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name,
             SalaryScales = p.SalaryScales.Select(s => new ViewCrudSalaryScaleOccupation()
-              {
-                _id = s._id,
-                Name = s.NameSalaryScale,
-                NameGrade = s.NameGrade,
-                _idGrade = s._idGrade
-              }).ToList(),
+            {
+              _id = s._id,
+              Name = s.NameSalaryScale,
+              NameGrade = s.NameGrade,
+              _idGrade = s._idGrade
+            }).ToList(),
             Group = new ViewListGroup()
             {
               _id = p.Group._id,
@@ -5372,7 +5372,7 @@ namespace Manager.Services.Specific
           view.Skills.Add(new ViewListSkill() { _id = item._id, Name = item.Name, Concept = item.Concept, TypeSkill = item.TypeSkill });
 
         foreach (var item in company.Skills)
-          view.Skills.Add(new ViewListSkill() { _id = item._id, Name = item.Name, Concept = item.Concept, TypeSkill = item.TypeSkill });
+          view.SkillsCompany.Add(new ViewListSkill() { _id = item._id, Name = item.Name, Concept = item.Concept, TypeSkill = item.TypeSkill });
 
         return view;
       }
@@ -5383,26 +5383,24 @@ namespace Manager.Services.Specific
 
     }
 
-    public List<ViewCrudMapGroupScope> GetMapGroupScopeById(string id)
+    public ViewCrudMapGroupScope GetMapGroupScopeById(string idgroup, string idscope)
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == id).FirstOrDefault();
+        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
 
-        if (group == null)
-          return null;
 
-        return group.Scope
+        return group.Scope.Where(p => p._id == idscope)
         .Select(p => new ViewCrudMapGroupScope()
         {
-          _idGroup = id,
+          _idGroup = idgroup,
           Scope = new ViewCrudScope()
           {
             _id = p._id,
             Name = p.Name,
             Order = p.Order
           }
-        }).ToList();
+        }).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -5414,27 +5412,38 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceProcessLevelOne.GetAll(p => p.Area._id == idarea).
-        Select(p => new ViewListProcessLevelOneByArea()
+        var list = serviceProcessLevelOne.GetAll(p => p.Area._id == idarea).ToList();
+
+        var result = new List<ViewListProcessLevelOneByArea>();
+        foreach (var item in list)
         {
-          _id = p._id,
-          Name = p.Name,
-          Area = new ViewListArea() { _id = p.Area._id, Name = p.Area.Name },
-          Order = p.Order,
-          Process = p.Process.Select(x => new ViewListProcessLevelTwo()
+          var view = new ViewListProcessLevelOneByArea()
           {
-            _id = x._id,
-            Name = x.Name,
-            Order = x.Order,
-            ProcessLevelOne = new ViewListProcessLevelOne()
+            _id = item._id,
+            Name = item.Name,
+            Area = new ViewListArea() { _id = item.Area._id, Name = item.Area.Name },
+            Order = item.Order,
+            Process = item.Process == null ? null : item.Process.Select(x => new ViewListProcessLevelTwo()
             {
-              _id = x.ProcessLevelOne._id,
+              _id = x._id,
               Name = x.Name,
               Order = x.Order,
-              Area = new ViewListArea() { _id = p.Area._id, Name = p.Area.Name }
-            }
-          }).ToList()
-        }).ToList();
+              ProcessLevelOne = new ViewListProcessLevelOne()
+              {
+                _id = x.ProcessLevelOne._id,
+                Name = x.Name,
+                Order = x.Order,
+                Area = new ViewListArea() { _id = item.Area._id, Name = item.Area.Name }
+              }
+            }).ToList()
+          };
+
+          result.Add(view);
+        }
+
+
+
+        return result;
       }
       catch (Exception e)
       {
@@ -5454,6 +5463,126 @@ namespace Manager.Services.Specific
           Order = area.Order,
           Company = new ViewListCompany() { _id = area.Company._id, Name = area.Company.Name }
         };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewMapOccupation GetMapOccupation(string id)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetAll(p => p._id == id).FirstOrDefault();
+
+        var group = serviceGroup.GetAll(p => p._id == occupation.Group._id).FirstOrDefault();
+        var company = serviceCompany.GetAll(p => p._id == group.Company._id).FirstOrDefault();
+
+        var map = new ViewMapOccupation()
+        {
+          _id = occupation._id,
+          Name = occupation.Name,
+          SpecificRequirements = occupation.SpecificRequirements,
+          Company = new ViewListCompany() { _id = company._id, Name = company.Name },
+          Group = new ViewListGroup()
+          {
+            _id = group._id,
+            Name = group.Name,
+            Line = group.Line,
+            Axis = new ViewListAxis() { _id = group.Axis._id, Name = group.Axis.Name, TypeAxis = group.Axis.TypeAxis },
+            Sphere = new ViewListSphere() { _id = group.Sphere._id, Name = group.Sphere.Name, TypeSphere = group.Sphere.TypeSphere }
+          },
+          Activities = occupation.Activities.Select(x => new ViewListActivitie()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Order = x.Order
+          }).ToList(),
+          Process = occupation.Process.Select(x => new ViewListProcessLevelTwo()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Order = x.Order,
+            ProcessLevelOne = new ViewListProcessLevelOne()
+            {
+              _id = x.ProcessLevelOne._id,
+              Name = x.ProcessLevelOne.Name,
+              Order = x.ProcessLevelOne.Order,
+              Area = new ViewListArea()
+              {
+                _id = x.ProcessLevelOne.Area._id,
+                Name = x.ProcessLevelOne.Area.Name
+              }
+            }
+          }).ToList(),
+          Schooling = occupation.Schooling.Select(x => new ViewCrudSchooling()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Complement = x.Complement,
+            Type = x.Type,
+            Order = x.Order
+          }).ToList(),
+          Skills = occupation.Skills.Select(x => new ViewListSkill()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Concept = x.Concept,
+            TypeSkill = x.TypeSkill
+          }).ToList(),
+          SkillsCompany = company.Skills.Select(x => new ViewListSkill()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Concept = x.Concept,
+            TypeSkill = x.TypeSkill
+          }).ToList(),
+          SkillsGroup = group.Skills.Select(x => new ViewListSkill()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Concept = x.Concept,
+            TypeSkill = x.TypeSkill
+          }).ToList(),
+          ScopeGroup = group.Scope.Select(x => new ViewListScope()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Order = x.Order
+          }).ToList()
+        };
+
+        return map;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudProcessLevelTwo GetListProcessLevelTwoById(string id)
+    {
+      try
+      {
+        return serviceProcessLevelTwo.GetAll(p => p._id == id).Select(p => new ViewCrudProcessLevelTwo()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Comments = p.Comments,
+          Order = p.Order,
+          ProcessLevelOne = new ViewListProcessLevelOne()
+          {
+            _id = p.ProcessLevelOne._id,
+            Name = p.ProcessLevelOne.Name,
+            Order = p.ProcessLevelOne.Order,
+            Area = new ViewListArea()
+            {
+              _id = p.ProcessLevelOne.Area._id,
+              Name = p.ProcessLevelOne.Area.Name
+            }
+          }
+        }).FirstOrDefault();
       }
       catch (Exception e)
       {

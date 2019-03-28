@@ -56,6 +56,25 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
+
+    /// <summary>
+    /// Lista todos os grades para filtro
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listgrades/{idcompany}")]
+    public List<ViewListGradeFilter> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListGrades(idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
     /// <summary>
     /// Buscar objeto de manutenção da tabela salarial
     /// </summary>

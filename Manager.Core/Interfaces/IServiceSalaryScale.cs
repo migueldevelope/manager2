@@ -8,6 +8,9 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceSalaryScale
   {
+    #region SalaryScale
+    List<ViewListGradeFilter> ListGrades(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    #endregion
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     List<ViewListSalaryScale> List(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
