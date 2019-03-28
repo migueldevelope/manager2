@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
-using Manager.Core.Business;
-using Manager.Core.BusinessModel;
+﻿using System.Collections.Generic;
 using Manager.Core.Interfaces;
-using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Authorization;
@@ -53,25 +46,6 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.List(idcompany, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    /// <summary>
-    /// Lista todos os grades para filtro
-    /// </summary>
-    /// <param name="idcompany">Identificador da empresa</param>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("listgrades/{idcompany}")]
-    public List<ViewListGradeFilter> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListGrades(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -145,6 +119,24 @@ namespace Manager.Controllers
       return result;
     }
     /// <summary>
+    /// Lista todos os grades para filtro
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listgrades/{idcompany}")]
+    public List<ViewListGradeFilter> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListGrades(idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
     /// Buscar grade para alteração
     /// </summary>
     /// <param name="idsalaryscale">Identificador da tabela salarial</param>
@@ -180,6 +172,20 @@ namespace Manager.Controllers
     public IActionResult UpdateGrade([FromBody]ViewCrudGrade view)
     {
       return Ok(service.UpdateGrade(view));
+    }
+    /// <summary>
+    /// Alterar a ordem do grade
+    /// </summary>
+    /// <param name="idsalaryscale">Identificador da tabela salarial</param>
+    /// <param name="idgrade">Identificador do Grade</param>
+    /// <param name="position">Nova posicao</param>
+    /// <returns>Mensagem de Sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updategradeposition")]
+    public IActionResult UpdateGradePosition(string idsalaryscale, string idgrade, int position)
+    {
+      return Ok(service.UpdateGradePosition(idsalaryscale, idgrade, position));
     }
     /// <summary>
     /// Remover um grade da tabela salarial

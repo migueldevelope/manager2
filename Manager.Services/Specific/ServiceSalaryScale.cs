@@ -239,6 +239,30 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public string UpdateGradePosition(string idsalaryscale, string idgrade, int position)
+    {
+      try
+      {
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+        var list = new List<Grade>();
+        foreach (var grade in salaryScale.Grades)
+        {
+          if (grade._id == idgrade)
+          {
+            grade.Order = position;
+          }
+          list.Add(grade);
+        }
+        salaryScale.Grades = list;
+        serviceSalaryScale.Update(salaryScale, null);
+        return "Grade altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string RemoveGrade(string idsalaryscale, string id)
     {
       try

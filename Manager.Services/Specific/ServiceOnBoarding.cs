@@ -230,183 +230,128 @@ namespace Manager.Services.Specific
         ViewCrudOnboarding result = new ViewCrudOnboarding()
         {
           _id = onBoarding._id,
+          Person = new ViewListPerson()
+          {
+            _id = onBoarding.Person._id,
+            Company = new ViewListCompany() { _id = onBoarding.Person.Company._id, Name = onBoarding.Person.Company.Name },
+            Establishment = new ViewListEstablishment() { _id = onBoarding.Person.Establishment._id, Name = onBoarding.Person.Establishment.Name },
+            Registration = onBoarding.Person.Registration,
+            User = new ViewListUser()
+            {
+              Document = onBoarding.Person.User.Document,
+              Mail = onBoarding.Person.User.Mail,
+              Name = onBoarding.Person.User.Name,
+              Phone = onBoarding.Person.User.Phone,
+              _id = onBoarding.Person.User._id
+            }
+          },
           CommentsPerson = onBoarding.CommentsPerson,
           CommentsManager = onBoarding.CommentsManager,
           CommentsEnd = onBoarding.CommentsEnd,
           StatusOnBoarding = onBoarding.StatusOnBoarding,
-          SkillsCompany = new List<ViewCrudOnboardingSkill>(),
-          SkillsGroup = new List<ViewCrudOnboardingSkill>(),
-          SkillsOccupation = new List<ViewCrudOnboardingSkill>()
+          SkillsCompany = onBoarding.SkillsCompany?.OrderBy(o => o.Skill.Name).Select(p => new ViewCrudOnboardingSkill()
+          {
+            _id = p._id,
+            Skill = new ViewListSkill() { _id = p.Skill._id, Name = p.Skill.Name, TypeSkill = p.Skill.TypeSkill, Concept = p.Skill.Concept },
+            CommentsManager = p.CommentsManager,
+            CommentsPerson = p.CommentsPerson,
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Comments = p.Comments?.Select(c => new ViewCrudComment()
+            {
+              _id = c._id,
+              Date = c.Date,
+              StatusView = c.StatusView,
+              UserComment = c.UserComment,
+              Comments = c.Comments
+            }).ToList()
+          }).ToList(),
+          SkillsGroup = onBoarding.SkillsGroup?.OrderBy(o => o.Skill.Name).Select(p => new ViewCrudOnboardingSkill()
+          {
+            _id = p._id,
+            Skill = new ViewListSkill() { _id = p.Skill._id, Name = p.Skill.Name, TypeSkill = p.Skill.TypeSkill, Concept = p.Skill.Concept },
+            CommentsManager = p.CommentsManager,
+            CommentsPerson = p.CommentsPerson,
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Comments = p.Comments?.Select(c => new ViewCrudComment()
+            {
+              _id = c._id,
+              Date = c.Date,
+              StatusView = c.StatusView,
+              UserComment = c.UserComment,
+              Comments = c.Comments
+            }).ToList()
+          }).ToList(),
+          SkillsOccupation = onBoarding.SkillsOccupation?.OrderBy(o => o.Skill.Name).Select(p => new ViewCrudOnboardingSkill()
+          {
+            _id = p._id,
+            Skill = new ViewListSkill() { _id = p.Skill._id, Name = p.Skill.Name, TypeSkill = p.Skill.TypeSkill, Concept = p.Skill.Concept },
+            CommentsManager = p.CommentsManager,
+            CommentsPerson = p.CommentsPerson,
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Comments = p.Comments?.Select(c => new ViewCrudComment()
+            {
+              _id = c._id,
+              Date = c.Date,
+              StatusView = c.StatusView,
+              UserComment = c.UserComment,
+              Comments = c.Comments
+            }).ToList()
+          }).ToList(),
+          Scopes = onBoarding.Scopes?.OrderBy(o => o.Scope.Order).Select(p => new ViewCrudOnboardingScope()
+          {
+            _id = p._id,
+            Scope = new ViewListScope() { _id = p.Scope._id, Name = p.Scope.Name, Order = p.Scope.Order },
+            CommentsManager = p.CommentsManager,
+            CommentsPerson = p.CommentsPerson,
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Comments = p.Comments?.Select(c => new ViewCrudComment()
+            {
+              _id = c._id,
+              Date = c.Date,
+              StatusView = c.StatusView,
+              UserComment = c.UserComment,
+              Comments = c.Comments
+            }).ToList()
+          }).ToList(),
+          Schoolings = onBoarding.Schoolings?.OrderBy(o => o.Schooling.Order).Select(p => new ViewCrudOnboardingSchooling()
+          {
+            _id = p._id,
+            Schooling = new ViewListSchooling() { _id = p.Schooling._id, Name = p.Schooling.Name, Order = p.Schooling.Order },
+            CommentsManager = p.CommentsManager,
+            CommentsPerson = p.CommentsPerson,
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Comments = p.Comments?.Select(c => new ViewCrudComment()
+            {
+              _id = c._id,
+              Date = c.Date,
+              StatusView = c.StatusView,
+              UserComment = c.UserComment,
+              Comments = c.Comments
+            }).ToList()
+          }).ToList(),
+          Activities = onBoarding.Activities?.OrderBy(o => o.Activitie.Order).Select(p => new ViewCrudOnboardingActivitie()
+          {
+            _id = p._id,
+            Activitie = new ViewListActivitie() { _id = p.Activitie._id, Name = p.Activitie.Name, Order = p.Activitie.Order },
+            CommentsManager = p.CommentsManager,
+            CommentsPerson = p.CommentsPerson,
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Comments = p.Comments?.Select(c => new ViewCrudComment()
+            {
+              _id = c._id,
+              Date = c.Date,
+              StatusView = c.StatusView,
+              UserComment = c.UserComment,
+              Comments = c.Comments
+            }).ToList()
+          }).ToList()
         };
-        ViewCrudOnboardingSkill newSkill;
-        foreach (OnBoardingSkills skill in onBoarding.SkillsCompany)
-        {
-          newSkill = new ViewCrudOnboardingSkill()
-          {
-            _id = skill._id,
-            Skill = new ViewListSkill() { _id = skill.Skill._id, Name = skill.Skill.Name, TypeSkill = skill.Skill.TypeSkill, Concept = skill.Skill.Concept },
-            CommentsManager = skill.CommentsManager,
-            CommentsPerson = skill.CommentsPerson,
-            StatusViewManager = skill.StatusViewManager,
-            StatusViewPerson = skill.StatusViewPerson,
-            Comments = new List<ViewCrudComment>()
-          };
-          ViewCrudComment newComment;
-          foreach (var comment in skill.Comments)
-          {
-            newComment = new ViewCrudComment()
-            {
-              _id = comment._id,
-              Date = comment.Date,
-              StatusView = comment.StatusView,
-              UserComment = comment.UserComment,
-              Comments = comment.Comments
-            };
-            newSkill.Comments.Add(newComment);
-          }
-          result.SkillsCompany.Add(newSkill);
-        }
-        foreach (OnBoardingSkills skill in onBoarding.SkillsGroup)
-        {
-          newSkill = new ViewCrudOnboardingSkill()
-          {
-            _id = skill._id,
-            Skill = new ViewListSkill() { _id = skill.Skill._id, Name = skill.Skill.Name, TypeSkill = skill.Skill.TypeSkill, Concept = skill.Skill.Concept },
-            CommentsManager = skill.CommentsManager,
-            CommentsPerson = skill.CommentsPerson,
-            StatusViewManager = skill.StatusViewManager,
-            StatusViewPerson = skill.StatusViewPerson,
-            Comments = new List<ViewCrudComment>()
-          };
-          ViewCrudComment newComment;
-          foreach (var comment in skill.Comments)
-          {
-            newComment = new ViewCrudComment()
-            {
-              _id = comment._id,
-              Date = comment.Date,
-              StatusView = comment.StatusView,
-              UserComment = comment.UserComment,
-              Comments = comment.Comments
-            };
-            newSkill.Comments.Add(newComment);
-          }
-          result.SkillsGroup.Add(newSkill);
-        }
-        foreach (OnBoardingSkills skill in onBoarding.SkillsOccupation)
-        {
-          newSkill = new ViewCrudOnboardingSkill()
-          {
-            _id = skill._id,
-            Skill = new ViewListSkill() { _id = skill.Skill._id, Name = skill.Skill.Name, TypeSkill = skill.Skill.TypeSkill, Concept = skill.Skill.Concept },
-            CommentsManager = skill.CommentsManager,
-            CommentsPerson = skill.CommentsPerson,
-            StatusViewManager = skill.StatusViewManager,
-            StatusViewPerson = skill.StatusViewPerson,
-            Comments = new List<ViewCrudComment>()
-          };
-          ViewCrudComment newComment;
-          foreach (var comment in skill.Comments)
-          {
-            newComment = new ViewCrudComment()
-            {
-              _id = comment._id,
-              Date = comment.Date,
-              StatusView = comment.StatusView,
-              UserComment = comment.UserComment,
-              Comments = comment.Comments
-            };
-            newSkill.Comments.Add(newComment);
-          }
-          result.SkillsOccupation.Add(newSkill);
-        }
-
-        ViewCrudOnboardingScope newScope = new ViewCrudOnboardingScope();
-        foreach (OnBoardingScope scope in onBoarding.Scopes)
-        {
-          newScope = new ViewCrudOnboardingScope()
-          {
-            _id = scope._id,
-            Scope = new ViewListScope() { _id = scope.Scope._id, Name = scope.Scope.Name, Order = scope.Scope.Order },
-            CommentsManager = scope.CommentsManager,
-            CommentsPerson = scope.CommentsPerson,
-            StatusViewManager = scope.StatusViewManager,
-            StatusViewPerson = scope.StatusViewPerson,
-            Comments = new List<ViewCrudComment>()
-          };
-          ViewCrudComment newComment;
-          foreach (var comment in scope.Comments)
-          {
-            newComment = new ViewCrudComment()
-            {
-              _id = comment._id,
-              Date = comment.Date,
-              StatusView = comment.StatusView,
-              UserComment = comment.UserComment,
-              Comments = comment.Comments
-            };
-            newScope.Comments.Add(newComment);
-          }
-          result.Scopes.Add(newScope);
-        }
-
-        ViewCrudOnboardingSchooling newSchooling = new ViewCrudOnboardingSchooling();
-        foreach (OnBoardingSchooling schooling in onBoarding.Schoolings)
-        {
-          newSchooling = new ViewCrudOnboardingSchooling()
-          {
-            _id = schooling._id,
-            Schooling = new ViewListSchooling() { _id = schooling.Schooling._id, Name = schooling.Schooling.Name, Order = schooling.Schooling.Order },
-            CommentsManager = schooling.CommentsManager,
-            CommentsPerson = schooling.CommentsPerson,
-            StatusViewManager = schooling.StatusViewManager,
-            StatusViewPerson = schooling.StatusViewPerson,
-            Comments = new List<ViewCrudComment>()
-          };
-          ViewCrudComment newComment;
-          foreach (var comment in schooling.Comments)
-          {
-            newComment = new ViewCrudComment()
-            {
-              _id = comment._id,
-              Date = comment.Date,
-              StatusView = comment.StatusView,
-              UserComment = comment.UserComment,
-              Comments = comment.Comments
-            };
-            newSchooling.Comments.Add(newComment);
-          }
-          result.Schoolings.Add(newSchooling);
-        }
-
-        ViewCrudOnboardingActivitie newActivitie = new ViewCrudOnboardingActivitie();
-        foreach (OnBoardingActivities activitie in onBoarding.Activities)
-        {
-          newActivitie = new ViewCrudOnboardingActivitie()
-          {
-            _id = activitie._id,
-            Activitie = new ViewListActivitie() { _id = activitie.Activitie._id, Name = activitie.Activitie.Name, Order = activitie.Activitie.Order },
-            CommentsManager = activitie.CommentsManager,
-            CommentsPerson = activitie.CommentsPerson,
-            StatusViewManager = activitie.StatusViewManager,
-            StatusViewPerson = activitie.StatusViewPerson,
-            Comments = new List<ViewCrudComment>()
-          };
-          ViewCrudComment newComment;
-          foreach (var comment in activitie.Comments)
-          {
-            newComment = new ViewCrudComment()
-            {
-              _id = comment._id,
-              Date = comment.Date,
-              StatusView = comment.StatusView,
-              UserComment = comment.UserComment,
-              Comments = comment.Comments
-            };
-            newActivitie.Comments.Add(newComment);
-          }
-          result.Activities.Add(newActivitie);
-        }
         return result;
       }
       catch (Exception e)
