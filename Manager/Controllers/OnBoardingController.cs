@@ -140,17 +140,6 @@ namespace Manager.Controllers
 
     [Authorize]
     [HttpGet]
-    [Route("list/{idmanager}")]
-    public List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListOnBoardingsWait(idmanager, ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
     [Route("personend/{idmanager}")]
     public List<ViewListOnBoarding> PersonOnBoardingsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
@@ -160,13 +149,6 @@ namespace Manager.Controllers
       return result;
     }
 
-    [Authorize]
-    [HttpGet]
-    [Route("personwait/{idmanager}")]
-    public ViewListOnBoarding PersonOnBoardingWait(string idmanager)
-    {
-      return service.PersonOnBoardingWait(idmanager);
-    }
 
 
     [Authorize]
