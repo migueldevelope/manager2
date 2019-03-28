@@ -297,7 +297,7 @@ namespace Manager.Test.Test.Complete
           item.CommentsManager = "teste 1";
         }
         newOn.StatusOnBoarding = EnumStatusOnBoarding.WaitPerson;
-        serviceOnBoarding.UpdateOnBoarding(newOn, person.Manager._id);
+        //serviceOnBoarding.UpdateOnBoarding(newOn, person.Manager._id);
 
 
       }

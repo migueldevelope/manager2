@@ -1591,22 +1591,77 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceMonitoring.GetAll(p => p._id == id).ToList().Select(p => new ViewCrudMonitoring()
+        var monitoring= serviceMonitoring.GetAll(p => p._id == id).FirstOrDefault();
+
+        var view = new ViewCrudMonitoring()
         {
-          _id = p._id,
-          _idPerson = p.Person._id,
-          DateBeginPerson = p.DateBeginPerson,
-          DateBeginManager = p.DateBeginManager,
-          DateBeginEnd = p.DateBeginEnd,
-          DateEndPerson = p.DateEndPerson,
-          DateEndManager = p.DateEndManager,
-          DateEndEnd = p.DateEndEnd,
-          CommentsEnd = p.CommentsEnd,
-          //SkillsCompany = p.SkillsCompany.OrderBy(x => x.Skill.Name).ToList(),
-          //Schoolings = p.Schoolings.OrderBy(x => x.Schooling.Order).ToList(),
-          //Activities = p.Activities.OrderBy(x => x.Activities.Order).ToList(),
-          StatusMonitoring = p.StatusMonitoring
-        }).FirstOrDefault();
+          _id = monitoring._id,
+          _idPerson = monitoring.Person._id,
+          SkillsCompany = monitoring.SkillsCompany.Select(p => new ViewCrudMonitoringSkills()
+          {
+            _id = p._id,
+            Comments = p.Comments.Select(x => new ViewCrudComment()
+            {
+              _id = x._id,
+              Comments = x.Comments,
+              Date = x.Date,
+              StatusView = x.StatusView,
+              UserComment = x.UserComment
+            }).ToList(),
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Skill = new ViewListSkill()
+            {
+              _id = p.Skill._id,
+              Name = p.Skill.Name,
+              Concept = p.Skill.Concept,
+              TypeSkill = p.Skill.TypeSkill
+            }
+          }).ToList(),
+          Schoolings = monitoring.Schoolings.Select(p => new ViewCrudMonitoringSchooling()
+          {
+            _id = p._id,
+            Comments = p.Comments.Select(x => new ViewCrudComment()
+            {
+              _id = x._id,
+              Comments = x.Comments,
+              Date = x.Date,
+              StatusView = x.StatusView,
+              UserComment = x.UserComment
+            }).ToList(),
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Schooling = new ViewListSchooling()
+            {
+              _id = p.Schooling._id,
+              Name = p.Schooling.Name,
+              Order = p.Schooling.Order
+            }
+          }).ToList(),
+          Activities = monitoring.Activities.Select(p => new ViewCrudMonitoringActivities()
+          {
+            _id = p._id,
+            Comments = p.Comments.Select(x => new ViewCrudComment()
+            {
+              _id = x._id,
+              Comments = x.Comments,
+              Date = x.Date,
+              StatusView = x.StatusView,
+              UserComment = x.UserComment
+            }).ToList(),
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Activities = new ViewListActivitie()
+            {
+              _id = p.Activities._id,
+              Name = p.Activities.Name,
+              Order = p.Activities.Order
+            }
+          }).ToList(),
+          StatusMonitoring = monitoring.StatusMonitoring
+        };
+
+        return view;
       }
       catch (Exception e)
       {

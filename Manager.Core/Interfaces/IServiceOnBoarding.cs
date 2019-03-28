@@ -11,29 +11,40 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceOnBoarding
   {
+    #region OnBoardgin
+    List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page);
+
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     List<ViewListOnBoarding> ListOnBoarding(string idmanager, ref long total, string filter, int count, int page);
     ViewListOnBoarding PersonOnBoardingWait(string idperson);
     ViewListOnBoarding NewOnBoarding(string idperson);
     ViewCrudOnboarding GetOnBoarding(string id);
-
-
-    #region Old
     string RemoveOnBoarding(string idperson);
     string DeleteComments(string idonboarding, string iditem, string idcomments);
-    List<OnBoarding> ListOnBoardingsWaitOld(string idmanager, ref long total, string filter, int count, int page);
-    List<OnBoarding> ListOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
-    OnBoarding GetOnBoardings(string id);
-    OnBoarding PersonOnBoardingsWaitOld(string idmanager);
-    List<OnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
-    OnBoarding NewOnBoardingOld(OnBoarding onboarding, string idperson);
-    string UpdateOnBoarding(OnBoarding onboarding, string idperson);
-    List<OnBoarding> GetListExclud(ref long total, string filter, int count, int page);
-    List<ListComments> AddComments(string idonboarding, string iditem, ListComments comments);
-    string UpdateComments(string idonboarding, string iditem, ListComments comments);
-    List<ListComments> GetListComments(string idonboarding, string iditem);
     string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment);
+    List<ViewListOnBoarding> ListOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
+    ViewCrudOnboarding GetOnBoardings(string id);
+    List<ViewListOnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
+    string UpdateOnBoarding(ViewCrudOnboarding onboarding, string idperson);
+    List<ViewListOnBoarding> GetListExclud(ref long total, string filter, int count, int page);
+    List<ViewCrudComment> AddComments(string idonboarding, string iditem, ViewCrudComment comments);
+    string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
+    List<ViewCrudComment> GetListComments(string idonboarding, string iditem);
+    #endregion
+
+    #region Old
+    List<OnBoarding> ListOnBoardingsWaitOld(string idmanager, ref long total, string filter, int count, int page);
+    OnBoarding PersonOnBoardingsWaitOld(string idmanager);
+    OnBoarding NewOnBoardingOld(OnBoarding onboarding, string idperson);
+    List<OnBoarding> ListOnBoardingsEndOld(string idmanager, ref long total, string filter, int count, int page);
+    OnBoarding GetOnBoardingsOld(string id);
+    List<OnBoarding> PersonOnBoardingsEndOld(string idmanager, ref long total, string filter, int count, int page);
+    string UpdateOnBoardingOld(OnBoarding onboarding, string idperson);
+    List<OnBoarding> GetListExcludOld(ref long total, string filter, int count, int page);
+    List<ListComments> AddCommentsOld(string idonboarding, string iditem, ListComments comments);
+    string UpdateCommentsOld(string idonboarding, string iditem, ListComments comments);
+    List<ListComments> GetListCommentsOld(string idonboarding, string iditem);
     #endregion
 
   }
