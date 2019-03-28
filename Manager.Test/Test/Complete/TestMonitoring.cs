@@ -28,33 +28,33 @@ namespace Manager.Test.Test.Complete
       servicePerson._user = base.baseUser;
     }
 
-    [Fact]
-    public void TestMonitoringComplete()
-    {
-      try
-      {
-        long total = 0;
-        var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
+    //[Fact]
+    //public void TestMonitoringComplete()
+    //{
+    //  try
+    //  {
+    //    long total = 0;
+    //    var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
 
-        var list = serviceMonitoring.ListMonitoringsWait(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
-        var newOn = serviceMonitoring.NewMonitoring(list, person.Manager._id);
+    //    var list = serviceMonitoring.ListMonitoringsWait(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
+    //    var newOn = serviceMonitoring.NewMonitoring(list, person.Manager._id);
 
-        foreach (var item in newOn.SkillsCompany)
-        {
-          item.CommentsManager = "teste 1";
-        }
-        newOn.StatusMonitoring = EnumStatusMonitoring.Wait;
-        serviceMonitoring.UpdateMonitoring(newOn, person.Manager._id);
+    //    foreach (var item in newOn.SkillsCompany)
+    //    {
+    //      item.CommentsManager = "teste 1";
+    //    }
+    //    newOn.StatusMonitoring = EnumStatusMonitoring.Wait;
+    //    serviceMonitoring.UpdateMonitoring(newOn, person.Manager._id);
 
-        var listskills = serviceMonitoring.GetSkills(person._id);
+    //    var listskills = serviceMonitoring.GetSkills(person._id);
 
 
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
 
     [Fact]
     public void ScriptComments()
