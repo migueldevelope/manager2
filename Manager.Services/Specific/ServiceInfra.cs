@@ -5133,28 +5133,38 @@ namespace Manager.Services.Specific
         occupation.Name = view.Name;
         occupation.Line = view.Line;
 
-        occupation.CBO = serviceCbo.GetAll(p => p._id == view.Cbo._id).FirstOrDefault(); ;
+        if (view.Cbo != null)
+        occupation.CBO = serviceCbo.GetAll(p => p._id == view.Cbo._id).FirstOrDefault();
+
         occupation.SalaryScales = new List<SalaryScaleGrade>();
-        foreach (var item in view.SalaryScales)
+        if(view.SalaryScales != null)
         {
-          foreach (var grade in serviceSalaryScales.GetAll(p => p._id == item._id).FirstOrDefault().Grades)
+          foreach (var item in view.SalaryScales)
           {
-            occupation.SalaryScales.Add(new SalaryScaleGrade()
+            foreach (var grade in serviceSalaryScales.GetAll(p => p._id == item._id).FirstOrDefault().Grades)
             {
-              _idSalaryScale = item._id,
-              NameSalaryScale = item.Name,
-              _idGrade = grade._id,
-              NameGrade = grade.Name,
-              Status = EnumStatus.Enabled,
-              _idAccount = _user._idAccount,
-              _id = ObjectId.GenerateNewId().ToString()
-            });
+              occupation.SalaryScales.Add(new SalaryScaleGrade()
+              {
+                _idSalaryScale = item._id,
+                NameSalaryScale = item.Name,
+                _idGrade = grade._id,
+                NameGrade = grade.Name,
+                Status = EnumStatus.Enabled,
+                _idAccount = _user._idAccount,
+                _id = ObjectId.GenerateNewId().ToString()
+              });
+            }
           }
         }
+        
 
         occupation.Process = new List<ProcessLevelTwo>();
-        foreach (var item in view.Process)
-          occupation.Process.Add(serviceProcessLevelTwo.GetAll(p => p._id == item._id).FirstOrDefault());
+        if(view.Process != null)
+        {
+          foreach (var item in view.Process)
+            occupation.Process.Add(serviceProcessLevelTwo.GetAll(p => p._id == item._id).FirstOrDefault());
+        }
+        
 
         //foreach (var item in occupation.Process)
         //  areas.Add(item.ProcessLevelOne.Area);

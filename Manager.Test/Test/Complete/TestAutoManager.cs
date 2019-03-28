@@ -65,7 +65,7 @@ namespace Manager.Test.Test.Complete
         listTeam = this.servicePerson.GetPersonTeam(ref total, employee.Manager._id, "Ariel", 10, 1);
         foreach (var item in listTeam)
         {
-          this.serviceAutoManager.DeleteManager(item.IdPerson);
+          //this.serviceAutoManager.DeleteManager(item.IdPerson);
         }
 
         //Set origin manager
