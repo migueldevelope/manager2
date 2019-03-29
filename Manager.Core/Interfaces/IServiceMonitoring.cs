@@ -28,7 +28,7 @@ namespace Manager.Core.Interfaces
     List<ViewListSkill> GetSkills(string idperson);
     ViewListMonitoring PersonMonitoringsWait(string idmanager);
     List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager);
-    ViewListMonitoring NewMonitoring(ViewCrudMonitoring view, string idperson);
+    ViewListMonitoring NewMonitoring(string idperson);
     string UpdateMonitoring(ViewCrudMonitoring view, string idperson);
     List<ViewListMonitoring> GetListExclud(ref long total, string filter, int count, int page);
     ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie);

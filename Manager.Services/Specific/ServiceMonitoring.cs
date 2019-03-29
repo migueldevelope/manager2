@@ -1823,12 +1823,14 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public ViewListMonitoring NewMonitoring(ViewCrudMonitoring view, string idperson)
+    public ViewListMonitoring NewMonitoring(string idperson)
     {
       try
       {
-        LogSave(view._idPerson, "Monitoring Process");
-        var monitoring = serviceMonitoring.GetAll(p => p._id == view._id).FirstOrDefault();
+        LogSave(idperson, "Monitoring Process");
+        var monitoring = serviceMonitoring.GetAll(p => p.Person._id == idperson
+        && p.StatusMonitoring != EnumStatusMonitoring.End
+        && p.StatusMonitoring != EnumStatusMonitoring.Disapproved).FirstOrDefault();
 
         if (monitoring == null)
         {

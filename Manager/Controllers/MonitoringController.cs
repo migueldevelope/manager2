@@ -90,15 +90,14 @@ namespace Manager.Controllers
     /// <summary>
     /// Inclusão monitoring
     /// </summary>
-    /// <param name="monitoring">Objeto Crud</param>
     /// <param name="idperson">Identificador contrato</param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("new/{idperson}")]
-    public ViewListMonitoring NewMonitoring([FromBody]ViewCrudMonitoring monitoring, string idperson)
+    public ViewListMonitoring NewMonitoring(string idperson)
     {
-      return service.NewMonitoring(monitoring, idperson);
+      return service.NewMonitoring(idperson);
     }
 
     /// <summary>
