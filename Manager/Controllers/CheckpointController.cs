@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
+using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,13 +32,21 @@ namespace Manager.Controllers
     #endregion
 
     #region Checkpoint
+    /// <summary>
+    /// Listar pendências de checkpoint para gestor
+    /// </summary>
+    /// <param name="idmanager">Identificador do gestor</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do colaborador</param>
+    /// <returns>Lista de pendência de checkpoint</returns>
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
-    public List<Checkpoint> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCheckpoint> ListCheckpointWait(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListCheckpointsWaitOld(idmanager, ref total, filter, count, page);
+      var result = service.ListCheckpointWait(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

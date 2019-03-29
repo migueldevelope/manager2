@@ -7,6 +7,7 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -83,6 +84,58 @@ namespace Manager.Services.Specific
       servicePerson._user = user;
       serviceQuestions._user = user;
       serviceTextDefault._user = user;
+    }
+    #endregion
+
+    #region Checkpoint
+    public List<ViewListCheckpoint> ListCheckpointWait(string idmanager, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        List<ViewListCheckpoint> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+                                        p.TypeUser != EnumTypeUser.Administrator &&
+                                        p.TypeJourney == EnumTypeJourney.Checkpoint &&
+                                        p.Manager._id == idmanager &&
+                                        p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+          .Select(p => new ViewListCheckpoint()
+          {
+            _id = string.Empty,
+            _idPerson = p._id,
+            Name = p.User.Name,
+            OccupationName = p.Occupation.Name,
+            StatusCheckpoint = EnumStatusCheckpoint.Open,
+            TypeCheckpoint = EnumCheckpoint.None
+          }).ToList();
+        List<ViewListCheckpoint> detail = new List<ViewListCheckpoint>();
+        if (serviceCheckpoint.Exists("Checkpoint"))
+        {
+          Checkpoint checkpoint;
+          foreach (var item in list)
+          {
+            checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+            if (checkpoint != null)
+            {
+              item._id = checkpoint._id;
+              item.StatusCheckpoint = checkpoint.StatusCheckpoint;
+              item.TypeCheckpoint = checkpoint.TypeCheckpoint;
+              detail.Add(item);
+            }
+          }
+        }
+        else
+          detail = list;
+
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+                                p.TypeUser != EnumTypeUser.Administrator &&
+                                p.TypeJourney == EnumTypeJourney.Checkpoint &&
+                                p.Manager._id == idmanager &&
+                                p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
     #endregion
 

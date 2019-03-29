@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
@@ -9,6 +10,9 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
+
+    List<ViewListCheckpoint> ListCheckpointWait(string idmanager, ref long total, string filter, int count, int page);
+
 
     #region Old
     List<Checkpoint> ListCheckpointsWaitOld(string idmanager, ref long total, string filter, int count, int page);

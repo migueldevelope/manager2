@@ -2,7 +2,7 @@
 
 namespace Manager.Views.BusinessList
 {
-  class ViewListCheckpoint : _ViewList
+  public class ViewListCheckpoint : _ViewListBase
   {
     public string _idPerson { get; set; }
     public string OccupationName { get; set; }

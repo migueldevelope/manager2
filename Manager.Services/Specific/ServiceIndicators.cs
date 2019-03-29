@@ -446,7 +446,7 @@ namespace Manager.Services.Specific
             NamePerson = item.Person.User.Name,
             NameItem = item.CertificationItem.Name,
             Status = item.StatusCertification,
-            DateEnd = item.DateEnd
+            item.DateEnd
           });
         }
 
@@ -526,8 +526,8 @@ namespace Manager.Services.Specific
             Status = item.Checkpoint == null ? "Aguardando para iniciar" :
               item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
                 item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
-            DateBegin = item.Checkpoint?.DateBegin,
-            DateEnd = item.Checkpoint?.DateEnd,
+            item.Checkpoint?.DateBegin,
+            item.Checkpoint?.DateEnd,
             Occupation = item.Person.Occupation.Name,
             Result = item.Checkpoint == null ? "Não iniciado" :
               item.Checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
@@ -617,13 +617,13 @@ namespace Manager.Services.Specific
                     NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                     NamePerson = item.Person.User.Name,
                     What = rows.Schooling.Name,
-                    Description = plan?.Description,
-                    Deadline = plan.Deadline,
+                    plan?.Description,
+                    plan.Deadline,
                     Status = plan == null ? "Em aberto" :
                       plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
                     Obs = plan?.TextEnd,
-                    DateEnd = plan?.DateEnd
+                    plan?.DateEnd
                   });
                 }
               }
@@ -637,13 +637,13 @@ namespace Manager.Services.Specific
                     NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                     NamePerson = item.Person.User.Name,
                     What = rows.Skill.Name,
-                    Description = plan?.Description,
-                    Deadline = plan.Deadline,
+                    plan?.Description,
+                    plan.Deadline,
                     Status = plan == null ? "Em aberto" :
                       plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
                     Obs = plan?.TextEnd,
-                    DateEnd = plan?.DateEnd
+                    plan?.DateEnd
                   });
                 }
               }
@@ -657,13 +657,13 @@ namespace Manager.Services.Specific
                     NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                     NamePerson = item.Person.User.Name,
                     What = rows.Activities.Name,
-                    Description = plan?.Description,
-                    Deadline = plan.Deadline,
+                    plan?.Description,
+                    plan.Deadline,
                     Status = plan == null ? "Em aberto" :
                       plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
                     Obs = plan?.TextEnd,
-                    DateEnd = plan?.DateEnd
+                    plan?.DateEnd
                   });
                 }
               }

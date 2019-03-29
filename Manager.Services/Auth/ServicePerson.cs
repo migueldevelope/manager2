@@ -291,8 +291,8 @@ namespace Manager.Services.Auth
         {
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
-            total = servicePerson.CountNewVersion(p => p.User.Name.Contains(filter)).Result;
-            return servicePerson.GetAllNewVersion(p => p.User.Name.Contains(filter), count, count * (page - 1), "User.Name").Result
+            total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            return servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
             .Select(x => new ViewListPersonCrud()
             {
               _id = x._id,
@@ -306,8 +306,8 @@ namespace Manager.Services.Auth
             }).OrderBy(p => p.User.Name).ToList();
           case EnumTypeUser.HR:
           case EnumTypeUser.ManagerHR:
-            total = servicePerson.CountNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;
-            return servicePerson.GetAllNewVersion(p => p.User.Name.Contains(filter) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
+            total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;
+            return servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
             .Select(x => new ViewListPersonCrud()
             {
               _id = x._id,
