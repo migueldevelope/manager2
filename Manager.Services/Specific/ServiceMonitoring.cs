@@ -1593,12 +1593,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring= serviceMonitoring.GetAll(p => p._id == id).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAll(p => p._id == id).FirstOrDefault();
 
         var view = new ViewCrudMonitoring()
         {
           _id = monitoring._id,
           _idPerson = monitoring.Person._id,
+          CommentsPerson = monitoring.CommentsPerson,
+          CommentsEnd = monitoring.CommentsEnd,
+          CommentsManager = monitoring.CommentsEnd,
           SkillsCompany = monitoring.SkillsCompany.Select(p => new ViewCrudMonitoringSkills()
           {
             _id = p._id,
@@ -1831,7 +1834,10 @@ namespace Manager.Services.Specific
         {
           monitoring = new Monitoring()
           {
-            Person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault()
+            Person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault(),
+            CommentsPerson = monitoring.CommentsPerson,
+            CommentsEnd = monitoring.CommentsEnd,
+            CommentsManager = monitoring.CommentsEnd,
           };
 
           LoadMap(monitoring);
@@ -1871,7 +1877,26 @@ namespace Manager.Services.Specific
       {
         var monitoring = serviceMonitoring.GetAll(p => p._id == view._id).FirstOrDefault();
         monitoring.StatusMonitoring = view.StatusMonitoring;
-        
+        monitoring.CommentsEnd = view.CommentsEnd;
+        monitoring.CommentsPerson = view.CommentsPerson;
+        monitoring.CommentsManager = view.CommentsEnd;
+
+        foreach (var row in monitoring.SkillsCompany)
+        {
+          var item = view.SkillsCompany.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();
+          row.Praise = item.Praise;
+        };
+        foreach (var row in monitoring.Schoolings)
+        {
+          var item = view.Schoolings.Where(p => p.Schooling._id == row.Schooling._id).FirstOrDefault();
+          row.Praise = item.Praise;
+        };
+        foreach (var row in monitoring.Activities)
+        {
+          var item = view.Activities.Where(p => p.Activities._id == row.Activities._id).FirstOrDefault();
+          row.Praise = item.Praise;
+        };
+
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
@@ -2288,14 +2313,15 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
-            {
-              _id = p._id,
-              Comments = p.Comments,
-              Date = p.Date,
-              StatusView = p.StatusView,
-              UserComment = p.UserComment
-            }).ToList();
+            if (item.Comments != null)
+              return item.Comments.Select(p => new ViewCrudComment()
+              {
+                _id = p._id,
+                Comments = p.Comments,
+                Date = p.Date,
+                StatusView = p.StatusView,
+                UserComment = p.UserComment
+              }).ToList();
           }
         }
 
@@ -2304,14 +2330,15 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
-            {
-              _id = p._id,
-              Comments = p.Comments,
-              Date = p.Date,
-              StatusView = p.StatusView,
-              UserComment = p.UserComment
-            }).ToList();
+            if (item.Comments != null)
+              return item.Comments.Select(p => new ViewCrudComment()
+              {
+                _id = p._id,
+                Comments = p.Comments,
+                Date = p.Date,
+                StatusView = p.StatusView,
+                UserComment = p.UserComment
+              }).ToList();
           }
         }
 
@@ -2319,14 +2346,15 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
-            {
-              _id = p._id,
-              Comments = p.Comments,
-              Date = p.Date,
-              StatusView = p.StatusView,
-              UserComment = p.UserComment
-            }).ToList();
+            if (item.Comments != null)
+              return item.Comments.Select(p => new ViewCrudComment()
+              {
+                _id = p._id,
+                Comments = p.Comments,
+                Date = p.Date,
+                StatusView = p.StatusView,
+                UserComment = p.UserComment
+              }).ToList();
           }
         }
 

@@ -59,7 +59,7 @@ namespace Manager.Controllers
     /// <returns>Situação do Onboarding do cloaborador</returns>
     [Authorize]
     [HttpGet]
-    [Route("personwait/{idmanager}")]
+    [Route("personwait/{idperson}")]
     public ViewListOnBoarding ListPerson(string idperson)
     {
       return service.PersonOnBoardingWait(idperson);
@@ -132,14 +132,13 @@ namespace Manager.Controllers
     /// Atualiza informações do onboarding
     /// </summary>
     /// <param name="onboarding">Objeto Crud</param>
-    /// <param name="idperson">Identificador do colaborador</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
-    [Route("update/{idperson}")]
-    public IActionResult UpdateOnBoarding([FromBody]ViewCrudOnboarding onboarding, string idperson)
+    [Route("update")]
+    public IActionResult UpdateOnBoarding([FromBody]ViewCrudOnboarding onboarding)
     {
-      return Ok(service.UpdateOnBoarding(onboarding, idperson));
+      return Ok(service.UpdateOnBoarding(onboarding));
     }
     /// <summary>
     /// Lista onboarding finalizados

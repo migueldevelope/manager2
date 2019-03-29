@@ -1064,14 +1064,15 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
-            {
-              _id = p._id,
-              Comments = p.Comments,
-              Date = p.Date,
-              StatusView = p.StatusView,
-              UserComment = p.UserComment
-            }).ToList();
+            if (item.Comments != null)
+              return item.Comments.Select(p => new ViewCrudComment()
+              {
+                _id = p._id,
+                Comments = p.Comments,
+                Date = p.Date,
+                StatusView = p.StatusView,
+                UserComment = p.UserComment
+              }).ToList();
           }
         }
 
@@ -1079,14 +1080,15 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
-            {
-              _id = p._id,
-              Comments = p.Comments,
-              Date = p.Date,
-              StatusView = p.StatusView,
-              UserComment = p.UserComment
-            }).ToList();
+            if (item.Comments != null)
+              return item.Comments.Select(p => new ViewCrudComment()
+              {
+                _id = p._id,
+                Comments = p.Comments,
+                Date = p.Date,
+                StatusView = p.StatusView,
+                UserComment = p.UserComment
+              }).ToList();
           }
         }
 
@@ -1094,14 +1096,15 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
-            {
-              _id = p._id,
-              Comments = p.Comments,
-              Date = p.Date,
-              StatusView = p.StatusView,
-              UserComment = p.UserComment
-            }).ToList();
+            if (item.Comments != null)
+              return item.Comments.Select(p => new ViewCrudComment()
+              {
+                _id = p._id,
+                Comments = p.Comments,
+                Date = p.Date,
+                StatusView = p.StatusView,
+                UserComment = p.UserComment
+              }).ToList();
           }
         }
 
@@ -1375,17 +1378,16 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    public string UpdateOnBoarding(ViewCrudOnboarding view, string idperson)
+    public string UpdateOnBoarding(ViewCrudOnboarding view)
     {
       try
       {
         LogSave(view.Person._id, "OnBoarding Process Update");
-        var onboarding = serviceOnboarding.GetAll(p => p._id == idperson).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAll(p => p._id == view._id).FirstOrDefault();
         onboarding.StatusOnBoarding = view.StatusOnBoarding;
         onboarding.CommentsEnd = view.CommentsEnd;
 
-
-        if (onboarding.Person._id != idperson)
+        if (onboarding.Person._id != _user._idPerson)
         {
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson)
           {

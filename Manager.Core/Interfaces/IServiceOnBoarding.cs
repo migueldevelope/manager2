@@ -26,7 +26,7 @@ namespace Manager.Core.Interfaces
     List<ViewListOnBoarding> ListOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
     ViewCrudOnboarding GetOnBoardings(string id);
     List<ViewListOnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
-    string UpdateOnBoarding(ViewCrudOnboarding onboarding, string idperson);
+    string UpdateOnBoarding(ViewCrudOnboarding onboarding);
     List<ViewListOnBoarding> GetListExclud(ref long total, string filter, int count, int page);
     List<ViewCrudComment> AddComments(string idonboarding, string iditem, ViewCrudComment comments);
     string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
