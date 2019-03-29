@@ -93,9 +93,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public ViewCrudPerson Put([FromBody] ViewCrudPerson view)
+    public IActionResult Put([FromBody] ViewCrudPerson view)
     {
-      return service.UpdatePerson(view);
+      return Ok(service.UpdatePerson(view));
     }
 
     /// <summary>

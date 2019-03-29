@@ -273,7 +273,7 @@ namespace Manager.Services.Auth
           {
             Name = item.User.Name,
             _idPerson = item._id,
-            Occupation = (item.Occupation == null) ? null : item.Occupation.Name,
+            Occupation = item.Occupation?.Name,
             DataAdm = item.User.DateAdm
           }).OrderBy(p => p.Name).ToList();
       }
@@ -343,9 +343,55 @@ namespace Manager.Services.Auth
           DateResignation = person.DateResignation,
           Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
           HolidayReturn = person.HolidayReturn,
-          Manager = null,
+          Manager = person.Manager == null ? null : new ViewBaseFields()
+          {
+            _id = person.Manager._id,
+            Name = person.Manager.Name,
+            Mail = person.Manager.Mail
+          },
           MotiveAside = person.MotiveAside,
-          Occupation = null,
+          Occupation = person.Occupation == null ? null : new ViewListOccupation()
+          {
+            _id = person.Occupation._id,
+            Name = person.Occupation.Name,
+            Line = person.Occupation.Line,
+            Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
+            Group = new ViewListGroup()
+            {
+              _id = person.Occupation.Group._id,
+              Name = person.Occupation.Group.Name,
+              Line = person.Occupation.Group.Line,
+              Axis = new ViewListAxis()
+              {
+                _id = person.Occupation.Group.Axis._id,
+                Name = person.Occupation.Group.Axis.Name,
+                TypeAxis = person.Occupation.Group.Axis.TypeAxis
+              },
+              Sphere = new ViewListSphere()
+              {
+                _id = person.Occupation.Group.Sphere._id,
+                Name = person.Occupation.Group.Sphere.Name,
+                TypeSphere = person.Occupation.Group.Sphere.TypeSphere
+              }
+            },
+            Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Order = p.Order,
+              ProcessLevelOne = new ViewListProcessLevelOne()
+              {
+                _id = p.ProcessLevelOne._id,
+                Name = p.ProcessLevelOne.Name,
+                Order = p.ProcessLevelOne.Order,
+                Area = new ViewListArea()
+                {
+                  _id = p.ProcessLevelOne.Area._id,
+                  Name = p.ProcessLevelOne.Area.Name
+                }
+              }
+            }).ToList()
+          },
           Registration = person.Registration,
           Salary = person.Salary,
           StatusUser = person.StatusUser,
@@ -369,7 +415,6 @@ namespace Manager.Services.Auth
             _id = person.User._id
           }
         };
-        // TODO: Manager, Occupation
       }
       catch (Exception e)
       {
@@ -473,7 +518,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudPerson UpdatePerson(ViewCrudPerson view)
+    public string UpdatePerson(ViewCrudPerson view)
     {
       try
       {
@@ -492,25 +537,6 @@ namespace Manager.Services.Auth
         user.Sex = view.User.Sex;
         user = serviceUser.UpdateNewVersion(user).Result;
 
-        Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
-        person.Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
-        person.DateLastOccupation = view.DateLastOccupation;
-        person.DateLastReadjust = view.DateLastReadjust;
-        person.DateResignation = view.DateResignation;
-        person.Establishment = view.Establishment == null ? null : serviceEstablishment.GetNewVersion(p => p._id == view.Establishment._id).Result;
-        person.HolidayReturn = view.HolidayReturn;
-        person.Manager = null;
-        person.MotiveAside = view.MotiveAside;
-        person.Occupation = view.Occupation == null ? null : serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result;
-        person.Registration = view.Registration;
-        person.Salary = view.Salary;
-        person.DocumentManager = null;
-        person.StatusUser = view.StatusUser;
-        person.TypeJourney = view.TypeJourney;
-        person.TypeUser = view.TypeUser;
-        person.User = user;
-        person.SalaryScales = new SalaryScalePerson() { _idSalaryScale = view.SalaryScales._idSalaryScale, NameSalaryScale = view.SalaryScales.NameSalaryScale };
-
         BaseFields manager = null;
         if (view.Manager != null)
         {
@@ -522,45 +548,32 @@ namespace Manager.Services.Auth
              Mail = p.User.Mail
            }).FirstOrDefault();
         }
-        person.Manager = manager;
+        SalaryScalePerson salaryScale = null;
+        if (view.SalaryScales != null)
+          salaryScale = serviceSalaryScale.GetAll(p => p._id == view.SalaryScales._idSalaryScale)
+            .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
+            .FirstOrDefault();
 
+        Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
+        person.Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
+        person.DateLastOccupation = view.DateLastOccupation;
+        person.DateLastReadjust = view.DateLastReadjust;
+        person.DateResignation = view.DateResignation;
+        person.Establishment = view.Establishment == null ? null : serviceEstablishment.GetNewVersion(p => p._id == view.Establishment._id).Result;
+        person.HolidayReturn = view.HolidayReturn;
+        person.Manager = manager;
+        person.MotiveAside = view.MotiveAside;
+        person.Occupation = view.Occupation == null ? null : serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result;
+        person.Registration = view.Registration;
+        person.Salary = view.Salary;
+        person.DocumentManager = null;
+        person.StatusUser = view.StatusUser;
+        person.TypeJourney = view.TypeJourney;
+        person.TypeUser = view.TypeUser;
+        person.User = user;
+        person.SalaryScales = salaryScale;
         person = servicePerson.UpdateNewVersion(person).Result;
-        return new ViewCrudPerson()
-        {
-          _id = person._id,
-          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
-          DateLastOccupation = person.DateLastOccupation,
-          DateLastReadjust = person.DateLastReadjust,
-          DateResignation = person.DateResignation,
-          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
-          HolidayReturn = person.HolidayReturn,
-          Manager = null,
-          MotiveAside = person.MotiveAside,
-          Occupation = null,
-          Registration = person.Registration,
-          Salary = person.Salary,
-          StatusUser = person.StatusUser,
-          TypeJourney = person.TypeJourney,
-          TypeUser = person.TypeUser,
-          User = new ViewCrudUser()
-          {
-            Name = person.User.Name,
-            DateAdm = person.User.DateAdm,
-            DateBirth = person.User.DateBirth,
-            Document = person.User.Document,
-            DocumentCTPF = person.User.DocumentCTPF,
-            DocumentID = person.User.DocumentID,
-            Mail = person.User.Mail,
-            Password = string.Empty,
-            Phone = person.User.Phone,
-            PhoneFixed = person.User.PhoneFixed,
-            PhotoUrl = person.User.PhotoUrl,
-            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
-            Sex = person.User.Sex,
-            _id = person.User._id
-          }
-        };
-        // TODO: Manager, Occupation
+        return "Person altered!";
       }
       catch (Exception e)
       {

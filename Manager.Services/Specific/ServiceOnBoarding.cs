@@ -97,7 +97,7 @@ namespace Manager.Services.Specific
         List<ViewListOnBoarding> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
                                              p.TypeUser > EnumTypeUser.Administrator &&
                                              (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
-                                             p.Manager._id == idmanager &&
+                                             p.Manager._id == idmanager && p.Occupation != null &&
                                              p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
           .Select(p => new ViewListOnBoarding()
           {

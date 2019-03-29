@@ -11,7 +11,7 @@ namespace Manager.Views.BusinessCrud
     public EnumStatusUser StatusUser { get; set; }
     public ViewListCompany Company { get; set; }
     public ViewListOccupation Occupation { get; set; }
-    public ViewListPerson Manager { get; set; }
+    public ViewBaseFields Manager { get; set; }
     public DateTime? DateLastOccupation { get; set; }
     public decimal Salary { get; set; }
     public DateTime? DateLastReadjust { get; set; }

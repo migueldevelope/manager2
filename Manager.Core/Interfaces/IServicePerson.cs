@@ -20,7 +20,7 @@ namespace Manager.Core.Interfaces
     List<ViewListPersonCrud> GetPersons(ref long total, int count, int page, string filter, EnumTypeUser type);
     ViewCrudPerson GetPersonCrud(string id);
     ViewCrudPerson NewPerson(ViewCrudPerson view);
-    ViewCrudPerson UpdatePerson(ViewCrudPerson person);
+    string UpdatePerson(ViewCrudPerson person);
 
 
     List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page);
