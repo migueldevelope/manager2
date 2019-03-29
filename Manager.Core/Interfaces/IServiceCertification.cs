@@ -24,7 +24,7 @@ namespace Manager.Core.Interfaces
     ViewCrudCertification NewCertification(CertificationItem item, string idperson);
     string AddPerson(string idcertification, ViewListBasePerson person);
     string ApprovedCertification(string idcertificationperson, ViewCrudCertificationPerson view);
-    string UpdateCertification(ViewCrudCertification certification, string idperson, string idmonitoring);
+    string UpdateCertification(ViewCrudCertification view, string idperson, string idcertification);
     List<ViewListCertification> GetListExclud(ref long total, string filter, int count, int page);
     List<ViewCertification> ListCertificationsWaitPerson(string idperson, ref long total, string filter, int count, int page);
     ViewListCertification CertificationsWaitPerson(string idcertification);

@@ -89,6 +89,12 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// Inclusão pessoa para acreditação
+    /// </summary>
+    /// <param name="person">Objetivo Crud</param>
+    /// <param name="idcertification">Identificador acreditação</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addperson/{idcertification}")]
@@ -97,6 +103,12 @@ namespace Manager.Controllers
       return service.AddPerson(idcertification, person);
     }
 
+    /// <summary>
+    /// Acreditação de contrato 
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <param name="idcertificationperson">Identificador de contrato da acreditação</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("approvedcertification/{idcertificationperson}")]
@@ -105,6 +117,13 @@ namespace Manager.Controllers
       return service.ApprovedCertification(idcertificationperson, view);
     }
 
+    /// <summary>
+    /// Lista acreditação para excluir
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
@@ -114,6 +133,11 @@ namespace Manager.Controllers
       return service.GetListExclud(ref total, filter, count, page);
     }
 
+    /// <summary>
+    /// Busca informação de acreditção
+    /// </summary>
+    /// <param name="idcertification">Identificador Acreditação</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("certificationswaitperson/{idcertification}")]
@@ -122,6 +146,14 @@ namespace Manager.Controllers
       return service.CertificationsWaitPerson(idcertification);
     }
 
+    /// <summary>
+    /// Lista contratos para adicionar na acreditçaão
+    /// </summary>
+    /// <param name="idcertification">Identificador da acreditação</param>
+    /// <param name="filter"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listpersons/{idcertification}")]
@@ -131,6 +163,12 @@ namespace Manager.Controllers
       return service.ListPersons(idcertification, ref total, filter, count, page);
     }
 
+    /// <summary>
+    /// Inclusão de nova acreditação
+    /// </summary>
+    /// <param name="item">Objeto Crud</param>
+    /// <param name="idperson">Identificador do contrato</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("newcertification/{idperson}")]
@@ -139,14 +177,19 @@ namespace Manager.Controllers
       return service.NewCertification(item, idperson);
     }
 
-
-
+    /// <summary>
+    /// Atualiza informações da acreidtação
+    /// </summary>
+    /// <param name="certification">Objeto Crud</param>
+    /// <param name="idperson">Identificador contrato</param>
+    /// <param name="idmonitoring">Identificador acreditação</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [Route("updatecertification/{idperson}/{idmonitoring}")]
-    public string UpdateCertification([FromBody]ViewCrudCertification certification, string idperson, string idmonitoring)
+    [Route("updatecertification/{idperson}/{idcertification}")]
+    public string UpdateCertification([FromBody]ViewCrudCertification certification, string idperson, string idcertification)
     {
-      return service.UpdateCertification(certification, idperson, idmonitoring);
+      return service.UpdateCertification(certification, idperson, idcertification);
     }
 
 
