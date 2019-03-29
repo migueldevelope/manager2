@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
@@ -21,50 +22,80 @@ namespace Manager.Services.Specific
   public class ServiceCheckpoint : Repository<Checkpoint>, IServiceCheckpoint
   {
     private readonly ServiceAuthentication serviceAuthentication;
-    private readonly ServiceGeneric<Checkpoint> checkpointService;
-    private readonly ServiceGeneric<Person> personService;
-    private readonly ServiceLog logService;
-    private readonly ServiceMailModel mailModelService;
-    private readonly ServiceGeneric<Questions> questionsService;
-    private readonly ServiceGeneric<MailMessage> mailMessageService;
-    private readonly ServiceGeneric<MailLog> mailService;
-    private readonly ServiceGeneric<Parameter> parameterService;
-    private readonly ServiceGeneric<TextDefault> textDefaultService;
-    private readonly ServiceLogMessages logMessagesService;
+    private readonly ServiceGeneric<Checkpoint> serviceCheckpoint;
+    private readonly ServiceLog serviceLog;
+    private readonly ServiceLogMessages serviceLogMessages;
+    private readonly ServiceGeneric<MailLog> serviceMail;
+    private readonly ServiceGeneric<MailMessage> serviceMailMessage;
+    private readonly ServiceMailModel serviceMailModel;
+    private readonly ServiceGeneric<Parameter> serviceParameter;
+    private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<Questions> serviceQuestions;
+    private readonly ServiceGeneric<TextDefault> serviceTextDefault;
     public string path;
 
-    public ServiceCheckpoint(DataContext context, string pathToken)
-      : base(context)
+    #region Contructor
+    public ServiceCheckpoint(DataContext context, string pathToken) : base(context)
     {
       try
       {
-        checkpointService = new ServiceGeneric<Checkpoint>(context);
-        textDefaultService = new ServiceGeneric<TextDefault>(context);
-        personService = new ServiceGeneric<Person>(context);
-        logService = new ServiceLog(_context);
-        mailModelService = new ServiceMailModel(context);
-        questionsService = new ServiceGeneric<Questions>(context);
-        mailMessageService = new ServiceGeneric<MailMessage>(context);
-        mailService = new ServiceGeneric<MailLog>(context);
-        parameterService = new ServiceGeneric<Parameter>(context);
-        logMessagesService = new ServiceLogMessages(context);
         serviceAuthentication = new ServiceAuthentication(context);
+        serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
+        serviceLog = new ServiceLog(_context);
+        serviceLogMessages = new ServiceLogMessages(context);
+        serviceMail = new ServiceGeneric<MailLog>(context);
+        serviceMailMessage = new ServiceGeneric<MailMessage>(context);
+        serviceMailModel = new ServiceMailModel(context);
+        serviceParameter = new ServiceGeneric<Parameter>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceQuestions = new ServiceGeneric<Questions>(context);
+        serviceTextDefault = new ServiceGeneric<TextDefault>(context);
         path = pathToken;
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      serviceCheckpoint._user = _user;
+      serviceLog._user = _user;
+      serviceLogMessages._user = _user;
+      serviceMail._user = _user;
+      serviceMailMessage._user = _user;
+      serviceMailModel._user = _user;
+      serviceParameter._user = _user;
+      servicePerson._user = _user;
+      serviceQuestions._user = _user;
+      serviceTextDefault._user = _user;
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceCheckpoint._user = user;
+      serviceLog._user = user;
+      serviceLogMessages._user = user;
+      serviceMail._user = user;
+      serviceMailMessage._user = user;
+      serviceMailModel._user = user;
+      serviceParameter._user = user;
+      servicePerson._user = user;
+      serviceQuestions._user = user;
+      serviceTextDefault._user = user;
+    }
+    #endregion
 
-    public List<Checkpoint> ListCheckpointsEnd(string idmanager, ref long total, string filter, int count, int page)
+    #region Old
+
+    public List<Checkpoint> ListCheckpointsEndOld(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
         LogSave(idmanager, "ListEnd");
         int skip = (count * (page - 1));
-        var detail = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = checkpointService.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceCheckpoint.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceCheckpoint.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }
@@ -74,12 +105,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Checkpoint PersonCheckpointEnd(string idperson)
+    public Checkpoint PersonCheckpointEndOld(string idperson)
     {
       try
       {
         LogSave(idperson, "PersonEnd");
-        return checkpointService.GetAll(p => p.Person._id == idperson & p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
+        return serviceCheckpoint.GetAll(p => p.Person._id == idperson & p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -91,11 +122,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var on = checkpointService.GetAuthentication(p => p.Status == EnumStatus.Disabled).Count();
+        var on = serviceCheckpoint.GetAuthentication(p => p.Status == EnumStatus.Disabled).Count();
         if (on == 0)
         {
-          var person = personService.GetAll().FirstOrDefault();
-          var zero = checkpointService.Insert(new Checkpoint() { Person = person, Status = EnumStatus.Disabled, StatusCheckpoint = EnumStatusCheckpoint.End });
+          var person = servicePerson.GetAll().FirstOrDefault();
+          var zero = serviceCheckpoint.Insert(new Checkpoint() { Person = person, Status = EnumStatus.Disabled, StatusCheckpoint = EnumStatusCheckpoint.End });
         }
       }
       catch (Exception)
@@ -104,16 +135,16 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Checkpoint> ListCheckpointsWait(string idmanager, ref long total, string filter, int count, int page)
+    public List<Checkpoint> ListCheckpointsWaitOld(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
         LogSave(idmanager, "List");
         NewOnZero();
         int skip = (count * (page - 1));
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
+        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
         & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
 
         var detail = new List<Checkpoint>();
@@ -140,15 +171,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Checkpoint ListCheckpointsWaitPerson(string idperson)
+    public Checkpoint ListCheckpointsWaitPersonOld(string idperson)
     {
       try
       {
         LogSave(idperson, "List");
         NewOnZero();
-        var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p._id == idperson)
+        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p._id == idperson)
         .OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        .ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
 
         var detail = new List<Checkpoint>();
@@ -174,11 +205,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Checkpoint GetCheckpoints(string id)
+    public Checkpoint GetCheckpointsOld(string id)
     {
       try
       {
-        return checkpointService.GetAll(p => p._id == id)
+        return serviceCheckpoint.GetAll(p => p._id == id)
           .ToList().Select(p => new Checkpoint()
           {
             _id = p._id,
@@ -231,7 +262,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Skill & p.TypeRotine == EnumTypeRotine.Checkpoint).ToList())
+        foreach (var item in serviceQuestions.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Skill & p.TypeRotine == EnumTypeRotine.Checkpoint).ToList())
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
@@ -255,7 +286,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        foreach (var item in questionsService.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Checkpoint).ToList())
+        foreach (var item in serviceQuestions.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Checkpoint).ToList())
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
@@ -278,7 +309,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        var text = textDefaultService.GetAll(p => p.TypeText == EnumTypeText.Checkpoint).FirstOrDefault();
+        var text = serviceTextDefault.GetAll(p => p.TypeText == EnumTypeText.Checkpoint).FirstOrDefault();
         if (text != null)
           checkpoint.TextDefault = text.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name).Replace("{manager_name}", checkpoint.Person.Manager.Name);
 
@@ -290,7 +321,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Checkpoint NewCheckpoint(Checkpoint checkpoint, string idperson)
+    public Checkpoint NewCheckpointOld(Checkpoint checkpoint, string idperson)
     {
       try
       {
@@ -306,7 +337,7 @@ namespace Manager.Services.Specific
         if (checkpoint._id != null)
           return checkpoint;
         else
-          return checkpointService.Insert(checkpoint);
+          return serviceCheckpoint.Insert(checkpoint);
       }
       catch (Exception e)
       {
@@ -314,7 +345,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateCheckpoint(Checkpoint checkpoint, string idperson)
+    public string UpdateCheckpointOld(Checkpoint checkpoint, string idperson)
     {
       try
       {
@@ -325,11 +356,11 @@ namespace Manager.Services.Specific
           if (checkpoint.TypeCheckpoint == EnumCheckpoint.Approved)
           {
             checkpoint.Person.TypeJourney = EnumTypeJourney.Monitoring;
-            personService.Update(checkpoint.Person, null);
+            servicePerson.Update(checkpoint.Person, null);
             MailRH(checkpoint.Person, "Aprovado");
             MailPerson(checkpoint.Person, "Aprovado");
 
-            logMessagesService.NewLogMessage("Checkpoint", " Colaborador " + checkpoint.Person.User.Name + " aprovado no Checkpoint", checkpoint.Person);
+            serviceLogMessages.NewLogMessage("Checkpoint", " Colaborador " + checkpoint.Person.User.Name + " aprovado no Checkpoint", checkpoint.Person);
           }
           else
           {
@@ -339,7 +370,7 @@ namespace Manager.Services.Specific
         }
 
 
-        checkpointService.Update(checkpoint, null);
+        serviceCheckpoint.Update(checkpoint, null);
         return "update";
       }
       catch (Exception e)
@@ -352,35 +383,19 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = personService.GetAll(p => p._id == iduser).FirstOrDefault();
+        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
         var log = new ViewLog()
         {
           Description = "Access Checkpoint ",
           Local = local,
           _idPerson = user._id
         };
-        logService.NewLog(log);
+        serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
         throw e;
       }
-    }
-
-    public void SetUser(IHttpContextAccessor contextAccessor)
-    {
-      User(contextAccessor);
-      personService._user = _user;
-      checkpointService._user = _user;
-      logService._user = _user;
-      mailModelService._user = _user;
-      mailMessageService._user = _user;
-      mailService._user = _user;
-      questionsService._user = _user;
-      textDefaultService._user = _user;
-      parameterService._user = _user;
-      logMessagesService._user = _user;
-      mailModelService.SetUser(contextAccessor);
     }
 
     // send mail
@@ -389,7 +404,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.CheckpointApproval(path);
+        var model = serviceMailModel.CheckpointApproval(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -402,7 +417,7 @@ namespace Manager.Services.Specific
           Url = url,
           Body = body
         };
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -417,11 +432,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
+        var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -433,9 +448,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var par = parameterService.GetAll(p => p.Name == "mailcheckpoint").FirstOrDefault();
+        var par = serviceParameter.GetAll(p => p.Name == "mailcheckpoint").FirstOrDefault();
         if (par == null)
-          return parameterService.Insert(new Parameter()
+          return serviceParameter.Insert(new Parameter()
           {
             Name = "mailcheckpoint",
             Content = "suporte@jmsoft.com.br",
@@ -455,7 +470,7 @@ namespace Manager.Services.Specific
       {
         var mailDefault = MailDefault();
         //searsh model mail database
-        var model = mailModelService.CheckpointResult(path);
+        var model = serviceMailModel.CheckpointResult(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -474,7 +489,7 @@ namespace Manager.Services.Specific
         {
           listMail.Add(new MailLogAddress(item, item));
         }
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -487,11 +502,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
+        var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -505,7 +520,7 @@ namespace Manager.Services.Specific
       {
         var mailDefault = MailDefault();
         //searsh model mail database
-        var model = mailModelService.CheckpointResultDisapproved(path);
+        var model = serviceMailModel.CheckpointResultDisapproved(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -524,7 +539,7 @@ namespace Manager.Services.Specific
         {
           listMail.Add(new MailLogAddress(item, item));
         }
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -537,11 +552,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
+        var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -554,7 +569,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.CheckpointResultPerson(path);
+        var model = serviceMailModel.CheckpointResultPerson(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -573,7 +588,7 @@ namespace Manager.Services.Specific
           new MailLogAddress(person.User.Mail, person.User.Name)
         };
 
-        var idMessage = mailMessageService.Insert(message)._id;
+        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -586,11 +601,11 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = mailService.Insert(sendMail);
+        var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = mailMessageService.GetAll(p => p._id == idMessage).FirstOrDefault();
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
-        mailMessageService.Update(messageEnd, null);
+        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -629,17 +644,17 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string RemoveCheckpoint(string idperson)
+    public string RemoveCheckpointOld(string idperson)
     {
       try
       {
         LogSave(_user._idPerson, "RemoveOnboarding:" + idperson);
-        var checkpoint = checkpointService.GetAll(p => p.Person._id == idperson).FirstOrDefault();
+        var checkpoint = serviceCheckpoint.GetAll(p => p.Person._id == idperson).FirstOrDefault();
         if (checkpoint == null)
           return "deleted";
 
         checkpoint.Status = EnumStatus.Disabled;
-        checkpointService.Update(checkpoint, null);
+        serviceCheckpoint.Update(checkpoint, null);
         return "deleted";
       }
       catch (Exception e)
@@ -652,10 +667,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var parameter = parameterService.GetAll(p => p.Name == "DeadlineAdm").FirstOrDefault();
+        var parameter = serviceParameter.GetAll(p => p.Name == "DeadlineAdm").FirstOrDefault();
         if (parameter == null)
         {
-          return int.Parse(parameterService.Insert(new Parameter()
+          return int.Parse(serviceParameter.Insert(new Parameter()
           {
             Name = "DeadlineAdm",
             Status = EnumStatus.Enabled,
@@ -672,14 +687,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<Checkpoint> GetListExclud(ref long total, string filter, int count, int page)
+    public List<Checkpoint> GetListExcludOld(ref long total, string filter, int count, int page)
     {
       try
       {
         LogSave(_user._idPerson, "ListExclud");
         int skip = (count * (page - 1));
-        var detail = checkpointService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = checkpointService.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceCheckpoint.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceCheckpoint.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }
@@ -688,6 +703,8 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    #endregion
+
   }
 #pragma warning restore 1998
 }

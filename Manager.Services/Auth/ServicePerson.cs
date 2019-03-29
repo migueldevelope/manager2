@@ -533,7 +533,7 @@ namespace Manager.Services.Auth
         user.Phone = view.User.Phone;
         user.PhoneFixed = view.User.PhoneFixed;
         user.PhotoUrl = view.User.PhotoUrl;
-        user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User._id).Result;
+        user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result;
         user.Sex = view.User.Sex;
         user = serviceUser.UpdateNewVersion(user).Result;
 

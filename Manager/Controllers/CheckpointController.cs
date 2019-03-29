@@ -10,100 +10,124 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador do Checkpoint
+  /// </summary>
   [Produces("application/json")]
   [Route("checkpoint")]
   public class CheckpointController : Controller
   {
     private readonly IServiceCheckpoint service;
 
+    #region Constructor
+    /// <summary>
+    /// Contrutor do controlador
+    /// </summary>
+    /// <param name="_service">Servico do checkpoint</param>
+    /// <param name="contextAccessor">Token de segurança</param>
     public CheckpointController(IServiceCheckpoint _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
+    #endregion
 
-    [Authorize]
-    [HttpPost]
-    [Route("new/{idperson}")]
-    public Checkpoint Post([FromBody]Checkpoint checkpoint, string idperson)
-    {
-      return service.NewCheckpoint(checkpoint, idperson);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("update/{idperson}")]
-    public string Put([FromBody]Checkpoint checkpoint, string idperson)
-    {
-      return service.UpdateCheckpoint(checkpoint, idperson);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("listend/{idmanager}")]
-    public List<Checkpoint> ListEnd(string idmanager, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListCheckpointsEnd(idmanager, ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
+    #region Checkpoint
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
     public List<Checkpoint> List(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListCheckpointsWait(idmanager, ref total, filter, count, page);
+      var result = service.ListCheckpointsWaitOld(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    #endregion
+
+    #region old
+    [Authorize]
+    [HttpPost]
+    [Route("old/new/{idperson}")]
+    public Checkpoint PostOld([FromBody]Checkpoint checkpoint, string idperson)
+    {
+      return service.NewCheckpointOld(checkpoint, idperson);
+    }
+
+    [Authorize]
+    [HttpPut]
+    [Route("old/update/{idperson}")]
+    public string PutOld([FromBody]Checkpoint checkpoint, string idperson)
+    {
+      return service.UpdateCheckpointOld(checkpoint, idperson);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("old/listend/{idmanager}")]
+    public List<Checkpoint> ListEndOld(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListCheckpointsEndOld(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpGet]
-    [Route("get/{id}")]
-    public Checkpoint GetCheckpoint(string id)
+    [Route("old/list/{idmanager}")]
+    public List<Checkpoint> ListOld(string idmanager, int count = 10, int page = 1, string filter = "")
     {
-      return service.GetCheckpoints(id);
+      long total = 0;
+      var result = service.ListCheckpointsWaitOld(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
     [Authorize]
     [HttpGet]
-    [Route("getlistexclud")]
-    public List<Checkpoint> GetListExclud(int count = 10, int page = 1, string filter = "")
+    [Route("old/get/{id}")]
+    public Checkpoint GetCheckpointOld(string id)
+    {
+      return service.GetCheckpointsOld(id);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("old/getlistexclud")]
+    public List<Checkpoint> GetListExcludOld(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetListExclud(ref total, filter, count, page);
+      var result = service.GetListExcludOld(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
     [Authorize]
     [HttpDelete]
-    [Route("delete/{idperson}")]
-    public string RemoveCheckpoint(string idperson)
+    [Route("old/delete/{idperson}")]
+    public string RemoveCheckpointOld(string idperson)
     {
-      return service.RemoveCheckpoint(idperson);
+      return service.RemoveCheckpointOld(idperson);
     }
 
     [Authorize]
     [HttpGet]
-    [Route("personcheckpointend/{idperson}")]
-    public Checkpoint PersonCheckpointEnd(string idperson)
+    [Route("old/personcheckpointend/{idperson}")]
+    public Checkpoint PersonCheckpointEndOld(string idperson)
     {
-      return service.PersonCheckpointEnd(idperson);
+      return service.PersonCheckpointEndOld(idperson);
     }
 
 
     [Authorize]
     [HttpGet]
-    [Route("listcheckpointswaitperson/{idperson}")]
-    public Checkpoint ListCheckpointsWaitPerson(string idperson)
+    [Route("old/listcheckpointswaitperson/{idperson}")]
+    public Checkpoint ListCheckpointsWaitPersonOld(string idperson)
     {
-      return service.ListCheckpointsWaitPerson(idperson);
+      return service.ListCheckpointsWaitPersonOld(idperson);
     }
-
+    #endregion
 
   }
 }
