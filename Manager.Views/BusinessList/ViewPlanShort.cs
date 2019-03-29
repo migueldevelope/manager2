@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Manager.Core.Views
+namespace Manager.Views.BusinessList
 {
   public class ViewPlanShort
   {

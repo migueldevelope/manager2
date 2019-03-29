@@ -312,21 +312,35 @@ namespace Manager.Controllers
     }
 
 
-    //[Authorize]
-    //[HttpPost]
-    //[Route("addplan/{idmonitoring}/{iditem}")]
-    //public List<Plan> AddPlan([FromBody]Plan plan, string idmonitoring, string iditem)
-    //{
-    //  return service.AddPlan(idmonitoring, iditem, plan);
-    //}
+    /// <summary>
+    /// Adiciona um plano
+    /// </summary>
+    /// <param name="plan">Objeto Crud</param>
+    /// <param name="idmonitoring">Identificador monitoring</param>
+    /// <param name="iditem">Identificador item</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addplan/{idmonitoring}/{iditem}")]
+    public List<ViewCrudPlan> AddPlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
+    {
+      return service.AddPlan(idmonitoring, iditem, plan);
+    }
 
-    //[Authorize]
-    //[HttpPut]
-    //[Route("updateplan/{idmonitoring}/{iditem}")]
-    //public List<Plan> UpdatePlan([FromBody]ViewListPlan plan, string idmonitoring, string iditem)
-    //{
-    //  return service.UpdatePlan(idmonitoring, iditem, plan);
-    //}
+    /// <summary>
+    /// Atualiza informações do plano dentro de um item do monitoring
+    /// </summary>
+    /// <param name="plan">Objeto Crud</param>
+    /// <param name="idmonitoring">Identificador monitoring</param>
+    /// <param name="iditem">Identificador item do monitoring</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateplan/{idmonitoring}/{iditem}")]
+    public List<ViewCrudPlan> UpdatePlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
+    {
+      return service.UpdatePlan(idmonitoring, iditem, plan);
+    }
 
     #endregion
 

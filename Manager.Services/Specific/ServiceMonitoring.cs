@@ -1697,7 +1697,7 @@ namespace Manager.Services.Specific
             Name = monitoring.Person.User.Name,
             Manager = monitoring.Person.Manager.Name,
             Company = new ViewListCompany() { _id = monitoring.Person.Company._id, Name = monitoring.Person.Company.Name },
-            Establishment = new ViewListEstablishment() { _id = monitoring.Person.Establishment._id, Name = monitoring.Person.Establishment.Name },
+            Establishment = (monitoring.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = monitoring.Person.Establishment._id, Name = monitoring.Person.Establishment.Name },
             Registration = monitoring.Person.Registration,
             User = new ViewListUser()
             {
@@ -1710,7 +1710,7 @@ namespace Manager.Services.Specific
           },
           CommentsPerson = monitoring.CommentsPerson,
           CommentsEnd = monitoring.CommentsEnd,
-          CommentsManager = monitoring.CommentsEnd,
+          CommentsManager = monitoring.CommentsManager,
           SkillsCompany = (monitoring.SkillsCompany == null) ? null : monitoring.SkillsCompany.Select(p => new ViewCrudMonitoringSkills()
           {
             _id = p._id,
@@ -1731,6 +1731,7 @@ namespace Manager.Services.Specific
               Concept = p.Skill.Concept,
               TypeSkill = p.Skill.TypeSkill
             },
+            Praise = p.Praise,
             Plans = (p.Plans == null) ? null : p.Plans.Select(x => new ViewCrudPlan()
             {
               _id = x._id,
@@ -1761,6 +1762,7 @@ namespace Manager.Services.Specific
             }).ToList(),
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
+            Praise = p.Praise,
             Schooling = new ViewCrudSchooling()
             {
               _id = p.Schooling._id,
@@ -1800,6 +1802,8 @@ namespace Manager.Services.Specific
             }).ToList(),
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
+            TypeAtivitie = p.TypeAtivitie,
+            Praise = p.Praise,
             Activities = new ViewListActivitie()
             {
               _id = p.Activities._id,
@@ -1886,21 +1890,29 @@ namespace Manager.Services.Specific
               StatusViewManager = view.StatusViewManager,
               StatusViewPerson = view.StatusViewPerson,
               Praise = view.Praise,
-              Activities = item.Activities,
+              Activities = new Activitie()
+              {
+                _id = item._id,
+                _idAccount = item._idAccount,
+                Name = view.Activities.Name,
+                Order = view.Activities.Order,
+                Status = item.Status
+              },
               Plans = item.Plans,
               Comments = new List<ListComments>()
             };
-            foreach (var com in view.Comments)
-              monitoringActivitie.Comments.Add(new ListComments()
-              {
-                _id = (com._id == null) ? ObjectId.GenerateNewId().ToString() : com._id,
-                Date = com.Date,
-                Comments = com.Comments,
-                Status = EnumStatus.Enabled,
-                StatusView = com.StatusView,
-                UserComment = com.UserComment,
-                _idAccount = _user._idAccount
-              });
+            if (view.Comments != null)
+              foreach (var com in view.Comments)
+                monitoringActivitie.Comments.Add(new ListComments()
+                {
+                  _id = (com._id == null) ? ObjectId.GenerateNewId().ToString() : com._id,
+                  Date = com.Date,
+                  Comments = com.Comments,
+                  Status = EnumStatus.Enabled,
+                  StatusView = com.StatusView,
+                  UserComment = com.UserComment,
+                  _idAccount = _user._idAccount
+                });
 
             monitoring.Activities.Add(monitoringActivitie);
             serviceMonitoring.Update(monitoring, null);
@@ -1990,8 +2002,7 @@ namespace Manager.Services.Specific
       {
         LogSave(idperson, "Monitoring Process");
         var monitoring = serviceMonitoring.GetAll(p => p.Person._id == idperson
-        && p.StatusMonitoring != EnumStatusMonitoring.End
-        && p.StatusMonitoring != EnumStatusMonitoring.Disapproved).FirstOrDefault();
+        && p.StatusMonitoring != EnumStatusMonitoring.End).FirstOrDefault();
 
         if (monitoring == null)
         {
@@ -2038,7 +2049,7 @@ namespace Manager.Services.Specific
         monitoring.StatusMonitoring = view.StatusMonitoring;
         monitoring.CommentsEnd = view.CommentsEnd;
         monitoring.CommentsPerson = view.CommentsPerson;
-        monitoring.CommentsManager = view.CommentsEnd;
+        monitoring.CommentsManager = view.CommentsManager;
 
         foreach (var row in monitoring.SkillsCompany)
         {
