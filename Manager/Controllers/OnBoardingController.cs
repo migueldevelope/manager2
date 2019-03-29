@@ -119,6 +119,12 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// Atualiza informações do onboarding
+    /// </summary>
+    /// <param name="onboarding">Objeto Crud</param>
+    /// <param name="idperson">Identificador contrato</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("update/{idperson}")]
@@ -127,6 +133,14 @@ namespace Manager.Controllers
       return service.UpdateOnBoarding(onboarding, idperson);
     }
 
+    /// <summary>
+    /// Lista onboarding finalizados
+    /// </summary>
+    /// <param name="idmanager">Identificador contrato gestor</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listend/{idmanager}")]
@@ -138,6 +152,14 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista onboarding finalizado
+    /// </summary>
+    /// <param name="idmanager">Identificador contrato</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("personend/{idmanager}")]
@@ -150,7 +172,13 @@ namespace Manager.Controllers
     }
 
 
-
+    /// <summary>
+    /// List onboarding para exclusão
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
@@ -162,6 +190,13 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Atualização informações de comentarios
+    /// </summary>
+    /// <param name="comments">Objeto Crud</param>
+    /// <param name="idonboarding">Identificador onboarding</param>
+    /// <param name="iditem">Indetificador item do onboarding</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatecomments/{idonboarding}/{iditem}")]
@@ -170,6 +205,12 @@ namespace Manager.Controllers
       return service.UpdateComments(idonboarding, iditem, comments);
     }
 
+    /// <summary>
+    /// Lista comentarios onboarding
+    /// </summary>
+    /// <param name="idonboarding">Identificador onboarding</param>
+    /// <param name="iditem">Identificador item onboarding</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listcomments/{idonboarding}/{iditem}")]
@@ -178,6 +219,13 @@ namespace Manager.Controllers
       return service.GetListComments(idonboarding, iditem);
     }
 
+    /// <summary>
+    /// Inclusão comentario no item do onboarding
+    /// </summary>
+    /// <param name="comments">Objeto Crud</param>
+    /// <param name="idonboarding">Identificador onboarding</param>
+    /// <param name="iditem">Identificador item do onboarding</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addcomments/{idonboarding}/{iditem}")]
