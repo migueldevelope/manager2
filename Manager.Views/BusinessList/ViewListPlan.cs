@@ -1,12 +1,11 @@
-﻿
-using Manager.Views.BusinessList;
+﻿using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
 
-namespace Manager.Views.BusinessCrud
+namespace Manager.Views.BusinessList
 {
-  public class ViewCrudPlan: _ViewCrudBase
+  public class ViewListPlan : _ViewListBase
   {
     public string Description { get; set; }
     public DateTime? Deadline { get; set; }

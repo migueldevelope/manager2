@@ -26,7 +26,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Monitoring> serviceMonitoring;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Occupation> occupationService;
-    private readonly ServiceGeneric<Plan> planService;
+    private readonly ServiceGeneric<Plan> servicePlan;
     private readonly ServiceLog logService;
     private readonly ServiceMailModel mailModelService;
     private readonly ServiceGeneric<MailMessage> mailMessageService;
@@ -45,7 +45,7 @@ namespace Manager.Services.Specific
       {
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         servicePerson = new ServiceGeneric<Person>(context);
-        planService = new ServiceGeneric<Plan>(context);
+        servicePlan = new ServiceGeneric<Plan>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
         logService = new ServiceLog(_context);
         mailModelService = new ServiceMailModel(context);
@@ -67,7 +67,7 @@ namespace Manager.Services.Specific
       User(contextAccessor);
       servicePerson._user = _user;
       serviceMonitoring._user = _user;
-      planService._user = _user;
+      servicePlan._user = _user;
       logService._user = _user;
       mailModelService._user = _user;
       mailMessageService._user = _user;
@@ -1127,24 +1127,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-    private async void LogSave(string iduser, string local)
-    {
-      try
-      {
-        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
-        var log = new ViewLog()
-        {
-          Description = "Access Monitoring ",
-          Local = local,
-          _idPerson = user._id
-        };
-        logService.NewLog(log);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment)
     {
       try
@@ -1288,174 +1270,281 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan)
+    {
+      try
+      {
+        var userInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
 
-    //public List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan)
-    //{
-    //  try
-    //  {
-    //    var userInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
-    //    var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+        {
+          if (monitoring.Person._id == _user._idPerson)
+          {
+            monitoring.DateBeginPerson = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+          }
+          else
+          {
+            monitoring.DateBeginManager = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+          }
+        }
 
-    //    if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
-    //    {
-    //      if (monitoring.Person._id == _user._idPerson)
-    //      {
-    //        monitoring.DateBeginPerson = DateTime.Now;
-    //        monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
-    //      }
-    //      else
-    //      {
-    //        monitoring.DateBeginManager = DateTime.Now;
-    //        monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
-    //      }
-    //    }
-
-    //    logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
-
-
-    //    var newPlan = AddPlan(plan, userInclude);
-
-    //    if (plan.SourcePlan == EnumSourcePlan.Activite)
-    //    {
-    //      foreach (var item in monitoring.Activities)
-    //      {
-    //        if (item._id == iditem)
-    //        {
-    //          if (item.Plans == null)
-    //            item.Plans = new List<Plan>();
-
-    //          item.Plans.Add(newPlan);
-    //          serviceMonitoring.Update(monitoring, null);
-    //          return item.Plans;
-    //        }
-    //      }
-    //    }
-
-    //    if (plan.SourcePlan == EnumSourcePlan.Schooling)
-    //    {
-    //      foreach (var item in monitoring.Schoolings)
-    //      {
-    //        if (item._id == iditem)
-    //        {
-    //          if (item.Plans == null)
-    //            item.Plans = new List<Plan>();
-
-    //          item.Plans.Add(newPlan);
-    //          serviceMonitoring.Update(monitoring, null);
-    //          return item.Plans;
-    //        }
-    //      }
-    //    }
-
-    //    if (plan.SourcePlan == EnumSourcePlan.Skill)
-    //    {
-    //      foreach (var item in monitoring.SkillsCompany)
-    //      {
-    //        if (item._id == iditem)
-    //        {
-    //          if (item.Plans == null)
-    //            item.Plans = new List<Plan>();
-
-    //          item.Plans.Add(newPlan);
-    //          serviceMonitoring.Update(monitoring, null);
-    //          return item.Plans;
-    //        }
-    //      }
-    //    }
+        logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
 
 
-    //    return null;
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-    //public List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan plan)
-    //{
-    //  try
-    //  {
-    //    //var userInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
-    //    var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
-    //    logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
+        var newPlan = AddPlan(new Plan()
+        {
+          _id = plan._id,
+          Name = plan.Name,
+          Description = plan.Description,
+          Deadline = plan.Deadline,
+          Skills = (plan.Skills == null) ? null : plan.Skills.Select(x => new Skill()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Concept = x.Concept,
+            TypeSkill = x.TypeSkill
+          }).ToList(),
+          SourcePlan = plan.SourcePlan,
+          TypePlan = plan.TypePlan
+        }, userInclude);
+
+        if (plan.SourcePlan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            if (item._id == iditem)
+            {
+              if (item.Plans == null)
+                item.Plans = new List<Plan>();
+
+              item.Plans.Add(newPlan);
+              serviceMonitoring.Update(monitoring, null);
+              return item.Plans.Select(p => new ViewCrudPlan()
+              {
+                _id = p._id,
+                Name = p.Name,
+                Description = p.Description,
+                Deadline = p.Deadline,
+                Skills = (p.Skills == null) ? null : p.Skills.Select(x => new ViewListSkill()
+                {
+                  _id = x._id,
+                  Name = x.Name,
+                  Concept = x.Concept,
+                  TypeSkill = x.TypeSkill
+                }).ToList(),
+                SourcePlan = p.SourcePlan,
+                TypePlan = p.TypePlan
+              }).ToList();
+            }
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            if (item._id == iditem)
+            {
+              if (item.Plans == null)
+                item.Plans = new List<Plan>();
+
+              item.Plans.Add(newPlan);
+              serviceMonitoring.Update(monitoring, null);
+              return item.Plans.Select(p => new ViewCrudPlan()
+              {
+                _id = p._id,
+                Name = p.Name,
+                Description = p.Description,
+                Deadline = p.Deadline,
+                Skills = (p.Skills == null) ? null : p.Skills.Select(x => new ViewListSkill()
+                {
+                  _id = x._id,
+                  Name = x.Name,
+                  Concept = x.Concept,
+                  TypeSkill = x.TypeSkill
+                }).ToList(),
+                SourcePlan = p.SourcePlan,
+                TypePlan = p.TypePlan
+              }).ToList();
+            }
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.Skill)
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            if (item._id == iditem)
+            {
+              if (item.Plans == null)
+                item.Plans = new List<Plan>();
+
+              item.Plans.Add(newPlan);
+              serviceMonitoring.Update(monitoring, null);
+              return item.Plans.Select(p => new ViewCrudPlan()
+              {
+                _id = p._id,
+                Name = p.Name,
+                Description = p.Description,
+                Deadline = p.Deadline,
+                Skills = (p.Skills == null) ? null : p.Skills.Select(x => new ViewListSkill()
+                {
+                  _id = x._id,
+                  Name = x.Name,
+                  Concept = x.Concept,
+                  TypeSkill = x.TypeSkill
+                }).ToList(),
+                SourcePlan = p.SourcePlan,
+                TypePlan = p.TypePlan
+              }).ToList();
+            }
+          }
+        }
 
 
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
+    public List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan view)
+    {
+      try
+      {
+        //var userInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        logMessagesService.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
+        var plan = servicePlan.GetAll(p => p._id == view._id).FirstOrDefault();
+        plan.Description = view.Description;
+        plan.Deadline = view.Deadline;
+        plan.Name = view.Name;
+        plan.SourcePlan = view.SourcePlan;
+        plan.TypePlan = view.TypePlan;
 
 
-    //    if (plan.SourcePlan == EnumSourcePlan.Activite)
-    //    {
-    //      foreach (var item in monitoring.Activities)
-    //      {
-    //        if (item._id == iditem)
-    //        {
-    //          foreach (var row in item.Plans)
-    //          {
-    //            if (row._id == plan._id)
-    //            {
-    //              item.Plans.Remove(row);
-    //              item.Plans.Add(plan);
-    //              UpdatePlan(plan);
-    //              serviceMonitoring.Update(monitoring, null);
-    //              return item.Plans;
-    //            }
-    //          }
+        if (plan.SourcePlan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  item.Plans.Add(plan);
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null);
+                  return item.Plans.Select(p => new ViewCrudPlan()
+                  {
+                    _id = p._id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Deadline = p.Deadline,
+                    Skills = (p.Skills == null) ? null : p.Skills.Select(x => new ViewListSkill()
+                    {
+                      _id = x._id,
+                      Name = x.Name,
+                      Concept = x.Concept,
+                      TypeSkill = x.TypeSkill
+                    }).ToList(),
+                    SourcePlan = p.SourcePlan,
+                    TypePlan = p.TypePlan
+                  }).ToList();
+                }
+              }
 
 
-    //        }
-    //      }
-    //    }
+            }
+          }
+        }
 
-    //    if (plan.SourcePlan == EnumSourcePlan.Schooling)
-    //    {
-    //      foreach (var item in monitoring.Schoolings)
-    //      {
-    //        if (item._id == iditem)
-    //        {
-    //          foreach (var row in item.Plans)
-    //          {
-    //            if (row._id == plan._id)
-    //            {
-    //              item.Plans.Remove(row);
-    //              item.Plans.Add(plan);
-    //              UpdatePlan(plan);
-    //              serviceMonitoring.Update(monitoring, null);
-    //              return item.Plans;
-    //            }
-    //          }
-    //        }
-    //      }
-    //    }
+        if (plan.SourcePlan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  item.Plans.Add(plan);
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null);
+                  return item.Plans.Select(p => new ViewCrudPlan()
+                  {
+                    _id = p._id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Deadline = p.Deadline,
+                    Skills = (p.Skills == null) ? null : p.Skills.Select(x => new ViewListSkill()
+                    {
+                      _id = x._id,
+                      Name = x.Name,
+                      Concept = x.Concept,
+                      TypeSkill = x.TypeSkill
+                    }).ToList(),
+                    SourcePlan = p.SourcePlan,
+                    TypePlan = p.TypePlan
+                  }).ToList();
+                }
+              }
+            }
+          }
+        }
 
-    //    if (plan.SourcePlan == EnumSourcePlan.Skill)
-    //    {
-    //      foreach (var item in monitoring.SkillsCompany)
-    //      {
-    //        if (item._id == iditem)
-    //        {
-    //          foreach (var row in item.Plans)
-    //          {
-    //            if (row._id == plan._id)
-    //            {
-    //              item.Plans.Remove(row);
-    //              item.Plans.Add(plan);
-    //              UpdatePlan(plan);
-    //              serviceMonitoring.Update(monitoring, null);
-    //              return item.Plans;
-    //            }
-    //          }
-    //        }
-    //      }
-    //    }
+        if (plan.SourcePlan == EnumSourcePlan.Skill)
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  item.Plans.Add(plan);
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null);
+                  return item.Plans.Select(p => new ViewCrudPlan()
+                  {
+                    _id = p._id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Deadline = p.Deadline,
+                    Skills = (p.Skills == null) ? null : p.Skills.Select(x => new ViewListSkill()
+                    {
+                      _id = x._id,
+                      Name = x.Name,
+                      Concept = x.Concept,
+                      TypeSkill = x.TypeSkill
+                    }).ToList(),
+                    SourcePlan = p.SourcePlan,
+                    TypePlan = p.TypePlan
+                  }).ToList();
+                }
+              }
+            }
+          }
+        }
 
-    //    serviceMonitoring.Update(monitoring, null);
-    //    return null;
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw new ServiceException(_user, e, this._context);
-    //  }
-    //}
-
+        serviceMonitoring.Update(monitoring, null);
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw new ServiceException(_user, e, this._context);
+      }
+    }
     public List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page)
     {
       try
@@ -1516,7 +1605,9 @@ namespace Manager.Services.Specific
           _id = p._id,
           Name = p.Person.User.Name,
           idPerson = p.Person._id,
-          StatusMonitoring = p.StatusMonitoring
+          StatusMonitoring = p.StatusMonitoring,
+          DateEndEnd = p.DateEndEnd,
+          OccupationName = p.Person.Occupation.Name
         }).ToList();
       }
       catch (Exception e)
@@ -1598,14 +1689,32 @@ namespace Manager.Services.Specific
         var view = new ViewCrudMonitoring()
         {
           _id = monitoring._id,
-          _idPerson = monitoring.Person._id,
+          Person = new ViewInfoPerson()
+          {
+            _id = monitoring.Person._id,
+            TypeJourney = monitoring.Person.TypeJourney,
+            Occupation = monitoring.Person.Occupation.Name,
+            Name = monitoring.Person.User.Name,
+            Manager = monitoring.Person.Manager.Name,
+            Company = new ViewListCompany() { _id = monitoring.Person.Company._id, Name = monitoring.Person.Company.Name },
+            Establishment = new ViewListEstablishment() { _id = monitoring.Person.Establishment._id, Name = monitoring.Person.Establishment.Name },
+            Registration = monitoring.Person.Registration,
+            User = new ViewListUser()
+            {
+              Document = monitoring.Person.User.Document,
+              Mail = monitoring.Person.User.Mail,
+              Name = monitoring.Person.User.Name,
+              Phone = monitoring.Person.User.Phone,
+              _id = monitoring.Person.User._id
+            }
+          },
           CommentsPerson = monitoring.CommentsPerson,
           CommentsEnd = monitoring.CommentsEnd,
           CommentsManager = monitoring.CommentsEnd,
-          SkillsCompany = monitoring.SkillsCompany.Select(p => new ViewCrudMonitoringSkills()
+          SkillsCompany = (monitoring.SkillsCompany == null) ? null : monitoring.SkillsCompany.Select(p => new ViewCrudMonitoringSkills()
           {
             _id = p._id,
-            Comments = p.Comments.Select(x => new ViewCrudComment()
+            Comments = (p.Comments == null) ? null : p.Comments.Select(x => new ViewCrudComment()
             {
               _id = x._id,
               Comments = x.Comments,
@@ -1621,12 +1730,28 @@ namespace Manager.Services.Specific
               Name = p.Skill.Name,
               Concept = p.Skill.Concept,
               TypeSkill = p.Skill.TypeSkill
-            }
+            },
+            Plans = (p.Plans == null) ? null : p.Plans.Select(x => new ViewCrudPlan()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Description = x.Description,
+              Deadline = x.Deadline,
+              Skills = (x.Skills == null) ? null : x.Skills.Select(y => new ViewListSkill()
+              {
+                _id = y._id,
+                Name = y.Name,
+                Concept = y.Concept,
+                TypeSkill = y.TypeSkill
+              }).ToList(),
+              SourcePlan = x.SourcePlan,
+              TypePlan = x.TypePlan
+            }).ToList()
           }).ToList(),
-          Schoolings = monitoring.Schoolings.Select(p => new ViewCrudMonitoringSchooling()
+          Schoolings = (monitoring.Schoolings == null) ? null : monitoring.Schoolings.Select(p => new ViewCrudMonitoringSchooling()
           {
             _id = p._id,
-            Comments = p.Comments.Select(x => new ViewCrudComment()
+            Comments = (p.Comments == null) ? null : p.Comments.Select(x => new ViewCrudComment()
             {
               _id = x._id,
               Comments = x.Comments,
@@ -1636,17 +1761,35 @@ namespace Manager.Services.Specific
             }).ToList(),
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
-            Schooling = new ViewListSchooling()
+            Schooling = new ViewCrudSchooling()
             {
               _id = p.Schooling._id,
               Name = p.Schooling.Name,
-              Order = p.Schooling.Order
-            }
+              Complement = p.Schooling.Complement,
+              Order = p.Schooling.Order,
+              Type = p.Schooling.Type
+            },
+            Plans = (p.Plans == null) ? null : p.Plans.Select(x => new ViewCrudPlan()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Description = x.Description,
+              Deadline = x.Deadline,
+              Skills = (x.Skills == null) ? null : x.Skills.Select(y => new ViewListSkill()
+              {
+                _id = y._id,
+                Name = y.Name,
+                Concept = y.Concept,
+                TypeSkill = y.TypeSkill
+              }).ToList(),
+              SourcePlan = x.SourcePlan,
+              TypePlan = x.TypePlan
+            }).ToList()
           }).ToList(),
-          Activities = monitoring.Activities.Select(p => new ViewCrudMonitoringActivities()
+          Activities = (monitoring.Activities == null) ? null : monitoring.Activities.Select(p => new ViewCrudMonitoringActivities()
           {
             _id = p._id,
-            Comments = p.Comments.Select(x => new ViewCrudComment()
+            Comments = (p.Comments == null) ? null : p.Comments.Select(x => new ViewCrudComment()
             {
               _id = x._id,
               Comments = x.Comments,
@@ -1661,7 +1804,23 @@ namespace Manager.Services.Specific
               _id = p.Activities._id,
               Name = p.Activities.Name,
               Order = p.Activities.Order
-            }
+            },
+            Plans = (p.Plans == null) ? null : p.Plans.Select(x => new ViewCrudPlan()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Description = x.Description,
+              Deadline = x.Deadline,
+              Skills = (x.Skills == null) ? null : x.Skills.Select(y => new ViewListSkill()
+              {
+                _id = y._id,
+                Name = y.Name,
+                Concept = y.Concept,
+                TypeSkill = y.TypeSkill
+              }).ToList(),
+              SourcePlan = x.SourcePlan,
+              TypePlan = x.TypePlan
+            }).ToList()
           }).ToList(),
           StatusMonitoring = monitoring.StatusMonitoring
         };
@@ -1836,10 +1995,7 @@ namespace Manager.Services.Specific
         {
           monitoring = new Monitoring()
           {
-            Person = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault(),
-            CommentsPerson = monitoring.CommentsPerson,
-            CommentsEnd = monitoring.CommentsEnd,
-            CommentsManager = monitoring.CommentsEnd,
+            Person = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault()
           };
 
           LoadMap(monitoring);
@@ -1872,7 +2028,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
     public string UpdateMonitoring(ViewCrudMonitoring view)
     {
       try
@@ -2025,8 +2180,6 @@ namespace Manager.Services.Specific
         throw new ServiceException(_user, e, this._context);
       }
     }
-
-
     public List<ViewListSkill> GetSkills(string idperson)
     {
       try
@@ -2371,11 +2524,30 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
+
+    private async void LogSave(string iduser, string local)
+    {
+      try
+      {
+        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Access Monitoring ",
+          Local = local,
+          _idPerson = user._id
+        };
+        logService.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private string UpdatePlan(Plan plan)
     {
       try
       {
-        planService.Update(plan, null);
+        servicePlan.Update(plan, null);
         return "ok";
       }
       catch (Exception e)
@@ -2390,7 +2562,7 @@ namespace Manager.Services.Specific
 
         plan.DateInclude = DateTime.Now;
         plan.UserInclude = person;
-        return planService.Insert(plan);
+        return servicePlan.Insert(plan);
       }
       catch (Exception e)
       {
