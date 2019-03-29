@@ -9,5 +9,7 @@ namespace Manager.Views.BusinessList
   {
     public string idPerson { get; set; }
     public EnumStatusMonitoring StatusMonitoring { get; set; }
+    public string OccupationName { get; set; }
+    public DateTime? DateEndEnd { get; set; }
   }
 }

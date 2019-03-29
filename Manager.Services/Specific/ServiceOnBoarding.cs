@@ -1172,7 +1172,8 @@ namespace Manager.Services.Specific
           Name = p.Person.User.Name,
           _idPerson = p.Person._id,
           StatusOnBoarding = p.StatusOnBoarding,
-          OccupationName = p.Person.Occupation.Name
+          OccupationName = p.Person.Occupation.Name,
+          DateEndEnd = p.DateEndEnd
         }).ToList(); ;
       }
       catch (Exception e)

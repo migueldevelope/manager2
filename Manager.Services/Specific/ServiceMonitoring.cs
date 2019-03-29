@@ -1535,7 +1535,9 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Person.User.Name,
             idPerson = p.Person._id,
-            StatusMonitoring = p.StatusMonitoring
+            StatusMonitoring = p.StatusMonitoring,
+            OccupationName = p.Person.Occupation.Name,
+            DateEndEnd = p.DateEndEnd
           }).ToList();
       }
       catch (Exception e)
