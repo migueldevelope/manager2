@@ -1836,7 +1836,7 @@ namespace Manager.Services.Specific
         {
           monitoring = new Monitoring()
           {
-            Person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault(),
+            Person = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault(),
             CommentsPerson = monitoring.CommentsPerson,
             CommentsEnd = monitoring.CommentsEnd,
             CommentsManager = monitoring.CommentsEnd,
