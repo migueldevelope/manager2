@@ -10,6 +10,7 @@ using Manager.Core.Enumns;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Reflection;
+using Manager.Views.Enumns;
 
 namespace Manager.Data
 {

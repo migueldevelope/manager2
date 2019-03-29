@@ -15,5 +15,6 @@ namespace Manager.Views.BusinessCrud
     public List<ViewCrudComment> Comments { get; set; }
     public EnumStatusView StatusViewManager { get; set; }
     public EnumStatusView StatusViewPerson { get; set; }
+    public EnumStatus Status { get; set; }
   }
 }

@@ -19,6 +19,7 @@ using Manager.Core.Enumns;
 using Tools;
 using Manager.Core.Base;
 using Manager.Core.Interfaces;
+using Manager.Views.Enumns;
 
 namespace EdeskIntegration.Controllers
 {

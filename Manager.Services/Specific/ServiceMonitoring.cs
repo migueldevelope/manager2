@@ -1788,6 +1788,7 @@ namespace Manager.Services.Specific
           }).ToList(),
           Activities = (monitoring.Activities == null) ? null : monitoring.Activities.Select(p => new ViewCrudMonitoringActivities()
           {
+            Status = p.Status,
             _id = p._id,
             Comments = (p.Comments == null) ? null : p.Comments.Select(x => new ViewCrudComment()
             {
@@ -1841,6 +1842,7 @@ namespace Manager.Services.Specific
 
         return new ViewCrudMonitoringActivities()
         {
+          Status = view.Status,
           _id = view._id,
           Activities = new ViewListActivitie() { _id = view.Activities._id, Name = view.Activities.Name, Order = view.Activities.Order },
           Comments = view.Comments.Select(p => new ViewCrudComment()

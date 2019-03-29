@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Enumns;
+using Manager.Views.Enumns;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 

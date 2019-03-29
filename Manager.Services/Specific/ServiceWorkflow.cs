@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Manager.Core.Base;
 using Manager.Views.BusinessView;
 using Manager.Services.Auth;
+using Manager.Views.Enumns;
 
 namespace Manager.Services.Specific
 {
