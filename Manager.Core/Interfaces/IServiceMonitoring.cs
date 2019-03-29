@@ -29,7 +29,7 @@ namespace Manager.Core.Interfaces
     ViewListMonitoring PersonMonitoringsWait(string idmanager);
     List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager);
     ViewListMonitoring NewMonitoring(string idperson);
-    string UpdateMonitoring(ViewCrudMonitoring view, string idperson);
+    string UpdateMonitoring(ViewCrudMonitoring view);
     List<ViewListMonitoring> GetListExclud(ref long total, string filter, int count, int page);
     ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie);
     string UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view);
@@ -41,8 +41,6 @@ namespace Manager.Core.Interfaces
     //List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan plan);
 
     #endregion
-
-
 
     #region Old
     List<Monitoring> ListMonitoringsWaitOld(string idmanager, ref long total, string filter, int count, int page);

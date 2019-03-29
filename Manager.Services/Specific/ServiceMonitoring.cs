@@ -1873,7 +1873,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateMonitoring(ViewCrudMonitoring view, string idperson)
+    public string UpdateMonitoring(ViewCrudMonitoring view)
     {
       try
       {
@@ -1914,9 +1914,9 @@ namespace Manager.Services.Specific
           }
         }
 
-        var userInclude = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
+        var userInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
 
-        if (monitoring.Person._id != idperson)
+        if (monitoring.Person._id != _user._idPerson)
         {
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.Wait)
           {

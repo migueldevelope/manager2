@@ -108,10 +108,10 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [Route("update/{idperson}")]
-    public string UpdateMonitoring([FromBody]ViewCrudMonitoring monitoring, string idperson)
+    [Route("update")]
+    public string UpdateMonitoring([FromBody]ViewCrudMonitoring monitoring)
     {
-      return service.UpdateMonitoring(monitoring, idperson);
+      return service.UpdateMonitoring(monitoring);
     }
 
     /// <summary>
