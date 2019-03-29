@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -92,47 +88,59 @@ namespace Manager.Controllers
     {
       return service.GetOnBoarding(id);
     }
-
+    /// <summary>
+    /// Apagar comentários
+    /// </summary>
+    /// <param name="idonboarding">Identificador do onboarding</param>
+    /// <param name="iditem">Identificador do item</param>
+    /// <param name="idcomment">Identificador do comentário</param>
+    /// <returns>Mensagem de Sucesso</returns>
     [Authorize]
     [HttpDelete]
     [Route("deletecomments/{idonboarding}/{iditem}/{idcomments}")]
-    public string DeleteComments(string idonboarding, string iditem, string idcomments)
+    public IActionResult DeleteComments(string idonboarding, string iditem, string idcomment)
     {
-      return service.DeleteComments(idonboarding, iditem, idcomments);
+      return Ok(service.DeleteComments(idonboarding, iditem, idcomment));
     }
-
+    /// <summary>
+    /// Alteração de leitura de comentário
+    /// </summary>
+    /// <param name="idonboarding">Identificador do onboarding</param>
+    /// <param name="iditem">Identificador do item</param>
+    /// <param name="usercomment">Marcação de leitura</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
     [Route("updatecommentsview/{idonboarding}/{iditem}/{usercomment}")]
-    public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment usercomment)
+    public IActionResult UpdateCommentsView(string idonboarding, string iditem, EnumUserComment usercomment)
     {
-      return service.UpdateCommentsView(idonboarding, iditem, usercomment);
+      return Ok(service.UpdateCommentsView(idonboarding, iditem, usercomment));
     }
-
-
+    /// <summary>
+    /// Apagar onboarding
+    /// </summary>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <returns>Mensagem de Sucesso</returns>
     [Authorize]
     [HttpDelete]
     [Route("delete/{idperson}")]
-    public string RemoveOnBoarding(string idperson)
+    public IActionResult RemoveOnBoarding(string idperson)
     {
-      return service.RemoveOnBoarding(idperson);
+      return Ok(service.RemoveOnBoarding(idperson));
     }
-
-
     /// <summary>
     /// Atualiza informações do onboarding
     /// </summary>
     /// <param name="onboarding">Objeto Crud</param>
-    /// <param name="idperson">Identificador contrato</param>
-    /// <returns></returns>
+    /// <param name="idperson">Identificador do colaborador</param>
+    /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
     [Route("update/{idperson}")]
-    public string UpdateOnBoarding([FromBody]ViewCrudOnboarding onboarding, string idperson)
+    public IActionResult UpdateOnBoarding([FromBody]ViewCrudOnboarding onboarding, string idperson)
     {
-      return service.UpdateOnBoarding(onboarding, idperson);
+      return Ok(service.UpdateOnBoarding(onboarding, idperson));
     }
-
     /// <summary>
     /// Lista onboarding finalizados
     /// </summary>
@@ -151,7 +159,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista onboarding finalizado
     /// </summary>
@@ -170,8 +177,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
-
     /// <summary>
     /// List onboarding para exclusão
     /// </summary>
@@ -189,7 +194,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Atualização informações de comentarios
     /// </summary>
@@ -204,7 +208,6 @@ namespace Manager.Controllers
     {
       return service.UpdateComments(idonboarding, iditem, comments);
     }
-
     /// <summary>
     /// Lista comentarios onboarding
     /// </summary>
@@ -218,7 +221,6 @@ namespace Manager.Controllers
     {
       return service.GetListComments(idonboarding, iditem);
     }
-
     /// <summary>
     /// Inclusão comentario no item do onboarding
     /// </summary>
@@ -233,8 +235,6 @@ namespace Manager.Controllers
     {
       return service.AddComments(idonboarding, iditem, comments);
     }
-
-
     #endregion
 
     #region Old

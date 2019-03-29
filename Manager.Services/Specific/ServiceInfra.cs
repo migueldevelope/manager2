@@ -997,7 +997,7 @@ namespace Manager.Services.Specific
             Template = p.Template,
             //ProcessLevelTwo = p.ProcessLevelTwo,
             SpecificRequirements = p.SpecificRequirements,
-            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList() : null
+            Process = p.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList()
           }).FirstOrDefault();
 
         return occupation;
@@ -1081,7 +1081,7 @@ namespace Manager.Services.Specific
             Template = p.Template,
             // ProcessLevelTwo = p.ProcessLevelTwo,
             SpecificRequirements = p.SpecificRequirements,
-            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList() : null
+            Process = p.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order).ToList()
           }).FirstOrDefault();
       }
       catch (Exception e)
@@ -2173,12 +2173,14 @@ namespace Manager.Services.Specific
             if (line > maxLine)
               maxLine = line;
 
-            var result = new ViewCSVLO();
-            result.Name = scope.Name.Replace("\n", "").Replace(";", ".");
-            result.Line = line;
-            result.Col = col;
-            result.Type = EnumTypeLO.Scope;
-            result.IdGroup = item._id;
+            var result = new ViewCSVLO
+            {
+              Name = scope.Name.Replace("\n", "").Replace(";", "."),
+              Line = line,
+              Col = col,
+              Type = EnumTypeLO.Scope,
+              IdGroup = item._id
+            };
 
             list.Add(result);
             line += 1;
@@ -2193,12 +2195,14 @@ namespace Manager.Services.Specific
             if (line > maxLineSkill)
               maxLineSkill = line;
 
-            var result = new ViewCSVLO();
-            result.Name = skill.Name.Replace("\n", "").Replace(";", ".") + ":" + skill.Concept.Replace("\n", "").Replace(";", ".");
-            result.Line = line;
-            result.Col = col;
-            result.Type = EnumTypeLO.Skill;
-            result.IdGroup = item._id;
+            var result = new ViewCSVLO
+            {
+              Name = skill.Name.Replace("\n", "").Replace(";", ".") + ":" + skill.Concept.Replace("\n", "").Replace(";", "."),
+              Line = line,
+              Col = col,
+              Type = EnumTypeLO.Skill,
+              IdGroup = item._id
+            };
 
             list.Add(result);
             line += 1;
@@ -2213,12 +2217,14 @@ namespace Manager.Services.Specific
             if (line > maxLineSchooling)
               maxLineSchooling = line;
 
-            var result = new ViewCSVLO();
-            result.Name = scholling.Name.Replace("\n", "").Replace(";", ".");
-            result.Line = line;
-            result.Col = col;
-            result.Type = EnumTypeLO.Schooling;
-            result.IdGroup = item._id;
+            var result = new ViewCSVLO
+            {
+              Name = scholling.Name.Replace("\n", "").Replace(";", "."),
+              Line = line,
+              Col = col,
+              Type = EnumTypeLO.Schooling,
+              IdGroup = item._id
+            };
 
             list.Add(result);
             line += 1;
@@ -2237,12 +2243,14 @@ namespace Manager.Services.Specific
             var item = list.Where(p => p.Type == EnumTypeLO.Scope & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
             if (item == 0)
             {
-              var view = new ViewCSVLO();
-              view.IdGroup = group._id;
-              view.Type = EnumTypeLO.Scope;
-              view.Name = " ";
-              view.Line = row;
-              view.Col = col;
+              var view = new ViewCSVLO
+              {
+                IdGroup = group._id,
+                Type = EnumTypeLO.Scope,
+                Name = " ",
+                Line = row,
+                Col = col
+              };
               list.Add(view);
             }
             col += 1;
@@ -2258,12 +2266,14 @@ namespace Manager.Services.Specific
             var item = list.Where(p => p.Type == EnumTypeLO.Skill & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
             if (item == 0)
             {
-              var view = new ViewCSVLO();
-              view.IdGroup = group._id;
-              view.Type = EnumTypeLO.Skill;
-              view.Name = " ";
-              view.Line = row;
-              view.Col = col;
+              var view = new ViewCSVLO
+              {
+                IdGroup = group._id,
+                Type = EnumTypeLO.Skill,
+                Name = " ",
+                Line = row,
+                Col = col
+              };
               list.Add(view);
             }
             col += 1;
@@ -2279,12 +2289,14 @@ namespace Manager.Services.Specific
             var item = list.Where(p => p.Type == EnumTypeLO.Schooling & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
             if (item == 0)
             {
-              var view = new ViewCSVLO();
-              view.IdGroup = group._id;
-              view.Type = EnumTypeLO.Schooling;
-              view.Name = " ";
-              view.Line = row;
-              view.Col = col;
+              var view = new ViewCSVLO
+              {
+                IdGroup = group._id,
+                Type = EnumTypeLO.Schooling,
+                Name = " ",
+                Line = row,
+                Col = col
+              };
               list.Add(view);
             }
             col += 1;
@@ -4012,16 +4024,18 @@ namespace Manager.Services.Specific
         List<ViewGroupListLO> groups = new List<ViewGroupListLO>();
         foreach (var item in serviceGroup.GetAll(p => p.Company._id == idcompany))
         {
-          var view = new ViewGroupListLO();
-          view._id = item._id;
-          view.Name = item.Name;
-          view.Axis = new ViewListAxis() { _id = item.Axis._id, Name = item.Axis.Name, TypeAxis = item.Axis.TypeAxis };
-          view.Sphere = new ViewListSphere() { _id = item.Sphere._id, Name = item.Sphere.Name, TypeSphere = item.Sphere.TypeSphere };
-          view.Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name };
-          view.Line = item.Line;
-          view.ScopeCount = item.Scope.Count();
-          view.SchollingCount = item.Schooling.Count();
-          view.SkillCount = item.Skills.Count();
+          var view = new ViewGroupListLO
+          {
+            _id = item._id,
+            Name = item.Name,
+            Axis = new ViewListAxis() { _id = item.Axis._id, Name = item.Axis.Name, TypeAxis = item.Axis.TypeAxis },
+            Sphere = new ViewListSphere() { _id = item.Sphere._id, Name = item.Sphere.Name, TypeSphere = item.Sphere.TypeSphere },
+            Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+            Line = item.Line,
+            ScopeCount = item.Scope.Count(),
+            SchollingCount = item.Schooling.Count(),
+            SkillCount = item.Skills.Count()
+          };
           groups.Add(view);
         }
         return groups.OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ThenBy(p => p.Line).ToList();
@@ -4672,7 +4686,7 @@ namespace Manager.Services.Specific
           {
             _id = p._id,
             Name = p.Name,
-            SalaryScales = (p.SalaryScales == null) ? null : p.SalaryScales.Select(s => new ViewCrudSalaryScaleOccupation()
+            SalaryScales = p.SalaryScales?.Select(s => new ViewCrudSalaryScaleOccupation()
             {
               _id = s._id,
               Name = s.NameSalaryScale,
@@ -4688,7 +4702,7 @@ namespace Manager.Services.Specific
               Line = p.Group.Line,
             },
             Line = p.Line,
-            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
+            Process = p.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
             .Select(x => new ViewListProcessLevelTwo()
             {
               _id = x._id,
@@ -4703,7 +4717,7 @@ namespace Manager.Services.Specific
                 Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
               }
             })
-            .ToList() : null
+            .ToList()
           }).FirstOrDefault();
 
         return occupation;
@@ -4768,7 +4782,7 @@ namespace Manager.Services.Specific
               Line = p.Group.Line,
             },
             Line = p.Line,
-            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
+            Process = p.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
             .Select(x => new ViewListProcessLevelTwo()
             {
               _id = x._id,
@@ -4783,7 +4797,7 @@ namespace Manager.Services.Specific
                 Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
               }
             })
-            .ToList() : null
+            .ToList()
           }).FirstOrDefault();
       }
       catch (Exception e)
