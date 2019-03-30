@@ -13,16 +13,18 @@ namespace Manager.Core.Interfaces
   public interface IServiceCertification
   {
     #region Certification
-    string RemovePerson(string idcertifcation, string idcertificationperson);
     void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser user);
+
+    string RemovePerson(string idcertifcation, string idcertificationperson);
     void SetAttachment(string idcertification, string url, string fileName, string attachmentid);
     string RemoveCertification(string idcertification);
 
 
-    List<ViewListBasePerson> ListPersons(string idcertification, ref long total, string filter, int count, int page);
+    List<ViewListPerson> ListPersons(string idcertification, ref long total, string filter, int count, int page);
     ViewCertificationProfile GetProfile(string idperson);
     ViewCrudCertification NewCertification(CertificationItem item, string idperson);
-    string AddPerson(string idcertification, ViewListBasePerson person);
+    string AddPerson(string idcertification, ViewListPerson person);
     string ApprovedCertification(string idcertificationperson, ViewCrudCertificationPerson view);
     string UpdateCertification(ViewCrudCertification view, string idperson, string idcertification);
     List<ViewListCertification> GetListExclud(ref long total, string filter, int count, int page);

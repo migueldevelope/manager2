@@ -35,7 +35,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -223,7 +223,7 @@ namespace Manager.Services.Specific
         }
         catch (Exception e)
         {
-          throw new ServiceException(_user, e, this._context);
+          throw e;
         }
       }
       catch (Exception e)
@@ -302,7 +302,7 @@ namespace Manager.Services.Specific
         }
         catch (Exception e)
         {
-          throw new ServiceException(_user, e, this._context);
+          throw e;
         }
       }
       catch (Exception e)
@@ -325,7 +325,7 @@ namespace Manager.Services.Specific
         }
         catch (Exception e)
         {
-          throw new ServiceException(_user, e, this._context);
+          throw e;
         }
       }
       catch (Exception e)

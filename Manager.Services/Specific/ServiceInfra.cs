@@ -457,7 +457,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -506,7 +506,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -523,7 +523,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -547,7 +547,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -575,7 +575,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Area> GetAreasOld(string idcompany)
@@ -602,7 +602,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Axis> GetAxisOld()
@@ -613,7 +613,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Axis> GetAxisOld(string idcompany)
@@ -624,7 +624,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Questions> ListQuestionsOld(string idcompany)
@@ -635,7 +635,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public Questions GetQuestionsOld(string id)
@@ -646,7 +646,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Company> GetCompaniesOld()
@@ -666,7 +666,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public Skill AddSkillOld(ViewAddSkill view)
@@ -685,7 +685,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public Cbo GetCBOOld(string id)
@@ -697,7 +697,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Cbo> ListCBOOld()
@@ -709,7 +709,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Schooling> GetSchoolingOld()
@@ -720,7 +720,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public Skill GetSkillOld(string filterName)
@@ -739,7 +739,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Skill> GetSkillsOld(ref long total, string filter, int count, int page)
@@ -754,7 +754,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Sphere> GetSpheresOld()
@@ -765,7 +765,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Sphere> GetSpheresOld(string idcompany)
@@ -776,7 +776,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public ProcessLevelTwo GetProcessLevelTwoOld(string id)
@@ -790,7 +790,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ProcessLevelTwo> GetProcessLevelTwoFilterOld(string idarea)
@@ -811,7 +811,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -833,7 +833,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public Group GetGroupOld(string id)
@@ -871,7 +871,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -910,7 +910,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -929,7 +929,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -947,7 +947,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1004,7 +1004,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1031,7 +1031,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1086,7 +1086,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1098,7 +1098,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1159,7 +1159,7 @@ namespace Manager.Services.Specific
     //  }
     //  catch (Exception e)
     //  {
-    //    throw new ServiceException(_user, e, this._context);
+    //    throw e;
     //  }
     //}
 
@@ -1186,7 +1186,7 @@ namespace Manager.Services.Specific
     //  }
     //  catch (Exception e)
     //  {
-    //    throw new ServiceException(_user, e, this._context);
+    //    throw e;
     //  }
     //}
 
@@ -1206,7 +1206,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1219,7 +1219,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1232,7 +1232,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1257,7 +1257,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1270,7 +1270,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1283,7 +1283,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1308,7 +1308,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1321,7 +1321,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1344,7 +1344,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1359,7 +1359,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1373,7 +1373,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1386,7 +1386,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1409,7 +1409,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1459,7 +1459,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1473,7 +1473,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1486,7 +1486,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1500,7 +1500,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1514,7 +1514,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1527,7 +1527,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1541,7 +1541,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1574,7 +1574,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1594,7 +1594,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1614,7 +1614,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string UpdateGroupSphereAxisOld(Group group, Group groupOld)
@@ -1647,7 +1647,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1683,7 +1683,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1705,7 +1705,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1742,7 +1742,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1776,7 +1776,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1821,7 +1821,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1854,7 +1854,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1906,7 +1906,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1948,7 +1948,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1971,7 +1971,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2130,7 +2130,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2467,7 +2467,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2524,7 +2524,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2542,7 +2542,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2559,7 +2559,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2576,7 +2576,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2594,7 +2594,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2693,7 +2693,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2723,7 +2723,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2748,7 +2748,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2773,7 +2773,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2793,7 +2793,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2813,7 +2813,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2831,7 +2831,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2849,7 +2849,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2882,7 +2882,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2902,7 +2902,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2921,7 +2921,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2940,7 +2940,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2959,7 +2959,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2992,7 +2992,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3010,7 +3010,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3028,7 +3028,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3045,7 +3045,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3066,7 +3066,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3084,7 +3084,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3097,7 +3097,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3146,7 +3146,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3176,7 +3176,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3227,7 +3227,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3253,7 +3253,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3296,7 +3296,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3324,7 +3324,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3364,7 +3364,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3381,7 +3381,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3426,7 +3426,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3452,7 +3452,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3471,7 +3471,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3497,7 +3497,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3515,7 +3515,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3534,7 +3534,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3579,7 +3579,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3598,7 +3598,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3620,7 +3620,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3651,7 +3651,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3671,7 +3671,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3701,7 +3701,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3727,7 +3727,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3749,7 +3749,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3773,7 +3773,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3800,7 +3800,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3818,7 +3818,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3836,7 +3836,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3854,7 +3854,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3875,7 +3875,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3893,7 +3893,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3911,7 +3911,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3928,7 +3928,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3954,7 +3954,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3969,7 +3969,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string DeleteQuestion(string idquestion)
@@ -3983,7 +3983,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -3998,7 +3998,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4014,7 +4014,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewGroupListLO> GetGroups(string idcompany)
@@ -4042,7 +4042,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4110,7 +4110,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4175,7 +4175,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4209,7 +4209,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4231,7 +4231,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4268,7 +4268,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4314,7 +4314,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4369,7 +4369,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4402,7 +4402,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4440,7 +4440,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4478,7 +4478,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4502,7 +4502,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4564,7 +4564,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
 
     }
@@ -4592,7 +4592,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4619,7 +4619,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4648,7 +4648,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4673,7 +4673,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4724,7 +4724,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4760,7 +4760,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4802,7 +4802,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4846,7 +4846,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4927,7 +4927,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4957,7 +4957,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -4987,7 +4987,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5011,7 +5011,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string UpdateGroupSphereAxis(Group group, Group groupOld)
@@ -5044,7 +5044,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5065,7 +5065,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5084,7 +5084,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5101,7 +5101,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5131,7 +5131,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5219,7 +5219,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5238,7 +5238,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5257,7 +5257,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5277,7 +5277,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5296,7 +5296,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5314,7 +5314,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -5334,7 +5334,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 

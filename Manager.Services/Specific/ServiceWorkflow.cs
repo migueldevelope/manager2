@@ -57,7 +57,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<Workflow> Manager(ViewFlow view)
@@ -80,7 +80,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public Workflow Approved(ViewWorkflow view)
@@ -96,7 +96,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public Workflow Disapproved(ViewWorkflow view)
@@ -112,7 +112,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     #endregion

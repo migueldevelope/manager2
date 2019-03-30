@@ -58,7 +58,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -94,7 +94,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -129,7 +129,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -175,7 +175,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -206,7 +206,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -219,7 +219,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -244,7 +244,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -310,7 +310,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -342,7 +342,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -472,7 +472,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -555,7 +555,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -640,7 +640,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -659,7 +659,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -922,7 +922,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string ScriptComments()
@@ -1094,7 +1094,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string RemoveMonitoring(string idmonitoring)
@@ -1109,7 +1109,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string RemoveLastMonitoring(string idperson)
@@ -1124,7 +1124,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment)
@@ -1409,7 +1409,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan view)
@@ -1542,7 +1542,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page)
@@ -1564,7 +1564,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewListMonitoring> ListMonitoringsWait(string idmanager, ref long total, string filter, int count, int page)
@@ -1612,7 +1612,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager)
@@ -1633,7 +1633,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public ViewListMonitoring PersonMonitoringsWait(string idmanager)
@@ -1677,7 +1677,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public ViewCrudMonitoring GetMonitorings(string id)
@@ -1834,7 +1834,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
@@ -1867,7 +1867,7 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         return null;
-        //throw new ServiceException(_user, e, this._context);
+        //throw e;
       }
     }
     public string UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view)
@@ -1924,7 +1924,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string AddMonitoringActivities(string idmonitoring, ViewCrudActivities view)
@@ -1993,7 +1993,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public ViewListMonitoring NewMonitoring(string idperson)
@@ -2038,7 +2038,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string UpdateMonitoring(ViewCrudMonitoring view)
@@ -2190,7 +2190,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewListSkill> GetSkills(string idperson)
@@ -2215,7 +2215,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewListMonitoring> GetListExclud(ref long total, string filter, int count, int page)
@@ -2565,7 +2565,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private Plan AddPlan(Plan plan, Person person)
@@ -2579,7 +2579,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private Monitoring LoadMap(Monitoring monitoring)
@@ -2610,7 +2610,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     // send mail
@@ -2665,7 +2665,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private async void MailManager(Person person)
@@ -2719,7 +2719,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private async void MailDisApproval(Person person)
@@ -2773,7 +2773,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private string SendMail(string link, Person person, string idmail)
@@ -2803,7 +2803,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 

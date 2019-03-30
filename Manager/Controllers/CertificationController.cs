@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
@@ -15,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador para acreditação
+  /// </summary>
   [Produces("application/json")]
   [Route("certification")]
   public class CertificationController : Controller
@@ -23,6 +23,11 @@ namespace Manager.Controllers
     private readonly IServiceCertification service;
 
     #region constructor
+    /// <summary>
+    /// Construtor do controle
+    /// </summary>
+    /// <param name="_service">Serviço da acreditação</param>
+    /// <param name="contextAccessor">Token de autenticação</param>
     public CertificationController(IServiceCertification _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
@@ -32,32 +37,6 @@ namespace Manager.Controllers
 
 
     #region certification
-
-    [Authorize]
-    [HttpDelete]
-    [Route("removecertification/{idcertification}")]
-    public string RemoveCertification(string idcertification)
-    {
-      return service.RemoveCertification(idcertification);
-    }
-
-    [Authorize]
-    [HttpDelete]
-    [Route("removeperson/{idcertification}/{idcertificationperson}")]
-    public string RemovePerson(string idcertification, string idcertificationperson)
-    {
-      return service.RemovePerson(idcertification, idcertificationperson);
-    }
-
-
-    [Authorize]
-    [HttpGet]
-    [Route("getprofile/{idperson}")]
-    public ViewCertificationProfile GetProfile(string idperson)
-    {
-      return service.GetProfile(idperson);
-    }
-
     [Authorize]
     [HttpGet]
     [Route("listcertificationswaitperson/{idperson}")]
@@ -68,7 +47,27 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
+    [Authorize]
+    [HttpDelete]
+    [Route("removecertification/{idcertification}")]
+    public string RemoveCertification(string idcertification)
+    {
+      return service.RemoveCertification(idcertification);
+    }
+    [Authorize]
+    [HttpDelete]
+    [Route("removeperson/{idcertification}/{idcertificationperson}")]
+    public string RemovePerson(string idcertification, string idcertificationperson)
+    {
+      return service.RemovePerson(idcertification, idcertificationperson);
+    }
+    [Authorize]
+    [HttpGet]
+    [Route("getprofile/{idperson}")]
+    public ViewCertificationProfile GetProfile(string idperson)
+    {
+      return service.GetProfile(idperson);
+    }
     [Authorize]
     [HttpGet]
     [Route("listcertificationperson/{idperson}")]
@@ -79,7 +78,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     [Authorize]
     [HttpPut]
     [Route("updatestatuscertification/{idperson}")]
@@ -87,8 +85,6 @@ namespace Manager.Controllers
     {
       return service.UpdateStatusCertification(certification, idperson);
     }
-
-
     /// <summary>
     /// Inclusão pessoa para acreditação
     /// </summary>
@@ -98,11 +94,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addperson/{idcertification}")]
-    public string AddPerson([FromBody]ViewListBasePerson person, string idcertification)
+    public string AddPerson([FromBody]ViewListPerson person, string idcertification)
     {
       return service.AddPerson(idcertification, person);
     }
-
     /// <summary>
     /// Acreditação de contrato 
     /// </summary>
@@ -116,7 +111,6 @@ namespace Manager.Controllers
     {
       return service.ApprovedCertification(idcertificationperson, view);
     }
-
     /// <summary>
     /// Lista acreditação para excluir
     /// </summary>
@@ -132,7 +126,6 @@ namespace Manager.Controllers
       long total = 0;
       return service.GetListExclud(ref total, filter, count, page);
     }
-
     /// <summary>
     /// Busca informação de acreditção
     /// </summary>
@@ -145,7 +138,6 @@ namespace Manager.Controllers
     {
       return service.CertificationsWaitPerson(idcertification);
     }
-
     /// <summary>
     /// Lista contratos para adicionar na acreditçaão
     /// </summary>
@@ -153,16 +145,15 @@ namespace Manager.Controllers
     /// <param name="filter"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
-    /// <returns></returns>
+    /// <returns>Lista de colaboradores</returns>
     [Authorize]
     [HttpGet]
     [Route("listpersons/{idcertification}")]
-    public List<ViewListBasePerson> ListPersons(string idcertification, string filter = "", int count = 999999999, int page = 1)
+    public List<ViewListPerson> ListPersons(string idcertification, string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
       return service.ListPersons(idcertification, ref total, filter, count, page);
     }
-
     /// <summary>
     /// Inclusão de nova acreditação
     /// </summary>
@@ -176,13 +167,12 @@ namespace Manager.Controllers
     {
       return service.NewCertification(item, idperson);
     }
-
     /// <summary>
     /// Atualiza informações da acreidtação
     /// </summary>
     /// <param name="certification">Objeto Crud</param>
     /// <param name="idperson">Identificador contrato</param>
-    /// <param name="idmonitoring">Identificador acreditação</param>
+    /// <param name="idcertification">Identificador acreditação</param>
     /// <returns></returns>
     [Authorize]
     [HttpPut]
@@ -191,8 +181,6 @@ namespace Manager.Controllers
     {
       return service.UpdateCertification(certification, idperson, idcertification);
     }
-
-
     #endregion
 
     #region old

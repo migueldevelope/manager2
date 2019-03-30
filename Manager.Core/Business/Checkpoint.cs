@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Manager.Core.Business
   public class Checkpoint : BaseEntity
   {
     public Person Person { get; set; }
+    public ViewListOccupation Occupation { get; set; }
     public DateTime? DateBegin { get; set; }
     public DateTime? DateEnd { get; set; }
     public string Comments { get; set; }

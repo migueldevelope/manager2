@@ -354,7 +354,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -410,7 +410,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -426,7 +426,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -442,7 +442,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -456,7 +456,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -468,7 +468,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -481,7 +481,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -493,7 +493,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -506,7 +506,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -518,7 +518,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -550,7 +550,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -562,7 +562,7 @@ namespace Manager.Services.Auth
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 

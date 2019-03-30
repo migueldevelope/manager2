@@ -3,7 +3,7 @@ namespace Manager.Views.BusinessList
 {
   public class ViewListCertification: _ViewListBase
   {
-    public string idPerson { get; set; }
+    public string _idPerson { get; set; }
     public EnumStatusCertification StatusCertification { get; set; }
   }
 }

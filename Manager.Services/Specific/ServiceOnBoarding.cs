@@ -55,7 +55,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public void SetUser(IHttpContextAccessor contextAccessor)
@@ -630,7 +630,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -654,7 +654,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewCrudComment> AddComments(string idonboarding, string iditem, ViewCrudComment comments)
@@ -1181,7 +1181,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public ViewCrudOnboarding GetOnBoardings(string id)
@@ -1375,7 +1375,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string UpdateOnBoarding(ViewCrudOnboarding view)
@@ -1455,7 +1455,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ViewListOnBoarding> GetListExclud(ref long total, string filter, int count, int page)
@@ -1525,7 +1525,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -1650,7 +1650,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private async void LogSave(string iduser, string local)
@@ -1723,7 +1723,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private async void MailManager(Person person)
@@ -1777,7 +1777,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private async void MailOccupation(Person person)
@@ -1821,7 +1821,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private async void MailManagerOccupation(Person person)
@@ -1875,7 +1875,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private async void MailDisapproved(Person person)
@@ -1929,7 +1929,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     private string SendMail(string link, Person person, string idmail)
@@ -1959,7 +1959,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        //throw new ServiceException(_user, e, this._context);
+        //throw e;
         return "none";
       }
     }
@@ -2025,7 +2025,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public OnBoarding PersonOnBoardingsWaitOld(string idmanager)
@@ -2063,7 +2063,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public OnBoarding NewOnBoardingOld(OnBoarding onBoarding, string idperson)
@@ -2101,7 +2101,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
 
@@ -2119,7 +2119,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<ListComments> AddCommentsOld(string idonboarding, string iditem, ListComments comments)
@@ -2488,7 +2488,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public OnBoarding GetOnBoardingsOld(string id)
@@ -2523,7 +2523,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public string UpdateOnBoardingOld(OnBoarding onboarding, string idperson)
@@ -2600,7 +2600,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw new ServiceException(_user, e, this._context);
+        throw e;
       }
     }
     public List<OnBoarding> GetListExcludOld(ref long total, string filter, int count, int page)
