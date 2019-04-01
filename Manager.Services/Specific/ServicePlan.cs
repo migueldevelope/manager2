@@ -2037,7 +2037,7 @@ namespace Manager.Services.Specific
                 {
                   _id = structplan._id,
                   Course = (structplan.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplan.Course._id).FirstOrDefault(),
-                  PlanActivity = new PlanActivity() { Name = structplan.PlanActivity.Name },
+                  PlanActivity = (structplan.PlanActivity == null)? null : new PlanActivity() { _id = structplan.PlanActivity._id, _idAccount  = _user._idAccount, Status = EnumStatus.Enabled, Name = structplan.PlanActivity.Name },
                   TypeAction = structplan.TypeAction,
                   TypeResponsible = structplan.TypeResponsible
                 }));
@@ -2063,7 +2063,7 @@ namespace Manager.Services.Specific
                 {
                   _id = structplan._id,
                   Course = (structplan.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplan.Course._id).FirstOrDefault(),
-                  PlanActivity = new PlanActivity() { Name = structplan.PlanActivity.Name },
+                  PlanActivity = (structplan.PlanActivity == null) ? null : new PlanActivity() { _id = structplan.PlanActivity._id, _idAccount = _user._idAccount, Status = EnumStatus.Enabled, Name = structplan.PlanActivity.Name },
                   TypeAction = structplan.TypeAction,
                   TypeResponsible = structplan.TypeResponsible
                 }));
@@ -2089,7 +2089,7 @@ namespace Manager.Services.Specific
                 {
                   _id = structplan._id,
                   Course = (structplan.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplan.Course._id).FirstOrDefault(),
-                  PlanActivity = new PlanActivity() { Name = structplan.PlanActivity.Name },
+                  PlanActivity = (structplan.PlanActivity == null) ? null : new PlanActivity() { _id = structplan.PlanActivity._id, _idAccount = _user._idAccount, Status = EnumStatus.Enabled, Name = structplan.PlanActivity.Name },
                   TypeAction = structplan.TypeAction,
                   TypeResponsible = structplan.TypeResponsible
                 }));
@@ -2148,7 +2148,7 @@ namespace Manager.Services.Specific
                         _id = structplan.Course._id,
                         Name = structplan.Course.Name
                       },
-                      PlanActivity = new ViewPlanActivity() { Name = structplan.PlanActivity.Name },
+                      PlanActivity = (structplan.PlanActivity == null) ? null : new ViewPlanActivity() { _id = structplan._id, Name = structplan.PlanActivity.Name },
                       TypeAction = structplan.TypeAction,
                       TypeResponsible = structplan.TypeResponsible
                     };
@@ -2179,7 +2179,7 @@ namespace Manager.Services.Specific
                         _id = structplan.Course._id,
                         Name = structplan.Course.Name
                       },
-                      PlanActivity = new ViewPlanActivity() { Name = structplan.PlanActivity.Name },
+                      PlanActivity = (structplan.PlanActivity == null) ? null : new ViewPlanActivity() { _id = structplan._id, Name = structplan.PlanActivity.Name },
                       TypeAction = structplan.TypeAction,
                       TypeResponsible = structplan.TypeResponsible
                     };
@@ -2210,7 +2210,7 @@ namespace Manager.Services.Specific
                         _id = structplan.Course._id,
                         Name = structplan.Course.Name
                       },
-                      PlanActivity = new ViewPlanActivity() { Name = structplan.PlanActivity.Name },
+                      PlanActivity = (structplan.PlanActivity == null) ? null : new ViewPlanActivity() { _id = structplan._id, Name = structplan.PlanActivity.Name },
                       TypeAction = structplan.TypeAction,
                       TypeResponsible = structplan.TypeResponsible
                     };
