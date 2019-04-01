@@ -30,6 +30,8 @@ namespace Manager.Core.Interfaces
     
     ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse);
     List<ViewCrudMandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "");
+    string NewTrainingPlanInternal(TrainingPlan view);
+    string UpdateTrainingPlanInternal(TrainingPlan view);
     string NewTrainingPlan(ViewCrudTrainingPlan view);
     string UpdateTrainingPlan(ViewCrudTrainingPlan view);
     ViewCrudTrainingPlan GetTrainingPlan(string id);

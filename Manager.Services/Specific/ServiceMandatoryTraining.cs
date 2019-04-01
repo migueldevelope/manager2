@@ -296,6 +296,38 @@ namespace Manager.Services.Specific
     #endregion
 
     #region mandatorytraining
+
+    public string NewTrainingPlanInternal(TrainingPlan view)
+    {
+      try
+      {
+
+        if (view.Include == null)
+          view.Include = DateTime.Now;
+
+        serviceTrainingPlan.Insert(view);
+
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateTrainingPlanInternal(TrainingPlan view)
+    {
+      try
+      {
+        serviceTrainingPlan.Update(view, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string AddOccupation(ViewCrudOccupationMandatory view)
     {
       try

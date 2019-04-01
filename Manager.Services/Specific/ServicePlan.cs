@@ -2101,7 +2101,7 @@ namespace Manager.Services.Specific
             Include = DateTime.Now,
             StatusTrainingPlan = EnumStatusTrainingPlan.Open
           };
-          serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+          serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
         }
 
         serviceMonitoring.Update(monitoring, null);
@@ -2255,7 +2255,7 @@ namespace Manager.Services.Specific
                       if (serviceTrainingPlans.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
-                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                        serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
                       }
                     }
 
@@ -2304,7 +2304,7 @@ namespace Manager.Services.Specific
                       if (serviceTrainingPlans.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
-                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                        serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
                       }
                     }
 
@@ -2353,7 +2353,7 @@ namespace Manager.Services.Specific
                       if (serviceTrainingPlans.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
-                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                        serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
                       }
 
                     }
@@ -3804,7 +3804,7 @@ namespace Manager.Services.Specific
             Include = DateTime.Now,
             StatusTrainingPlan = EnumStatusTrainingPlan.Open
           };
-          serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+          serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
         }
 
         serviceMonitoring.Update(monitoring, null);
@@ -3926,7 +3926,7 @@ namespace Manager.Services.Specific
                       if (serviceTrainingPlans.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
-                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                        serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
                       }
                     }
 
@@ -3968,7 +3968,7 @@ namespace Manager.Services.Specific
                       if (serviceTrainingPlans.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
-                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                        serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
                       }
                     }
 
@@ -4010,7 +4010,7 @@ namespace Manager.Services.Specific
                       if (serviceTrainingPlans.GetAll(p => p.Person == trainingPlan.Person
                        & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
                       {
-                        serviceMandatoryTraining.NewTrainingPlan(trainingPlan);
+                        serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
                       }
 
                     }
