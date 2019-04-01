@@ -1410,7 +1410,7 @@ namespace Manager.Services.Specific
                 Name = res.Name,
                 Deadline = res.Deadline,
                 Description = res.Description,
-                Skills = res.Skills.Select(p => new ViewListSkill()
+                Skills = (res.Skills == null) ? null : res.Skills.Select(p => new ViewListSkill()
                 {
                   _id = p._id,
                   Name = p.Name,
@@ -2466,7 +2466,7 @@ namespace Manager.Services.Specific
               DateEnd = item.DateEnd,
               Evaluation = item.Evaluation,
               Result = item.Result,
-              StatusPlanApproved = EnumStatusPlanApproved.Open,
+              StatusPlanApproved = item.StatusPlanApproved,
               Status = item.Status,
               NewAction = item.NewAction,
               Attachments = (item.Attachments == null) ? null : item.Attachments.Select(p => new AttachmentField()
@@ -2548,7 +2548,8 @@ namespace Manager.Services.Specific
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
             }
-            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+            //else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+            else if ((res.Name == view.Name))
               view.PlanNew = res;
           }
         }
@@ -2584,7 +2585,23 @@ namespace Manager.Services.Specific
             Status = view.Status,
             DateEnd = view.DateEnd,
             NewAction = view.NewAction,
-            Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days)
+            Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days),
+            PlanNew = (view.PlanNew == null) ? null : new ViewCrudPlan()
+            {
+              _id = view.PlanNew._id,
+              TypePlan = view.PlanNew.TypePlan,
+              SourcePlan = view.PlanNew.SourcePlan,
+              Name = view.PlanNew.Name,
+              Deadline = view.PlanNew.Deadline,
+              Description = view.PlanNew.Description,
+              Skills = (view.PlanNew.Skills == null) ? null : view.PlanNew.Skills.Select(p => new ViewListSkill()
+              {
+                _id = p._id,
+                Name = p.Name,
+                Concept = p.Name,
+                TypeSkill = p.TypeSkill
+              }).ToList()
+            }
           };
 
         foreach (var plan in detailSchoolings.Plans)
@@ -2616,7 +2633,8 @@ namespace Manager.Services.Specific
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
             }
-            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+            //else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+            else if ((res.Name == view.Name))
               view.PlanNew = res;
           }
         }
@@ -2652,7 +2670,23 @@ namespace Manager.Services.Specific
             Status = view.Status,
             DateEnd = view.DateEnd,
             NewAction = view.NewAction,
-            Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days)
+            Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days),
+            PlanNew = (view.PlanNew == null) ? null : new ViewCrudPlan()
+            {
+              _id = view.PlanNew._id,
+              TypePlan = view.PlanNew.TypePlan,
+              SourcePlan = view.PlanNew.SourcePlan,
+              Name = view.PlanNew.Name,
+              Deadline = view.PlanNew.Deadline,
+              Description = view.PlanNew.Description,
+              Skills = (view.PlanNew.Skills == null) ? null : view.PlanNew.Skills.Select(p => new ViewListSkill()
+              {
+                _id = p._id,
+                Name = p.Name,
+                Concept = p.Name,
+                TypeSkill = p.TypeSkill
+              }).ToList()
+            }
           };
 
         foreach (var plan in detailSkillsCompany.Plans)
@@ -2684,7 +2718,8 @@ namespace Manager.Services.Specific
               view.Attachments = res.Attachments;
               view.NewAction = res.NewAction;
             }
-            else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+            //else if ((res.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (res.Name == view.Name))
+            else if ((res.Name == view.Name))
               view.PlanNew = res;
           }
         }
@@ -2720,7 +2755,29 @@ namespace Manager.Services.Specific
             Status = view.Status,
             DateEnd = view.DateEnd,
             NewAction = view.NewAction,
-            Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days)
+            Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days),
+            Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new ViewCrudAttachmentField()
+            {
+              _idAttachment = p._idAttachment,
+              Name = p.Name,
+              Url = p.Url
+            }).ToList(),
+            PlanNew = (view.PlanNew == null) ? null : new ViewCrudPlan()
+            {
+              _id = view.PlanNew._id,
+              TypePlan = view.PlanNew.TypePlan,
+              SourcePlan = view.PlanNew.SourcePlan,
+              Name = view.PlanNew.Name,
+              Deadline = view.PlanNew.Deadline,
+              Description = view.PlanNew.Description,
+              Skills = (view.PlanNew.Skills == null) ? null : view.PlanNew.Skills.Select(p => new ViewListSkill()
+              {
+                _id = p._id,
+                Name = p.Name,
+                Concept = p.Name,
+                TypeSkill = p.TypeSkill
+              }).ToList()
+            }
           };
 
         return null;

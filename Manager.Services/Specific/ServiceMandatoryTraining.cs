@@ -1040,11 +1040,21 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var trainingplan = new TrainingPlan()
+        {
+          Include = (view.Include == null) ? null : view.Include = DateTime.Now,
+          Status = EnumStatus.Enabled,
+          _idAccount = _user._idAccount,
+          Observartion = view.Observartion,
+          Deadline = view.Deadline,
+          Origin = view.Origin,
+          StatusTrainingPlan = view.StatusTrainingPlan,
+          Person = (view.Person == null) ? null : servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault(),
+          Course = (view.Course == null) ? null : new Course() { _id = view.Course._id, Name = view.Course.Name },
+          Event = (view.Event == null) ? null : new Event() { _id = view.Event._id, Name = view.Event.Name }
+        };
 
-        if (view.Include == null)
-          view.Include = DateTime.Now;
-
-        //serviceTrainingPlan.Insert(view);
+        serviceTrainingPlan.Insert(trainingplan);
 
         return "add success";
       }
@@ -1058,7 +1068,17 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //serviceTrainingPlan.Update(view, null);
+        var trainingplan = serviceTrainingPlan.GetAll(p => p._id == view._id).FirstOrDefault();
+        trainingplan.Include = (view.Include == null) ? null : view.Include = DateTime.Now;
+        trainingplan.Observartion = view.Observartion;
+        trainingplan.Deadline = view.Deadline;
+        trainingplan.Origin = view.Origin;
+        trainingplan.StatusTrainingPlan = view.StatusTrainingPlan;
+        trainingplan.Person = (view.Person == null) ? null : servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault();
+        trainingplan.Course = (view.Course == null) ? null : new Course() { _id = view.Course._id, Name = view.Course.Name };
+        trainingplan.Event = (view.Event == null) ? null : new Event() { _id = view.Event._id, Name = view.Event.Name };
+
+        serviceTrainingPlan.Update(trainingplan, null);
         return "update";
       }
       catch (Exception e)
@@ -1074,6 +1094,15 @@ namespace Manager.Services.Specific
         return serviceTrainingPlan.GetAll(p => p._id == id)
           .Select(p => new ViewCrudTrainingPlan()
           {
+            _id = p._id,
+            Deadline = p.Deadline,
+            Include = p.Include,
+            Origin = p.Origin,
+            Observartion = p.Observartion,
+            StatusTrainingPlan = p.StatusTrainingPlan,
+            Person = (p.Person == null) ? null : new ViewListPersonResume() { _id = p.Person._id, Name = p.Person.User.Name },
+            Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
+            Event = (p.Event == null) ? null : new ViewListEvent() { _id = p.Event._id, Name = p.Event.Name }
           })
           .FirstOrDefault();
       }
@@ -1093,6 +1122,15 @@ namespace Manager.Services.Specific
 
         return detail.Select(p => new ViewCrudTrainingPlan()
         {
+          _id = p._id,
+          Deadline = p.Deadline,
+          Include = p.Include,
+          Origin = p.Origin,
+          Observartion = p.Observartion,
+          StatusTrainingPlan = p.StatusTrainingPlan,
+          Person = (p.Person == null) ? null : new ViewListPersonResume() { _id = p.Person._id, Name = p.Person.User.Name },
+          Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
+          Event = (p.Event == null) ? null : new ViewListEvent() { _id = p.Event._id, Name = p.Event.Name }
         }).ToList();
       }
       catch (Exception e)
@@ -1111,6 +1149,15 @@ namespace Manager.Services.Specific
 
         return detail.Select(p => new ViewCrudTrainingPlan()
         {
+          _id = p._id,
+          Deadline = p.Deadline,
+          Include = p.Include,
+          Origin = p.Origin,
+          Observartion = p.Observartion,
+          StatusTrainingPlan = p.StatusTrainingPlan,
+          Person = (p.Person == null) ? null : new ViewListPersonResume() { _id = p.Person._id, Name = p.Person.User.Name },
+          Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
+          Event = (p.Event == null) ? null : new ViewListEvent() { _id = p.Event._id, Name = p.Event.Name }
         }).ToList();
       }
       catch (Exception e)

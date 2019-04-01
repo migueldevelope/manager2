@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Manager.Views.BusinessCrud
 {
-  public class ViewCrudTrainingPlan: _ViewCrudBase
+  public class ViewCrudTrainingPlan: _ViewCrud
   {
     public ViewListPersonResume Person { get; set; }
     public ViewListCourse Course { get; set; }
