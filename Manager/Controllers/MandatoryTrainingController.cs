@@ -23,12 +23,17 @@ namespace Manager.Controllers
   {
     private readonly IServiceMandatoryTraining service;
 
+
+    #region constructor
     public MandatoryTrainingController(IServiceMandatoryTraining _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
+    #endregion
 
+
+    #region mandatorytraining
     [Authorize]
     [HttpPost]
     [Route("addcompany")]
@@ -53,33 +58,6 @@ namespace Manager.Controllers
       return service.AddPerson(view);
     }
 
-    [Authorize]
-    [HttpGet]
-    [Route("gettrainingplan/{id}")]
-    public TrainingPlan GetTrainingPlan(string id)
-    {
-      return service.GetTrainingPlan(id);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("getmandatorytraining/{idcourse}")]
-    public MandatoryTraining GetMandatoryTraining(string idcourse)
-    {
-      return service.GetMandatoryTraining(idcourse);
-    }
-
-
-    [Authorize]
-    [HttpGet]
-    [Route("list")]
-    public List<MandatoryTraining> List(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.List(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
 
     [Authorize]
     [HttpGet]
@@ -125,27 +103,6 @@ namespace Manager.Controllers
       return result;
     }
 
-    [Authorize]
-    [HttpGet]
-    [Route("listtrainingplan/{idcompany}")]
-    public List<TrainingPlan> ListTrainingPlan(string idcompany, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListTrainingPlan(idcompany, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("listtrainingplan/{idcompany}/{idperson}")]
-    public List<TrainingPlan> ListTrainingPlan(string idcompany, string idperson, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListTrainingPlan(idcompany, idperson, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
 
     [Authorize]
     [HttpGet]
@@ -158,13 +115,6 @@ namespace Manager.Controllers
       return result;
     }
 
-    [Authorize]
-    [HttpPost]
-    [Route("newtrainingplan")]
-    public string NewTrainingPlan([FromBody]TrainingPlan view)
-    {
-      return service.NewTrainingPlan(view);
-    }
 
     [Authorize]
     [HttpDelete]
@@ -198,13 +148,144 @@ namespace Manager.Controllers
       return service.RemoveTrainingPlan(id);
     }
 
+
     [Authorize]
     [HttpPut]
     [Route("updatetrainingplan")]
-    public string UpdateTrainingPlan([FromBody]TrainingPlan view)
+    public string UpdateTrainingPlan([FromBody]ViewCrudTrainingPlan view)
     {
       return service.UpdateTrainingPlan(view);
     }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listtrainingplan/{idcompany}")]
+    public List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlan(idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listtrainingplan/{idcompany}/{idperson}")]
+    public List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlan(idcompany, idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("newtrainingplan")]
+    public string NewTrainingPlan([FromBody]ViewCrudTrainingPlan view)
+    {
+      return service.NewTrainingPlan(view);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("gettrainingplan/{id}")]
+    public ViewCrudTrainingPlan GetTrainingPlan(string id)
+    {
+      return service.GetTrainingPlan(id);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("getmandatorytraining/{idcourse}")]
+    public ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse)
+    {
+      return service.GetMandatoryTraining(idcourse);
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("list")]
+    public List<ViewCrudMandatoryTraining> List(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.List(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    #endregion
+
+    #region old
+
+    [Authorize]
+    [HttpPut]
+    [Route("old/updatetrainingplan")]
+    public string UpdateTrainingPlanOld([FromBody]TrainingPlan view)
+    {
+      return service.UpdateTrainingPlanOld(view);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("old/listtrainingplan/{idcompany}")]
+    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlanOld(idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("old/listtrainingplan/{idcompany}/{idperson}")]
+    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlanOld(idcompany, idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("old/newtrainingplan")]
+    public string NewTrainingPlanOld([FromBody]TrainingPlan view)
+    {
+      return service.NewTrainingPlanOld(view);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("old/gettrainingplan/{id}")]
+    public TrainingPlan GetTrainingPlanOld(string id)
+    {
+      return service.GetTrainingPlanOld(id);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("old/getmandatorytraining/{idcourse}")]
+    public MandatoryTraining GetMandatoryTrainingOld(string idcourse)
+    {
+      return service.GetMandatoryTrainingOld(idcourse);
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("old/list")]
+    public List<MandatoryTraining> ListOld(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListOld(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    #endregion
+
 
   }
 }

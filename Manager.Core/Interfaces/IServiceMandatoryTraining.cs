@@ -27,16 +27,14 @@ namespace Manager.Core.Interfaces
     List<ViewListCompany> ListCompany(string idcourse, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewTrainingPlan> ListTrainingPlanPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewTrainingPlanList> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "");
-    #endregion
-
-    #region old
-    MandatoryTraining GetMandatoryTraining(string idcourse);
-    List<MandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "");
-    string NewTrainingPlan(TrainingPlan view);
-    string UpdateTrainingPlan(TrainingPlan view);
-    TrainingPlan GetTrainingPlan(string id);
-    List<TrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
-    List<TrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+    
+    ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse);
+    List<ViewCrudMandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "");
+    string NewTrainingPlan(ViewCrudTrainingPlan view);
+    string UpdateTrainingPlan(ViewCrudTrainingPlan view);
+    ViewCrudTrainingPlan GetTrainingPlan(string id);
+    List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "");
 
     #endregion
 

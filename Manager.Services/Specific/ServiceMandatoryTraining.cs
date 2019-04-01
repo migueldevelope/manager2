@@ -832,7 +832,6 @@ namespace Manager.Services.Specific
       }
     }
 
-    
     public string RemoveTrainingPlan(string id)
     {
       try
@@ -848,7 +847,9 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<MandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "")
+
+
+    public List<ViewCrudMandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -856,7 +857,63 @@ namespace Manager.Services.Specific
         var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
         total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.ToList();
+        return detail.Select(p => new ViewCrudMandatoryTraining()
+        {
+          _id = p._id,
+          Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
+          {
+            _id = x._id,
+            Name = x.Person.User.Name,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Person = new ViewListPerson()
+            {
+              _id = x.Person._id,
+              Registration = x.Person.Registration,
+              Company = new ViewListCompany() { _id = x.Person.Company._id, Name = x.Person.Company.Name },
+              Establishment = new ViewListEstablishment() { _id = x.Person.Establishment._id, Name = x.Person.Establishment.Name },
+              User = new ViewListUser()
+              {
+                _id = x.Person.User._id,
+                Name = x.Person.User.Name,
+                Document = x.Person.User.Document,
+                Mail = x.Person.User.Mail,
+                Phone = x.Person.User.Phone
+              }
+            }
+          }).ToList(),
+          Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
+          Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
+          {
+            _id = x._id,
+            Name = x.Company.Name,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Company = new ViewListCompany()
+            {
+              _id = x.Company._id,
+              Name = x.Company.Name,
+            }
+          }).ToList(),
+          Occupations = (p.Occupations == null) ? null : p.Occupations.Select(x => new ViewCrudOccupationMandatory()
+          {
+            _id = x._id,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Occupation = new ViewListOccupation()
+            {
+              _id = x.Occupation._id,
+              Name = x.Occupation.Name,
+              Line = x.Occupation.Line,
+              Company = new ViewListCompany() { _id = x.Occupation.Group.Company._id, Name = x.Occupation.Group.Company.Name },
+              Group = new ViewListGroup() { _id = x.Occupation.Group._id, Name = x.Occupation.Group.Name }
+            }
+          }).ToList()
+
+        }).ToList();
 
       }
       catch (Exception e)
@@ -865,7 +922,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public MandatoryTraining GetMandatoryTraining(string idcourse)
+    public ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse)
     {
       try
       {
@@ -881,9 +938,65 @@ namespace Manager.Services.Specific
           _id = p._id,
           _idAccount = p._idAccount
         })
-        .FirstOrDefault();
+        .ToList();
 
-        return model;
+        return model.Select(p => new ViewCrudMandatoryTraining()
+        {
+          _id = p._id,
+          Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
+          {
+            _id = x._id,
+            Name = x.Person.User.Name,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Person = new ViewListPerson()
+            {
+              _id = x.Person._id,
+              Registration = x.Person.Registration,
+              Company = new ViewListCompany() { _id = x.Person.Company._id, Name = x.Person.Company.Name },
+              Establishment = new ViewListEstablishment() { _id = x.Person.Establishment._id, Name = x.Person.Establishment.Name },
+              User = new ViewListUser()
+              {
+                _id = x.Person.User._id,
+                Name = x.Person.User.Name,
+                Document = x.Person.User.Document,
+                Mail = x.Person.User.Mail,
+                Phone = x.Person.User.Phone
+              }
+            }
+          }).ToList(),
+          Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
+          Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
+          {
+            _id = x._id,
+            Name = x.Company.Name,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Company = new ViewListCompany()
+            {
+              _id = x.Company._id,
+              Name = x.Company.Name,
+            }
+          }).ToList(),
+          Occupations = (p.Occupations == null) ? null : p.Occupations.Select(x => new ViewCrudOccupationMandatory()
+          {
+            _id = x._id,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Occupation = new ViewListOccupation()
+            {
+              _id = x.Occupation._id,
+              Name = x.Occupation.Name,
+              Line = x.Occupation.Line,
+              Company = new ViewListCompany() { _id = x.Occupation.Group.Company._id, Name = x.Occupation.Group.Company.Name },
+              Group = new ViewListGroup() { _id = x.Occupation.Group._id, Name = x.Occupation.Group.Name }
+            }
+          }).ToList()
+
+        }).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -891,7 +1004,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewTrainingPlan(TrainingPlan view)
+    public string NewTrainingPlan(ViewCrudTrainingPlan view)
     {
       try
       {
@@ -899,7 +1012,7 @@ namespace Manager.Services.Specific
         if (view.Include == null)
           view.Include = DateTime.Now;
 
-        serviceTrainingPlan.Insert(view);
+        //serviceTrainingPlan.Insert(view);
 
         return "add success";
       }
@@ -909,11 +1022,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateTrainingPlan(TrainingPlan view)
+    public string UpdateTrainingPlan(ViewCrudTrainingPlan view)
     {
       try
       {
-        serviceTrainingPlan.Update(view, null);
+        //serviceTrainingPlan.Update(view, null);
         return "update";
       }
       catch (Exception e)
@@ -922,11 +1035,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public TrainingPlan GetTrainingPlan(string id)
+    public ViewCrudTrainingPlan GetTrainingPlan(string id)
     {
       try
       {
-        return serviceTrainingPlan.GetAll(p => p._id == id).FirstOrDefault();
+        return serviceTrainingPlan.GetAll(p => p._id == id)
+          .Select(p => new ViewCrudTrainingPlan()
+          {
+          })
+          .FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -934,7 +1051,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<TrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -942,7 +1059,9 @@ namespace Manager.Services.Specific
         var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.ToList();
+        return detail.Select(p => new ViewCrudTrainingPlan()
+        {
+        }).ToList();
       }
       catch (Exception e)
       {
@@ -950,7 +1069,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<TrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -958,7 +1077,9 @@ namespace Manager.Services.Specific
         var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.ToList();
+        return detail.Select(p => new ViewCrudTrainingPlan()
+        {
+        }).ToList();
       }
       catch (Exception e)
       {
