@@ -6,10 +6,9 @@ using System.Text;
 
 namespace Manager.Views.BusinessCrud
 {
-  public class ViewCrudEvent
+  public class ViewCrudEvent:_ViewCrudBase
   {
     public ViewListCourse Course { get; set; }
-    public string Name { get; set; }
     public string Content { get; set; }
     public ViewCrudEntity Entity { get; set; }
     public decimal MinimumFrequency { get; set; }
