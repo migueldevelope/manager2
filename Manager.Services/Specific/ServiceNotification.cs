@@ -614,7 +614,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.PlanSeq1_Person(path);
+        var model = mailModelService.PlanSeq1Person(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -704,7 +704,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.PlanSeq2_Person(path);
+        var model = mailModelService.PlanSeq2Person(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -794,7 +794,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.PlanSeq3_Person(path);
+        var model = mailModelService.PlanSeq3Person(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -884,7 +884,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = mailModelService.MonitoringSeq1_Person(path);
+        var model = mailModelService.MonitoringSeq1Person(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
