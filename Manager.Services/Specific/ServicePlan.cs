@@ -463,6 +463,20 @@ namespace Manager.Services.Specific
         plan.Deadline = viewPlan.Deadline;
         plan.Description = viewPlan.Description;
         plan.Name = viewPlan.Name;
+        plan.DateEnd = DateTime.Now;
+        plan.TypeAction = viewPlan.TypeAction;
+        plan.Attachments = (viewPlan.Attachments == null) ? null : viewPlan.Attachments.Select(p => new AttachmentField()
+        {
+          _idAttachment = p._idAttachment,
+          Name = p.Name,
+          Url = p.Url
+        }).ToList();
+        plan.StatusPlan = viewPlan.StatusPlan;
+        plan.NewAction = viewPlan.NewAction;
+        plan.TextEnd = viewPlan.TextEnd;
+        plan.TextEndManager = viewPlan.TextEndManager;
+        plan.Evaluation = viewPlan.Evaluation;
+        plan.StatusPlanApproved = viewPlan.StatusPlanApproved;
         plan.Skills = (viewPlan.Skills == null) ? null :
         viewPlan.Skills.Select(p => new Skill()
         {
@@ -2416,7 +2430,7 @@ namespace Manager.Services.Specific
               StatusPlanApproved = EnumStatusPlanApproved.Open,
               Status = item.Status,
               NewAction = item.NewAction,
-              Attachments =  (item.Attachments == null) ? null : item.Attachments.Select(p => new AttachmentField()
+              Attachments = (item.Attachments == null) ? null : item.Attachments.Select(p => new AttachmentField()
               {
                 _idAttachment = p._idAttachment,
                 Name = p.Name,
