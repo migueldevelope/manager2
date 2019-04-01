@@ -419,33 +419,33 @@ namespace Manager.Data
         throw e;
       }
     }
-    public async Task<T> UpdateNewVersion(T entity)
-    {
-      try
-      {
-        T entityOld = GetNewVersion(p => p._id == entity._id).Result;
-        Type type = entity.GetType();
-        IEnumerable<string> unequalProperties =
-            from pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            let selfValue = type.GetProperty(pi.Name).GetValue(entityOld, null)
-            let toValue = type.GetProperty(pi.Name).GetValue(entity, null)
-            where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
-            select pi.Name;
-        if (unequalProperties.Count() != 0)
-        {
-          FilterDefinition<T> filter = Builders<T>.Filter.Where(p => p._idAccount == _user._idAccount && p._id == entity._id);
-          List<UpdateDefinition<T>> entityChange = new List<UpdateDefinition<T>>();
-          foreach (string item in unequalProperties)
-            entityChange.Add(Builders<T>.Update.Set(item, entity.GetType().GetProperty(item).GetValue(entity, null)));
-          entity = await _collection.FindOneAndUpdateAsync(filter, Builders<T>.Update.Combine(entityChange));
-        }
-        return entity;
-      }
-      catch
-      {
-        throw;
-      }
-    }
+    //public async Task<T> UpdateNewVersion(T entity)
+    //{
+    //  try
+    //  {
+    //    T entityOld = GetNewVersion(p => p._id == entity._id).Result;
+    //    Type type = entity.GetType();
+    //    IEnumerable<string> unequalProperties =
+    //        from pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+    //        let selfValue = type.GetProperty(pi.Name).GetValue(entityOld, null)
+    //        let toValue = type.GetProperty(pi.Name).GetValue(entity, null)
+    //        where selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))
+    //        select pi.Name;
+    //    if (unequalProperties.Count() != 0)
+    //    {
+    //      FilterDefinition<T> filter = Builders<T>.Filter.Where(p => p._idAccount == _user._idAccount && p._id == entity._id);
+    //      List<UpdateDefinition<T>> entityChange = new List<UpdateDefinition<T>>();
+    //      foreach (string item in unequalProperties)
+    //        entityChange.Add(Builders<T>.Update.Set(item, entity.GetType().GetProperty(item).GetValue(entity, null)));
+    //      entity = await _collection.FindOneAndUpdateAsync(filter, Builders<T>.Update.Combine(entityChange));
+    //    }
+    //    return entity;
+    //  }
+    //  catch
+    //  {
+    //    throw;
+    //  }
+    //}
     public async Task<List<T>> GetAllNewVersion(Expression<Func<T, bool>> filter, int count, int skip, string sort)
     {
       try

@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
@@ -153,7 +152,7 @@ namespace Manager.Services.Specific
         logMessages.Subject = view.Subject;
         logMessages.StatusMessage = view.StatusMessage;
         logMessages.Message = view.Message;
-        logMessages = serviceLogMessages.UpdateNewVersion(logMessages).Result;
+        serviceLogMessages.Update(logMessages, null);
         return "Messagery altered!";
       }
       catch (Exception e)

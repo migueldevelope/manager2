@@ -220,7 +220,7 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.PhotoUrl;
         user.Schooling = new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
         user.Sex = view.Sex;
-        user = serviceUser.UpdateNewVersion(user).Result;
+        serviceUser.Update(user, null);
         return new ViewCrudUser()
         {
           _id = user._id,
@@ -258,7 +258,7 @@ namespace Manager.Services.Auth
         string newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
         user.Password = newPass;
         user.ChangePassword = EnumChangePassword.No;
-        user = serviceUser.UpdateNewVersion(user).Result;
+        serviceUser.Update(user, null);
         return "Password changed!";
       }
       catch (Exception e)
@@ -284,7 +284,7 @@ namespace Manager.Services.Auth
         user.Password = newPass;
         user.ChangePassword = EnumChangePassword.No;
         user.ForeignForgotPassword = string.Empty;
-        user = serviceUser.UpdateNewVersion(user).Result;
+        serviceUser.Update(user, null);
         return "Password changed!";
       }
       catch (Exception e)
@@ -331,7 +331,7 @@ namespace Manager.Services.Auth
         sendMail = serviceMail.InsertNewVersion(sendMail).Result;
         user.ChangePassword = EnumChangePassword.ForgotPassword;
         user.ForeignForgotPassword = guid;
-        user = serviceUser.UpdateNewVersion(user).Result;
+        serviceUser.Update(user, null);
         await serviceMail.Send(sendMail, pathSendGrid);
         return "Email sent successfully!";
       }

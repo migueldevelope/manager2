@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
@@ -61,7 +60,7 @@ namespace Manager.Services.Specific
       {
         Company item = serviceCompany.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        item = serviceCompany.UpdateNewVersion(item).Result;
+        serviceCompany.Update(item, null);
         return "Company deleted!";
       }
       catch (Exception e)
@@ -75,7 +74,7 @@ namespace Manager.Services.Specific
       {
         Company company = serviceCompany.GetNewVersion(p => p._id == idCompany).Result;
         company.Logo = url;
-        company = serviceCompany.UpdateNewVersion(company).Result;
+        serviceCompany.Update(company, null);
       }
       catch (Exception e)
       {
@@ -120,7 +119,7 @@ namespace Manager.Services.Specific
           propag = true;
         company.Name = view.Name;
         company.Logo = view.Logo;
-        company = serviceCompany.UpdateNewVersion(company).Result;
+        serviceCompany.Update(company, null);
 
         if (propag)
         {
@@ -200,7 +199,7 @@ namespace Manager.Services.Specific
       {
         Establishment item = serviceEstablishment.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        item = serviceEstablishment.UpdateNewVersion(item).Result;
+        serviceEstablishment.Update(item, null);
         return "Establishment deleted!";
       }
       catch (Exception e)
@@ -235,7 +234,7 @@ namespace Manager.Services.Specific
         Establishment establishment = serviceEstablishment.GetNewVersion(p => p._id == view._id).Result;
         establishment.Name = view.Name;
         establishment.Company = company;
-        establishment = serviceEstablishment.UpdateNewVersion(establishment).Result;
+        serviceEstablishment.Update(establishment, null);
         return "Establishment altered!";
       }
       catch (Exception e)

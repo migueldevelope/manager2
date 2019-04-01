@@ -1,7 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
@@ -535,7 +534,7 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.User.PhotoUrl;
         user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result;
         user.Sex = view.User.Sex;
-        user = serviceUser.UpdateNewVersion(user).Result;
+        serviceUser.Update(user, null);
 
         BaseFields manager = null;
         if (view.Manager != null)
@@ -572,7 +571,7 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user;
         person.SalaryScales = salaryScale;
-        person = servicePerson.UpdateNewVersion(person).Result;
+        servicePerson.Update(person, null);
         return "Person altered!";
       }
       catch (Exception e)

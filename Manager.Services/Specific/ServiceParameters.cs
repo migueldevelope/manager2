@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
@@ -54,7 +53,7 @@ namespace Manager.Services.Specific
       {
         Parameter item = serviceParameter.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        item = serviceParameter.UpdateNewVersion(item).Result;
+        serviceParameter.Update(item, null);
         return "Parameter deleted!";
       }
       catch (Exception e)
@@ -80,7 +79,7 @@ namespace Manager.Services.Specific
       {
         Parameter parameter = serviceParameter.GetNewVersion(p => p._id == view._id).Result;
         parameter.Content = view.Content;
-        parameter = serviceParameter.UpdateNewVersion(parameter).Result;
+        serviceParameter.Update(parameter, null);
         return "Parameter update!";
       }
       catch (Exception e)

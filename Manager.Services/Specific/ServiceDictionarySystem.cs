@@ -69,7 +69,7 @@ namespace Manager.Services.Specific
       {
         DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p._id == view._id).Result;
         dictionarySystem.Description = view.Description;
-        dictionarySystem = serviceDictionarySystem.UpdateNewVersion(dictionarySystem).Result;
+        serviceDictionarySystem.Update(dictionarySystem, null);
         return "Dictionary system altered!";
       }
       catch (Exception e)
@@ -83,7 +83,7 @@ namespace Manager.Services.Specific
       {
         DictionarySystem item = serviceDictionarySystem.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        item = serviceDictionarySystem.UpdateNewVersion(item).Result;
+        serviceDictionarySystem.Update(item, null);
         return "Dictionary system deleted!";
       }
       catch (Exception e)
