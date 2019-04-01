@@ -667,147 +667,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public MailModel OnBoardingApprovalManager(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingapprovalmanager").Result;
-        return model ?? OnBoardingApprovalManagerDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingApprovalOccupation(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingapprovaloccupation").Result;
-        return model ?? OnBoardingApprovalOccupationDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingApprovalManagerOccupation(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingapprovalmanageroccupation").Result;
-        return model ?? OnBoardingApprovalManagerOccupationDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingDisapproval(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingdisapproval").Result;
-        return model ?? OnBoardingDisapprovalDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingPendingManager(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "expectationspendingmanager").Result;
-        return model ?? DefaultExpectationsPendingManagerOld(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingSeq1(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq1").Result;
-        return model ?? OnBoardingSeq1Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingSeq2(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq2").Result;
-        return model ?? OnBoardingSeq2Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingSeq3(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq3").Result;
-        return model ?? OnBoardingSeq3Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingSeq4(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq4").Result;
-        return model ?? OnBoardingSeq4Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingSeq5(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq5").Result;
-        return model ?? OnBoardingSeq5Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel OnBoardingApprovalManagerDefault(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Olá {Manager},<br> O colaborador {Person} foi admitido na {Company} e inicio os registros de embarque na sua carreira.<br> De continuidade a este processo para gerar mais engajamento de sua equipe,e melhorar nossos processos de gestão.<br>Não perca tempo,  <a href ='https://analisa.solutions/' > clique aqui e confira </a>.<br><br>#VamosSerMaisFluidos",
-          Subject = "Notificação da Aprovação de Embarque | OnBoarding",
-          Name = "onboardingapprovalmanager",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     private MailModel OnBoardingApprovalDefault(string path)
     {
       try
@@ -829,16 +688,28 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel OnBoardingApprovalManagerOccupationDefault(string path)
+    public MailModel OnBoardingApprovalManager(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingapprovalmanager").Result;
+        return model ?? OnBoardingApprovalManagerDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel OnBoardingApprovalManagerDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Manager}, <br>O colaborador {Person} foi promovido para o cargo {Occupation}, e iniciou os registros de embarque. <br> De continuidade a este processo para gerar mais engajamento de sua equipe, e melhorar nossos processos de gestão.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
-          Subject = "Notificação para Continuar Embarque no Cargo | OnBoarding Occupation",
-          Name = "onboardingapprovalmanageroccupation",
+          Message = "Olá {Manager},<br> O colaborador {Person} foi admitido na {Company} e iniciou os registros de embarque na sua carreira.<br> De continuidade a este processo para gerar mais engajamento de sua equipe,e melhorar nossos processos de gestão.<br>Não perca tempo,  <a href ='https://analisa.solutions/' > clique aqui e confira </a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação da Aprovação de Embarque | OnBoarding",
+          Name = "onboardingapprovalmanager",
           Link = path
         };
         // Insert
@@ -850,7 +721,53 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel OnBoardingApprovalOccupationDefault(string path)
+    public MailModel OnBoardingDisapproval(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingdisapproval").Result;
+        return model ?? OnBoardingDisapprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel OnBoardingDisapprovalDefault(string path)
+    {
+      // Ok
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá <strong>{Manager}</strong>,</br></br>O seu colaborador {Person} fez alguns comentários no encerramento do embarque.</br>Por favor, verifique o que foi redigido e conclua esta etapa.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
+          Subject = "Notificação de Revisão de Embarque | OnBoarding",
+          Name = "onboardingdisapproval",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel OnBoardingOccupationApproval(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingapprovaloccupation").Result;
+        return model ?? OnBoardingOccupationApprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel OnBoardingOccupationApprovalDefault(string path)
     {
       try
       {
@@ -871,21 +788,80 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel OnBoardingDisapprovalDefault(string path)
+    public MailModel OnBoardingOccupationApprovalManager(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingapprovalmanageroccupation").Result;
+        return model ?? OnBoardingOccupationApprovalManagerDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel OnBoardingOccupationApprovalManagerDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>O seu subordinado {Person} não concordou com o OnBoarding.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Aprovação de OnBoarding",
-          Name = "onboardingdisapproval",
+          Message = "Olá {Manager}, <br>O colaborador {Person} foi promovido para o cargo {Occupation}, e iniciou os registros de embarque. <br> De continuidade a este processo para gerar mais engajamento de sua equipe, e melhorar nossos processos de gestão.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação para Continuar Embarque no Cargo | OnBoarding Occupation",
+          Name = "onboardingapprovalmanageroccupation",
           Link = path
         };
         // Insert
         model = serviceMailModel.InsertNewVersion(model).Result;
         return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel OnBoardingOccupationDisapproval(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingdisapprovaloccupation").Result;
+        return model ?? OnBoardingOccupationDisapprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel OnBoardingOccupationDisapprovalDefault(string path)
+    {
+      // Ok
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá <strong>{Manager}</strong>,</br></br>O seu colaborador {Person} fez alguns comentários no encerramento do embarque para troca de cargo.</br>Por favor, verifique o que foi redigido e conclua esta etapa.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
+          Subject = "Notificação de Revisão de Embarque | OnBoarding",
+          Name = "onboardingdisapprovaloccupation",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    // TODO: Revisão de outros e-mails de OnBoarding
+    public MailModel OnBoardingSeq1(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq1").Result;
+        return model ?? OnBoardingSeq1Default(path);
       }
       catch (Exception e)
       {
@@ -915,6 +891,18 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public MailModel OnBoardingSeq2(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq2").Result;
+        return model ?? OnBoardingSeq2Default(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private MailModel OnBoardingSeq2Default(string path)
     {
       try
@@ -932,6 +920,18 @@ namespace Manager.Services.Specific
         // Insert
         model = serviceMailModel.InsertNewVersion(model).Result;
         return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel OnBoardingSeq3(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq3").Result;
+        return model ?? OnBoardingSeq3Default(path);
       }
       catch (Exception e)
       {
@@ -961,6 +961,18 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public MailModel OnBoardingSeq4(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq4").Result;
+        return model ?? OnBoardingSeq4Default(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private MailModel OnBoardingSeq4Default(string path)
     {
       try
@@ -976,8 +988,20 @@ namespace Manager.Services.Specific
           Link = path
         };
         // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result ;
+        model = serviceMailModel.InsertNewVersion(model).Result;
         return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel OnBoardingSeq5(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq5").Result;
+        return model ?? OnBoardingSeq5Default(path);
       }
       catch (Exception e)
       {

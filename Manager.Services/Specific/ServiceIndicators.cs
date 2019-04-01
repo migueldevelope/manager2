@@ -489,7 +489,7 @@ namespace Manager.Services.Specific
                         item.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson ? "Em andamento pelo gestor" :
                           item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
                             item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
-                              item.StatusOnBoarding == EnumStatusOnBoarding.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+                              item.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
                 DateBegin = item?.DateBeginPerson,
                 DateEnd = item?.DateEndEnd,
 

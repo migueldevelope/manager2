@@ -373,7 +373,7 @@ namespace Manager.Services.Specific
               _id = p.Schooling._id,
               Name = p.Schooling.Name,
               Order = p.Schooling.Order,
-              Complement = p.Schooling._id,
+              Complement = p.Schooling.Complement,
               Type = p.Schooling.Type
             },
             CommentsManager = p.CommentsManager,
@@ -1064,15 +1064,14 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            if (item.Comments != null)
-              return item.Comments.Select(p => new ViewCrudComment()
-              {
-                _id = p._id,
-                Comments = p.Comments,
-                Date = p.Date,
-                StatusView = p.StatusView,
-                UserComment = p.UserComment
-              }).ToList();
+            return item.Comments?.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              Date = p.Date,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment
+            }).ToList();
           }
         }
 
@@ -1080,15 +1079,14 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            if (item.Comments != null)
-              return item.Comments.Select(p => new ViewCrudComment()
-              {
-                _id = p._id,
-                Comments = p.Comments,
-                Date = p.Date,
-                StatusView = p.StatusView,
-                UserComment = p.UserComment
-              }).ToList();
+            return item.Comments?.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              Date = p.Date,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment
+            }).ToList();
           }
         }
 
@@ -1096,15 +1094,14 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            if (item.Comments != null)
-              return item.Comments.Select(p => new ViewCrudComment()
-              {
-                _id = p._id,
-                Comments = p.Comments,
-                Date = p.Date,
-                StatusView = p.StatusView,
-                UserComment = p.UserComment
-              }).ToList();
+            return item.Comments?.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              Date = p.Date,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment
+            }).ToList();
           }
         }
 
@@ -1112,7 +1109,7 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
+            return item.Comments?.Select(p => new ViewCrudComment()
             {
               _id = p._id,
               Comments = p.Comments,
@@ -1127,7 +1124,7 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
+            return item.Comments?.Select(p => new ViewCrudComment()
             {
               _id = p._id,
               Comments = p.Comments,
@@ -1142,7 +1139,7 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            return item.Comments.Select(p => new ViewCrudComment()
+            return item.Comments?.Select(p => new ViewCrudComment()
             {
               _id = p._id,
               Comments = p.Comments,
@@ -1152,7 +1149,6 @@ namespace Manager.Services.Specific
             }).ToList();
           }
         }
-
         return null;
       }
       catch (Exception e)
@@ -1386,6 +1382,8 @@ namespace Manager.Services.Specific
         var onboarding = serviceOnboarding.GetAll(p => p._id == view._id).FirstOrDefault();
         onboarding.StatusOnBoarding = view.StatusOnBoarding;
         onboarding.CommentsEnd = view.CommentsEnd;
+        onboarding.CommentsPerson = view.CommentsPerson;
+        onboarding.CommentsManager = view.CommentsManager;
 
         if (onboarding.Person._id != _user._idPerson)
         {
@@ -1419,8 +1417,12 @@ namespace Manager.Services.Specific
 
             if (ValidOnboardingComments(onboarding))
             {
-              onboarding.StatusOnBoarding = EnumStatusOnBoarding.Disapproved;
+              onboarding.StatusOnBoarding = EnumStatusOnBoarding.WaitManagerRevision;
               onboarding.DateEndPerson = DateTime.Now;
+              if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+                MailDisapprovedOccupation(onboarding.Person);
+              else
+                MailDisapproved(onboarding.Person);
             }
             else
             {
@@ -1445,9 +1447,12 @@ namespace Manager.Services.Specific
             else
               MailManager(onboarding.Person);
           }
-          else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Disapproved)
+          else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision)
           {
-            MailDisapproved(onboarding.Person);
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              MailDisapprovedOccupation(onboarding.Person);
+            else
+              MailDisapproved(onboarding.Person);
           }
         }
         serviceOnboarding.Update(onboarding, null);
@@ -1785,7 +1790,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = serviceMailModel.OnBoardingApprovalOccupation(pathToken);
+        var model = serviceMailModel.OnBoardingOccupationApproval(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -1829,7 +1834,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = serviceMailModel.OnBoardingApprovalManagerOccupation(pathToken);
+        var model = serviceMailModel.OnBoardingOccupationApprovalManager(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -1884,6 +1889,60 @@ namespace Manager.Services.Specific
       {
         //searsh model mail database
         var model = serviceMailModel.OnBoardingDisapproval(pathToken);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        string managername = "";
+        try
+        {
+          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+        }
+        catch (Exception)
+        {
+
+        }
+
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = serviceMailMessage.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = serviceMailLog.Insert(sendMail);
+        var token = SendMail(pathToken, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        serviceMailMessage.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private async void MailDisapprovedOccupation(Person person)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = serviceMailModel.OnBoardingOccupationDisapproval(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -2564,7 +2623,7 @@ namespace Manager.Services.Specific
 
             if (ValidOnboardingComments(onboarding))
             {
-              onboarding.StatusOnBoarding = EnumStatusOnBoarding.Disapproved;
+              onboarding.StatusOnBoarding = EnumStatusOnBoarding.WaitManagerRevision;
               onboarding.DateEndPerson = DateTime.Now;
             }
             else
@@ -2590,7 +2649,7 @@ namespace Manager.Services.Specific
             else
               MailManager(onboarding.Person);
           }
-          else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.Disapproved)
+          else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision)
           {
             MailDisapproved(onboarding.Person);
           }
