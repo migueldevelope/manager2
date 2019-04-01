@@ -2415,7 +2415,13 @@ namespace Manager.Services.Specific
               Result = item.Result,
               StatusPlanApproved = EnumStatusPlanApproved.Open,
               Status = item.Status,
-              NewAction = item.NewAction
+              NewAction = item.NewAction,
+              Attachments =  (item.Attachments == null) ? null : item.Attachments.Select(p => new AttachmentField()
+              {
+                _idAttachment = p._idAttachment,
+                Name = p.Name,
+                Url = p.Url
+              }).ToList()
             };
           else
             planUpdate = new Plan()
@@ -2448,7 +2454,13 @@ namespace Manager.Services.Specific
               Result = item.Result,
               StatusPlanApproved = EnumStatusPlanApproved.Open,
               Status = item.Status,
-              NewAction = item.NewAction
+              NewAction = item.NewAction,
+              Attachments = (item.Attachments == null) ? null : item.Attachments.Select(p => new AttachmentField()
+              {
+                _idAttachment = p._idAttachment,
+                Name = p.Name,
+                Url = p.Url
+              }).ToList()
             };
         }
 

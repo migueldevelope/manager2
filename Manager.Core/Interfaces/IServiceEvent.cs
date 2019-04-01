@@ -12,55 +12,58 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceEvent
   {
-    //#region Event
-    //void SetUser(IHttpContextAccessor contextAccessor);
-    //void SetUser(BaseUser baseUser);
-    //string ReopeningEvent(string idevent);
-    //void SetAttachment(string idevent, string url, string fileName, string idattachmentid);
-    //void SetAttachmentHistoric(string idevent, string url, string fileName, string idattachmentid);
-    //string Remove(string id);
-    //string RemoveCourse(string id);
-    //string RemoveCourseESocial(string id);
-    //string RemoveEventHistoric(string id);
-    //string RemoveInstructor(string idevent, string id);
-    //string RemoveParticipant(string idevent, string idperson);
-    //string RemoveDays(string idevent, string idday);
-    //string Present(string idevent, string idparticipant, string idday, bool present);
-    //string SetGrade(string idevent, string idparticipant, decimal grade);
+    #region Event
+    void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser baseUser);
+    string ReopeningEvent(string idevent);
+    void SetAttachment(string idevent, string url, string fileName, string idattachmentid);
+    void SetAttachmentHistoric(string idevent, string url, string fileName, string idattachmentid);
+    string Remove(string id);
+    string RemoveCourse(string id);
+    string RemoveCourseESocial(string id);
+    string RemoveEventHistoric(string id);
+    string RemoveInstructor(string idevent, string id);
+    string RemoveParticipant(string idevent, string idperson);
+    string RemoveDays(string idevent, string idday);
+    string Present(string idevent, string idparticipant, string idday, bool present);
+    string SetGrade(string idevent, string idparticipant, decimal grade);
 
 
 
-    //ViewListEvent New(ViewCrudEvent view);
-    //ViewListEvent Update(ViewCrudEvent view);
-    //ViewCrudEvent Get(string id);
-    //List<ViewListEvent> List(ref long total, int count = 10, int page = 1, string filter = "");
-    //List<ViewListEventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "");
-    //string NewCourse(ViewCrudCourse view);
-    //string UpdateCourse(ViewCrudCourse view);
-    //ViewCrudCourse GetCourse(string id);
-    //List<ViewListCourse> ListCourse(ref long total, int count = 10, int page = 1, string filter = "");
-    //string NewCourseESocial(ViewCrudCourseESocial view);
-    //string UpdateCourseESocial(ViewCrudCourseESocial view);
-    //ViewCrudCourseESocial GetCourseESocial(string id);
-    //List<ViewCrudCourseESocial> ListCourseESocial(ref long total, int count = 10, int page = 1, string filter = "");
-    //string NewEventHistoric(ViewCrudEventHistoric view);
-    //string NewEventHistoricFrontEnd(ViewCrudEventHistoric view);
-    //string UpdateEventHistoric(ViewCrudEventHistoric view);
-    //string UpdateEventHistoricFrontEnd(ViewCrudEventHistoric view);
-    //ViewCrudEventHistoric GetEventHistoric(string id);
-    //List<ViewListEventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "");
-    //string AddParticipant(string idevent, ViewCrudParticipant participant);
-    //string AddDays(string idevent, ViewCrudDaysEvent days);
-    //string AddInstructor(string idevent, ViewCrudInstructor instructor);
-    //List<ViewCrudEntity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "");
-    //List<ViewListPerson> ListPersonInstructor(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
-    //List<ViewListPerson> ListPersonParticipants(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
-    //List<ViewCrudParticipant> ListParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
-    //List<ViewListEvent> ListEventOpen(ref long total, int count = 10, int page = 1, string filter = "");
-    //List<ViewListEvent> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
-    //List<ViewListEvent> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
-    //List<ViewListEvent> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
-    //#endregion
+    ViewListEvent New(ViewCrudEvent view);
+    ViewListEvent Update(ViewCrudEvent view);
+    ViewCrudEvent Get(string id);
+    List<ViewListEvent> List(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListEventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "");
+    string NewCourse(ViewCrudCourse view);
+    string UpdateCourse(ViewCrudCourse view);
+    ViewCrudCourse GetCourse(string id);
+    List<ViewListCourse> ListCourse(ref long total, int count = 10, int page = 1, string filter = "");
+    string NewCourseESocial(ViewCrudCourseESocial view);
+    string UpdateCourseESocial(ViewCrudCourseESocial view);
+    ViewCrudCourseESocial GetCourseESocial(string id);
+    List<ViewCrudCourseESocial> ListCourseESocial(ref long total, int count = 10, int page = 1, string filter = "");
+    string NewEventHistoricFrontEnd(ViewCrudEventHistoric view);
+    string UpdateEventHistoricFrontEnd(ViewCrudEventHistoric view);
+    ViewCrudEventHistoric GetEventHistoric(string id);
+    List<ViewListEventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "");
+    string AddParticipant(string idevent, ViewCrudParticipant view);
+    string AddDays(string idevent, ViewCrudDaysEvent view);
+    string AddInstructor(string idevent, ViewCrudInstructor view);
+    List<ViewCrudEntity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListPersonResume> ListPersonInstructor(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListPersonResume> ListPersonParticipants(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewCrudParticipant> ListParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListEvent> ListEventOpen(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListEvent> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListEvent> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListEvent> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+
+    //string NewEventHistoric(EventHistoric view);
+
+    //string UpdateEventHistoric(EventHistoric view);
+
+    #endregion
 
     #region Old
     Event NewOld(Event view);
