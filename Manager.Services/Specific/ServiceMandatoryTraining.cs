@@ -712,13 +712,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTrainingPlan> ListTrainingPlanPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewTrainingPlan> ListTrainingPlanPerson(string iduser, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._id == idperson & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._id == idperson & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
         var list = new List<ViewTrainingPlan>();
         var countRealized = 0;
         var countNo = 0;

@@ -149,6 +149,11 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// Atualizar informações do plano
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatetrainingplan")]
@@ -157,6 +162,14 @@ namespace Manager.Controllers
       return service.UpdateTrainingPlan(view);
     }
 
+    /// <summary>
+    /// Lista de plano de treinamento da empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listtrainingplan/{idcompany}")]
@@ -168,17 +181,31 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista planos de treinamento de um contrato
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <param name="iduser">Identificador do usuario</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("listtrainingplan/{idcompany}/{idperson}")]
-    public List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, string idperson, int count = 10, int page = 1, string filter = "")
+    [Route("listtrainingplan/{idcompany}/{iduser}")]
+    public List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, string iduser, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListTrainingPlan(idcompany, idperson, ref total, count, page, filter);
+      var result = service.ListTrainingPlan(idcompany, iduser, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
 
+    /// <summary>
+    /// Inclusão de novo plano de treinamento
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("newtrainingplan")]
@@ -187,6 +214,11 @@ namespace Manager.Controllers
       return service.NewTrainingPlan(view);
     }
 
+    /// <summary>
+    /// Busca informações para editar plano de treinamento
+    /// </summary>
+    /// <param name="id">Identificador do plano de treinamento</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("gettrainingplan/{id}")]
@@ -195,6 +227,11 @@ namespace Manager.Controllers
       return service.GetTrainingPlan(id);
     }
 
+    /// <summary>
+    /// Busca informações para editar treinamento obrigatório
+    /// </summary>
+    /// <param name="idcourse">Identificador do curso</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getmandatorytraining/{idcourse}")]
@@ -203,7 +240,13 @@ namespace Manager.Controllers
       return service.GetMandatoryTraining(idcourse);
     }
 
-
+    /// <summary>
+    /// Lista treinamentos obrigatórios
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("list")]
