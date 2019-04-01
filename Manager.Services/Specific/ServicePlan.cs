@@ -788,7 +788,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name },
+                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -852,7 +852,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name },
+                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -917,7 +917,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name },
+                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -1402,7 +1402,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name },
+                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -1483,7 +1483,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name },
+                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -1564,7 +1564,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name },
+                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
