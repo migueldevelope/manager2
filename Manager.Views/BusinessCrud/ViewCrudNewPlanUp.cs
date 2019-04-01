@@ -25,5 +25,6 @@ namespace Manager.Views.BusinessCrud
     public EnumStatus Status { get; set; }
     public EnumTypeViewPlan TypeViewPlan;
     public EnumNewAction NewAction { get; set; }
+    public List<ViewCrudAttachmentField> Attachments { get; set; }
   }
 }
