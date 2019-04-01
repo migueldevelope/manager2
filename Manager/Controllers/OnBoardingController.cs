@@ -48,7 +48,7 @@ namespace Manager.Controllers
     public List<ViewListOnBoarding> List(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListOnBoarding> result = service.ListOnBoarding(idmanager, ref total, filter, count, page);
+      List<ViewListOnBoarding> result = service.List(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -60,9 +60,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personwait/{idperson}")]
-    public ViewListOnBoarding ListPerson(string idperson)
+    public ViewListOnBoarding PersonWait(string idperson)
     {
-      return service.PersonOnBoardingWait(idperson);
+      return service.PersonWait(idperson);
     }
     /// <summary>
     /// Inclusão de novo OnBoarding
@@ -72,9 +72,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new/{idperson}")]
-    public ViewListOnBoarding Post(string idperson)
+    public ViewListOnBoarding New(string idperson)
     {
-      return service.NewOnBoarding(idperson);
+      return service.New(idperson);
     }
     /// <summary>
     /// Iniciar o processo de onboarding do colaborador
@@ -84,9 +84,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudOnboarding GetOnBoarding(string id)
+    public ViewCrudOnboarding Get(string id)
     {
-      return service.GetOnBoarding(id);
+      return service.Get(id);
     }
     /// <summary>
     /// Apagar comentários
@@ -119,14 +119,14 @@ namespace Manager.Controllers
     /// <summary>
     /// Apagar onboarding
     /// </summary>
-    /// <param name="idperson">Identificador da pessoa</param>
+    /// <param name="id">Identificador do Onboarding</param>
     /// <returns>Mensagem de Sucesso</returns>
     [Authorize]
     [HttpDelete]
-    [Route("delete/{idperson}")]
-    public IActionResult RemoveOnBoarding(string idperson)
+    [Route("delete/{id}")]
+    public IActionResult Delete(string id)
     {
-      return Ok(service.RemoveOnBoarding(idperson));
+      return Ok(service.Delete(id));
     }
     /// <summary>
     /// Atualiza informações do onboarding
@@ -136,9 +136,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult UpdateOnBoarding([FromBody]ViewCrudOnboarding onboarding)
+    public IActionResult Update([FromBody]ViewCrudOnboarding onboarding)
     {
-      return Ok(service.UpdateOnBoarding(onboarding));
+      return Ok(service.Update(onboarding));
     }
     /// <summary>
     /// Lista onboarding finalizados
@@ -151,10 +151,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listend/{idmanager}")]
-    public List<ViewListOnBoarding> ListOnBoardingsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    public List<ViewListOnBoarding> ListEnded(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListOnBoardingsEnd(idmanager, ref total, filter, count, page);
+      var result = service.ListEnded(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -169,10 +169,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personend/{idmanager}")]
-    public List<ViewListOnBoarding> PersonOnBoardingsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    public List<ViewListOnBoarding> ListPersonEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.PersonOnBoardingsEnd(idmanager, ref total, filter, count, page);
+      var result = service.ListPersonEnd(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -186,10 +186,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public List<ViewListOnBoarding> GetListExclud(int count = 10, int page = 1, string filter = "")
+    public List<ViewListOnBoarding> ListExcluded(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetListExclud(ref total, filter, count, page);
+      var result = service.ListExcluded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -216,9 +216,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcomments/{idonboarding}/{iditem}")]
-    public List<ViewCrudComment> GetListComments(string idonboarding, string iditem)
+    public List<ViewCrudComment> ListComments(string idonboarding, string iditem)
     {
-      return service.GetListComments(idonboarding, iditem);
+      return service.ListComments(idonboarding, iditem);
     }
     /// <summary>
     /// Inclusão comentario no item do onboarding

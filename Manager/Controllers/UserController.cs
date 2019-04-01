@@ -54,10 +54,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public List<ViewListUser> GetList(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public List<ViewListUser> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetUsers(ref total, count, page, filter, type);
+      var result = service.List(ref total, count, page, filter, type);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -68,10 +68,10 @@ namespace Manager.Controllers
     /// <returns>Objeto CRUD do usuário</returns>
     [Authorize]
     [HttpGet]
-    [Route("edit/{iduser}")]
-    public ViewCrudUser GetEdit(string iduser)
+    [Route("get/{iduser}")]
+    public ViewCrudUser Get(string iduser)
     {
-      return service.GetUserCrud(iduser);
+      return service.Get(iduser);
     }
     /// <summary>
     /// Inclusão de novo usuário
@@ -81,9 +81,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public ViewCrudUser Post([FromBody] ViewCrudUser view)
+    public ViewCrudUser New([FromBody] ViewCrudUser view)
     {
-      return service.NewUser(view);
+      return service.New(view);
     }
     /// <summary>
     /// Alteração de usuário
@@ -93,9 +93,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public ViewCrudUser Put([FromBody] ViewCrudUser view)
+    public ViewCrudUser Update([FromBody] ViewCrudUser view)
     {
-      return service.UpdateUser(view);
+      return service.Update(view);
     }
     /// <summary>
     /// Foto do perfil do usuário

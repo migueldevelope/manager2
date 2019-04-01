@@ -8,6 +8,8 @@ namespace Manager.Views.BusinessList
   public class ViewListCertificationItem: _ViewListBase
   {
     public EnumItemCertification ItemCertification { get; set; }
-    public string _idItem { get; set; }
+    public string IdItem { get; set; }
+    public string Concept { get; set; }
+
   }
 }

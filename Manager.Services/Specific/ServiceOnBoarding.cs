@@ -89,7 +89,7 @@ namespace Manager.Services.Specific
 
     #region Onboarding
 
-    public List<ViewListOnBoarding> ListOnBoarding(string idmanager, ref long total, string filter, int count, int page)
+    public List<ViewListOnBoarding> List(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -135,7 +135,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListOnBoarding PersonOnBoardingWait(string idperson)
+    public ViewListOnBoarding PersonWait(string idperson)
     {
       try
       {
@@ -170,7 +170,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListOnBoarding NewOnBoarding(string idperson)
+    public ViewListOnBoarding New(string idperson)
     {
       try
       {
@@ -222,7 +222,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudOnboarding GetOnBoarding(string id)
+    public ViewCrudOnboarding Get(string id)
     {
       try
       {
@@ -618,12 +618,12 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemoveOnBoarding(string idperson)
+    public string Delete(string id)
     {
       try
       {
-        LogSave(_user._idPerson, "RemoveOnboarding:" + idperson);
-        var onboarding = serviceOnboarding.GetAll(p => p.Person._id == idperson).FirstOrDefault();
+        LogSave(_user._idPerson, "RemoveOnboarding: " + id);
+        var onboarding = serviceOnboarding.GetNewVersion(p => p._id == id).Result;
         onboarding.Status = EnumStatus.Disabled;
         serviceOnboarding.Update(onboarding, null);
         return "deleted";
@@ -634,7 +634,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListOnBoarding> ListOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page)
+    public List<ViewListOnBoarding> ListEnded(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1055,7 +1055,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudComment> GetListComments(string idonboarding, string iditem)
+    public List<ViewCrudComment> ListComments(string idonboarding, string iditem)
     {
       try
       {
@@ -1160,7 +1160,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListOnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page)
+    public List<ViewListOnBoarding> ListPersonEnd(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1378,7 +1378,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateOnBoarding(ViewCrudOnboarding view)
+    public string Update(ViewCrudOnboarding view)
     {
       try
       {
@@ -1458,7 +1458,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListOnBoarding> GetListExclud(ref long total, string filter, int count, int page)
+    public List<ViewListOnBoarding> ListExcluded(ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1473,7 +1473,7 @@ namespace Manager.Services.Specific
           Name = p.Person.User.Name,
           _idPerson = p.Person._id,
           StatusOnBoarding = p.StatusOnBoarding,
-          OccupationName = p.Person.Occupation.Name
+          OccupationName = p.Person.Occupation?.Name
         }).ToList();
       }
       catch (Exception e)

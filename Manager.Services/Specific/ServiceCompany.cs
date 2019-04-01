@@ -55,7 +55,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Company
-    public string Remove(string id)
+    public string Delete(string id)
     {
       try
       {

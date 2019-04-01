@@ -68,7 +68,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudCompany List(string id)
+    public ViewCrudCompany Get(string id)
     {
       return service.Get(id);
     }
@@ -94,7 +94,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public IActionResult Delete(string id)
     {
-      return Ok(service.Remove(id));
+      return Ok(service.Delete(id));
     }
     #endregion
 

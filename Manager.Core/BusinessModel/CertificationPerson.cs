@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Enumns;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -12,10 +13,7 @@ namespace Manager.Core.BusinessModel
   /// </summary>
   public class CertificationPerson: BaseEntity
   {
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string IdPerson { get; set; }
-    public string Name { get; set; }
-    public string Mail { get; set; }
+    public ViewListPerson Person { get; set; }
     public string TextDefault { get; set; }
     public string TextDefaultEnd { get; set; }
     public EnumStatusCertificationPerson StatusCertificationPerson { get; set; }

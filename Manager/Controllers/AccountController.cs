@@ -58,7 +58,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewListAccount> GetAll(int count = 10, int page = 1, string filter = "")
+    public List<ViewListAccount> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetAll(ref total, count, page, filter);
@@ -96,7 +96,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("synchronize")]
-    public string SynchronizeParameters()
+    public string Synchronize()
     {
       return service.SynchronizeParameters().Result;
     }
@@ -113,11 +113,11 @@ namespace Manager.Controllers
     /// <returns>Lista de informações do Log</returns>
     [Authorize]
     [HttpGet]
-    [Route("getlogs/{idaccount}")]
-    public List<ViewListLog> GetLogs(string idaccount, int count = 10, int page = 1, string filter = "")
+    [Route("listlog/{idaccount}")]
+    public List<ViewListLog> ListLogs(string idaccount, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = serviceLog.GetLogs(idaccount, ref total, count, page, filter);
+      var result = serviceLog.ListLogs(idaccount, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

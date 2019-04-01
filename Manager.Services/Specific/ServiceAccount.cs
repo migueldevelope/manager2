@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
@@ -53,7 +52,7 @@ namespace Manager.Services.Specific
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
-      servicePerson._user = _user;
+      serviceAccount._user = _user;
       servicePerson._user = _user;
       serviceUser._user = _user;
       serviceCompany._user = _user;
@@ -64,13 +63,12 @@ namespace Manager.Services.Specific
     public void SetUser(BaseUser user)
     {
       serviceAccount._user = _user;
-      servicePerson._user = user;
-      servicePerson._user = user;
-      serviceUser._user = user;
-      serviceCompany._user = user;
-      serviceInfra.SetUser(user);
-      serviceLog.SetUser(user);
-      serviceParameter._user = user;
+      servicePerson._user = _user;
+      serviceUser._user = _user;
+      serviceCompany._user = _user;
+      serviceInfra.SetUser(_user);
+      serviceLog.SetUser(_user);
+      serviceParameter._user = _user;
     }
     #endregion
 

@@ -43,7 +43,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listwaitmanager/{idmanager}")]
-    public List<ViewListCheckpoint> ListCheckpointWait(string idmanager, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCheckpoint> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListWaitManager(idmanager, ref total, filter, count, page);
@@ -101,26 +101,26 @@ namespace Manager.Controllers
     /// <summary>
     /// Buscar checkpoint finalizado para mostrar no histórico
     /// </summary>
-    /// <param name="idperson">Identificador da pessoa</param>
+    /// <param name="id">Identificador do checkpoint</param>
     /// <returns>Objeto de manutenção do checkpoint</returns>
     [Authorize]
     [HttpGet]
-    [Route("personcheckpointend/{idperson}")]
-    public ViewCrudCheckpoint PersonCheckpointEnd(string idperson)
+    [Route("personcheckpointend/{id}")]
+    public ViewCrudCheckpoint PersonCheckpointEnd(string id)
     {
-      return service.PersonCheckpointEnd(idperson);
+      return service.PersonCheckpointEnd(id);
     }
     /// <summary>
     /// Remover um checkpoint
     /// </summary>
-    /// <param name="idcheckpoint">Identificador do checkpoint</param>
+    /// <param name="id">Identificador do checkpoint</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]
-    [Route("delete/{idcheckpoint}")]
-    public string RemoveCheckpoint(string idcheckpoint)
+    [Route("delete/{id}")]
+    public string DeleteCheckpoint(string id)
     {
-      return service.RemoveCheckpoint(idcheckpoint);
+      return service.DeleteCheckpoint(id);
     }
     /// <summary>
     /// Listar checkpoints finalizados
@@ -131,11 +131,11 @@ namespace Manager.Controllers
     /// <returns>Lista de checkpoint finalizados</returns>
     [Authorize]
     [HttpGet]
-    [Route("getlistexclud")]
-    public List<ViewListCheckpoint> GetListExclud(int count = 10, int page = 1, string filter = "")
+    [Route("listended")]
+    public List<ViewListCheckpoint> ListEnded(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetListExclud(ref total, filter, count, page);
+      var result = service.ListEnded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

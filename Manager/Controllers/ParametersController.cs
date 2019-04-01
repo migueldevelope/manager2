@@ -39,7 +39,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso</returns>
     [HttpPost]
     [Route("new")]
-    public IActionResult Post([FromBody]ViewCrudParameter view)
+    public IActionResult New([FromBody]ViewCrudParameter view)
     {
       return Ok(service.New(view));
     }
@@ -68,7 +68,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudParameter List(string id)
+    public ViewCrudParameter Get(string id)
     {
       return service.Get(id);
     }
@@ -106,7 +106,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public IActionResult Delete(string id)
     {
-      return Ok(service.Remove(id));
+      return Ok(service.Delete(id));
     }
     #endregion
 

@@ -24,6 +24,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceAuthentication serviceAuthentication;
     private readonly ServiceGeneric<Checkpoint> serviceCheckpoint;
+    private readonly ServiceGeneric<Company> serviceCompany;
     private readonly ServiceLog serviceLog;
     private readonly ServiceLogMessages serviceLogMessages;
     private readonly ServiceGeneric<MailLog> serviceMail;
@@ -42,6 +43,7 @@ namespace Manager.Services.Specific
       {
         serviceAuthentication = new ServiceAuthentication(context);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
         serviceLog = new ServiceLog(_context);
         serviceLogMessages = new ServiceLogMessages(context);
         serviceMail = new ServiceGeneric<MailLog>(context);
@@ -62,6 +64,7 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
       serviceCheckpoint._user = _user;
+      serviceCompany._user = _user;
       serviceLog.SetUser(_user);
       serviceLogMessages.SetUser(_user);
       serviceMail._user = _user;
@@ -75,6 +78,7 @@ namespace Manager.Services.Specific
     public void SetUser(BaseUser user)
     {
       serviceCheckpoint._user = user;
+      serviceCompany._user = user;
       serviceLog.SetUser(user);
       serviceLogMessages.SetUser(user);
       serviceMail._user = user;
@@ -119,8 +123,8 @@ namespace Manager.Services.Specific
               item.StatusCheckpoint = checkpoint.StatusCheckpoint;
               item.TypeCheckpoint = checkpoint.TypeCheckpoint;
               item.OccupationName = checkpoint.Occupation?.Name;
-              detail.Add(item);
             }
+            detail.Add(item);
           }
         }
         else
@@ -181,11 +185,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListCheckpoint> GetListExclud(ref long total, string filter, int count, int page)
+    public List<ViewListCheckpoint> ListEnded(ref long total, string filter, int count, int page)
     {
       try
       {
-        LogSave(_user._idPerson, "ListExclud");
+        LogSave(_user._idPerson, "ListEnded");
         int skip = (count * (page - 1));
         var detail = serviceCheckpoint.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Person.User.Name").Result
           .Select(s => new ViewListCheckpoint()
@@ -231,7 +235,7 @@ namespace Manager.Services.Specific
             Person = person,
             StatusCheckpoint = EnumStatusCheckpoint.Open,
             DateBegin = DateTime.Now,
-            DataAccess = checkpoint.Person.User.DateAdm == null ? DateTime.Now : DateTime.Parse(checkpoint.Person.User.DateAdm.ToString()).AddDays(Deadline()),
+            DataAccess = person.User.DateAdm == null ? DateTime.Now : DateTime.Parse(person.User.DateAdm.ToString()).AddDays(Deadline()),
             TypeCheckpoint = EnumCheckpoint.None,
             Occupation = new ViewListOccupation()
             {
@@ -299,7 +303,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p._id == id && p.StatusCheckpoint != EnumStatusCheckpoint.End ).Result;
+        Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p._id == id).Result;
         if (checkpoint == null)
           throw new Exception("Checkpoint not available!");
 
@@ -371,7 +375,7 @@ namespace Manager.Services.Specific
                   _id = p.ProcessLevelOne.Area._id,
                   Name = p.ProcessLevelOne.Area.Name
                 }
-              }
+              }              
             }).ToList()
           },
           TextDefault = checkpoint.TextDefault,
@@ -413,7 +417,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemoveCheckpoint(string idcheckpoint)
+    public string DeleteCheckpoint(string idcheckpoint)
     {
       try
       {
@@ -462,18 +466,30 @@ namespace Manager.Services.Specific
           }
         }
         checkpoint.Comments = view.Comments;
-        checkpoint.Questions = view.Questions.Select(p => new CheckpointQuestions()
+        checkpoint.Questions = view.Questions?.Select(p => new CheckpointQuestions()
         {
           _id = p._id,
           _idAccount = _user._idAccount,
           Status = EnumStatus.Enabled,
           Mark = p.Mark,
-          Question = serviceQuestions.GetNewVersion(x => x._id == p.Question._id).Result,
+          Question = FindQuestion(p.Question._id, p.Question.Company.Name, view.Person.User.Name),
           Itens = p.Itens?.Select(x => new CheckpointQuestions()
           {
             _id = x._id,
             Status = EnumStatus.Enabled,
-            Question = serviceQuestions.GetNewVersion(y => y._id == x.Question._id).Result,
+            Question = new Questions()
+            {
+              _id = x.Question._id,
+              _idAccount = _user._idAccount,
+              Status = EnumStatus.Enabled,
+              Company = serviceCompany.GetNewVersion(c => c._id == x.Question.Company._id).Result,
+              Content = x.Question.Content,
+              Name = x.Question.Name,
+              Order = x.Question.Order,
+              Template = null,
+              TypeQuestion = x.Question.TypeQuestion,
+              TypeRotine = x.Question.TypeRotine
+            },
             Itens = null,
             Mark = x.Mark,
             _idAccount = _user._idAccount
@@ -495,12 +511,6 @@ namespace Manager.Services.Specific
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p.Person._id == idperson && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
         if (checkpoint == null)
           throw new Exception("Checkpoint not available!");
-
-        if (checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open)
-        {
-          checkpoint.StatusCheckpoint = EnumStatusCheckpoint.Wait;
-          serviceCheckpoint.Update(checkpoint, null);
-        }
 
         return new ViewCrudCheckpoint()
         {
@@ -811,7 +821,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     private async void MailPerson(Person person, string result)
     {
       try
@@ -854,6 +863,19 @@ namespace Manager.Services.Specific
         var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
         messageEnd.Token = token;
         serviceMailMessage.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private Questions FindQuestion(string id, string nameCompany, string namePerson)
+    {
+      try
+      {
+        Questions result = serviceQuestions.GetNewVersion(x => x._id == id).Result;
+        result.Content = result.Content.Replace("{company_name}", nameCompany).Replace("{employee_name}", namePerson);
+        return result;
       }
       catch (Exception e)
       {

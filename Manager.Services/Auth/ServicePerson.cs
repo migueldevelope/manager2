@@ -260,7 +260,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<ViewListPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page)
+    public List<ViewListPersonTeam> ListTeam(ref long total, string idPerson, string filter, int count, int page)
     {
       try
       {
@@ -283,7 +283,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<ViewListPersonCrud> GetPersons(ref long total, int count, int page, string filter, EnumTypeUser type)
+    public List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
@@ -329,7 +329,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudPerson GetPersonCrud(string id)
+    public ViewCrudPerson Get(string id)
     {
       try
       {
@@ -421,7 +421,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudPerson NewPerson(ViewCrudPerson view)
+    public ViewCrudPerson New(ViewCrudPerson view)
     {
       try
       {
@@ -518,7 +518,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public string UpdatePerson(ViewCrudPerson view)
+    public string Update(ViewCrudPerson view)
     {
       try
       {

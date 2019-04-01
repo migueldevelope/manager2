@@ -67,7 +67,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListLog> GetLogs(string idaccount, ref long total, int count, int page, string filter)
+    public List<ViewListLog> ListLogs(string idaccount, ref long total, int count, int page, string filter)
     {
       try
       {

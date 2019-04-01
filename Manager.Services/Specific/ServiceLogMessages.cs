@@ -161,7 +161,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Remove(string id)
+    public string Delete(string id)
     {
       try
       {

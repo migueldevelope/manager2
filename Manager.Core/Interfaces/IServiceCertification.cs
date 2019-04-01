@@ -16,27 +16,27 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
 
-    string RemovePerson(string idcertifcation, string idcertificationperson);
+    string DeletePerson(string idcertifcation, string idcertificationperson);
     void SetAttachment(string idcertification, string url, string fileName, string attachmentid);
-    string RemoveCertification(string idcertification);
+    string DeleteCertification(string idcertification);
 
 
     List<ViewListPerson> ListPersons(string idcertification, ref long total, string filter, int count, int page);
-    ViewCertificationProfile GetProfile(string idperson);
-    ViewCrudCertification NewCertification(CertificationItem item, string idperson);
+    ViewListCertificationProfile GetProfile(string idperson);
+    ViewCrudCertification NewCertification(ViewListCertificationItem item, string idperson);
     string AddPerson(string idcertification, ViewListPerson person);
     string ApprovedCertification(string idcertificationperson, ViewCrudCertificationPerson view);
     string UpdateCertification(ViewCrudCertification view, string idperson, string idcertification);
-    List<ViewListCertification> GetListExclud(ref long total, string filter, int count, int page);
-    List<ViewCertification> ListCertificationsWaitPerson(string idperson, ref long total, string filter, int count, int page);
-    ViewListCertification CertificationsWaitPerson(string idcertification);
+    List<ViewListCertification> ListEnded(ref long total, string filter, int count, int page);
+    List<ViewListCertificationPerson> ListCertificationsWaitPerson(string idperson, ref long total, string filter, int count, int page);
+    ViewCrudCertification CertificationsWaitPerson(string idcertification);
     string UpdateStatusCertification(ViewCertificationStatus viewcertification, string idperson);
-    List<ViewCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page);
+    List<ViewListCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page);
     #endregion
 
     #region Old
     List<BaseFields> ListPersonsOld(string idcertification, ref long total, string filter, int count, int page);
-    ViewCertificationProfile GetProfileOld(string idperson);
+    ViewListCertificationProfile GetProfileOld(string idperson);
     Certification NewCertificationOld(CertificationItem item, string idperson);
     string AddPersonOld(string idcertification, BaseFields person);
     string ApprovedCertificationOld(string idcertificationperson, CertificationPerson view);

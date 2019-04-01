@@ -11,6 +11,6 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     void NewLog(ViewLog view);
-    List<ViewListLog> GetLogs(string idaccount, ref long total, int count , int page, string filter);
+    List<ViewListLog> ListLogs(string idaccount, ref long total, int count , int page, string filter);
   }
 }

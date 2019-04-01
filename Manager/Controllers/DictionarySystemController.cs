@@ -38,7 +38,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("new")]
-    public string Post([FromBody]ViewCrudDictionarySystem view)
+    public string New([FromBody]ViewCrudDictionarySystem view)
     {
       return service.New(view);
     }
@@ -67,7 +67,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudDictionarySystem List(string id)
+    public ViewCrudDictionarySystem Get(string id)
     {
       return service.Get(id);
     }
@@ -105,7 +105,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public IActionResult Delete(string id)
     {
-      return Ok(service.Remove(id));
+      return Ok(service.Delete(id));
     }
     #endregion
 

@@ -87,12 +87,12 @@ namespace Manager.Core.Interfaces
     string GetCSVCompareGroup(string idcompany, string link);
     List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref long total, string filter, int count, int page, string filterGroup);
     List<ViewGroupListLO> GetGroups(string idcompany);
-    ViewCrudSkill AddSkill(ViewAddSkill view);
+    ViewCrudSkill AddSkill(ViewCrudSkill view);
     ViewCrudGroup AddGroup(ViewCrudGroup view);
     string AddMapGroupScope(ViewCrudMapGroupScope view);
     string AddMapGroupSchooling(ViewCrudMapGroupSchooling view);
     string AddEssential(ViewCrudEssential view);
-    string AddSkills(List<ViewAddSkill> view);
+    string AddSkills(List<ViewCrudSkill> view);
     string AddMapGroupSkill(ViewCrudMapGroupSkill view);
     string AddOccupationSkill(ViewCrudOccupationSkill view);
     string AddOccupationActivities(ViewCrudOccupationActivities view);

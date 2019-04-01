@@ -16,21 +16,21 @@ namespace Manager.Core.Interfaces
 
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    List<ViewListOnBoarding> ListOnBoarding(string idmanager, ref long total, string filter, int count, int page);
-    ViewListOnBoarding PersonOnBoardingWait(string idperson);
-    ViewListOnBoarding NewOnBoarding(string idperson);
-    ViewCrudOnboarding GetOnBoarding(string id);
-    string RemoveOnBoarding(string idperson);
+    List<ViewListOnBoarding> List(string idmanager, ref long total, string filter, int count, int page);
+    ViewListOnBoarding PersonWait(string idperson);
+    ViewListOnBoarding New(string idperson);
+    ViewCrudOnboarding Get(string id);
+    string Delete(string idperson);
     string DeleteComments(string idonboarding, string iditem, string idcomments);
     string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment);
-    List<ViewListOnBoarding> ListOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
+    List<ViewListOnBoarding> ListEnded(string idmanager, ref long total, string filter, int count, int page);
     ViewCrudOnboarding GetOnBoardings(string id);
-    List<ViewListOnBoarding> PersonOnBoardingsEnd(string idmanager, ref long total, string filter, int count, int page);
-    string UpdateOnBoarding(ViewCrudOnboarding onboarding);
-    List<ViewListOnBoarding> GetListExclud(ref long total, string filter, int count, int page);
+    List<ViewListOnBoarding> ListPersonEnd(string idmanager, ref long total, string filter, int count, int page);
+    string Update(ViewCrudOnboarding onboarding);
+    List<ViewListOnBoarding> ListExcluded(ref long total, string filter, int count, int page);
     List<ViewCrudComment> AddComments(string idonboarding, string iditem, ViewCrudComment comments);
     string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
-    List<ViewCrudComment> GetListComments(string idonboarding, string iditem);
+    List<ViewCrudComment> ListComments(string idonboarding, string iditem);
     #endregion
 
     #region Old

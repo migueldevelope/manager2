@@ -16,10 +16,10 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    List<ViewListUser> GetUsers(ref long total, int count, int page, string filter, EnumTypeUser type);
-    ViewCrudUser GetUserCrud(string iduser);
-    ViewCrudUser NewUser(ViewCrudUser view);
-    ViewCrudUser UpdateUser(ViewCrudUser view);
+    List<ViewListUser> List(ref long total, int count, int page, string filter, EnumTypeUser type);
+    ViewCrudUser Get(string iduser);
+    ViewCrudUser New(ViewCrudUser view);
+    ViewCrudUser Update(ViewCrudUser view);
     string GetPhoto(string idUser);
     string AlterPassword(ViewAlterPass resetPass, string idUser);
     string AlterPasswordForgot(ViewAlterPass resetPass, string foreign);

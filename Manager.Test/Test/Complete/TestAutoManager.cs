@@ -39,7 +39,7 @@ namespace Manager.Test.Test.Complete
         var origin = this.servicePerson.ListPerson(p => p._id == employee.Manager._id).FirstOrDefault();
         //List Persons
         var listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "");
-        var listTeam = this.servicePerson.GetPersonTeam(ref total, manager._id.ToString(), "", 10, 1);
+        var listTeam = this.servicePerson.ListTeam(ref total, manager._id.ToString(), "", 10, 1);
         //List Persons Filter
         listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "Ariel");
         //Request
@@ -49,7 +49,7 @@ namespace Manager.Test.Test.Complete
           this.serviceAutoManager.SetManagerPerson(view, item.IdPerson, "http://10.0.0.15");
         }
         //Approved
-        var listApproved = this.serviceAutoManager.GetApproved(employee.Manager._id);
+        var listApproved = this.serviceAutoManager.ListApproved(employee.Manager._id);
         foreach (var item in listApproved)
         {
           var view = new ViewWorkflow()
@@ -62,7 +62,7 @@ namespace Manager.Test.Test.Complete
 
         //List Team Filter
         employee = this.servicePerson.ListPerson(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
-        listTeam = this.servicePerson.GetPersonTeam(ref total, employee.Manager._id, "Ariel", 10, 1);
+        listTeam = this.servicePerson.ListTeam(ref total, employee.Manager._id, "Ariel", 10, 1);
         foreach (var item in listTeam)
         {
           //this.serviceAutoManager.DeleteManager(item.IdPerson);

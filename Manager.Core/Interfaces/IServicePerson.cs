@@ -17,10 +17,10 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    List<ViewListPersonCrud> GetPersons(ref long total, int count, int page, string filter, EnumTypeUser type);
-    ViewCrudPerson GetPersonCrud(string id);
-    ViewCrudPerson NewPerson(ViewCrudPerson view);
-    string UpdatePerson(ViewCrudPerson person);
+    List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type);
+    ViewCrudPerson Get(string id);
+    ViewCrudPerson New(ViewCrudPerson view);
+    string Update(ViewCrudPerson person);
 
 
     List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page);
@@ -31,7 +31,7 @@ namespace Manager.Core.Interfaces
 
     string AddPersonUser(ViewCrudPersonUser view);
     string UpdatePersonUser(ViewCrudPersonUser view);
-    List<ViewListPersonTeam> GetPersonTeam(ref long total, string idPerson, string filter, int count, int page);
+    List<ViewListPersonTeam> ListTeam(ref long total, string idPerson, string filter, int count, int page);
     List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation);
 
 

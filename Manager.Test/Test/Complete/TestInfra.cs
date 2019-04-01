@@ -7,6 +7,7 @@ using Manager.Core.Views;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;
+using Manager.Views.BusinessCrud;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
@@ -81,7 +82,7 @@ namespace Manager.Test.Test.Complete
       {
         var ares = serviceInfra.GetAreas();
         var company = serviceInfra.GetCompanies().FirstOrDefault();
-        serviceInfra.AddSkill(new ViewAddSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
+        serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
         long total = 0;
         var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).FirstOrDefault();
         //serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });

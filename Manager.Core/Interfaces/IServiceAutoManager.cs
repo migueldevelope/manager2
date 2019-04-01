@@ -19,7 +19,7 @@ namespace Manager.Core.Interfaces
     void Disapproved(ViewWorkflow view, string idPerson, string idManager);
     void Approved(ViewWorkflow view, string idPerson, string idManager);
     void Canceled(string idPerson, string idManager);
-    List<ViewAutoManager> GetApproved(string idManager);
+    List<ViewAutoManager> ListApproved(string idManager);
     void DeleteManager(string idPerson);
   }
 }

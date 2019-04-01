@@ -39,9 +39,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/listapproved")]
-    public List<ViewAutoManager> GetListApproved(string idmanager)
+    public List<ViewAutoManager> ListApproved(string idmanager)
     {
-      return service.GetApproved(idmanager);
+      return service.ListApproved(idmanager);
     }
     /// <summary>
     /// Listar colaboradores sem gestão
@@ -54,7 +54,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/list")]
-    public List<ViewAutoManagerPerson> Get(string idmanager, int count = 10, int page = 1, string filter = "")
+    public List<ViewAutoManagerPerson> List(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(idmanager, ref total, count, page, filter);
@@ -70,7 +70,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/new")]
-    public IActionResult PutNew([FromBody]ViewManager view, string idperson)
+    public IActionResult New([FromBody]ViewManager view, string idperson)
     {
       service.SetManagerPerson(view, idperson, ConnectionNoSqlService.GetConnetionServer().TokenServer);
       return Ok("Auto manager added!");
@@ -85,7 +85,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/approved/{idmanager}")]
-    public IActionResult PutApproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
+    public IActionResult Approved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
       service.Approved(view, idperson, idmanager);
       return Ok("Auto manager approved!");
@@ -100,7 +100,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/disapproved/{idmanager}")]
-    public IActionResult PutDisapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
+    public IActionResult Disapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
       service.Disapproved(view, idperson, idmanager);
       return Ok("Auto manager disapproved!");

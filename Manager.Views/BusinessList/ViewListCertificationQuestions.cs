@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Manager.Views.BusinessCrud;
 
 namespace Manager.Views.BusinessList
 {
   public class ViewListCertificationQuestions
   {
-    public ViewListQuestions Question { get; set; }
+    public ViewCrudQuestions Question { get; set; }
     public string Answer { get; set; }
   }
 }

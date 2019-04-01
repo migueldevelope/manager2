@@ -17,8 +17,8 @@ namespace Manager.Core.Interfaces
     ViewCrudCheckpoint GetCheckpoint(string id);
     string UpdateCheckpoint(ViewCrudCheckpoint view);
     ViewCrudCheckpoint PersonCheckpointEnd(string idperson);
-    List<ViewListCheckpoint> GetListExclud(ref long total, string filter, int count, int page);
-    string RemoveCheckpoint(string idcheckpoint);
+    List<ViewListCheckpoint> ListEnded(ref long total, string filter, int count, int page);
+    string DeleteCheckpoint(string idcheckpoint);
 
     #region Old
     List<Checkpoint> ListCheckpointsWaitOld(string idmanager, ref long total, string filter, int count, int page);

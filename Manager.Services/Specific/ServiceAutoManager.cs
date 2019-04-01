@@ -296,7 +296,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewAutoManager> GetApproved(string idManager)
+    public List<ViewAutoManager> ListApproved(string idManager)
     {
       try
       {

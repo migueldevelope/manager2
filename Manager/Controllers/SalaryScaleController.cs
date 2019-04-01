@@ -56,8 +56,8 @@ namespace Manager.Controllers
     /// <returns>Objeto de menutenção da tabela salarial</returns>
     [Authorize]
     [HttpGet]
-    [Route("edit/{id}")]
-    public ViewCrudSalaryScale List(string id)
+    [Route("get/{id}")]
+    public ViewCrudSalaryScale Get(string id)
     {
       return service.Get(id);
     }
@@ -69,9 +69,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public IActionResult PostSalary([FromBody]ViewCrudSalaryScale view)
+    public IActionResult New([FromBody]ViewCrudSalaryScale view)
     {
-      return Ok(service.NewSalaryScale(view));
+      return Ok(service.New(view));
     }
     /// <summary>
     /// Atualizar uma tabela salarial
@@ -81,9 +81,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult UpdateSalary([FromBody]ViewCrudSalaryScale view)
+    public IActionResult Update([FromBody]ViewCrudSalaryScale view)
     {
-      return Ok(service.UpdateSalaryScale(view));
+      return Ok(service.Update(view));
     }
     /// <summary>
     /// Excluir uma tabela salarial
@@ -95,7 +95,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public IActionResult Delete(string id)
     {
-      return Ok(service.Remove(id));
+      return Ok(service.Delete(id));
     }
     #endregion
 
@@ -144,7 +144,7 @@ namespace Manager.Controllers
     /// <returns>Objeto de manutenção do grade</returns>
     [Authorize]
     [HttpGet]
-    [Route("editgrade/{idsalaryscale}/{id}")]
+    [Route("getgrade/{idsalaryscale}/{id}")]
     public ViewCrudGrade GetGrade(string idsalaryscale, string id)
     {
       return service.GetGrade(idsalaryscale, id);
@@ -157,7 +157,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addgrade")]
-    public IActionResult PostGrade([FromBody]ViewCrudGrade view)
+    public IActionResult AddGrade([FromBody]ViewCrudGrade view)
     {
       return Ok(service.AddGrade(view));
     }
@@ -198,7 +198,7 @@ namespace Manager.Controllers
     [Route("deletegrade/{idsalaryscale}/{id}")]
     public string DeleteGrade(string idsalaryscale, string id)
     {
-      return service.RemoveGrade(idsalaryscale, id);
+      return service.DeleteGrade(idsalaryscale, id);
     }
     #endregion
 
@@ -211,7 +211,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatestep")]
-    public IActionResult UpdateGrade([FromBody]ViewCrudStep view)
+    public IActionResult UpdateStep([FromBody]ViewCrudStep view)
     {
       return Ok(service.UpdateStep(view));
     }

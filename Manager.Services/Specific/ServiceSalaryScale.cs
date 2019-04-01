@@ -92,7 +92,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string NewSalaryScale(ViewCrudSalaryScale view)
+    public string New(ViewCrudSalaryScale view)
     {
       try
       {
@@ -110,7 +110,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateSalaryScale(ViewCrudSalaryScale view)
+    public string Update(ViewCrudSalaryScale view)
     {
       try
       {
@@ -124,7 +124,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Remove(string id)
+    public string Delete(string id)
     {
       try
       {
@@ -263,7 +263,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string RemoveGrade(string idsalaryscale, string id)
+    public string DeleteGrade(string idsalaryscale, string id)
     {
       try
       {

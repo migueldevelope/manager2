@@ -11,7 +11,7 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    string Remove(string id);
+    string Delete(string id);
     string New(ViewCrudParameter view);
     string Update(ViewCrudParameter view);
     ViewCrudParameter Get(string id);

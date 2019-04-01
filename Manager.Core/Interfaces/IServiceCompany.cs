@@ -13,7 +13,7 @@ namespace Manager.Core.Interfaces
     void SetUser(BaseUser user);
     void SetLogo(string idCompany, string url);
     string GetLogo(string idCompany);
-    string Remove(string id);
+    string Delete(string id);
     string RemoveEstablishment(string id);
     string New(ViewCrudCompany view);
     string Update(ViewCrudCompany view);

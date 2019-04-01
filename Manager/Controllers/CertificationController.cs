@@ -19,7 +19,6 @@ namespace Manager.Controllers
   [Route("certification")]
   public class CertificationController : Controller
   {
-
     private readonly IServiceCertification service;
 
     #region constructor
@@ -35,43 +34,61 @@ namespace Manager.Controllers
     }
     #endregion
 
-
     #region certification
+    /// <summary>
+    /// Retornar a lista de certificações pendentes
+    /// </summary>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do usuário</param>
+    /// <returns>Retorna a lista de pendências da pessoa</returns>
     [Authorize]
     [HttpGet]
     [Route("listcertificationswaitperson/{idperson}")]
-    public List<ViewCertification> ListCertificationsWaitPerson(string idperson, string filter = "", int count = 10, int page = 1)
+    public List<ViewListCertificationPerson> ListCertificationsWaitPerson(string idperson, string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
       var result = service.ListCertificationsWaitPerson(idperson, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
+    /// <summary>
+    /// Apaga uma acreditação
+    /// </summary>
+    /// <param name="idcertification">Identificador da acreditação</param>
+    /// <returns>Mensagem de Sucesso</returns>
     [Authorize]
     [HttpDelete]
     [Route("removecertification/{idcertification}")]
-    public string RemoveCertification(string idcertification)
+    public IActionResult DeleteCertification(string idcertification)
     {
-      return service.RemoveCertification(idcertification);
+      return Ok(service.DeleteCertification(idcertification));
     }
+    /// <summary>
+    /// Retira uma pessoa da acreditãção
+    /// </summary>
+    /// <param name="idcertification">Identificador da acreditação</param>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
-    [Route("removeperson/{idcertification}/{idcertificationperson}")]
-    public string RemovePerson(string idcertification, string idcertificationperson)
+    [Route("removeperson/{idcertification}/{idperson}")]
+    public string DeletePerson(string idcertification, string idperson)
     {
-      return service.RemovePerson(idcertification, idcertificationperson);
+      return service.DeletePerson(idcertification, idperson);
     }
     [Authorize]
     [HttpGet]
     [Route("getprofile/{idperson}")]
-    public ViewCertificationProfile GetProfile(string idperson)
+    public ViewListCertificationProfile GetProfile(string idperson)
     {
       return service.GetProfile(idperson);
     }
     [Authorize]
     [HttpGet]
     [Route("listcertificationperson/{idperson}")]
-    public List<ViewCertificationItem> ListCertificationPerson(string idperson, string filter = "", int count = 10, int page = 1)
+    public List<ViewListCertificationItem> ListCertificationPerson(string idperson, string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
       var result = service.ListCertificationPerson(idperson, ref total, filter, count, page);
@@ -121,10 +138,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public List<ViewListCertification> GetListExclud(string filter = "", int count = 999999999, int page = 1)
+    public List<ViewListCertification> ListEnded(string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
-      return service.GetListExclud(ref total, filter, count, page);
+      return service.ListEnded(ref total, filter, count, page);
     }
     /// <summary>
     /// Busca informação de acreditção
@@ -134,7 +151,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("certificationswaitperson/{idcertification}")]
-    public ViewListCertification CertificationsWaitPerson(string idcertification)
+    public ViewCrudCertification CertificationsWaitPerson(string idcertification)
     {
       return service.CertificationsWaitPerson(idcertification);
     }
@@ -163,7 +180,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newcertification/{idperson}")]
-    public ViewCrudCertification NewCertification([FromBody]CertificationItem item, string idperson)
+    public ViewCrudCertification NewCertification([FromBody]ViewListCertificationItem item, string idperson)
     {
       return service.NewCertification(item, idperson);
     }
@@ -246,7 +263,6 @@ namespace Manager.Controllers
 
 
     #endregion
-
-
+    
   }
 }

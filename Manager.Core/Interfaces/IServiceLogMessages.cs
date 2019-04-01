@@ -16,7 +16,7 @@ namespace Manager.Core.Interfaces
     string New(ViewCrudLogMessages view);
     ViewCrudLogMessages Get(string id);
     string Update(ViewCrudLogMessages view);
-    string Remove(string id);
+    string Delete(string id);
 
     #region Old
     string New(LogMessages view);

@@ -1,8 +1,6 @@
 ﻿namespace Manager.Views.BusinessList
 {
-  public class ViewListQuestions
+  public class ViewListQuestions : _ViewListBase
   {
-    public string _id { get; set; }
-    public string Name { get; set; }
   }
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -15,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador para acompanhamento
+  /// </summary>
   [Produces("application/json")]
   [Route("monitoring")]
   public class MonitoringController : Controller
@@ -22,16 +21,24 @@ namespace Manager.Controllers
     private readonly IServiceMonitoring service;
 
     #region Constructor
+    /// <summary>
+    /// Construtor do controlador
+    /// </summary>
+    /// <param name="_service">Serviço de acompanhamento</param>
+    /// <param name="contextAccessor">Token de segurança</param>
     public MonitoringController(IServiceMonitoring _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
-
     #endregion
 
     #region Monitoring
-
+    /// <summary>
+    /// Remover todos os monitoramentos de uma pessoa
+    /// </summary>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("deleteall/{idperson}")]
@@ -39,7 +46,11 @@ namespace Manager.Controllers
     {
       return service.RemoveAllMonitoring(idperson);
     }
-
+    /// <summary>
+    /// Exclusão de um monitoramento
+    /// </summary>
+    /// <param name="idmonitoring">Identificador do monitoramento</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("delete/{idmonitoring}")]
@@ -47,7 +58,11 @@ namespace Manager.Controllers
     {
       return service.RemoveMonitoring(idmonitoring);
     }
-
+    /// <summary>
+    /// Exclusão do último monitoramento
+    /// </summary>
+    /// <param name="idperson">Identificação da pessoa</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("deletelast/{idperson}")]
@@ -55,7 +70,12 @@ namespace Manager.Controllers
     {
       return service.RemoveLastMonitoring(idperson);
     }
-
+    /// <summary>
+    /// Exclusão de atividade do monitoramento
+    /// </summary>
+    /// <param name="idmonitoring">Identificador do monitoramento</param>
+    /// <param name="idactivitie">Identificador da atividade</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removemonitoringactivities/{idmonitoring}/{idactivitie}")]
@@ -63,6 +83,13 @@ namespace Manager.Controllers
     {
       return service.RemoveMonitoringActivities(idmonitoring, idactivitie);
     }
+    /// <summary>
+    /// Exclusão de compentário
+    /// </summary>
+    /// <param name="idmonitoring">Identificador do monitoramento</param>
+    /// <param name="iditem">Identificador do item</param>
+    /// <param name="idcomments">Identificador do comentário</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("deletecomments/{idmonitoring}/{iditem}/{idcomments}")]
@@ -70,6 +97,13 @@ namespace Manager.Controllers
     {
       return service.DeleteComments(idmonitoring, iditem, idcomments);
     }
+    /// <summary>
+    /// Alteração de comentário
+    /// </summary>
+    /// <param name="idmonitoring">Identificador do monitoramento</param>
+    /// <param name="iditem">Identificador do item</param>
+    /// <param name="usercomment">Tipo de usuário do comentário</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatecommentsview/{idmonitoring}/{iditem}/{usercomment}")]
@@ -77,7 +111,11 @@ namespace Manager.Controllers
     {
       return service.UpdateCommentsView(idmonitoring, iditem, usercomment);
     }
-
+    /// <summary>
+    /// Alteração do comentário
+    /// </summary>
+    /// <param name="idmonitoring">Identificador do monitoramento</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("validcomments/{idmonitoring}")]
@@ -85,8 +123,6 @@ namespace Manager.Controllers
     {
       return service.ValidComments(idmonitoring);
     }
-
-
     /// <summary>
     /// Inclusão monitoring
     /// </summary>
@@ -99,12 +135,10 @@ namespace Manager.Controllers
     {
       return service.NewMonitoring(idperson);
     }
-
     /// <summary>
     /// Atualiza informações monitogin
     /// </summary>
     /// <param name="monitoring">Objeto Crud</param>
-    /// <param name="idperson">Identificador contrato</param>
     /// <returns></returns>
     [Authorize]
     [HttpPut]
@@ -113,7 +147,6 @@ namespace Manager.Controllers
     {
       return service.UpdateMonitoring(monitoring);
     }
-
     /// <summary>
     /// Lista monitoring finalizado para gestor
     /// </summary>
@@ -132,8 +165,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
-
     /// <summary>
     /// Lista monitoring para exclusão
     /// </summary>
@@ -151,7 +182,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista monitoring em andamento para gestor
     /// </summary>
@@ -170,7 +200,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista monitoring para pessoa
     /// </summary>
@@ -183,7 +212,6 @@ namespace Manager.Controllers
     {
       return service.PersonMonitoringsEnd(idmanager);
     }
-
     /// <summary>
     /// Lista monitoring para pessoa
     /// </summary>
@@ -196,7 +224,6 @@ namespace Manager.Controllers
     {
       return service.PersonMonitoringsWait(idmanager);
     }
-
     /// <summary>
     /// Busca informação monitoring para editar
     /// </summary>
@@ -209,7 +236,6 @@ namespace Manager.Controllers
     {
       return service.GetMonitorings(id);
     }
-
     /// <summary>
     /// Lista skills
     /// </summary>
@@ -222,8 +248,6 @@ namespace Manager.Controllers
     {
       return service.GetSkills(idperson);
     }
-
-
     /// <summary>
     /// Busca informações para editar entrega
     /// </summary>
@@ -237,7 +261,6 @@ namespace Manager.Controllers
     {
       return service.GetMonitoringActivities(idmonitoring, idactivitie);
     }
-
     /// <summary>
     /// Atualiza entrega monitoring
     /// </summary>
@@ -251,7 +274,6 @@ namespace Manager.Controllers
     {
       return service.UpdateMonitoringActivities(idmonitoring, activitie);
     }
-
     /// <summary>
     /// Adiciona um entrega no monitoring
     /// </summary>
@@ -265,7 +287,6 @@ namespace Manager.Controllers
     {
       return service.AddMonitoringActivities(idmonitoring, activitie);
     }
-
     /// <summary>
     /// Lista comentarios de um item do monitoring
     /// </summary>
@@ -279,7 +300,6 @@ namespace Manager.Controllers
     {
       return service.GetListCommentsOld(idmonitoring, iditem);
     }
-
     /// <summary>
     /// Inclusão comentario
     /// </summary>
@@ -294,8 +314,6 @@ namespace Manager.Controllers
     {
       return service.AddComments(idmonitoring, iditem, comments);
     }
-
-
     /// <summary>
     /// Atualiza comentario item do monitoring
     /// </summary>
@@ -310,8 +328,6 @@ namespace Manager.Controllers
     {
       return service.UpdateComments(idmonitoring, iditem, comments);
     }
-
-
     /// <summary>
     /// Adiciona um plano
     /// </summary>
@@ -326,7 +342,6 @@ namespace Manager.Controllers
     {
       return service.AddPlan(idmonitoring, iditem, plan);
     }
-
     /// <summary>
     /// Atualiza informações do plano dentro de um item do monitoring
     /// </summary>
@@ -341,7 +356,6 @@ namespace Manager.Controllers
     {
       return service.UpdatePlan(idmonitoring, iditem, plan);
     }
-
     #endregion
 
     #region Old
@@ -496,9 +510,6 @@ namespace Manager.Controllers
     }
 
     #endregion
-
-
-
 
   }
 }

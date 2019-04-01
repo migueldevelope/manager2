@@ -87,7 +87,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region User
-    public List<ViewListUser> GetUsers(ref long total, int count, int page, string filter, EnumTypeUser type)
+    public List<ViewListUser> List(ref long total, int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
@@ -124,7 +124,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudUser GetUserCrud(string iduser)
+    public ViewCrudUser Get(string iduser)
     {
       try
       {
@@ -152,7 +152,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudUser NewUser(ViewCrudUser view)
+    public ViewCrudUser New(ViewCrudUser view)
     {
       try
       {
@@ -203,7 +203,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudUser UpdateUser(ViewCrudUser view)
+    public ViewCrudUser Update(ViewCrudUser view)
     {
       try
       {
