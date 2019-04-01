@@ -1,7 +1,6 @@
 ﻿namespace Manager.Views.BusinessCrud
 {
-  public class ViewPlanActivity
+  public class ViewPlanActivity: _ViewCrudBase
   {
-    public string Name { get; set; }
   }
 }

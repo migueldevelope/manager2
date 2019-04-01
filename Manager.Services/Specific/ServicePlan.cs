@@ -668,6 +668,7 @@ namespace Manager.Services.Specific
 
         return detail.Select(p => new ViewPlanActivity()
         {
+          _id = p._id,
           Name = p.Name
         }).ToList();
       }
@@ -684,6 +685,7 @@ namespace Manager.Services.Specific
         return servicePlanActivity.GetAll(p => p._id == id)
           .Select(p => new ViewPlanActivity()
           {
+            _id = p._id,
             Name = p.Name
           }).FirstOrDefault();
       }
@@ -697,7 +699,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        servicePlanActivity.Insert(new PlanActivity() { Name = model.Name });
+        servicePlanActivity.Insert(new PlanActivity() { Name = model.Name, Status = EnumStatus.Enabled });
         return "add plan activity";
       }
       catch (Exception e)
@@ -710,7 +712,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        servicePlanActivity.Update(new PlanActivity() { Name = model.Name }, null);
+        servicePlanActivity.Update(new PlanActivity()
+        {
+          _id = model._id,
+          Name = model.Name,
+          Status = EnumStatus.Enabled,
+          _idAccount = _user._idAccount
+        }, null);
         return "update";
       }
       catch (Exception e)
