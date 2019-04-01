@@ -24,7 +24,7 @@ namespace Manager.Controllers
     public EventController(IServiceEvent _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
-      //service.SetUser(contextAccessor);
+      service.SetUser(contextAccessor);
     }
 
     #endregion
