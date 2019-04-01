@@ -116,13 +116,25 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// Inclusão de um evento
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("new")]
-    public ViewListEvent Post([FromBody]ViewCrudEvent view)
+    public ViewListEvent New([FromBody]ViewCrudEvent view)
     {
       return service.New(view);
     }
 
+    /// <summary>
+    /// Lista eventos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("list")]
@@ -134,6 +146,14 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista eventos para inscrição
+    /// </summary>
+    /// <param name="idperson">Identificador contrato</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listeventopensubscription/{idperson}")]
@@ -145,6 +165,14 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista eventos inscritos
+    /// </summary>
+    /// <param name="idperson">Identificador contrato</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listeventsubscription/{idperson}")]
@@ -156,6 +184,13 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista eventos abertos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listeventopen")]
@@ -167,6 +202,13 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista eventos encerrados
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listeventend")]
@@ -178,6 +220,15 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista instrutores de um evento
+    /// </summary>
+    /// <param name="idevent">Identificador evento</param>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listpersoninstructor/{idevent}/{idcompany}")]
@@ -189,6 +240,15 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista participante do evento
+    /// </summary>
+    /// <param name="idevent">Identificador evento</param>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listpersonparticipants/{idevent}/{idcompany}")]
@@ -200,6 +260,13 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista entidades
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listentity")]
@@ -211,6 +278,11 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Busca informações de evento para editar 
+    /// </summary>
+    /// <param name="id">Identificador evento</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
@@ -219,6 +291,11 @@ namespace Manager.Controllers
       return service.Get(id);
     }
 
+    /// <summary>
+    /// Atualiza informações de um evento
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("update")]
@@ -228,13 +305,25 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// Inclusão histórico de evento
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("neweventhistoric")]
-    public string PostEventHistoric([FromBody]ViewCrudEventHistoric view)
+    public string NewEventHistoricFrontEnd([FromBody]ViewCrudEventHistoric view)
     {
       return service.NewEventHistoricFrontEnd(view);
     }
 
+    /// <summary>
+    /// Lista histórico de eventos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listeventhistoric")]
@@ -246,6 +335,14 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Lista os histórico de evento de um contrato
+    /// </summary>
+    /// <param name="id">Identificador usuário</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("listeventhistoricperson/{id}")]
     public List<ViewListEventHistoric> ListEventHistoricPerson(string id, int count = 10, int page = 1, string filter = "")
@@ -256,6 +353,11 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Busca informações para editar um histórico de evento
+    /// </summary>
+    /// <param name="id">Identificador histórico de evento</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("geteventhistoric/{id}")]
@@ -264,6 +366,11 @@ namespace Manager.Controllers
       return service.GetEventHistoric(id);
     }
 
+    /// <summary>
+    /// Atualiza informações de um historico de eventos
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updateeventhistoric")]
@@ -273,14 +380,25 @@ namespace Manager.Controllers
     }
 
 
-
+    /// <summary>
+    /// Inclusão de um novo curso
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("newcourse")]
-    public string PostCourse([FromBody]ViewCrudCourse view)
+    public string NewCourse([FromBody]ViewCrudCourse view)
     {
       return service.NewCourse(view);
     }
 
+    /// <summary>
+    /// Lista os cursos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listcourse")]
@@ -292,6 +410,11 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Busca informações para editar um curso
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getcourse/{id}")]
@@ -300,6 +423,11 @@ namespace Manager.Controllers
       return service.GetCourse(id);
     }
 
+    /// <summary>
+    /// Atualizar informaçõe de um curso
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatecourse")]
@@ -308,13 +436,25 @@ namespace Manager.Controllers
       return service.UpdateCourse(view);
     }
 
+    /// <summary>
+    /// Inclusão curso esocial
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("newcourseesocial")]
-    public string PostCourseESocial([FromBody]ViewCrudCourseESocial view)
+    public string NewCourseESocial([FromBody]ViewCrudCourseESocial view)
     {
       return service.NewCourseESocial(view);
     }
 
+    /// <summary>
+    /// Lista cursos do esocial
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listcourseesocial")]
@@ -326,6 +466,11 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Busca informações de um curso do esocial para editar
+    /// </summary>
+    /// <param name="id">Identificador do curso esocial</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getcourseesocial/{id}")]
@@ -334,6 +479,11 @@ namespace Manager.Controllers
       return service.GetCourseESocial(id);
     }
 
+    /// <summary>
+    /// Atualiza informações de um curso do esocial
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatecourseesocial")]
@@ -342,7 +492,12 @@ namespace Manager.Controllers
       return service.UpdateCourseESocial(view);
     }
 
-
+    /// <summary>
+    /// Adiciona um participante a um evento
+    /// </summary>
+    /// <param name="participant">Objeto Crud</param>
+    /// <param name="idevent">Identificador evento</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("addparticipant/{idevent}")]
     public string AddParticipant([FromBody]ViewCrudParticipant participant, string idevent)
@@ -350,6 +505,12 @@ namespace Manager.Controllers
       return service.AddParticipant(idevent, participant);
     }
 
+    /// <summary>
+    /// Adicionar dias a um evento
+    /// </summary>
+    /// <param name="days">Objeto Crud</param>
+    /// <param name="idevent">Identificador evento</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("adddays/{idevent}")]
     public string AddDays([FromBody]ViewCrudDaysEvent days, string idevent)
@@ -357,6 +518,12 @@ namespace Manager.Controllers
       return service.AddDays(idevent, days);
     }
 
+    /// <summary>
+    /// Adiciona um instrutor em um evento
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <param name="idevent">Identificador evento</param>
+    /// <returns></returns>
     [HttpPost]
     [Route("addinstructor/{idevent}")]
     public string AddDays([FromBody]ViewCrudInstructor view, string idevent)
@@ -364,7 +531,14 @@ namespace Manager.Controllers
       return service.AddInstructor(idevent, view);
     }
 
-
+    /// <summary>
+    /// Lista os participante de um evento
+    /// </summary>
+    /// <param name="idevent">Identificador do evento</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listparticipants/{idevent}")]

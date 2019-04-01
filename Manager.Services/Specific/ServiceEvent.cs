@@ -951,8 +951,8 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "List Historic Person");
         int skip = (count * (page - 1));
-        var detail = serviceEventHistoric.GetAll(p => p.Person._id == id & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEventHistoric.GetAll(p => p.Person._id == id & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.Select(p => new ViewListEventHistoric()
         {
