@@ -24,7 +24,7 @@ namespace Manager.Core.Interfaces
     List<ViewGetPlan> ListPlansPerson(ref long total, string id, string filter, int count,
       int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
     ViewGetPlan GetPlan(string idmonitoring, string idplan);
-    //string UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan);
+    string UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan);
     string NewPlan(string idmonitoring, string idplanold, ViewCrudPlan viewPlan);
     string NewUpdatePlan(string idmonitoring, List<ViewCrudNewPlanUp> viewPlan);
     List<ViewPlanShort> ListPlans(ref long total, string id, string filter, int count, int page);
@@ -39,7 +39,6 @@ namespace Manager.Core.Interfaces
     string UpdatePlanActivity(ViewPlanActivity model);
     ViewListPlanStruct GetPlanStruct(string idmonitoring, string idplan);
     #endregion
-
 
 
     #region Old

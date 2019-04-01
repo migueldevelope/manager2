@@ -455,6 +455,35 @@ namespace Manager.Services.Specific
 
     #region Plan
 
+    public string UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan)
+    {
+      try
+      {
+        var plan = servicePlan.GetAll(p => p._id == viewPlan._id).FirstOrDefault();
+        plan.Deadline = viewPlan.Deadline;
+        plan.Description = viewPlan.Description;
+        plan.Name = viewPlan.Name;
+        plan.Skills = (viewPlan.Skills == null) ? null :
+        viewPlan.Skills.Select(p => new Skill()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Concept = p.Concept,
+          Status = EnumStatus.Enabled,
+          TypeSkill = p.TypeSkill,
+          _idAccount = _user._idAccount
+        }).ToList();
+        plan.TypePlan = viewPlan.TypePlan;
+
+        UpdatePlan(idmonitoring, plan);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       try
@@ -2372,7 +2401,7 @@ namespace Manager.Services.Specific
                 _idAccount = _user._idAccount,
                 Status = EnumStatus.Enabled
               }).ToList(),
-              UserInclude = (item.UserInclude == null)? null:
+              UserInclude = (item.UserInclude == null) ? null :
               servicePerson.GetAll(p => p._id == item.UserInclude).FirstOrDefault(),
               DateInclude = item.DateInclude,
               TypePlan = item.TypePlan,
