@@ -29,6 +29,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlan;
 
 
+    #region Constructor
     public ServiceMandatoryTraining(DataContext context) : base(context)
     {
       try
@@ -64,47 +65,10 @@ namespace Manager.Services.Specific
       servicePersonMandatory._user = _user;
       serviceTrainingPlan._user = _user;
     }
-    public string AddOccupation(ViewCrudOccupationMandatory view)
-    {
-      try
-      {
-        Course course = serviceCourse.GetNewVersion(p => p._id == view._id).Result;
-        Occupation occupation = serviceOccupation.GetNewVersion(p => p._id == view._id).Result;
-        var list = new List<OccupationMandatory>
-        {
-          AddOccupationMandatory(new OccupationMandatory()
-          {
-            Course = course,
-            Occupation = occupation,
-            BeginDate = view.BeginDate,
-            TypeMandatoryTraining = view.TypeMandatoryTraining
-          })
-        };
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == view.Course._id).FirstOrDefault();
-        if (mandatory == null)
-        {
-          serviceMandatoryTraining.Insert(new MandatoryTraining()
-          {
-            Course = course,
-            Occupations = list,
-            Status = EnumStatus.Enabled,
-            Companys = new List<CompanyMandatory>(),
-            Persons = new List<PersonMandatory>()
-          });
-        }
-        else
-        {
-          mandatory.Occupations.Add(list.FirstOrDefault());
-          serviceMandatoryTraining.Update(mandatory, null);
-        }
-        UpdateTrainingPlanOccupation(course, occupation, view.BeginDate, view.TypeMandatoryTraining);
-        return "add occupation";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+
+    #endregion
+
+    #region private
 
     private void NewOnZero(Course course)
     {
@@ -122,8 +86,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-
-    public async void UpdateTrainingPlanPerson(Course course, Person person, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
+    private async void UpdateTrainingPlanPerson(Course course, Person person, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
@@ -200,8 +163,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
-    public List<EventHistoric> Equivalents(string idcourse, string idperson)
+    private List<EventHistoric> Equivalents(string idcourse, string idperson)
     {
       try
       {
@@ -239,7 +201,6 @@ namespace Manager.Services.Specific
         }
       }
     }
-
     private bool PrerequerimentsInvert(Course course, string idperson)
     {
       try
@@ -259,8 +220,7 @@ namespace Manager.Services.Specific
         }
       }
     }
-
-    public async void UpdateTrainingPlanOccupation(Course course, Occupation occupation, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
+    private async void UpdateTrainingPlanOccupation(Course course, Occupation occupation, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
@@ -278,8 +238,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
-    public async void UpdateTrainingPlanCompany(Course course, Company company, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
+    private async void UpdateTrainingPlanCompany(Course course, Company company, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
@@ -298,6 +257,86 @@ namespace Manager.Services.Specific
       }
     }
 
+    private CompanyMandatory AddCompanyMandatory(CompanyMandatory model)
+    {
+      try
+      {
+        return serviceCompanyMandatory.Insert(model);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private OccupationMandatory AddOccupationMandatory(OccupationMandatory model)
+    {
+      try
+      {
+        return serviceOccupationMandatory.Insert(model);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private PersonMandatory AddPersonMandatory(PersonMandatory model)
+    {
+      try
+      {
+        return servicePersonMandatory.Insert(model);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
+    #region mandatorytraining
+    public string AddOccupation(ViewCrudOccupationMandatory view)
+    {
+      try
+      {
+        Course course = serviceCourse.GetNewVersion(p => p._id == view._id).Result;
+        Occupation occupation = serviceOccupation.GetNewVersion(p => p._id == view._id).Result;
+        var list = new List<OccupationMandatory>
+        {
+          AddOccupationMandatory(new OccupationMandatory()
+          {
+            Course = course,
+            Occupation = occupation,
+            BeginDate = view.BeginDate,
+            TypeMandatoryTraining = view.TypeMandatoryTraining
+          })
+        };
+        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == view.Course._id).FirstOrDefault();
+        if (mandatory == null)
+        {
+          serviceMandatoryTraining.Insert(new MandatoryTraining()
+          {
+            Course = course,
+            Occupations = list,
+            Status = EnumStatus.Enabled,
+            Companys = new List<CompanyMandatory>(),
+            Persons = new List<PersonMandatory>()
+          });
+        }
+        else
+        {
+          mandatory.Occupations.Add(list.FirstOrDefault());
+          serviceMandatoryTraining.Update(mandatory, null);
+        }
+        UpdateTrainingPlanOccupation(course, occupation, view.BeginDate, view.TypeMandatoryTraining);
+        return "add occupation";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public string AddPerson(ViewCrudPersonMandatory view)
     {
       try
@@ -340,7 +379,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public string AddCompany(ViewCrudCompanyMandatory view)
     {
       try
@@ -382,7 +420,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public string RemoveOccupation(string idcourse, string idoccupation)
     {
       try
@@ -406,7 +443,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public string RemovePerson(string idcourse, string idperson)
     {
       try
@@ -430,7 +466,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public async void RemovePersonPlan(string idperson, string idcourse)
     {
       try
@@ -445,7 +480,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public async void RemoveOccupationPlan(string idoccoupation, string idcourse)
     {
       try
@@ -460,7 +494,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public async void RemoveCompanyPlan(string idcompany, string idcourse)
     {
       try
@@ -475,7 +508,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public string RemoveCompany(string idcourse, string idcompany)
     {
       try
@@ -500,16 +532,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<MandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public void RemoveCompanyMandatory(string id)
     {
       try
       {
-        int skip = (count * (page - 1));
-        var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
-        total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail.ToList();
-
+        var model = serviceCompanyMandatory.GetAll(p => p._id == id).FirstOrDefault();
+        model.Status = EnumStatus.Disabled;
+        serviceCompanyMandatory.Update(model, null);
       }
       catch (Exception e)
       {
@@ -517,25 +546,59 @@ namespace Manager.Services.Specific
       }
     }
 
-    public MandatoryTraining GetMandatoryTraining(string idcourse)
+    public void RemoveOccupationMandatory(string id)
     {
       try
       {
-        var list = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).ToList();
+        var model = serviceOccupationMandatory.GetAll(p => p._id == id).FirstOrDefault();
+        model.Status = EnumStatus.Disabled;
+        serviceOccupationMandatory.Update(model, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
-        var model = list.Select(p => new MandatoryTraining()
+    public void RemovePersonMandatory(string id)
+    {
+      try
+      {
+        var model = servicePersonMandatory.GetAll(p => p._id == id).FirstOrDefault();
+        model.Status = EnumStatus.Disabled;
+        servicePersonMandatory.Update(model, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListOccupation> ListOccupation(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        List<string> filters = new List<string>();
+
+        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
+        if (mandatory != null)
         {
-          Occupations = p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
-          Companys = p.Companys.OrderBy(x => x.Company).ToList(),
-          Course = p.Course,
-          Persons = p.Persons.OrderBy(x => x.Person.User.Name).ToList(),
-          Status = p.Status,
-          _id = p._id,
-          _idAccount = p._idAccount
-        })
-        .FirstOrDefault();
+          foreach (var item in mandatory.Occupations)
+          {
+            filters.Add(item.Occupation._id);
+          }
+        }
 
-        return model;
+        var detail = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result
+          .Where(x => !filters.Contains(x._id))
+          .Select(x => new ViewListOccupation()
+          {
+            _id = x._id,
+            Name = x.Name
+          }).ToList();
+        total = detail.Count();
+        return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
@@ -543,73 +606,37 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewTrainingPlan(TrainingPlan view)
-    {
-      try
-      {
-
-        if (view.Include == null)
-          view.Include = DateTime.Now;
-
-        serviceTrainingPlan.Insert(view);
-
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateTrainingPlan(TrainingPlan view)
-    {
-      try
-      {
-        serviceTrainingPlan.Update(view, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string RemoveTrainingPlan(string id)
-    {
-      try
-      {
-        var item = serviceTrainingPlan.GetAll(p => p._id == id).FirstOrDefault();
-        item.Status = EnumStatus.Disabled;
-        serviceTrainingPlan.Update(item, null);
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public TrainingPlan GetTrainingPlan(string id)
-    {
-      try
-      {
-        return serviceTrainingPlan.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<TrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListPerson> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        List<string> filters = new List<string>();
 
-        return detail.ToList();
+        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
+        if (mandatory != null)
+        {
+          foreach (var item in mandatory.Persons)
+          {
+            filters.Add(item.Person._id);
+          }
+        }
+
+        var detail = servicePerson.GetAll(p => p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
+          .Where(x => !filters.Contains(x._id))
+          .Select(x => new ViewListPerson()
+          {
+            _id = x._id,
+            Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
+            Establishment = new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
+            Registration = x.Registration,
+            User = new ViewListUser() { _id = x._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone }
+          }).ToList();
+
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList();
+
       }
       catch (Exception e)
       {
@@ -617,15 +644,35 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<TrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCompany> ListCompany(string idcourse, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        List<string> filters = new List<string>();
 
-        return detail.ToList();
+        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
+        if (mandatory != null)
+        {
+          foreach (var item in mandatory.Companys)
+          {
+            filters.Add(item.Company._id);
+          }
+        }
+
+        var detail = serviceCompany.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result
+          .Where(x => !filters.Contains(x._id))
+          .Select(x => new ViewListCompany()
+          {
+            _id = x._id,
+            Name = x.Name
+          }).ToList();
+        ;
+
+        total = detail.Count();
+
+        return detail.Skip(skip).Take(count).ToList();
+
       }
       catch (Exception e)
       {
@@ -722,7 +769,7 @@ namespace Manager.Services.Specific
           list.Add(plan);
         }
 
-       
+
 
         var result = new List<ViewTrainingPlanList>();
         var view = new ViewTrainingPlanList();
@@ -765,7 +812,7 @@ namespace Manager.Services.Specific
           else
             countNo += 1;
           view.TraningPlans.Add(training);
-          if(item == list.Last())
+          if (item == list.Last())
           {
             if (totalGeral > 0)
             {
@@ -774,7 +821,7 @@ namespace Manager.Services.Specific
             }
             view.TraningPlans.Add(training);
           }
-            
+
         }
 
         return result;
@@ -785,11 +832,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public CompanyMandatory AddCompanyMandatory(CompanyMandatory model)
+    
+    public string RemoveTrainingPlan(string id)
     {
       try
       {
-        return serviceCompanyMandatory.Insert(model);
+        var item = serviceTrainingPlan.GetAll(p => p._id == id).FirstOrDefault();
+        item.Status = EnumStatus.Disabled;
+        serviceTrainingPlan.Update(item, null);
+        return "deleted";
       }
       catch (Exception e)
       {
@@ -797,98 +848,16 @@ namespace Manager.Services.Specific
       }
     }
 
-    public OccupationMandatory AddOccupationMandatory(OccupationMandatory model)
-    {
-      try
-      {
-        return serviceOccupationMandatory.Insert(model);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public PersonMandatory AddPersonMandatory(PersonMandatory model)
-    {
-      try
-      {
-        return servicePersonMandatory.Insert(model);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public void RemoveCompanyMandatory(string id)
-    {
-      try
-      {
-        var model = serviceCompanyMandatory.GetAll(p => p._id == id).FirstOrDefault();
-        model.Status = EnumStatus.Disabled;
-        serviceCompanyMandatory.Update(model, null);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public void RemoveOccupationMandatory(string id)
-    {
-      try
-      {
-        var model = serviceOccupationMandatory.GetAll(p => p._id == id).FirstOrDefault();
-        model.Status = EnumStatus.Disabled;
-        serviceOccupationMandatory.Update(model, null);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public void RemovePersonMandatory(string id)
-    {
-      try
-      {
-        var model = servicePersonMandatory.GetAll(p => p._id == id).FirstOrDefault();
-        model.Status = EnumStatus.Disabled;
-        servicePersonMandatory.Update(model, null);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<ViewListOccupation> ListOccupation(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<MandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        List<string> filters = new List<string>();
+        var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
+        total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
-        if (mandatory != null)
-        {
-          foreach (var item in mandatory.Occupations)
-          {
-            filters.Add(item.Occupation._id);
-          }
-        }
+        return detail.ToList();
 
-        var detail = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result
-          .Where(x => !filters.Contains(x._id))
-          .Select(x => new ViewListOccupation()
-          {
-            _id = x._id,
-            Name = x.Name            
-          }).ToList();
-        total = detail.Count();
-        return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
@@ -896,37 +865,84 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPerson> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public MandatoryTraining GetMandatoryTraining(string idcourse)
+    {
+      try
+      {
+        var list = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).ToList();
+
+        var model = list.Select(p => new MandatoryTraining()
+        {
+          Occupations = p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
+          Companys = p.Companys.OrderBy(x => x.Company).ToList(),
+          Course = p.Course,
+          Persons = p.Persons.OrderBy(x => x.Person.User.Name).ToList(),
+          Status = p.Status,
+          _id = p._id,
+          _idAccount = p._idAccount
+        })
+        .FirstOrDefault();
+
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string NewTrainingPlan(TrainingPlan view)
+    {
+      try
+      {
+
+        if (view.Include == null)
+          view.Include = DateTime.Now;
+
+        serviceTrainingPlan.Insert(view);
+
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateTrainingPlan(TrainingPlan view)
+    {
+      try
+      {
+        serviceTrainingPlan.Update(view, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public TrainingPlan GetTrainingPlan(string id)
+    {
+      try
+      {
+        return serviceTrainingPlan.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<TrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        List<string> filters = new List<string>();
+        var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
-        if (mandatory != null)
-        {
-          foreach (var item in mandatory.Persons)
-          {
-            filters.Add(item.Person._id);
-          }
-        }
-
-        var detail = servicePerson.GetAll(p => p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
-          .Where(x => !filters.Contains(x._id))
-          .Select(x => new ViewListPerson()
-          {
-            _id = x._id,
-            Company = new ViewListCompany(){ _id = x.Company._id, Name = x.Company.Name },
-            Establishment = new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
-            Registration = x.Registration,
-            User = new ViewListUser() { _id = x._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone }
-          }).ToList();
-
-        total = detail.Count();
-
-        return detail.Skip(skip).Take(count).ToList();
-
+        return detail.ToList();
       }
       catch (Exception e)
       {
@@ -934,34 +950,34 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCompany> ListCompany(string idcourse, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<TrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        List<string> filters = new List<string>();
+        var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == idcourse).Result;
-        if (mandatory != null)
-        {
-          foreach (var item in mandatory.Companys)
-          {
-            filters.Add(item.Company._id);
-          }
-        }
+        return detail.ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
-        var detail = serviceCompany.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result
-          .Where(x => !filters.Contains(x._id))
-          .Select(x => new ViewListCompany()
-          {
-            _id = x._id,
-            Name = x.Name
-          }).ToList();
-        ;
+    #endregion
 
-        total = detail.Count();
+    #region old
+    public List<MandatoryTraining> ListOld(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
+        total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail.ToList();
 
       }
       catch (Exception e)
@@ -969,6 +985,118 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public MandatoryTraining GetMandatoryTrainingOld(string idcourse)
+    {
+      try
+      {
+        var list = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).ToList();
+
+        var model = list.Select(p => new MandatoryTraining()
+        {
+          Occupations = p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
+          Companys = p.Companys.OrderBy(x => x.Company).ToList(),
+          Course = p.Course,
+          Persons = p.Persons.OrderBy(x => x.Person.User.Name).ToList(),
+          Status = p.Status,
+          _id = p._id,
+          _idAccount = p._idAccount
+        })
+        .FirstOrDefault();
+
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string NewTrainingPlanOld(TrainingPlan view)
+    {
+      try
+      {
+
+        if (view.Include == null)
+          view.Include = DateTime.Now;
+
+        serviceTrainingPlan.Insert(view);
+
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateTrainingPlanOld(TrainingPlan view)
+    {
+      try
+      {
+        serviceTrainingPlan.Update(view, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public TrainingPlan GetTrainingPlanOld(string id)
+    {
+      try
+      {
+        return serviceTrainingPlan.GetAll(p => p._id == id).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail.ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+        return detail.ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
+
+
+
+
+
+
+
+
   }
 #pragma warning restore 1998
 }
