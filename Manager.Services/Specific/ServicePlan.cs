@@ -369,7 +369,7 @@ namespace Manager.Services.Specific
       try
       {
         //searsh model mail database
-        var model = serviceMailModel.DefaultPlanApproval(path);
+        var model = serviceMailModel.PlanApproval(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
