@@ -803,13 +803,13 @@ namespace Manager.Services.Specific
       {
         LogSave(_user._idPerson, "List Historic Person");
         int skip = (count * (page - 1));
-        var detail = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.Select(p => new ViewListEventHistoric()
         {
           _id = p._id,
-          Name = p.Name,
+          Name = p.Course.Name,
           _idPerson = p.Person._id,
           NamePerson = p.Person.User.Name
         }).ToList();
@@ -1340,7 +1340,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var esocial = serviceCourseESocial.GetAll(p => p._id == view._id).FirstOrDefault();
+        var esocial = serviceCourseESocial.GetAuthentication(p => p._id == view._id).FirstOrDefault();
         esocial.Name = view.Name;
         esocial.Code = view.Code;
 
