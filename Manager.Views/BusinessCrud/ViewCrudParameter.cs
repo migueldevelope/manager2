@@ -4,5 +4,6 @@
   {
     public string Content { get; set; }
     public string Help { get; set; }
+    public string Key { get; set; }
   }
 }

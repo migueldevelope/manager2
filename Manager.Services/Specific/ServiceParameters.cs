@@ -16,6 +16,7 @@ namespace Manager.Services.Specific
   public class ServiceParameters : Repository<Company>, IServiceParameters
   {
     private readonly ServiceGeneric<Parameter> serviceParameter;
+    private readonly ServiceInfra serviceInfra;
     private readonly ServiceGeneric<Person> servicePerson;
 
     #region Constructor
@@ -23,6 +24,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        serviceInfra = new ServiceInfra(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         servicePerson = new ServiceGeneric<Person>(context);
       }
@@ -35,12 +37,14 @@ namespace Manager.Services.Specific
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
+      serviceInfra.SetUser(_user);
       serviceParameter._user = _user;
       servicePerson._user = _user;
     }
 
     public void SetUser(BaseUser user)
     {
+      serviceInfra.SetUser(user);
       serviceParameter._user = user;
       servicePerson._user = user;
     }
@@ -65,14 +69,27 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //Parameter parameter = serviceParameter.InsertNewVersion(new Parameter()
-        //{
-        //  _id = view._id,
-        //  Name = view.Name,
-        //  Content = view.Content,
-        //  Key = view.Key
-        //}).Result;
-        return "Add parameter not available!";
+        Person person = servicePerson.GetNewVersion(p => p._id == _user._idPerson).Result;
+        if (person.TypeUser != EnumTypeUser.Support)
+          throw new Exception("Add parameter not available!");
+
+        if (string.IsNullOrEmpty(view.Key))
+          throw new Exception("Parameter Key invalid!");
+
+        Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == view.Key).Result;
+        if (parameter != null)
+          throw new Exception("Parameter Key exists!");
+
+        parameter = serviceParameter.InsertNewVersion(new Parameter()
+        {
+          _id = view._id,
+          Name = view.Name,
+          Content = view.Content,
+          Key = view.Key,
+          Help = view.Help,
+        }).Result;
+        serviceInfra.AddParameterAccounts(parameter);
+        return "Parameter added!";
       }
       catch (Exception e)
       {
@@ -106,7 +123,8 @@ namespace Manager.Services.Specific
           _id = item._id,
           Name = item.Name,
           Help = item.Help,
-          Content = item.Content
+          Content = item.Content,
+          Key = item.Key
         };
       }
       catch (Exception e)

@@ -326,6 +326,28 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Synchronize Parameters
+
+    public string AddParameterAccounts(Parameter parameter)
+    {
+      try
+      {
+        // Identificação da conta raiz do ANALISA
+        var idresolution = "5b6c4f47d9090156f08775aa";
+        List<Account> accounts = serviceAccount.GetAllFreeNewVersion(p => p._id != idresolution).Result;
+        foreach (Account account in accounts)
+        {
+          parameter._id = ObjectId.GenerateNewId().ToString();
+          parameter._idAccount = account._id;
+          serviceParameter.InsertFreeNewVersion(parameter);
+        }
+        return "Ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public async Task SynchronizeParametersAsync()
     {
       try
