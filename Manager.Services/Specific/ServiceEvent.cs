@@ -673,7 +673,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "List Open Events subscrive");
+        //LogSave(_user._idPerson, "List Open Events subscrive");
         DateTime? date = DateTime.Now;
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.OpenSubscription == true &
@@ -712,7 +712,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "List Open Events subscrive");
+        //LogSave(_user._idPerson, "List Open Events subscrive");
         DateTime? date = DateTime.Now;
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
@@ -1711,7 +1711,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "List Open Events subscrive");
+        //LogSave(_user._idPerson, "List Open Events subscrive");
         DateTime? date = DateTime.Now;
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.OpenSubscription == true &
@@ -1744,7 +1744,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "List Open Events subscrive");
+        //LogSave(_user._idPerson, "List Open Events subscrive");
         DateTime? date = DateTime.Now;
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).ToList();

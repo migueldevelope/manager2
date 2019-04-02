@@ -2227,7 +2227,7 @@ namespace Manager.Services.Specific
                     {
                       var trainingPlan = new TrainingPlan
                       {
-                        Course = (structplan.Course == null) ? null : structplan.Course,
+                        Course = structplan.Course ?? null,
                         Deadline = plan.Deadline,
                         Origin = EnumOrigin.Monitoring,
                         Person = monitoring.Person,
@@ -2276,7 +2276,7 @@ namespace Manager.Services.Specific
                     {
                       var trainingPlan = new TrainingPlan
                       {
-                        Course = (structplan.Course == null) ? null : structplan.Course,
+                        Course = structplan.Course ?? null,
                         Deadline = plan.Deadline,
                         Origin = EnumOrigin.Monitoring,
                         Person = monitoring.Person,
@@ -2325,7 +2325,7 @@ namespace Manager.Services.Specific
                     {
                       var trainingPlan = new TrainingPlan
                       {
-                        Course = (structplan.Course == null) ? null : structplan.Course,
+                        Course = structplan.Course ?? null,
                         Deadline = plan.Deadline,
                         Origin = EnumOrigin.Monitoring,
                         Person = monitoring.Person,

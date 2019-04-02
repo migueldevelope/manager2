@@ -195,7 +195,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Guest}</strong>,</br></br>O(a) gestor(a) {Manager} enviou uma solicitação para aprovação de acreditação do(a) colaborador(a) {Person}.</br></br>Ajude a encontrar as pessoas que são referências na nossa empresa.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Guest}</strong>,</br></br>O(a) gestor(a) <strong>{Manager}</strong> enviou uma solicitação para aprovação de acreditação do(a) colaborador(a) <strong>{Person}</strong>.</br>Ajude a encontrar as pessoas que são referências na nossa empresa.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação para aprovação de Acreditação | Accretitation Skill",
           Name = "certification",
           Link = path
@@ -228,7 +228,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>A acreditação da competência {Skill} do(a) colaborador(a) {Person} foi APROVADA.</br></br>Enviamos um e-mail parabenizando o(a) colaborador(a) mas é muito importante que você comemore com ele(a).</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>A acreditação da competência <strong>{Skill}</strong> do(a) colaborador(a) <strong>{Person}</strong> foi APROVADA.</br>Enviamos um e-mail parabenizando o(a) colaborador(a) mas é muito importante que você comemore com ele(a).</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Acreditação | Accretitation Skill - APROVADA",
           Name = "certificationapproval",
           Link = path
@@ -261,7 +261,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>Foi concedido a você a acreditação da competência {Skill}.</br></br>Parabéns por este feito glorioso, e continue buscando outras acreditações.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,</br></br>Foi concedido a você a acreditação da competência <strong>{Skill}</strong>.</br>Parabéns por este feito glorioso, e continue buscando outras acreditações.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Acreditação | Accretitation Skill - APROVADA",
           Name = "certificationapprovalperson",
           Link = path
@@ -294,7 +294,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>A acreditação da competência {Skill} do(a) colaborador(a) {Person} foi REPROVADA.</br></br>Não se aboreça, insentive seu colaborador a se aperfeiçoar mais e solicite novamente daqui algum tempo.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>A acreditação da competência <strong>{Skill}</strong> do(a) colaborador(a) <strong>{Person}</strong> foi REPROVADA.</br>Não se aboreça, insentive seu colaborador a se aperfeiçoar mais e solicite novamente daqui algum tempo.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Acreditação | Accretitation Skill - REPROVADA",
           Name = "certificationdisapproval",
           Link = path
@@ -330,7 +330,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola Recursos Humanos, <br>O resultado do check point para {Person} foi APROVADO.<br>Procure o gestor {Manager} para realizar os procedimentos de efetivação de período de experiência.<br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>Recursos Humanos</strong>,</br></br>O resultado do check point para o(a) colaborador(a) <strong>{Person}</strong> foi APROVADO.</br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de efetivação de período de experiência.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Decisão de Efetivação | Check point - Aprovado",
           Name = "checkpointresult",
           Link = path
@@ -363,7 +363,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola Recursos Humanos,<br>O resultado do check point para {Person} foi REPROVADO.<br>Procure o gestor {Manager} para realizar os procedimentos de desligamento.<br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>Recursos Humanos</strong>,</br></br>O resultado do check point para <strong>{Person}</strong> foi REPROVADO.</br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de desligamento.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Decisão de Efetivação | Check point - Reprovado",
           Name = "checkpointresultdisapproved",
           Link = path
@@ -396,7 +396,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Person},<br>Parabéns!Você foi efetivado na {Company}. Isso é fruto do seu engajamento e alinhamento com nossa cultura e nossas competências essenciais.<br>Agora é seguir interessado em conhecer mais sobre as entregas do seu cargo e as competências que fazem parte do mesmo.<br>Fique atento às notificações do Analisa e aproveite o máximo de suas funcionalidades.<br>Estaremos na torcida para que sua carreira seja a mais fluida possível.<br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,</br></br>Parabéns! Você foi efetivado na <strong>{Company}</strong>. Isso é fruto do seu engajamento e alinhamento com nossa cultura e nossas competências essenciais.</br>Agora é seguir interessado em conhecer mais sobre as entregas do seu cargo e as competências que fazem parte do mesmo.</br>Fique atento às notificações do Analisa e aproveite o máximo de suas funcionalidades.</br>Estaremos na torcida para que sua carreira seja a mais fluida possível.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Decisão de Efetivação | Check point",
           Name = "checkpointresultperson",
           Link = path
@@ -503,7 +503,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Person},<br>Seu gestor {Manager} acaba de registrar ações de monitoramento da sua performance.<br>Não perca tempo,<br>acesse agora o Analisa e veja este conteúdo.<br>Lembre - se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!<br>Para acessar o Analisa <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,</br>Seu gestor <strong>{Manager}</strong> acaba de registrar ações de monitoramento da sua performance.</br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.</br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!</br></br>Para acessar o Analisa <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Aprovação do Monitoramento | Monitoring",
           Name = "monitoringapproval",
           Link = path
@@ -536,7 +536,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Manager},<br>Seu colaborador {Person} acaba de propor novos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre - se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>Seu colaborador <strong>{Person}</strong> acaba de propor novos registros de monitoramento.</br>Acesse agora o Analisa e veja este conteúdo.</br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.</br></br>Para acessar o sistema Analisa <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Continuar o Monitoramento | Monitoring",
           Name = "monitoringapprovalmanager",
           Link = path
@@ -569,7 +569,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Manager},<br>Seu colaborador {Person} acaba de propor uma revisão nos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre - se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>Seu colaborador <strong>{Person}</strong> acaba de propor uma revisão nos registros de monitoramento.</br>Acesse agora o Analisa e veja este conteúdo.</br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.</br></br>Para acessar o sistema Analisa <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Revisão do Monitoramento | Monitoring",
           Name = "monitoringdisapproval",
           Link = path
@@ -676,7 +676,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Person},<br>Bem - vindo à {Company}!<br>Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.<br>Seu gestor {Manager} acaba de fazer um registro do seu embarque no Analisa.<br>Não perca tempo, <a href='https://analisa.solutions/'>clique aqui e confira</a>.<br><br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,</br></br>Bem - vindo à <strong>{Company}</strong>!</br>Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.</br>Seu gestor <strong>{Manager}</strong> acaba de fazer um registro do seu embarque no Analisa.</br></br>Não perca tempo, <a href='https://analisa.solutions/'>clique aqui e confira</a>.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação para Continuar Embarque | OnBoarding",
           Name = "onboardingapproval",
           Link = path
@@ -709,7 +709,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Manager},<br> O colaborador {Person} foi admitido na {Company} e iniciou os registros de embarque na sua carreira.<br> De continuidade a este processo para gerar mais engajamento de sua equipe,e melhorar nossos processos de gestão.<br>Não perca tempo,  <a href ='https://analisa.solutions/' > clique aqui e confira </a>.<br><br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>O colaborador <strong>{Person}</strong> foi admitido na <strong>{Company}</strong> e iniciou os registros de embarque na sua carreira.</br>De continuidade a este processo para gerar mais engajamento de sua equipe,e melhorar nossos processos de gestão.</br></br>Não perca tempo, <a href ='https://analisa.solutions/' > clique aqui e confira </a>.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação da Aprovação de Embarque | OnBoarding",
           Name = "onboardingapprovalmanager",
           Link = path
@@ -743,7 +743,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong></br></br>O seu colaborador { Person } fez alguns comentários no encerramento do embarque.</br></br>Não deixe para mais tarde, <a href='https://analisa.solutions/'>clique aqui</a> e olhe os comentários que foram redigidos.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>O seu colaborador <strong>{Person}</strong> fez alguns comentários no encerramento do embarque.</br></br>Não deixe para mais tarde, <a href='https://analisa.solutions/'> clique aqui </a> e olhe os comentários que foram redigidos.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Revisão de Embarque | OnBoarding",
           Name = "onboardingdisapproval",
           Link = path
@@ -776,7 +776,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Person},<br>Bem - vindo ao seu novo cargo {Occupation}!<br>Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.<br>Seu gestor {Manager} acaba de fazer um registro do seu embarque no Analisa.<br>Não perca tempo, <a href='https://analisa.solutions/'>clique aqui e confira</a>.<br><br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,</br></br>Bem - vindo ao seu novo cargo <strong>{Occupation}</strong>!</br>Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.</br>Seu gestor <strong>{Manager}<strong> acaba de fazer um registro do seu embarque no Analisa.</br></br>Não perca tempo, <a href='https://analisa.solutions/'>clique aqui e confira</a>.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação da Aprovação de OnBoarding Troca de Cargo",
           Name = "onboardingapprovaloccupation",
           Link = path
@@ -809,7 +809,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá {Manager}, <br>O colaborador {Person} foi promovido para o cargo {Occupation}, e iniciou os registros de embarque. <br> De continuidade a este processo para gerar mais engajamento de sua equipe, e melhorar nossos processos de gestão.<br><br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>O colaborador <strong>{Person}</strong> foi promovido para o cargo <strong>{Occupation}</strong>, e iniciou os registros de embarque.</br>De continuidade a este processo para gerar mais engajamento de sua equipe, e melhorar nossos processos de gestão.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação para Continuar Embarque no Cargo | OnBoarding Occupation",
           Name = "onboardingapprovalmanageroccupation",
           Link = path
@@ -843,7 +843,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong></br></br>O seu colaborador { Person } fez alguns comentários no encerramento do embarque para troca de cargo.</br></br>Não deixe para mais tarde, <a href='https://analisa.solutions/'>clique aqui</a> e olhe os comentários que foram redigidos.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>O seu colaborador <strong>{Person}</strong> fez alguns comentários no encerramento do embarque para troca de cargo.</br></br>Não deixe para mais tarde, <a href='https://analisa.solutions/'>clique aqui</a> e olhe os comentários que foram redigidos.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Revisão de Embarque | OnBoarding",
           Name = "onboardingdisapprovaloccupation",
           Link = path

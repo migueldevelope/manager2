@@ -241,7 +241,7 @@ namespace Manager.Services.Specific
             TypeJourney = onBoarding.Person.TypeJourney,
             Occupation = onBoarding.Person.Occupation.Name,
             Name = onBoarding.Person.User.Name,
-            Manager = (onBoarding.Person.Manager == null) ? null : onBoarding.Person.Manager.Name,
+            Manager = onBoarding.Person.Manager?.Name,
             Company = new ViewListCompany() { _id = onBoarding.Person.Company._id, Name = onBoarding.Person.Company.Name },
             Establishment = (onBoarding.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = onBoarding.Person.Establishment._id, Name = onBoarding.Person.Establishment.Name },
             Registration = onBoarding.Person.Registration,
