@@ -199,7 +199,7 @@ namespace Manager.Services.Specific
             onBoarding.StatusOnBoarding = EnumStatusOnBoarding.InProgressManager;
           }
           onBoarding = serviceOnboarding.InsertNewVersion(onBoarding).Result;
-          LogSave(_user._idPerson, string.Format("Start process | {0}",onBoarding._id));
+          LogSave(_user._idPerson, string.Format("Start process | {0}", onBoarding._id));
         }
         else
         {
@@ -229,7 +229,8 @@ namespace Manager.Services.Specific
       {
         OnBoarding onBoarding = serviceOnboarding.GetNewVersion(p => p._id == id).Result;
         if (onBoarding == null)
-          throw new Exception("OnBoarding not available!");
+          return null;
+        //throw new Exception("OnBoarding not available!");
 
         ViewCrudOnboarding result = new ViewCrudOnboarding()
         {
@@ -240,9 +241,9 @@ namespace Manager.Services.Specific
             TypeJourney = onBoarding.Person.TypeJourney,
             Occupation = onBoarding.Person.Occupation.Name,
             Name = onBoarding.Person.User.Name,
-            Manager = onBoarding.Person.Manager.Name,
+            Manager = (onBoarding.Person.Manager == null) ? null : onBoarding.Person.Manager.Name,
             Company = new ViewListCompany() { _id = onBoarding.Person.Company._id, Name = onBoarding.Person.Company.Name },
-            Establishment = new ViewListEstablishment() { _id = onBoarding.Person.Establishment._id, Name = onBoarding.Person.Establishment.Name },
+            Establishment = (onBoarding.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = onBoarding.Person.Establishment._id, Name = onBoarding.Person.Establishment.Name },
             Registration = onBoarding.Person.Registration,
             User = new ViewListUser()
             {
@@ -622,7 +623,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, string.Format("Delete | {0}",id));
+        LogSave(_user._idPerson, string.Format("Delete | {0}", id));
         var onboarding = serviceOnboarding.GetNewVersion(p => p._id == id).Result;
         onboarding.Status = EnumStatus.Disabled;
         serviceOnboarding.Update(onboarding, null);
@@ -1392,7 +1393,7 @@ namespace Manager.Services.Specific
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
           {
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-              serviceLogMessages.NewLogMessage("OnBoarding", string.Format("Embarque | OnBoarding realizado para {0}.",onboarding.Person.User.Name), onboarding.Person);
+              serviceLogMessages.NewLogMessage("OnBoarding", string.Format("Embarque | OnBoarding realizado para {0}.", onboarding.Person.User.Name), onboarding.Person);
             else
               serviceLogMessages.NewLogMessage("OnBoarding", string.Format("Embarque | OnBoarding de troca de cargo realizado para {0}.", onboarding.Person.User.Name), onboarding.Person);
 
@@ -2589,7 +2590,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(onboarding.Person._id, string.Format("Update id {0}",onboarding._id));
+        LogSave(onboarding.Person._id, string.Format("Update id {0}", onboarding._id));
 
         if (onboarding.Person._id != idperson)
         {

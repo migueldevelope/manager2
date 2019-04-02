@@ -306,7 +306,8 @@ namespace Manager.Services.Specific
       {
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p._id == id).Result;
         if (checkpoint == null)
-          throw new Exception("Checkpoint not available!");
+          return null;
+          //throw new Exception("Checkpoint not available!");
 
         if (checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open)
         {
@@ -515,7 +516,8 @@ namespace Manager.Services.Specific
       {
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p.Person._id == idperson && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
         if (checkpoint == null)
-          throw new Exception("Checkpoint not available!");
+          return null;
+          //throw new Exception("Checkpoint not available!");
 
         LogSave(idperson, string.Format("Person ended | {0}", checkpoint._id));
 
