@@ -2566,6 +2566,11 @@ namespace Manager.Services.Specific
             Status = view.Status,
             DateEnd = view.DateEnd,
             NewAction = view.NewAction,
+            Attachments = (view.Attachments == null)? null : view.Attachments.Select(p => new ViewCrudAttachmentField() {
+              Name  = p.Name,
+              Url = p.Url,
+              _idAttachment = p._idAttachment
+            }).ToList(),
             Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days),
             PlanNew = (view.PlanNew == null) ? null : new ViewCrudPlan()
             {
@@ -2650,6 +2655,12 @@ namespace Manager.Services.Specific
             Status = view.Status,
             DateEnd = view.DateEnd,
             NewAction = view.NewAction,
+            Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new ViewCrudAttachmentField()
+            {
+              Name = p.Name,
+              Url = p.Url,
+              _idAttachment = p._idAttachment
+            }).ToList(),
             Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days),
             PlanNew = (view.PlanNew == null) ? null : new ViewCrudPlan()
             {
@@ -2734,13 +2745,13 @@ namespace Manager.Services.Specific
             Status = view.Status,
             DateEnd = view.DateEnd,
             NewAction = view.NewAction,
-            Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days),
-            Attachments = view.Attachments?.Select(p => new ViewCrudAttachmentField()
+            Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new ViewCrudAttachmentField()
             {
-              _idAttachment = p._idAttachment,
               Name = p.Name,
-              Url = p.Url
+              Url = p.Url,
+              _idAttachment = p._idAttachment
             }).ToList(),
+            Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days),
             PlanNew = (view.PlanNew == null) ? null : new ViewCrudPlan()
             {
               _id = view.PlanNew._id,
