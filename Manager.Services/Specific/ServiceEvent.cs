@@ -853,7 +853,8 @@ namespace Manager.Services.Specific
         return detail.Select(p => new ViewCrudCourseESocial()
         {
           _id = p._id,
-          Name = p.Name
+          Name = p.Name,
+          Code = p.Code
         }).ToList();
       }
       catch (Exception e)
@@ -1087,7 +1088,7 @@ namespace Manager.Services.Specific
           Workload = view.Workload,
           Begin = view.Begin,
           End = view.End,
-          Attachments = view.Attachments.Select(p => new AttachmentField()
+          Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new AttachmentField()
           {
             _idAttachment = p._idAttachment,
             Name = p.Name,
@@ -1263,7 +1264,7 @@ namespace Manager.Services.Specific
         eventHistoric.Workload = view.Workload;
         eventHistoric.Begin = view.Begin;
         eventHistoric.End = view.End;
-        eventHistoric.Attachments = view.Attachments.Select(p => new AttachmentField()
+        eventHistoric.Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new AttachmentField()
         {
           _idAttachment = p._idAttachment,
           Name = p.Name,
