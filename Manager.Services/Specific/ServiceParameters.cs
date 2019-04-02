@@ -65,8 +65,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Parameter parameter = serviceParameter.InsertNewVersion(new Parameter() { _id = view._id, Name = view.Name, Content = view.Content }).Result;
-        return "Parameter added!";
+        //Parameter parameter = serviceParameter.InsertNewVersion(new Parameter()
+        //{
+        //  _id = view._id,
+        //  Name = view.Name,
+        //  Content = view.Content,
+        //  Key = view.Key
+        //}).Result;
+        return "Add parameter not available!";
       }
       catch (Exception e)
       {
@@ -78,7 +84,10 @@ namespace Manager.Services.Specific
       try
       {
         Parameter parameter = serviceParameter.GetNewVersion(p => p._id == view._id).Result;
+        parameter.Name = view.Name;
+        // Não deve ser alterada a propriedade key
         parameter.Content = view.Content;
+        parameter.Help = view.Help;
         serviceParameter.Update(parameter, null);
         return "Parameter update!";
       }
@@ -96,6 +105,7 @@ namespace Manager.Services.Specific
         {
           _id = item._id,
           Name = item.Name,
+          Help = item.Help,
           Content = item.Content
         };
       }
@@ -104,15 +114,16 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudParameter GetName(string name)
+    public ViewCrudParameter GetKey(string key)
     {
       try
       {
-        Parameter item = serviceParameter.GetNewVersion(p => p.Name == name).Result;
+        Parameter item = serviceParameter.GetNewVersion(p => p.Key == key).Result;
         return new ViewCrudParameter()
         {
           _id = item._id,
           Name = item.Name,
+          Help = item.Help,
           Content = item.Content
         };
       }

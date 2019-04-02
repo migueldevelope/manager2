@@ -47,7 +47,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListMailModel> detail = serviceMailModel.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+        List<ViewListMailModel> detail = serviceMailModel.GetAllNewVersion(p => p.Subject.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Subject").Result
           .Select(p => new ViewListMailModel()
           {
             _id = p._id,

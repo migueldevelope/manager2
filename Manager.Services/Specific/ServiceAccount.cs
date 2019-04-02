@@ -121,16 +121,6 @@ namespace Manager.Services.Specific
         serviceAccount._user._idPerson = person._id;
         // Criar os parâmetros básicos
         serviceInfra._user = serviceAccount._user;
-
-        // Use parameter
-        serviceParameter.InsertAccount(new Parameter()
-        {
-          _idAccount = account._id,
-          Status = EnumStatus.Enabled,
-          Name = "servicemailmessage",
-          Content = "false"
-        });
-
         await serviceInfra.CopyTemplateInfraAsync(company);
         return "Account created!";
       }

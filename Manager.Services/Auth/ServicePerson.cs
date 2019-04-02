@@ -1073,12 +1073,14 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var parameter = serviceParameter.GetAll(p => p.Name == "typeregisterperson").FirstOrDefault();
+        var parameter = serviceParameter.GetAll(p => p.Key == "typeregisterperson").FirstOrDefault();
         if (parameter == null)
           serviceParameter.Insert(new Parameter()
           {
-            Name = "typeregisterperson",
+            Name = "Tipo do cadastro da pessoa",
+            Key = "typeregisterperson",
             Content = "0",
+            Help = "Informe 0 para cadastro normal e 1 para cadastro de multicontratos.",
             Status = EnumStatus.Enabled
           });
       }

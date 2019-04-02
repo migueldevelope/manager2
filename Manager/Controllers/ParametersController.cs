@@ -73,16 +73,16 @@ namespace Manager.Controllers
       return service.Get(id);
     }
     /// <summary>
-    /// Buscar um parâmetro pelo nome
+    /// Buscar um parâmetro pela chave interna
     /// </summary>
-    /// <param name="name">Nome para pesquisar</param>
+    /// <param name="key">Chave para pesquisar</param>
     /// <returns>Objeto de parâmetro para manutenção</returns>
     [Authorize]
     [HttpGet]
-    [Route("getname/{name}")]
-    public ViewCrudParameter GetName(string name)
+    [Route("getkey/{key}")]
+    public ViewCrudParameter GetName(string key)
     {
-      return service.GetName(name);
+      return service.GetKey(key);
     }
     /// <summary>
     /// Alterar um parâmetro

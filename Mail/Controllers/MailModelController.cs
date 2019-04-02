@@ -54,6 +54,7 @@ namespace Mail.Controllers
     /// </summary>
     /// <param name="view">Objeto de manutenção</param>
     /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
     [HttpPost]
     [Route("new")]
     public IActionResult New([FromBody]ViewCrudMailModel view)
@@ -67,7 +68,7 @@ namespace Mail.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("get")]
+    [Route("get/{id}")]
     public ViewCrudMailModel Get(string id)
     {
       return service.Get(id);

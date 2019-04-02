@@ -141,7 +141,7 @@ namespace Manager.Services.Specific
         var idresolution = "5b6c4f47d9090156f08775aa";
 
         // Parameter
-        foreach (Parameter parameter in serviceParameter.GetAllFreeNewVersion(p => p._idAccount == idresolution && p.Name != "Account_Resolution").Result)
+        foreach (Parameter parameter in serviceParameter.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
           parameter._id = ObjectId.GenerateNewId().ToString();
           parameter._idAccount = _user._idAccount;
@@ -343,7 +343,7 @@ namespace Manager.Services.Specific
           Parameter local;
           foreach (Account subitem in accounts)
           {
-            local = serviceParameter.GetFreeNewVersion(p => p._idAccount == subitem._id && p.Name == item.Name).Result;
+            local = serviceParameter.GetFreeNewVersion(p => p._idAccount == subitem._id && p.Key == item.Key).Result;
             if (local == null)
             {
               item._id = ObjectId.GenerateNewId().ToString();

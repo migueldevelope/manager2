@@ -15,7 +15,7 @@ namespace Manager.Core.Interfaces
     string New(ViewCrudParameter view);
     string Update(ViewCrudParameter view);
     ViewCrudParameter Get(string id);
-    ViewCrudParameter GetName(string name);
+    ViewCrudParameter GetKey(string key);
     List<ViewListParameter> List(ref long total, int count = 10, int page = 1, string filter = "");
 
     #region Old

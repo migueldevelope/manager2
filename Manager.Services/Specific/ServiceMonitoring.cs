@@ -1222,7 +1222,7 @@ namespace Manager.Services.Specific
                 StatusView = comments.StatusView,
                 UserComment = comments.UserComment
               });
-
+            LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring));
             serviceMonitoring.Update(monitoring, null);
 
             return item.Comments.Select(p => new ViewCrudComment()
@@ -1266,6 +1266,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null);
+            LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring));
 
             return item.Comments.Select(p => new ViewCrudComment()
             {
@@ -1309,6 +1310,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null);
+            LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,

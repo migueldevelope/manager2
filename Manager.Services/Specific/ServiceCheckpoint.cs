@@ -707,12 +707,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var parameter = serviceParameter.GetAll(p => p.Name == "DeadlineAdm").FirstOrDefault();
+        var parameter = serviceParameter.GetAll(p => p.Key == "DeadlineAdm").FirstOrDefault();
         if (parameter == null)
         {
           return int.Parse(serviceParameter.Insert(new Parameter()
           {
-            Name = "DeadlineAdm",
+            Name = "Total de dias do contrato de experiência",
+            Key = "DeadlineAdm",
+            Help = "Quantidade de dias para o final do contrato de experiência, a contar da data de admissão.",
             Status = EnumStatus.Enabled,
             Content = "90"
           }).Content);
@@ -1095,11 +1097,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var par = serviceParameter.GetAll(p => p.Name == "mailcheckpoint").FirstOrDefault();
+        var par = serviceParameter.GetAll(p => p.Key == "mailcheckpoint").FirstOrDefault();
         if (par == null)
           return serviceParameter.Insert(new Parameter()
           {
-            Name = "mailcheckpoint",
+            Name = "E-mail do RH para enviar aviso de Decisão de Efetivação | Checkpoint",
+            Key = "mailcheckpoint",
+            Help = "Informe um e-mail, ou vários e-mails separados por ponto-e-virgula, para enviar os avisos.",
             Content = "suporte@jmsoft.com.br",
             Status = EnumStatus.Enabled
           }).Content;

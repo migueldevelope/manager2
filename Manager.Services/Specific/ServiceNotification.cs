@@ -7,9 +7,6 @@ using Manager.Data;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.Enumns;
-using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,10 +97,10 @@ namespace Manager.Services.Specific
 
         foreach (var item in accounts)
         {
-          var parameter = parameterService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == item._id & p.Name == "servicemailmessage").FirstOrDefault();
+          var parameter = parameterService.GetAuthentication(p => p.Status == EnumStatus.Enabled & p._idAccount == item._id & p.Key == "servicemailmessage").FirstOrDefault();
           if (parameter != null)
           {
-            if (parameter.Content == "true")
+            if (parameter.Content.Equals("1"))
             {
               BaseUser baseUser = new BaseUser
               {
