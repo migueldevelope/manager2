@@ -7,7 +7,7 @@ namespace Manager.Views.BusinessCrud
 {
   public class ViewCrudCheckpoint : _ViewCrud
   {
-    public ViewListPerson Person { get; set; }
+    public ViewInfoPerson Person { get; set; }
     public ViewListOccupation Occupation { get; set; }
     public DateTime? DateBegin { get; set; }
     public DateTime? DateEnd { get; set; }

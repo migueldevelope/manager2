@@ -780,7 +780,7 @@ namespace Manager.Services.Specific
                     {
                       _id = p._id,
                       TypeResponsible = p.TypeResponsible,
-                      PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                      PlanActivity = (p.PlanActivity == null) ? null : new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                       TypeAction = p.TypeAction,
                       Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -843,7 +843,7 @@ namespace Manager.Services.Specific
                     {
                       _id = p._id,
                       TypeResponsible = p.TypeResponsible,
-                      PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                      PlanActivity = (p.PlanActivity == null) ? null : new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                       TypeAction = p.TypeAction,
                       Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -907,7 +907,7 @@ namespace Manager.Services.Specific
                     {
                       _id = p._id,
                       TypeResponsible = p.TypeResponsible,
-                      PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                      PlanActivity = (p.PlanActivity == null) ? null : new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                       TypeAction = p.TypeAction,
                       Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -2117,7 +2117,7 @@ namespace Manager.Services.Specific
                     return new ViewCrudStructPlan()
                     {
                       _id = structplan._id,
-                      Course = new ViewListCourse()
+                      Course = (structplan.Course == null) ? null : new ViewListCourse()
                       {
                         _id = structplan.Course._id,
                         Name = structplan.Course.Name
@@ -2148,7 +2148,7 @@ namespace Manager.Services.Specific
                     return new ViewCrudStructPlan()
                     {
                       _id = structplan._id,
-                      Course = new ViewListCourse()
+                      Course = (structplan.Course == null) ? null : new ViewListCourse()
                       {
                         _id = structplan.Course._id,
                         Name = structplan.Course.Name
@@ -2179,7 +2179,7 @@ namespace Manager.Services.Specific
                     return new ViewCrudStructPlan()
                     {
                       _id = structplan._id,
-                      Course = new ViewListCourse()
+                      Course = (structplan.Course == null) ? null : new ViewListCourse()
                       {
                         _id = structplan.Course._id,
                         Name = structplan.Course.Name
@@ -2227,7 +2227,7 @@ namespace Manager.Services.Specific
                     {
                       var trainingPlan = new TrainingPlan
                       {
-                        Course = structplan.Course,
+                        Course = (structplan.Course == null) ? null : structplan.Course,
                         Deadline = plan.Deadline,
                         Origin = EnumOrigin.Monitoring,
                         Person = monitoring.Person,
@@ -2246,7 +2246,7 @@ namespace Manager.Services.Specific
                     {
                       _id = structplanedit._id,
                       Course = (structplanedit.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplanedit.Course._id).FirstOrDefault(),
-                      PlanActivity = new PlanActivity() { Name = structplanedit.PlanActivity.Name },
+                      PlanActivity = (structplanedit.PlanActivity == null) ? null : new PlanActivity() { _id = structplanedit.PlanActivity._id, Name = structplanedit.PlanActivity.Name },
                       TypeAction = structplanedit.TypeAction,
                       TypeResponsible = structplanedit.TypeResponsible
                     });
@@ -2276,7 +2276,7 @@ namespace Manager.Services.Specific
                     {
                       var trainingPlan = new TrainingPlan
                       {
-                        Course = structplan.Course,
+                        Course = (structplan.Course == null) ? null : structplan.Course,
                         Deadline = plan.Deadline,
                         Origin = EnumOrigin.Monitoring,
                         Person = monitoring.Person,
@@ -2295,7 +2295,7 @@ namespace Manager.Services.Specific
                     {
                       _id = structplanedit._id,
                       Course = (structplanedit.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplanedit.Course._id).FirstOrDefault(),
-                      PlanActivity = new PlanActivity() { Name = structplanedit.PlanActivity.Name },
+                      PlanActivity = (structplanedit.PlanActivity == null) ? null : new PlanActivity() { _id = structplanedit.PlanActivity._id, Name = structplanedit.PlanActivity.Name },
                       TypeAction = structplanedit.TypeAction,
                       TypeResponsible = structplanedit.TypeResponsible
                     });
@@ -2325,7 +2325,7 @@ namespace Manager.Services.Specific
                     {
                       var trainingPlan = new TrainingPlan
                       {
-                        Course = structplan.Course,
+                        Course = (structplan.Course == null) ? null : structplan.Course,
                         Deadline = plan.Deadline,
                         Origin = EnumOrigin.Monitoring,
                         Person = monitoring.Person,
@@ -2345,7 +2345,7 @@ namespace Manager.Services.Specific
                     {
                       _id = structplanedit._id,
                       Course = (structplanedit.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplanedit.Course._id).FirstOrDefault(),
-                      PlanActivity = new PlanActivity() { Name = structplanedit.PlanActivity.Name },
+                      PlanActivity = (structplanedit.PlanActivity ==null)?null: new PlanActivity() { _id = structplanedit.PlanActivity._id, Name = structplanedit.PlanActivity.Name },
                       TypeAction = structplanedit.TypeAction,
                       TypeResponsible = structplanedit.TypeResponsible
                     });
