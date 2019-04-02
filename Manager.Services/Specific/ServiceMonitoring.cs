@@ -645,7 +645,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        if (serviceMonitoring.Exists("Monitoring"))
+        if (!serviceMonitoring.Exists("Monitoring"))
           return null;
 
         var item = servicePerson.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring & p._id == idmanager)
