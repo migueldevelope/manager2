@@ -102,21 +102,39 @@ namespace Manager.Services.Specific
                                         p.Manager._id == idmanager &&
                                         p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
                                         .Select(p => new ViewListCheckpoint()
-          {
-            _id = string.Empty,
-            _idPerson = p._id,
-            Name = p.User.Name,
-            OccupationName = p.Occupation.Name,
-            StatusCheckpoint = EnumStatusCheckpoint.Open,
-            TypeCheckpoint = EnumCheckpoint.None
-          }).ToList();
+                                        {
+                                          _id = string.Empty,
+                                          Person = new ViewInfoPerson()
+                                          {
+                                            _id = p._id,
+                                            TypeJourney = p.TypeJourney,
+                                            Occupation = p.Occupation.Name,
+                                            Name = p.User.Name,
+                                            Manager = p.Manager.Name,
+                                            Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
+                                            Establishment = (p.Establishment == null) ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
+                                            Registration = p.Registration,
+                                            User = new ViewListUser()
+                                            {
+                                              Document = p.User.Document,
+                                              Mail = p.User.Mail,
+                                              Name = p.User.Name,
+                                              Phone = p.User.Phone,
+                                              _id = p.User._id
+                                            }
+                                          },
+                                          Name = p.User.Name,
+                                          OccupationName = p.Occupation.Name,
+                                          StatusCheckpoint = EnumStatusCheckpoint.Open,
+                                          TypeCheckpoint = EnumCheckpoint.None
+                                        }).ToList();
         List<ViewListCheckpoint> detail = new List<ViewListCheckpoint>();
         if (serviceCheckpoint.Exists("Checkpoint"))
         {
           Checkpoint checkpoint;
           foreach (var item in list)
           {
-            checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+            checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item.Person._id && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
             if (checkpoint != null)
             {
               item._id = checkpoint._id;
@@ -153,7 +171,25 @@ namespace Manager.Services.Specific
                                         .Select(p => new ViewListCheckpoint()
                                         {
                                           _id = string.Empty,
-                                          _idPerson = p._id,
+                                          Person = new ViewInfoPerson()
+                                          {
+                                            _id = p._id,
+                                            TypeJourney = p.TypeJourney,
+                                            Occupation = p.Occupation.Name,
+                                            Name = p.User.Name,
+                                            Manager = p.Manager.Name,
+                                            Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
+                                            Establishment = (p.Establishment == null) ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
+                                            Registration = p.Registration,
+                                            User = new ViewListUser()
+                                            {
+                                              Document = p.User.Document,
+                                              Mail = p.User.Mail,
+                                              Name = p.User.Name,
+                                              Phone = p.User.Phone,
+                                              _id = p.User._id
+                                            }
+                                          },
                                           Name = p.User.Name,
                                           OccupationName = p.Occupation.Name,
                                           StatusCheckpoint = EnumStatusCheckpoint.Open,
@@ -165,7 +201,7 @@ namespace Manager.Services.Specific
           Checkpoint checkpoint;
           foreach (var item in list)
           {
-            checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+            checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item.Person._id && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
             if (checkpoint != null)
             {
               item._id = checkpoint._id;
@@ -194,14 +230,32 @@ namespace Manager.Services.Specific
         LogSave(_user._idPerson, "List ended");
         int skip = (count * (page - 1));
         var detail = serviceCheckpoint.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Person.User.Name").Result
-          .Select(s => new ViewListCheckpoint()
+          .Select(p => new ViewListCheckpoint()
           {
-            _id = s._id,
-            _idPerson = s.Person._id,
-            Name = s.Person.User.Name,
-            StatusCheckpoint = s.StatusCheckpoint,
-            TypeCheckpoint = s.TypeCheckpoint,
-            OccupationName = s.Occupation?.Name
+            _id = p._id,
+            Person = new ViewInfoPerson()
+            {
+              _id = p._id,
+              TypeJourney = p.Person.TypeJourney,
+              Occupation = p.Person.Occupation.Name,
+              Name = p.Person.User.Name,
+              Manager = p.Person.Manager.Name,
+              Company = new ViewListCompany() { _id = p.Person.Company._id, Name = p.Person.Company.Name },
+              Establishment = (p.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = p.Person.Establishment._id, Name = p.Person.Establishment.Name },
+              Registration = p.Person.Registration,
+              User = new ViewListUser()
+              {
+                Document = p.Person.User.Document,
+                Mail = p.Person.User.Mail,
+                Name = p.Person.User.Name,
+                Phone = p.Person.User.Phone,
+                _id = p.Person.User._id
+              }
+            },
+            Name = p.Person.User.Name,
+            StatusCheckpoint = p.StatusCheckpoint,
+            TypeCheckpoint = p.TypeCheckpoint,
+            OccupationName = p.Occupation?.Name
           }).ToList();
 
         total = serviceCheckpoint.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -282,7 +336,7 @@ namespace Manager.Services.Specific
           };
           checkpoint = LoadMap(checkpoint);
           checkpoint = serviceCheckpoint.InsertNewVersion(checkpoint).Result;
-          LogSave(idperson, string.Format("Start new process | {0}",checkpoint._id));
+          LogSave(idperson, string.Format("Start new process | {0}", checkpoint._id));
         }
         return new ViewListCheckpoint()
         {
@@ -291,7 +345,25 @@ namespace Manager.Services.Specific
           OccupationName = checkpoint.Person.Occupation.Name,
           StatusCheckpoint = checkpoint.StatusCheckpoint,
           TypeCheckpoint = checkpoint.TypeCheckpoint,
-          _idPerson = checkpoint.Person._id
+          Person = new ViewInfoPerson()
+          {
+            _id = checkpoint._id,
+            TypeJourney = checkpoint.Person.TypeJourney,
+            Occupation = checkpoint.Person.Occupation.Name,
+            Name = checkpoint.Person.User.Name,
+            Manager = checkpoint.Person.Manager.Name,
+            Company = new ViewListCompany() { _id = checkpoint.Person.Company._id, Name = checkpoint.Person.Company.Name },
+            Establishment = (checkpoint.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = checkpoint.Person.Establishment._id, Name = checkpoint.Person.Establishment.Name },
+            Registration = checkpoint.Person.Registration,
+            User = new ViewListUser()
+            {
+              Document = checkpoint.Person.User.Document,
+              Mail = checkpoint.Person.User.Mail,
+              Name = checkpoint.Person.User.Name,
+              Phone = checkpoint.Person.User.Phone,
+              _id = checkpoint.Person.User._id
+            }
+          }
         };
       }
       catch (Exception e)
@@ -376,7 +448,7 @@ namespace Manager.Services.Specific
                   _id = p.ProcessLevelOne.Area._id,
                   Name = p.ProcessLevelOne.Area.Name
                 }
-              }              
+              }
             }).ToList()
           },
           TextDefault = checkpoint.TextDefault,
@@ -513,7 +585,7 @@ namespace Manager.Services.Specific
         if (checkpoint == null)
           throw new Exception("Checkpoint not available!");
 
-        LogSave(idperson, string.Format("Person ended | {0}",checkpoint._id));
+        LogSave(idperson, string.Format("Person ended | {0}", checkpoint._id));
 
         return new ViewCrudCheckpoint()
         {

@@ -904,14 +904,14 @@ namespace Manager.Services.Specific
                     view.StructPlans = null;
                   else
                     view.StructPlans = res.StructPlans?.Select(p => new ViewCrudStructPlan()
-                  {
-                    _id = p._id,
-                    TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
-                    TypeAction = p.TypeAction,
-                    Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
+                    {
+                      _id = p._id,
+                      TypeResponsible = p.TypeResponsible,
+                      PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                      TypeAction = p.TypeAction,
+                      Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
-                  }).ToList();
+                    }).ToList();
                 }
                 result.Add(view);
               }
@@ -1369,11 +1369,11 @@ namespace Manager.Services.Specific
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments?.Select(p => new ViewCrudAttachmentField()
-                {
-                  Name = p.Name,
-                  Url = p.Url,
-                  _idAttachment = p._idAttachment
-                }).ToList();
+              {
+                Name = p.Name,
+                Url = p.Url,
+                _idAttachment = p._idAttachment
+              }).ToList();
               view.NewAction = res.NewAction;
               if (res.StructPlans != null)
               {
@@ -1384,7 +1384,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                    PlanActivity = (p.PlanActivity == null) ? null : new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -1448,11 +1448,11 @@ namespace Manager.Services.Specific
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments?.Select(p => new ViewCrudAttachmentField()
-                {
-                  Name = p.Name,
-                  Url = p.Url,
-                  _idAttachment = p._idAttachment
-                }).ToList();
+              {
+                Name = p.Name,
+                Url = p.Url,
+                _idAttachment = p._idAttachment
+              }).ToList();
               view.NewAction = res.NewAction;
               if (res.StructPlans != null)
               {
@@ -1463,7 +1463,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                    PlanActivity = (p.PlanActivity == null) ? null : new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -1527,11 +1527,11 @@ namespace Manager.Services.Specific
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
               view.Attachments = res.Attachments?.Select(p => new ViewCrudAttachmentField()
-                {
-                  Name = p.Name,
-                  Url = p.Url,
-                  _idAttachment = p._idAttachment
-                }).ToList();
+              {
+                Name = p.Name,
+                Url = p.Url,
+                _idAttachment = p._idAttachment
+              }).ToList();
               view.NewAction = res.NewAction;
               if (res.StructPlans != null)
               {
@@ -1542,7 +1542,7 @@ namespace Manager.Services.Specific
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                    PlanActivity = (p.PlanActivity == null) ? null : new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
                     TypeAction = p.TypeAction,
                     Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -1757,12 +1757,12 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills?.Select(p => new ViewListSkill()
-                  {
-                    _id = p._id,
-                    TypeSkill = p.TypeSkill,
-                    Concept = p.Concept,
-                    Name = p.Name
-                  }).ToList(),
+                {
+                  _id = p._id,
+                  TypeSkill = p.TypeSkill,
+                  Concept = p.Concept,
+                  Name = p.Name
+                }).ToList(),
                 UserInclude = res.UserInclude?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
@@ -1801,12 +1801,12 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills?.Select(p => new ViewListSkill()
-                  {
-                    _id = p._id,
-                    TypeSkill = p.TypeSkill,
-                    Concept = p.Concept,
-                    Name = p.Name
-                  }).ToList(),
+                {
+                  _id = p._id,
+                  TypeSkill = p.TypeSkill,
+                  Concept = p.Concept,
+                  Name = p.Name
+                }).ToList(),
                 UserInclude = res.UserInclude?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
@@ -1846,12 +1846,12 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills?.Select(p => new ViewListSkill()
-                  {
-                    _id = p._id,
-                    TypeSkill = p.TypeSkill,
-                    Concept = p.Concept,
-                    Name = p.Name
-                  }).ToList(),
+                {
+                  _id = p._id,
+                  TypeSkill = p.TypeSkill,
+                  Concept = p.Concept,
+                  Name = p.Name
+                }).ToList(),
                 UserInclude = res.UserInclude?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
@@ -2011,7 +2011,7 @@ namespace Manager.Services.Specific
                 {
                   _id = structplan._id,
                   Course = (structplan.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplan.Course._id).FirstOrDefault(),
-                  PlanActivity = (structplan.PlanActivity == null)? null : new PlanActivity() { _id = structplan.PlanActivity._id, _idAccount  = _user._idAccount, Status = EnumStatus.Enabled, Name = structplan.PlanActivity.Name },
+                  PlanActivity = (structplan.PlanActivity == null) ? null : new PlanActivity() { _id = structplan.PlanActivity._id, _idAccount = _user._idAccount, Status = EnumStatus.Enabled, Name = structplan.PlanActivity.Name },
                   TypeAction = structplan.TypeAction,
                   TypeResponsible = structplan.TypeResponsible
                 }));
@@ -2545,12 +2545,12 @@ namespace Manager.Services.Specific
             Deadline = view.Deadline,
             Description = view.Description,
             Skills = view.Skills?.Select(p => new ViewListSkill()
-                  {
-                    _id = p._id,
-                    TypeSkill = p.TypeSkill,
-                    Concept = p.Concept,
-                    Name = p.Name
-                  }).ToList(),
+            {
+              _id = p._id,
+              TypeSkill = p.TypeSkill,
+              Concept = p.Concept,
+              Name = p.Name
+            }).ToList(),
             UserInclude = view.UserInclude?._id,
             TypePlan = view.TypePlan,
             _idPerson = view.IdPerson,
@@ -2629,12 +2629,12 @@ namespace Manager.Services.Specific
             Deadline = view.Deadline,
             Description = view.Description,
             Skills = view.Skills?.Select(p => new ViewListSkill()
-                  {
-                    _id = p._id,
-                    TypeSkill = p.TypeSkill,
-                    Concept = p.Concept,
-                    Name = p.Name
-                  }).ToList(),
+            {
+              _id = p._id,
+              TypeSkill = p.TypeSkill,
+              Concept = p.Concept,
+              Name = p.Name
+            }).ToList(),
             UserInclude = view.UserInclude?._id,
             TypePlan = view.TypePlan,
             _idPerson = view.IdPerson,
@@ -2713,12 +2713,12 @@ namespace Manager.Services.Specific
             Deadline = view.Deadline,
             Description = view.Description,
             Skills = view.Skills?.Select(p => new ViewListSkill()
-                  {
-                    _id = p._id,
-                    TypeSkill = p.TypeSkill,
-                    Concept = p.Concept,
-                    Name = p.Name
-                  }).ToList(),
+            {
+              _id = p._id,
+              TypeSkill = p.TypeSkill,
+              Concept = p.Concept,
+              Name = p.Name
+            }).ToList(),
             UserInclude = view.UserInclude?._id,
             TypePlan = view.TypePlan,
             _idPerson = view.IdPerson,
