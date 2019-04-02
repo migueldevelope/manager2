@@ -4,17 +4,16 @@ using Manager.Core.BusinessModel;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Manager.Core.Interfaces
 {
   public interface IServiceEvent
   {
+
     #region Event
     void SetUser(IHttpContextAccessor contextAccessor);
-    void SetUser(BaseUser baseUser);
+    void SetUser(BaseUser user);
     string ReopeningEvent(string idevent);
     void SetAttachment(string idevent, string url, string fileName, string idattachmentid);
     void SetAttachmentHistoric(string idevent, string url, string fileName, string idattachmentid);

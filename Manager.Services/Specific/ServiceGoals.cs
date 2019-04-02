@@ -1,13 +1,13 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,322 +16,361 @@ namespace Manager.Services.Specific
 {
   public class ServiceGoals : Repository<Goals>, IServiceGoals
   {
-    private readonly ServiceGeneric<Goals> goalsService;
-    private readonly ServiceGeneric<GoalsPeriod> goalsPeriodService;
-    private readonly ServiceGeneric<GoalsCompany> goalsCompanyService;
-    private readonly ServiceGeneric<Person> personService;
+    private readonly ServiceGeneric<Goals> serviceGoals;
+    private readonly ServiceGeneric<GoalsPeriod> serviceGoalsPeriod;
+    private readonly ServiceGeneric<GoalsCompany> serviceGoalsCompany;
+    private readonly ServiceGeneric<Person> servicePerson;
 
-    public BaseUser user { get => _user; set => user = _user; }
-
-    public ServiceGoals(DataContext context)
-      : base(context)
+    #region Constructor
+    public ServiceGoals(DataContext context) : base(context)
     {
       try
       {
-        goalsService = new ServiceGeneric<Goals>(context);
-        personService = new ServiceGeneric<Person>(context);
-        goalsPeriodService = new ServiceGeneric<GoalsPeriod>(context);
-        goalsCompanyService = new ServiceGeneric<GoalsCompany>(context);
+        serviceGoals = new ServiceGeneric<Goals>(context);
+        serviceGoalsCompany = new ServiceGeneric<GoalsCompany>(context);
+        serviceGoalsPeriod = new ServiceGeneric<GoalsPeriod>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
-      goalsService._user = _user;
-      personService._user = _user;
-      goalsPeriodService._user = _user;
-      goalsCompanyService._user = _user;
+      serviceGoals._user = _user;
+      serviceGoalsCompany._user = _user;
+      serviceGoalsPeriod._user = _user;
+      servicePerson._user = _user;
     }
 
     public void SetUser(BaseUser baseUser)
     {
       _user = baseUser;
-      goalsService._user = baseUser;
-      personService._user = baseUser;
-      goalsPeriodService._user = baseUser;
-      goalsCompanyService._user = baseUser;
+      serviceGoals._user = baseUser;
+      serviceGoalsCompany._user = baseUser;
+      serviceGoalsPeriod._user = baseUser;
+      servicePerson._user = baseUser;
     }
+    #endregion
 
-    public string New(Goals view)
+    #region Goals
+    public string New(ViewCrudGoal view)
     {
       try
       {
-        goalsService.Insert(view);
-        return "add success";
+        Goals goal = new Goals()
+        {
+          Name = view.Name,
+          Concept = view.Concept,
+          TypeGoals = view.TypeGoals
+        };
+        goal = serviceGoals.InsertNewVersion(goal).Result;
+        return "Goal added!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public string Update(Goals view)
+    public string Update(ViewCrudGoal view)
     {
       try
       {
-        goalsService.Update(view, null);
-        return "update";
+        Goals goal = serviceGoals.GetNewVersion(p => p._id == view._id).Result;
+        if (goal == null)
+          throw new Exception("Goal not available!");
+        goal.Name = view.Name;
+        goal.Concept = view.Concept;
+        goal.TypeGoals = view.TypeGoals;
+        goal = serviceGoals.InsertNewVersion(goal).Result;
+        return "Goal altered!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public string Remove(string id)
+    public string Delete(string id)
     {
       try
       {
-        var item = goalsService.GetAll(p => p._id == id).FirstOrDefault();
+        Goals item = serviceGoals.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        goalsService.Update(item, null);
-        return "deleted";
+        serviceGoals.Update(item, null);
+        return "Goal deleted!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public Goals Get(string id)
+    public ViewCrudGoal Get(string id)
     {
       try
       {
-        return goalsService.GetAll(p => p._id == id).FirstOrDefault();
+        var goal = serviceGoals.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudGoal()
+        {
+          _id = goal._id,
+          Name = goal.Name,
+          Concept = goal.Concept,
+          TypeGoals = goal.TypeGoals
+        };
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public List<Goals> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListGoal> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        int skip = (count * (page - 1));
-        var detail = goalsService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = goalsService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail.ToList();
-
+        List<ViewListGoal> detail = serviceGoals.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(p => new ViewListGoal()
+          {
+            _id = p._id,
+            Name = p.Name
+          }).ToList();
+        total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    #endregion
 
-    public string NewGoalsPeriod(GoalsPeriod view)
+    #region Period Goals
+    public string NewGoalsPeriod(ViewCrudGoalPeriod view)
     {
       try
       {
-        goalsPeriodService.Insert(view);
-
-        //var grades = gradeService.GetAll(p => p.Goals._id == view.Goals._id).ToList();
-        //foreach (var grade in grades)
-        //{
-        //  var list = new List<ListSteps>();
-        //  for (var step = 0; step <= 7; step++)
-        //  {
-        //    list.Add(new ListSteps()
-        //    {
-        //      _id = ObjectId.GenerateNewId().ToString(),
-        //      _idAccount = _user._idAccount,
-        //      Status = EnumStatus.Enabled,
-        //      Salary = 0,
-        //      Step = (EnumSteps)step,
-        //    });
-        //  }
-
-        //  var item = new SalaryScale()
-        //  {
-        //    Grade = grade,
-        //    GoalsPeriod = view,
-        //    ListSteps = list
-        //  };
-        //  salaryScaleService.Insert(item);
-
-        //}
-
-        return "add success";
+        GoalsPeriod goalsPeriod = new GoalsPeriod()
+        {
+          Review = view.Review,
+          Name = view.Name,
+          ChangeCheck = view.ChangeCheck,
+          DateBegin = view.DateBegin,
+          DateEnd = view.DateEnd
+        };
+        goalsPeriod = serviceGoalsPeriod.InsertNewVersion(goalsPeriod).Result;
+        return "Period goals added!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public string UpdateGoalsPeriod(GoalsPeriod view)
+    public string UpdateGoalsPeriod(ViewCrudGoalPeriod view)
     {
       try
       {
-        goalsPeriodService.Update(view, null);
-        return "update";
+        GoalsPeriod goalsPeriod = serviceGoalsPeriod.GetNewVersion(p => p._id == view._id).Result;
+        goalsPeriod.Review = view.Review;
+        goalsPeriod.Name = view.Name;
+        goalsPeriod.ChangeCheck = view.ChangeCheck;
+        goalsPeriod.DateBegin = view.DateBegin;
+        goalsPeriod.DateEnd = view.DateEnd;
+        serviceGoalsPeriod.Update(goalsPeriod, null);
+        return "Period goals altered!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public string RemoveGoalsPeriod(string id)
+    public string DeleteGoalsPeriod(string id)
     {
       try
       {
-        var item = goalsPeriodService.GetAll(p => p._id == id).FirstOrDefault();
+        GoalsPeriod item = serviceGoalsPeriod.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        goalsPeriodService.Update(item, null);
-        return "deleted";
+        serviceGoalsPeriod.Update(item, null);
+        return "Period goals deleted!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public GoalsPeriod GetGoalsPeriod(string id)
+    public ViewCrudGoalPeriod GetGoalsPeriod(string id)
     {
       try
       {
-        return goalsPeriodService.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public List<GoalsPeriod> ListGoalsPeriod(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        try
+        GoalsPeriod goalsPeriod =  serviceGoalsPeriod.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudGoalPeriod()
         {
-          int skip = (count * (page - 1));
-          var detail = goalsPeriodService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = goalsPeriodService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          Review = goalsPeriod.Review,
+          Name = goalsPeriod.Name,
+          ChangeCheck = goalsPeriod.ChangeCheck,
+          DateBegin = goalsPeriod.DateBegin,
+          DateEnd = goalsPeriod.DateEnd
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public List<ViewListGoalPeriod> ListGoalsPeriod(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListGoalPeriod> detail = serviceGoalsPeriod.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(p => new ViewListGoalPeriod()
+          {
+            _id = p._id,
+            Name = p.Name
+          }).ToList();
 
-          return detail.ToList();
-        }
-        catch (Exception e)
+        total = serviceGoalsPeriod.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
+    #region Company Goals
+    public string NewGoalsCompany(ViewCrudGoalCompany view)
+    {
+      try
+      {
+        GoalsCompany goalsCompany = new GoalsCompany()
         {
-          throw e;
-        }
+          GoalsPeriod = view.GoalsPeriod,
+          Company = view.Company,
+          GoalsCompanyList = view.GoalsCompanyList?.Select(p => new GoalsCompanyItem()
+          {
+            Weight = p.Weight,
+            Achievement = p.Achievement,
+            Deadline = p.Deadline,
+            Goal = p.Goal,
+            Goals = p.Goals,
+            Realized = p.Realized,
+            Result = p.Result
+          }).ToList()
+        };
+        goalsCompany = serviceGoalsCompany.InsertNewVersion(goalsCompany).Result;
+        return "Company goal added!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-
-    public string NewGoalsCompany(GoalsCompany view)
+    public string UpdateGoalsCompany(ViewCrudGoalCompany view)
     {
       try
       {
-        goalsCompanyService.Insert(view);
-
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateGoalsCompany(GoalsCompany view)
-    {
-      try
-      {
-        goalsCompanyService.Update(view, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string RemoveGoalsCompany(string id)
-    {
-      try
-      {
-        var item = goalsCompanyService.GetAll(p => p._id == id).FirstOrDefault();
-        item.Status = EnumStatus.Disabled;
-        goalsCompanyService.Update(item, null);
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public GoalsCompany GetGoalsCompany(string id)
-    {
-      try
-      {
-        return goalsCompanyService.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public List<GoalsCompany> ListGoalsCompany(string idgoalsperiod, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        try
+        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == view._id).Result;
+        goalsCompany.GoalsPeriod = view.GoalsPeriod;
+        goalsCompany.Company = view.Company;
+        goalsCompany.GoalsCompanyList = view.GoalsCompanyList?.Select(p => new GoalsCompanyItem()
         {
-          int skip = (count * (page - 1));
-          var detail = goalsCompanyService.GetAll(p => p.GoalsPeriod._id == idgoalsperiod & p.Company._id == idcompany & p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.GoalsPeriod.Name).Skip(skip).Take(count).ToList();
-          total = goalsCompanyService.GetAll(p => p.GoalsPeriod._id == idgoalsperiod & p.Company._id == idcompany & p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-          return detail.ToList();
-        }
-        catch (Exception e)
-        {
-          throw e;
-        }
+          Weight = p.Weight,
+          Achievement = p.Achievement,
+          Deadline = p.Deadline,
+          Goal = p.Goal,
+          Goals = p.Goals,
+          Realized = p.Realized,
+          Result = p.Result
+        }).ToList();
+        serviceGoalsCompany.Update(goalsCompany, null);
+        return "Company goal altered!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
-    public List<GoalsCompany> ListGoalsCompany(ref long total, int count = 10, int page = 1, string filter = "")
+    public string DeleteGoalsCompany(string id)
     {
       try
       {
-        try
-        {
-          int skip = (count * (page - 1));
-          var detail = goalsCompanyService.GetAll(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.GoalsPeriod.Name).Skip(skip).Take(count).ToList();
-          total = goalsCompanyService.GetAll(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-          return detail.ToList();
-        }
-        catch (Exception e)
-        {
-          throw e;
-        }
+        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == id).Result;
+        goalsCompany.Status = EnumStatus.Disabled;
+        serviceGoalsCompany.Update(goalsCompany, null);
+        return "Company goal deleted!";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    public ViewCrudGoalCompany GetGoalsCompany(string id)
+    {
+      try
+      {
+        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudGoalCompany()
+        {
+          GoalsPeriod = goalsCompany.GoalsPeriod,
+          Company = goalsCompany.Company,
+          GoalsCompanyList = goalsCompany.GoalsCompanyList?.Select(p => new ViewCrudGoalCompanyItem()
+          {
+            Weight = p.Weight,
+            Achievement = p.Achievement,
+            Deadline = p.Deadline,
+            Goal = p.Goal,
+            Goals = p.Goals,
+            Realized = p.Realized,
+            Result = p.Result
+          }).ToList()
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public List<ViewListGoalCompany> ListGoalsCompany(string idGoalsPeriod, string idCompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListGoalCompany> detail = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
+                  && p.Company._id == idCompany && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "Company.Name").Result
+          .Select(p => new ViewListGoalCompany()
+          {
+            _id = p._id,
+            Company = p.Company,
+            GoalsPeriod = p.GoalsPeriod
+          }).ToList();
+
+        total = serviceGoalsCompany.CountNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod && p.Company._id == idCompany && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public List<ViewListGoalCompany> ListGoalsCompany(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListGoalCompany> detail = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
+          .Select(p => new ViewListGoalCompany()
+          {
+            _id = p._id,
+            Company = p.Company,
+            GoalsPeriod = p.GoalsPeriod
+          }).ToList();
+        total = serviceGoalsCompany.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
   }
 }

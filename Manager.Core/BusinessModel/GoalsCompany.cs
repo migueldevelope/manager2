@@ -1,8 +1,6 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Business;
-using System;
+using Manager.Views.BusinessList;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Manager.Core.BusinessModel
 {
@@ -11,8 +9,8 @@ namespace Manager.Core.BusinessModel
   /// </summary>
   public class GoalsCompany: BaseEntity
   {
-    public GoalsPeriod GoalsPeriod { get; set; }
-    public Company Company { get; set; }
-    public List<GoalsCompanyList> GoalsCompanyList { get; set; }
+    public ViewListGoalPeriod GoalsPeriod { get; set; }
+    public ViewListCompany Company { get; set; }
+    public List<GoalsCompanyItem> GoalsCompanyList { get; set; }
   }
 }

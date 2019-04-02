@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Enumns;
-using System;
+using Manager.Views.Enumns;
 namespace Manager.Core.Business
 {
   /// <summary>

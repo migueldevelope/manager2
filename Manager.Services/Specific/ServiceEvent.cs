@@ -1,7 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
@@ -20,30 +19,30 @@ namespace Manager.Services.Specific
 #pragma warning disable 1998
   public class ServiceEvent : Repository<Event>, IServiceEvent
   {
-    private readonly ServiceGeneric<Event> serviceEvent;
-    private readonly ServiceGeneric<Entity> entityService;
-    private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
     private readonly ServiceGeneric<Course> serviceCourse;
     private readonly ServiceGeneric<CourseESocial> serviceCourseESocial;
+    private readonly ServiceGeneric<Entity> serviceEntity;
+    private readonly ServiceGeneric<Event> serviceEvent;
+    private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
+    private readonly ServiceLog serviceLog;
     private readonly ServiceGeneric<Person> servicePerson;
-    private readonly ServiceGeneric<TrainingPlan> trainingPlanService;
-    private readonly ServiceLog logService;
+    private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlan;
+
     private readonly string Path;
 
     #region Constructor
-    public ServiceEvent(DataContext context, string pathToken)
-     : base(context)
+    public ServiceEvent(DataContext context, string pathToken) : base(context)
     {
       try
       {
-        serviceEvent = new ServiceGeneric<Event>(context);
         serviceCourse = new ServiceGeneric<Course>(context);
         serviceCourseESocial = new ServiceGeneric<CourseESocial>(context);
-        servicePerson = new ServiceGeneric<Person>(context);
-        entityService = new ServiceGeneric<Entity>(context);
+        serviceEntity = new ServiceGeneric<Entity>(context);
+        serviceEvent = new ServiceGeneric<Event>(context);
         serviceEventHistoric = new ServiceGeneric<EventHistoric>(context);
-        trainingPlanService = new ServiceGeneric<TrainingPlan>(context);
-        logService = new ServiceLog(context);
+        serviceLog = new ServiceLog(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceTrainingPlan = new ServiceGeneric<TrainingPlan>(context);
         Path = pathToken;
       }
       catch (Exception e)
@@ -52,194 +51,33 @@ namespace Manager.Services.Specific
       }
     }
 
-
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
-      serviceEvent._user = _user;
-      serviceEventHistoric._user = _user;
       serviceCourse._user = _user;
       serviceCourseESocial._user = _user;
-      servicePerson._user = _user;
-      entityService._user = _user;
-      logService._user = _user;
-      trainingPlanService._user = _user;
-    }
-
-    public void SetUser(BaseUser baseUser)
-    {
-      _user = baseUser;
+      serviceEntity._user = _user;
       serviceEvent._user = _user;
       serviceEventHistoric._user = _user;
-      serviceCourse._user = _user;
-      serviceCourseESocial._user = _user;
+      serviceLog.SetUser(_user);
       servicePerson._user = _user;
-      entityService._user = _user;
-      logService._user = _user;
-      trainingPlanService._user = _user;
+      serviceTrainingPlan._user = _user;
     }
 
-
+    public void SetUser(BaseUser user)
+    {
+      serviceCourse._user = user;
+      serviceCourseESocial._user = user;
+      serviceEntity._user = user;
+      serviceEvent._user = user;
+      serviceEventHistoric._user = user;
+      serviceLog.SetUser(user);
+      servicePerson._user = user;
+      serviceTrainingPlan._user = user;
+    }
     #endregion
 
-    #region private
-
-    private void UpdateAddDaysParticipant(ref Event events, DaysEvent days)
-    {
-      try
-      {
-        foreach (var item in events.Participants)
-        {
-          item.FrequencyEvent.Add(new FrequencyEvent()
-          {
-            DaysEvent = days,
-            Present = true,
-            Status = EnumStatus.Enabled,
-            _id = ObjectId.GenerateNewId().ToString(),
-            _idAccount = _user._idAccount
-          });
-        }
-        //serviceEvent.Update(events, null);
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-
-    }
-
-    private async void GenerateHistoric(Event view)
-    {
-      try
-      {
-        foreach (var item in view.Participants)
-        {
-          if (item.Approved & (item.Grade > view.Grade))
-          {
-            //NewEventHistoric(new EventHistoric()
-            //{
-            //  Name = view.Name,
-            //  Event = view,
-            //  Course = view.Course,
-            //  Entity = view.Entity,
-            //  Workload = view.Workload,
-            //  Person = item.Person,
-            //  Status = EnumStatus.Enabled,
-            //  Begin = DateTime.Parse(view.Begin.ToString()),
-            //  End = DateTime.Parse(view.End.ToString()),
-            //  Attachments = view.Attachments
-            //});
-          }
-
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private void MathWorkload(ref Event events)
-    {
-      try
-      {
-        if (events.Days.Count() > 0)
-        {
-          events.Begin = events.Days.Min(p => p.Begin);
-          events.End = events.Days.Max(p => p.End);
-        }
-        else
-        {
-          events.Begin = null;
-          events.End = null;
-        }
-        decimal workload = 0;
-        foreach (var item in events.Days)
-        {
-          workload += decimal.Parse((item.End - item.Begin).TotalMinutes.ToString());
-        }
-        events.Workload = workload;
-        //serviceEvent.Update(events, null);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private Entity AddEntity(string name)
-    {
-      try
-      {
-        var entity = entityService.GetAuthentication(p => p.Name.ToUpper().Contains(name.ToUpper())).FirstOrDefault();
-        if (entity == null)
-          return entityService.Insert(new Entity()
-          {
-            Status = EnumStatus.Enabled,
-            Name = name
-          });
-        else
-          return entity;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async void VerifyEquivalent(Course course)
-    {
-      try
-      {
-        var list = trainingPlanService.GetAll(p => p.Course._id == course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).ToList();
-        if (course.Equivalents != null)
-        {
-          foreach (var item in course.Equivalents)
-          {
-            foreach (var plan in list)
-            {
-              var eventsHis = serviceEventHistoric.GetAll(p => p.Course._id == item._id & p.Person._id == plan.Person._id);
-              if (eventsHis.Count() > 0)
-              {
-                plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
-                plan.Observartion = "Realized Event: " + eventsHis.LastOrDefault().Name + ", ID_Historic: " + eventsHis.LastOrDefault()._id;
-                trainingPlanService.Update(plan, null);
-              }
-
-            }
-          }
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async void LogSave(string iduser, string local)
-    {
-      try
-      {
-        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
-        var log = new ViewLog()
-        {
-          Description = "Access Event ",
-          Local = local,
-          _idPerson = user._id
-        };
-        logService.NewLog(log);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    #endregion
-
-    #region event
+    #region Event
     public string RemoveDays(string idevent, string iddays)
     {
       try
@@ -341,13 +179,13 @@ namespace Manager.Services.Specific
 
         var item = serviceEventHistoric.GetAll(p => p._id == id).FirstOrDefault();
         var obs = "Realized Event: " + item.Name + ", ID_Historic: " + item._id;
-        var trainingplan = trainingPlanService.GetAll(p => p.Person._id == item.Person._id
+        var trainingplan = serviceTrainingPlan.GetAll(p => p.Person._id == item.Person._id
         & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
         & p.Observartion == obs).FirstOrDefault();
         if (trainingplan != null)
         {
           trainingplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
-          trainingPlanService.Update(trainingplan, null);
+          serviceTrainingPlan.Update(trainingplan, null);
         }
         item.Status = EnumStatus.Disabled;
         serviceEventHistoric.Update(item, null);
@@ -407,11 +245,11 @@ namespace Manager.Services.Specific
 
         }
 
-        var plans = trainingPlanService.GetAll(p => p.Event._id == events._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized).ToList();
+        var plans = serviceTrainingPlan.GetAll(p => p.Event._id == events._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized).ToList();
         foreach (var traningplan in plans)
         {
           traningplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
-          trainingPlanService.Update(traningplan, null);
+          serviceTrainingPlan.Update(traningplan, null);
         }
 
         events.StatusEvent = EnumStatusEvent.Open;
@@ -559,7 +397,7 @@ namespace Manager.Services.Specific
           Workload = events.Workload,
           Begin = events.Begin,
           End = events.End,
-          Instructors = (events.Instructors == null) ? null : events.Instructors.Select(x => new ViewCrudInstructor()
+          Instructors = events.Instructors?.Select(x => new ViewCrudInstructor()
           {
             _idPerson = x.Person._id,
             Document = x.Person.User.Document,
@@ -568,12 +406,12 @@ namespace Manager.Services.Specific
             Content = x.Content,
             TypeInstructor = x.TypeInstructor
           }).ToList(),
-          Days = (events.Days == null) ? null : events.Days.Select(p => new ViewCrudDaysEvent() { _id = p._id, Begin = p.Begin, End = p.End }).OrderBy(p => p.Begin).ToList(),
+          Days = events.Days?.Select(p => new ViewCrudDaysEvent() { _id = p._id, Begin = p.Begin, End = p.End }).OrderBy(p => p.Begin).ToList(),
           Participants = events.Participants.Select(x => new ViewCrudParticipant()
           {
             _id = x._id,
             _idPerson = x.Person._id,
-            FrequencyEvent = (x.FrequencyEvent == null) ? null : x.FrequencyEvent.OrderBy(k => k.DaysEvent.Begin).Select
+            FrequencyEvent = x.FrequencyEvent?.OrderBy(k => k.DaysEvent.Begin).Select
             (y => new ViewCrudFrequencyEvent()
             {
               _id = y._id,
@@ -588,7 +426,7 @@ namespace Manager.Services.Specific
           StatusEvent = events.StatusEvent,
           Observation = events.Observation,
           Evalution = events.Evalution,
-          Attachments = (events.Attachments == null) ? null : events.Attachments.Select(p => new ViewCrudAttachmentField()
+          Attachments = events.Attachments?.Select(p => new ViewCrudAttachmentField()
           {
             Url = p.Url,
             _idAttachment = p._idAttachment,
@@ -619,12 +457,12 @@ namespace Manager.Services.Specific
           Content = course.Content,
           CourseESocial = (course.CourseESocial == null) ? null : new ViewCrudCourseESocial() { _id = course.CourseESocial._id, Name = course.CourseESocial.Name, Code = course.CourseESocial.Code },
           Deadline = course.Deadline,
-          Equivalents = (course.Equivalents == null) ? null : course.Equivalents.Select(p => new ViewListCourse()
+          Equivalents = course.Equivalents?.Select(p => new ViewListCourse()
           {
             _id = p._id,
             Name = p.Name
           }).ToList(),
-          Prerequisites = (course.Prerequisites == null) ? null : course.Prerequisites.Select(p => new ViewListCourse()
+          Prerequisites = course.Prerequisites?.Select(p => new ViewListCourse()
           {
             _id = p._id,
             Name = p.Name
@@ -676,7 +514,7 @@ namespace Manager.Services.Specific
           NamePerson = eventhistoric.Person.User.Name,
           Entity = new ViewCrudEntity() { _id = eventhistoric.Entity._id, Name = eventhistoric.Entity.Name },
           Event = new ViewListEvent() { _id = eventhistoric.Event._id, Name = eventhistoric.Event.Name },
-          Attachments = (eventhistoric.Attachments == null) ? null : eventhistoric.Attachments.Select(p => new ViewCrudAttachmentField()
+          Attachments = eventhistoric.Attachments?.Select(p => new ViewCrudAttachmentField()
           {
             Url = p.Url,
             _idAttachment = p._idAttachment,
@@ -695,8 +533,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = entityService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = entityService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceEntity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEntity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.Select(p => new ViewCrudEntity()
         {
@@ -1203,7 +1041,7 @@ namespace Manager.Services.Specific
         {
           _id = p._id,
           _idPerson = p.Person._id,
-          FrequencyEvent = (p.FrequencyEvent == null) ? null : p.FrequencyEvent.OrderBy(k => k.DaysEvent.Begin).Select
+          FrequencyEvent = p.FrequencyEvent?.OrderBy(k => k.DaysEvent.Begin).Select
             (y => new ViewCrudFrequencyEvent()
             {
               _id = y._id,
@@ -1258,13 +1096,13 @@ namespace Manager.Services.Specific
         //view.Workload = decimal.Parse(minutes2.ToString());
 
         var events = serviceEventHistoric.Insert(eventhistoric);
-        var plan = trainingPlanService.GetAll(p => p.Person._id == eventhistoric.Person._id & p.Course._id == view.Course._id
+        var plan = serviceTrainingPlan.GetAll(p => p.Person._id == eventhistoric.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
         if (plan != null)
         {
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
           plan.Observartion = "Realized Event: " + events.Name + ", ID_Historic: " + events._id;
-          trainingPlanService.Update(plan, null);
+          serviceTrainingPlan.Update(plan, null);
         }
         return "add success";
       }
@@ -1280,14 +1118,14 @@ namespace Manager.Services.Specific
       {
         view.Entity = AddEntity(view.Entity.Name);
         var events = serviceEventHistoric.Insert(view);
-        var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
+        var plan = serviceTrainingPlan.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
         if (plan != null)
         {
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
           plan.Observartion = "Realized Event: " + events.Name + ", ID_Historic: " + events._id;
           plan.Event = view.Event;
-          trainingPlanService.Update(plan, null);
+          serviceTrainingPlan.Update(plan, null);
         }
         return "add success";
       }
@@ -1311,8 +1149,7 @@ namespace Manager.Services.Specific
           CourseESocial = (view.CourseESocial == null) ? null :
           serviceCourseESocial.GetAll(p => p._id == view.CourseESocial._id).FirstOrDefault(),
           Status = EnumStatus.Enabled,
-          Prerequisites = (view.Prerequisites == null) ? null :
-          view.Prerequisites.Select(p => new Course()
+          Prerequisites = view.Prerequisites?.Select(p => new Course()
           {
             _id = p._id,
             Name = p.Name,
@@ -1460,12 +1297,12 @@ namespace Manager.Services.Specific
         course.Deadline = view.Deadline;
         course.Wordkload = view.Wordkload;
         course.CourseESocial = (view.CourseESocial == null) ? null : new CourseESocial() { _id = view.CourseESocial._id, Name = view.CourseESocial.Name, Code = view.CourseESocial.Code };
-        course.Equivalents = (view.Equivalents == null) ? null : view.Equivalents.Select(p => new Course()
+        course.Equivalents = view.Equivalents?.Select(p => new Course()
         {
           _id = p._id,
           Name = p.Name
         }).ToList();
-        course.Prerequisites = (view.Prerequisites == null) ? null : view.Prerequisites.Select(p => new Course()
+        course.Prerequisites = view.Prerequisites?.Select(p => new Course()
         {
           _id = p._id,
           Name = p.Name
@@ -1494,6 +1331,163 @@ namespace Manager.Services.Specific
 
         serviceCourseESocial.UpdateAccount(esocial, null);
         return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
+    #region private
+
+    private void UpdateAddDaysParticipant(ref Event events, DaysEvent days)
+    {
+      try
+      {
+        foreach (var item in events.Participants)
+        {
+          item.FrequencyEvent.Add(new FrequencyEvent()
+          {
+            DaysEvent = days,
+            Present = true,
+            Status = EnumStatus.Enabled,
+            _id = ObjectId.GenerateNewId().ToString(),
+            _idAccount = _user._idAccount
+          });
+        }
+        //serviceEvent.Update(events, null);
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+
+    }
+
+    private async void GenerateHistoric(Event view)
+    {
+      try
+      {
+        foreach (var item in view.Participants)
+        {
+          if (item.Approved & (item.Grade > view.Grade))
+          {
+            //NewEventHistoric(new EventHistoric()
+            //{
+            //  Name = view.Name,
+            //  Event = view,
+            //  Course = view.Course,
+            //  Entity = view.Entity,
+            //  Workload = view.Workload,
+            //  Person = item.Person,
+            //  Status = EnumStatus.Enabled,
+            //  Begin = DateTime.Parse(view.Begin.ToString()),
+            //  End = DateTime.Parse(view.End.ToString()),
+            //  Attachments = view.Attachments
+            //});
+          }
+
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private void MathWorkload(ref Event events)
+    {
+      try
+      {
+        if (events.Days.Count() > 0)
+        {
+          events.Begin = events.Days.Min(p => p.Begin);
+          events.End = events.Days.Max(p => p.End);
+        }
+        else
+        {
+          events.Begin = null;
+          events.End = null;
+        }
+        decimal workload = 0;
+        foreach (var item in events.Days)
+        {
+          workload += decimal.Parse((item.End - item.Begin).TotalMinutes.ToString());
+        }
+        events.Workload = workload;
+        //serviceEvent.Update(events, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private Entity AddEntity(string name)
+    {
+      try
+      {
+        var entity = serviceEntity.GetAuthentication(p => p.Name.ToUpper().Contains(name.ToUpper())).FirstOrDefault();
+        if (entity == null)
+          return serviceEntity.Insert(new Entity()
+          {
+            Status = EnumStatus.Enabled,
+            Name = name
+          });
+        else
+          return entity;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private async void VerifyEquivalent(Course course)
+    {
+      try
+      {
+        var list = serviceTrainingPlan.GetAll(p => p.Course._id == course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).ToList();
+        if (course.Equivalents != null)
+        {
+          foreach (var item in course.Equivalents)
+          {
+            foreach (var plan in list)
+            {
+              var eventsHis = serviceEventHistoric.GetAll(p => p.Course._id == item._id & p.Person._id == plan.Person._id);
+              if (eventsHis.Count() > 0)
+              {
+                plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
+                plan.Observartion = "Realized Event: " + eventsHis.LastOrDefault().Name + ", ID_Historic: " + eventsHis.LastOrDefault()._id;
+                serviceTrainingPlan.Update(plan, null);
+              }
+
+            }
+          }
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private async void LogSave(string iduser, string local)
+    {
+      try
+      {
+        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Access Event ",
+          Local = local,
+          _idPerson = user._id
+        };
+        serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
@@ -1604,8 +1598,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = entityService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = entityService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceEntity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEntity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail;
       }
@@ -2048,13 +2042,13 @@ namespace Manager.Services.Specific
         //view.Workload = decimal.Parse(minutes2.ToString());
 
         var events = serviceEventHistoric.Insert(view);
-        var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
+        var plan = serviceTrainingPlan.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
         if (plan != null)
         {
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
           plan.Observartion = "Realized Event: " + events.Name + ", ID_Historic: " + events._id;
-          trainingPlanService.Update(plan, null);
+          serviceTrainingPlan.Update(plan, null);
         }
         return "add success";
       }
@@ -2070,14 +2064,14 @@ namespace Manager.Services.Specific
       {
         view.Entity = AddEntity(view.Entity.Name);
         var events = serviceEventHistoric.Insert(view);
-        var plan = trainingPlanService.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
+        var plan = serviceTrainingPlan.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
         if (plan != null)
         {
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
           plan.Observartion = "Realized Event: " + events.Name + ", ID_Historic: " + events._id;
           plan.Event = view.Event;
-          trainingPlanService.Update(plan, null);
+          serviceTrainingPlan.Update(plan, null);
         }
         return "add success";
       }
@@ -2204,8 +2198,7 @@ namespace Manager.Services.Specific
     }
 
     #endregion
-
-
+    
   }
 #pragma warning restore 1998
 }
