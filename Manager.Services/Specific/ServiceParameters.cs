@@ -132,7 +132,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public List<ViewListParameter> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try

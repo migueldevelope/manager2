@@ -275,6 +275,143 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    private async void MailApproved(Person person, string skillName)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = serviceMailModel.CertificationApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        var url = "";
+        var body = model.Message.Replace("{Manager}", person.Manager?.Name)
+                                .Replace("{Skill}", skillName)
+                                .Replace("{Person}", person.User.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = serviceMailMessage.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = serviceMail.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        serviceMailMessage.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private async void MailApprovedPerson(Person person, string skillName)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = serviceMailModel.CertificationApprovalPerson(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        var url = "";
+        var body = model.Message.Replace("{Person}", person.User.Name)
+                                .Replace("{Skill}", skillName);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = serviceMailMessage.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = serviceMail.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        serviceMailMessage.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private async void MailDisapproved(Person person, string skillName)
+    {
+      try
+      {
+        //searsh model mail database
+        var model = serviceMailModel.CertificationDisapproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        var url = "";
+        var body = model.Message.Replace("{Manager}", person.Manager?.Name)
+                                .Replace("{Skill}", skillName)
+                                .Replace("{Person}", person.User.Name);
+        var message = new MailMessage
+        {
+          Type = EnumTypeMailMessage.Put,
+          Name = model.Name,
+          Url = url,
+          Body = body
+        };
+        var idMessage = serviceMailMessage.Insert(message)._id;
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = serviceMail.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
+        messageEnd.Token = token;
+        serviceMailMessage.Update(messageEnd, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     private string SendMail(string link, Person person, string idmail)
     {
@@ -385,11 +522,7 @@ namespace Manager.Services.Specific
             item.Comments = viewcertification.Comments;
             item.DateApprovation = DateTime.Now;
             serviceCertificationPerson.Update(item, null);
-
             serviceCertification.Update(certification, null);
-
-
-
             var open = certification.ListPersons.Where(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).Count();
             if (open == 0)
             {
@@ -402,6 +535,12 @@ namespace Manager.Services.Specific
               certification.DateEnd = DateTime.Now;
 
               serviceCertification.Update(certification, null);
+
+              if (certification.StatusCertification == EnumStatusCertification.Approved)
+              {
+                MailApproved(certification.Person, certification.CertificationItem.Name);
+                MailApprovedPerson(certification.Person, certification.CertificationItem.Name);
+              }
             }
 
             return "update";

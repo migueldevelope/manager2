@@ -159,10 +159,10 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,</br></br>O gestor <strong>{Requestor}</strong>, está solicitando que o(a) colaborador(a) <strong>{Employee}</strong> faça parte da equipe dele. </br></br>Você <a href='{Approved}'> aprova </a> ou <a href='{Disapproved}'> reprova </a> esta solicitação?",
-          Subject = "Solicitação de Aprovação de Auto Gestão",
+          Message = "Olá <strong>{Manager}</strong>,</br></br>O gestor <strong>{Requestor}</strong>, está solicitando que o(a) colaborador(a) <strong>{Employee}</strong> faça parte da equipe dele. </br></br>Você <a href='{Approved}'> aprova </a> ou <a href='{Disapproved}'> reprova </a> esta solicitação?",
+          Subject = "Notificação de Auto Gestão - Pedido de Autorização",
           Name = "automanager",
-          Link = string.Format("{0}evaluation_f/genericmessage", path)
+          Link = path
         };
         // Insert
         model = serviceMailModel.InsertNewVersion(model).Result;
@@ -188,12 +188,87 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    private MailModel CertificationDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Guest}</strong>,</br></br>O(a) gestor(a) {Manager} enviou uma solicitação para aprovação de acreditação do(a) colaborador(a) {Person}.</br></br>Ajude a encontrar as pessoas que são referências na nossa empresa.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
+          Subject = "Notificação para aprovação de Acreditação | Accretitation Skill",
+          Name = "certification",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public MailModel CertificationApproval(string path)
     {
       try
       {
         MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "certificationapproval").Result;
         return model ?? CertificationApprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel CertificationApprovalDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Manager}</strong>,</br></br>A acreditação da competência {Skill} do(a) colaborador(a) {Person} foi APROVADA.</br></br>Enviamos um e-mail parabenizando o(a) colaborador(a) mas é muito importante que você comemore com ele(a).</br></br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Acreditação | Accretitation Skill - APROVADA",
+          Name = "certificationapproval",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel CertificationApprovalPerson(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "certificationapprovalperson").Result;
+        return model ?? CertificationApprovalPersonDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel CertificationApprovalPersonDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Ola <strong>{Person}</strong>,</br></br>Foi concedido a você a acreditação da competência {Skill}.</br></br>Parabéns por este feito glorioso, e continue buscando outras acreditações.</br></br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Acreditação | Accretitation Skill - APROVADA",
+          Name = "certificationapprovalperson",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
       }
       catch (Exception e)
       {
@@ -212,48 +287,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel CertificationDefault(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Guest}</strong>,</br></br>{Manager} enviou a acreditação do colaborador {Person}.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Acreditação",
-          Name = "certification",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel CertificationApprovalDefault(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>O {Person} enviou a acreditação.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Acreditação",
-          Name = "certificationapproval",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     private MailModel CertificationDisapprovalDefault(string path)
     {
       try
@@ -261,8 +294,8 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>O {Person} enviou a acreditação.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Acreditação",
+          Message = "Ola <strong>{Manager}</strong>,</br></br>A acreditação da competência {Skill} do(a) colaborador(a) {Person} foi REPROVADA.</br></br>Não se aboreça, insentive seu colaborador a se aperfeiçoar mais e solicite novamente daqui algum tempo.</br></br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Acreditação | Accretitation Skill - REPROVADA",
           Name = "certificationdisapproval",
           Link = path
         };

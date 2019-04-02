@@ -1,7 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
@@ -365,5 +364,6 @@ namespace Manager.Services.Specific
       }
     }
     #endregion
+
   }
 }
