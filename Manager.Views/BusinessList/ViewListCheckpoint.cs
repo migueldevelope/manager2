@@ -4,7 +4,7 @@ namespace Manager.Views.BusinessList
 {
   public class ViewListCheckpoint : _ViewListBase
   {
-    public ViewInfoPerson Person { get; set; }
+    public string _idPerson { get; set; }
     public string OccupationName { get; set; }
     public EnumStatusCheckpoint StatusCheckpoint { get; set; }
     public EnumCheckpoint TypeCheckpoint { get; set; }
