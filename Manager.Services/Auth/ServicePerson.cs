@@ -449,6 +449,23 @@ namespace Manager.Services.Auth
 
         user = serviceUser.InsertNewVersion(user).Result;
 
+        BaseFields manager = null;
+        if (view.Manager != null)
+        {
+          manager = servicePerson.GetAll(p => p._id == view.Manager._id).
+           Select(p => new BaseFields()
+           {
+             _id = p._id,
+             Name = p.User.Name,
+             Mail = p.User.Mail
+           }).FirstOrDefault();
+        }
+        SalaryScalePerson salaryScale = null;
+        if (view.SalaryScales != null)
+          salaryScale = serviceSalaryScale.GetAll(p => p._id == view.SalaryScales._idSalaryScale)
+            .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
+            .FirstOrDefault();
+
         Person person = new Person()
         {
           Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result,
@@ -457,7 +474,7 @@ namespace Manager.Services.Auth
           DateResignation = view.DateResignation,
           Establishment = view.Establishment == null ? null : serviceEstablishment.GetNewVersion(p => p._id == view.Establishment._id).Result,
           HolidayReturn = view.HolidayReturn,
-          Manager = null,
+          Manager = manager,
           MotiveAside = view.MotiveAside,
           Occupation = view.Occupation == null ? null : serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result,
           Registration = view.Registration,
@@ -467,13 +484,9 @@ namespace Manager.Services.Auth
           TypeJourney = view.TypeJourney,
           TypeUser = view.TypeUser,
           User = user,
-          SalaryScales = new SalaryScalePerson() { _idSalaryScale = view.SalaryScales._idSalaryScale, NameSalaryScale = view.SalaryScales.NameSalaryScale }
+          SalaryScales = salaryScale
         };
 
-        /*foreach (var item in view.SalaryScales)
-          person.SalaryScales.Add(new SalaryScalePerson() { _idSalaryScale = item._idSalaryScale, NameSalaryScale = item.NameSalaryScale });
-          */
-        /// TODO: Manager
         person = servicePerson.InsertNewVersion(person).Result;
         return new ViewCrudPerson()
         {
@@ -484,9 +497,55 @@ namespace Manager.Services.Auth
           DateResignation = person.DateResignation,
           Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
           HolidayReturn = person.HolidayReturn,
-          Manager = null,
+          Manager = person.Manager == null ? null : new ViewBaseFields()
+          {
+            _id = person.Manager._id,
+            Name = person.Manager.Name,
+            Mail = person.Manager.Mail
+          },
           MotiveAside = person.MotiveAside,
-          Occupation = null,
+          Occupation = person.Occupation == null ? null : new ViewListOccupation()
+          {
+            _id = person.Occupation._id,
+            Name = person.Occupation.Name,
+            Line = person.Occupation.Line,
+            Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
+            Group = new ViewListGroup()
+            {
+              _id = person.Occupation.Group._id,
+              Name = person.Occupation.Group.Name,
+              Line = person.Occupation.Group.Line,
+              Axis = new ViewListAxis()
+              {
+                _id = person.Occupation.Group.Axis._id,
+                Name = person.Occupation.Group.Axis.Name,
+                TypeAxis = person.Occupation.Group.Axis.TypeAxis
+              },
+              Sphere = new ViewListSphere()
+              {
+                _id = person.Occupation.Group.Sphere._id,
+                Name = person.Occupation.Group.Sphere.Name,
+                TypeSphere = person.Occupation.Group.Sphere.TypeSphere
+              }
+            },
+            Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Order = p.Order,
+              ProcessLevelOne = new ViewListProcessLevelOne()
+              {
+                _id = p.ProcessLevelOne._id,
+                Name = p.ProcessLevelOne.Name,
+                Order = p.ProcessLevelOne.Order,
+                Area = new ViewListArea()
+                {
+                  _id = p.ProcessLevelOne.Area._id,
+                  Name = p.ProcessLevelOne.Area.Name
+                }
+              }
+            }).ToList()
+          },
           Registration = person.Registration,
           Salary = person.Salary,
           StatusUser = person.StatusUser,
@@ -510,7 +569,7 @@ namespace Manager.Services.Auth
             _id = person.User._id
           }
         };
-        // TODO: Manager, Occupation
+        // TODO: Manager
       }
       catch (Exception e)
       {
