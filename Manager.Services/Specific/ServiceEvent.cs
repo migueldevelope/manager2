@@ -569,7 +569,14 @@ namespace Manager.Services.Specific
           .Select(p => new ViewListPersonResume()
           {
             _id = p._id,
-            Name = p.User.Name
+            Name = p.User.Name,
+            Document = p.User.Document,
+            Cbo = (p.Occupation.CBO == null) ? null : new ViewListCbo()
+            {
+              _id = p.Occupation.CBO._id,
+              Name = p.Occupation.CBO.Name,
+              Code = p.Occupation.CBO.Code
+            }
           })
           .ToList();
       }
@@ -599,7 +606,14 @@ namespace Manager.Services.Specific
         return detail.Select(p => new ViewListPersonResume()
         {
           _id = p._id,
-          Name = p.User.Name
+          Name = p.User.Name,
+          Document = p.User.Document,
+          Cbo = (p.Occupation.CBO == null) ? null : new ViewListCbo()
+          {
+            _id = p.Occupation.CBO._id,
+            Name = p.Occupation.CBO.Name,
+            Code = p.Occupation.CBO.Code
+          }
         })
           .ToList().Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
@@ -2198,7 +2212,7 @@ namespace Manager.Services.Specific
     }
 
     #endregion
-    
+
   }
 #pragma warning restore 1998
 }

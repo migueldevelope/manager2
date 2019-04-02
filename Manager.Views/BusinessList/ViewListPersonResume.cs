@@ -2,5 +2,7 @@
 {
   public class ViewListPersonResume:_ViewListBase
   {
+    public string Document { get; set; }
+    public ViewListCbo Cbo { get; set; }
   }
 }
