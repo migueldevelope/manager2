@@ -329,18 +329,18 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeleteCertification(string idperson)
+    public string DeleteCertification(string idcertification)
     {
       try
       {
-        LogSave(_user._idPerson, "RemoveOnboarding:" + idperson);
-        var certification = serviceCertification.GetAll(p => p.Person._id == idperson).FirstOrDefault();
+        LogSave(_user._idPerson, string.Format("Delete | ", idcertification));
+        var certification = serviceCertification.GetAll(p => p.Person._id == idcertification).FirstOrDefault();
         if (certification == null)
-          return "deleted";
+          return "Certification deleted!";
 
         certification.Status = EnumStatus.Disabled;
         serviceCertification.Update(certification, null);
-        return "deleted";
+        return "Certification deleted!";
       }
       catch (Exception e)
       {
@@ -490,7 +490,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "ListExclud");
+        LogSave(_user._idPerson, "List exclud");
         int skip = (count * (page - 1));
         var detail = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -658,10 +658,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
+        Person person = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
         item._id = ObjectId.GenerateNewId().ToString();
 
-        var certification = new Certification()
+        Certification certification = new Certification()
         {
           CertificationItem = new CertificationItem()
           {
@@ -682,25 +682,25 @@ namespace Manager.Services.Specific
 
         certification = LoadMap(certification);
 
-        var view = serviceCertification.Insert(certification);
-
+        certification = serviceCertification.InsertNewVersion(certification).Result;
+        LogSave(_user._idPerson, string.Format("Start new process | {0}", certification._id));
         return new ViewCrudCertification()
         {
-          _id = view._id,
-          Name = view.Person.User.Name,
-          _idPerson = view.Person._id,
-          TextDefault = view.TextDefault,
-          StatusCertification = view.StatusCertification,
+          _id = certification._id,
+          Name = certification.Person.User.Name,
+          _idPerson = certification.Person._id,
+          TextDefault = certification.TextDefault,
+          StatusCertification = certification.StatusCertification,
           CertificationItem = new ViewListCertificationItem()
           {
-            _id = view.CertificationItem._id,
-            Name = view.CertificationItem.Name,
-            ItemCertification = view.CertificationItem.ItemCertification,
-            Concept = view.CertificationItem.Concept,
-            IdItem = view.CertificationItem.IdItem
+            _id = certification.CertificationItem._id,
+            Name = certification.CertificationItem.Name,
+            ItemCertification = certification.CertificationItem.ItemCertification,
+            Concept = certification.CertificationItem.Concept,
+            IdItem = certification.CertificationItem.IdItem
           },
-          Attachments = view.Attachments.Select(p => new ViewCrudAttachmentField() { _idAttachment = p._idAttachment, Name = p.Name, Url = p.Url }).ToList(),
-          ListPersons = view.ListPersons.Select(p => new ViewCrudCertificationPerson()
+          Attachments = certification.Attachments.Select(p => new ViewCrudAttachmentField() { _idAttachment = p._idAttachment, Name = p.Name, Url = p.Url }).ToList(),
+          ListPersons = certification.ListPersons.Select(p => new ViewCrudCertificationPerson()
           {
             _id = p.Person._id,
             Name = p.Person.User.Name,
@@ -710,7 +710,7 @@ namespace Manager.Services.Specific
             TextDefault = p.TextDefault,
             TextDefaultEnd = p.TextDefaultEnd
           }).ToList(),
-          Questions = view.Questions.Select(p => new ViewListCertificationQuestions()
+          Questions = certification.Questions.Select(p => new ViewListCertificationQuestions()
           {
             Answer = p.Answer,
             Question = new ViewCrudQuestions()
@@ -790,10 +790,10 @@ namespace Manager.Services.Specific
           }
           serviceCertificationPerson.Update(item, null);
           serviceCertification.Update(certification, null);
-          return "ok";
+          LogSave(_user._idPerson, string.Format("Certification approved | {0}", certification._id));
+          return "Certification approved!";
         }
-
-        return "not found";
+        return "Certification not found!";
       }
       catch (Exception e)
       {
@@ -841,7 +841,7 @@ namespace Manager.Services.Specific
         }
 
         serviceCertification.Update(certification, null);
-        return "update";
+        return "Certification altered!";
       }
       catch (Exception e)
       {
@@ -902,7 +902,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     #endregion
 
     #region old

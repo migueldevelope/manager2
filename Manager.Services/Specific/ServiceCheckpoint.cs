@@ -174,6 +174,8 @@ namespace Manager.Services.Specific
               item.OccupationName = checkpoint.Occupation?.Name;
               detail.Add(item);
             }
+            else
+              detail.Add(item);
           }
         }
         else
@@ -189,7 +191,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "ListEnded");
+        LogSave(_user._idPerson, "List ended");
         int skip = (count * (page - 1));
         var detail = serviceCheckpoint.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Person.User.Name").Result
           .Select(s => new ViewListCheckpoint()
@@ -221,8 +223,6 @@ namespace Manager.Services.Specific
                                         p._id == idperson).Result;
         if (person == null)
           throw new Exception("Person not available!");
-
-        LogSave(idperson, "Checkpoint Process");
 
         Checkpoint checkpoint = null;
         if (serviceCheckpoint.Exists("Checkpoint"))
@@ -282,6 +282,7 @@ namespace Manager.Services.Specific
           };
           checkpoint = LoadMap(checkpoint);
           checkpoint = serviceCheckpoint.InsertNewVersion(checkpoint).Result;
+          LogSave(idperson, string.Format("Start new process | {0}",checkpoint._id));
         }
         return new ViewListCheckpoint()
         {
@@ -425,7 +426,7 @@ namespace Manager.Services.Specific
         if (checkpoint == null)
           return "Checkpoint not available!";
 
-        LogSave(_user._idPerson, string.Format("RemoveCheckpoint: {0}", idcheckpoint));
+        LogSave(_user._idPerson, string.Format("Delete | {0}", idcheckpoint));
         checkpoint.Status = EnumStatus.Disabled;
         serviceCheckpoint.Update(checkpoint, null);
         return "Checkpoint deleted!";
@@ -443,7 +444,6 @@ namespace Manager.Services.Specific
         if (checkpoint == null)
           throw new Exception("Checkpoint not available!");
 
-        LogSave(view.Person._id, "Checkpoint update");
         if (view.StatusCheckpoint == EnumStatusCheckpoint.End)
         {
           checkpoint.DateEnd = DateTime.Now;
@@ -455,14 +455,16 @@ namespace Manager.Services.Specific
             person.TypeJourney = EnumTypeJourney.Monitoring;
             servicePerson.Update(person, null);
 
-            MailRH(person, "Aprovado");
+            MailRhApproved(person, "Aprovado");
             MailPerson(person, "Aprovado");
 
             serviceLogMessages.NewLogMessage("Checkpoint", string.Format(" Colaborador {0} aprovado no Checkpoint", person.User.Name), person);
+            LogSave(view.Person._id, string.Format("Approved | {0}.", view._id));
           }
           else
           {
-            MailRHDisapproved(person, "Reprovado");
+            MailRhDisapproved(person, "Reprovado");
+            LogSave(view.Person._id, string.Format("Disapproved | {0}.", view._id));
           }
         }
         checkpoint.Comments = view.Comments;
@@ -507,10 +509,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(idperson, "PersonEnd");
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p.Person._id == idperson && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
         if (checkpoint == null)
           throw new Exception("Checkpoint not available!");
+
+        LogSave(idperson, string.Format("Person ended | {0}",checkpoint._id));
 
         return new ViewCrudCheckpoint()
         {
@@ -616,7 +619,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     #endregion
 
     #region Private
@@ -723,13 +725,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailRH(Person person, string result)
+    private async void MailRhApproved(Person person, string result)
     {
       try
       {
         var mailDefault = MailDefault();
         //searsh model mail database
-        var model = serviceMailModel.CheckpointResult(path);
+        var model = serviceMailModel.CheckpointResultApproved(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -772,7 +774,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailRHDisapproved(Person person, string result)
+    private async void MailRhDisapproved(Person person, string result)
     {
       try
       {
@@ -1048,14 +1050,14 @@ namespace Manager.Services.Specific
           {
             checkpoint.Person.TypeJourney = EnumTypeJourney.Monitoring;
             servicePerson.Update(checkpoint.Person, null);
-            MailRH(checkpoint.Person, "Aprovado");
+            MailRhApproved(checkpoint.Person, "Aprovado");
             MailPerson(checkpoint.Person, "Aprovado");
 
             serviceLogMessages.NewLogMessage("Checkpoint", " Colaborador " + checkpoint.Person.User.Name + " aprovado no Checkpoint", checkpoint.Person);
           }
           else
           {
-            MailRHDisapproved(checkpoint.Person, "Reprovado");
+            MailRhDisapproved(checkpoint.Person, "Reprovado");
 
           }
         }
@@ -1070,64 +1072,18 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async void LogSave(string iduser, string local)
+    public void LogSave(string idperson, string local)
     {
       try
       {
-        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var user = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
         var log = new ViewLog()
         {
-          Description = "Access Checkpoint ",
+          Description = "Checkpoint",
           Local = local,
           _idPerson = user._id
         };
         serviceLog.NewLog(log);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    // send mail
-    public async void Mail(Person person)
-    {
-      try
-      {
-        //searsh model mail database
-        var model = serviceMailModel.CheckpointApproval(path);
-        if (model.StatusMail == EnumStatus.Disabled)
-          return;
-
-        var url = "";
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}",person.Occupation.Name);
-        var message = new MailMessage
-        {
-          Type = EnumTypeMailMessage.Put,
-          Name = model.Name,
-          Url = url,
-          Body = body
-        };
-        var idMessage = serviceMailMessage.Insert(message)._id;
-        var sendMail = new MailLog
-        {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-          To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.User.Mail, person.User.Name)
-                    },
-          Priority = EnumPriorityMail.Low,
-          _idPerson = person._id,
-          NamePerson = person.User.Name,
-          Body = body,
-          StatusMail = EnumStatusMail.Sended,
-          Included = DateTime.Now,
-          Subject = model.Subject
-        };
-        var mailObj = serviceMail.Insert(sendMail);
-        var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
-        messageEnd.Token = token;
-        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {

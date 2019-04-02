@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Business;
 using Manager.Core.BusinessModel;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
@@ -10,10 +9,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Tools;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador de plano de desenvolvimento
+  /// </summary>
   [Produces("application/json")]
   [Route("plan")]
   public class PlanController : Controller
@@ -21,13 +22,17 @@ namespace Manager.Controllers
     private readonly IServicePlan service;
 
     #region Constructor
+    /// <summary>
+    /// Contrutor do plano de desenvolvimento
+    /// </summary>
+    /// <param name="_service">Serviço do plano de desenvolvimento</param>
+    /// <param name="contextAccessor">Token de segurança</param>
     public PlanController(IServicePlan _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
     #endregion
-
 
     #region Plan
     [Authorize]
@@ -37,7 +42,6 @@ namespace Manager.Controllers
     {
       return service.RemoveStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
-
     [Authorize]
     [HttpDelete]
     [Route("removeplanactivity/{id}")]
@@ -45,8 +49,6 @@ namespace Manager.Controllers
     {
       return service.RemovePlanActivity(id);
     }
-
-
     /// <summary>
     /// Lista os planos para tela principal
     /// </summary>
@@ -72,7 +74,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista os planos filtrando pelo gestor
     /// </summary>
@@ -91,7 +92,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista os planos filtrando pelo contrato
     /// </summary>
@@ -110,7 +110,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista o monitoring para tela principal filtrando pelo contrato
     /// </summary>
@@ -136,7 +135,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Busca informações de plano para editar
     /// </summary>
@@ -150,7 +148,6 @@ namespace Manager.Controllers
     {
       return service.GetPlan(idmonitoring, idplan);
     }
-
     /// <summary>
     /// Atualiza informações do plano
     /// </summary>
@@ -164,7 +161,6 @@ namespace Manager.Controllers
     {
       return service.UpdatePlan(idmonitoring, plan);
     }
-
     /// <summary>
     /// Inclusão de novo plano
     /// </summary>
@@ -179,7 +175,6 @@ namespace Manager.Controllers
     {
       return service.NewPlan(idmonitoring, idplanold, plan);
     }
-
     /// <summary>
     /// Inclusão de novo plano quando reprovado (não concorda) o plano anterior
     /// </summary>
@@ -193,8 +188,6 @@ namespace Manager.Controllers
     {
       return service.NewUpdatePlan(idmonitoring, plan);
     }
-
-
     /// <summary>
     /// Lista planos para curadoria
     /// </summary>
@@ -215,7 +208,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Inclusão da Curadoria
     /// </summary>
@@ -231,7 +223,6 @@ namespace Manager.Controllers
     {
       return service.NewStructPlan(idmonitoring, idplan, sourceplan, structplan);
     }
-
     /// <summary>
     /// Busca informações para editar curadoria
     /// </summary>
@@ -247,8 +238,6 @@ namespace Manager.Controllers
     {
       return service.GetStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
-
-
     /// <summary>
     /// Busca informações para editar plano para curadoria
     /// </summary>
@@ -262,8 +251,6 @@ namespace Manager.Controllers
     {
       return service.GetPlanStruct(idmonitoring, idplan);
     }
-
-
     /// <summary>
     /// Atualiza informações da curadoria
     /// </summary>
@@ -279,7 +266,6 @@ namespace Manager.Controllers
     {
       return service.UpdateStructPlan(idmonitoring, idplan, sourceplan, structplanedit);
     }
-
     /// <summary>
     /// Lista planos de entregas
     /// </summary>
@@ -297,7 +283,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Busca informações para editar planos de entrega
     /// </summary>
@@ -310,7 +295,6 @@ namespace Manager.Controllers
     {
       return service.GetPlanActivity(id);
     }
-
     /// <summary>
     /// Adiciona entrega
     /// </summary>
@@ -323,7 +307,6 @@ namespace Manager.Controllers
     {
       return service.NewPlanActivity(model);
     }
-
     /// <summary>
     /// Atualiza informações de entrega
     /// </summary>
@@ -491,9 +474,6 @@ namespace Manager.Controllers
     }
 
     #endregion
-
-
-
 
   }
 }

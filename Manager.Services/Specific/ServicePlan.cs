@@ -11,7 +11,6 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -319,7 +318,6 @@ namespace Manager.Services.Specific
       try
       {
         LogSave(manager._id, "Plan Process Update");
-
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
         {
           if (user._idPerson == manager._id)
@@ -332,12 +330,8 @@ namespace Manager.Services.Specific
             Mail(manager);
           }
         }
-
-
-
-
         servicePlan.Update(plan, null);
-        return "ok";
+        return "Plan altered!";
       }
       catch (Exception e)
       {
@@ -465,7 +459,7 @@ namespace Manager.Services.Specific
         plan.Name = viewPlan.Name;
         plan.DateEnd = DateTime.Now;
         plan.TypeAction = viewPlan.TypeAction;
-        plan.Attachments = (viewPlan.Attachments == null) ? null : viewPlan.Attachments.Select(p => new AttachmentField()
+        plan.Attachments = viewPlan.Attachments?.Select(p => new AttachmentField()
         {
           _idAttachment = p._idAttachment,
           Name = p.Name,
@@ -477,8 +471,7 @@ namespace Manager.Services.Specific
         plan.TextEndManager = viewPlan.TextEndManager;
         plan.Evaluation = viewPlan.Evaluation;
         plan.StatusPlanApproved = viewPlan.StatusPlanApproved;
-        plan.Skills = (viewPlan.Skills == null) ? null :
-        viewPlan.Skills.Select(p => new Skill()
+        plan.Skills = viewPlan.Skills?.Select(p => new Skill()
         {
           _id = p._id,
           Name = p.Name,
@@ -737,7 +730,7 @@ namespace Manager.Services.Specific
         if (activities == 1)
         {
           var detail = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList();
 
 
           foreach (var item in detail)
@@ -753,7 +746,7 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills.OrderBy(p => p.Name)
+                  Skills = res.Skills?.OrderBy(p => p.Name)
                 .Select(p => new ViewListSkill()
                 {
                   _id = p._id,
@@ -762,7 +755,7 @@ namespace Manager.Services.Specific
                   TypeSkill = p.TypeSkill
                 })
                 .ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -783,16 +776,15 @@ namespace Manager.Services.Specific
                   if (res.StructPlans.Count() == 0)
                     view.StructPlans = null;
                   else
-                    view.StructPlans = (res.StructPlans == null) ? null :
-                  res.StructPlans.Select(p => new ViewCrudStructPlan()
-                  {
-                    _id = p._id,
-                    TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
-                    TypeAction = p.TypeAction,
-                    Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
+                    view.StructPlans = res.StructPlans?.Select(p => new ViewCrudStructPlan()
+                    {
+                      _id = p._id,
+                      TypeResponsible = p.TypeResponsible,
+                      PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                      TypeAction = p.TypeAction,
+                      Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
-                  }).ToList();
+                    }).ToList();
                 }
                 result.Add(view);
               }
@@ -803,7 +795,7 @@ namespace Manager.Services.Specific
         if (schooling == 1)
         {
           var detailSchool = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
-            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList();
           foreach (var item in detailSchool)
           {
             foreach (var plan in item.Plans)
@@ -817,7 +809,7 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills.OrderBy(p => p.Name)
+                  Skills = res.Skills?.OrderBy(p => p.Name)
                 .Select(p => new ViewListSkill()
                 {
                   _id = p._id,
@@ -826,7 +818,7 @@ namespace Manager.Services.Specific
                   TypeSkill = p.TypeSkill
                 })
                 .ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -847,16 +839,15 @@ namespace Manager.Services.Specific
                   if (res.StructPlans.Count() == 0)
                     view.StructPlans = null;
                   else
-                    view.StructPlans = (res.StructPlans == null) ? null :
-                  res.StructPlans.Select(p => new ViewCrudStructPlan()
-                  {
-                    _id = p._id,
-                    TypeResponsible = p.TypeResponsible,
-                    PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
-                    TypeAction = p.TypeAction,
-                    Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
+                    view.StructPlans = res.StructPlans?.Select(p => new ViewCrudStructPlan()
+                    {
+                      _id = p._id,
+                      TypeResponsible = p.TypeResponsible,
+                      PlanActivity = new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                      TypeAction = p.TypeAction,
+                      Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
-                  }).ToList();
+                    }).ToList();
                 }
                 result.Add(view);
               }
@@ -867,7 +858,7 @@ namespace Manager.Services.Specific
         if (skillcompany == 1)
         {
           var detailSkills = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
-            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList();
 
           foreach (var item in detailSkills)
           {
@@ -882,7 +873,7 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills.OrderBy(p => p.Name)
+                  Skills = res.Skills?.OrderBy(p => p.Name)
                 .Select(p => new ViewListSkill()
                 {
                   _id = p._id,
@@ -891,7 +882,7 @@ namespace Manager.Services.Specific
                   TypeSkill = p.TypeSkill
                 })
                 .ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -912,8 +903,7 @@ namespace Manager.Services.Specific
                   if (res.StructPlans.Count() == 0)
                     view.StructPlans = null;
                   else
-                    view.StructPlans = (res.StructPlans == null) ? null :
-                  res.StructPlans.Select(p => new ViewCrudStructPlan()
+                    view.StructPlans = res.StructPlans?.Select(p => new ViewCrudStructPlan()
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
@@ -966,7 +956,7 @@ namespace Manager.Services.Specific
         {
           var detail = (from monitoring in
          serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-       .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+       .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList()
                         join person in servicePerson.GetAll() on monitoring.Person._id equals person._id
                         where person.Manager._id == id
                         select monitoring
@@ -989,15 +979,14 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                  Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1026,7 +1015,7 @@ namespace Manager.Services.Specific
 
           var detailSchool = (from monitoring in
          serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-       .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+       .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList()
                               join person in servicePerson.GetAll() on monitoring.Person._id equals person._id
                               where person.Manager._id == id
                               select monitoring
@@ -1045,15 +1034,14 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                  Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1082,7 +1070,7 @@ namespace Manager.Services.Specific
 
           var detailSkills = (from monitoring in
          serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-       .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+       .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList()
                               join person in servicePerson.GetAll() on monitoring.Person._id equals person._id
                               where person.Manager._id == id
                               select monitoring
@@ -1101,15 +1089,14 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                  Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1166,7 +1153,7 @@ namespace Manager.Services.Specific
         if (activities == 1)
         {
           var detail = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList();
 
 
           foreach (var item in detail)
@@ -1182,15 +1169,14 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                  Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1215,7 +1201,7 @@ namespace Manager.Services.Specific
         if (schooling == 1)
         {
           var detailSchool = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList();
           foreach (var item in detailSchool)
           {
             foreach (var plan in item.Plans)
@@ -1229,15 +1215,14 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                  Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1262,7 +1247,7 @@ namespace Manager.Services.Specific
         if (skillcompany == 1)
         {
           var detailSkills = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList();
 
           foreach (var item in detailSkills)
           {
@@ -1277,15 +1262,14 @@ namespace Manager.Services.Specific
                   DateInclude = res.DateInclude,
                   Deadline = res.Deadline,
                   Description = res.Description,
-                  Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                  Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                  UserInclude = res.UserInclude?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1337,13 +1321,13 @@ namespace Manager.Services.Specific
       try
       {
         var detail = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         var detailSchoolings = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         var detailSkillsCompany = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         if (detail == null)
           return new ViewListPlanStruct() { _id = idmonitoring };
@@ -1365,11 +1349,11 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id;
+              view.UserInclude = res.UserInclude?._id;
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
-              view.Skills = (res.Skills == null) ? null : res.Skills.OrderBy(p => p.Name)
+              view.Skills = res.Skills?.OrderBy(p => p.Name)
                 .Select(p => new ViewListSkill()
                 {
                   _id = p._id,
@@ -1384,8 +1368,7 @@ namespace Manager.Services.Specific
               view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
-              view.Attachments = (res.Attachments == null) ? null : res.Attachments.
-                Select(p => new ViewCrudAttachmentField()
+              view.Attachments = res.Attachments?.Select(p => new ViewCrudAttachmentField()
                 {
                   Name = p.Name,
                   Url = p.Url,
@@ -1397,8 +1380,7 @@ namespace Manager.Services.Specific
                 if (res.StructPlans.Count() == 0)
                   view.StructPlans = null;
                 else
-                  view.StructPlans = (res.StructPlans == null) ? null :
-                  res.StructPlans.Select(p => new ViewCrudStructPlan()
+                  view.StructPlans = res.StructPlans?.Select(p => new ViewCrudStructPlan()
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
@@ -1418,7 +1400,7 @@ namespace Manager.Services.Specific
                 Name = res.Name,
                 Deadline = res.Deadline,
                 Description = res.Description,
-                Skills = (res.Skills == null) ? null : res.Skills.Select(p => new ViewListSkill()
+                Skills = res.Skills?.Select(p => new ViewListSkill()
                 {
                   _id = p._id,
                   Name = p.Name,
@@ -1446,11 +1428,11 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id;
+              view.UserInclude = res.UserInclude?._id;
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
-              view.Skills = (res.Skills == null) ? null : res.Skills.OrderBy(p => p.Name)
+              view.Skills = res.Skills?.OrderBy(p => p.Name)
                 .Select(p => new ViewListSkill()
                 {
                   _id = p._id,
@@ -1465,8 +1447,7 @@ namespace Manager.Services.Specific
               view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
-              view.Attachments = (res.Attachments == null) ? null : res.Attachments.
-                Select(p => new ViewCrudAttachmentField()
+              view.Attachments = res.Attachments?.Select(p => new ViewCrudAttachmentField()
                 {
                   Name = p.Name,
                   Url = p.Url,
@@ -1478,8 +1459,7 @@ namespace Manager.Services.Specific
                 if (res.StructPlans.Count() == 0)
                   view.StructPlans = null;
                 else
-                  view.StructPlans = (res.StructPlans == null) ? null :
-                  res.StructPlans.Select(p => new ViewCrudStructPlan()
+                  view.StructPlans = res.StructPlans?.Select(p => new ViewCrudStructPlan()
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
@@ -1499,7 +1479,7 @@ namespace Manager.Services.Specific
                 Name = res.Name,
                 Deadline = res.Deadline,
                 Description = res.Description,
-                Skills = (res.Skills == null) ? null : res.Skills.Select(p => new ViewListSkill()
+                Skills = res.Skills?.Select(p => new ViewListSkill()
                 {
                   _id = p._id,
                   Name = p.Name,
@@ -1527,11 +1507,11 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id;
+              view.UserInclude = res.UserInclude?._id;
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
-              view.Skills = (res.Skills == null) ? null : res.Skills.OrderBy(p => p.Name)
+              view.Skills = res.Skills?.OrderBy(p => p.Name)
                 .Select(p => new ViewListSkill()
                 {
                   _id = p._id,
@@ -1546,8 +1526,7 @@ namespace Manager.Services.Specific
               view.TextEndManager = res.TextEndManager;
               view.Status = res.Status;
               view.DateEnd = res.DateEnd;
-              view.Attachments = (res.Attachments == null) ? null : res.Attachments.
-                Select(p => new ViewCrudAttachmentField()
+              view.Attachments = res.Attachments?.Select(p => new ViewCrudAttachmentField()
                 {
                   Name = p.Name,
                   Url = p.Url,
@@ -1559,8 +1538,7 @@ namespace Manager.Services.Specific
                 if (res.StructPlans.Count() == 0)
                   view.StructPlans = null;
                 else
-                  view.StructPlans = (res.StructPlans == null) ? null :
-                  res.StructPlans.Select(p => new ViewCrudStructPlan()
+                  view.StructPlans = res.StructPlans?.Select(p => new ViewCrudStructPlan()
                   {
                     _id = p._id,
                     TypeResponsible = p.TypeResponsible,
@@ -1580,7 +1558,7 @@ namespace Manager.Services.Specific
                 Name = res.Name,
                 Deadline = res.Deadline,
                 Description = res.Description,
-                Skills = (res.Skills == null) ? null : res.Skills.Select(p => new ViewListSkill()
+                Skills = res.Skills?.Select(p => new ViewListSkill()
                 {
                   _id = p._id,
                   Name = p.Name,
@@ -1611,7 +1589,7 @@ namespace Manager.Services.Specific
         List<ViewPlan> result = new List<ViewPlan>();
 
         var detail = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList();
 
 
         foreach (var item in detail)
@@ -1652,7 +1630,7 @@ namespace Manager.Services.Specific
 
 
         var detailSchool = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList();
         foreach (var item in detailSchool)
         {
           foreach (var plan in item.Plans)
@@ -1691,7 +1669,7 @@ namespace Manager.Services.Specific
 
 
         var detailSkills = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList();
 
         foreach (var item in detailSkills)
         {
@@ -1758,7 +1736,7 @@ namespace Manager.Services.Specific
 
         var detail = (from monitoring in
           serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList()
                       join person in servicePerson.GetAll() on monitoring.Person._id equals person._id
                       where person.Manager._id == id
                       select monitoring
@@ -1778,15 +1756,14 @@ namespace Manager.Services.Specific
                 DateInclude = res.DateInclude,
                 Deadline = res.Deadline,
                 Description = res.Description,
-                Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                UserInclude = res.UserInclude?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1809,7 +1786,7 @@ namespace Manager.Services.Specific
 
 
         var detailSchool = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList();
         foreach (var item in detailSchool)
         {
           foreach (var plan in item.Plans)
@@ -1823,15 +1800,14 @@ namespace Manager.Services.Specific
                 DateInclude = res.DateInclude,
                 Deadline = res.Deadline,
                 Description = res.Description,
-                Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                UserInclude = res.UserInclude?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1854,7 +1830,7 @@ namespace Manager.Services.Specific
 
 
         var detailSkills = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList();
 
         foreach (var item in detailSkills)
         {
@@ -1869,15 +1845,14 @@ namespace Manager.Services.Specific
                 DateInclude = res.DateInclude,
                 Deadline = res.Deadline,
                 Description = res.Description,
-                Skills = (res.Skills == null) ? null : res.Skills
-                  .Select(p => new ViewListSkill()
+                Skills = res.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                UserInclude = (res.UserInclude == null) ? null : res.UserInclude._id,
+                UserInclude = res.UserInclude?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1929,8 +1904,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Description = view.Description,
           Deadline = view.Deadline,
-          Skills = (view.Skills == null) ? null :
-          view.Skills.Select(p => new Skill()
+          Skills = view.Skills?.Select(p => new Skill()
           {
             _id = p._id,
             Name = p.Name,
@@ -2414,7 +2388,7 @@ namespace Manager.Services.Specific
               Name = item.Name,
               Description = item.Description,
               Deadline = item.Deadline,
-              Skills = (item.Skills == null) ? null : item.Skills.Select(p => new Skill()
+              Skills = item.Skills?.Select(p => new Skill()
               {
                 _id = p._id,
                 Name = p.Name,
@@ -2438,7 +2412,7 @@ namespace Manager.Services.Specific
               StatusPlanApproved = EnumStatusPlanApproved.Open,
               Status = item.Status,
               NewAction = item.NewAction,
-              Attachments = (item.Attachments == null) ? null : item.Attachments.Select(p => new AttachmentField()
+              Attachments = item.Attachments?.Select(p => new AttachmentField()
               {
                 _idAttachment = p._idAttachment,
                 Name = p.Name,
@@ -2453,7 +2427,7 @@ namespace Manager.Services.Specific
               Name = item.Name,
               Description = item.Description,
               Deadline = item.Deadline,
-              Skills = (item.Skills == null) ? null : item.Skills.Select(p => new Skill()
+              Skills = item.Skills?.Select(p => new Skill()
               {
                 _id = p._id,
                 Name = p.Name,
@@ -2477,7 +2451,7 @@ namespace Manager.Services.Specific
               StatusPlanApproved = item.StatusPlanApproved,
               Status = item.Status,
               NewAction = item.NewAction,
-              Attachments = (item.Attachments == null) ? null : item.Attachments.Select(p => new AttachmentField()
+              Attachments = item.Attachments?.Select(p => new AttachmentField()
               {
                 _idAttachment = p._idAttachment,
                 Name = p.Name,
@@ -2513,13 +2487,13 @@ namespace Manager.Services.Specific
       try
       {
         var detail = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         var detailSchoolings = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         var detailSkillsCompany = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         if (detail == null)
           return new ViewGetPlan() { _id = idmonitoring };
@@ -2570,15 +2544,14 @@ namespace Manager.Services.Specific
             DateInclude = view.DateInclude,
             Deadline = view.Deadline,
             Description = view.Description,
-            Skills = (view.Skills == null) ? null : view.Skills
-                  .Select(p => new ViewListSkill()
+            Skills = view.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-            UserInclude = (view.UserInclude == null) ? null : view.UserInclude._id,
+            UserInclude = view.UserInclude?._id,
             TypePlan = view.TypePlan,
             _idPerson = view.IdPerson,
             NamePerson = view.NamePerson,
@@ -2602,7 +2575,7 @@ namespace Manager.Services.Specific
               Name = view.PlanNew.Name,
               Deadline = view.PlanNew.Deadline,
               Description = view.PlanNew.Description,
-              Skills = (view.PlanNew.Skills == null) ? null : view.PlanNew.Skills.Select(p => new ViewListSkill()
+              Skills = view.PlanNew.Skills?.Select(p => new ViewListSkill()
               {
                 _id = p._id,
                 Name = p.Name,
@@ -2655,15 +2628,14 @@ namespace Manager.Services.Specific
             DateInclude = view.DateInclude,
             Deadline = view.Deadline,
             Description = view.Description,
-            Skills = (view.Skills == null) ? null : view.Skills
-                  .Select(p => new ViewListSkill()
+            Skills = view.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-            UserInclude = (view.UserInclude == null) ? null : view.UserInclude._id,
+            UserInclude = view.UserInclude?._id,
             TypePlan = view.TypePlan,
             _idPerson = view.IdPerson,
             NamePerson = view.NamePerson,
@@ -2687,7 +2659,7 @@ namespace Manager.Services.Specific
               Name = view.PlanNew.Name,
               Deadline = view.PlanNew.Deadline,
               Description = view.PlanNew.Description,
-              Skills = (view.PlanNew.Skills == null) ? null : view.PlanNew.Skills.Select(p => new ViewListSkill()
+              Skills = view.PlanNew.Skills?.Select(p => new ViewListSkill()
               {
                 _id = p._id,
                 Name = p.Name,
@@ -2740,15 +2712,14 @@ namespace Manager.Services.Specific
             DateInclude = view.DateInclude,
             Deadline = view.Deadline,
             Description = view.Description,
-            Skills = (view.Skills == null) ? null : view.Skills
-                  .Select(p => new ViewListSkill()
+            Skills = view.Skills?.Select(p => new ViewListSkill()
                   {
                     _id = p._id,
                     TypeSkill = p.TypeSkill,
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-            UserInclude = (view.UserInclude == null) ? null : view.UserInclude._id,
+            UserInclude = view.UserInclude?._id,
             TypePlan = view.TypePlan,
             _idPerson = view.IdPerson,
             NamePerson = view.NamePerson,
@@ -2764,7 +2735,7 @@ namespace Manager.Services.Specific
             DateEnd = view.DateEnd,
             NewAction = view.NewAction,
             Bomb = GetBomb((DateTime.Parse(view.Deadline.ToString()) - DateTime.Now).Days),
-            Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new ViewCrudAttachmentField()
+            Attachments = view.Attachments?.Select(p => new ViewCrudAttachmentField()
             {
               _idAttachment = p._idAttachment,
               Name = p.Name,
@@ -2778,7 +2749,7 @@ namespace Manager.Services.Specific
               Name = view.PlanNew.Name,
               Deadline = view.PlanNew.Deadline,
               Description = view.PlanNew.Description,
-              Skills = (view.PlanNew.Skills == null) ? null : view.PlanNew.Skills.Select(p => new ViewListSkill()
+              Skills = view.PlanNew.Skills?.Select(p => new ViewListSkill()
               {
                 _id = p._id,
                 Name = p.Name,
@@ -2812,7 +2783,7 @@ namespace Manager.Services.Specific
         List<ViewPlan> result = new List<ViewPlan>();
 
         var detail = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList();
 
 
         foreach (var item in detail)
@@ -2853,7 +2824,7 @@ namespace Manager.Services.Specific
 
 
         var detailSchool = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList();
         foreach (var item in detailSchool)
         {
           foreach (var plan in item.Plans)
@@ -2892,7 +2863,7 @@ namespace Manager.Services.Specific
 
 
         var detailSkills = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList();
 
         foreach (var item in detailSkills)
         {
@@ -2958,7 +2929,7 @@ namespace Manager.Services.Specific
 
         var detail = (from monitoring in
           serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+        .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList()
                       join person in servicePerson.GetAll() on monitoring.Person._id equals person._id
                       where person.Manager._id == id
                       select monitoring
@@ -3003,7 +2974,7 @@ namespace Manager.Services.Specific
 
 
         var detailSchool = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList();
         foreach (var item in detailSchool)
         {
           foreach (var plan in item.Plans)
@@ -3042,7 +3013,7 @@ namespace Manager.Services.Specific
 
 
         var detailSkills = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Manager._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList();
 
         foreach (var item in detailSkills)
         {
@@ -3111,7 +3082,7 @@ namespace Manager.Services.Specific
         {
           var detail = (from monitoring in
          serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-       .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+       .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList()
                         join person in servicePerson.GetAll() on monitoring.Person._id equals person._id
                         where person.Manager._id == id
                         select monitoring
@@ -3165,7 +3136,7 @@ namespace Manager.Services.Specific
 
           var detailSchool = (from monitoring in
          serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-       .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+       .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList()
                               join person in servicePerson.GetAll() on monitoring.Person._id equals person._id
                               where person.Manager._id == id
                               select monitoring
@@ -3215,7 +3186,7 @@ namespace Manager.Services.Specific
 
           var detailSkills = (from monitoring in
          serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-       .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList()
+       .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList()
                               join person in servicePerson.GetAll() on monitoring.Person._id equals person._id
                               where person.Manager._id == id
                               select monitoring
@@ -3293,7 +3264,7 @@ namespace Manager.Services.Specific
         if (activities == 1)
         {
           var detail = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList();
 
 
           foreach (var item in detail)
@@ -3343,7 +3314,7 @@ namespace Manager.Services.Specific
         if (schooling == 1)
         {
           var detailSchool = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
-            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList();
           foreach (var item in detailSchool)
           {
             foreach (var plan in item.Plans)
@@ -3391,7 +3362,7 @@ namespace Manager.Services.Specific
         if (skillcompany == 1)
         {
           var detailSkills = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End)
-            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList();
 
           foreach (var item in detailSkills)
           {
@@ -3472,7 +3443,7 @@ namespace Manager.Services.Specific
         if (activities == 1)
         {
           var detail = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).ToList();
 
 
           foreach (var item in detail)
@@ -3515,7 +3486,7 @@ namespace Manager.Services.Specific
         if (schooling == 1)
         {
           var detailSchool = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+            .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).ToList();
           foreach (var item in detailSchool)
           {
             foreach (var plan in item.Plans)
@@ -3556,7 +3527,7 @@ namespace Manager.Services.Specific
         if (skillcompany == 1)
         {
           var detailSkills = serviceMonitoring.GetAll(p => p.StatusMonitoring == EnumStatusMonitoring.End & p.Person._id == id & p.Person.User.Name.ToUpper().Contains(filter.ToUpper()))
-            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).ToList();
+            .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).ToList();
 
           foreach (var item in detailSkills)
           {
@@ -4266,13 +4237,13 @@ namespace Manager.Services.Specific
       try
       {
         var detail = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         var detailSchoolings = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         var detailSkillsCompany = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         if (detail == null)
           return new ViewPlan() { _idAccount = serviceMonitoring._user._idAccount, _id = idmonitoring };
@@ -4404,13 +4375,13 @@ namespace Manager.Services.Specific
       try
       {
         var detail = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.Activities.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         var detailSchoolings = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.Schoolings.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         var detailSkillsCompany = serviceMonitoring.GetAll(p => p._id == idmonitoring)
-          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), Person = p.Person, _id = p._id }).FirstOrDefault();
+          .Select(p => new { Plans = p.SkillsCompany.Select(x => x.Plans), p.Person, p._id }).FirstOrDefault();
 
         if (detail == null)
           return new ViewPlanStruct() { _idAccount = serviceMonitoring._user._idAccount, _id = idmonitoring };
@@ -4617,12 +4588,6 @@ namespace Manager.Services.Specific
 
 
     #endregion
-
-
-
-
-
-
 
   }
 #pragma warning restore 1998

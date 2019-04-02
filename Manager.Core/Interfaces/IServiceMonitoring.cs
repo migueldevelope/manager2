@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -14,9 +15,9 @@ namespace Manager.Core.Interfaces
     string RemoveAllMonitoring(string idperson);
     string RemoveMonitoring(string idmonitoring);
     void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser user);
     string RemoveLastMonitoring(string idperson);
     bool ValidComments(string id);
-    string ScriptComments();
     string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment);
     string DeleteComments(string idmonitoring, string iditem, string idcomments);
     string RemoveMonitoringActivities(string idmonitoring, string idactivitie);

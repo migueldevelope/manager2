@@ -86,7 +86,7 @@ namespace Manager.Services.Auth
           _idAccount = user._idAccount
         };
 
-        serviceDictionarySystem._user = _user;
+        serviceDictionarySystem.SetUser(_user);
         ViewPerson person = new ViewPerson()
         {
           IdUser = user._id,
@@ -107,9 +107,11 @@ namespace Manager.Services.Auth
             Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name
           }).ToList();
 
-        // TODO: ajustar melhor o LOG de authenticação
         if (registerLog)
+        {
+          serviceLog.SetUser(_user);
           LogSave(servicePerson.GetFreeNewVersion(p => p.User._id == user._id).Result);
+        }
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
         // Token

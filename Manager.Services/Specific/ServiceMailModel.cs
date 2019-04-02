@@ -278,79 +278,19 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Checkpoint Mail
-    public MailModel CheckpointApproval(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointapproval").Result;
-        return model ?? CheckpointApprovalDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel CheckpointResult(string path)
+    public MailModel CheckpointResultApproved(string path)
     {
       try
       {
         MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointresult").Result;
-        return model ?? CheckpointResultDefault(path);
+        return model ?? CheckpointResultApprovedDefault(path);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public MailModel CheckpointResultDisapproved(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointresultdisapproved").Result;
-        return model ?? CheckpointResultDisapprovedDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel CheckpointResultPerson(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointresultperson").Result;
-        return model ?? CheckpointResultPersonDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel CheckpointSeq1(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointseq1").Result;
-        return model ?? CheckpointSeq1Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel CheckpointSeq2(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointseq2").Result;
-        return model ?? CheckpointSeq2Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel CheckpointResultDefault(string path)
+    private MailModel CheckpointResultApprovedDefault(string path)
     {
       try
       {
@@ -365,6 +305,18 @@ namespace Manager.Services.Specific
         // Insert
         model = serviceMailModel.InsertNewVersion(model).Result;
         return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel CheckpointResultDisapproved(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointresultdisapproved").Result;
+        return model ?? CheckpointResultDisapprovedDefault(path);
       }
       catch (Exception e)
       {
@@ -392,6 +344,18 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public MailModel CheckpointResultPerson(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointresultperson").Result;
+        return model ?? CheckpointResultPersonDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private MailModel CheckpointResultPersonDefault(string path)
     {
       try
@@ -413,21 +377,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel CheckpointApprovalDefault(string path)
+    // TODO: Revisão de outros e-mails de Checkpoint
+    public MailModel CheckpointSeq1(string path)
     {
       try
       {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do checkpointapproval.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Aprovação de checkpointapproval",
-          Name = "checkpointapproval",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointseq1").Result;
+        return model ?? CheckpointSeq1Default(path);
       }
       catch (Exception e)
       {
@@ -451,6 +407,18 @@ namespace Manager.Services.Specific
         // Insert
         model = serviceMailModel.InsertNewVersion(model).Result;
         return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel CheckpointSeq2(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointseq2").Result;
+        return model ?? CheckpointSeq2Default(path);
       }
       catch (Exception e)
       {
@@ -495,54 +463,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public MailModel MonitoringApprovalManager(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringapprovalmanager").Result;
-        return model ?? MonitoringApprovalManagerDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel MonitoringDisApproval(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringdisapproval").Result;
-        return model ?? MonitoringDisapprovalDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel MonitoringSeq1(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringseq1").Result;
-        return model ?? MonitoringSeq1Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel MonitoringSeq1Person(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringseq1_person").Result;
-        return model ?? MonitoringSeq1PersonDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     private MailModel MonitoringApprovalDefault(string path)
     {
       try
@@ -564,6 +484,18 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public MailModel MonitoringApprovalManager(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringapprovalmanager").Result;
+        return model ?? MonitoringApprovalManagerDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private MailModel MonitoringApprovalManagerDefault(string path)
     {
       try
@@ -579,6 +511,52 @@ namespace Manager.Services.Specific
         // Insert
         model = serviceMailModel.InsertNewVersion(model).Result;
         return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel MonitoringDisapproval(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringdisapproval").Result;
+        return model ?? MonitoringDisapprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel MonitoringDisapprovalDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá {Manager},<br>Seu colaborador {Person} acaba de propor uma revisão nos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre - se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Revisão do Monitoramento | Monitoring",
+          Name = "monitoringdisapproval",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    // TODO: Revisão de outros e-mails de Monitoring
+    public MailModel MonitoringSeq1(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringseq1").Result;
+        return model ?? MonitoringSeq1Default(path);
       }
       catch (Exception e)
       {
@@ -608,21 +586,12 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel MonitoringDisapprovalDefault(string path)
+    public MailModel MonitoringSeq1Person(string path)
     {
       try
       {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Olá {Manager},<br>Seu colaborador {Person} acaba de propor uma revisão nos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre - se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='https://analisa.solutions/'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
-          Subject = "Notificação de Revisão do Monitoramento | Monitoring",
-          Name = "monitoringdisapproval",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringseq1_person").Result;
+        return model ?? MonitoringSeq1PersonDefault(path);
       }
       catch (Exception e)
       {
@@ -741,7 +710,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>O seu colaborador {Person} fez alguns comentários no encerramento do embarque.</br>Por favor, verifique o que foi redigido e conclua esta etapa.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
+          Message = "Olá <strong>{Manager}</strong></br></br>O seu colaborador { Person } fez alguns comentários no encerramento do embarque.</br></br>Não deixe para mais tarde, <a href='https://analisa.solutions/'>clique aqui</a> e olhe os comentários que foram redigidos.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Revisão de Embarque | OnBoarding",
           Name = "onboardingdisapproval",
           Link = path
@@ -841,7 +810,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>O seu colaborador {Person} fez alguns comentários no encerramento do embarque para troca de cargo.</br>Por favor, verifique o que foi redigido e conclua esta etapa.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
+          Message = "Olá <strong>{Manager}</strong></br></br>O seu colaborador { Person } fez alguns comentários no encerramento do embarque para troca de cargo.</br></br>Não deixe para mais tarde, <a href='https://analisa.solutions/'>clique aqui</a> e olhe os comentários que foram redigidos.</br></br>#VamosSerMaisFluidos",
           Subject = "Notificação de Revisão de Embarque | OnBoarding",
           Name = "onboardingdisapprovaloccupation",
           Link = path
@@ -1314,63 +1283,6 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Old
-    public MailModel DefaultExpectationsPendingManagerOld(string path)
-    {
-      try
-      {
-        var model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "<html><head><style>#customers { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%; }#customers td, #customers th {border: 1px solid #ddd; padding: 8px; }#customers tr:nth-child(even){background-color: #f2f2f2;}#customers th{padding-top: 12px;padding-bottom: 12px; text-align: left; background-color: #4598dc; color: white;}</style></head><body><table id='customers'><tr><td colspan='2' style='font-size: medium; font-weight: bold; text-align: center;'>Acordos de Expectativas Pendentes</td></tr><tr><td colspan='2'>Sr(a). <strong>{Person}</strong>, abaixo estão relacionados os acordos de expectativas dos seus funcionários que ainda não tem registro de conclusão, por favor acesse o sistema e realize estes acordos. </tr><tr><th>Funcionário</th><th>Situação</th></tr>{List}<tr align='center'><td colspan='2'><a href='https://analisa.solutions/'>Clique aqui para acessar o sistema</a></tr><tr align='center'><td colspan='2'>Obrigado por sua atenção.</tr></body></html>",
-          Subject = "Pendência de Acordo de Expectativas",
-          Name = "expectationspendingmanager",
-          Link = path
-        };
-        // Insert
-        serviceMailModel.Insert(model);
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingPendingEmployeeOld(string path)
-    {
-      try
-      {
-        var model = serviceMailModel.GetAll(p => p.Name == "expectationspendingemployee");
-        if (model.Count() == 0)
-          return DefaultExpectationsPendingEmployeeOld(path);
-        else
-          return model.FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel DefaultExpectationsPendingEmployeeOld(string path)
-    {
-      try
-      {
-        var model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "<html><head><style>body{font-family: 'Segoe UI', Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%;}</style></head><body>Olá <strong>{Person}</strong>,<br /><br />Existe um acordo de expectativa pendende de sua aprovação, por favor, <a href='https://analisa.solutions/'>clique aqui</a> para acessar o sistema.<br /><br />Obrigado por sua atenção.</body></html>",
-          Subject = "Pendência de Acordo de Expectativas",
-          Name = "expectationspendingemployee",
-          Link = path
-        };
-        // Insert
-        serviceMailModel.Insert(model);
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     public string NewOld(MailModel view)
     {
       try

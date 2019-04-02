@@ -19,8 +19,8 @@ namespace Manager.Core.Interfaces
 
     #region Old
     //MailModel DefaultAutoManagerOld(string path);
-    MailModel DefaultExpectationsPendingManagerOld(string path);
-    MailModel DefaultExpectationsPendingEmployeeOld(string path);
+    //MailModel DefaultExpectationsPendingManagerOld(string path);
+    //MailModel DefaultExpectationsPendingEmployeeOld(string path);
 
     string NewOld(MailModel view);
     string UpdateOld(MailModel view);
