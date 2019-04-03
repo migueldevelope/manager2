@@ -841,7 +841,7 @@ namespace Manager.Services.Specific
           Attachments = certification.Attachments.Select(p => new ViewCrudAttachmentField() { _idAttachment = p._idAttachment, Name = p.Name, Url = p.Url }).ToList(),
           ListPersons = certification.ListPersons.Select(p => new ViewCrudCertificationPerson()
           {
-            _id = p.Person._id,
+            _id = p._id,
             Name = p.Person.User.Name,
             Mail = p.Person.User.Mail,
             Comments = p.Comments,
@@ -1012,7 +1012,7 @@ namespace Manager.Services.Specific
           Attachments = certification.Attachments.Select(p => new ViewCrudAttachmentField() { _idAttachment = p._idAttachment, Name = p.Name, Url = p.Url }).ToList(),
           ListPersons = certification.ListPersons.Select(p => new ViewCrudCertificationPerson()
           {
-            _id = p.Person._id,
+            _id = p._id,
             Name = p.Person.User.Name,
             Mail = p.Person.User.Mail,
             Comments = p.Comments,

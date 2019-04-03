@@ -124,7 +124,9 @@ namespace Manager.Services.Specific
               item.TypeCheckpoint = checkpoint.TypeCheckpoint;
               item.OccupationName = checkpoint.Occupation?.Name;
             }
-            detail.Add(item);
+            if (checkpoint.TypeCheckpoint != EnumCheckpoint.Disapproved)
+              detail.Add(item);
+
           }
         }
         else
@@ -197,7 +199,7 @@ namespace Manager.Services.Specific
           .Select(p => new ViewListCheckpoint()
           {
             _id = p._id,
-            _idPerson =p.Person._id,
+            _idPerson = p.Person._id,
             Name = p.Person.User.Name,
             StatusCheckpoint = p.StatusCheckpoint,
             TypeCheckpoint = p.TypeCheckpoint,
@@ -307,7 +309,7 @@ namespace Manager.Services.Specific
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p._id == id).Result;
         if (checkpoint == null)
           return null;
-          //throw new Exception("Checkpoint not available!");
+        //throw new Exception("Checkpoint not available!");
 
         if (checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open)
         {
@@ -517,7 +519,7 @@ namespace Manager.Services.Specific
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p.Person._id == idperson && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
         if (checkpoint == null)
           return null;
-          //throw new Exception("Checkpoint not available!");
+        //throw new Exception("Checkpoint not available!");
 
         LogSave(idperson, string.Format("Person ended | {0}", checkpoint._id));
 
