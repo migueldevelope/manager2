@@ -6,6 +6,5 @@ namespace Manager.Views.BusinessList
   {
     public string NameItem { get; set; }
     public bool Manager { get; set; }
-    public EnumItemCertification ItemCertificationView { get; set; }
   }
 }

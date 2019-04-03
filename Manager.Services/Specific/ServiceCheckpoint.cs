@@ -329,6 +329,7 @@ namespace Manager.Services.Specific
           DateEnd = checkpoint.DateEnd,
           StatusCheckpoint = checkpoint.StatusCheckpoint,
           TypeCheckpoint = checkpoint.TypeCheckpoint,
+          Comments = checkpoint.Comments,
           Person = new ViewInfoPerson()
           {
             _id = checkpoint.Person._id,
@@ -452,6 +453,8 @@ namespace Manager.Services.Specific
       try
       {
         Checkpoint checkpoint = serviceCheckpoint.GetNewVersion(p => p._id == view._id && p.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+        checkpoint.Comments = view.Comments;
+
         if (checkpoint == null)
           throw new Exception("Checkpoint not available!");
 

@@ -577,8 +577,7 @@ namespace Manager.Services.Specific
               _id = certification._id,
               Name = certification.Person.User.Name,
               NameItem = certification.CertificationItem.Name,
-              Manager = false,
-              ItemCertificationView = certification.CertificationItem.ItemCertification
+              Manager = false
             });
           }
 
@@ -592,8 +591,7 @@ namespace Manager.Services.Specific
             _id = item._id,
             Name = item.Person.User.Name,
             NameItem = item.CertificationItem.Name,
-            Manager = true,
-            ItemCertificationView = item.CertificationItem.ItemCertification
+            Manager = true
           });
         };
 
@@ -625,7 +623,11 @@ namespace Manager.Services.Specific
           Name = p.CertificationItem.Name,
           Concept = p.CertificationItem.Concept,
           IdItem = p.CertificationItem.IdItem,
-          ItemCertification = p.CertificationItem.ItemCertification
+          ItemCertification = p.CertificationItem.ItemCertification,
+          ItemCertificationView = p.CertificationItem.ItemCertification == EnumItemCertification.SkillCompanyHard ? EnumItemCertificationView.Company :
+          p.CertificationItem.ItemCertification == EnumItemCertification.SkillCompanySoft ? EnumItemCertificationView.Company :
+          p.CertificationItem.ItemCertification == EnumItemCertification.SkillGroupHard ? EnumItemCertificationView.Hard :
+          p.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationHard ? EnumItemCertificationView.Hard : EnumItemCertificationView.Soft
         }).ToList();
 
         total = result.Count();
