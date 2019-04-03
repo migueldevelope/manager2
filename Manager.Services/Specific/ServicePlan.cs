@@ -419,7 +419,7 @@ namespace Manager.Services.Specific
         ViewPerson view = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
-          //client.BaseAddress = new Uri(link);
+          client.BaseAddress = new Uri(link);
           //var data = new
           //{
           //  mail = person.User.Mail,
