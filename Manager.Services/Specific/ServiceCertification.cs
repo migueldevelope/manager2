@@ -345,7 +345,7 @@ namespace Manager.Services.Specific
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+                        new MailLogAddress(person.User.Mail, person.User.Name)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,

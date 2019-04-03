@@ -313,21 +313,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    private string UpdatePlan(Plan plan, Person manager)
+    private string UpdatePlan(Plan plan, Person person)
     {
       try
       {
-        LogSave(manager._id, "Plan Process Update");
+        LogSave(person._id, "Plan Process Update");
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
         {
-          if (user._idPerson == manager._id)
+          if (user._idPerson == person._id)
           {
-            //var person = servicePerson.GetAll(p => p._id == persons._id).FirstOrDefault();
-            //Mail(manager.Manager);
+            var manager = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault();
+            Mail(manager);
           }
           else
           {
-            Mail(manager);
+            Mail(person);
           }
         }
         servicePlan.Update(plan, null);

@@ -1582,8 +1582,11 @@ namespace Manager.Services.Specific
           .Select(p => new ViewListQuestions()
           {
             _id = p._id,
-            Name = p.Name
-          }).ToList();
+            Name = p.Name,
+            Content = p.Content,
+            TypeRotine = p.TypeRotine,
+            Order = p.Order
+          }).OrderBy(p => p.TypeRotine).ThenBy(p => p.Order).ToList();
       }
       catch (Exception e)
       {
@@ -3439,6 +3442,7 @@ namespace Manager.Services.Specific
           {
             _id = p._id,
             Name = p.Name,
+            Content = p.Content
           })
           .ToList();
       }
