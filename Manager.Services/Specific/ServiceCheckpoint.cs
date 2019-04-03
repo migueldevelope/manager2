@@ -124,7 +124,11 @@ namespace Manager.Services.Specific
               item.TypeCheckpoint = checkpoint.TypeCheckpoint;
               item.OccupationName = checkpoint.Occupation?.Name;
             }
-            if (checkpoint.TypeCheckpoint != EnumCheckpoint.Disapproved)
+            else
+              checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
+            
+            
+            if (checkpoint?.TypeCheckpoint != EnumCheckpoint.Disapproved)
               detail.Add(item);
 
           }

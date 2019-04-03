@@ -572,7 +572,14 @@ namespace Manager.Services.Specific
           p => p.ListPersons.Contains(item)).FirstOrDefault();
           if (certification != null)
           {
-            list.Add(new ViewListCertificationPerson() { _id = certification._id, Name = certification.Person.User.Name, NameItem = certification.CertificationItem.Name, Manager = false });
+            list.Add(new ViewListCertificationPerson()
+            {
+              _id = certification._id,
+              Name = certification.Person.User.Name,
+              NameItem = certification.CertificationItem.Name,
+              Manager = false,
+              ItemCertificationView = certification.CertificationItem.ItemCertification
+            });
           }
 
         };
@@ -580,7 +587,14 @@ namespace Manager.Services.Specific
         //load certification manager
         foreach (var item in serviceCertification.GetAll(p => p.Person.Manager._id == idperson & p.StatusCertification == EnumStatusCertification.Wait).ToList())
         {
-          list.Add(new ViewListCertificationPerson() { _id = item._id, Name = item.Person.User.Name, NameItem = item.CertificationItem.Name, Manager = true });
+          list.Add(new ViewListCertificationPerson()
+          {
+            _id = item._id,
+            Name = item.Person.User.Name,
+            NameItem = item.CertificationItem.Name,
+            Manager = true,
+            ItemCertificationView = item.CertificationItem.ItemCertification
+          });
         };
 
 
@@ -1224,7 +1238,7 @@ namespace Manager.Services.Specific
           textEnd.Content = textEnd.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
             .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
 
-        var personLocal = servicePerson.GetAll(p => p._id == person._id ).FirstOrDefault();
+        var personLocal = servicePerson.GetAll(p => p._id == person._id).FirstOrDefault();
         var cerPerson = new CertificationPerson()
         {
           Person = new ViewListPerson()
@@ -1346,7 +1360,7 @@ namespace Manager.Services.Specific
 
 
     #endregion
-    
+
   }
 #pragma warning restore 1998
 }
