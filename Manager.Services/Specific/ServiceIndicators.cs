@@ -5,6 +5,7 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -342,17 +343,17 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<dynamic> ExportStatusMonitoring(string idperson)
+    public List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson)
     {
       try
       {
 
         var list = monitoringService.GetAll(p => p.Person._id == idperson).ToList();
-        List<dynamic> result = new List<dynamic>();
+        List<ViewExportStatusMonitoring> result = new List<ViewExportStatusMonitoring>();
 
         foreach (var item in list)
         {
-          result.Add(new
+          result.Add(new ViewExportStatusMonitoring
           {
             IdMonitoring = item._id,
             NamePerson = item.Person.User.Name,
@@ -370,21 +371,20 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<dynamic> ExportStatusOnboarding(string idperson)
+    public List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
     {
       try
       {
 
         var list = onboardingService.GetAll(p => p.Person._id == idperson).ToList();
-        List<dynamic> result = new List<dynamic>();
+        List<ViewExportStatusOnboarding> result = new List<ViewExportStatusOnboarding>();
 
         foreach (var item in list)
         {
-          result.Add(new
+          result.Add(new ViewExportStatusOnboarding
           {
             IdOnboarding = item._id,
             NamePerson = item.Person.User.Name,
-
             Status = item.StatusOnBoarding,
             Occupation = item.Person.Occupation.Name,
             DataEnd = item.DateEndEnd
@@ -399,17 +399,17 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<dynamic> ExportStatusCertification()
+    public List<ViewExportStatusCertification> ExportStatusCertification()
     {
       try
       {
 
         var list = certificationService.GetAll(p => p.StatusCertification != EnumStatusCertification.Open).ToList();
-        List<dynamic> result = new List<dynamic>();
+        List<ViewExportStatusCertification> result = new List<ViewExportStatusCertification>();
 
         foreach (var item in list)
         {
-          result.Add(new
+          result.Add(new ViewExportStatusCertification
           {
             NameManager = item.Person.Manager.Name,
             NamePerson = item.Person.User.Name,
@@ -430,23 +430,23 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<dynamic> ExportStatusCertification(string idperson)
+    public List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson)
     {
       try
       {
 
         var list = certificationService.GetAll(p => p.Person._id == idperson & p.StatusCertification != EnumStatusCertification.Open).ToList();
-        List<dynamic> result = new List<dynamic>();
+        List<ViewExportStatusCertificationPerson> result = new List<ViewExportStatusCertificationPerson>();
 
         foreach (var item in list)
         {
-          result.Add(new
+          result.Add(new ViewExportStatusCertificationPerson
           {
             IdCertification = item._id,
             NamePerson = item.Person.User.Name,
             NameItem = item.CertificationItem.Name,
             Status = item.StatusCertification,
-            item.DateEnd
+            DateEnd = item.DateEnd
           });
         }
 
@@ -458,7 +458,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<dynamic> ExportStatusOnboarding()
+    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
     {
       try
       {
@@ -466,7 +466,7 @@ namespace Manager.Services.Specific
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, OnBoardings = onboardingService.GetAll(x => x.Person._id == p._id).ToList() })
         .ToList();
-        List<dynamic> result = new List<dynamic>();
+        List<ViewExportStatusOnboardingGeral> result = new List<ViewExportStatusOnboardingGeral>();
 
         foreach (var rows in list)
         {
@@ -474,7 +474,7 @@ namespace Manager.Services.Specific
           {
             foreach (var item in rows.OnBoardings)
             {
-              result.Add(new
+              result.Add(new ViewExportStatusOnboardingGeral
               {
                 NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                 NamePerson = item.Person.User.Name,
@@ -507,7 +507,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<dynamic> ExportStatusCheckpoint()
+    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
     {
       try
       {
@@ -515,19 +515,19 @@ namespace Manager.Services.Specific
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
         .ToList();
-        List<dynamic> result = new List<dynamic>();
+        List<ViewExportStatusCheckpoint> result = new List<ViewExportStatusCheckpoint>();
 
         foreach (var item in list)
         {
-          result.Add(new
+          result.Add(new ViewExportStatusCheckpoint
           {
             NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
             NamePerson = item.Person.User.Name,
             Status = item.Checkpoint == null ? "Aguardando para iniciar" :
               item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
                 item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
-            item.Checkpoint?.DateBegin,
-            item.Checkpoint?.DateEnd,
+            DateBegin = item.Checkpoint?.DateBegin,
+            DateEnd = item.Checkpoint?.DateEnd,
             Occupation = item.Person.Occupation.Name,
             Result = item.Checkpoint == null ? "Não iniciado" :
               item.Checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
@@ -543,7 +543,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<dynamic> ExportStatusMonitoring()
+    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
     {
       try
       {
@@ -551,7 +551,7 @@ namespace Manager.Services.Specific
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Monitorings = monitoringService.GetAll(x => x.Person._id == p._id).ToList() })
         .ToList();
-        List<dynamic> result = new List<dynamic>();
+        List<ViewExportStatusMonitoringGeral> result = new List<ViewExportStatusMonitoringGeral>();
 
         foreach (var rows in list)
         {
@@ -559,7 +559,7 @@ namespace Manager.Services.Specific
           {
             foreach (var item in rows.Monitorings)
             {
-              result.Add(new
+              result.Add(new ViewExportStatusMonitoringGeral
               {
                 NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                 NamePerson = item.Person.User.Name,
@@ -591,7 +591,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<dynamic> ExportStatusPlan()
+    public List<ViewExportStatusPlan> ExportStatusPlan()
     {
       try
       {
@@ -600,7 +600,7 @@ namespace Manager.Services.Specific
         .ToList().Select(p => new { Person = p, Monitorings = monitoringService.GetAll(x => x.Person._id == p._id).ToList() })
         .ToList();
 
-        List<dynamic> result = new List<dynamic>();
+        List<ViewExportStatusPlan> result = new List<ViewExportStatusPlan>();
 
         foreach (var item in list)
         {
@@ -612,18 +612,18 @@ namespace Manager.Services.Specific
               {
                 foreach (var plan in rows.Plans)
                 {
-                  result.Add(new
+                  result.Add(new ViewExportStatusPlan
                   {
                     NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                     NamePerson = item.Person.User.Name,
                     What = rows.Schooling.Name,
-                    plan?.Description,
-                    plan.Deadline,
+                    Description = plan?.Description,
+                    Deadline = plan.Deadline,
                     Status = plan == null ? "Em aberto" :
                       plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
                     Obs = plan?.TextEnd,
-                    plan?.DateEnd
+                    DateEnd = plan?.DateEnd
                   });
                 }
               }
@@ -632,18 +632,18 @@ namespace Manager.Services.Specific
               {
                 foreach (var plan in rows.Plans)
                 {
-                  result.Add(new
+                  result.Add(new ViewExportStatusPlan
                   {
                     NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                     NamePerson = item.Person.User.Name,
                     What = rows.Skill.Name,
-                    plan?.Description,
-                    plan.Deadline,
+                    Description = plan?.Description,
+                    Deadline = plan.Deadline,
                     Status = plan == null ? "Em aberto" :
                       plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
                     Obs = plan?.TextEnd,
-                    plan?.DateEnd
+                    DateEnd = plan?.DateEnd
                   });
                 }
               }
@@ -652,18 +652,18 @@ namespace Manager.Services.Specific
               {
                 foreach (var plan in rows.Plans)
                 {
-                  result.Add(new
+                  result.Add(new ViewExportStatusPlan
                   {
                     NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
                     NamePerson = item.Person.User.Name,
                     What = rows.Activities.Name,
-                    plan?.Description,
-                    plan.Deadline,
+                    Description = plan?.Description,
+                    Deadline = plan.Deadline,
                     Status = plan == null ? "Em aberto" :
                       plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         plan.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
                     Obs = plan?.TextEnd,
-                    plan?.DateEnd
+                    DateEnd = plan?.DateEnd
                   });
                 }
               }
@@ -786,14 +786,14 @@ namespace Manager.Services.Specific
     }
 
 
-    public IEnumerable<dynamic> ChartOnboarding()
+    public IEnumerable<ViewChartOnboarding> ChartOnboarding()
     {
       try
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-        .GroupBy(p => p.OnBoarding == null ? EnumStatusOnBoarding.WaitBegin : p.OnBoarding.StatusOnBoarding).Select(x => new
+        .GroupBy(p => p.OnBoarding == null ? EnumStatusOnBoarding.WaitBegin : p.OnBoarding.StatusOnBoarding).Select(x => new ViewChartOnboarding
         {
           Status = x.Key,
           Count = x.Count()
@@ -807,14 +807,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<dynamic> ChartOnboardingRealized()
+    public IEnumerable<ViewChartStatus> ChartOnboardingRealized()
     {
       try
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
        .ToList().Select(p => new { Person = p, OnBoarding = onboardingService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-       .GroupBy(p => p.OnBoarding == null ? "Não Realizado" : (p.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado")).Select(x => new
+       .GroupBy(p => p.OnBoarding == null ? "Não Realizado" : (p.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
        {
          Status = x.Key,
          Count = x.Count()
@@ -828,14 +828,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<dynamic> ChartMonitoring()
+    public IEnumerable<ViewChartMonitoring> ChartMonitoring()
     {
       try
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-        .GroupBy(p => p.Monitoring == null ? EnumStatusMonitoring.Open : p.Monitoring.StatusMonitoring).Select(x => new
+        .GroupBy(p => p.Monitoring == null ? EnumStatusMonitoring.Open : p.Monitoring.StatusMonitoring).Select(x => new ViewChartMonitoring
         {
           Status = x.Key,
           Count = x.Count()
@@ -849,14 +849,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<dynamic> ChartMonitoringRealized()
+    public IEnumerable<ViewChartStatus> ChartMonitoringRealized()
     {
       try
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
        .ToList().Select(p => new { Person = p, Monitoring = monitoringService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-       .GroupBy(p => p.Monitoring == null ? "Não Realizado" : (p.Monitoring.StatusMonitoring == EnumStatusMonitoring.End ? "Realizado" : "Não Realizado")).Select(x => new
+       .GroupBy(p => p.Monitoring == null ? "Não Realizado" : (p.Monitoring.StatusMonitoring == EnumStatusMonitoring.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
        {
          Status = x.Key,
          Count = x.Count()
@@ -870,14 +870,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<dynamic> ChartCheckpoint()
+    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint()
     {
       try
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-        .GroupBy(p => p.Checkpoint == null ? EnumStatusCheckpoint.Open : p.Checkpoint.StatusCheckpoint).Select(x => new
+        .GroupBy(p => p.Checkpoint == null ? EnumStatusCheckpoint.Open : p.Checkpoint.StatusCheckpoint).Select(x => new ViewChartCheckpoint
         {
           Status = x.Key,
           Count = x.Count()
@@ -891,14 +891,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<dynamic> ChartCheckpointRealized()
+    public IEnumerable<ViewChartStatus> ChartCheckpointRealized()
     {
       try
       {
 
         var list = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
        .ToList().Select(p => new { Person = p, Checkpoint = checkpointService.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-       .GroupBy(p => p.Checkpoint == null ? "Não Realizado" : (p.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End ? "Realizado" : "Não Realizado")).Select(x => new
+       .GroupBy(p => p.Checkpoint == null ? "Não Realizado" : (p.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
        {
          Status = x.Key,
          Count = x.Count()
@@ -912,7 +912,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<dynamic> ChartPlan()
+    public IEnumerable<ViewChartPlan> ChartPlan()
     {
       try
       {
@@ -964,7 +964,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        return result.GroupBy(p => p.Status).Select(x => new
+        return result.GroupBy(p => p.Status).Select(x => new ViewChartPlan
         {
           Status = x.Key,
           Count = x.Count()
@@ -977,7 +977,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<dynamic> ChartPlanRealized()
+    public IEnumerable<ViewChartStatus> ChartPlanRealized()
     {
       try
       {
@@ -1029,7 +1029,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        return result.GroupBy(p => p.Status).Select(x => new
+        return result.GroupBy(p => p.Status).Select(x => new ViewChartStatus
         {
           Status = x.Key,
           Count = x.Count()

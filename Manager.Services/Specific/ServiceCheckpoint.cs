@@ -535,7 +535,7 @@ namespace Manager.Services.Specific
             TypeJourney = checkpoint.Person.TypeJourney,
             Occupation = checkpoint.Person.Occupation.Name,
             Name = checkpoint.Person.User.Name,
-            Manager = checkpoint.Person.Manager.Name,
+            Manager = checkpoint.Person.Manager?.Name,
             Company = new ViewListCompany() { _id = checkpoint.Person.Company._id, Name = checkpoint.Person.Company.Name },
             Establishment = (checkpoint.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = checkpoint.Person.Establishment._id, Name = checkpoint.Person.Establishment.Name },
             Registration = checkpoint.Person.Registration,

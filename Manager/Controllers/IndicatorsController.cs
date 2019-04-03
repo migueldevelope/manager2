@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -68,7 +69,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportonboarding")]
-    public List<dynamic> ExportStatusOnboarding()
+    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
     {
      return service.ExportStatusOnboarding();
     }
@@ -76,7 +77,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportstatuscertification")]
-    public List<dynamic> ExportStatusCertification()
+    public List<ViewExportStatusCertification> ExportStatusCertification()
     {
       return service.ExportStatusCertification();
     }
@@ -84,7 +85,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportstatuscertification/{idperson}")]
-    public List<dynamic> ExportStatusCertification(string idperson)
+    public List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson)
     {
       return service.ExportStatusCertification(idperson);
     }
@@ -92,14 +93,14 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportmonitoring")]
-    public List<dynamic> ExportStatusMonitoring()
+    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
     {
       return service.ExportStatusMonitoring();
     }
 
     [HttpGet]
     [Route("exportonboarding/{idperson}")]
-    public List<dynamic> ExportStatusOnboarding(string idperson)
+    public List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
     {
       return service.ExportStatusOnboarding(idperson);
     }
@@ -107,7 +108,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportmonitoring/{idperson}")]
-    public List<dynamic> ExportStatusMonitoring(string idperson)
+    public List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson)
     {
       return service.ExportStatusMonitoring(idperson);
     }
@@ -115,7 +116,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportcheckpoint")]
-    public List<dynamic> ExportStatusCheckpoint()
+    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
     {
       return service.ExportStatusCheckpoint();
     }
@@ -123,7 +124,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportplan")]
-    public List<dynamic> ExportStatusPlan()
+    public List<ViewExportStatusPlan> ExportStatusPlan()
     {
       return service.ExportStatusPlan();
     }
@@ -131,7 +132,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartonboarding")]
-    public IEnumerable<dynamic> ChartOnboarding()
+    public IEnumerable<ViewChartOnboarding> ChartOnboarding()
     {
       return service.ChartOnboarding();
     }
@@ -139,7 +140,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartmonitoring")]
-    public IEnumerable<dynamic> ChartMonitoring()
+    public IEnumerable<ViewChartMonitoring> ChartMonitoring()
     {
       return service.ChartMonitoring();
     }
@@ -147,7 +148,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartcheckpoint")]
-    public IEnumerable<dynamic> ChartCheckpoint()
+    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint()
     {
       return service.ChartCheckpoint();
     }
@@ -155,7 +156,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartplan")]
-    public IEnumerable<dynamic> ChartPlan()
+    public IEnumerable<ViewChartPlan> ChartPlan()
     {
       return service.ChartPlan();
     }
@@ -163,7 +164,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartmonitoringrealized")]
-    public IEnumerable<dynamic> ChartMonitoringRealized()
+    public IEnumerable<ViewChartStatus> ChartMonitoringRealized()
     {
       return service.ChartMonitoringRealized();
     }
@@ -171,7 +172,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartcheckpointrealized")]
-    public IEnumerable<dynamic> ChartCheckpointRealized()
+    public IEnumerable<ViewChartStatus> ChartCheckpointRealized()
     {
       return service.ChartCheckpointRealized();
     }
@@ -179,7 +180,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartplanrealized")]
-    public IEnumerable<dynamic> ChartPlanRealized()
+    public IEnumerable<ViewChartStatus> ChartPlanRealized()
     {
       return service.ChartPlanRealized();
     }
@@ -187,7 +188,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartonboardingrealized")]
-    public IEnumerable<dynamic> ChartOnboardingRealized()
+    public IEnumerable<ViewChartStatus> ChartOnboardingRealized()
     {
       return service.ChartOnboardingRealized();
     }

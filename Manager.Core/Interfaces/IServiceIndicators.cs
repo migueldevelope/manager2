@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Views;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,29 +20,29 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudPerson(string idperson);
     List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
     //string[] ExportStatusOnboarding(ref long total, string filter, int count, int page);
-    List<dynamic> ExportStatusOnboarding();
-    List<dynamic> ExportStatusMonitoring();
-    List<dynamic> ExportStatusOnboarding(string idperson);
-    List<dynamic> ExportStatusMonitoring(string idperson);
-    List<dynamic> ExportStatusCheckpoint();
-    List<dynamic> ExportStatusPlan();
-    List<dynamic> ExportStatusCertification();
-    List<dynamic> ExportStatusCertification(string idperson);
+    List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding();
+    List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring();
+    List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson);
+    List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson);
+    List<ViewExportStatusCheckpoint> ExportStatusCheckpoint();
+    List<ViewExportStatusPlan> ExportStatusPlan();
+    List<ViewExportStatusCertification> ExportStatusCertification();
+    List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson);
 
-    IEnumerable<dynamic> ChartOnboarding();
+    IEnumerable<ViewChartOnboarding> ChartOnboarding();
 
-    IEnumerable<dynamic> ChartOnboardingRealized();
+    IEnumerable<ViewChartStatus> ChartOnboardingRealized();
 
-    IEnumerable<dynamic> ChartMonitoring();
+    IEnumerable<ViewChartMonitoring> ChartMonitoring();
 
-    IEnumerable<dynamic> ChartCheckpoint();
+    IEnumerable<ViewChartCheckpoint> ChartCheckpoint();
 
-    IEnumerable<dynamic> ChartPlan();
+    IEnumerable<ViewChartPlan> ChartPlan();
 
-    IEnumerable<dynamic> ChartMonitoringRealized();
+    IEnumerable<ViewChartStatus> ChartMonitoringRealized();
 
-    IEnumerable<dynamic> ChartCheckpointRealized();
+    IEnumerable<ViewChartStatus> ChartCheckpointRealized();
 
-    IEnumerable<dynamic> ChartPlanRealized();
+    IEnumerable<ViewChartStatus> ChartPlanRealized();
   }
 }
