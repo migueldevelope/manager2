@@ -141,181 +141,258 @@ namespace Manager.Services.Specific
         var idresolution = "5b6c4f47d9090156f08775aa";
 
         // Parameter
+        Parameter parameterLocal;
         foreach (Parameter parameter in serviceParameter.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          parameter._id = ObjectId.GenerateNewId().ToString();
-          parameter._idAccount = _user._idAccount;
-          serviceParameter.InsertFreeNewVersion(parameter);
+          parameterLocal = new Parameter()
+          {
+            Content = parameter.Content,
+            Help = parameter.Help,
+            Key = parameter.Key,
+            Name = parameter.Name,
+            Status = parameter.Status,
+            _idAccount = _user._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          };
+          Parameter result = serviceParameter.InsertFreeNewVersion(parameterLocal).Result;
         }
 
+        TextDefault textDefaultLocal;
         // Text default
-        foreach (TextDefault item in serviceTextDefault.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        foreach (TextDefault textDefault in serviceTextDefault.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          item.Template = new TextDefault()
+          textDefaultLocal = new TextDefault()
           {
-            _id = item._id,
-            _idAccount = item._idAccount,
-            Company = item.Company,
-            Name = item.Name,
-            TypeText = item.TypeText,
-            Content = item.Content,
-            Status = item.Status,
-            Template = null
+            Template = new TextDefault()
+            {
+              _id = textDefault._id,
+              _idAccount = textDefault._idAccount,
+              Company = textDefault.Company,
+              Name = textDefault.Name,
+              TypeText = textDefault.TypeText,
+              Content = textDefault.Content,
+              Status = textDefault.Status,
+              Template = null
+            },
+            Company = company,
+            _idAccount = _user._idAccount,
+            Content = textDefault.Content,
+            Name = textDefault.Name,
+            Status = EnumStatus.Enabled,
+            TypeText = textDefault.TypeText,
+            _id = ObjectId.GenerateNewId().ToString()
           };
-          item.Company = company;
-          item._idAccount = _user._idAccount;
-          item._id = ObjectId.GenerateNewId().ToString();
-          serviceTextDefault.InsertFreeNewVersion(item);
+          TextDefault result = serviceTextDefault.InsertFreeNewVersion(textDefaultLocal).Result;
         }
 
         // MailModel
-        foreach (MailModel item in serviceMailModel.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        MailModel mailModelLocal;
+        foreach (MailModel mailModel in serviceMailModel.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          item._idAccount = _user._idAccount;
-          item._id = ObjectId.GenerateNewId().ToString();
-          serviceMailModel.InsertFreeNewVersion(item);
+          mailModelLocal = new MailModel()
+          {
+            Link = mailModel.Link,
+            Message = mailModel.Message,
+            Name = mailModel.Name,
+            Status = mailModel.Status,
+            StatusMail = mailModel.StatusMail,
+            Subject = mailModel.Subject,
+            _idAccount = _user._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          };
+          MailModel result = serviceMailModel.InsertFreeNewVersion(mailModelLocal).Result;
         }
 
         // Questions
-        foreach (Questions item in serviceQuestions.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        Questions questionsLocal;
+        foreach (Questions question in serviceQuestions.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          item.Template = new Questions()
+          questionsLocal = new Questions()
           {
-            Content = item.Content,
-            Company = item.Company,
-            Name = item.Name,
-            Order = item.Order,
-            Status = item.Status,
-            TypeQuestion = item.TypeQuestion,
-            TypeRotine = item.TypeRotine,
-            _idAccount = item._idAccount,
-            _id = item._id,
-            Template = null
+            Template = new Questions()
+            {
+              Content = question.Content,
+              Company = question.Company,
+              Name = question.Name,
+              Order = question.Order,
+              Status = question.Status,
+              TypeQuestion = question.TypeQuestion,
+              TypeRotine = question.TypeRotine,
+              _idAccount = question._idAccount,
+              _id = question._id,
+              Template = null
+            },
+            Content = question.Content,
+            Company = company,
+            Name = question.Name,
+            Order = question.Order,
+            Status = question.Status,
+            TypeQuestion = question.TypeQuestion,
+            TypeRotine = question.TypeRotine,
+            _idAccount = _user._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
           };
-          item.Company = company;
-          item._idAccount = _user._idAccount;
-          item._id = ObjectId.GenerateNewId().ToString();
-          serviceQuestions.InsertFreeNewVersion(item);
+          Questions result = serviceQuestions.InsertFreeNewVersion(questionsLocal).Result;
         }
 
         // Skill
+        Skill skillLocal;
         foreach (Skill item in serviceSkill.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          item.Template = new Skill()
+          skillLocal = new Skill()
           {
+            Template = new Skill()
+            {
+              Concept = item.Concept,
+              Name = item.Name,
+              Status = item.Status,
+              TypeSkill = item.TypeSkill,
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Template = null
+            },
             Concept = item.Concept,
             Name = item.Name,
             Status = item.Status,
             TypeSkill = item.TypeSkill,
-            _id = item._id,
-            _idAccount = item._idAccount,
-            Template = null
+            _idAccount = _user._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
           };
-          item._idAccount = _user._idAccount;
-          item._id = ObjectId.GenerateNewId().ToString();
-          serviceSkill.InsertFreeNewVersion(item);
+          Skill result = serviceSkill.InsertFreeNewVersion(skillLocal).Result;
         }
 
         // Schooling
+        Schooling schoolingLocal;
         foreach (Schooling item in serviceSchooling.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          item.Template = new Schooling()
+          schoolingLocal = new Schooling()
           {
+            Template = new Schooling()
+            {
+              Complement = item.Complement,
+              Name = item.Name,
+              Order = item.Order,
+              Status = item.Status,
+              Type = item.Type,
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Template = null
+            },
             Complement = item.Complement,
             Name = item.Name,
             Order = item.Order,
             Status = item.Status,
             Type = item.Type,
-            _id = item._id,
-            _idAccount = item._idAccount,
-            Template = null
+            _idAccount = _user._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
           };
-          item._idAccount = _user._idAccount;
-          item._id = ObjectId.GenerateNewId().ToString();
-          serviceSchooling.InsertFreeNewVersion(item);
+          Schooling result =  serviceSchooling.InsertFreeNewVersion(item).Result;
         }
 
         // Sphere
+        Sphere sphereLocal;
         foreach (Sphere item in serviceSphere.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          item.Template = new Sphere()
+          sphereLocal = new Sphere()
           {
-            Company = item.Company,
+            Template = new Sphere()
+            {
+              Company = item.Company,
+              Name = item.Name,
+              Status = item.Status,
+              TypeSphere = item.TypeSphere,
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Template = null
+            },
+            Company = company,
             Name = item.Name,
             Status = item.Status,
             TypeSphere = item.TypeSphere,
-            _id = item._id,
-            _idAccount = item._idAccount,
-            Template = null
+            _idAccount = _user._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
           };
-          item._idAccount = _user._idAccount;
-          item._id = ObjectId.GenerateNewId().ToString();
-          item.Company = company;
-          serviceSphere.InsertFreeNewVersion(item);
+          Sphere result = serviceSphere.InsertFreeNewVersion(item).Result;
         }
 
         // Axis
+        Axis axisLocal;
         foreach (Axis item in serviceAxis.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          item.Template = new Axis()
+          axisLocal = new Axis()
           {
+            Template = new Axis()
+            {
+              Name = item.Name,
+              Company = item.Company,
+              Status = item.Status,
+              TypeAxis = item.TypeAxis,
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Template = null
+            },
+            Company = company,
             Name = item.Name,
-            Company = item.Company,
             Status = item.Status,
             TypeAxis = item.TypeAxis,
-            _id = item._id,
-            _idAccount = item._idAccount,
-            Template = null
-          };
-          item._idAccount = _user._idAccount;
-          item._id = ObjectId.GenerateNewId().ToString();
-          item.Company = serviceCompany.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Company._id).Result;
+            _idAccount = _user._idAccount,
+            _id = ObjectId.GenerateNewId().ToString(),
+        };
           serviceAxis.InsertFreeNewVersion(item);
         }
 
         // Group
+        Group groupLocal;
         foreach (Group item in serviceGroup.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          item.Template = new Group()
+          groupLocal = new Group()
           {
+            Template = new Group()
+            {
+              Name = item.Name,
+              Sphere = item.Sphere,
+              Status = item.Status,
+              _id = item._id,
+              _idAccount = item._idAccount,
+              Axis = item.Axis,
+              Company = item.Company,
+              Line = item.Line,
+              Schooling = item.Schooling,
+              Skills = item.Skills,
+              Scope = item.Scope,
+              Template = null
+            },
+            Company = company,
+            Sphere = serviceSphere.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Sphere._id).Result,
+            Axis = serviceAxis.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Axis._id).Result,
             Name = item.Name,
-            Sphere = item.Sphere,
             Status = item.Status,
             _id = item._id,
             _idAccount = item._idAccount,
-            Axis = item.Axis,
-            Company = item.Company,
             Line = item.Line,
-            Schooling = item.Schooling,
-            Skills = item.Skills,
-            Scope = item.Scope,
-            Template = null
+            Schooling = new List<Schooling>(),
+            Skills = new List<Skill>(),
+            Scope = new List<Scope>()
           };
-          item.Company = company;
-          item.Sphere = serviceSphere.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Sphere._id).Result;
-          item.Axis = serviceAxis.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Axis._id).Result;
-          item.Schooling = new List<Schooling>();
-          item.Skills = new List<Skill>();
-          item.Scope = new List<Scope>();
 
           if (item.Template.Schooling != null)
             foreach (Schooling schooling in item.Template.Schooling)
-              item.Schooling.Add(serviceSchooling.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == schooling._id).Result);
+              groupLocal.Schooling.Add(serviceSchooling.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == schooling._id).Result);
 
           if (item.Template.Skills != null)
             foreach (Skill skill in item.Template.Skills)
-              item.Skills.Add(serviceSkill.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == skill._id).Result);
+              groupLocal.Skills.Add(serviceSkill.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == skill._id).Result);
 
           if (item.Template.Scope != null)
             foreach (Scope scope in item.Template.Scope)
             {
               scope._idAccount = _user._idAccount;
               scope._id = ObjectId.GenerateNewId().ToString();
-              item.Scope.Add(scope);
+              groupLocal.Scope.Add(scope);
             };
-          item._idAccount = _user._idAccount;
-          item._id = ObjectId.GenerateNewId().ToString();
-          serviceGroup.InsertFreeNewVersion(item);
+          groupLocal._idAccount = _user._idAccount;
+          groupLocal._id = ObjectId.GenerateNewId().ToString();
+          Group result = serviceGroup.InsertFreeNewVersion(item).Result;
         }
       }
       catch (Exception e)
@@ -334,13 +411,22 @@ namespace Manager.Services.Specific
         // Identificação da conta raiz do ANALISA
         var idresolution = "5b6c4f47d9090156f08775aa";
         List<Account> accounts = serviceAccount.GetAllFreeNewVersion(p => p._id != idresolution).Result;
+        Parameter local;
         foreach (Account account in accounts)
         {
-          parameter._id = ObjectId.GenerateNewId().ToString();
-          parameter._idAccount = account._id;
-          serviceParameter.InsertFreeNewVersion(parameter);
+          local = new Parameter()
+          {
+            Content = parameter.Content,
+            Help = parameter.Help,
+            Key = parameter.Key,
+            Name = parameter.Name,
+            Status = parameter.Status,
+            _idAccount = account._id,
+            _id = ObjectId.GenerateNewId().ToString()
+          };
+          Parameter result = serviceParameter.InsertFreeNewVersion(local).Result;
         }
-        return "Ok";
+        return "Paramter added!";
       }
       catch (Exception e)
       {
@@ -360,91 +446,123 @@ namespace Manager.Services.Specific
         List<Account> accounts = serviceAccount.GetAllFreeNewVersion(p => p._id != idresolution).Result;
 
         // Parameter
-        foreach (Parameter item in serviceParameter.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        foreach (Parameter parameter in serviceParameter.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
           Parameter local;
-          foreach (Account subitem in accounts)
+          foreach (Account accountParameter in accounts)
           {
-            local = serviceParameter.GetFreeNewVersion(p => p._idAccount == subitem._id && p.Key == item.Key).Result;
+            local = serviceParameter.GetFreeNewVersion(p => p._idAccount == accountParameter._id && p.Key == parameter.Key).Result;
             if (local == null)
             {
-              item._id = ObjectId.GenerateNewId().ToString();
-              item._idAccount = subitem._id;
-              serviceParameter.InsertFreeNewVersion(item);
+              local = new Parameter()
+              {
+                Content = parameter.Content,
+                Help = parameter.Help,
+                Key = parameter.Key,
+                Name = parameter.Name,
+                Status = parameter.Status,
+                _idAccount = accountParameter._id,
+                _id = ObjectId.GenerateNewId().ToString()
+              };
+              Parameter result = serviceParameter.InsertFreeNewVersion(local).Result;
             }
           }
         }
-
         // Text default
-        foreach (TextDefault item in serviceTextDefault.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        foreach (TextDefault textDefault in serviceTextDefault.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
           TextDefault local;
-          foreach (Account subitem in accounts)
+          foreach (Account accountTextDefault in accounts)
           {
-            company = serviceCompany.GetAllFreeNewVersion(p => p._idAccount == subitem._id).Result.FirstOrDefault();
-            local = serviceTextDefault.GetFreeNewVersion(p => p._idAccount == subitem._id && p.Template._id == item._id).Result;
+            company = serviceCompany.GetAllFreeNewVersion(p => p._idAccount == accountTextDefault._id).Result.FirstOrDefault();
+            local = serviceTextDefault.GetFreeNewVersion(p => p._idAccount == accountTextDefault._id && p.Template._id == textDefault._id).Result;
             if (local == null)
             {
-              item.Template = new TextDefault()
+              local = new TextDefault()
               {
-                _id = item._id,
-                _idAccount = item._idAccount,
-                Company = item.Company,
-                Name = item.Name,
-                TypeText = item.TypeText,
-                Content = item.Content,
-                Status = item.Status,
-                Template = null
+                Template = new TextDefault()
+                {
+                  _id = textDefault._id,
+                  _idAccount = textDefault._idAccount,
+                  Company = textDefault.Company,
+                  Name = textDefault.Name,
+                  TypeText = textDefault.TypeText,
+                  Content = textDefault.Content,
+                  Status = textDefault.Status,
+                  Template = null
+                },
+                Company = company,
+                _idAccount = accountTextDefault._id,
+                Content = textDefault.Content,
+                Name = textDefault.Name,
+                Status = EnumStatus.Enabled,
+                TypeText = textDefault.TypeText,
+                _id = ObjectId.GenerateNewId().ToString()
               };
-              item.Company = company;
-              item._idAccount = subitem._id;
-              item._id = ObjectId.GenerateNewId().ToString();
-              serviceTextDefault.InsertFreeNewVersion(item);
+              TextDefault result = serviceTextDefault.InsertFreeNewVersion(local).Result;
             }
           }
         }
         // MailModel
-        foreach (MailModel item in serviceMailModel.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        foreach (MailModel mailModel in serviceMailModel.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
           MailModel local;
-          foreach (Account subitem in accounts)
+          foreach (Account accountMailModel in accounts)
           {
-            local = serviceMailModel.GetFreeNewVersion(p => p._idAccount == subitem._idAccount && p.Name == item.Name).Result;
+            local = serviceMailModel.GetFreeNewVersion(p => p._idAccount == accountMailModel._idAccount && p.Name == mailModel.Name).Result;
             if (local == null)
             {
-              item._idAccount = subitem._id;
-              item._id = ObjectId.GenerateNewId().ToString();
-              serviceMailModel.InsertFreeNewVersion(item);
+              local = new MailModel()
+              {
+                Link = mailModel.Link,
+                Message = mailModel.Message,
+                Name = mailModel.Name,
+                Status = mailModel.Status,
+                StatusMail = mailModel.StatusMail,
+                Subject = mailModel.Subject,
+                _idAccount = accountMailModel._id,
+                _id = ObjectId.GenerateNewId().ToString()
+              };
+              MailModel result = serviceMailModel.InsertFreeNewVersion(local).Result;
             }
           }
         }
         // Questions
-        foreach (Questions item in serviceQuestions.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        foreach (Questions question in serviceQuestions.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
           Questions local;
-          foreach (Account subitem in accounts)
+          foreach (Account accountQuestion in accounts)
           {
-            company = serviceCompany.GetAllFreeNewVersion(p => p._idAccount == subitem._id).Result.FirstOrDefault();
-            local = serviceQuestions.GetFreeNewVersion(p => p._idAccount == subitem._idAccount && p.Template._id == item._id).Result;
+            company = serviceCompany.GetAllFreeNewVersion(p => p._idAccount == accountQuestion._id).Result.FirstOrDefault();
+            local = serviceQuestions.GetFreeNewVersion(p => p._idAccount == accountQuestion._idAccount && p.Template._id == question._id).Result;
             if (local == null)
             {
-              item.Template = new Questions()
+              local = new Questions()
               {
-                Content = item.Content,
-                Company = item.Company,
-                Name = item.Name,
-                Order = item.Order,
-                Status = item.Status,
-                TypeQuestion = item.TypeQuestion,
-                TypeRotine = item.TypeRotine,
-                _idAccount = item._idAccount,
-                _id = item._id,
-                Template = null
+                Template = new Questions()
+                {
+                  Content = question.Content,
+                  Company = question.Company,
+                  Name = question.Name,
+                  Order = question.Order,
+                  Status = question.Status,
+                  TypeQuestion = question.TypeQuestion,
+                  TypeRotine = question.TypeRotine,
+                  _idAccount = question._idAccount,
+                  _id = question._id,
+                  Template = null
+                },
+                Content = question.Content,
+                Company = company,
+                Name = question.Name,
+                Order = question.Order,
+                Status = question.Status,
+                TypeQuestion = question.TypeQuestion,
+                TypeRotine = question.TypeRotine,
+                _idAccount = accountQuestion._id,
+                _id = ObjectId.GenerateNewId().ToString()
               };
-              item.Company = company;
-              item._idAccount = subitem._id;
-              item._id = ObjectId.GenerateNewId().ToString();
-              serviceQuestions.InsertFreeNewVersion(item);
+              Questions result = serviceQuestions.InsertFreeNewVersion(local).Result;
             }
           }
         }
@@ -3405,7 +3523,8 @@ namespace Manager.Services.Specific
           Name = item.Name,
           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
           Content = item.Content,
-          TypeText = item.TypeText
+          TypeText = item.TypeText,
+          _id = item._id
         };
       }
       catch (Exception e)
@@ -3424,7 +3543,8 @@ namespace Manager.Services.Specific
           Name = item.Name,
           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
           Content = item.Content,
-          TypeText = item.TypeText
+          TypeText = item.TypeText,
+          _id = item._id
         };
       }
       catch (Exception e)

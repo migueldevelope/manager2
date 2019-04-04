@@ -1233,12 +1233,13 @@ namespace Manager.Services.Specific
         var text = serviceTextDefault.GetAll(p => p.TypeText == EnumTypeText.CertificationPerson).FirstOrDefault();
         if (text != null)
           text.Content = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
+            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name).Replace("{concept}",certification.CertificationItem.Concept);
 
         var textEnd = serviceTextDefault.GetAll(p => p.TypeText == EnumTypeText.CertificationPersonEnd).FirstOrDefault();
         if (textEnd != null)
           textEnd.Content = textEnd.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
+            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name).Replace("{concept}", certification.CertificationItem.Concept)
+            .Replace("{type}", "competência | skill");
 
         var personLocal = servicePerson.GetAll(p => p._id == person._id).FirstOrDefault();
         var cerPerson = new CertificationPerson()

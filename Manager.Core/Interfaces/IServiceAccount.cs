@@ -21,5 +21,6 @@ namespace Manager.Core.Interfaces
     ViewPerson AlterAccountPerson(string idperson);
     Task<string> SynchronizeParameters();
     Account GeAccount(Expression<Func<Account, bool>> filter);
+
   }
 }

@@ -331,7 +331,7 @@ namespace Manager.Services.Specific
         {
           Status = EnumStatus.Enabled,
           Message = "Olá <strong>Recursos Humanos</strong>,</br></br>O resultado do check point para o(a) colaborador(a) <strong>{Person}</strong> foi APROVADO.</br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de efetivação de período de experiência.</br></br>#VamosSerMaisFluidos",
-          Subject = "Notificação de Decisão de Efetivação | Check point - Aprovado",
+          Subject = "Notificação de Decisão de Efetivação | Check point - APROVADO",
           Name = "checkpointresult",
           Link = path
         };
@@ -364,7 +364,7 @@ namespace Manager.Services.Specific
         {
           Status = EnumStatus.Enabled,
           Message = "Olá <strong>Recursos Humanos</strong>,</br></br>O resultado do check point para <strong>{Person}</strong> foi REPROVADO.</br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de desligamento.</br></br>#VamosSerMaisFluidos",
-          Subject = "Notificação de Decisão de Efetivação | Check point - Reprovado",
+          Subject = "Notificação de Decisão de Efetivação | Check point - REPROVADO",
           Name = "checkpointresultdisapproved",
           Link = path
         };
@@ -397,7 +397,7 @@ namespace Manager.Services.Specific
         {
           Status = EnumStatus.Enabled,
           Message = "Olá <strong>{Person}</strong>,</br></br>Parabéns! Você foi efetivado na <strong>{Company}</strong>. Isso é fruto do seu engajamento e alinhamento com nossa cultura e nossas competências essenciais.</br>Agora é seguir interessado em conhecer mais sobre as entregas do seu cargo e as competências que fazem parte do mesmo.</br>Fique atento às notificações do Analisa e aproveite o máximo de suas funcionalidades.</br>Estaremos na torcida para que sua carreira seja a mais fluida possível.</br></br>#VamosSerMaisFluidos",
-          Subject = "Notificação de Decisão de Efetivação | Check point",
+          Subject = "Notificação de Decisão de Efetivação | Checkpoint",
           Name = "checkpointresultperson",
           Link = path
         };
