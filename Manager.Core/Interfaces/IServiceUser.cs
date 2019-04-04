@@ -24,6 +24,7 @@ namespace Manager.Core.Interfaces
     string AlterPassword(ViewAlterPass resetPass, string idUser);
     string AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
     Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid);
+    List<ViewInfoPerson> ListPerson(string iduser, ref long total, string filter, int count, int page);
 
     #region Old
     List<User> ListUser(Expression<Func<User, bool>> filter);
@@ -47,7 +48,7 @@ namespace Manager.Core.Interfaces
     //string ScriptCheckpoint();
     //string ScriptMonitoring();
     //string ScriptLog();
-    List<Person> ListPerson(string iduser, ref long total, string filter, int count, int page);
+    List<Person> ListPersonOld(string iduser, ref long total, string filter, int count, int page);
     #endregion
 
   }

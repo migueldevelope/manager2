@@ -128,7 +128,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user =  serviceUser.GetNewVersion(p => p._id == iduser).Result;
+        User user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
         return new ViewCrudUser()
         {
           _id = user._id,
@@ -141,7 +141,7 @@ namespace Manager.Services.Auth
           DocumentCTPF = user.DocumentCTPF,
           DocumentID = user.DocumentCTPF,
           PhoneFixed = user.PhoneFixed,
-          Schooling = new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order},
+          Schooling = user.Schooling == null ? null : new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
           Sex = user.Sex,
           PhotoUrl = user.PhotoUrl,
           Password = string.Empty
@@ -171,7 +171,7 @@ namespace Manager.Services.Auth
           Phone = view.Phone,
           PhoneFixed = view.PhoneFixed,
           PhotoUrl = view.PhotoUrl,
-          Schooling = new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order },
+          Schooling = view.Schooling == null ? null : new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order },
           Sex = view.Sex,
           ChangePassword = EnumChangePassword.AccessFirst
         };
@@ -218,7 +218,7 @@ namespace Manager.Services.Auth
         user.Phone = view.Phone;
         user.PhoneFixed = view.PhoneFixed;
         user.PhotoUrl = view.PhotoUrl;
-        user.Schooling = new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
+        user.Schooling = user.Schooling == null ? null : new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
         user.Sex = view.Sex;
         serviceUser.Update(user, null);
         return new ViewCrudUser()
@@ -233,7 +233,7 @@ namespace Manager.Services.Auth
           DocumentCTPF = user.DocumentCTPF,
           DocumentID = user.DocumentCTPF,
           PhoneFixed = user.PhoneFixed,
-          Schooling = new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
+          Schooling = user.Schooling == null ? null : new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
           Sex = user.Sex,
           PhotoUrl = user.PhotoUrl,
           Password = string.Empty
@@ -358,266 +358,294 @@ namespace Manager.Services.Auth
       }
     }
 
-    public User NewUserView(User user)
-    {
 
-      try
-      {
-        var authMaristas = false;
-        var authPUC = false;
-        try
-        {
-          authMaristas = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
-          authPUC = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
-        }
-        catch (Exception)
-        {
-
-        }
-
-
-
-
-        User model = new User()
-        {
-          Name = user.Name,
-
-          ChangePassword = EnumChangePassword.AccessFirst,
-          DateAdm = user.DateAdm,
-          DateBirth = user.DateBirth,
-          Document = user.Document,
-          Phone = user.Phone,
-          Mail = user.Mail,
-          Status = EnumStatus.Enabled,
-          Schooling = user.Schooling,
-          PhoneFixed = user.PhoneFixed,
-          DocumentID = user.DocumentID,
-          DocumentCTPF = user.DocumentCTPF,
-          Sex = user.Sex
-        };
-
-        if (user.Password == string.Empty)
-          model.Password = EncryptServices.GetMD5Hash(user.Document);
-        else
-          model.Password = EncryptServices.GetMD5Hash(user.Password);
-
-
-
-        if ((authMaristas) || (authPUC))
-          model.ChangePassword = EnumChangePassword.No;
-
-        return serviceUser.Insert(model);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-
-    public User UpdateUserView(User user)
-    {
-      try
-      {
-        var pass = serviceUser.GetAll(p => p._id == user._id).SingleOrDefault().Password;
-        serviceUser.Update(user, null);
-        return user;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public User UpdateUser(User user)
-    {
-      try
-      {
-        var pass = serviceUser.GetAll(p => p._id == user._id).SingleOrDefault().Password;
-        if (user.Password != EncryptServices.GetMD5Hash(pass))
-          user.Password = EncryptServices.GetMD5Hash(user.Password);
-        serviceUser.Update(user, null);
-        return user;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public void SetPhoto(string idUser, string url)
-    {
-      try
-      {
-        var user = serviceUser.GetAll(p => p._id == idUser).SingleOrDefault();
-        user.PhotoUrl = url;
-        serviceUser.Update(user, null);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<User> GetUsers(string idcompany, string filter)
-    {
-      try
-      {
-        return serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public string GetPhoto(string idUser)
-    {
-      try
-      {
-        return this.serviceUser.GetAll(p => p._id == idUser).FirstOrDefault().PhotoUrl;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public User GetAuthentication(string mail, string password)
-    {
-      try
-      {
-        return serviceUser.GetAuthentication(p => p.Status == EnumStatus.Enabled & p.Mail == mail && p.Password == password).SingleOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public User GetUser(string id)
-    {
-      try
-      {
-        return serviceUser.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<User> ListUser(Expression<Func<User, bool>> filter)
-    {
-      try
-      {
-        return serviceUser.GetAll(filter).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<User> GetUsersCrudOld(EnumTypeUser typeUser, ref long total, string filter, int count, int page)
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        List<User> detail = null;
-        if (typeUser == EnumTypeUser.Support)
-        {
-          detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-        }
-
-        else if (typeUser == EnumTypeUser.Administrator)
-        {
-          detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-        }
-
-        else
-        {
-          detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-        }
-
-        return detail;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public User GetUserCrudOld(string iduser)
-    {
-      try
-      {
-        return serviceUser.GetAll(p => p._id == iduser).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<Occupation> ListOccupation(ref long total, string filter, int count, int page)
-    {
-      int skip = (count * (page - 1));
-      var detail = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-      total = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-      return detail;
-    }
-
-    public List<Person> ListPerson(string iduser, ref long total, string filter, int count, int page)
+    public List<ViewInfoPerson> ListPerson(string iduser, ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
       var detail = servicePerson.GetAll(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
       total = servicePerson.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-      return detail;
-    }
+      return detail.Select(p => new ViewInfoPerson
+      {
+        _id = p._id,
+        TypeJourney = p.TypeJourney,
+        Occupation = p.Occupation.Name,
+        Name = p.User.Name,
+        Manager = p.Manager.Name,
+        Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
+        Establishment = (p.Establishment == null) ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
+        Registration = p.Registration,
+        User = new ViewListUser()
+        {
+          Document = p.User.Document,
+          Mail = p.User.Mail,
+          Name = p.User.Name,
+          Phone = p.User.Phone,
+          _id = p.User._id
+        }
+      }).ToList();
+  }
 
-    public List<User> ListManager(ref long total, string filter, int count, int page)
+  public User NewUserView(User user)
+  {
+
+    try
     {
-      int skip = (count * (page - 1));
-      var detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).ToList();
-      //var detail = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-      //total = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-      return detail;
-    }
-
-    public List<Company> ListCompany(ref long total, string filter, int count, int page)
-    {
-      int skip = (count * (page - 1));
-      var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-      total = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).Count();
-
-      return detail;
-    }
-
-    public List<User> ListAll()
-    {
+      var authMaristas = false;
+      var authPUC = false;
       try
       {
-        return serviceUser.GetAuthentication(p => p.Status != EnumStatus.Disabled).ToList();
+        authMaristas = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
+        authPUC = user.Mail.Substring(user.Mail.IndexOf("@"), user.Mail.Length - user.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        throw e;
+
       }
+
+
+
+
+      User model = new User()
+      {
+        Name = user.Name,
+
+        ChangePassword = EnumChangePassword.AccessFirst,
+        DateAdm = user.DateAdm,
+        DateBirth = user.DateBirth,
+        Document = user.Document,
+        Phone = user.Phone,
+        Mail = user.Mail,
+        Status = EnumStatus.Enabled,
+        Schooling = user.Schooling,
+        PhoneFixed = user.PhoneFixed,
+        DocumentID = user.DocumentID,
+        DocumentCTPF = user.DocumentCTPF,
+        Sex = user.Sex
+      };
+
+      if (user.Password == string.Empty)
+        model.Password = EncryptServices.GetMD5Hash(user.Document);
+      else
+        model.Password = EncryptServices.GetMD5Hash(user.Password);
+
+
+
+      if ((authMaristas) || (authPUC))
+        model.ChangePassword = EnumChangePassword.No;
+
+      return serviceUser.Insert(model);
     }
-    #endregion
-
-
-
-
+    catch (Exception e)
+    {
+      throw e;
+    }
   }
+
+
+
+  public User UpdateUserView(User user)
+  {
+    try
+    {
+      var pass = serviceUser.GetAll(p => p._id == user._id).SingleOrDefault().Password;
+      serviceUser.Update(user, null);
+      return user;
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+  public User UpdateUser(User user)
+  {
+    try
+    {
+      var pass = serviceUser.GetAll(p => p._id == user._id).SingleOrDefault().Password;
+      if (user.Password != EncryptServices.GetMD5Hash(pass))
+        user.Password = EncryptServices.GetMD5Hash(user.Password);
+      serviceUser.Update(user, null);
+      return user;
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+  public void SetPhoto(string idUser, string url)
+  {
+    try
+    {
+      var user = serviceUser.GetAll(p => p._id == idUser).SingleOrDefault();
+      user.PhotoUrl = url;
+      serviceUser.Update(user, null);
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+  public List<User> GetUsers(string idcompany, string filter)
+  {
+    try
+    {
+      return serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+
+  public string GetPhoto(string idUser)
+  {
+    try
+    {
+      return this.serviceUser.GetAll(p => p._id == idUser).FirstOrDefault().PhotoUrl;
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+  public User GetAuthentication(string mail, string password)
+  {
+    try
+    {
+      return serviceUser.GetAuthentication(p => p.Status == EnumStatus.Enabled & p.Mail == mail && p.Password == password).SingleOrDefault();
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+
+  public User GetUser(string id)
+  {
+    try
+    {
+      return serviceUser.GetAll(p => p._id == id).FirstOrDefault();
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+  public List<User> ListUser(Expression<Func<User, bool>> filter)
+  {
+    try
+    {
+      return serviceUser.GetAll(filter).ToList();
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+  public List<User> GetUsersCrudOld(EnumTypeUser typeUser, ref long total, string filter, int count, int page)
+  {
+    try
+    {
+      int skip = (count * (page - 1));
+      List<User> detail = null;
+      if (typeUser == EnumTypeUser.Support)
+      {
+        detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+      }
+
+      else if (typeUser == EnumTypeUser.Administrator)
+      {
+        detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+      }
+
+      else
+      {
+        detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+      }
+
+      return detail;
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+  public User GetUserCrudOld(string iduser)
+  {
+    try
+    {
+      return serviceUser.GetAll(p => p._id == iduser).FirstOrDefault();
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+
+  public List<Occupation> ListOccupation(ref long total, string filter, int count, int page)
+  {
+    int skip = (count * (page - 1));
+    var detail = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+    total = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+    return detail;
+  }
+
+  public List<Person> ListPersonOld(string iduser, ref long total, string filter, int count, int page)
+  {
+    int skip = (count * (page - 1));
+    var detail = servicePerson.GetAll(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
+    total = servicePerson.GetAll(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+    return detail;
+  }
+
+  public List<User> ListManager(ref long total, string filter, int count, int page)
+  {
+    int skip = (count * (page - 1));
+    var detail = serviceUser.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).ToList();
+    //var detail = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+    //total = userService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+    return detail;
+  }
+
+  public List<Company> ListCompany(ref long total, string filter, int count, int page)
+  {
+    int skip = (count * (page - 1));
+    var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+    total = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).Count();
+
+    return detail;
+  }
+
+  public List<User> ListAll()
+  {
+    try
+    {
+      return serviceUser.GetAuthentication(p => p.Status != EnumStatus.Disabled).ToList();
+    }
+    catch (Exception e)
+    {
+      throw e;
+    }
+  }
+  #endregion
+
+
+
+
+}
 }

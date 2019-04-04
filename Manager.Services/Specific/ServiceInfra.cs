@@ -3914,6 +3914,7 @@ namespace Manager.Services.Specific
       {
         var model = serviceQuestions.GetAll(p => p._id == view._id).FirstOrDefault();
         model.Name = view.Name;
+        model.Content = view.Content;
         model.Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault();
         model.TypeQuestion = view.TypeQuestion;
         model.TypeRotine = view.TypeRotine;

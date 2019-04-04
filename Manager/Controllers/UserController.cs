@@ -109,6 +109,17 @@ namespace Manager.Controllers
     {
       return service.GetPhoto(iduser);
     }
+
+    [Authorize]
+    [HttpGet]
+    [Route("listperson/{iduser}")]
+    public List<ViewInfoPerson> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListPerson(iduser, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
     #endregion
 
     #region Password
@@ -211,10 +222,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("old/listperson/{iduser}")]
-    public List<Person> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    public List<Person> ListPersonOld(string iduser, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPerson(iduser, ref total, filter, count, page);
+      var result = service.ListPersonOld(iduser, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
