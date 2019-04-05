@@ -7,5 +7,6 @@ namespace Manager.Views.BusinessList
     public EnumStatusUser StatusUser { get; set; }
     public EnumTypeJourney TypeJourney { get; set; }
     public EnumTypeUser TypeUser { get; set; }
+    public string Occupation { get; set; }
   }
 }

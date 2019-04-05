@@ -301,7 +301,8 @@ namespace Manager.Services.Auth
               Establishment = x.Establishment == null ? null : new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
-              TypeUser = x.TypeUser
+              TypeUser = x.TypeUser,
+              Occupation = x.Occupation?.Name
             }).OrderBy(p => p.User.Name).ToList();
           case EnumTypeUser.HR:
           case EnumTypeUser.ManagerHR:
@@ -316,7 +317,8 @@ namespace Manager.Services.Auth
               Establishment = x.Establishment == null ? null : new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
-              TypeUser = x.TypeUser
+              TypeUser = x.TypeUser,
+              Occupation = x.Occupation?.Name
             }).ToList();
           default:
             total = 0;
@@ -447,7 +449,10 @@ namespace Manager.Services.Auth
         if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
           user.ChangePassword = EnumChangePassword.No;
 
-        user = serviceUser.InsertNewVersion(user).Result;
+        if (view.User._id == null)
+          user = serviceUser.InsertNewVersion(user).Result;
+        else
+          user = serviceUser.GetNewVersion(p => p._id == view.User._id).Result;
 
         BaseFields manager = null;
         if (view.Manager != null)
