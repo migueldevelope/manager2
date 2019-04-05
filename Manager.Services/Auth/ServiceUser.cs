@@ -221,6 +221,11 @@ namespace Manager.Services.Auth
         user.Schooling = user.Schooling == null ? null : new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
         user.Sex = view.Sex;
         serviceUser.Update(user, null);
+        foreach(var item in servicePerson.GetAll(p => p.User._id == view._id).ToList())
+        {
+          item.User = user;
+          servicePerson.Update(item, null);
+        }
         return new ViewCrudUser()
         {
           _id = user._id,
