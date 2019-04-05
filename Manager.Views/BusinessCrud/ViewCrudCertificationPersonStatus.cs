@@ -1,10 +1,8 @@
-﻿using Manager.Core.Enumns;
-using Manager.Views.Enumns;
-using System;
+﻿using Manager.Views.Enumns;
 
-namespace Manager.Core.Views
+namespace Manager.Views.BusinessCrud
 {
-  public class ViewCertificationStatus
+  public class ViewCrudCertificationPersonStatus
   {
     public string _idCertification { get; set; }
     public EnumStatusCertificationPerson StatusCertificationPerson { get; set; }

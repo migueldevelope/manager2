@@ -3,7 +3,6 @@ using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
-using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Authorization;
@@ -78,6 +77,11 @@ namespace Manager.Controllers
     {
       return service.DeletePerson(idcertification, idperson);
     }
+    /// <summary>
+    /// Retornar as competências que podem ser acreditadas para uma pessoa
+    /// </summary>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getprofile/{idperson}")]
@@ -85,6 +89,14 @@ namespace Manager.Controllers
     {
       return service.GetProfile(idperson);
     }
+    /// <summary>
+    /// Lista as acreditações pendentes para uma pessoa
+    /// </summary>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do usuário</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listcertificationperson/{idperson}")]
@@ -95,10 +107,16 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
+    /// <summary>
+    /// Atualizar a situação 
+    /// </summary>
+    /// <param name="certification"></param>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatestatuscertification/{idperson}")]
-    public string UpdateStatusCertification([FromBody]ViewCertificationStatus certification, string idperson)
+    public string UpdateStatusCertification([FromBody]ViewCrudCertificationPersonStatus certification, string idperson)
     {
       return service.UpdateStatusCertification(certification, idperson);
     }

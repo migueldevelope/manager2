@@ -508,7 +508,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateStatusCertification(ViewCertificationStatus viewcertification, string idperson)
+    public string UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson)
     {
       try
       {

@@ -346,9 +346,11 @@ namespace Manager.Services.Specific
       try
       {
         var salaryScale = serviceSalaryScale.GetAll(p => p.Company._id == idcompany).FirstOrDefault();
-        if (salaryScale.Grades == null)
+        if (salaryScale == null || salaryScale.Grades == null)
           return null;
 
+        if (salaryScale.Grades == null)
+          return null;
 
         return salaryScale.Grades.Select(p => new ViewListGradeFilter()
         {

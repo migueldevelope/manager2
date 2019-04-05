@@ -30,7 +30,7 @@ namespace Manager.Core.Interfaces
     List<ViewListCertification> ListEnded(ref long total, string filter, int count, int page);
     List<ViewListCertificationPerson> ListCertificationsWaitPerson(string idperson, ref long total, string filter, int count, int page);
     ViewCrudCertification CertificationsWaitPerson(string idcertification);
-    string UpdateStatusCertification(ViewCertificationStatus viewcertification, string idperson);
+    string UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson);
     List<ViewListCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page);
     #endregion
 
