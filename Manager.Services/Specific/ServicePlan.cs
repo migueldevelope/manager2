@@ -318,17 +318,8 @@ namespace Manager.Services.Specific
       {
         LogSave(person._id, "Plan Process Update");
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
-        {
-          if (user._idPerson == person._id)
-          {
-            var manager = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault();
-            Mail(manager);
-          }
-          else
-          {
-            Mail(person);
-          }
-        }
+          Mail(servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault());
+
         servicePlan.Update(plan, null);
         return "Plan altered!";
       }
