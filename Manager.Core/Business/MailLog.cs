@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Enumns;
-using MongoDB.Bson;
+using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
 

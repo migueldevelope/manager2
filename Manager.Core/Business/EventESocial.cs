@@ -1,5 +1,4 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Enumns;
 
 namespace Manager.Core.Business
 {

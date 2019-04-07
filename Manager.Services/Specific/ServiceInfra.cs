@@ -1,5 +1,4 @@
 ﻿using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
@@ -838,7 +837,7 @@ namespace Manager.Services.Specific
               Name = scope.Name.Replace("\n", "").Replace(";", "."),
               Line = line,
               Col = col,
-              Type = EnumTypeLO.Scope,
+              Type = EnumTypeLineOpportunity.Scope,
               IdGroup = item._id
             };
 
@@ -860,7 +859,7 @@ namespace Manager.Services.Specific
               Name = skill.Name.Replace("\n", "").Replace(";", ".") + ":" + skill.Concept.Replace("\n", "").Replace(";", "."),
               Line = line,
               Col = col,
-              Type = EnumTypeLO.Skill,
+              Type = EnumTypeLineOpportunity.Skill,
               IdGroup = item._id
             };
 
@@ -882,7 +881,7 @@ namespace Manager.Services.Specific
               Name = scholling.Name.Replace("\n", "").Replace(";", "."),
               Line = line,
               Col = col,
-              Type = EnumTypeLO.Schooling,
+              Type = EnumTypeLineOpportunity.Schooling,
               IdGroup = item._id
             };
 
@@ -900,13 +899,13 @@ namespace Manager.Services.Specific
           col = 0;
           foreach (var group in groups)
           {
-            var item = list.Where(p => p.Type == EnumTypeLO.Scope & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
+            var item = list.Where(p => p.Type == EnumTypeLineOpportunity.Scope & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
             if (item == 0)
             {
               var view = new ViewCSVLO
               {
                 IdGroup = group._id,
-                Type = EnumTypeLO.Scope,
+                Type = EnumTypeLineOpportunity.Scope,
                 Name = " ",
                 Line = row,
                 Col = col
@@ -923,13 +922,13 @@ namespace Manager.Services.Specific
           col = 0;
           foreach (var group in groups)
           {
-            var item = list.Where(p => p.Type == EnumTypeLO.Skill & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
+            var item = list.Where(p => p.Type == EnumTypeLineOpportunity.Skill & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
             if (item == 0)
             {
               var view = new ViewCSVLO
               {
                 IdGroup = group._id,
-                Type = EnumTypeLO.Skill,
+                Type = EnumTypeLineOpportunity.Skill,
                 Name = " ",
                 Line = row,
                 Col = col
@@ -946,13 +945,13 @@ namespace Manager.Services.Specific
           col = 0;
           foreach (var group in groups)
           {
-            var item = list.Where(p => p.Type == EnumTypeLO.Schooling & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
+            var item = list.Where(p => p.Type == EnumTypeLineOpportunity.Schooling & p.IdGroup == group._id & p.Line == row).OrderBy(p => p.Col).Count();
             if (item == 0)
             {
               var view = new ViewCSVLO
               {
                 IdGroup = group._id,
-                Type = EnumTypeLO.Schooling,
+                Type = EnumTypeLineOpportunity.Schooling,
                 Name = " ",
                 Line = row,
                 Col = col
@@ -966,7 +965,7 @@ namespace Manager.Services.Specific
         for (var row = 0; row < maxLine; row++)
         {
           var itemView = string.Empty;
-          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Scope & p.Line == row).OrderBy(p => p.Col).ToList())
+          foreach (var item in list.Where(p => p.Type == EnumTypeLineOpportunity.Scope & p.Line == row).OrderBy(p => p.Col).ToList())
           {
             try
             {
@@ -984,7 +983,7 @@ namespace Manager.Services.Specific
         for (var row = 0; row < maxLineSkill; row++)
         {
           var itemView = string.Empty;
-          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Skill & p.Line == row).OrderBy(p => p.Col).ToList())
+          foreach (var item in list.Where(p => p.Type == EnumTypeLineOpportunity.Skill & p.Line == row).OrderBy(p => p.Col).ToList())
           {
             try
             {
@@ -1002,7 +1001,7 @@ namespace Manager.Services.Specific
         for (var row = 0; row < maxLineSchooling; row++)
         {
           var itemView = string.Empty;
-          foreach (var item in list.Where(p => p.Type == EnumTypeLO.Schooling & p.Line == row).OrderBy(p => p.Col).ToList())
+          foreach (var item in list.Where(p => p.Type == EnumTypeLineOpportunity.Schooling & p.Line == row).OrderBy(p => p.Col).ToList())
           {
             try
             {

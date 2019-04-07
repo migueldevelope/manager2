@@ -15,7 +15,6 @@ using Manager.Data;
 using Manager.Services.Specific;
 using Manager.Services.Commons;
 using Manager.Core;
-using Manager.Core.Enumns;
 using Tools;
 using Manager.Core.Base;
 using Manager.Core.Interfaces;

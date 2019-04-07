@@ -1,4 +1,4 @@
-﻿namespace Manager.Core.Enumns
+﻿namespace Manager.Views.Enumns
 {
   public enum EnumTypeMailMessage : byte
   {

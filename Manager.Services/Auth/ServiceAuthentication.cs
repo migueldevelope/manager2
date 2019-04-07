@@ -9,7 +9,6 @@ using System;
 using Manager.Services.Specific;
 using Tools;
 using System.Net.Http;
-using Manager.Core.Enumns;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;

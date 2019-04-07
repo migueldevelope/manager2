@@ -1,5 +1,4 @@
 ﻿using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;

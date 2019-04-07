@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Manager.Core.Enumns
+﻿namespace Manager.Views.Enumns
 {
   public enum EnumWeek : byte
   {

@@ -6,10 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Linq;
-using Manager.Core.Enumns;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Reflection;
 using Manager.Views.Enumns;
 
 namespace Manager.Data

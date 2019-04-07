@@ -1,5 +1,4 @@
 ﻿using Manager.Core.Business;
-using Manager.Core.Enumns;
 using System;
 using System.Collections.Generic;
 

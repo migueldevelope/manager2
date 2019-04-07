@@ -1,4 +1,4 @@
-﻿using Manager.Core.Enumns;
+﻿using Manager.Views.Enumns;
 
 namespace Manager.Core.Views
 {
@@ -8,6 +8,6 @@ namespace Manager.Core.Views
     public string Name { get; set; }
     public long Line { get; set; }
     public long Col { get; set; }
-    public EnumTypeLO Type { get; set; }
+    public EnumTypeLineOpportunity Type { get; set; }
   }
 }

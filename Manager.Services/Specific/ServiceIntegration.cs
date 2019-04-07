@@ -1,7 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Business.Integration;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;

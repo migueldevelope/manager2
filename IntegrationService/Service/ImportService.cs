@@ -641,7 +641,7 @@ namespace IntegrationService.Service
             ControleColaboradores.Add(new ControleColaborador(colaborador));
             search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
             ControleColaboradores[search].Situacao = EnumColaboradorSituacao.LocalError;
-            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, colaborador.Message), EnumTypeLog.Warning);
+            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, colaborador.Message), EnumTypeLineOpportunityg.Warning);
             Status = EnumStatusService.Error;
             hasLogFile = true;
           }
@@ -662,7 +662,7 @@ namespace IntegrationService.Service
           switch (ControleColaboradores[search].Situacao)
           {
             case EnumColaboradorSituacao.NoChange:
-              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, string.Format("Pessoa sem alteração.")), EnumTypeLog.Warning);
+              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, string.Format("Pessoa sem alteração.")), EnumTypeLineOpportunityg.Warning);
               break;
             case EnumColaboradorSituacao.SendServer:
               viewColaborador = new ViewIntegrationColaborador()
@@ -683,12 +683,12 @@ namespace IntegrationService.Service
                 ControleColaboradores[search].IdPerson = viewColaborador.IdPerson;
                 ControleColaboradores[search].IdContract = viewColaborador.IdContract;
                 ControleColaboradores[search].Message = viewColaborador.Message;
-                FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, viewColaborador.Message), EnumTypeLog.Information);
+                FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, viewColaborador.Message), EnumTypeLineOpportunityg.Information);
               }
               else
               {
                 ControleColaboradores[search].Message = viewColaborador.Message;
-                FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, string.Format("Pessoa não atualizada. {0}", viewColaborador.Message)), EnumTypeLog.Warning);
+                FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, string.Format("Pessoa não atualizada. {0}", viewColaborador.Message)), EnumTypeLineOpportunityg.Warning);
                 hasLogFile = true;
               }
               break;

@@ -23,7 +23,7 @@ namespace IntegrationService.Tools
       }
     }
 
-    public static void SaveLog(string file, string register, EnumTypeLog typeLog)
+    public static void SaveLog(string file, string register, EnumTypeLineOpportunityg typeLog)
     {
       bool newFile = true;
       if (File.Exists(file))
@@ -32,7 +32,7 @@ namespace IntegrationService.Tools
       {
         switch (typeLog)
         {
-          case EnumTypeLog.Register:
+          case EnumTypeLineOpportunityg.Register:
             stream.WriteLine(register);
             break;
           default:

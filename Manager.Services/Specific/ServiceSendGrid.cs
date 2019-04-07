@@ -1,9 +1,9 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.Enumns;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using SendGrid;
 using SendGrid.Helpers.Mail;
