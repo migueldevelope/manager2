@@ -2200,23 +2200,28 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddOccupation(ViewCrudOccupation occupation)
+    public string AddOccupation(ViewCrudOccupation view)
     {
       try
       {
-        serviceOccupation.Insert(new Occupation()
+        var occupation = new Occupation()
         {
-          Name = occupation.Name,
-          Line = occupation.Line,
+          Name = view.Name,
+          Line = view.Line,
           Status = EnumStatus.Enabled,
-          Group = serviceGroup.GetAll(p => p._id == occupation.Group._id).FirstOrDefault(),
+          Group = serviceGroup.GetAll(p => p._id == view.Group._id).FirstOrDefault(),
           Skills = new List<Skill>(),
-          CBO = (occupation.Cbo == null) ? null : serviceCbo.GetAll(p => p._id == occupation.Cbo._id).FirstOrDefault(),
+          CBO = (view.Cbo == null) ? null : serviceCbo.GetAll(p => p._id == view.Cbo._id).FirstOrDefault(),
           Activities = new List<Activitie>(),
           SalaryScales = new List<SalaryScaleGrade>(),
           Schooling = new List<Schooling>(),
           Process = new List<ProcessLevelTwo>()
-        });
+        };
+
+        foreach (var item in view.Process)
+          occupation.Process.Add(serviceProcessLevelTwo.GetAll(p => p._id == item._id).FirstOrDefault());
+
+        serviceOccupation.Insert(occupation);
         return "ok";
       }
       catch (Exception)
