@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Auth;
@@ -14,8 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Tools;
 
@@ -50,7 +45,7 @@ namespace ManagerMessages
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, conn.TokenServer);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer, serviceMandatoryTraining);
+      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer);
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, conn.TokenServer);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);

@@ -35,12 +35,10 @@ namespace Mail
       IServiceMailMessage serviceMailMessage = new ServiceMailMessage(_context);
       IServiceSendGrid serviceSendGrid = new ServiceSendGrid(_context);
       IServiceMailModel serviceMailModel = new ServiceMailModel(_context);
-      IServiceMail serviceMail = new ServiceMail(_context);
 
       services.AddSingleton(_ => serviceMailMessage);
       services.AddSingleton(_ => serviceSendGrid);
       services.AddSingleton(_ => serviceMailModel);
-      services.AddSingleton(_ => serviceMail);
     }
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)

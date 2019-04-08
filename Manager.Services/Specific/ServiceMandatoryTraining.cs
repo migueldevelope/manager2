@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
@@ -63,6 +64,19 @@ namespace Manager.Services.Specific
       servicePerson._user = _user;
       servicePersonMandatory._user = _user;
       serviceTrainingPlan._user = _user;
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceCompany._user = user;
+      serviceCompanyMandatory._user = user;
+      serviceCourse._user = user;
+      serviceEventHistoric._user = user;
+      serviceMandatoryTraining._user = user;
+      serviceOccupation._user = user;
+      serviceOccupationMandatory._user = user;
+      servicePerson._user = user;
+      servicePersonMandatory._user = user;
+      serviceTrainingPlan._user = user;
     }
 
     #endregion

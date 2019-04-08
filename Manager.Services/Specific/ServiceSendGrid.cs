@@ -66,10 +66,6 @@ namespace Manager.Services.Specific
           HtmlContent = mailSend.Body
         };
 
-        //msg.ReplyTo.Email = "no-reply@jmsoft.com.br";
-        //msg.ReplyTo.Name = "no-reply";
-        
-
         foreach (var item in mailSend.To)
           msg.AddTo(new EmailAddress(item.Email, item.Name));
 
@@ -92,7 +88,7 @@ namespace Manager.Services.Specific
         {
           mailSend.StatusMail = EnumStatusMail.Error;
           serviceMail.Update(mailSend, null);
-          throw new ServiceException(_user, new Exception(string.Format("e-mail send error: {0}", response.StatusCode)), _context);
+          throw new Exception(string.Format("e-mail send error: {0}", response.StatusCode));
         }
 
         mailSend.StatusMail = EnumStatusMail.Sended;
@@ -103,9 +99,9 @@ namespace Manager.Services.Specific
         serviceMail.Update(mailSend, null);
         return "e-mail send sucess!";
       }
-      catch (ServiceException)
+      catch (Exception e)
       {
-        throw;
+        throw e;
       }
     }
     #endregion

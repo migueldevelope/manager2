@@ -21,44 +21,38 @@ namespace Manager.Services.Specific
   public class ServicePlan : Repository<Plan>, IServicePlan
   {
     private readonly ServiceAuthentication serviceAuthentication;
-    private ServiceGeneric<Person> servicePerson;
-    private ServiceGeneric<Course> serviceCourse;
-    private ServiceGeneric<Monitoring> serviceMonitoring;
-    private ServiceGeneric<Plan> servicePlan;
-    private ServiceGeneric<StructPlan> serviceStructPlan;
-    private ServiceGeneric<PlanActivity> servicePlanActivity;
+    private readonly ServiceGeneric<Course> serviceCourse;
     private readonly ServiceLog serviceLog;
-    private readonly ServiceMailModel serviceMailModel;
-    private readonly ServiceGeneric<MailMessage> serviceMailMessage;
-    private readonly ServiceGeneric<MailLog> serviceMail;
-    private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlans;
     private readonly ServiceLogMessages serviceLogMessages;
-    IServiceMandatoryTraining serviceMandatoryTraining;
+    private readonly ServiceGeneric<MailLog> serviceMail;
+    private readonly ServiceMailModel serviceMailModel;
+    private readonly ServiceMandatoryTraining serviceMandatoryTraining;
+    private readonly ServiceGeneric<Monitoring> serviceMonitoring;
+    private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<Plan> servicePlan;
+    private readonly ServiceGeneric<PlanActivity> servicePlanActivity;
+    private readonly ServiceGeneric<StructPlan> serviceStructPlan;
+    private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlans;
     public string path;
 
-
     #region Constructor
-    public BaseUser user { get => _user; set => user = _user; }
-
-    public ServicePlan(DataContext context, string pathToken, IServiceMandatoryTraining _serviceMandatoryTraining)
-      : base(context)
+    public ServicePlan(DataContext context, string pathToken) : base(context)
     {
       try
       {
-        serviceMandatoryTraining = _serviceMandatoryTraining;
+        serviceAuthentication = new ServiceAuthentication(context);
+        serviceCourse = new ServiceGeneric<Course>(context);
+        serviceLog = new ServiceLog(_context);
+        serviceLogMessages = new ServiceLogMessages(context);
+        serviceMail = new ServiceGeneric<MailLog>(context);
+        serviceMailModel = new ServiceMailModel(context);
+        serviceMandatoryTraining = new ServiceMandatoryTraining(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         servicePerson = new ServiceGeneric<Person>(context);
-        serviceCourse = new ServiceGeneric<Course>(context);
         servicePlan = new ServiceGeneric<Plan>(context);
-        serviceLog = new ServiceLog(_context);
-        serviceTrainingPlans = new ServiceGeneric<TrainingPlan>(context);
-        serviceMailModel = new ServiceMailModel(context);
-        serviceMailMessage = new ServiceGeneric<MailMessage>(context);
-        serviceMail = new ServiceGeneric<MailLog>(context);
-        serviceStructPlan = new ServiceGeneric<StructPlan>(context);
         servicePlanActivity = new ServiceGeneric<PlanActivity>(context);
-        serviceLogMessages = new ServiceLogMessages(context);
-        serviceAuthentication = new ServiceAuthentication(context);
+        serviceStructPlan = new ServiceGeneric<StructPlan>(context);
+        serviceTrainingPlans = new ServiceGeneric<TrainingPlan>(context);
         path = pathToken;
       }
       catch (Exception e)
@@ -72,20 +66,40 @@ namespace Manager.Services.Specific
       try
       {
         User(contextAccessor);
-        servicePerson._user = _user;
         serviceCourse._user = _user;
-        serviceMonitoring._user = _user;
-        servicePlan._user = _user;
-        serviceLog._user = _user;
-        serviceMailModel._user = _user;
-        serviceMailMessage._user = _user;
+        serviceLog.SetUser(_user);
+        serviceLogMessages.SetUser(_user);
         serviceMail._user = _user;
+        serviceMailModel.SetUser(_user);
+        serviceMandatoryTraining.SetUser(_user);
+        serviceMonitoring._user = _user;
+        servicePerson._user = _user;
         servicePlan._user = _user;
-        serviceStructPlan._user = _user;
         servicePlanActivity._user = _user;
+        serviceStructPlan._user = _user;
         serviceTrainingPlans._user = _user;
-        serviceLogMessages._user = _user;
-        serviceMandatoryTraining.SetUser(contextAccessor);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public void SetUser(BaseUser user)
+    {
+      try
+      {
+        serviceCourse._user = user;
+        serviceLog.SetUser(user);
+        serviceLogMessages.SetUser(user);
+        serviceMail._user = user;
+        serviceMailModel.SetUser(user);
+        serviceMandatoryTraining.SetUser(user);
+        serviceMonitoring._user = user;
+        servicePerson._user = user;
+        servicePlan._user = user;
+        servicePlanActivity._user = user;
+        serviceStructPlan._user = user;
+        serviceTrainingPlans._user = user;
       }
       catch (Exception e)
       {
@@ -367,16 +381,7 @@ namespace Manager.Services.Specific
 
         }
 
-        var url = "";
         var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
-        var message = new MailMessage
-        {
-          Type = EnumTypeMailMessage.Put,
-          Name = model.Name,
-          Url = url,
-          Body = body
-        };
-        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -393,9 +398,6 @@ namespace Manager.Services.Specific
         };
         var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
-        messageEnd.Token = token;
-        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {

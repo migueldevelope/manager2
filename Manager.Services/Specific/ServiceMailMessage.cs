@@ -4,57 +4,60 @@ using Manager.Data;
 using Manager.Core.Business;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
 using System;
-using System.Linq;
 using Manager.Core.Base;
 
 namespace Manager.Services.Specific
 {
   public class ServiceMailMessage : Repository<MailMessage>, IServiceMailMessage
   {
-    private readonly ServiceGeneric<MailMessage> mailMessageService;
+    private readonly ServiceGeneric<MailMessage> serviceMailMessage;
 
-    public BaseUser user { get => _user; set => user = _user; }
-
-    public ServiceMailMessage(DataContext context)
-      : base(context)
+    #region Constructor
+    public ServiceMailMessage(DataContext context) : base(context)
     {
       try
       {
-        mailMessageService = new ServiceGeneric<MailMessage>(context);
+        serviceMailMessage = new ServiceGeneric<MailMessage>(context);
       }
       catch (ServiceException)
       {
         throw;
       }
     }
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      serviceMailMessage._user = _user;
+    }
+    public void SetUser(BaseUser user)
+    {
+      serviceMailMessage._user = user;
+    }
+    #endregion
 
+    #region MailMessage
     public ViewMailMessage GetMessage(string id)
     {
       try
       {
-        return (from message in mailMessageService.GetAuthentication(p => p._id == id)
-                select message).ToList().
-                Select(message => new ViewMailMessage
-                {
-                  Url = message.Url,
-                  Body = message.Body,
-                  Type = message.Type,
-                  Token = message.Token,
-                  Name = message.Name
-                }).FirstOrDefault();
+        MailMessage message = serviceMailMessage.GetNewVersion(p => p._id == id).Result;
+        return message == null ? null :
+          new ViewMailMessage
+          {
+            Url = message.Url,
+            Body = message.Body,
+            Type = message.Type,
+            Token = message.Token,
+            Name = message.Name
+          };
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    #endregion
 
-    public void SetUser(IHttpContextAccessor contextAccessor)
-    {
-      User(contextAccessor);
-      mailMessageService._user = _user;
-    }
   }
 }

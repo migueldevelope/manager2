@@ -47,7 +47,7 @@ namespace Attachment
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, conn.TokenServer);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer, serviceMandatoryTraining);
+      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer);
       IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
       IServiceUser serviceUser = new ServiceUser(_context);
       //IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany, serviceUser);
