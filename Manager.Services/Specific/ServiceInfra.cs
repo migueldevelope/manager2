@@ -285,7 +285,7 @@ namespace Manager.Services.Specific
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           };
-          Schooling result =  serviceSchooling.InsertFreeNewVersion(item).Result;
+          Schooling result = serviceSchooling.InsertFreeNewVersion(item).Result;
         }
 
         // Sphere
@@ -336,7 +336,7 @@ namespace Manager.Services.Specific
             TypeAxis = item.TypeAxis,
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString(),
-        };
+          };
           serviceAxis.InsertFreeNewVersion(item);
         }
 
@@ -2211,7 +2211,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Group = serviceGroup.GetAll(p => p._id == occupation.Group._id).FirstOrDefault(),
           Skills = new List<Skill>(),
-          CBO = serviceCbo.GetAll(p => p._id == occupation.Cbo._id).FirstOrDefault(),
+          CBO = (occupation.Cbo == null) ? null : serviceCbo.GetAll(p => p._id == occupation.Cbo._id).FirstOrDefault(),
           Activities = new List<Activitie>(),
           SalaryScales = new List<SalaryScaleGrade>(),
           Schooling = new List<Schooling>(),
