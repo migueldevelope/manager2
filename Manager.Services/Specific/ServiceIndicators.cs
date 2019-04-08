@@ -26,7 +26,6 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Plan> planService;
     private readonly ServiceLog logService;
     private readonly ServiceMailModel mailModelService;
-    private readonly ServiceGeneric<MailMessage> mailMessageService;
     private readonly ServiceGeneric<MailLog> mailService;
     private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceGeneric<Certification> certificationService;
@@ -45,7 +44,6 @@ namespace Manager.Services.Specific
         checkpointService = new ServiceGeneric<Checkpoint>(context);
         logService = new ServiceLog(_context);
         mailModelService = new ServiceMailModel(context);
-        mailMessageService = new ServiceGeneric<MailMessage>(context);
         mailService = new ServiceGeneric<MailLog>(context);
         workflowService = new ServiceGeneric<Workflow>(context);
         accountService = new ServiceGeneric<Account>(context);
@@ -68,7 +66,6 @@ namespace Manager.Services.Specific
       monitoringService._user = _user;
       logService._user = _user;
       mailModelService._user = _user;
-      mailMessageService._user = _user;
       workflowService._user = _user;
       mailService._user = _user;
       certificationService._user = _user;
@@ -292,7 +289,6 @@ namespace Manager.Services.Specific
         monitoringService._user = _user;
         logService._user = _user;
         mailModelService._user = _user;
-        mailMessageService._user = _user;
         mailService._user = _user;
       }
       catch (Exception e)

@@ -27,7 +27,6 @@ namespace Manager.Services.Specific
     private readonly ServiceLog serviceLog;
     private readonly ServiceLogMessages serviceLogMessages;
     private readonly ServiceGeneric<MailLog> serviceMail;
-    private readonly ServiceGeneric<MailMessage> serviceMailMessage;
     private readonly ServiceMailModel serviceMailModel;
     private readonly ServiceGeneric<Monitoring> serviceMonitoring;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
@@ -48,7 +47,6 @@ namespace Manager.Services.Specific
         serviceLog = new ServiceLog(_context);
         serviceLogMessages = new ServiceLogMessages(context);
         serviceMail = new ServiceGeneric<MailLog>(context);
-        serviceMailMessage = new ServiceGeneric<MailMessage>(context);
         serviceMailModel = new ServiceMailModel(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
@@ -71,7 +69,6 @@ namespace Manager.Services.Specific
       serviceLog.SetUser(_user);
       serviceLogMessages.SetUser(_user);
       serviceMail._user = _user;
-      serviceMailMessage._user = _user;
       serviceMailModel.SetUser(_user);
       serviceMonitoring._user = _user;
       serviceOccupation._user = _user;
@@ -87,7 +84,6 @@ namespace Manager.Services.Specific
       serviceLog.SetUser(user);
       serviceLogMessages.SetUser(user);
       serviceMail._user = user;
-      serviceMailMessage._user = user;
       serviceMailModel.SetUser(user);
       serviceMonitoring._user = user;
       serviceOccupation._user = user;
@@ -239,16 +235,7 @@ namespace Manager.Services.Specific
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
-        var url = "";
         var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Guest}", guest.Name);
-        var message = new MailMessage
-        {
-          Type = EnumTypeMailMessage.Put,
-          Name = model.Name,
-          Url = url,
-          Body = body
-        };
-        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -265,9 +252,6 @@ namespace Manager.Services.Specific
         };
         var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
-        messageEnd.Token = token;
-        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -283,18 +267,9 @@ namespace Manager.Services.Specific
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
-        var url = "";
         var body = model.Message.Replace("{Manager}", person.Manager?.Name)
                                 .Replace("{Skill}", skillName)
                                 .Replace("{Person}", person.User.Name);
-        var message = new MailMessage
-        {
-          Type = EnumTypeMailMessage.Put,
-          Name = model.Name,
-          Url = url,
-          Body = body
-        };
-        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -311,9 +286,6 @@ namespace Manager.Services.Specific
         };
         var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
-        messageEnd.Token = token;
-        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -329,17 +301,8 @@ namespace Manager.Services.Specific
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
-        var url = "";
         var body = model.Message.Replace("{Person}", person.User.Name)
                                 .Replace("{Skill}", skillName);
-        var message = new MailMessage
-        {
-          Type = EnumTypeMailMessage.Put,
-          Name = model.Name,
-          Url = url,
-          Body = body
-        };
-        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -356,9 +319,6 @@ namespace Manager.Services.Specific
         };
         var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
-        messageEnd.Token = token;
-        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
@@ -374,18 +334,9 @@ namespace Manager.Services.Specific
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
-        var url = "";
         var body = model.Message.Replace("{Manager}", person.Manager?.Name)
                                 .Replace("{Skill}", skillName)
                                 .Replace("{Person}", person.User.Name);
-        var message = new MailMessage
-        {
-          Type = EnumTypeMailMessage.Put,
-          Name = model.Name,
-          Url = url,
-          Body = body
-        };
-        var idMessage = serviceMailMessage.Insert(message)._id;
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -402,9 +353,6 @@ namespace Manager.Services.Specific
         };
         var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
-        var messageEnd = serviceMailMessage.GetAll(p => p._id == idMessage).FirstOrDefault();
-        messageEnd.Token = token;
-        serviceMailMessage.Update(messageEnd, null);
       }
       catch (Exception e)
       {
