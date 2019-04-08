@@ -172,7 +172,7 @@ namespace Manager.Services.Specific
           if (model.StatusMail == EnumStatus.Disabled)
             return;
 
-          var url = path + "evaluationconfiguration/automanager/" + person._id.ToString() + "/approved/" + manager._id.ToString();
+          var url = path + "manager/automanager/" + person._id.ToString() + "/approved/" + manager._id.ToString();
           var message = new MailMessage
           {
             Type = EnumTypeMailMessage.Put,
@@ -187,7 +187,7 @@ namespace Manager.Services.Specific
           body = body.Replace("{Employee}", person.User.Name);
           // approved link
           body = body.Replace("{Approved}", model.Link + "/" + idMessageApv.ToString());
-          url = path + "evaluationconfiguration/automanager/" + person._id.ToString() + "/disapproved/" + manager._id.ToString();
+          url = path + "manager/automanager/" + person._id.ToString() + "/disapproved/" + manager._id.ToString();
           //disapproved link
           message.Url = url;
           var idMessageDis = serviceMailMessage.Insert(message)._id;
