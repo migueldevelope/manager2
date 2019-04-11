@@ -67,8 +67,6 @@ namespace Manager.Services.Auth
         }
         else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1)
         {
-          //if (userLogin.Mail == "toten@unimednordesters.com.br")
-          //  userLogin.Mail = "toten";
 
           GetUnimedAsync(userLogin.Mail, userLogin.Password);
           user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
@@ -236,9 +234,9 @@ namespace Manager.Services.Auth
       {
         string username = "apiadv";
         string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
-        string password2 = Tools.EncryptServices.GetMD5HashTypeTwo(password).ToLower();
+        string password2 = EncryptServices.GetMD5HashTypeTwo(password).ToLower();
 
-        using (var client = new HttpClient())
+        using (HttpClient client = new HttpClient())
         {
 
           client.DefaultRequestHeaders.Add("Autorization", "Basic " + password);
@@ -254,11 +252,11 @@ namespace Manager.Services.Auth
               senha = passwordClient
             }
           };
-          var json = JsonConvert.SerializeObject(data);
-          var content = new StringContent(json);
+          string json = JsonConvert.SerializeObject(data);
+          StringContent content = new StringContent(json);
           content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          var result = client.PostAsync("/", content).Result;
+          HttpResponseMessage result = client.PostAsync("/", content).Result;
           //var resultContent = result.Content.ReadAsStringAsync().Result;
 
           if (result.StatusCode != System.Net.HttpStatusCode.OK)

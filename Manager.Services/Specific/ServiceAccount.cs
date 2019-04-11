@@ -73,7 +73,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region New account
-    public async Task<string> NewAccount(ViewNewAccount view)
+    public string NewAccount(ViewNewAccount view)
     {
       try
       {
@@ -121,7 +121,7 @@ namespace Manager.Services.Specific
         serviceAccount._user._idPerson = person._id;
         // Criar os parâmetros básicos
         serviceInfra._user = serviceAccount._user;
-        await serviceInfra.CopyTemplateInfraAsync(company);
+        Task.Run(() => serviceInfra.CopyTemplateInfraAsync(company));
         return "Account created!";
       }
       catch (Exception e)
@@ -203,17 +203,10 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Syncronize Parameters
-    public async Task<string> SynchronizeParameters()
+    public string SynchronizeParameters()
     {
-      await serviceInfra.SynchronizeParametersAsync();
+      Task.Run(() => serviceInfra.SynchronizeParametersAsync());
       return "Parameters synchonized!";
-    }
-    #endregion
-
-    #region Old
-    public Account GeAccount(Expression<Func<Account, bool>> filter)
-    {
-      return serviceAccount.GetAuthentication(filter).FirstOrDefault();
     }
     #endregion
 

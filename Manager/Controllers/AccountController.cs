@@ -97,7 +97,7 @@ namespace Manager.Controllers
     [Route("synchronize")]
     public string Synchronize()
     {
-      return service.SynchronizeParameters().Result;
+      return service.SynchronizeParameters();
     }
     #endregion
 

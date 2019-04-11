@@ -1,13 +1,9 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Business;
 using Manager.Core.Views;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessNew;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
 {
@@ -15,12 +11,10 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser _user);
-    Task<string> NewAccount(ViewNewAccount view);
+    string NewAccount(ViewNewAccount view);
     List<ViewListAccount> GetAll(ref long total, int count = 10, int page = 1, string filter = "");
     ViewPerson AlterAccount(string idaccount);
     ViewPerson AlterAccountPerson(string idperson);
-    Task<string> SynchronizeParameters();
-    Account GeAccount(Expression<Func<Account, bool>> filter);
-
+    string SynchronizeParameters();
   }
 }

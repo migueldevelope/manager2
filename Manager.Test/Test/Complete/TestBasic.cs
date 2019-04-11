@@ -63,12 +63,12 @@ namespace Manager.Test.Test.Complete
       {
         base.Init();
 
-        var account = this.serviceAccount.GeAccount(p => p.Name == "TestBig")._id;
-        var baseUser = new BaseUser()
-        {
-          _idAccount = account
-        };
-        base.Init();
+        //var account = this.serviceAccount.GeAccount(p => p.Name == "TestBig")._id;
+        //var baseUser = new BaseUser()
+        //{
+        //  _idAccount = account
+        //};
+        //base.Init();
         serviceIntegration = new ServiceIntegration(base.context);
         serviceIntegration.SetUser(baseUser);
 
@@ -161,10 +161,10 @@ namespace Manager.Test.Test.Complete
       {
         base.Init();
 
-        var account = this.serviceAccount.GeAccount(p => p.Name == "Support")._id;
+        //var account = this.serviceAccount.GeAccount(p => p.Name == "Support")._id;
         var baseUser = new BaseUser()
         {
-          _idAccount = account
+//          _idAccount = account
         };
         base.Init();
         serviceIntegration = new ServiceIntegration(base.context);
@@ -326,10 +326,10 @@ namespace Manager.Test.Test.Complete
       {
         base.Init();
 
-        var account = this.serviceAccount.GeAccount(p => p.Name == "Support")._id;
+        //var account = this.serviceAccount.GeAccount(p => p.Name == "Support")._id;
         var baseUser = new BaseUser()
         {
-          _idAccount = account
+          //_idAccount = account
         };
         base.Init();
         serviceIntegration = new ServiceIntegration(base.context);
