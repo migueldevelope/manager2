@@ -15,6 +15,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Manager.Views.Enumns;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Manager.Services.Auth
 {
@@ -59,6 +61,13 @@ namespace Manager.Services.Auth
         if (userLogin.Mail.IndexOf("@maristas.org.br") != -1 || userLogin.Mail.IndexOf("@pucrs.br") != -1)
         {
           GetMaristasAsync(userLogin.Mail, userLogin.Password);
+          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
+          if (user == null)
+            throw new Exception("User not authorized!");
+        }
+        else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1)
+        {
+          GetUnimedAsync(userLogin.Mail, userLogin.Password);
           user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
           if (user == null)
             throw new Exception("User not authorized!");
@@ -109,7 +118,7 @@ namespace Manager.Services.Auth
         if (registerLog)
         {
           serviceLog.SetUser(_user);
-          LogSave(servicePerson.GetFreeNewVersion(p => p.User._id == user._id).Result);
+          Task.Run(() => LogSave(servicePerson.GetFreeNewVersion(p => p.User._id == user._id).Result));
         }
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
@@ -195,14 +204,17 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async void GetMaristasAsync(string login, string senha)
+    #endregion
+
+    #region private
+    private async void GetMaristasAsync(string login, string password)
     {
       try
       {
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri("http://integracoes.maristas.org.br");
-          var content = new StringContent("login=" + login + "&senha=" + senha);
+          var content = new StringContent("login=" + login + "&senha=" + password);
           content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
           client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
           HttpResponseMessage result = await client.PostAsync("wspucsede/WService.asmx/ValidateUser", content);
@@ -215,7 +227,47 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public void LogSave(Person user)
+    private async void GetUnimedAsync(string login, string passwordClient)
+    {
+      try
+      {
+        string username = "apiadv";
+        string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
+        string password2 = Tools.EncryptServices.GetMD5HashTypeTwo(password).ToLower();
+
+        using (var client = new HttpClient())
+        {
+
+          client.DefaultRequestHeaders.Add("Autorization", "Basic " + password);
+          client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(new UTF8Encoding().GetBytes(username + ":" + password2)));
+          client.BaseAddress = new Uri("https://apip1.unimednordesters.com.br");
+
+          var data = new
+          {
+            channel = "apiadv",
+            parametros = new
+            {
+              usuario = login,
+              senha = passwordClient
+            }
+          };
+          var json = JsonConvert.SerializeObject(data);
+          var content = new StringContent(json);
+          content.Headers.ContentType.MediaType = "application/json";
+          client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          var result = client.PostAsync("/", content).Result;
+          //var resultContent = result.Content.ReadAsStringAsync().Result;
+
+          if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            throw new Exception("User/Password invalid!");
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private async Task LogSave(Person user)
     {
       try
       {
@@ -231,7 +283,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    #endregion
 
+    #endregion
   }
 }
