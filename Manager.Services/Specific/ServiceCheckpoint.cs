@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -192,7 +193,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "List ended");
+        Task.Run(() => LogSave(_user._idPerson, "List ended"));
         int skip = (count * (page - 1));
         var detail = serviceCheckpoint.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Person.User.Name").Result
           .Select(p => new ViewListCheckpoint()
@@ -283,7 +284,7 @@ namespace Manager.Services.Specific
           };
           checkpoint = LoadMap(checkpoint);
           checkpoint = serviceCheckpoint.InsertNewVersion(checkpoint).Result;
-          LogSave(idperson, string.Format("Start new process | {0}", checkpoint._id));
+          Task.Run(() => LogSave(idperson, string.Format("Start new process | {0}", checkpoint._id)));
         }
         return new ViewListCheckpoint()
         {
@@ -433,7 +434,7 @@ namespace Manager.Services.Specific
         if (checkpoint == null)
           return "Checkpoint not available!";
 
-        LogSave(_user._idPerson, string.Format("Delete | {0}", idcheckpoint));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | {0}", idcheckpoint)));
         checkpoint.Status = EnumStatus.Disabled;
         serviceCheckpoint.Update(checkpoint, null);
         return "Checkpoint deleted!";
@@ -464,16 +465,16 @@ namespace Manager.Services.Specific
             person.TypeJourney = EnumTypeJourney.Monitoring;
             servicePerson.Update(person, null);
 
-            MailRhApproved(person, "Aprovado");
-            MailPerson(person, "Aprovado");
+            Task.Run(() => MailRhApproved(person, "Aprovado"));
+            Task.Run(() => MailPerson(person, "Aprovado"));
 
             serviceLogMessages.NewLogMessage("Checkpoint", string.Format(" Colaborador {0} aprovado no Checkpoint", person.User.Name), person);
-            LogSave(view.Person._id, string.Format("Approved | {0}.", view._id));
+            Task.Run(() => LogSave(view.Person._id, string.Format("Approved | {0}.", view._id)));
           }
           else
           {
-            MailRhDisapproved(person, "Reprovado");
-            LogSave(view.Person._id, string.Format("Disapproved | {0}.", view._id));
+            Task.Run(() => MailRhDisapproved(person, "Reprovado"));
+            Task.Run(() => LogSave(view.Person._id, string.Format("Disapproved | {0}.", view._id)));
           }
         }
         checkpoint.Comments = view.Comments;
@@ -523,7 +524,7 @@ namespace Manager.Services.Specific
           return null;
         //throw new Exception("Checkpoint not available!");
 
-        LogSave(idperson, string.Format("Person ended | {0}", checkpoint._id));
+        Task.Run(() => LogSave(idperson, string.Format("Person ended | {0}", checkpoint._id)));
 
         return new ViewCrudCheckpoint()
         {
@@ -741,7 +742,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailRhApproved(Person person, string result)
+    private async Task MailRhApproved(Person person, string result)
     {
       try
       {
@@ -778,7 +779,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailRhDisapproved(Person person, string result)
+    private async Task MailRhDisapproved(Person person, string result)
     {
       try
       {
@@ -815,7 +816,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailPerson(Person person, string result)
+    private async Task MailPerson(Person person, string result)
     {
       try
       {
@@ -870,7 +871,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(idmanager, "ListEnd");
+        Task.Run(() => LogSave(idmanager, "ListEnd"));
         int skip = (count * (page - 1));
         var detail = serviceCheckpoint.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceCheckpoint.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -887,7 +888,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(idperson, "PersonEnd");
+        Task.Run(() => LogSave(idperson, "PersonEnd"));
         return serviceCheckpoint.GetAll(p => p.Person._id == idperson & p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
       }
       catch (Exception e)
@@ -1050,7 +1051,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public void LogSave(string idperson, string local)
+    public async Task LogSave(string idperson, string local)
     {
       try
       {

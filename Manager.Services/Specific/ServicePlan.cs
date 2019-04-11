@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -128,7 +129,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                UpdatePlan(viewPlan, monitoring.Person);
+                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
                 listActivities.Add(viewPlan);
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
@@ -136,7 +137,7 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                UpdatePlan(plan, monitoring.Person);
+                Task.Run(() => UpdatePlan(plan, monitoring.Person));
                 listActivities.Add(plan);
               }
               else
@@ -154,7 +155,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                UpdatePlan(viewPlan, monitoring.Person);
+                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
                 listSchoolings.Add(viewPlan);
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
@@ -162,7 +163,7 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                UpdatePlan(plan, monitoring.Person);
+                Task.Run(() => UpdatePlan(plan, monitoring.Person));
                 listSchoolings.Add(plan);
               }
               else
@@ -181,7 +182,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                UpdatePlan(viewPlan, monitoring.Person);
+                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
                 listSkillsCompany.Add(viewPlan);
               }
               else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible))
@@ -189,7 +190,7 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                UpdatePlan(plan, monitoring.Person);
+                Task.Run(() => UpdatePlan(plan, monitoring.Person));
                 listSkillsCompany.Add(plan);
               }
               else
@@ -225,7 +226,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person);
-                UpdatePlan(planOld, monitoring.Person);
+                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listActivities.Add(planOld);
                 listActivities.Add(viewPlan);
               }
@@ -245,7 +246,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person);
-                UpdatePlan(planOld, monitoring.Person);
+                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listSchoolings.Add(planOld);
                 listSchoolings.Add(viewPlan);
               }
@@ -265,7 +266,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person);
-                UpdatePlan(planOld, monitoring.Person);
+                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listSkillsCompany.Add(planOld);
                 listSkillsCompany.Add(viewPlan);
               }
@@ -326,16 +327,16 @@ namespace Manager.Services.Specific
       }
     }
 
-    private string UpdatePlan(Plan plan, Person person)
+    private async Task UpdatePlan(Plan plan, Person person)
     {
       try
       {
-        LogSave(person._id, "Plan Process Update");
+        Task.Run(() => LogSave(person._id, "Plan Process Update"));
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
-          Mail(servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault());
+          Task.Run(() => Mail(servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault()));
 
         servicePlan.Update(plan, null);
-        return "Plan altered!";
+        //return "Plan altered!";
       }
       catch (Exception e)
       {
@@ -343,7 +344,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async void LogSave(string iduser, string local)
+    private async Task LogSave(string iduser, string local)
     {
       try
       {
@@ -362,7 +363,7 @@ namespace Manager.Services.Specific
       }
     }
     // send mail
-    private void Mail(Person person)
+    private async Task Mail(Person person)
     {
       try
       {
@@ -474,7 +475,7 @@ namespace Manager.Services.Specific
         }).ToList();
         plan.TypePlan = viewPlan.TypePlan;
 
-        UpdatePlan(idmonitoring, plan);
+        Task.Run(() => UpdatePlan(idmonitoring, plan));
         return "update";
       }
       catch (Exception e)
@@ -2464,7 +2465,7 @@ namespace Manager.Services.Specific
             NewPlanView(idmonitoring, planUpdate, planNew);
           }
           else
-            UpdatePlan(idmonitoring, planUpdate);
+            Task.Run(() => UpdatePlan(idmonitoring, planUpdate));
         }
         return "newupdate";
       }

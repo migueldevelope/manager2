@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -207,7 +208,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async void LogSave(string iduser, string local)
+    private async Task LogSave(string iduser, string local)
     {
       try
       {
@@ -226,7 +227,7 @@ namespace Manager.Services.Specific
       }
     }
     //send mail
-    private async void Mail(Person person, BaseFields guest)
+    private async Task Mail(Person person, BaseFields guest)
     {
       try
       {
@@ -417,7 +418,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, string.Format("Delete | ", idcertification));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | ", idcertification)));
         var certification = serviceCertification.GetAll(p => p.Person._id == idcertification).FirstOrDefault();
         if (certification == null)
           return "Certification deleted!";
@@ -592,7 +593,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "List exclud");
+        Task.Run(() => LogSave(_user._idPerson, "List exclud"));
         int skip = (count * (page - 1));
         var detail = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -785,7 +786,7 @@ namespace Manager.Services.Specific
         certification = LoadMap(certification);
 
         certification = serviceCertification.InsertNewVersion(certification).Result;
-        LogSave(_user._idPerson, string.Format("Start new process | {0}", certification._id));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", certification._id)));
         return new ViewCrudCertification()
         {
           _id = certification._id,
@@ -892,7 +893,7 @@ namespace Manager.Services.Specific
           }
           serviceCertificationPerson.Update(item, null);
           serviceCertification.Update(certification, null);
-          LogSave(_user._idPerson, string.Format("Certification approved | {0}", certification._id));
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Certification approved | {0}", certification._id)));
           return "Certification approved!";
         }
         return "Certification not found!";
@@ -932,7 +933,7 @@ namespace Manager.Services.Specific
           {
             try
             {
-              Mail(certification.Person, new BaseFields() { Name = item.Person.User.Name, Mail = item.Person.User.Mail });
+              Task.Run(() => Mail(certification.Person, new BaseFields() { Name = item.Person.User.Name, Mail = item.Person.User.Mail }));
             }
             catch (Exception)
             {

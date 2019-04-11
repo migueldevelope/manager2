@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
@@ -195,14 +196,14 @@ namespace Manager.Services.Specific
             onBoarding.StatusOnBoarding = EnumStatusOnBoarding.InProgressManager;
           }
           onBoarding = serviceOnboarding.InsertNewVersion(onBoarding).Result;
-          LogSave(_user._idPerson, string.Format("Start process | {0}", onBoarding._id));
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", onBoarding._id)));
         }
         else
         {
           if (onBoarding.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson)
           {
             onBoarding.DateBeginEnd = DateTime.Now;
-            LogSave(_user._idPerson, string.Format("Send person approval | {0}", onBoarding._id));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", onBoarding._id)));
             serviceOnboarding.Update(onBoarding, null);
           }
         }
@@ -511,7 +512,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, string.Format("Delete comment | {0} item {1} comment {2}", idonboarding, iditem, idcomments));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete comment | {0} item {1} comment {2}", idonboarding, iditem, idcomments)));
         var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
         foreach (var item in onboarding.Activities)
         {
@@ -619,7 +620,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, string.Format("Delete | {0}", id));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | {0}", id)));
         var onboarding = serviceOnboarding.GetNewVersion(p => p._id == id).Result;
         onboarding.Status = EnumStatus.Disabled;
         serviceOnboarding.Update(onboarding, null);
@@ -635,7 +636,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(idmanager, "List ended");
+        Task.Run(() => LogSave(idmanager, "List ended"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -658,7 +659,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, string.Format("Add comment | {0} item {1}", idonboarding, iditem));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0} item {1}", idonboarding, iditem)));
         var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
         foreach (var item in onboarding.Activities)
         {
@@ -1150,7 +1151,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(idmanager, "List ended for person");
+        Task.Run(() => LogSave(idmanager, "List ended for person"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -1380,10 +1381,10 @@ namespace Manager.Services.Specific
           {
             onboarding.DateEndManager = DateTime.Now;
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-              MailOccupation(onboarding.Person);
+              Task.Run(() => MailOccupation(onboarding.Person));
             else
-              Mail(onboarding.Person);
-            LogSave(view.Person._id, string.Format("Send person approval | {0}", onboarding._id));
+              Task.Run(() => Mail(onboarding.Person));
+            Task.Run(() => LogSave(view.Person._id, string.Format("Send person approval | {0}", onboarding._id)));
           }
 
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
@@ -1402,7 +1403,7 @@ namespace Manager.Services.Specific
               person.TypeJourney = EnumTypeJourney.Checkpoint;
             servicePerson.Update(person, null);
 
-            LogSave(view.Person._id, string.Format("Conclusion process | {0}", onboarding._id));
+            Task.Run(() => LogSave(view.Person._id, string.Format("Conclusion process | {0}", onboarding._id)));
           }
         }
         else
@@ -1414,10 +1415,10 @@ namespace Manager.Services.Specific
               onboarding.StatusOnBoarding = EnumStatusOnBoarding.WaitManagerRevision;
               onboarding.DateEndPerson = DateTime.Now;
               if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-                MailDisapprovedOccupation(onboarding.Person);
+                Task.Run(() => MailDisapprovedOccupation(onboarding.Person));
               else
-                MailDisapproved(onboarding.Person);
-              LogSave(view.Person._id, string.Format("Send manager review | {0}", onboarding._id));
+                Task.Run(() => MailDisapproved(onboarding.Person));
+              Task.Run(() => LogSave(view.Person._id, string.Format("Send manager review | {0}", onboarding._id)));
             }
             else
             {
@@ -1431,7 +1432,7 @@ namespace Manager.Services.Specific
                 person.TypeJourney = EnumTypeJourney.Monitoring;
               else
                 person.TypeJourney = EnumTypeJourney.Checkpoint;
-              LogSave(view.Person._id, string.Format("Conclusion process | {0}", onboarding._id));
+              Task.Run(() => LogSave(view.Person._id, string.Format("Conclusion process | {0}", onboarding._id)));
               servicePerson.Update(person, null);
             }
 
@@ -1441,18 +1442,18 @@ namespace Manager.Services.Specific
           {
             onboarding.DateEndPerson = DateTime.Now;
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-              MailManagerOccupation(onboarding.Person);
+              Task.Run(() => MailManagerOccupation(onboarding.Person));
             else
-              MailManager(onboarding.Person);
-            LogSave(view.Person._id, string.Format("Send manager approval | {0}", onboarding._id));
+              Task.Run(() => MailManager(onboarding.Person));
+            Task.Run(() => LogSave(view.Person._id, string.Format("Send manager approval | {0}", onboarding._id)));
           }
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision)
           {
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-              MailDisapprovedOccupation(onboarding.Person);
+              Task.Run(() => MailDisapprovedOccupation(onboarding.Person));
             else
-              MailDisapproved(onboarding.Person);
-            LogSave(view.Person._id, string.Format("Send manager review | {0}", onboarding._id));
+              Task.Run(() => MailDisapproved(onboarding.Person));
+            Task.Run(() => LogSave(view.Person._id, string.Format("Send manager review | {0}", onboarding._id)));
           }
         }
         serviceOnboarding.Update(onboarding, null);
@@ -1467,7 +1468,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogSave(_user._idPerson, "OnBoarding list for exclud");
+        Task.Run(() => LogSave(_user._idPerson, "OnBoarding list for exclud"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -1657,7 +1658,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void LogSave(string idperson, string local)
+    private async Task LogSave(string idperson, string local)
     {
       try
       {
