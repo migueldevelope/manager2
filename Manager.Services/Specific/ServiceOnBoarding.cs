@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -1675,7 +1676,7 @@ namespace Manager.Services.Specific
       }
     }
     // send mail
-    private async void Mail(Person person)
+    private async Task Mail(Person person)
     {
       try
       {
@@ -1709,14 +1710,14 @@ namespace Manager.Services.Specific
           Subject = model.Subject
         };
         var mailObj = serviceMailLog.Insert(sendMail);
-        var token = SendMail(pathToken, person, mailObj._id.ToString());
+        SendMail(pathToken, person, mailObj._id.ToString());
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    private async void MailManager(Person person)
+    private async Task MailManager(Person person)
     {
       try
       {
@@ -1758,7 +1759,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailOccupation(Person person)
+    private async Task MailOccupation(Person person)
     {
       try
       {
@@ -1790,7 +1791,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailManagerOccupation(Person person)
+    private async Task MailManagerOccupation(Person person)
     {
       try
       {
@@ -1832,7 +1833,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailDisapproved(Person person)
+    private async Task MailDisapproved(Person person)
     {
       try
       {
@@ -2520,9 +2521,9 @@ namespace Manager.Services.Specific
           {
             onboarding.DateEndManager = DateTime.Now;
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-              MailOccupation(onboarding.Person);
+              Task.Run(() => MailOccupation(onboarding.Person));
             else
-              Mail(onboarding.Person);
+              Task.Run(() => Mail(onboarding.Person));
           }
 
           if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
@@ -2568,13 +2569,13 @@ namespace Manager.Services.Specific
           {
             onboarding.DateEndPerson = DateTime.Now;
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-              MailManagerOccupation(onboarding.Person);
+              Task.Run(() => MailManagerOccupation(onboarding.Person));
             else
-              MailManager(onboarding.Person);
+              Task.Run(() => MailManager(onboarding.Person));
           }
           else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision)
           {
-            MailDisapproved(onboarding.Person);
+            Task.Run(() => MailDisapproved(onboarding.Person));
           }
         }
         serviceOnboarding.Update(onboarding, null);
