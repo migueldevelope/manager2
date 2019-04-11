@@ -67,6 +67,9 @@ namespace Manager.Services.Auth
         }
         else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1)
         {
+          //if (userLogin.Mail == "toten@unimednordesters.com.br")
+          //  userLogin.Mail = "toten";
+
           GetUnimedAsync(userLogin.Mail, userLogin.Password);
           user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
           if (user == null)
