@@ -776,7 +776,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de retorno</returns>
     [Authorize]
     [HttpDelete]
-    [Route("deleteoccupationactivities/{idoccupation}/{activitie}")]
+    [Route("deleteoccupationactivities/{idoccupation}/{idactivitie}")]
     public string DeleteOccupationActivities(string idoccupation, string idactivitie)
     {
       return service.DeleteOccupationActivities(idoccupation, idactivitie);

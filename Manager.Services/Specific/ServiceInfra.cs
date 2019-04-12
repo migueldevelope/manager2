@@ -2036,7 +2036,8 @@ namespace Manager.Services.Specific
       {
         foreach (var view in list)
         {
-          AddOccupationActivities(view);
+          if (!string.IsNullOrEmpty(view.Activities.Name.Trim()))
+            AddOccupationActivities(view);
         }
 
         return "ok";
