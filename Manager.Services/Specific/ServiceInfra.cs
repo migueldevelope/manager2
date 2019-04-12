@@ -2204,12 +2204,14 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var group = serviceGroup.GetAll(p => p._id == view.Group._id).FirstOrDefault();
+
         var occupation = new Occupation()
         {
           Name = view.Name,
           Line = view.Line,
           Status = EnumStatus.Enabled,
-          Group = serviceGroup.GetAll(p => p._id == view.Group._id).FirstOrDefault(),
+          Group = group,
           Skills = new List<Skill>(),
           CBO = (view.Cbo == null) ? null : serviceCbo.GetAll(p => p._id == view.Cbo._id).FirstOrDefault(),
           Activities = new List<Activitie>(),
@@ -2220,6 +2222,22 @@ namespace Manager.Services.Specific
 
         foreach (var item in view.Process)
           occupation.Process.Add(serviceProcessLevelTwo.GetAll(p => p._id == item._id).FirstOrDefault());
+
+        if (view.SalaryScales != null)
+          foreach (var item in view.SalaryScales)
+            occupation.SalaryScales.Add(new SalaryScaleGrade()
+            {
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = _user._idAccount,
+              Status = EnumStatus.Enabled,
+              NameGrade = item.NameGrade,
+              NameSalaryScale = item.Name,
+              _idGrade = item._idGrade,
+              _idSalaryScale = item._id
+            });
+
+        if (group.Schooling != null)
+          occupation.Schooling = group.Schooling;
 
         serviceOccupation.Insert(occupation);
         return "ok";
