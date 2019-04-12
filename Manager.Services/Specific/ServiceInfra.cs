@@ -2034,12 +2034,41 @@ namespace Manager.Services.Specific
     {
       try
       {
+
+        var occupation = serviceOccupation.GetAll(p => p._id == list.FirstOrDefault().idOccupation).FirstOrDefault();
+        long order = 1;
+        try
+        {
+          order = occupation.Activities.Max(p => p.Order) + 1;
+          if (order == 0)
+          {
+            order = 1;
+          }
+        }
+        catch (Exception)
+        {
+          order = 1;
+        }
+
+
         foreach (ViewCrudOccupationActivities view in list)
         {
           if (!string.IsNullOrEmpty(view.Activities.Name.Trim()))
-            AddOccupationActivities(view);
+          {
+            var activitie = new Activitie()
+            {
+              Order = order,
+              _id = ObjectId.GenerateNewId().ToString(),
+              _idAccount = _user._idAccount,
+              Name = view.Activities.Name,
+              Status = EnumStatus.Enabled
+            };
+
+            occupation.Activities.Add(activitie);
+          }
         }
 
+        serviceOccupation.Update(occupation, null);
         return "ok";
       }
       catch (Exception e)
