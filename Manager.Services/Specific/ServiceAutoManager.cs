@@ -182,16 +182,16 @@ namespace Manager.Services.Specific
           };
           var idMessageApv = serviceMailMessage.Insert(message)._id;
           var requestor = servicePerson.GetAll(p => p._id == auto.Workflow.FirstOrDefault().Requestor._id).FirstOrDefault();
-          var body = model.Message.Replace("{Person}", auto.Workflow.FirstOrDefault().Requestor.User.Name);
+          var body = model.Message.Replace("{Person}", auto.Workflow.FirstOrDefault().Requestor.User.Name).Replace("{Manager}", auto.Workflow.FirstOrDefault().Requestor.Manager.Name);
           body = body.Replace("{Requestor}", auto.Requestor.User.Name);
           body = body.Replace("{Employee}", person.User.Name);
           // approved link
-          body = body.Replace("{Approved}", model.Link + "/" + idMessageApv.ToString());
+          body = body.Replace("{Approved}", model.Link + "GenericMessage/" + idMessageApv.ToString());
           url = path + "manager/automanager/" + person._id.ToString() + "/disapproved/" + manager._id.ToString();
           //disapproved link
           message.Url = url;
           var idMessageDis = serviceMailMessage.Insert(message)._id;
-          body = body.Replace("{Disapproved}", model.Link + "/" + idMessageDis.ToString());
+          body = body.Replace("{Disapproved}", model.Link + "GenericMessage/" + idMessageDis.ToString());
           var sendMail = new MailLog
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),

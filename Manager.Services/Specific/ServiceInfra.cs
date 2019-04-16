@@ -4179,11 +4179,12 @@ namespace Manager.Services.Specific
             Name = item.Name,
             Area = new ViewListArea() { _id = item.Area._id, Name = item.Area.Name },
             Order = item.Order,
-            Process = serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).Select(x => new ViewListProcessLevelTwo()
+            Process = serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).Select(x => new ViewCrudProcessLevelTwo()
             {
               _id = x._id,
               Name = x.Name,
-              Order = x.Order
+              Order = x.Order,
+              Comments = x.Comments
             }).OrderBy(p => p.Order).ToList()
           };
 

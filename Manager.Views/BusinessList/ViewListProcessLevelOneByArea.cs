@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Manager.Views.BusinessCrud;
+using System.Collections.Generic;
 
 namespace Manager.Views.BusinessList
 {
@@ -6,6 +7,6 @@ namespace Manager.Views.BusinessList
   {
     public ViewListArea Area { get; set; }
     public long Order { get; set; }
-    public List<ViewListProcessLevelTwo> Process { get; set; }
+    public List<ViewCrudProcessLevelTwo> Process { get; set; }
   }
 }
