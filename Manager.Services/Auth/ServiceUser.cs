@@ -308,7 +308,7 @@ namespace Manager.Services.Auth
         if (forgotPassword.Message == string.Empty)
           message = string.Format("Hello {0}<br>To reset your password click the link below<br>http://{1}/evaluation_f/forgot", user.Name, forgotPassword.Link);
         else
-          message = forgotPassword.Message.Replace("{User}", user.Name).Replace("{Link}", forgotPassword.Link + "/" + guid);
+          message = forgotPassword.Message.Replace("{Person}", user.Name).Replace("{Link}", forgotPassword.Link + "/" + guid);
 
         serviceUser._user = new BaseUser()
         {
