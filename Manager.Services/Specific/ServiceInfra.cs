@@ -1386,21 +1386,29 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task UpdateProcessLevelTwoAll(ProcessLevelTwo processLevelTwo)
+    private async Task UpdateProcessLevelTwoAll(string id)
     {
       try
       {
-        foreach (var item in serviceOccupation.GetAll(p => p.Process.Exists(i => i._id == processLevelTwo._id)).ToList())
+        var processLevelTwo = serviceProcessLevelTwo.GetAll(p => p._id == id).FirstOrDefault();
+
+        var list = serviceOccupation.GetAll().ToList();
+
+        foreach (var item in list)
         {
-          foreach (var proc in item.Process)
+          if(item.Process != null)
           {
-            if (proc._id == processLevelTwo._id)
+            var process = item.Process.Where(p => p._id == id).ToList();
+            foreach (var proc in process)
             {
-              item.Process.Remove(proc);
-              item.Process.Add(processLevelTwo);
-              this.serviceOccupation.Update(item, null);
-              UpdateOccupationAll(item);
-              break;
+              if (proc._id == processLevelTwo._id)
+              {
+                item.Process.Remove(proc);
+                item.Process.Add(processLevelTwo);
+                this.serviceOccupation.Update(item, null);
+                UpdateOccupationAll(item);
+                break;
+              }
             }
           }
         }
@@ -2101,7 +2109,7 @@ namespace Manager.Services.Specific
         var occupation = serviceOccupation.GetAll(p => p._id == view._idOccupation).FirstOrDefault();
         var skill = serviceSkill.GetAll(p => p._id == view.Skill._id).FirstOrDefault();
 
-        if (view.Skill == null)
+        if (skill == null)
         {
           skill = AddSkillInternal(new ViewCrudSkill()
           {
@@ -4048,7 +4056,9 @@ namespace Manager.Services.Specific
         model.Comments = view.Comments;
 
         serviceProcessLevelTwo.Update(model, null);
-        UpdateProcessLevelTwoAll(model);
+        
+        Task.Run(() => UpdateProcessLevelTwoAll(model._id));
+        //UpdateProcessLevelTwoAll(model._id);
         return "update";
       }
       catch (Exception e)
@@ -4174,7 +4184,7 @@ namespace Manager.Services.Specific
               _id = x._id,
               Name = x.Name,
               Order = x.Order
-            }).ToList()
+            }).OrderBy(p => p.Order).ToList()
           };
 
           result.Add(view);
@@ -4182,7 +4192,7 @@ namespace Manager.Services.Specific
 
 
 
-        return result;
+        return result.OrderBy(p => p.Order).ToList();
       }
       catch (Exception e)
       {
@@ -4250,8 +4260,8 @@ namespace Manager.Services.Specific
               Order = x.ProcessLevelOne.Order,
               Area = new ViewListArea()
               {
-                _id = x.ProcessLevelOne.Area._id,
-                Name = x.ProcessLevelOne.Area.Name
+                _id = x.ProcessLevelOne?.Area._id,
+                Name = x.ProcessLevelOne?.Area.Name
               }
             }
           }).ToList(),
@@ -4263,12 +4273,12 @@ namespace Manager.Services.Specific
             Type = x.Type,
             Order = x.Order
           }).ToList(),
-          Skills = occupation.Skills?.OrderBy(o => o.Name).Select(x => new ViewListSkill()
+          Skills = occupation.Skills?.OrderBy(o => o?.Name).Select(x => new ViewListSkill()
           {
-            _id = x._id,
-            Name = x.Name,
-            Concept = x.Concept,
-            TypeSkill = x.TypeSkill
+            _id = x?._id,
+            Name = x?.Name,
+            Concept = x?.Concept,
+            TypeSkill = (x == null) ? 0 : x.TypeSkill
           }).ToList(),
           SkillsCompany = company.Skills?.OrderBy(o => o.Name).Select(x => new ViewListSkill()
           {
@@ -5432,7 +5442,7 @@ namespace Manager.Services.Specific
       try
       {
         serviceProcessLevelTwo.Update(model, null);
-        UpdateProcessLevelTwoAll(model);
+        Task.Run(() => UpdateProcessLevelTwoAll(model._id));
         return "update";
       }
       catch (Exception e)
