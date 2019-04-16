@@ -182,7 +182,7 @@ namespace Manager.Services.Specific
           };
           var idMessageApv = serviceMailMessage.Insert(message)._id;
           var requestor = servicePerson.GetAll(p => p._id == auto.Workflow.FirstOrDefault().Requestor._id).FirstOrDefault();
-          var body = model.Message.Replace("{Person}", auto.Workflow.FirstOrDefault().Requestor.User.Name).Replace("{Manager}", auto.Workflow.FirstOrDefault().Requestor.Manager.Name);
+          var body = model.Message.Replace("{Person}", auto.Workflow.FirstOrDefault().Requestor.User.Name).Replace("{Manager}", requestor.User.Name);
           body = body.Replace("{Requestor}", auto.Requestor.User.Name);
           body = body.Replace("{Employee}", person.User.Name);
           // approved link
