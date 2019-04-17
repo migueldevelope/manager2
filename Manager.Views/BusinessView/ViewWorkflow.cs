@@ -2,7 +2,7 @@
 {
   public class ViewWorkflow
   {
-    public string IdWorkflow { get; set; }
+    public string _idWorkflow { get; set; }
     public string Comments { get; set; }
   }
 }
