@@ -192,9 +192,9 @@ namespace Manager.Services.Specific
         }
         return result;
       }
-      catch (Exception)
+      catch (Exception e)
       {
-        throw;
+        throw e;
       }
     }
     public ViewListIntegrationCompany CompanyUpdate(string idIntegration, string idCompany)

@@ -33,9 +33,9 @@ namespace IntegrationService.Api
         person.Email = mail;
         return person;
       }
-      catch (Exception)
+      catch (Exception e)
       {
-        throw;
+        throw e;
       }
     }
   }

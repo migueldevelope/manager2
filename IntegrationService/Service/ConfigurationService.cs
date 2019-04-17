@@ -17,6 +17,10 @@ namespace IntegrationService.Service
         Person = person;
         Service = new ConfigurationIntegration(person);
         Param = Service.GetParameter();
+        if (Param == null)
+        {
+          Param = new ViewCrudIntegrationParameter();
+        }
       }
       catch (Exception)
       {

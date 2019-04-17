@@ -35,32 +35,28 @@ namespace IntegrationServer
       var conn = ConnectionNoSqlService.GetConnetionServer();
       _context = new DataContext(conn.Server, conn.DataBase);
 
-
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context);
+      IServiceAudit serviceAudit = new ServiceAudit(_context);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context);
-      IServiceLog serviceLog = new ServiceLog(_context);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceIntegration serviceIntegration = new ServiceIntegration(_context);
+      IServiceLog serviceLog = new ServiceLog(_context);
+      IServiceParameters serviceParameters = new ServiceParameters(_context);
+      IServicePerson servicePerson = new ServicePerson(_context);
       IServiceUser serviceUser = new ServiceUser(_context);
-      //IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany,serviceUser);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context);
 
-      services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceAccount);
+      services.AddSingleton(_ => serviceAudit);
       services.AddSingleton(_ => serviceCompany);
-      //services.AddSingleton(_ => serviceAuthentication);
-      services.AddSingleton(_ => servicePerson);
-      services.AddSingleton(_ => serviceWorkflow);
-      services.AddSingleton(_ => serviceLog);
       services.AddSingleton(_ => serviceInfra);
-      services.AddSingleton(_ => serviceParameters);
       services.AddSingleton(_ => serviceIntegration);
-
-      //serviceIndicators.SendMessages(conn.SignalRService);
-
+      services.AddSingleton(_ => serviceLog);
+      services.AddSingleton(_ => serviceParameters);
+      services.AddSingleton(_ => servicePerson);
+      services.AddSingleton(_ => serviceUser);
+      services.AddSingleton(_ => serviceWorkflow);
     }
 
     // This method gets called by the runtime. Use this method to add services to the container.
@@ -100,7 +96,6 @@ namespace IntegrationServer
           .AllowAnyHeader()
           .AllowCredentials()
       ));
-
 
       services.AddMvc();
 

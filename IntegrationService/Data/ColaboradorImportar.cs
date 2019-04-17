@@ -3,7 +3,6 @@ using Manager.Views.Integration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace IntegrationService.Data
 {
@@ -49,6 +48,8 @@ namespace IntegrationService.Data
         EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutManualBasicV1.NomeEmpresaGestor]);
         NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutManualBasicV1.NomeEmpresaGestor]);
         DocumentoGestor = list[(int)EnumLayoutManualBasicV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
+        EstabelecimentoGestor = "1";
+        NomeEstabelecimentoGestor = "Estabelecimento Padrão";
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
@@ -77,7 +78,7 @@ namespace IntegrationService.Data
         Documento = list[(int)EnumLayoutManualCompleteV1.Cpf].Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
         Matricula = Convert.ToInt64(list[(int)EnumLayoutManualCompleteV1.Matricula].Trim());
         Nome = FormatedField(list[(int)EnumLayoutManualCompleteV1.Nome]);
-        Email = list[(int)EnumLayoutManualCompleteV1.Email].Trim().ToLower();
+        Email = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.Email]);
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutManualCompleteV1.Celular].Trim();
         Telefone = list[(int)EnumLayoutManualCompleteV1.Telefone].Trim();
@@ -99,6 +100,8 @@ namespace IntegrationService.Data
         DocumentoGestor = list[(int)EnumLayoutManualCompleteV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
         EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor]);
         NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor]);
+        EstabelecimentoGestor = "1";
+        NomeEstabelecimentoGestor = "Estabelecimento Padrão";
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
@@ -124,7 +127,7 @@ namespace IntegrationService.Data
         Documento = list[(int)EnumLayoutSystemBasicV1.Cpf].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
         Matricula = Convert.ToInt64(list[(int)EnumLayoutSystemBasicV1.Matricula].Trim());
         Nome = FormatedField(list[(int)EnumLayoutSystemBasicV1.Nome]);
-        Email = list[(int)EnumLayoutSystemBasicV1.Email].Trim().ToLower();
+        Email = FormatedFieldKey(list[(int)EnumLayoutSystemBasicV1.Email]);
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutSystemBasicV1.Celular].Trim();
         Telefone = list[(int)EnumLayoutSystemBasicV1.Telefone].Trim();
@@ -146,6 +149,8 @@ namespace IntegrationService.Data
         DocumentoGestor = list[(int)EnumLayoutSystemBasicV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
         EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutSystemBasicV1.EmpresaGestor]);
         NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutSystemBasicV1.NomeEmpresaGestor]);
+        EstabelecimentoGestor = "1";
+        NomeEstabelecimentoGestor = "Estabelecimento Padrão";
         MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
@@ -174,7 +179,7 @@ namespace IntegrationService.Data
         Documento = list[(int)EnumLayoutSystemCompleteV1.Cpf].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
         Matricula = Convert.ToInt64(list[(int)EnumLayoutSystemCompleteV1.Matricula].Trim());
         Nome = FormatedField(list[(int)EnumLayoutSystemCompleteV1.Nome]);
-        Email = list[(int)EnumLayoutSystemCompleteV1.Email].Trim().ToLower();
+        Email = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.Email]);
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutSystemCompleteV1.Celular].Trim();
         Telefone = list[(int)EnumLayoutSystemCompleteV1.Telefone].Trim();
@@ -193,12 +198,14 @@ namespace IntegrationService.Data
         NomeGrauInstrucao = FormatedField(list[(int)EnumLayoutSystemCompleteV1.DescricaoGrauInstrucao]);
         SalarioNominal = Convert.ToDecimal(list[(int)EnumLayoutSystemCompleteV1.Salario].Trim());
         DataUltimoReajuste = dataUltimoReajuste;
-        DocumentoGestor = list[(int)EnumLayoutSystemCompleteV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
         EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.EmpresaGestor]);
         NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutSystemCompleteV1.NomeEmpresaGestor]);
-        MatriculaGestor = 0;
+        EstabelecimentoGestor = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.EstabelecimentoGestor]);
+        NomeEstabelecimentoGestor = FormatedField(list[(int)EnumLayoutSystemCompleteV1.NomeEstabelecimentoGestor]);
+        DocumentoGestor = list[(int)EnumLayoutSystemCompleteV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        MatriculaGestor = 0;
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor]))
           MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor].Trim());
       }

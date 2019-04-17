@@ -60,9 +60,13 @@ namespace IntegrationService.Enumns
     EmpresaGestor = 26,
     [Description("nome_empresa_chefe")]
     NomeEmpresaGestor = 27,
+    [Description("estabelecimento_chefe")]
+    EstabelecimentoGestor = 28,
+    [Description("nome_estabelecimento_chefe")]
+    NomeEstabelecimentoGestor = 29,
     [Description("cpf_chefe")]
-    CpfGestor = 28,
+    CpfGestor = 30,
     [Description("matricula_chefe")]
-    MatriculaGestor = 29
+    MatriculaGestor = 31
   }
 }

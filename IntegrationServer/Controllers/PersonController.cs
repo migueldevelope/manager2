@@ -77,13 +77,19 @@ namespace IntegrationServer.InfraController
         if (!company.IdCompany.Equals("000000000000000000000000"))
           occupation = service.GetIntegrationOccupation(view.Colaborador.ChaveCargo, view.Colaborador.NomeCargo, company.IdCompany);
 
-        IntegrationCompany companyManager = null;
-        if (!string.IsNullOrEmpty(view.Colaborador.NomeEmpresaGestor))
-          companyManager = service.GetIntegrationCompany(view.Colaborador.ChaveEmpresaGestor, view.Colaborador.NomeEmpresaGestor);
-
         Person personManager = null;
-        if (companyManager != null && !string.IsNullOrEmpty(view.Colaborador.DocumentoGestor))
-          personManager = service.GetPersonByKey(companyManager.IdCompany, establishment.IdEstablishment, view.Colaborador.DocumentoGestor, view.Colaborador.MatriculaGestor);
+        if (!string.IsNullOrEmpty(view.Colaborador.NomeEmpresaGestor) && !string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimentoGestor) && !string.IsNullOrEmpty(view.Colaborador.DocumentoGestor))
+        {
+          IntegrationCompany companyManager = null;
+          companyManager = service.GetIntegrationCompany(view.Colaborador.ChaveEmpresaGestor, view.Colaborador.NomeEmpresaGestor);
+          if (!companyManager.IdCompany.Equals("000000000000000000000000"))
+          {
+            IntegrationEstablishment establishmentManager = null;
+            establishmentManager = service.GetIntegrationEstablishment(view.Colaborador.ChaveEstabelecimento, view.Colaborador.NomeEstabelecimento, company.IdCompany);
+            if (!establishmentManager.IdEstablishment.Equals("000000000000000000000000"))
+              personManager = service.GetPersonByKey(companyManager.IdCompany, establishmentManager.IdEstablishment, view.Colaborador.DocumentoGestor, view.Colaborador.MatriculaGestor);
+          }
+        }
 
         if (company.IdCompany.Equals("000000000000000000000000"))
         {
