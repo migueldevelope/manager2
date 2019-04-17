@@ -85,10 +85,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/approved/{idmanager}")]
-    public IActionResult Approved([FromBody]ViewWorkflow view, string idperson, string idmanager)
+    public string Approved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
-      service.Approved(view, idperson, idmanager);
-      return Ok("Auto manager approved!");
+      return service.Approved(view, idperson, idmanager);
     }
     /// <summary>
     /// Não aprovar o colaborador para o gestor
@@ -100,10 +99,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/disapproved/{idmanager}")]
-    public IActionResult Disapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
+    public string Disapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
-      service.Disapproved(view, idperson, idmanager);
-      return Ok("Auto manager disapproved!");
+      return service.Disapproved(view, idperson, idmanager);
     }
     /// <summary>
     /// Exclusão do colaborador da equipe

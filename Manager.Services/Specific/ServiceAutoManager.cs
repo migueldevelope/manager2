@@ -178,7 +178,7 @@ namespace Manager.Services.Specific
             Type = EnumTypeMailMessage.Put,
             Name = model.Name,
             Url = url,
-            Body = " { '._idWorkFlow': '" + auto.Workflow.FirstOrDefault()._id.ToString() + "' } "
+            Body = " { '_idWorkFlow': '" + auto.Workflow.FirstOrDefault()._id.ToString() + "' } "
           };
           var idMessageApv = serviceMailMessage.Insert(message)._id;
           var requestor = servicePerson.GetAll(p => p._id == auto.Workflow.FirstOrDefault().Requestor._id).FirstOrDefault();
@@ -186,12 +186,12 @@ namespace Manager.Services.Specific
           body = body.Replace("{Requestor}", auto.Requestor.User.Name);
           body = body.Replace("{Employee}", person.User.Name);
           // approved link
-          body = body.Replace("{Approved}", model.Link + "GenericMessage/" + idMessageApv.ToString());
+          body = body.Replace("{Approved}", model.Link + "genericmessage/" + idMessageApv.ToString());
           url = path + "manager/automanager/" + person._id.ToString() + "/disapproved/" + manager._id.ToString();
           //disapproved link
           message.Url = url;
           var idMessageDis = serviceMailMessage.Insert(message)._id;
-          body = body.Replace("{Disapproved}", model.Link + "GenericMessage/" + idMessageDis.ToString());
+          body = body.Replace("{Disapproved}", model.Link + "genericmessage/" + idMessageDis.ToString());
           var sendMail = new MailLog
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
@@ -211,8 +211,10 @@ namespace Manager.Services.Specific
           var messageDis = serviceMailMessage.GetAll(p => p._id == idMessageDis).FirstOrDefault();
           var token = SendMail(path, person, sendMail._id.ToString());
           messageApv.Token = token;
+          messageApv.Name = "automanagerapproved";
           serviceMailMessage.Update(messageApv, null);
           messageDis.Token = token;
+          messageDis.Name = "automanagerdisapproved";
           serviceMailMessage.Update(messageDis, null);
         };
       }
@@ -239,28 +241,36 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void Disapproved(ViewWorkflow view, string idPerson, string idManager)
+    public string Disapproved(ViewWorkflow view, string idPerson, string idManager)
     {
       try
       {
         var auto = serviceAutoManager.GetAll(p => p.Person._id == idPerson & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).FirstOrDefault();
+        if (auto == null)
+          return "realized";
+
         var list = new List<Workflow>();
         foreach (var item in auto.Workflow)
           list.Add(serviceWorkflow.Disapproved(view));
         auto.Workflow = list;
         auto.StatusAutoManager = EnumStatusAutoManager.Disapproved;
         serviceAutoManager.Update(auto, null);
+        
+        return "disapproved";
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public void Approved(ViewWorkflow view, string idPerson, string idManager)
+    public string Approved(ViewWorkflow view, string idPerson, string idManager)
     {
       try
       {
         var auto = serviceAutoManager.GetAll(p => p.Person._id == idPerson & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).FirstOrDefault();
+        if (auto == null)
+          return "realized";
+
         var list = new List<Workflow>();
         foreach (var item in auto.Workflow)
           list.Add(serviceWorkflow.Approved(view));
@@ -276,6 +286,8 @@ namespace Manager.Services.Specific
           servicePerson.Update(manager, null);
         }
         serviceAutoManager.Update(auto, null);
+
+        return "approved";
       }
       catch (Exception e)
       {
