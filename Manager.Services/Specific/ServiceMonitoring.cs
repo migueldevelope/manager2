@@ -687,7 +687,7 @@ namespace Manager.Services.Specific
         var view = new ViewCrudMonitoring()
         {
           _id = monitoring._id,
-          Person = new ViewInfoPerson()
+          Person = new ViewListPersonInfo()
           {
             _id = monitoring.Person._id,
             TypeJourney = monitoring.Person.TypeJourney,

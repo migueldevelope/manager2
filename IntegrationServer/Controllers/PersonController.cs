@@ -67,6 +67,12 @@ namespace IntegrationServer.InfraController
         view.Situacao = EnumColaboradorSituacao.ServerError;
         IntegrationCompany company = service.GetIntegrationCompany(view.Colaborador.ChaveEmpresa, view.Colaborador.NomeEmpresa);
 
+        // Ajustar escolaridade vazia para ensino médio completo
+        if (view.Colaborador.ChaveGrauInstrucao == ";")
+        {
+          view.Colaborador.GrauInstrucao = "";
+          view.Colaborador.NomeGrauInstrucao = "Ensino Médio Completo";
+        }
         IntegrationSchooling schooling = service.GetIntegrationSchooling(view.Colaborador.ChaveGrauInstrucao, view.Colaborador.NomeGrauInstrucao);
 
         IntegrationEstablishment establishment = null;
@@ -94,11 +100,6 @@ namespace IntegrationServer.InfraController
         if (company.IdCompany.Equals("000000000000000000000000"))
         {
           view.Message = "Falta integração da empresa!";
-          return view;
-        }
-        if (schooling.IdSchooling.Equals("000000000000000000000000"))
-        {
-          view.Message = "Falta integração do grau de instrução!";
           return view;
         }
         if (occupation.IdOccupation.Equals("000000000000000000000000"))
@@ -193,7 +194,7 @@ namespace IntegrationServer.InfraController
           user.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
           user = serviceUser.UpdateUserView(user);
         }
-        // Testar se a person já existe
+        // Verificar se a person já existe
         Person person = service.GetPersonByKey(company.IdCompany, establishment.IdEstablishment, view.Colaborador.Documento, view.Colaborador.Matricula);
         if (person == null)
         {
@@ -233,7 +234,7 @@ namespace IntegrationServer.InfraController
           }
           person.User = user;
           person = servicePerson.NewPersonView(person);
-          view.Message = "Nova pessoa incluída!";
+          view.Message = "Person Included!";
           view.IdPerson = person._id;
         }
         else
@@ -272,7 +273,7 @@ namespace IntegrationServer.InfraController
           person.User = user;
           person = servicePerson.UpdatePersonView(person);
           view.IdPerson = person._id;
-          view.Message = "Pessoa atualizada!";
+          view.Message = "Person atualized!";
         }
         if (integrationPerson == null)
         {

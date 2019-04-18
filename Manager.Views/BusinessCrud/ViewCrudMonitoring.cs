@@ -8,7 +8,7 @@ namespace Manager.Views.BusinessCrud
 {
   public class ViewCrudMonitoring: _ViewCrud
   {
-    public ViewInfoPerson Person { get; set; }
+    public ViewListPersonInfo Person { get; set; }
     public string CommentsEnd { get; set; }
     public string CommentsManager { get; set; }
     public string CommentsPerson { get; set; }

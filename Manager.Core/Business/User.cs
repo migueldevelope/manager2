@@ -27,5 +27,7 @@ namespace Manager.Core.Business
     public string DocumentID { get; set; }
     public string DocumentCTPF { get; set; }
     public EnumSex Sex { get; set; }
+    public string Nickname { get; set; }
+    public bool UserAdmin { get; set; }
   }
 }

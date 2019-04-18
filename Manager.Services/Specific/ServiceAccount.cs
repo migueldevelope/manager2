@@ -81,6 +81,7 @@ namespace Manager.Services.Specific
         Account account = new Account()
         {
           Name = view.NameAccount,
+          NickName = view.Nickname.Replace(".","").Replace("/","").Replace(" ","_"),
           Status = EnumStatus.Enabled
         };
         account = serviceAccount.InsertAccountNewVersion(account).Result;

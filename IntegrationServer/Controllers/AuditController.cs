@@ -52,7 +52,7 @@ namespace IntegrationServer.Controllers
       var result = service.ListUser();
       // Gravar arquivo CSV
       string csv = Tools.CSVService.ToCsv(result, "", "");
-      System.IO.File.WriteAllText("user.csv", csv);
+      System.IO.File.WriteAllText("export/user.csv", csv);
       //
       return result;
     }
@@ -71,7 +71,7 @@ namespace IntegrationServer.Controllers
       var result = service.ListPerson();
       // Gravar arquivo CSV
       string csv = Tools.CSVService.ToCsv(result, "", "");
-      System.IO.File.WriteAllText("person.csv", csv);
+      System.IO.File.WriteAllText("export/person.csv", csv);
       //
       return result;
     }

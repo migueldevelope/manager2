@@ -54,7 +54,7 @@ namespace Manager.Test.Test.Complete
         {
           var view = new ViewWorkflow()
           {
-            IdWorkflow = item.IdWorkflow,
+            _idWorkflow = item.IdWorkflow,
             Comments = "ok"
           };
           this.serviceAutoManager.Approved(view, item.IdPerson, item.IdRequestor);

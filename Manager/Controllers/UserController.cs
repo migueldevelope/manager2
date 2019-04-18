@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
@@ -109,11 +108,21 @@ namespace Manager.Controllers
     {
       return service.GetPhoto(iduser);
     }
+    #endregion
 
+    #region Person
+    /// <summary>
+    /// Listar as pessoas de um usuário
+    /// </summary>
+    /// <param name="iduser">Identificador do usuário</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do usuário</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listperson/{iduser}")]
-    public List<ViewInfoPerson> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    public List<ViewListPersonInfo> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPerson(iduser, ref total, filter, count, page);
@@ -163,94 +172,5 @@ namespace Manager.Controllers
     }
     #endregion
 
-    #region User Old
-    [Authorize]
-    [HttpGet]
-    [Route("old/listusers/{idcompany}")]
-    public List<User> ListUsers(string idcompany, string filter = "")
-    {
-      return service.GetUsers(idcompany, filter);
-    }
-
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/list/{type}")]
-    public List<User> ListOld(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.GetUsersCrudOld(type, ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/{iduser}/edit")]
-    public User GetEditOld(string iduser)
-    {
-      return service.GetUserCrudOld(iduser); ;
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("old/new")]
-    public User Post([FromBody] User user)
-    {
-      return service.NewUserView(user);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/update")]
-    public User Put([FromBody] User user)
-    {
-      return service.UpdateUserView(user);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listoccupation")]
-    public List<Occupation> ListOccupation(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListOccupation(ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listperson/{iduser}")]
-    public List<Person> ListPersonOld(string iduser, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListPersonOld(iduser, ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listcompany")]
-    public List<Company> ListCompany(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListCompany(ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listmanager")]
-    public List<User> ListManager(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListManager(ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-    #endregion
   }
 }

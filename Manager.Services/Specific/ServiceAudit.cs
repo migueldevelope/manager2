@@ -92,12 +92,14 @@ namespace Manager.Services.Specific
                 DisabledUser = p.User.Status.ToString(),
                 IdPerson = p._id,
                 DisabledPerson = p.Status.ToString(),
-                IdEstablishment = p.Establishment == null ? string.Empty : p.Establishment._id,
-                NameEstablishment = p.Establishment == null ? string.Empty : p.Establishment.Name,
+                IdEstablishment = p.Establishment?._id,
+                NameEstablishment = p.Establishment?.Name,
                 IdCompany = p.Company._id,
                 NameCompany = p.Company.Name,
                 Registration = p.Registration,
-                StatusUser = p.StatusUser.ToString()
+                StatusUser = p.StatusUser.ToString(),
+                IdManager = p.Manager?._id,
+                NameManager = p.Manager?.Name
               }).ToList();
           default:
             throw new Exception("Not available!");

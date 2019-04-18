@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Manager.Views.BusinessList
 {
-  public class ViewInfoPerson : _ViewListBase
+  public class ViewListPersonInfo : _ViewListBase
   {
     public ViewListCompany Company { get; set; }
     public ViewListEstablishment Establishment { get; set; }

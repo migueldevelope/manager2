@@ -326,7 +326,7 @@ namespace Manager.Services.Specific
           StatusCheckpoint = checkpoint.StatusCheckpoint,
           TypeCheckpoint = checkpoint.TypeCheckpoint,
           Comments = checkpoint.Comments,
-          Person = new ViewInfoPerson()
+          Person = new ViewListPersonInfo()
           {
             _id = checkpoint.Person._id,
             TypeJourney = checkpoint.Person.TypeJourney,
@@ -534,7 +534,7 @@ namespace Manager.Services.Specific
           DateEnd = checkpoint.DateEnd,
           StatusCheckpoint = checkpoint.StatusCheckpoint,
           TypeCheckpoint = checkpoint.TypeCheckpoint,
-          Person = new ViewInfoPerson()
+          Person = new ViewListPersonInfo()
           {
             _id = checkpoint.Person._id,
             TypeJourney = checkpoint.Person.TypeJourney,

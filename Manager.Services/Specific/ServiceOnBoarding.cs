@@ -232,7 +232,7 @@ namespace Manager.Services.Specific
         ViewCrudOnboarding result = new ViewCrudOnboarding()
         {
           _id = onBoarding._id,
-          Person = new ViewInfoPerson()
+          Person = new ViewListPersonInfo()
           {
             _id = onBoarding.Person._id,
             TypeJourney = onBoarding.Person.TypeJourney,
@@ -1180,7 +1180,7 @@ namespace Manager.Services.Specific
         var view = new ViewCrudOnboarding()
         {
           _id = onboarding._id,
-          Person = new ViewInfoPerson()
+          Person = new ViewListPersonInfo()
           {
             _id = onboarding.Person._id,
             TypeJourney = onboarding.Person.TypeJourney,
