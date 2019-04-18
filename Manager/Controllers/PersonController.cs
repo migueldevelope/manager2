@@ -130,5 +130,59 @@ namespace Manager.Controllers
     }
     #endregion
 
+    #region Person Auxiliar
+    /// <summary>
+    /// Listar os cargos para manutenção da pessoa
+    /// </summary>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do cargo</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listoccupation")]
+    public List<ViewListOccupation> ListOccupation(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListOccupation(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Listar as empresas para manutenção da pessoa
+    /// </summary>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listcompany")]
+    public List<ViewListCompany> ListCompany(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListCompany(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Listar os gestores para manutenção da pessoa
+    /// </summary>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da pessoa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listmanager")]
+    public List<ViewListPerson> ListManager(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListManager(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    #endregion
+
   }
 }
