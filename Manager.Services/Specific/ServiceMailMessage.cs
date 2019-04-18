@@ -14,11 +14,11 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailMessage> serviceMailMessage;
 
     #region Constructor
-    public ServiceMailMessage(DataContext context) : base(context)
+    public ServiceMailMessage(DataContext contextLog) : base(contextLog)
     {
       try
       {
-        serviceMailMessage = new ServiceGeneric<MailMessage>(context);
+        serviceMailMessage = new ServiceGeneric<MailMessage>(contextLog);
       }
       catch (ServiceException)
       {

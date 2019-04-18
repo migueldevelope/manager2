@@ -19,11 +19,11 @@ namespace Manager.Services.Specific
     private ServiceGeneric<MailLog> serviceMail;
 
     #region Constructor
-    public ServiceSendGrid(DataContext context) : base(context)
+    public ServiceSendGrid(DataContext contextLog) : base(contextLog)
     {
       try
       {
-        serviceMail = new ServiceGeneric<MailLog>(context);
+        serviceMail = new ServiceGeneric<MailLog>(contextLog);
       }
       catch (Exception e)
       {

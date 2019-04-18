@@ -4,6 +4,7 @@ using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Business.Integration;
 using Manager.Core.Interfaces;
+using Manager.Views.BusinessCrud;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Authorization;
@@ -159,10 +160,11 @@ namespace IntegrationServer.InfraController
           view.Colaborador.DataDemissao = ((DateTime)view.Colaborador.DataDemissao).ToUniversalTime();
 
         // Testar se o usuário já existe
+        ViewCrudUser userView = new ViewCrudUser();
         User user = service.GetUserByKey(view.Colaborador.Documento);
         if (user == null)
         {
-          user = new User()
+          userView = new ViewCrudUser()
           {
             Name = view.Colaborador.Nome,
             Document = view.Colaborador.Documento,
@@ -177,28 +179,32 @@ namespace IntegrationServer.InfraController
             Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
             Password = view.Colaborador.Documento,
           };
-          user = serviceUser.NewUserView(user);
+          userView = serviceUser.New(userView);
         }
         else
         {
-          user.Document = view.Colaborador.Documento;
-          user.Name = view.Colaborador.Nome;
-          user.Mail = view.Colaborador.Email;
-          user.Phone = view.Colaborador.Celular;
-          user.DateBirth = view.Colaborador.DataNascimento;
-          user.DateAdm = view.Colaborador.DataAdmissao;
-          user.Schooling = service.GetSchooling(schooling.IdSchooling);
-          user.PhoneFixed = view.Colaborador.Telefone;
-          user.DocumentID = view.Colaborador.Identidade;
-          user.DocumentCTPF = view.Colaborador.CarteiraProfissional;
-          user.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
-          user = serviceUser.UpdateUserView(user);
+          userView = new ViewCrudUser()
+          {
+            Name = view.Colaborador.Nome,
+            Document = view.Colaborador.Documento,
+            Mail = view.Colaborador.Email,
+            Phone = view.Colaborador.Celular,
+            DateAdm = view.Colaborador.DataAdmissao,
+            DateBirth = view.Colaborador.DataNascimento,
+            Schooling = service.GetSchooling(schooling.IdSchooling),
+            PhoneFixed = view.Colaborador.Telefone,
+            DocumentID = view.Colaborador.Identidade,
+            DocumentCTPF = view.Colaborador.CarteiraProfissional,
+            Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others
+          };
+          userView = serviceUser.Update(userView);
         }
         // Verificar se a person já existe
+        ViewCrudPerson viewPerson = new ViewCrudPerson();
         Person person = service.GetPersonByKey(company.IdCompany, establishment.IdEstablishment, view.Colaborador.Documento, view.Colaborador.Matricula);
         if (person == null)
         {
-          person = new Person
+          viewPerson = new ViewCrudPerson
           {
             TypeUser = EnumTypeUser.Employee,
             Company = service.GetCompany(company.IdCompany),
@@ -212,67 +218,67 @@ namespace IntegrationServer.InfraController
             DateLastReadjust = view.Colaborador.DataUltimoReajuste,
             DateResignation = view.Colaborador.DataDemissao,
             TypeJourney = DateTime.Now.Subtract(((DateTime)view.Colaborador.DataAdmissao)).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
-            DocumentManager = personManager?.DocumentManager,
           };
           if (personManager != null)
-            person.Manager = new BaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
+            viewPerson.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
 
           switch (view.Colaborador.Situacao.ToLower())
           {
             case "férias": case "ferias":
-              person.StatusUser = EnumStatusUser.Vacation;
+              viewPerson.StatusUser = EnumStatusUser.Vacation;
               break;
             case "afastado":
-              person.StatusUser = EnumStatusUser.Away;
+              viewPerson.StatusUser = EnumStatusUser.Away;
               break;
             case "demitido":
-              person.StatusUser = EnumStatusUser.Disabled;
+              viewPerson.StatusUser = EnumStatusUser.Disabled;
               break;
             default:
-              person.StatusUser = EnumStatusUser.Enabled;
+              viewPerson.StatusUser = EnumStatusUser.Enabled;
               break;
           }
-          person.User = user;
-          person = servicePerson.NewPersonView(person);
+          viewPerson.User = userView;
+          viewPerson = servicePerson.New(viewPerson);
           view.Message = "Person Included!";
-          view.IdPerson = person._id;
+          view.IdPerson = viewPerson._id;
         }
         else
         {
-          person.Registration = view.Colaborador.Matricula.ToString();
-          person.User.Name = view.Colaborador.Nome;
-          person.User.Mail = view.Colaborador.Email;
-          person.Company = service.GetCompany(company.IdCompany);
-          person.Establishment = string.IsNullOrEmpty(establishment.IdEstablishment) ? null : service.GetEstablishment(establishment.IdEstablishment);
-          person.Occupation = service.GetOccupation(occupation.IdOccupation);
-          person.User.DateAdm = view.Colaborador.DataAdmissao;
-          person.HolidayReturn = view.Colaborador.DataRetornoFerias;
-          person.MotiveAside = view.Colaborador.MotivoAfastamento;
-          person.DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo;
-          person.Salary = view.Colaborador.SalarioNominal;
-          person.DateLastReadjust = view.Colaborador.DataUltimoReajuste;
-          person.DateResignation = view.Colaborador.DataDemissao;
+          viewPerson = new ViewCrudPerson
+          {
+            Company = service.GetCompany(company.IdCompany),
+            Establishment = string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) ? null : service.GetEstablishment(establishment.IdEstablishment),
+            Occupation = service.GetOccupation(occupation.IdOccupation),
+            Registration = view.Colaborador.Matricula.ToString(),
+            HolidayReturn = view.Colaborador.DataRetornoFerias,
+            MotiveAside = view.Colaborador.MotivoAfastamento,
+            DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo,
+            Salary = view.Colaborador.SalarioNominal,
+            DateLastReadjust = view.Colaborador.DataUltimoReajuste,
+            DateResignation = view.Colaborador.DataDemissao
+          };
+
+          if (personManager != null)
+            viewPerson.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
+
           switch (view.Colaborador.Situacao.ToLower())
           {
-            case "férias": case "ferias":
-              person.StatusUser = EnumStatusUser.Vacation;
+            case "férias":
+            case "ferias":
+              viewPerson.StatusUser = EnumStatusUser.Vacation;
               break;
             case "afastado":
-              person.StatusUser = EnumStatusUser.Away;
+              viewPerson.StatusUser = EnumStatusUser.Away;
               break;
             case "demitido":
-              person.StatusUser = EnumStatusUser.Disabled;
+              viewPerson.StatusUser = EnumStatusUser.Disabled;
               break;
             default:
-              person.StatusUser = EnumStatusUser.Enabled;
+              viewPerson.StatusUser = EnumStatusUser.Enabled;
               break;
           }
-          if (personManager != null)
-            person.Manager = new BaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
-
-          person.User = user;
-          person = servicePerson.UpdatePersonView(person);
-          view.IdPerson = person._id;
+          viewPerson.User = userView;
+          view.IdPerson = viewPerson._id;
           view.Message = "Person atualized!";
         }
         if (integrationPerson == null)

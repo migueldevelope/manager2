@@ -31,9 +31,12 @@ namespace Mail
       var conn = ConnectionNoSqlService.GetConnetionServer();
       _context = new DataContext(conn.Server, conn.DataBase);
 
+      DataContext _contextLog;
+      _contextLog = new DataContext(conn.Server, conn.DataBase);
+
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceMailMessage serviceMailMessage = new ServiceMailMessage(_context);
-      IServiceSendGrid serviceSendGrid = new ServiceSendGrid(_context);
+      IServiceMailMessage serviceMailMessage = new ServiceMailMessage(_contextLog);
+      IServiceSendGrid serviceSendGrid = new ServiceSendGrid(_contextLog);
       IServiceMailModel serviceMailModel = new ServiceMailModel(_context);
 
       services.AddSingleton(_ => serviceMailMessage);

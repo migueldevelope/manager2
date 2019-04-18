@@ -26,9 +26,9 @@ namespace Manager.Test.Test.Complete
       try
       {
         base.InitOffAccount();
-        serviceAccount = new ServiceAccount(base.context);
-        servicePerson = new ServiceGeneric<Person>(base.context);
-        serviceOccupation = new ServiceGeneric<Occupation>(base.context);
+        serviceAccount = new ServiceAccount(context, context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
       }
       catch (Exception e)
       {
@@ -69,7 +69,7 @@ namespace Manager.Test.Test.Complete
         //  _idAccount = account
         //};
         //base.Init();
-        serviceIntegration = new ServiceIntegration(base.context);
+        serviceIntegration = new ServiceIntegration(context, context, context);
         serviceIntegration.SetUser(baseUser);
 
         var list = new List<ViewPersonImport>();
@@ -167,7 +167,7 @@ namespace Manager.Test.Test.Complete
 //          _idAccount = account
         };
         base.Init();
-        serviceIntegration = new ServiceIntegration(base.context);
+        serviceIntegration = new ServiceIntegration(context, context, context);
         serviceIntegration.SetUser(baseUser);
 
         var list = new List<ViewPersonImport>();
@@ -332,7 +332,7 @@ namespace Manager.Test.Test.Complete
           //_idAccount = account
         };
         base.Init();
-        serviceIntegration = new ServiceIntegration(base.context);
+        serviceIntegration = new ServiceIntegration(context, context, context);
         serviceIntegration.SetUser(baseUser);
 
         var list = new List<ViewPersonImport>();

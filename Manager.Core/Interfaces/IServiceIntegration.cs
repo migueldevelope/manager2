@@ -44,10 +44,10 @@ namespace Manager.Core.Interfaces
     IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany);
     Person GetPersonByKey(string idcompany, string idestablishment, string document, long registration);
     User GetUserByKey(string document);
-    Schooling GetSchooling(string id);
-    Company GetCompany(string id);
-    Establishment GetEstablishment(string id);
-    Occupation GetOccupation(string id);
+    ViewListSchooling GetSchooling(string id);
+    ViewListCompany GetCompany(string id);
+    ViewListEstablishment GetEstablishment(string id);
+    ViewListOccupation GetOccupation(string id);
 
     IntegrationPerson GetIntegrationPerson(string key);
     void PostIntegrationPerson(IntegrationPerson integrationPerson);

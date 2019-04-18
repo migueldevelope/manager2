@@ -21,8 +21,8 @@ namespace Manager.Test.Test.Complete
     {
       base.Init();
       serviceMandatoryTraining = new ServiceMandatoryTraining(base.context);
-      serviceEvent = new ServiceEvent(base.context, "http://10.0.0.15/");
-      serviceMandatoryTraining.SetUser(base.contextAccessor);
+      serviceEvent = new ServiceEvent(context, context, "http://10.0.0.15/");
+      serviceMandatoryTraining.SetUser(contextAccessor);
       serviceEvent.SetUser(base.contextAccessor);
 
       servicePerson = new ServiceGeneric<Person>(base.context)

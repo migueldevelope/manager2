@@ -30,14 +30,14 @@ namespace Manager.Services.Auth
     private ServiceGeneric<User> serviceUser;
 
     #region Constructor
-    public ServicePerson(DataContext context) : base(context)
+    public ServicePerson(DataContext context, DataContext contextLog) : base(context)
     {
       try
       {
         serviceAttachment = new ServiceGeneric<Attachments>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceEstablishment = new ServiceGeneric<Establishment>(context);
-        serviceMail = new ServiceSendGrid(context);
+        serviceMail = new ServiceSendGrid(contextLog);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         servicePerson = new ServiceGeneric<Person>(context);

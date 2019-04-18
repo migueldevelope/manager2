@@ -32,7 +32,7 @@ namespace Manager.Services.Specific
     private readonly string Path;
 
     #region Constructor
-    public ServiceEvent(DataContext context, string pathToken) : base(context)
+    public ServiceEvent(DataContext context, DataContext contextLog, string pathToken) : base(context)
     {
       try
       {
@@ -41,7 +41,7 @@ namespace Manager.Services.Specific
         serviceEntity = new ServiceGeneric<Entity>(context);
         serviceEvent = new ServiceGeneric<Event>(context);
         serviceEventHistoric = new ServiceGeneric<EventHistoric>(context);
-        serviceLog = new ServiceLog(context);
+        serviceLog = new ServiceLog(context, contextLog);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceTrainingPlan = new ServiceGeneric<TrainingPlan>(context);
         Path = pathToken;

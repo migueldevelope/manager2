@@ -28,17 +28,17 @@ namespace Manager.Services.Specific
     private readonly ServiceWorkflow serviceWorkflow;
 
     #region Constructor
-    public ServiceAutoManager(DataContext context) : base(context)
+    public ServiceAutoManager(DataContext context, DataContext contextLog) : base(context)
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
         serviceAutoManager = new ServiceGeneric<AutoManager>(context);
-        serviceMailLog = new ServiceGeneric<MailLog>(context);
+        serviceMailLog = new ServiceGeneric<MailLog>(contextLog);
         serviceMailModel = new ServiceMailModel(context);
-        serviceMailMessage = new ServiceGeneric<MailMessage>(context);
+        serviceMailMessage = new ServiceGeneric<MailMessage>(contextLog);
         servicePerson = new ServiceGeneric<Person>(context);
-        serviceWorkflow = new ServiceWorkflow(context);
+        serviceWorkflow = new ServiceWorkflow(context, contextLog);
       }
       catch (Exception e)
       {

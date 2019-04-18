@@ -37,13 +37,13 @@ namespace Manager.Services.Specific
     public string path;
 
     #region Constructor
-    public ServicePlan(DataContext context, string pathToken) : base(context)
+    public ServicePlan(DataContext context, DataContext contextLog, string pathToken) : base(context)
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
         serviceCourse = new ServiceGeneric<Course>(context);
-        serviceLog = new ServiceLog(_context);
+        serviceLog = new ServiceLog(context, contextLog);
         serviceLogMessages = new ServiceLogMessages(context);
         serviceMail = new ServiceGeneric<MailLog>(context);
         serviceMailModel = new ServiceMailModel(context);

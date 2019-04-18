@@ -22,8 +22,8 @@ namespace Manager.Test.Test.Complete
       try
       {
         base.Init();
-        serviceIndicators = new ServiceIndicators(base.context, "");
-        servicePerson = new ServiceGeneric<Person>(base.context);
+        serviceIndicators = new ServiceIndicators(context, context, "");
+        servicePerson = new ServiceGeneric<Person>(context);
 
 
         servicePerson._user = base.baseUser;

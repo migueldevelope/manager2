@@ -30,14 +30,14 @@ namespace Manager.Services.Auth
     private readonly ServiceDictionarySystem serviceDictionarySystem;
 
     #region Constructor
-    public ServiceAuthentication(DataContext context)
+    public ServiceAuthentication(DataContext context, DataContext contextLog)
     {
       try
       {
         serviceAccount = new ServiceGeneric<Account>(context);
-        serviceLog = new ServiceLog(context);
-        servicePerson = new ServicePerson(context);
-        serviceUser = new ServiceUser(context);
+        serviceLog = new ServiceLog(context, contextLog);
+        servicePerson = new ServicePerson(context, contextLog);
+        serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
       }
       catch (Exception e)
@@ -286,5 +286,6 @@ namespace Manager.Services.Auth
     }
 
     #endregion
+
   }
 }

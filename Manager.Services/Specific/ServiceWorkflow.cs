@@ -20,11 +20,11 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Workflow> serviceWorkflow;
 
     #region Constructor
-    public ServiceWorkflow(DataContext context) : base(context)
+    public ServiceWorkflow(DataContext context, DataContext contextLog) : base(context)
     {
       try
       {
-        servicePerson = new ServicePerson(context);
+        servicePerson = new ServicePerson(context, contextLog);
         serviceWorkflow = new ServiceGeneric<Workflow>(context);
       }
       catch (Exception e)
@@ -63,8 +63,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = servicePerson.GetPerson(view.IdPerson);
-        var manager = servicePerson.GetPerson(person.Manager._id.ToString());
+        var person = servicePerson.GetNewVersion(p => p._id == view.IdPerson).Result;
+        var manager = servicePerson.GetNewVersion(p => p._id == person.Manager._id).Result;
         var result = new List<Workflow>();
         var workflow = new Workflow
         {

@@ -18,6 +18,7 @@ namespace Manager.Core.Interfaces
     ViewCrudUser New(ViewCrudUser view);
     ViewCrudUser Update(ViewCrudUser view);
     string GetPhoto(string idUser);
+    void SetPhoto(string idUser, string url);
     string AlterPassword(ViewAlterPass resetPass, string idUser);
     string AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
     Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid);

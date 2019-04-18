@@ -41,31 +41,32 @@ namespace Manager
       var conn = ConnectionNoSqlService.GetConnetionServer();
       _context = new DataContext(conn.Server, conn.DataBase);
 
+      DataContext _contextLog;
+      _contextLog = new DataContext(conn.Server, conn.DataBase);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceAccount serviceAccount = new ServiceAccount(_context);
+      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context);
-      IServiceLog serviceLog = new ServiceLog(_context);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
+      IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
+      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, conn.TokenServer);
-      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
-      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, conn.TokenServer);
+      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer);
+      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer);
+      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer);
-      IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, conn.TokenServer);
+      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer);
+      IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
+      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
       IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
-      IServiceUser serviceUser = new ServiceUser(_context);
-      //IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany,serviceUser);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context);
-      IServiceCertification serviceCertification = new ServiceCertification(_context, conn.TokenServer);
+      IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog);
+      IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer);
       IServiceGoals serviceGoals = new ServiceGoals(_context);
 
       services.AddSingleton(_ => serviceGoals);

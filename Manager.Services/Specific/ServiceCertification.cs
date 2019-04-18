@@ -38,16 +38,16 @@ namespace Manager.Services.Specific
     public string path;
 
     #region Constructor
-    public ServiceCertification(DataContext context, string pathToken) : base(context)
+    public ServiceCertification(DataContext context, DataContext contextLog, string pathToken) : base(context)
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
         serviceCertification = new ServiceGeneric<Certification>(context);
         serviceCertificationPerson = new ServiceGeneric<CertificationPerson>(context);
-        serviceLog = new ServiceLog(_context);
+        serviceLog = new ServiceLog(context, contextLog);
         serviceLogMessages = new ServiceLogMessages(context);
-        serviceMail = new ServiceGeneric<MailLog>(context);
+        serviceMail = new ServiceGeneric<MailLog>(contextLog);
         serviceMailModel = new ServiceMailModel(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);

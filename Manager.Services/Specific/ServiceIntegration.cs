@@ -35,8 +35,7 @@ namespace Manager.Services.Specific
     private readonly IServiceLog logService;
 
     #region Constructor
-    public ServiceIntegration(DataContext context)
-      : base(context)
+    public ServiceIntegration(DataContext context, DataContext contextLog, DataContext contextIntegration) : base(context)
     {
       try
       {
@@ -47,13 +46,13 @@ namespace Manager.Services.Specific
         establishmentService = new ServiceGeneric<Establishment>(context);
         accountService = new ServiceGeneric<Account>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
-        integrationSchoolingService = new ServiceGeneric<IntegrationSchooling>(context);
-        integrationCompanyService = new ServiceGeneric<IntegrationCompany>(context);
-        integrationEstablishmentService = new ServiceGeneric<IntegrationEstablishment>(context);
+        integrationSchoolingService = new ServiceGeneric<IntegrationSchooling>(contextIntegration);
+        integrationCompanyService = new ServiceGeneric<IntegrationCompany>(contextIntegration);
+        integrationEstablishmentService = new ServiceGeneric<IntegrationEstablishment>(contextIntegration);
         integrationOccupationService = new ServiceGeneric<IntegrationOccupation>(context);
         parameterService = new ServiceGeneric<IntegrationParameter>(context);
-        integrationPersonService = new ServiceGeneric<IntegrationPerson>(context);
-        logService = new ServiceLog(context);
+        integrationPersonService = new ServiceGeneric<IntegrationPerson>(contextIntegration);
+        logService = new ServiceLog(context, contextLog);
       }
       catch (Exception)
       {
@@ -768,44 +767,99 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Gets isolados por id
-    public Schooling GetSchooling(string id)
+    public ViewListSchooling GetSchooling(string id)
     {
       try
       {
-        return schoolingService.GetAll(p => p._id == id).FirstOrDefault();
+        Schooling result = schoolingService.GetAll(p => p._id == id).FirstOrDefault();
+        return result != null
+          ? new ViewListSchooling()
+          {
+            Name = result.Name,
+            Order = result.Order,
+            _id = result._id
+          }
+          : null;
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public Company GetCompany(string id)
+    public ViewListCompany GetCompany(string id)
     {
       try
       {
-        return companyService.GetAll(p => p._id == id).FirstOrDefault();
+        var result = companyService.GetAll(p => p._id == id).FirstOrDefault();
+        return result != null
+          ? new ViewListCompany()
+          {
+            Name = result.Name,
+            _id = result._id
+          }
+          : null;
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public Establishment GetEstablishment(string id)
+    public ViewListEstablishment GetEstablishment(string id)
     {
       try
       {
-        return establishmentService.GetAll(p => p._id == id).FirstOrDefault();
+        var result = establishmentService.GetAll(p => p._id == id).FirstOrDefault();
+        return result != null
+          ? new ViewListEstablishment()
+          {
+            Name = result.Name,
+            _id = result._id
+          }
+          : null;
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public Occupation GetOccupation(string id)
+    public ViewListOccupation GetOccupation(string id)
     {
       try
       {
-        return occupationService.GetAll(p => p._id == id).FirstOrDefault();
+        var result = occupationService.GetAll(p => p._id == id).FirstOrDefault();
+        return result != null
+          ? new ViewListOccupation()
+          {
+            _id = result._id,
+            Name = result.Name,
+            Line = result.Line,
+            Company = new ViewListCompany() { _id = result.Group.Company._id, Name = result.Group.Company.Name },
+            Group = new ViewListGroup()
+            {
+              _id = result.Group._id,
+              Name = result.Group.Name,
+              Line = result.Group.Line,
+              Axis = new ViewListAxis() { _id = result.Group.Axis._id, Name = result.Group.Axis.Name, TypeAxis = result.Group.Axis.TypeAxis },
+              Sphere = new ViewListSphere() { _id = result.Group.Sphere._id, Name = result.Group.Sphere.Name, TypeSphere = result.Group.Sphere.TypeSphere }
+            },
+            Process = result.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
+            .Select(x => new ViewListProcessLevelTwo()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Order = x.Order,
+              ProcessLevelOne = new
+            ViewListProcessLevelOne()
+              {
+                _id = x.ProcessLevelOne._id,
+                Name = x.ProcessLevelOne.Name,
+                Order = x.ProcessLevelOne.Order,
+                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+              }
+            })
+            .ToList()
+          }
+          : null;
       }
       catch (Exception)
       {

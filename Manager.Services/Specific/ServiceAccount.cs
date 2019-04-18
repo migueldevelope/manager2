@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Tools;
 
@@ -31,17 +30,17 @@ namespace Manager.Services.Specific
     private readonly ServiceLog serviceLog;
 
     #region Constructor
-    public ServiceAccount(DataContext context) : base(context)
+    public ServiceAccount(DataContext context, DataContext contextLog) : base(context)
     {
       try
       {
         serviceAccount = new ServiceGeneric<Account>(context);
-        serviceAuthentication = new ServiceAuthentication(context);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceUser = new ServiceGeneric<User>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceInfra = new ServiceInfra(context);
-        serviceLog = new ServiceLog(context);
+        serviceLog = new ServiceLog(context, contextLog);
         serviceParameter = new ServiceGeneric<Parameter>(context);
       }
       catch (Exception e)
@@ -81,7 +80,6 @@ namespace Manager.Services.Specific
         Account account = new Account()
         {
           Name = view.NameAccount,
-          NickName = view.Nickname.Replace(".","").Replace("/","").Replace(" ","_"),
           Status = EnumStatus.Enabled
         };
         account = serviceAccount.InsertAccountNewVersion(account).Result;

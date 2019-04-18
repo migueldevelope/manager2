@@ -32,15 +32,15 @@ namespace Manager.Services.Auth
     private ServiceGeneric<User> serviceUser;
 
     #region Constructor
-    public ServiceUser(DataContext context) : base(context)
+    public ServiceUser(DataContext context, DataContext contextLog) : base(context)
     {
       try
       {
         serviceAttachment = new ServiceGeneric<Attachments>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
-        serviceLog = new ServiceGeneric<Log>(context);
-        serviceMail = new ServiceSendGrid(context);
+        serviceLog = new ServiceGeneric<Log>(contextLog);
+        serviceMail = new ServiceSendGrid(contextLog);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
@@ -223,7 +223,7 @@ namespace Manager.Services.Auth
         user.Schooling = user.Schooling == null ? null : new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
         user.Sex = view.Sex;
         serviceUser.Update(user, null);
-        foreach(var item in servicePerson.GetAll(p => p.User._id == view._id).ToList())
+        foreach (var item in servicePerson.GetAll(p => p.User._id == view._id).ToList())
         {
           item.User = user;
           servicePerson.Update(item, null);
@@ -263,6 +263,20 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+    public void SetPhoto(string idUser, string url)
+    {
+      try
+      {
+        var person = serviceUser.GetAll(p => p._id == idUser).SingleOrDefault();
+        person.PhotoUrl = url;
+        serviceUser.Update(person, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region Password

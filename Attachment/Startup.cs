@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
@@ -13,8 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Tools;
 
@@ -35,30 +31,30 @@ namespace Attachment
       var conn = ConnectionNoSqlService.GetConnetionServer();
       _context = new DataContext(conn.Server, conn.DataBase);
 
+      DataContext _contextLog;
+      _contextLog = new DataContext(conn.Server, conn.DataBase);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceAccount serviceAccount = new ServiceAccount(_context);
+      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context);
-      IServiceLog serviceLog = new ServiceLog(_context);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
+      IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
+      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, conn.TokenServer);
-      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, conn.TokenServer);
+      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer);
+      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServicePlan servicePlan = new ServicePlan(_context, conn.TokenServer);
-      IServiceEvent serviceEvent = new ServiceEvent(_context, conn.TokenServer);
-      IServiceUser serviceUser = new ServiceUser(_context);
-      //IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, serviceLog, servicePerson, serviceCompany, serviceUser);
-      IServiceCertification serviceCertification = new ServiceCertification(_context, conn.TokenServer);
+      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer);
+      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
+      IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
+      IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer);
 
       services.AddSingleton(_ => serviceCertification);
       services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceMandatoryTraining);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceCompany);
-      //services.AddSingleton(_ => serviceAuthentication);
       services.AddSingleton(_ => servicePerson);
       services.AddSingleton(_ => serviceWorkflow);
       services.AddSingleton(_ => serviceAutoManager);
@@ -68,7 +64,6 @@ namespace Attachment
       services.AddSingleton(_ => serviceMonitoring);
       services.AddSingleton(_ => servicePlan);
       services.AddSingleton(_ => serviceEvent);
-
     }
 
     // This method gets called by the runtime. Use this method to add services to the container.

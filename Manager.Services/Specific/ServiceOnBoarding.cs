@@ -36,16 +36,16 @@ namespace Manager.Services.Specific
     public string pathToken;
 
     #region Constructor
-    public ServiceOnBoarding(DataContext context, string _pathToken) : base(context)
+    public ServiceOnBoarding(DataContext context, DataContext contextLog, string _pathToken) : base(context)
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceGroup = new ServiceGeneric<Group>(context);
-        serviceLog = new ServiceLog(_context);
+        serviceLog = new ServiceLog(context, contextLog);
         serviceLogMessages = new ServiceLogMessages(context);
-        serviceMailLog = new ServiceGeneric<MailLog>(context);
+        serviceMailLog = new ServiceGeneric<MailLog>(contextLog);
         serviceMailModel = new ServiceMailModel(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);

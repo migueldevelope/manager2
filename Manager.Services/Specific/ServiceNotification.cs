@@ -34,7 +34,7 @@ namespace Manager.Services.Specific
     private readonly string path;
     public BaseUser user { get => _user; set => user = _user; }
 
-    public ServiceNotification(DataContext context, string _path)
+    public ServiceNotification(DataContext context, DataContext contextLog, string _path)
       : base(context)
     {
       try
@@ -42,17 +42,17 @@ namespace Manager.Services.Specific
         path = _path;
         configurationNotificationsService = new ServiceGeneric<ConfigurationNotifications>(context);
         personService = new ServiceGeneric<Person>(context);
-        logService = new ServiceLog(_context);
+        logService = new ServiceLog(context, contextLog);
         mailModelService = new ServiceMailModel(context);
-        mailMessageService = new ServiceGeneric<MailMessage>(context);
-        mailService = new ServiceGeneric<MailLog>(context);
+        mailMessageService = new ServiceGeneric<MailMessage>(contextLog);
+        mailService = new ServiceGeneric<MailLog>(contextLog);
         accountService = new ServiceGeneric<Account>(context);
         onBoardingService = new ServiceGeneric<OnBoarding>(context);
         checkpointService = new ServiceGeneric<Checkpoint>(context);
         monitoringService = new ServiceGeneric<Monitoring>(context);
         parameterService = new ServiceGeneric<Parameter>(context);
         logMessagesService = new ServiceLogMessages(context);
-        serviceAuthentication = new ServiceAuthentication(context);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
       }
       catch (Exception e)
       {

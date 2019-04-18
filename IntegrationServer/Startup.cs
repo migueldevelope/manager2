@@ -35,17 +35,23 @@ namespace IntegrationServer
       var conn = ConnectionNoSqlService.GetConnetionServer();
       _context = new DataContext(conn.Server, conn.DataBase);
 
+      DataContext _contextLog;
+      _contextLog = new DataContext(conn.Server, conn.DataBase);
+
+      DataContext _contextIntegration;
+      _contextIntegration = new DataContext(conn.Server, conn.DataBase);
+
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceAccount serviceAccount = new ServiceAccount(_context);
+      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
       IServiceAudit serviceAudit = new ServiceAudit(_context);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceIntegration serviceIntegration = new ServiceIntegration(_context);
-      IServiceLog serviceLog = new ServiceLog(_context);
+      IServiceIntegration serviceIntegration = new ServiceIntegration(_context, _contextLog, _contextIntegration);
+      IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServicePerson servicePerson = new ServicePerson(_context);
-      IServiceUser serviceUser = new ServiceUser(_context);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
+      IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
 
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceAudit);

@@ -32,7 +32,7 @@ namespace Manager.Services.Specific
     public string path;
     private HubConnection hubConnection;
 
-    public ServiceIndicators(DataContext context, string pathToken)
+    public ServiceIndicators(DataContext context, DataContext contextLog, string pathToken)
       : base(context)
     {
       try
@@ -42,9 +42,9 @@ namespace Manager.Services.Specific
         personService = new ServiceGeneric<Person>(context);
         planService = new ServiceGeneric<Plan>(context);
         checkpointService = new ServiceGeneric<Checkpoint>(context);
-        logService = new ServiceLog(_context);
+        logService = new ServiceLog(context, contextLog);
         mailModelService = new ServiceMailModel(context);
-        mailService = new ServiceGeneric<MailLog>(context);
+        mailService = new ServiceGeneric<MailLog>(contextLog);
         workflowService = new ServiceGeneric<Workflow>(context);
         accountService = new ServiceGeneric<Account>(context);
         certificationService = new ServiceGeneric<Certification>(context);

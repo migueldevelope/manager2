@@ -36,17 +36,17 @@ namespace Manager.Services.Specific
     public string path;
 
     #region Contructor
-    public ServiceCheckpoint(DataContext context, string pathToken) : base(context)
+    public ServiceCheckpoint(DataContext context, DataContext contextLog, string pathToken) : base(context)
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
-        serviceLog = new ServiceLog(_context);
+        serviceLog = new ServiceLog(context, contextLog);
         serviceLogMessages = new ServiceLogMessages(context);
         serviceMail = new ServiceGeneric<MailLog>(context);
-        serviceMailModel = new ServiceMailModel(context);
+        serviceMailModel = new ServiceMailModel(contextLog);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceQuestions = new ServiceGeneric<Questions>(context);

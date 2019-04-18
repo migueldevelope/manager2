@@ -20,11 +20,11 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
 
     #region Constructor
-    public ServiceLog(DataContext context) : base(context)
+    public ServiceLog(DataContext context, DataContext contextLog) : base(context)
     {
       try
       {
-        serviceLog = new ServiceGeneric<Log>(context);
+        serviceLog = new ServiceGeneric<Log>(contextLog);
         servicePerson = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)

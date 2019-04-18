@@ -36,12 +36,12 @@ namespace Manager.Services.Specific
     public string path;
 
     #region Constructor
-    public ServiceMonitoring(DataContext context, string pathToken) : base(context)
+    public ServiceMonitoring(DataContext context, DataContext contextLog, string pathToken) : base(context)
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context);
-        serviceLog = new ServiceLog(_context);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
+        serviceLog = new ServiceLog(context, contextLog);
         serviceLogMessages = new ServiceLogMessages(context);
         serviceMail = new ServiceGeneric<MailLog>(context);
         serviceMailModel = new ServiceMailModel(context);
