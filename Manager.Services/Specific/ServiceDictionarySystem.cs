@@ -39,6 +39,7 @@ namespace Manager.Services.Specific
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceDictionarySystem._user = user;
       servicePerson._user = user;
     }

@@ -6,7 +6,6 @@ namespace Manager.Views.BusinessCrud
 {
   public class ViewMapGroup: _ViewCrudBase
   {
-    public string Name { get; set; }
     public ViewListCompany Company { get; set; }
     public ViewListAxis Axis { get; set; }
     public ViewListSphere Sphere { get; set; }

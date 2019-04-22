@@ -57,6 +57,7 @@ namespace Manager.Services.Specific
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceAutoManager._user = user;
       serviceMailLog._user = user;
       serviceMailMessage._user = user;

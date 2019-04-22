@@ -40,6 +40,7 @@ namespace Manager.Services.Specific
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceWorkflow._user = user;
       servicePerson.SetUser(user);
     }

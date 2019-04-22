@@ -107,6 +107,7 @@ namespace Manager.Services.Specific
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceAccount._user = user;
       serviceArea._user = user;
       serviceAxis._user = user;

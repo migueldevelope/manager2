@@ -2,7 +2,7 @@
 
 namespace Manager.Core.Views
 {
-  public class ViewAddArea
+  public class ViewAddAreaOld
   {
     public string Name { get; set; }
     public Company Company { get; set; }

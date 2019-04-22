@@ -89,6 +89,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        _user = user;
         serviceCourse._user = user;
         serviceLog.SetUser(user);
         serviceLogMessages.SetUser(user);

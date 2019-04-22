@@ -73,6 +73,7 @@ namespace Manager.Services.Specific
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceLog.SetUser(user);
       serviceLogMessages.SetUser(user);
       serviceMail._user = user;

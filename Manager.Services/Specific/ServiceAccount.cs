@@ -61,6 +61,7 @@ namespace Manager.Services.Specific
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceAccount._user = _user;
       servicePerson._user = _user;
       serviceUser._user = _user;

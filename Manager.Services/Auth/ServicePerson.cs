@@ -67,6 +67,7 @@ namespace Manager.Services.Auth
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceAttachment._user = user;
       serviceCompany._user = user;
       serviceEstablishment._user = user;

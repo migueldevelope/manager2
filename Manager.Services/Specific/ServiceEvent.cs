@@ -67,6 +67,7 @@ namespace Manager.Services.Specific
 
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceCourse._user = user;
       serviceCourseESocial._user = user;
       serviceEntity._user = user;

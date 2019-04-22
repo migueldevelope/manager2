@@ -72,6 +72,7 @@ namespace Manager.Services.Specific
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceCompany._user = user;
       serviceGroup._user = user;
       serviceLog.SetUser(user);

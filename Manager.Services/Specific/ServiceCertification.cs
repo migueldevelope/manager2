@@ -80,6 +80,7 @@ namespace Manager.Services.Specific
     }
     public void SetUser(BaseUser user)
     {
+      _user = user;
       serviceCertification._user = user;
       serviceCertificationPerson._user = user;
       serviceLog.SetUser(user);
