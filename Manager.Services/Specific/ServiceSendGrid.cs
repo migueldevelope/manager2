@@ -88,6 +88,7 @@ namespace Manager.Services.Specific
         if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
         {
           mailSend.StatusMail = EnumStatusMail.Error;
+          mailSend.MessageError = response.Body.ToString();
           serviceMail.Update(mailSend, null);
           throw new Exception(string.Format("e-mail send error: {0}", response.StatusCode));
         }

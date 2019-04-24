@@ -22,5 +22,6 @@ namespace Manager.Core.Business
     public string Body { get; set; }
     public EnumStatusMail StatusMail { get; set; }
     public List<string> KeySendGrid { get; set; }
+    public string MessageError { get; set; }
   }
 }

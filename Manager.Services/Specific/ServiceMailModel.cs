@@ -566,7 +566,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe estão na jornada de Monitoramento | Monitoring, mas não tiveram ainda o seu feedback à mais de 90 dias.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe, estão na jornada de Monitoramento | Monitoring, mas não temos registro de seu feedback a mais de 90 dias.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre-se que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
                     "{LIST1}",
                     "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
           Subject = "Notificação da jornada de Monitoramento | Monitoring",
@@ -601,9 +601,9 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>Identificamos que você está na jordana de Monitoramento | Monitoring, mas não teve feedback à mais de 90 dias.<br><br>Seja protagonista de sua carreira e inicie agora mesmo o seu monitoramento, assim você ajuda seu gestor a cuidar de sua carreira.<br><br>",
+          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>Identificamos que você está na jornada de Monitoramento | Monitoring, mas não temos registro de feedback a mais de 90 dias.<br><br>Seja protagonista de sua carreira e inicie agora mesmo o seu monitoramento, assim você ajuda seu gestor a cuidar da sua carreira.<br><br>",
                     "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
-          Subject = "Notificação da jornada de Monitoramento | Monitoring",
+          Subject = "Notificação do Colaborador da jornada de Monitoramento | Monitoring",
           Name = "monitoringmanagerdeadline",
           Link = path
         };
@@ -871,7 +871,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe estão na jornada Embarque || Onboarding, mas não tiveram ainda o seu feedback de apresentação.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe, estão na jornada de Embarque || Onboarding, mas não tiveram ainda o seu feedback de apresentação.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
                     "{LIST1}{LIST2}{LIST3}{LIST4}",
                     "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
           Subject = "Notificação de Vencimentos da jornada de Embarque | Onboarding",
@@ -942,7 +942,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que existem planos de ações com situações que requerem sua atenção.<br><br>Informe a resolução destes planos de ação, pois isto fecha o círculo virtuoso das carreiras fluidas.<br><br>",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que existem alguns colaboradores com planos de ações com situações que requerem sua atenção.<br><br>Informe a resolução destes planos de ação, pois isto fecha o círculo virtuoso das carreiras fluidas.<br><br>",
                     "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
                     "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
           Subject = "Notificação de Plano de Ação | Action Plan",
@@ -980,7 +980,7 @@ namespace Manager.Services.Specific
           Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>Identificamos que existem planos de ações com situações que requerem sua atenção.<br><br>Informe a resolução destes planos de ação, pois isto fecha o círculo virtuoso das carreiras fluidas.<br><br>",
                     "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
                     "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
-          Subject = "Notificação de Plano de Ação | Action Plan",
+          Subject = "Notificação do Colaborador do Plano de Ação | Action Plan",
           Name = "actionplandeadline",
           Link = path
         };

@@ -127,18 +127,17 @@ namespace Manager.Services.Specific
     {
       try
       {
-        ViewLog log = new ViewLog
-        {
-          Description = "Service Notification",
-          _idPerson = null,
-          Local = "ManagerMessages"
-        };
-        serviceLog.NewLog(log);
-
         List<Account> accounts = serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var account in accounts)
         {
           SetUser(new BaseUser() { _idAccount = account._id });
+          ViewLog log = new ViewLog
+          {
+            Description = "Service Notification",
+            _idPerson = null,
+            Local = "ManagerMessages"
+          };
+          serviceLog.NewLog(log);
           Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
           if (parameter != null)
             SendMessageAccount();
@@ -332,6 +331,9 @@ namespace Manager.Services.Specific
         MailModel model = serviceMailModel.CheckpointManagerDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
+
+        Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
+
         foreach (var item in listManager)
         {
           string body = model.Message.Replace("{Link}", model.Link)
@@ -401,9 +403,17 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject
           };
-          MailLog mailObj = serviceMailLog.Insert(sendMail);
-          //TODO: Liberar o comentário para enviar e-mail
-          //string token = SendMailApi(path, person, mailObj._id).Result;
+          if (personManager != null)
+          {
+            sendMail = serviceMailLog.Insert(sendMail);
+            string token = SendMailApi(path, personManager, sendMail._id).Result;
+          }
+          else
+          {
+            sendMail.StatusMail = EnumStatusMail.Error;
+            sendMail.MessageError = "Manager null in checkpoint messages.";
+            sendMail = serviceMailLog.Insert(sendMail);
+          }
         }
       }
       catch (Exception e)
@@ -504,6 +514,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
+
         //searsh model mail database
         MailModel model = serviceMailModel.MonitoringManagerDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
@@ -538,9 +550,17 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject
           };
-          MailLog mailObj = serviceMailLog.Insert(sendMail);
-          //TODO: Liberar o comentário para enviar e-mail
-          //string token = SendMailApi(path, person, mailObj._id).Result;
+          if (personManager != null)
+          {
+            sendMail = serviceMailLog.Insert(sendMail);
+            string token = SendMailApi(path, personManager, sendMail._id).Result;
+          }
+          else
+          {
+            sendMail.StatusMail = EnumStatusMail.Error;
+            sendMail.MessageError = "Manager null in monitoring manager messages.";
+            sendMail = serviceMailLog.Insert(sendMail);
+          }
         }
       }
       catch (Exception e)
@@ -577,8 +597,8 @@ namespace Manager.Services.Specific
             Subject = model.Subject
           };
           MailLog mailObj = serviceMailLog.Insert(sendMail);
-          //TODO: Liberar o comentário para enviar e-mail
-          //string token = SendMailApi(path, person, mailObj._id).Result;
+          sendMail = serviceMailLog.Insert(sendMail);
+          string token = SendMailApi(path, item, sendMail._id).Result;
         }
       }
       catch (Exception e)
@@ -644,9 +664,8 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        MailLog mailObj = serviceMailLog.Insert(sendMail);
-        //TODO: Liberar o comentário para enviar e-mail
-        //string token = SendMailApi(path, person, mailObj._id).Result;
+        sendMail = serviceMailLog.Insert(sendMail);
+        string token = SendMailApi(path, person, sendMail._id).Result;
       }
       catch (Exception e)
       {
@@ -793,6 +812,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
+
         //searsh model mail database
         MailModel model = serviceMailModel.OnboardingManagerDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
@@ -857,9 +878,17 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject
           };
-          MailLog mailObj = serviceMailLog.Insert(sendMail);
-          //TODO: Liberar o comentário para enviar e-mail
-          //string token = SendMailApi(path, person, mailObj._id).Result;
+          if (personManager != null)
+          {
+            sendMail = serviceMailLog.Insert(sendMail);
+            string token = SendMailApi(path, personManager, sendMail._id).Result;
+          }
+          else
+          {
+            sendMail.StatusMail = EnumStatusMail.Error;
+            sendMail.MessageError = "Manager null in onboarding manager messages.";
+            sendMail = serviceMailLog.Insert(sendMail);
+          }
         }
       }
       catch (Exception e)
@@ -1082,6 +1111,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
+
         //searsh model mail database
         MailModel model = serviceMailModel.PlanManagerDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
@@ -1172,8 +1203,17 @@ namespace Manager.Services.Specific
             Subject = model.Subject
           };
           MailLog mailObj = serviceMailLog.Insert(sendMail);
-          //TODO: Liberar o comentário para enviar e-mail
-          //string token = SendMailApi(path, person, mailObj._id).Result;
+          if (personManager != null)
+          {
+            sendMail = serviceMailLog.Insert(sendMail);
+            string token = SendMailApi(path, personManager, sendMail._id).Result;
+          }
+          else
+          {
+            sendMail.StatusMail = EnumStatusMail.Error;
+            sendMail.MessageError = "Manager null in plan action manager messages.";
+            sendMail = serviceMailLog.Insert(sendMail);
+          }
         }
       }
       catch (Exception e)
@@ -1259,9 +1299,8 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject
           };
-          MailLog mailObj = serviceMailLog.Insert(sendMail);
-          //TODO: Liberar o comentário para enviar e-mail
-          //string token = SendMailApi(path, person, mailObj._id).Result;
+          sendMail = serviceMailLog.Insert(sendMail);
+          string token = SendMailApi(path, item.Person, sendMail._id).Result;
         }
       }
       catch (Exception e)
