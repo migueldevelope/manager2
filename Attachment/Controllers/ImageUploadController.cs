@@ -10,11 +10,10 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using MongoDB.Bson;
 using Manager.Core.Business;
 using Manager.Data;
-using Manager.Services.Specific;
 using Manager.Services.Commons;
-using Manager.Core;
 using Tools;
 using Manager.Core.Base;
+using Tools.Data;
 
 namespace EdeskIntegration.Controllers
 {
@@ -48,7 +47,7 @@ namespace EdeskIntegration.Controllers
           baseUser._idPerson = ci.Value;
 
       }
-      var conn = ConnectionNoSqlService.GetConnetionServer();
+      Config conn = XmlConnection.ReadConfig();
       context = new DataContext(conn.Server, conn.DataBase);
       blobKey = conn.BlobKey;
       service = new ServiceGeneric<Attachments>(context);

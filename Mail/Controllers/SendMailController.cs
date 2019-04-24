@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Manager.Core.Interfaces;
 using Tools;
+using Tools.Data;
 
 namespace EvaluationMail.Controllers
 {
@@ -38,7 +39,7 @@ namespace EvaluationMail.Controllers
     {
       try
       {
-        var conn = ConnectionNoSqlService.GetConnetionServer();
+        Config conn = XmlConnection.ReadConfig();
         return Ok(service.Send(idmail, conn.SendGridKey));
       }
       catch (Exception e)

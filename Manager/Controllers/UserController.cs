@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tools;
+using Tools.Data;
 
 namespace Manager.Controllers
 {
@@ -167,7 +168,7 @@ namespace Manager.Controllers
     [Route("forgotpassword/{mail}")]
     public string ForgotPassword([FromBody]ViewForgotPassword view, string mail)
     {
-      var conn = ConnectionNoSqlService.GetConnetionServer();
+      Config conn = XmlConnection.ReadConfig();
       return service.ForgotPassword(mail, view, conn.SendGridKey).Result;
     }
     #endregion

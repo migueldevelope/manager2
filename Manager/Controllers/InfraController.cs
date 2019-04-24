@@ -590,7 +590,7 @@ namespace Manager.Controllers
     [Route("getcsvcomparegroup/{idcompany}")]
     public string GetCSVCompareGroup(string idcompany)
     {
-      return service.GetCSVCompareGroup(idcompany, ConnectionNoSqlService.GetConnetionServer().BlobKey);
+      return service.GetCSVCompareGroup(idcompany, XmlConnection.ReadConfig().BlobKey);
     }
     #endregion
 

@@ -72,7 +72,7 @@ namespace Manager.Controllers
     [Route("{idperson}/new")]
     public IActionResult New([FromBody]ViewManager view, string idperson)
     {
-      service.SetManagerPerson(view, idperson, ConnectionNoSqlService.GetConnetionServer().TokenServer);
+      service.SetManagerPerson(view, idperson, XmlConnection.ReadConfig().TokenServer);
       return Ok("Auto manager added!");
     }
     /// <summary>

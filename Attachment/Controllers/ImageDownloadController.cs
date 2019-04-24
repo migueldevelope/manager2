@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Manager.Core.Business;
 using Manager.Data;
-using Manager.Services.Specific;
 using Manager.Services.Commons;
-using Manager.Core;
 using MongoDB.Bson;
 using Tools;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +14,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System.Net.Http;
 using System.Net;
 using Manager.Core.Base;
+using Tools.Data;
 
 namespace EdeskIntegration.Controllers
 {
@@ -50,7 +49,7 @@ namespace EdeskIntegration.Controllers
           baseUser._idPerson = ci.Value;
 
       }
-      var conn = ConnectionNoSqlService.GetConnetionServer();
+      Config conn = XmlConnection.ReadConfig();
       context = new DataContext(conn.Server, conn.DataBase);
       blobKey = conn.BlobKey;
       service = new ServiceGeneric<Attachments>(context);
