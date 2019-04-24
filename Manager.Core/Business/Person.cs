@@ -1,6 +1,8 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace Manager.Core.Business
@@ -27,26 +29,16 @@ namespace Manager.Core.Business
     public EnumTypeUser TypeUser { get; set; }
     public string Registration { get; set; }
     public User User { get; set; }
-
-
-
-    //public string Name { get; set; }
-    //public long Registration { get; set; }
-    //public DateTime? DateBirth { get; set; }
-    //public DateTime? DateAdm { get; set; }
-    //public Schooling Schooling { get; set; }
-    //public string PhotoUrl { get; set; }
-    //public long Coins { get; set; }
-    //public EnumChangePassword ChangePassword { get; set; }
-    //public string ForeignForgotPassword { get; set; }
-    //public string PhoneFixed { get; set; }
-    //public string DocumentID { get; set; }
-    //public string DocumentCTPF { get; set; }
-    //public EnumSex Sex { get; set; }
-    //public string Document { get; set; }
-    //public string Mail { get; set; }
-    //public string Phone { get; set; }
-    //public string Password { get; set; }
-
+    public ViewListPerson GetViewList()
+    {
+      return new ViewListPerson()
+      {
+        _id = _id,
+        Company = new ViewListCompany() { _id = Company._id, Name = Company.Name },
+        Establishment = Establishment == null ? null : new ViewListEstablishment() { _id = Establishment._id, Name = Establishment.Name },
+        Registration = Registration,
+        User = new ViewListUser() { _id = User._id, Name = User.Name, Document = User.Document, Mail = User.Mail, Phone = User.Phone }
+      };
+    }
   }
 }

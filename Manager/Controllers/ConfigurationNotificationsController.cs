@@ -25,7 +25,7 @@ namespace Manager.Controllers
 
     [HttpPost]
     [Route("new")]
-    public string Post([FromBody]ConfigurationNotifications view)
+    public string Post([FromBody]ConfigurationNotification view)
     {
       return service.New(view);
     }
@@ -33,7 +33,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ConfigurationNotifications> List(int count = 10, int page = 1, string filter = "")
+    public List<ConfigurationNotification> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(ref total, count, page, filter);
@@ -44,7 +44,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get")]
-    public ConfigurationNotifications List(string id)
+    public ConfigurationNotification List(string id)
     {
       return service.Get(id);
     }
@@ -52,7 +52,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string Update([FromBody]ConfigurationNotifications view)
+    public string Update([FromBody]ConfigurationNotification view)
     {
       return service.Update(view);
     }

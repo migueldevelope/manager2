@@ -24,7 +24,7 @@ namespace IntegrationService.Data
         Estabelecimento = "1";
         NomeEstabelecimento = "Estabelecimento Padrão";
         Documento = list[(int)EnumLayoutManualBasicV1.Cpf].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
-        Matricula = Convert.ToInt64(list[(int)EnumLayoutManualBasicV1.Matricula].Trim());
+        Matricula = list[(int)EnumLayoutManualBasicV1.Matricula].Trim();
         Nome = FormatedField(list[(int)EnumLayoutManualBasicV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutManualBasicV1.Email]);
         DataNascimento = dataNascimento;
@@ -50,11 +50,12 @@ namespace IntegrationService.Data
         DocumentoGestor = list[(int)EnumLayoutManualBasicV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
         EstabelecimentoGestor = "1";
         NomeEstabelecimentoGestor = "Estabelecimento Padrão";
-        MatriculaGestor = 0;
+        MatriculaGestor = string.Empty;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutManualBasicV1.MatriculaGestor]))
-          MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutManualBasicV1.MatriculaGestor].Trim());
+          MatriculaGestor = list[(int)EnumLayoutManualBasicV1.MatriculaGestor].Trim();
+        ValidDataColaborator();
       }
       catch (Exception)
       {
@@ -76,7 +77,7 @@ namespace IntegrationService.Data
         Estabelecimento = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEstabelecimento]);
         NomeEstabelecimento = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEstabelecimento]);
         Documento = list[(int)EnumLayoutManualCompleteV1.Cpf].Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
-        Matricula = Convert.ToInt64(list[(int)EnumLayoutManualCompleteV1.Matricula].Trim());
+        Matricula = list[(int)EnumLayoutManualCompleteV1.Matricula].Trim();
         Nome = FormatedField(list[(int)EnumLayoutManualCompleteV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.Email]);
         DataNascimento = dataNascimento;
@@ -102,11 +103,12 @@ namespace IntegrationService.Data
         NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor]);
         EstabelecimentoGestor = "1";
         NomeEstabelecimentoGestor = "Estabelecimento Padrão";
-        MatriculaGestor = 0;
+        MatriculaGestor = string.Empty;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutManualCompleteV1.MatriculaGestor]))
-          MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutManualCompleteV1.MatriculaGestor].Trim());
+          MatriculaGestor = list[(int)EnumLayoutManualCompleteV1.MatriculaGestor].Trim();
+        ValidDataColaborator();
       }
       catch (Exception)
       {
@@ -125,7 +127,7 @@ namespace IntegrationService.Data
         Estabelecimento = "1";
         NomeEstabelecimento = "Estabelecimento Padrão";
         Documento = list[(int)EnumLayoutSystemBasicV1.Cpf].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
-        Matricula = Convert.ToInt64(list[(int)EnumLayoutSystemBasicV1.Matricula].Trim());
+        Matricula = list[(int)EnumLayoutSystemBasicV1.Matricula].Trim();
         Nome = FormatedField(list[(int)EnumLayoutSystemBasicV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutSystemBasicV1.Email]);
         DataNascimento = dataNascimento;
@@ -151,11 +153,12 @@ namespace IntegrationService.Data
         NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutSystemBasicV1.NomeEmpresaGestor]);
         EstabelecimentoGestor = "1";
         NomeEstabelecimentoGestor = "Estabelecimento Padrão";
-        MatriculaGestor = 0;
+        MatriculaGestor = string.Empty;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemBasicV1.MatriculaGestor]))
-          MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutSystemBasicV1.MatriculaGestor].Trim());
+          MatriculaGestor = list[(int)EnumLayoutSystemBasicV1.MatriculaGestor].Trim();
+        ValidDataColaborator();
       }
       catch (Exception)
       {
@@ -177,7 +180,7 @@ namespace IntegrationService.Data
         Estabelecimento = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.Estabelecimento]);
         NomeEstabelecimento = FormatedField(list[(int)EnumLayoutSystemCompleteV1.NomeEstabelecimento]);
         Documento = list[(int)EnumLayoutSystemCompleteV1.Cpf].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11,'0');
-        Matricula = Convert.ToInt64(list[(int)EnumLayoutSystemCompleteV1.Matricula].Trim());
+        Matricula = list[(int)EnumLayoutSystemCompleteV1.Matricula].Trim();
         Nome = FormatedField(list[(int)EnumLayoutSystemCompleteV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.Email]);
         DataNascimento = dataNascimento;
@@ -205,9 +208,10 @@ namespace IntegrationService.Data
         DocumentoGestor = list[(int)EnumLayoutSystemCompleteV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
-        MatriculaGestor = 0;
+        MatriculaGestor = string.Empty;
         if (!string.IsNullOrEmpty(list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor]))
-          MatriculaGestor = Convert.ToInt64(list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor].Trim());
+          MatriculaGestor = list[(int)EnumLayoutSystemCompleteV1.MatriculaGestor].Trim();
+        ValidDataColaborator();
       }
       catch (Exception)
       {
@@ -269,9 +273,9 @@ namespace IntegrationService.Data
           Message = string.Concat(Message, "CPF vazio!;");
         else
           if (!IsValidCPF(Documento))
-          Message = string.Concat(Message, "CPF inválido!;");
+            Message = string.Concat(Message, "CPF inválido!;");
         // Matricula obrigatória
-        if (Matricula == 0)
+        if (string.IsNullOrEmpty(Matricula))
           Message = string.Concat(Message, "Matricula não informada!;");
         // Nome
         if (string.IsNullOrEmpty(Nome))
@@ -296,7 +300,7 @@ namespace IntegrationService.Data
           Message = string.Concat(Message, "Nome do cargo vazio!;");
         // Grau de Instrução, Nome do Grau de Instrução
         if (string.IsNullOrEmpty(NomeGrauInstrucao))
-          Message = string.Concat(Message, "Nome do grau de instrução vazio!;");
+          NomeGrauInstrucao = "Ensino Médio Completo";
         // Valid Cpf chefe
         if (!string.IsNullOrEmpty(DocumentoGestor))
           if (!IsValidCPF(DocumentoGestor))

@@ -906,11 +906,31 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    public User GetUserByKey(string document)
+    public ViewCrudUser GetUserByKey(string document)
     {
       try
       {
-        return userService.GetAll(p => p.Document == document).SingleOrDefault();
+        User user = userService.GetAll(p => p.Document == document).SingleOrDefault();
+        return user == null
+          ? null
+          : new ViewCrudUser()
+        {
+          DateAdm = user.DateAdm,
+          DateBirth = user.DateBirth,
+          Document = user.Document,
+          DocumentCTPF = user.DocumentCTPF,
+          DocumentID = user.DocumentID,
+          Mail = user.Mail,
+          Name = user.Mail,
+          Nickname = user.Nickname,
+          Password = string.Empty,
+          Phone = user.Phone,
+          PhoneFixed = user.PhoneFixed,
+          PhotoUrl = user.PhotoUrl,
+          Sex = user.Sex,
+          Schooling = user.Schooling == null ? null : new ViewListSchooling() { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
+          _id = user._id
+        };
       }
       catch (Exception e)
       {
@@ -918,14 +938,98 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Person GetPersonByKey(string idcompany, string idestablishment, string document, long registration)
+    public ViewCrudPerson GetPersonByKey(string idcompany, string idestablishment, string document, string registration)
     {
       try
       {
         IQueryable<Person> personsDocument = personService.GetAll(p => p.User.Document == document);
         if (personsDocument.Count() == 0)
           return null;
-        return personsDocument.Where(p => p.Company._id == idcompany && p.Establishment._id == idestablishment && p.Registration == registration.ToString()).FirstOrDefault();
+        Person person = personsDocument.Where(p => p.Company._id == idcompany && p.Establishment._id == idestablishment && p.Registration == registration).FirstOrDefault();
+        return person == null
+          ? null
+          : new ViewCrudPerson()
+        {
+          _id = person._id,
+          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          DateLastOccupation = person.DateLastOccupation,
+          DateLastReadjust = person.DateLastReadjust,
+          DateResignation = person.DateResignation,
+          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
+          HolidayReturn = person.HolidayReturn,
+          Manager = person.Manager == null ? null : new ViewBaseFields()
+          {
+            _id = person.Manager._id,
+            Name = person.Manager.Name,
+            Mail = person.Manager.Mail
+          },
+          MotiveAside = person.MotiveAside,
+          Occupation = person.Occupation == null ? null : new ViewListOccupation()
+          {
+            _id = person.Occupation._id,
+            Name = person.Occupation.Name,
+            Line = person.Occupation.Line,
+            Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
+            Group = new ViewListGroup()
+            {
+              _id = person.Occupation.Group._id,
+              Name = person.Occupation.Group.Name,
+              Line = person.Occupation.Group.Line,
+              Axis = new ViewListAxis()
+              {
+                _id = person.Occupation.Group.Axis._id,
+                Name = person.Occupation.Group.Axis.Name,
+                TypeAxis = person.Occupation.Group.Axis.TypeAxis
+              },
+              Sphere = new ViewListSphere()
+              {
+                _id = person.Occupation.Group.Sphere._id,
+                Name = person.Occupation.Group.Sphere.Name,
+                TypeSphere = person.Occupation.Group.Sphere.TypeSphere
+              }
+            },
+            Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Order = p.Order,
+              ProcessLevelOne = new ViewListProcessLevelOne()
+              {
+                _id = p.ProcessLevelOne._id,
+                Name = p.ProcessLevelOne.Name,
+                Order = p.ProcessLevelOne.Order,
+                Area = new ViewListArea()
+                {
+                  _id = p.ProcessLevelOne.Area._id,
+                  Name = p.ProcessLevelOne.Area.Name
+                }
+              }
+            }).ToList()
+          },
+          Registration = person.Registration,
+          Salary = person.Salary,
+          StatusUser = person.StatusUser,
+          TypeJourney = person.TypeJourney,
+          TypeUser = person.TypeUser,
+          User = new ViewCrudUser()
+          {
+            Name = person.User.Name,
+            Nickname = person.User.Nickname,
+            DateAdm = person.User.DateAdm,
+            DateBirth = person.User.DateBirth,
+            Document = person.User.Document,
+            DocumentCTPF = person.User.DocumentCTPF,
+            DocumentID = person.User.DocumentID,
+            Mail = person.User.Mail,
+            Password = string.Empty,
+            Phone = person.User.Phone,
+            PhoneFixed = person.User.PhoneFixed,
+            PhotoUrl = person.User.PhotoUrl,
+            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
+            Sex = person.User.Sex,
+            _id = person.User._id
+          }
+        };
       }
       catch (Exception e)
       {

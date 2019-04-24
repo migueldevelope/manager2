@@ -9,7 +9,7 @@ namespace Manager.Views.Integration
     public string Estabelecimento { get; set; }
     public string NomeEstabelecimento { get; set; }
     public string Documento { get; set; }
-    public long Matricula { get; set; }
+    public string Matricula { get; set; }
     public string Nome { get; set; }
     public string Email { get; set; }
     public DateTime? DataNascimento { get; set; }
@@ -35,7 +35,7 @@ namespace Manager.Views.Integration
     public string NomeEmpresaGestor { get; set; }
     public string EstabelecimentoGestor { get; set; }
     public string NomeEstabelecimentoGestor { get; set; }
-    public long MatriculaGestor { get; set; }
+    public string MatriculaGestor { get; set; }
     public string ChaveEmpresa { get { return Empresa; } }
     public string ChaveEstabelecimento { get { return string.Format("{0};{1}", Empresa, Estabelecimento); } }
     public string ChaveGrauInstrucao { get { return GrauInstrucao; } }

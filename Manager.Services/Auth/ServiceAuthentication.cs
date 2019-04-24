@@ -148,7 +148,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewPerson AuthenticationMail(Person loginPerson)
+    public string AuthenticationMail(Person loginPerson)
     {
       try
       {
@@ -198,7 +198,7 @@ namespace Manager.Services.Auth
         );
         person.Token = new JwtSecurityTokenHandler().WriteToken(token);
         //
-        return person;
+        return person.Token;
       }
       catch (Exception e)
       {

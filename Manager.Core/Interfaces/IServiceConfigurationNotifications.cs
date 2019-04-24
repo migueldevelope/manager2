@@ -10,10 +10,10 @@ namespace Manager.Core.Interfaces
     BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
-    string New(ConfigurationNotifications view);
-    string Update(ConfigurationNotifications view);
+    string New(ConfigurationNotification view);
+    string Update(ConfigurationNotification view);
     string Remove(string id);
-    ConfigurationNotifications Get(string id);
-    List<ConfigurationNotifications> List(ref long total, int count = 10, int page = 1, string filter = "");
+    ConfigurationNotification Get(string id);
+    List<ConfigurationNotification> List(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

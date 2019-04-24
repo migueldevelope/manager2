@@ -7,7 +7,7 @@ namespace Manager.Core.Business
   /// <summary>
   /// Este iria utilizar para gerenciar o serviço de email, porém acabei não utilizando
   /// </summary>
-  public class ConfigurationNotifications : BaseEntity
+  public class ConfigurationNotification : BaseEntity
   {
     public string Name { get; set; }
     public EnumStatusNotification StatusNotification { get; set; }

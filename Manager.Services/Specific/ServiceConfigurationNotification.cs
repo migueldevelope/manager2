@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace Manager.Services.Specific
 {
-  public class ServiceConfigurationNotifications : Repository<ConfigurationNotifications>, IServiceConfigurationNotifications
+  public class ServiceConfigurationNotifications : Repository<ConfigurationNotification>, IServiceConfigurationNotifications
   {
-    private readonly ServiceGeneric<ConfigurationNotifications> configurationNotificationsService;
+    private readonly ServiceGeneric<ConfigurationNotification> configurationNotificationsService;
     private readonly ServiceGeneric<Person> personService;
 
     public BaseUser user { get => _user; set => user = _user; }
@@ -24,7 +24,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        configurationNotificationsService = new ServiceGeneric<ConfigurationNotifications>(context);
+        configurationNotificationsService = new ServiceGeneric<ConfigurationNotification>(context);
         personService = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
@@ -46,7 +46,7 @@ namespace Manager.Services.Specific
       personService._user = baseUser;
     }
 
-    public string New(ConfigurationNotifications view)
+    public string New(ConfigurationNotification view)
     {
       try
       {
@@ -59,7 +59,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string Update(ConfigurationNotifications view)
+    public string Update(ConfigurationNotification view)
     {
       try
       {
@@ -87,7 +87,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ConfigurationNotifications Get(string id)
+    public ConfigurationNotification Get(string id)
     {
       try
       {
@@ -98,7 +98,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ConfigurationNotifications GetByName(string name)
+    public ConfigurationNotification GetByName(string name)
     {
       try
       {
@@ -109,7 +109,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ConfigurationNotifications> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ConfigurationNotification> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {

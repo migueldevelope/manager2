@@ -410,25 +410,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        ViewPerson view = serviceAuthentication.AuthenticationMail(person);
+        string token = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
-          //var data = new
-          //{
-          //  mail = person.User.Mail,
-          //  password = person.User.Password
-          //};
-          //var json = JsonConvert.SerializeObject(data);
-          //var content = new StringContent(json);
-          //content.Headers.ContentType.MediaType = "application/json";
-          //client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          //var result = client.PostAsync("manager/authentication/encrypt", content).Result;
-          //var resultContent = result.Content.ReadAsStringAsync().Result;
-          //var auth = JsonConvert.DeserializeObject<ViewPerson>(resultContent);
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + view.Token);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
           var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
-          return view.Token;
+          return token;
         }
       }
       catch (Exception e)

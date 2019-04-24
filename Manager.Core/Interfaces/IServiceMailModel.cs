@@ -16,18 +16,5 @@ namespace Manager.Core.Interfaces
     string New(ViewCrudMailModel view);
     ViewCrudMailModel Get(string id);
     string Update(ViewCrudMailModel view);
-
-    #region Old
-    //MailModel DefaultAutoManagerOld(string path);
-    //MailModel DefaultExpectationsPendingManagerOld(string path);
-    //MailModel DefaultExpectationsPendingEmployeeOld(string path);
-
-    string NewOld(MailModel view);
-    string UpdateOld(MailModel view);
-    string RemoveOld(string id);
-    MailModel GetOld(string id);
-    List<MailModel> ListOld(ref long total, int count = 10, int page = 1, string filter = "");
-    #endregion
-
   }
 }

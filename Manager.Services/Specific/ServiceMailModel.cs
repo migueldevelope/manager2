@@ -159,7 +159,7 @@ namespace Manager.Services.Specific
         var model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>O gestor <strong>{Requestor}</strong>, está solicitando que o(a) colaborador(a) <strong>{Employee}</strong> faça parte da equipe dele. </br></br>Você <a href='{Approved}'> aprova </a> ou <a href='{Disapproved}'> reprova </a> esta solicitação?",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>O gestor <strong>{Requestor}</strong>, está solicitando que o(a) colaborador(a) <strong>{Employee}</strong> faça parte da equipe dele. <br><br>Você <a href='{Approved}'> aprova </a> ou <a href='{Disapproved}'> reprova </a> esta solicitação?",
           Subject = "Notificação de Auto Gestão - Pedido de Autorização",
           Name = "automanager",
           Link = path
@@ -195,7 +195,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Guest}</strong>,</br></br>O(a) gestor(a) <strong>{Manager}</strong> enviou uma solicitação para aprovação de acreditação do(a) colaborador(a) <strong>{Person}</strong>.</br>Ajude a encontrar as pessoas que são referências na nossa empresa.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Guest}</strong>,<br><br>O(a) gestor(a) <strong>{Manager}</strong> enviou uma solicitação para aprovação de acreditação do(a) colaborador(a) <strong>{Person}</strong>.<br>Ajude a encontrar as pessoas que são referências na nossa empresa.<br><br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação para aprovação de Acreditação | Accretitation Skill",
           Name = "certification",
           Link = path
@@ -228,7 +228,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>A acreditação da competência <strong>{Skill}</strong> do(a) colaborador(a) <strong>{Person}</strong> foi APROVADA.</br>Enviamos um e-mail parabenizando o(a) colaborador(a) mas é muito importante que você comemore com ele(a).</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>A acreditação da competência <strong>{Skill}</strong> do(a) colaborador(a) <strong>{Person}</strong> foi APROVADA.<br>Enviamos um e-mail parabenizando o(a) colaborador(a) mas é muito importante que você comemore com ele(a).<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Acreditação | Accretitation Skill - APROVADA",
           Name = "certificationapproval",
           Link = path
@@ -261,7 +261,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,</br></br>Foi concedido a você a acreditação da competência <strong>{Skill}</strong>.</br>Parabéns por este feito glorioso, e continue buscando outras acreditações.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,<br><br>Foi concedido a você a acreditação da competência <strong>{Skill}</strong>.<br>Parabéns por este feito glorioso, e continue buscando outras acreditações.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Acreditação | Accretitation Skill - APROVADA",
           Name = "certificationapprovalperson",
           Link = path
@@ -294,7 +294,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>A acreditação da competência <strong>{Skill}</strong> do(a) colaborador(a) <strong>{Person}</strong> foi REPROVADA.</br>Não se aboreça, insentive seu colaborador a se aperfeiçoar mais e solicite novamente daqui algum tempo.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>A acreditação da competência <strong>{Skill}</strong> do(a) colaborador(a) <strong>{Person}</strong> foi REPROVADA.<br>Não se aboreça, insentive seu colaborador a se aperfeiçoar mais e solicite novamente daqui algum tempo.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Acreditação | Accretitation Skill - REPROVADA",
           Name = "certificationdisapproval",
           Link = path
@@ -330,7 +330,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>Recursos Humanos</strong>,</br></br>O resultado do check point para o(a) colaborador(a) <strong>{Person}</strong> foi APROVADO.</br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de efetivação de período de experiência.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>Recursos Humanos</strong>,<br><br>O resultado do check point para o(a) colaborador(a) <strong>{Person}</strong> foi APROVADO.<br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de efetivação de período de experiência.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Decisão de Efetivação | Check point - APROVADO",
           Name = "checkpointresult",
           Link = path
@@ -363,7 +363,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>Recursos Humanos</strong>,</br></br>O resultado do check point para <strong>{Person}</strong> foi REPROVADO.</br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de desligamento.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>Recursos Humanos</strong>,<br><br>O resultado do check point para <strong>{Person}</strong> foi REPROVADO.<br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de desligamento.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Decisão de Efetivação | Check point - REPROVADO",
           Name = "checkpointresultdisapproved",
           Link = path
@@ -396,7 +396,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,</br></br>Parabéns! Você foi efetivado na <strong>{Company}</strong>. Isso é fruto do seu engajamento e alinhamento com nossa cultura e nossas competências essenciais.</br>Agora é seguir interessado em conhecer mais sobre as entregas do seu cargo e as competências que fazem parte do mesmo.</br>Fique atento às notificações do Analisa e aproveite o máximo de suas funcionalidades.</br>Estaremos na torcida para que sua carreira seja a mais fluida possível.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,<br><br>Parabéns! Você foi efetivado na <strong>{Company}</strong>. Isso é fruto do seu engajamento e alinhamento com nossa cultura e nossas competências essenciais.<br>Agora é seguir interessado em conhecer mais sobre as entregas do seu cargo e as competências que fazem parte do mesmo.<br>Fique atento às notificações do Analisa e aproveite o máximo de suas funcionalidades.<br>Estaremos na torcida para que sua carreira seja a mais fluida possível.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Decisão de Efetivação | Checkpoint",
           Name = "checkpointresultperson",
           Link = path
@@ -410,66 +410,30 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    // TODO: Revisão de outros e-mails de Checkpoint
-    public MailModel CheckpointSeq1(string path)
+    public MailModel CheckpointManagerDeadline(string path)
     {
       try
       {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointseq1").Result;
-        return model ?? CheckpointSeq1Default(path);
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointmanagerdeadline").Result;
+        return model ?? CheckpointManagerDeadlineDefault(path);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    private MailModel CheckpointSeq1Default(string path)
+    private MailModel CheckpointManagerDeadlineDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o Checkpoint de " +
-          "seu subordinado {Person} que irá vencer em {Days} dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Checkpoint à vencer",
-          Name = "checkpointseq1",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel CheckpointSeq2(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "checkpointseq2").Result;
-        return model ?? CheckpointSeq2Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel CheckpointSeq2Default(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o Checkpoint de " +
-          "seu subordinado {Person} que está atrasado em {Days} dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Checkpoint atrasado",
-          Name = "checkpointseq2",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe estão na jornada de Definição de Efetivação | Checkpoint, e não foi feito ainda seu preenchimento.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
+                    "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
+                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
+          Subject = "Notificação de Vencimentos da jornada de Decisão de Efetivação | Checkpoint",
+          Name = "checkpointmanagerdeadline",
           Link = path
         };
         // Insert
@@ -503,7 +467,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,</br>Seu gestor <strong>{Manager}</strong> acaba de registrar ações de monitoramento da sua performance.</br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.</br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!</br></br>Para acessar o Analisa <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,<br>Seu gestor <strong>{Manager}</strong> acaba de registrar ações de monitoramento da sua performance.<br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!<br><br>Para acessar o Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Aprovação do Monitoramento | Monitoring",
           Name = "monitoringapproval",
           Link = path
@@ -536,7 +500,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>Seu colaborador <strong>{Person}</strong> acaba de propor novos registros de monitoramento.</br>Acesse agora o Analisa e veja este conteúdo.</br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.</br></br>Para acessar o sistema Analisa <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>Seu colaborador <strong>{Person}</strong> acaba de propor novos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Continuar o Monitoramento | Monitoring",
           Name = "monitoringapprovalmanager",
           Link = path
@@ -569,7 +533,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>Seu colaborador <strong>{Person}</strong> acaba de propor uma revisão nos registros de monitoramento.</br>Acesse agora o Analisa e veja este conteúdo.</br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.</br></br>Para acessar o sistema Analisa <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>Seu colaborador <strong>{Person}</strong> acaba de propor uma revisão nos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Revisão do Monitoramento | Monitoring",
           Name = "monitoringdisapproval",
           Link = path
@@ -583,31 +547,30 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    // TODO: Revisão de outros e-mails de Monitoring
-    public MailModel MonitoringSeq1(string path)
+    public MailModel MonitoringManagerDeadline(string path)
     {
       try
       {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringseq1").Result;
-        return model ?? MonitoringSeq1Default(path);
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringmanagerdeadline").Result;
+        return model ?? MonitoringManagerDeadlineDefault(path);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    private MailModel MonitoringSeq1PersonDefault(string path)
+    private MailModel MonitoringManagerDeadlineDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Você está a {Days} dias sem " +
-          "realizar um Monitoring.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Monitoring",
-          Name = "monitoringseq1_person",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe estão na jornada de Monitoramento | Monitoring, mas não tiveram ainda o seu feedback à mais de 90 dias.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
+                    "{LIST1}",
+                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
+          Subject = "Notificação da jornada de Monitoramento | Monitoring",
+          Name = "monitoringmanagerdeadline",
           Link = path
         };
         // Insert
@@ -619,30 +582,29 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public MailModel MonitoringSeq1Person(string path)
+    public MailModel MonitoringDeadline(string path)
     {
       try
       {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringseq1_person").Result;
-        return model ?? MonitoringSeq1PersonDefault(path);
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringdeadline").Result;
+        return model ?? MonitoringDeadlineDefault(path);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    private MailModel MonitoringSeq1Default(string path)
+    private MailModel MonitoringDeadlineDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Você está a {Days} dias sem " +
-          "realizar um Monitoring do seu subordinao {Person}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Monitoring",
-          Name = "monitoringseq1",
+          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>Identificamos que você está na jordana de Monitoramento | Monitoring, mas não teve feedback à mais de 90 dias.<br><br>Seja protagonista de sua carreira e inicie agora mesmo o seu monitoramento, assim você ajuda seu gestor a cuidar de sua carreira.<br><br>",
+                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
+          Subject = "Notificação da jornada de Monitoramento | Monitoring",
+          Name = "monitoringmanagerdeadline",
           Link = path
         };
         // Insert
@@ -676,7 +638,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,</br></br>Bem - vindo à <strong>{Company}</strong>!</br>Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.</br>Seu gestor <strong>{Manager}</strong> acaba de fazer um registro do seu embarque no Analisa.</br></br>Não perca tempo, <a href='https://analisa.solutions/'>clique aqui e confira</a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,<br><br>Bem - vindo à <strong>{Company}</strong>!<br>Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.<br>Seu gestor <strong>{Manager}</strong> acaba de fazer um registro do seu embarque no Analisa.<br><br>Não perca tempo, <a href='{Link}'>clique aqui e confira</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação para Continuar Embarque | OnBoarding",
           Name = "onboardingapproval",
           Link = path
@@ -709,7 +671,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>O colaborador <strong>{Person}</strong> foi admitido na <strong>{Company}</strong> e iniciou os registros de embarque na sua carreira.</br>De continuidade a este processo para gerar mais engajamento de sua equipe,e melhorar nossos processos de gestão.</br></br>Não perca tempo, <a href ='https://analisa.solutions/' > clique aqui e confira </a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>O colaborador <strong>{Person}</strong> foi admitido na <strong>{Company}</strong> e iniciou os registros de embarque na sua carreira.<br>De continuidade a este processo para gerar mais engajamento de sua equipe,e melhorar nossos processos de gestão.<br><br>Não perca tempo, <a href ='{Link}' > clique aqui e confira </a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação da Aprovação de Embarque | OnBoarding",
           Name = "onboardingapprovalmanager",
           Link = path
@@ -743,7 +705,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>O seu colaborador <strong>{Person}</strong> fez alguns comentários no encerramento do embarque.</br></br>Não deixe para mais tarde, <a href='https://analisa.solutions/'> clique aqui </a> e olhe os comentários que foram redigidos.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>O seu colaborador <strong>{Person}</strong> fez alguns comentários no encerramento do embarque.<br><br>Não deixe para mais tarde, <a href='{Link}'> clique aqui </a> e olhe os comentários que foram redigidos.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Revisão de Embarque | OnBoarding",
           Name = "onboardingdisapproval",
           Link = path
@@ -776,7 +738,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,</br></br>Bem - vindo ao seu novo cargo <strong>{Occupation}</strong>!</br>Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.</br>Seu gestor <strong>{Manager}<strong> acaba de fazer um registro do seu embarque no Analisa.</br></br>Não perca tempo, <a href='https://analisa.solutions/'>clique aqui e confira</a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,<br><br>Bem - vindo ao seu novo cargo <strong>{Occupation}</strong>!<br>Estaremos aqui na torcida para que sua trajetória de carreira seja a melhor possível.<br>Seu gestor <strong>{Manager}<strong> acaba de fazer um registro do seu embarque no Analisa.<br><br>Não perca tempo, <a href='{Link}'>clique aqui e confira</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação da Aprovação de OnBoarding Troca de Cargo",
           Name = "onboardingapprovaloccupation",
           Link = path
@@ -809,7 +771,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>O colaborador <strong>{Person}</strong> foi promovido para o cargo <strong>{Occupation}</strong>, e iniciou os registros de embarque.</br>De continuidade a este processo para gerar mais engajamento de sua equipe, e melhorar nossos processos de gestão.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>O colaborador <strong>{Person}</strong> foi promovido para o cargo <strong>{Occupation}</strong>, e iniciou os registros de embarque.<br>De continuidade a este processo para gerar mais engajamento de sua equipe, e melhorar nossos processos de gestão.<br><br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação para Continuar Embarque no Cargo | OnBoarding Occupation",
           Name = "onboardingapprovalmanageroccupation",
           Link = path
@@ -843,7 +805,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,</br></br>O seu colaborador <strong>{Person}</strong> fez alguns comentários no encerramento do embarque para troca de cargo.</br></br>Não deixe para mais tarde, <a href='https://analisa.solutions/'>clique aqui</a> e olhe os comentários que foram redigidos.</br></br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>O seu colaborador <strong>{Person}</strong> fez alguns comentários no encerramento do embarque para troca de cargo.<br><br>Não deixe para mais tarde, <a href='{Link}'>clique aqui</a> e olhe os comentários que foram redigidos.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Revisão de Embarque | OnBoarding",
           Name = "onboardingdisapprovaloccupation",
           Link = path
@@ -857,31 +819,28 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    // TODO: Revisão de outros e-mails de OnBoarding
-    public MailModel OnBoardingSeq1(string path)
+    public MailModel OnboardingAdmission(string path)
     {
       try
       {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq1").Result;
-        return model ?? OnBoardingSeq1Default(path);
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingadmission").Result;
+        return model ?? OnboardingAdmissionDefault(path);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    private MailModel OnBoardingSeq1Default(string path)
+    private MailModel OnboardingAdmissionDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
-          "seu subordinado {Person} que irá vencer em 30 dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "OnBoarding à vencer",
-          Name = "onboardingseq1",
+          Message = "Olá <strong>{Manager}</strong>,<br><br>O(a) colaborador(a) <strong>{Person}</strong> foi admitido, é importante que você apresente a ele nossa metodologia de carreira fluida.<br><br>A apresentação é fundamental para preparar o(a) colaborador(a) para as próximas jornadas, e mostrar para ele(a) como nossa empresa se preocupa com sua carreira.<br><br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Admissão para jornada de Embarque | Onboarding",
+          Name = "onboardingadmission",
           Link = path
         };
         // Insert
@@ -893,135 +852,30 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public MailModel OnBoardingSeq2(string path)
+    public MailModel OnboardingManagerDeadline(string path)
     {
       try
       {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq2").Result;
-        return model ?? OnBoardingSeq2Default(path);
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingmanagerdeadline").Result;
+        return model ?? OnboardingManagerDeadlineDefault(path);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    private MailModel OnBoardingSeq2Default(string path)
+    private MailModel OnboardingManagerDeadlineDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
-          "seu subordinado {Person} que irá vencer em 5 dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "OnBoarding à vencer",
-          Name = "onboardingseq2",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingSeq3(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq3").Result;
-        return model ?? OnBoardingSeq3Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel OnBoardingSeq3Default(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
-          "seu subordinado {Person} que irá vencer hoje.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "OnBoarding vencendo",
-          Name = "onboardingseq3",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingSeq4(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq4").Result;
-        return model ?? OnBoardingSeq4Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel OnBoardingSeq4Default(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
-          "seu subordinado {Person} que está vencido a 5 dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "OnBoarding vencido",
-          Name = "onboardingseq4",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel OnBoardingSeq5(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingseq5").Result;
-        return model ?? OnBoardingSeq5Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel OnBoardingSeq5Default(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>É necessário que você acesse o sistema e realize o OnBoarding de " +
-          "seu subordinado {Person} que está vencido a 10 dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "OnBoarding vencido",
-          Name = "onboardingseq5",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe estão na jornada Embarque || Onboarding, mas não tiveram ainda o seu feedback de apresentação.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
+                    "{LIST1}{LIST2}{LIST3}{LIST4}",
+                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
+          Subject = "Notificação de Vencimentos da jornada de Embarque | Onboarding",
+          Name = "onboardingmanagerdeadline",
           Link = path
         };
         // Insert
@@ -1048,111 +902,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public MailModel Plan(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "developmentplan").Result;
-        return model ?? DevelopmentPlanDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel PlanSeq1(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "planseq1").Result;
-        return model ?? PlanSeq1Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel PlanSeq1Person(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "planseq1_person").Result;
-        return model ?? PlanSeq1PersonDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel PlanSeq2(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "planseq2").Result;
-        return model ?? PlanSeq2Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel PlanSeq2Person(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "planseq2_person").Result;
-        return model ?? PlanSeq2PersonDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel PlanSeq3(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "planseq3").Result;
-        return model ?? PlanSeq3Default(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel PlanSeq3Person(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "planseq3_person").Result;
-        return model ?? PlanSeq3PersonDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel DevelopmentPlanDefault(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "<html><head><style>#customers {font-family: 'Segoe UI', Arial, Helvetica, sans-serif;border-collapse: collapse;width: 100%;}#customers td, #customers th{border: 1px solid #ddd;padding: 8px;}#customers tr:nth-child(even){background-color: #f2f2f2;}#customers th {padding-top: 12px;padding-bottom: 12px;text-align: left;background-color: #4598dc;color: white;}</style></head><body><table id='customers'><tr><td colspan='3' style='font-size: medium; font-weight: bold; text-align: center;'>Plano de Desenvolvimento Individual</td></tr><tr><td colspan='3'>Sr(a). <strong>{Person}</strong>, abaixo estão relacionados os planos de desenvolvimento dos seus funcionários que já venceram, ou que estão vencendo este mês, por favor acesse o sistema e atualize os registros.</tr><tr><th>Funcionário</th><th>Plano de Ação</th><th>Prazo</th></tr>{List}<tr align='center'><td colspan='3'><a href='https://analisa.solutions/'>Clique aqui para acessar o sistema</a></tr><tr align='center'><td colspan='3'>Obrigado por sua atenção.</tr></body></html>",
-          Subject = "Pendência do Plano de Desenvolvimento Individual (PDI)",
-          Name = "developmentplan",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     private MailModel PlanApprovalDefault(string path)
     {
       try
@@ -1160,7 +909,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,</br></br>É necessário que você acesse o sistema e realize uma aprovação do Pdi.</br></br>Para acessar o sistema <a href='https://analisa.solutions/'>clique aqui</a>.",
+          Message = "Ola <strong>{Person}</strong>,<br><br>É necessário que você acesse o sistema e realize uma aprovação do Pdi.<br><br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.",
           Subject = "Aprovação de PDI",
           Name = "planapproval",
           Link = path
@@ -1174,18 +923,30 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel PlanSeq1Default(string path)
+    public MailModel PlanManagerDeadline(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "actionplanmanagerdeadline").Result;
+        return model ?? PlanManagerDeadlineDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel PlanManagerDeadlineDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
-          " em {Days} dias do seu subordinao {Person}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Plano à vencer",
-          Name = "planseq1",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que existem planos de ações com situações que requerem sua atenção.<br><br>Informe a resolução destes planos de ação, pois isto fecha o círculo virtuoso das carreiras fluidas.<br><br>",
+                    "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
+                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
+          Subject = "Notificação de Plano de Ação | Action Plan",
+          Name = "actionplanmanagerdeadline",
           Link = path
         };
         // Insert
@@ -1197,18 +958,30 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel PlanSeq1PersonDefault(string path)
+    public MailModel PlanDeadline(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "actionplandeadline").Result;
+        return model ?? PlanDeadlineDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel PlanDeadlineDefault(string path)
     {
       try
       {
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
-          " em {Days} dias.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Plano à vencer",
-          Name = "planseq1_person",
+          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>Identificamos que existem planos de ações com situações que requerem sua atenção.<br><br>Informe a resolução destes planos de ação, pois isto fecha o círculo virtuoso das carreiras fluidas.<br><br>",
+                    "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
+                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
+          Subject = "Notificação de Plano de Ação | Action Plan",
+          Name = "actionplandeadline",
           Link = path
         };
         // Insert
@@ -1220,175 +993,8 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private MailModel PlanSeq2Default(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
-          " hoje do seu subordinao {Person}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Plano vencendo",
-          Name = "planseq2",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel PlanSeq2PersonDefault(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano que irá vencer" +
-          " hoje.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Plano vencendo",
-          Name = "planseq2_person",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel PlanSeq3Default(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano vencido" +
-          " à {Days} dias do seu subordinao {Person}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Plano",
-          Name = "planseq3",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    private MailModel PlanSeq3PersonDefault(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Manager}</strong>,</br></br>Você tem um plano vencido" +
-          " à {Days}.</br></br>Para acessar o sistema " +
-          "<a href='https://analisa.solutions/'>clique aqui</a>.",
-          Subject = "Plano",
-          Name = "planseq3_person",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     #endregion
 
-    #region Old
-    public string NewOld(MailModel view)
-    {
-      try
-      {
-        serviceMailModel.Insert(view);
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string UpdateOld(MailModel view)
-    {
-      try
-      {
-        serviceMailModel.Update(view, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string RemoveOld(string id)
-    {
-      try
-      {
-        var item = serviceMailModel.GetAll(p => p._id == id).FirstOrDefault();
-        item.Status = EnumStatus.Disabled;
-        serviceMailModel.Update(item, null);
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public MailModel GetOld(string id)
-    {
-      try
-      {
-        return serviceMailModel.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public List<MailModel> ListOld(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        try
-        {
-          int skip = (count * (page - 1));
-          var detail = serviceMailModel.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).ToList();
-          total = detail.Count();
-
-          return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        }
-        catch (Exception e)
-        {
-          throw e;
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
   }
-  #endregion
-
 }
 

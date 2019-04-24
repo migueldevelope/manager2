@@ -117,6 +117,40 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public ViewCrudLogMessages NewNotExist(ViewCrudLogMessages view)
+    {
+      try
+      {
+        LogMessages logMessage = serviceLogMessages.GetNewVersion(p => p.Subject == view.Subject && p.Person._id == view.Person._id).Result;
+
+        // Se já existir a notificação de admissão, não enviar mais
+        if (logMessage != null)
+          return null;
+
+        logMessage = new LogMessages()
+        {
+          Person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result,
+          Subject = view.Subject,
+          StatusMessage = view.StatusMessage,
+          Message = view.Message,
+          Register = DateTime.Now
+        };
+        logMessage = serviceLogMessages.InsertNewVersion(logMessage).Result;
+        return new ViewCrudLogMessages()
+        {
+          Subject = logMessage.Subject,
+          Message = logMessage.Message,
+          Register = logMessage.Register,
+          StatusMessage = logMessage.StatusMessage,
+          Person = logMessage.Person.GetViewList(),
+          _id = logMessage._id
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public ViewCrudLogMessages Get(string id)
     {
       try
@@ -296,5 +330,6 @@ namespace Manager.Services.Specific
       }
     }
     #endregion
+
   }
 }

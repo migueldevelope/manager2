@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -84,46 +83,6 @@ namespace Mail.Controllers
     public IActionResult Update([FromBody]ViewCrudMailModel view)
     {
       return Ok(service.Update(view));
-    }
-    #endregion
-
-    #region Old
-    [HttpPost]
-    [Route("old/new")]
-    public string Post([FromBody]MailModel view)
-    {
-      return service.NewOld(view);
-    }
-    [Authorize]
-    [HttpGet]
-    [Route("old/list")]
-    public List<MailModel> ListOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-    [Authorize]
-    [HttpGet]
-    [Route("old/get")]
-    public MailModel List(string id)
-    {
-      return service.GetOld(id);
-    }
-    [Authorize]
-    [HttpPut]
-    [Route("old/update")]
-    public string Update([FromBody]MailModel view)
-    {
-      return service.UpdateOld(view);
-    }
-    [Authorize]
-    [HttpDelete]
-    [Route("old/delete/{id}")]
-    public string Delete(string id)
-    {
-      return service.RemoveOld(id);
     }
     #endregion
 

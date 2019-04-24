@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using Manager.Core.Base;
-using Manager.Core.Business;
 using Manager.Core.Business.Integration;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
@@ -68,12 +66,6 @@ namespace IntegrationServer.InfraController
         view.Situacao = EnumColaboradorSituacao.ServerError;
         IntegrationCompany company = service.GetIntegrationCompany(view.Colaborador.ChaveEmpresa, view.Colaborador.NomeEmpresa);
 
-        // Ajustar escolaridade vazia para ensino médio completo
-        if (view.Colaborador.ChaveGrauInstrucao == ";")
-        {
-          view.Colaborador.GrauInstrucao = "";
-          view.Colaborador.NomeGrauInstrucao = "Ensino Médio Completo";
-        }
         IntegrationSchooling schooling = service.GetIntegrationSchooling(view.Colaborador.ChaveGrauInstrucao, view.Colaborador.NomeGrauInstrucao);
 
         IntegrationEstablishment establishment = null;
@@ -84,7 +76,7 @@ namespace IntegrationServer.InfraController
         if (!company.IdCompany.Equals("000000000000000000000000"))
           occupation = service.GetIntegrationOccupation(view.Colaborador.ChaveCargo, view.Colaborador.NomeCargo, company.IdCompany);
 
-        Person personManager = null;
+        ViewCrudPerson personManager = null;
         if (!string.IsNullOrEmpty(view.Colaborador.NomeEmpresaGestor) && !string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimentoGestor) && !string.IsNullOrEmpty(view.Colaborador.DocumentoGestor))
         {
           IntegrationCompany companyManager = null;
@@ -160,9 +152,8 @@ namespace IntegrationServer.InfraController
           view.Colaborador.DataDemissao = ((DateTime)view.Colaborador.DataDemissao).ToUniversalTime();
 
         // Testar se o usuário já existe
-        ViewCrudUser userView = new ViewCrudUser();
-        User user = service.GetUserByKey(view.Colaborador.Documento);
-        if (user == null)
+        ViewCrudUser userView = service.GetUserByKey(view.Colaborador.Documento);
+        if (userView == null)
         {
           userView = new ViewCrudUser()
           {
@@ -183,26 +174,22 @@ namespace IntegrationServer.InfraController
         }
         else
         {
-          userView = new ViewCrudUser()
-          {
-            Name = view.Colaborador.Nome,
-            Document = view.Colaborador.Documento,
-            Mail = view.Colaborador.Email,
-            Phone = view.Colaborador.Celular,
-            DateAdm = view.Colaborador.DataAdmissao,
-            DateBirth = view.Colaborador.DataNascimento,
-            Schooling = service.GetSchooling(schooling.IdSchooling),
-            PhoneFixed = view.Colaborador.Telefone,
-            DocumentID = view.Colaborador.Identidade,
-            DocumentCTPF = view.Colaborador.CarteiraProfissional,
-            Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others
-          };
+          userView.Name = view.Colaborador.Nome;
+          userView.Document = view.Colaborador.Documento;
+          userView.Mail = view.Colaborador.Email;
+          userView.Phone = view.Colaborador.Celular;
+          userView.DateAdm = view.Colaborador.DataAdmissao;
+          userView.DateBirth = view.Colaborador.DataNascimento;
+          userView.Schooling = service.GetSchooling(schooling.IdSchooling);
+          userView.PhoneFixed = view.Colaborador.Telefone;
+          userView.DocumentID = view.Colaborador.Identidade;
+          userView.DocumentCTPF = view.Colaborador.CarteiraProfissional;
+          userView.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
           userView = serviceUser.Update(userView);
         }
         // Verificar se a person já existe
-        ViewCrudPerson viewPerson = new ViewCrudPerson();
-        Person person = service.GetPersonByKey(company.IdCompany, establishment.IdEstablishment, view.Colaborador.Documento, view.Colaborador.Matricula);
-        if (person == null)
+        ViewCrudPerson viewPerson = service.GetPersonByKey(company.IdCompany, establishment.IdEstablishment, view.Colaborador.Documento, view.Colaborador.Matricula);
+        if (viewPerson == null)
         {
           viewPerson = new ViewCrudPerson
           {
@@ -244,19 +231,16 @@ namespace IntegrationServer.InfraController
         }
         else
         {
-          viewPerson = new ViewCrudPerson
-          {
-            Company = service.GetCompany(company.IdCompany),
-            Establishment = string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) ? null : service.GetEstablishment(establishment.IdEstablishment),
-            Occupation = service.GetOccupation(occupation.IdOccupation),
-            Registration = view.Colaborador.Matricula.ToString(),
-            HolidayReturn = view.Colaborador.DataRetornoFerias,
-            MotiveAside = view.Colaborador.MotivoAfastamento,
-            DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo,
-            Salary = view.Colaborador.SalarioNominal,
-            DateLastReadjust = view.Colaborador.DataUltimoReajuste,
-            DateResignation = view.Colaborador.DataDemissao
-          };
+          viewPerson.Company = service.GetCompany(company.IdCompany);
+          viewPerson.Establishment = string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimento) ? null : service.GetEstablishment(establishment.IdEstablishment);
+          viewPerson.Occupation = service.GetOccupation(occupation.IdOccupation);
+          viewPerson.Registration = view.Colaborador.Matricula.ToString();
+          viewPerson.HolidayReturn = view.Colaborador.DataRetornoFerias;
+          viewPerson.MotiveAside = view.Colaborador.MotivoAfastamento;
+          viewPerson.DateLastOccupation = view.Colaborador.DataUltimaTrocaCargo;
+          viewPerson.Salary = view.Colaborador.SalarioNominal;
+          viewPerson.DateLastReadjust = view.Colaborador.DataUltimoReajuste;
+          viewPerson.DateResignation = view.Colaborador.DataDemissao;
 
           if (personManager != null)
             viewPerson.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
@@ -278,6 +262,7 @@ namespace IntegrationServer.InfraController
               break;
           }
           viewPerson.User = userView;
+          servicePerson.Update(viewPerson);
           view.IdPerson = viewPerson._id;
           view.Message = "Person atualized!";
         }

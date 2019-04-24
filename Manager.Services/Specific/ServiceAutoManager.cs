@@ -228,13 +228,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        ViewPerson view = serviceAuthentication.AuthenticationMail(person);
+        string token = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + view.Token);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
           var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
-          return view.Token;
+          return token;
         }
       }
       catch (Exception e)

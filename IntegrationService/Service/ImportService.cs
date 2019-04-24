@@ -650,6 +650,10 @@ namespace IntegrationService.Service
         ViewIntegrationColaborador viewColaborador;
         foreach (var colaborador in Colaboradores.Where(p => string.IsNullOrEmpty(p.Message)))
         {
+          if (colaborador.Nome == "Michele Azevedo Goncalves")
+          {
+            var a = 10;
+          }
           search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
           if (search == -1)
           {
@@ -662,7 +666,7 @@ namespace IntegrationService.Service
           switch (ControleColaboradores[search].Situacao)
           {
             case EnumColaboradorSituacao.NoChange:
-              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, string.Format("Pessoa sem alteração.")), EnumTypeLineOpportunityg.Warning);
+              FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, "Pessoa sem alteração."), EnumTypeLineOpportunityg.Warning);
               break;
             case EnumColaboradorSituacao.SendServer:
               viewColaborador = new ViewIntegrationColaborador()
