@@ -1241,7 +1241,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Activities.Where(
+            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Activities.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
           }
@@ -1255,7 +1255,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().SkillsCompany.Where(
+            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().SkillsCompany.Where(
            p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
            p._id != plan._id).FirstOrDefault();
           }
@@ -1270,7 +1270,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Schoolings.Where(
+            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Schoolings.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
           }
