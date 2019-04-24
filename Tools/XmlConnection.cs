@@ -12,6 +12,7 @@ namespace Tools
       try
       {
         string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"../Config.xml");
+
         if (!File.Exists(fileName))
         {
           WriteConfig(new Config()

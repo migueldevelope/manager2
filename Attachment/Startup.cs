@@ -28,11 +28,11 @@ namespace Attachment
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
-      var conn = ConnectionNoSqlService.GetConnetionServer();
+      var conn = XmlConnection.ReadConfig();
       _context = new DataContext(conn.Server, conn.DataBase);
 
       DataContext _contextLog;
-      _contextLog = new DataContext(conn.Server, conn.DataBase);
+      _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);

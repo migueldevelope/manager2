@@ -46,15 +46,7 @@ namespace Manager
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
-      try
-      {
-        var conn1 = XmlConnection.ReadConfig();
-      }
-      catch (Exception)
-      {
-
-      }
-      var conn = ConnectionNoSqlService.GetConnetionServer();
+      var conn = XmlConnection.ReadConfig();
       _context = new DataContext(conn.Server, conn.DataBase);
 
       DataContext _contextLog;

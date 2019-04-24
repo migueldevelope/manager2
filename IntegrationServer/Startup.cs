@@ -44,11 +44,12 @@ namespace IntegrationServer
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
-      var conn = ConnectionNoSqlService.GetConnetionServer();
+
+      var conn = XmlConnection.ReadConfig();
       _context = new DataContext(conn.Server, conn.DataBase);
 
       DataContext _contextLog;
-      _contextLog = new DataContext(conn.Server, conn.DataBase);
+      _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
       DataContext _contextIntegration;
       _contextIntegration = new DataContext(conn.Server, conn.DataBase);
