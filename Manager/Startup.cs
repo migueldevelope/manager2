@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Auth;
@@ -16,8 +13,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
@@ -25,24 +20,45 @@ using Tools;
 
 namespace Manager
 {
+  /// <summary>
+  /// Controle de inicialização da API
+  /// </summary>
   public class Startup
   {
-
+    /// <summary>
+    /// Construtor do controle
+    /// </summary>
+    /// <param name="configuration"></param>
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
     }
+    /// <summary>
+    /// Propriedade de configuração
+    /// </summary>
     public IConfiguration Configuration { get; }
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
+    /// <summary>
+    /// Registrador de serviços
+    /// </summary>
+    /// <param name="services">Coleção de serviços</param>
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
+      try
+      {
+        var conn1 = XmlConnection.ReadConfig();
+      }
+      catch (Exception)
+      {
+
+      }
       var conn = ConnectionNoSqlService.GetConnetionServer();
       _context = new DataContext(conn.Server, conn.DataBase);
 
       DataContext _contextLog;
-      _contextLog = new DataContext(conn.Server, conn.DataBase);
+      _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
@@ -93,12 +109,13 @@ namespace Manager
       services.AddSingleton(_ => serviceEvent);
       services.AddSingleton(_ => serviceMandatoryTraining);
 
-
       serviceIndicators.SendMessages(conn.SignalRService);
-
     }
-
     // This method gets called by the runtime. Use this method to add services to the container.
+    /// <summary>
+    /// Configurador de servicos
+    /// </summary>
+    /// <param name="services">Coleção de serviços</param>
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -136,7 +153,6 @@ namespace Manager
           .AllowCredentials()
       ));
 
-
       services.AddMvc();
 
       services.AddSignalR();
@@ -164,8 +180,12 @@ namespace Manager
 
       RegistreServices(services);
     }
-
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    /// <summary>
+    /// Configuração de aplicação
+    /// </summary>
+    /// <param name="app">Aplicação</param>
+    /// <param name="env">Ambiente de hospedagem</param>
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
       if (env.IsDevelopment())

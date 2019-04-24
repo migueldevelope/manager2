@@ -3,9 +3,9 @@ using System.Xml.Serialization;
 
 namespace Tools.Data
 {
-  [XmlRoot("ConnNoSql")]
+  [XmlRoot("Config")]
   [Serializable]
-  public class ConnNoSql
+  public class Config
   {
     [XmlElement("Server")]
     public string Server { get; set; }
