@@ -72,8 +72,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        List<Log> detail = serviceLog.GetAllFreeNewVersion(p => p.Person._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "DataLog DESC").Result;
-        total = serviceLog.CountFreeNewVersion(p => p.Person._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        List<Log> detail = serviceLog.GetAllFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "DataLog DESC").Result;
+        total = serviceLog.CountFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.Select(p => new ViewListLog()
         {
           DataLog = p.DataLog,

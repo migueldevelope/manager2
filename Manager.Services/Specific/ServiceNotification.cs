@@ -128,19 +128,27 @@ namespace Manager.Services.Specific
       try
       {
         List<Account> accounts = serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        foreach (var account in accounts)
+        foreach (Account account in accounts)
         {
           SetUser(new BaseUser() { _idAccount = account._id });
-          ViewLog log = new ViewLog
-          {
-            Description = "Service Notification",
-            _idPerson = null,
-            Local = "ManagerMessages"
-          };
-          serviceLog.NewLog(log);
           Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
           if (parameter != null)
-            SendMessageAccount();
+          {
+            DateTime dateStart = DateTime.Now.Date;
+            DateTime dateEnd = dateStart.AddDays(1);
+            Log logExits = serviceLog.GetNewVersion(p => p.Local == "ManagerMessages" && p.DataLog >= dateStart && p.DataLog < dateEnd).Result;
+            if (logExits == null)
+            {
+              ViewLog log = new ViewLog
+              {
+                Description = "Service Notification",
+                _idPerson = null,
+                Local = "ManagerMessages"
+              };
+              serviceLog.NewLog(log);
+              SendMessageAccount();
+            }
+          }
         }
       }
       catch (Exception e)

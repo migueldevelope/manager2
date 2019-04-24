@@ -1,13 +1,11 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.Enumns;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Manager.Core.Business
 {
-
-  /// <summary>
-  /// Objeto persiste no banco de dados - Logs para mensageria
-  /// </summary>
   public class LogMessages : BaseEntity
   {
     public Person Person { get; set; }
