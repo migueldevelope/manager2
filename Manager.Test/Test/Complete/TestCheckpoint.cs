@@ -31,8 +31,8 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        long total = 0;
-        var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
+        //long total = 0;
+        //var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
 
         //var list = serviceCheckpoint.ListCheckpointsWaitOld(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
         //var newOn = serviceCheckpoint.NewCheckpointOld(list, person.Manager._id);
@@ -53,7 +53,7 @@ namespace Manager.Test.Test.Complete
       try
       {
 
-        var person = "5b8e9a6adc2492055f5fb68b";
+        //var person = "5b8e9a6adc2492055f5fb68b";
         //serviceCheckpoint.RemoveCheckpointOld(person);
 
       }

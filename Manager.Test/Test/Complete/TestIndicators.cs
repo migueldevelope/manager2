@@ -42,8 +42,8 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var idmanager = "5b7c06188dc3106609728c6d";
-        long total = 0;
+        //var idmanager = "5b7c06188dc3106609728c6d";
+        //long total = 0;
         //var indicators = serviceIndicators.ListTagsCloud(idmanager);
 
         //var export = serviceIndicators.ExportStatusOnboarding(ref total, "", 9999999, 1);

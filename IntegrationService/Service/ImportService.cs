@@ -650,10 +650,6 @@ namespace IntegrationService.Service
         ViewIntegrationColaborador viewColaborador;
         foreach (var colaborador in Colaboradores.Where(p => string.IsNullOrEmpty(p.Message)))
         {
-          if (colaborador.Nome == "Michele Azevedo Goncalves")
-          {
-            var a = 10;
-          }
           search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
           if (search == -1)
           {

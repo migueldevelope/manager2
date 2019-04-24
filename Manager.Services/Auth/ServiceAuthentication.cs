@@ -119,7 +119,7 @@ namespace Manager.Services.Auth
         if (registerLog)
         {
           serviceLog.SetUser(_user);
-          Task.Run(() => LogSave(servicePerson.GetFreeNewVersion(p => p.User._id == user._id).Result));
+          Task.Run(() => LogSave(person.Contracts[0].IdPerson));
         }
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
@@ -256,7 +256,7 @@ namespace Manager.Services.Auth
           StringContent content = new StringContent(json);
           content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          HttpResponseMessage result = client.PostAsync("/", content).Result;
+          HttpResponseMessage result = await client.PostAsync("/", content);
           //var resultContent = result.Content.ReadAsStringAsync().Result;
 
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
@@ -268,7 +268,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    private async Task LogSave(Person user)
+    private void LogSave(string idPerson)
     {
       try
       {
@@ -276,7 +276,7 @@ namespace Manager.Services.Auth
         {
           Description = "Login",
           Local = "Authentication",
-          _idPerson = user._id
+          _idPerson = idPerson
         });
       }
       catch (Exception e)

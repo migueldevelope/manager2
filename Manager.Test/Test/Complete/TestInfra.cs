@@ -378,8 +378,8 @@ namespace Manager.Test.Test.Complete
         sphere.Name = sphere.Name + " test";
         //serviceInfra.UpdateSphere(sphere);
 
-        var idcompany = "5b59d5bda49e0f344cd97fb6";
-        var id = "5b5a23bd3ac6f1466cdd7d3d";
+        //var idcompany = "5b59d5bda49e0f344cd97fb6";
+        //var id = "5b5a23bd3ac6f1466cdd7d3d";
 
 
 

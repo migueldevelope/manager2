@@ -285,8 +285,8 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        long total = 0;
-        var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
+        //long total = 0;
+        //var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
 
         //var list = serviceOnBoarding.ListOnBoardingsWaitOld(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
         //var newOn = serviceOnBoarding.NewOnBoardingOld(list, person.Manager._id);

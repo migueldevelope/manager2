@@ -186,7 +186,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     private async Task PropagInfoCompany()
     {
 

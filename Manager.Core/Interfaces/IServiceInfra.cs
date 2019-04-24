@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.BusinessModel;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -122,83 +121,5 @@ namespace Manager.Core.Interfaces
     string UpdateProcessLevelOne(ViewCrudProcessLevelOne view);
     string UpdateProcessLevelTwo(ViewCrudProcessLevelTwo view);
     string UpdateCBO(ViewCrudCbo view);
-
-    #region Old
-    ViewCrudGroup AddGroupOld(ViewAddGroup view);
-    string AddMapGroupScopeOld(ViewAddMapGroupScope view);
-    string AddMapGroupSchoolingOld(ViewAddMapGroupSchooling view);
-    string AddEssentialOld(ViewAddEssential view);
-    string AddSkillsOld(List<ViewAddSkill> view);
-    string AddMapGroupSkillOld(ViewAddMapGroupSkill view);
-    string AddOccupationOld(ViewAddOccupation view);
-    string AddOccupationSkillOld(ViewAddOccupationSkill view);
-    string AddOccupationActivitiesOld(ViewAddOccupationActivities view);
-    string AddOccupationActivitiesListOld(List<ViewAddOccupationActivities> list);
-
-    string UpdateMapGroupSchoolingOld(string idgroup, Schooling schooling);
-    string UpdateMapOccupationSchoolingOld(string idoccupation, Schooling schooling);
-    string UpdateMapOccupationActivitiesOld(string idoccupation, Activitie activitie);
-    string UpdateMapGroupScopeOld(string idgroup, Scope scope);
-
-    List<Company> GetCompaniesOld();
-    Skill GetSkillOld(string filterName);
-    List<Skill> GetSkillsOld(ref long total, string filter, int count, int page);
-    List<Schooling> GetSchoolingOld();
-    List<Sphere> GetSpheresOld();
-    List<Sphere> GetSpheresOld(string idcompany);
-    List<Axis> GetAxisOld();
-    List<Cbo> ListCBOOld();
-    Cbo GetCBOOld(string id);
-    List<Axis> GetAxisOld(string idcompany);
-    List<Area> GetAreasOld();
-    List<Area> GetAreasOld(string idcompany);
-    List<Questions> ListQuestionsOld(string idcompany);
-    Questions GetQuestionsOld(string id);
-    ProcessLevelTwo GetProcessLevelTwoOld(string id);
-    List<ProcessLevelTwo> GetProcessLevelTwoOld();
-    List<ProcessLevelTwo> GetProcessLevelTwoFilterOld(string idarea);
-
-
-    Group GetGroupOld(string id);
-    Group GetGroupOld(string idcompany, string filterName);
-    Occupation GetOccupationOld(string id);
-    Occupation GetOccupationOld(string idcompany, string filterName);
-    List<Group> GetGroupsOld();
-    List<Occupation> GetOccupationsOld();
-    TextDefault GetTextDefaultOld(string idcompany, string name);
-    TextDefault GetTextDefaultOld(string id);
-    List<TextDefault> ListTextDefaultOld(string idcompany);
-    List<Group> GetGroupsPrintOld(string idcompany);
-    List<Course> GetCourseOccupationOld(string idoccuation, EnumTypeMandatoryTraining type);
-
-    Skill AddSkillOld(ViewAddSkill view);
-    //Group AddGroupOld(ViewAddGroup view);
-
-    string AddTextDefaultOld(TextDefault model);
-    string AddCBOOld(Cbo model);
-    Schooling AddSchoolingOld(Schooling schooling);
-    string AddAxisOld(Axis view);
-    string AddAreaOld(Area view);
-    string AddSphereOld(Sphere view);
-    string AddOccupationOld(Occupation occupation);
-    string AddProcessLevelOneOld(ProcessLevelOne model);
-    string AddProcessLevelTwoOld(ProcessLevelTwo model);
-    string AddQuestionsOld(Questions view);
-
-    string UpdateTextDefaultOld(TextDefault textDefault);
-    string UpdateSkillOld(Skill skill);
-    string UpdateSphereOld(Sphere sphere);
-    string UpdateAxisOld(Axis axis);
-    string UpdateQuestionsOld(Questions questions);
-    string UpdateGroupOld(Group group);
-    string UpdateAreaOld(Area area);
-    string UpdateOccupationOld(Occupation occupation);
-    string UpdateSchoolingOld(Schooling schooling);
-    string UpdateProcessLevelOneOld(ProcessLevelOne model);
-    string UpdateProcessLevelTwoOld(ProcessLevelTwo model);
-    string UpdateCBOOld(Cbo model);
-    string AddSpecificRequirementsOld(string idoccupation, ViewAddSpecificRequirements view);
-    #endregion
-
   }
 }

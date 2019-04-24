@@ -15,16 +15,29 @@ using Tools;
 
 namespace Mail
 {
+  /// <summary>
+  /// Controlador de inicialização do projeto
+  /// </summary>
   public class Startup
   {
-
+    /// <summary>
+    /// Propriedade publica do configurador
+    /// </summary>
     public IConfiguration Configuration { get; }
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
+    /// <summary>
+    /// Ponto de entrada do configurador
+    /// </summary>
+    /// <param name="configuration"></param>
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
     }
+    /// <summary>
+    /// Configurador de serviços
+    /// </summary>
+    /// <param name="services">Coleção de serviços</param>
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
@@ -44,6 +57,10 @@ namespace Mail
       services.AddSingleton(_ => serviceMailModel);
     }
     // This method gets called by the runtime. Use this method to add services to the container.
+    /// <summary>
+    /// Configurador de servicos
+    /// </summary>
+    /// <param name="services">Coleção de serviços</param>
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -83,6 +100,11 @@ namespace Mail
       RegistreServices(services);
     }
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    /// <summary>
+    /// Configurador de aplicação
+    /// </summary>
+    /// <param name="app">Aplicação</param>
+    /// <param name="env">Ambiente de hospedagem</param>
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
       if (env.IsDevelopment())

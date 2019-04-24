@@ -53,7 +53,8 @@ namespace EdeskIntegration.Controllers
       var conn = ConnectionNoSqlService.GetConnetionServer();
       context = new DataContext(conn.Server, conn.DataBase);
       blobKey = conn.BlobKey;
-      service = new ServiceGeneric<Attachments>(context, baseUser);
+      service = new ServiceGeneric<Attachments>(context);
+      service.User(contextAccessor);
       aux = (HttpContextAccessor)contextAccessor;
     }
 

@@ -681,7 +681,7 @@ namespace Manager.Services.Specific
         var mailObj = serviceMail.Insert(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
       }
-      catch (Exception e)
+      catch (Exception)
       {
         //throw e;
       }

@@ -1931,9 +1931,8 @@ namespace Manager.Services.Specific
           return token;
         }
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        //throw e;
         return "none";
       }
     }

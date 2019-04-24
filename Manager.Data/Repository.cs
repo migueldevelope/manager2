@@ -16,8 +16,6 @@ namespace Manager.Data
   {
     public DataContext _context;
     IMongoCollection<T> _collection;
-    Object _service;
-    public string _idAccount;
     public BaseUser _user;
 
     #region Contructor
@@ -31,56 +29,6 @@ namespace Manager.Data
           _user._idAccount = _user._idAccount;
         else
           _user = new BaseUser() { _idAccount = "000000000000000000000000" };
-      }
-      catch
-      {
-        throw;
-      }
-    }
-    public Repository(DataContext context, string idAccount)
-    {
-      try
-      {
-        _context = context;
-        _collection = _context._db.GetCollection<T>(typeof(T).Name);
-        if (_user != null)
-          _user._idAccount = _user._idAccount;
-        else
-          _user = new BaseUser() { _idAccount = "000000000000000000000000" };
-      }
-      catch
-      {
-        throw;
-      }
-    }
-    public Repository(DataContext context, Object service)
-    {
-      try
-      {
-        _context = context;
-        _service = service;
-        _collection = _context._db.GetCollection<T>(typeof(T).Name);
-        if (_user != null)
-          _user._idAccount = _user._idAccount;
-        else
-          _user = new BaseUser() { _idAccount = "000000000000000000000000" };
-      }
-      catch
-      {
-        throw;
-      }
-    }
-    public Repository(DataContext context, string idAccount, Object service)
-    {
-      try
-      {
-        _context = context;
-        _service = service;
-        _collection = _context._db.GetCollection<T>(typeof(T).Name);
-        if (_user != null)
-          _user._idAccount = _user._idAccount;
-        else
-          _user = new BaseUser() { _idAccount = idAccount };
       }
       catch
       {
@@ -111,7 +59,7 @@ namespace Manager.Data
     {
       try
       {
-        return _collection.AsQueryable<T>().Where(p => p._idAccount == _idAccount);
+        return _collection.AsQueryable<T>().Where(p => p._idAccount == _user._idAccount);
       }
       catch
       {
