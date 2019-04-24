@@ -324,7 +324,7 @@ namespace Manager.Services.Specific
           }).ToList(),
           SourcePlan = plan.SourcePlan,
           TypePlan = plan.TypePlan
-        }, userInclude);
+        }, monitoring.Person, monitoring._id);
 
         if (plan.SourcePlan == EnumSourcePlan.Activite)
         {
@@ -1487,12 +1487,27 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private Plan AddPlan(Plan plan, Person person)
+    private Plan AddPlan(Plan plan, Person person, string _idMonitoring)
     {
       try
       {
         plan.DateInclude = DateTime.Now;
-        plan.UserInclude = person;
+        plan._idMonitoring = _idMonitoring;
+        plan.Person = new ViewListPerson()
+        {
+          _id = person._id,
+          User = new ViewListUser()
+          {
+            _id = person.User._id,
+            Name = person.User.Name,
+            Document = person.User.Document,
+            Mail = person.User.Mail,
+            Phone = person.User.Phone
+          },
+          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          Registration = person.Registration,
+          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name }
+        };
         return servicePlan.Insert(plan);
       }
       catch (Exception e)
@@ -2098,7 +2113,7 @@ namespace Manager.Services.Specific
         serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
 
 
-        var newPlan = AddPlan(plan, userInclude);
+        var newPlan = AddPlan(plan, monitoring.Person, monitoring._id);
 
         if (plan.SourcePlan == EnumSourcePlan.Activite)
         {

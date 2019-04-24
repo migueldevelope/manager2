@@ -226,7 +226,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listActivities.Add(planOld);
                 listActivities.Add(viewPlan);
@@ -246,7 +246,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listSchoolings.Add(planOld);
                 listSchoolings.Add(viewPlan);
@@ -266,7 +266,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listSkillsCompany.Add(planOld);
                 listSkillsCompany.Add(viewPlan);
@@ -302,12 +302,27 @@ namespace Manager.Services.Specific
       }
     }
 
-    private Plan AddPlan(Plan plan, Person person)
+    private Plan AddPlan(Plan plan, Person person, string _idMonitoring)
     {
       try
       {
         plan.DateInclude = DateTime.Now;
-        plan.UserInclude = person;
+        plan._idMonitoring = _idMonitoring;
+        plan.Person = new ViewListPerson()
+        {
+          _id = person._id,
+          User = new ViewListUser()
+          {
+            _id = person.User._id,
+            Name = person.User.Name,
+            Document = person.User.Document,
+            Mail = person.User.Mail,
+            Phone = person.User.Phone
+          },
+          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          Registration = person.Registration,
+          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name }
+        };
         return servicePlan.Insert(plan);
       }
       catch (Exception e)
@@ -737,7 +752,7 @@ namespace Manager.Services.Specific
                   TypeSkill = p.TypeSkill
                 })
                 .ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -800,7 +815,7 @@ namespace Manager.Services.Specific
                   TypeSkill = p.TypeSkill
                 })
                 .ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -864,7 +879,7 @@ namespace Manager.Services.Specific
                   TypeSkill = p.TypeSkill
                 })
                 .ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -968,7 +983,7 @@ namespace Manager.Services.Specific
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1023,7 +1038,7 @@ namespace Manager.Services.Specific
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1078,7 +1093,7 @@ namespace Manager.Services.Specific
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1158,7 +1173,7 @@ namespace Manager.Services.Specific
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1204,7 +1219,7 @@ namespace Manager.Services.Specific
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1251,7 +1266,7 @@ namespace Manager.Services.Specific
                     Concept = p.Concept,
                     Name = p.Name
                   }).ToList(),
-                  UserInclude = res.UserInclude?._id,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                   TypePlan = res.TypePlan,
                   _idPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -1331,7 +1346,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude?._id;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id;
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -1410,7 +1425,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude?._id;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id;
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -1489,7 +1504,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude?._id;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id;
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -1589,7 +1604,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault() == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1628,7 +1643,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1668,7 +1683,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1745,7 +1760,7 @@ namespace Manager.Services.Specific
                   Concept = p.Concept,
                   Name = p.Name
                 }).ToList(),
-                UserInclude = res.UserInclude?._id,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1789,7 +1804,7 @@ namespace Manager.Services.Specific
                   Concept = p.Concept,
                   Name = p.Name
                 }).ToList(),
-                UserInclude = res.UserInclude?._id,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1834,7 +1849,7 @@ namespace Manager.Services.Specific
                   Concept = p.Concept,
                   Name = p.Name
                 }).ToList(),
-                UserInclude = res.UserInclude?._id,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -1909,7 +1924,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 listActivities.Add(plan);
                 listActivities.Add(viewPlan);
               }
@@ -1928,7 +1943,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 listSchoolings.Add(plan);
                 listSchoolings.Add(viewPlan);
               }
@@ -1947,7 +1962,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 listSkillsCompany.Add(plan);
                 listSkillsCompany.Add(viewPlan);
               }
@@ -2327,7 +2342,7 @@ namespace Manager.Services.Specific
                     {
                       _id = structplanedit._id,
                       Course = (structplanedit.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplanedit.Course._id).FirstOrDefault(),
-                      PlanActivity = (structplanedit.PlanActivity ==null)?null: new PlanActivity() { _id = structplanedit.PlanActivity._id, Name = structplanedit.PlanActivity.Name },
+                      PlanActivity = (structplanedit.PlanActivity == null) ? null : new PlanActivity() { _id = structplanedit.PlanActivity._id, Name = structplanedit.PlanActivity.Name },
                       TypeAction = structplanedit.TypeAction,
                       TypeResponsible = structplanedit.TypeResponsible
                     });
@@ -2379,8 +2394,6 @@ namespace Manager.Services.Specific
                 _idAccount = _user._idAccount,
                 Status = EnumStatus.Enabled
               }).ToList(),
-              UserInclude = (item.UserInclude == null) ? null :
-              servicePerson.GetAll(p => p._id == item.UserInclude).FirstOrDefault(),
               DateInclude = item.DateInclude,
               TypePlan = item.TypePlan,
               SourcePlan = item.SourcePlan,
@@ -2418,8 +2431,6 @@ namespace Manager.Services.Specific
                 _idAccount = _user._idAccount,
                 Status = EnumStatus.Enabled
               }).ToList(),
-              UserInclude = (item.UserInclude == null) ? null :
-              servicePerson.GetAll(p => p._id == item.UserInclude).FirstOrDefault(),
               DateInclude = item.DateInclude,
               TypePlan = item.TypePlan,
               SourcePlan = item.SourcePlan,
@@ -2497,7 +2508,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -2548,8 +2559,9 @@ namespace Manager.Services.Specific
             Status = view.Status,
             DateEnd = view.DateEnd,
             NewAction = view.NewAction,
-            Attachments = (view.Attachments == null)? null : view.Attachments.Select(p => new ViewCrudAttachmentField() {
-              Name  = p.Name,
+            Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new ViewCrudAttachmentField()
+            {
+              Name = p.Name,
               Url = p.Url,
               _idAttachment = p._idAttachment
             }).ToList(),
@@ -2586,7 +2598,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -2676,7 +2688,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -2794,7 +2806,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -2833,7 +2845,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -2873,7 +2885,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -2944,7 +2956,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -2983,7 +2995,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -3023,7 +3035,7 @@ namespace Manager.Services.Specific
                 Deadline = res.Deadline,
                 Description = res.Description,
                 Skills = res.Skills,
-                UserInclude = res.UserInclude,
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                 TypePlan = res.TypePlan,
                 IdPerson = item.Person._id,
                 NamePerson = item.Person.User.Name,
@@ -3100,7 +3112,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3150,7 +3162,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3200,7 +3212,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3275,7 +3287,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3323,7 +3335,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3372,7 +3384,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3454,7 +3466,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3495,7 +3507,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3537,7 +3549,7 @@ namespace Manager.Services.Specific
                   Deadline = res.Deadline,
                   Description = res.Description,
                   Skills = res.Skills,
-                  UserInclude = res.UserInclude,
+                  UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault(),
                   TypePlan = res.TypePlan,
                   IdPerson = item.Person._id,
                   NamePerson = item.Person.User.Name,
@@ -3698,7 +3710,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 listActivities.Add(plan);
                 listActivities.Add(viewPlan);
               }
@@ -3717,7 +3729,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 listSchoolings.Add(plan);
                 listSchoolings.Add(viewPlan);
               }
@@ -3736,7 +3748,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 listSkillsCompany.Add(plan);
                 listSkillsCompany.Add(viewPlan);
               }
@@ -4079,7 +4091,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 UpdatePlan(planOld, monitoring.Person);
                 listActivities.Add(planOld);
                 listActivities.Add(viewPlan);
@@ -4099,7 +4111,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 UpdatePlan(planOld, monitoring.Person);
                 listSchoolings.Add(planOld);
                 listSchoolings.Add(viewPlan);
@@ -4119,7 +4131,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person);
+                AddPlan(viewPlan, monitoring.Person, monitoring._id);
                 UpdatePlan(planOld, monitoring.Person);
                 listSkillsCompany.Add(planOld);
                 listSkillsCompany.Add(viewPlan);
@@ -4161,7 +4173,6 @@ namespace Manager.Services.Specific
               Description = item.Description,
               Deadline = item.Deadline,
               Skills = item.Skills,
-              UserInclude = item.UserInclude,
               DateInclude = item.DateInclude,
               TypePlan = item.TypePlan,
               SourcePlan = item.SourcePlan,
@@ -4185,7 +4196,6 @@ namespace Manager.Services.Specific
               Description = item.Description,
               Deadline = item.Deadline,
               Skills = item.Skills,
-              UserInclude = item.UserInclude,
               DateInclude = item.DateInclude,
               TypePlan = item.TypePlan,
               SourcePlan = item.SourcePlan,
@@ -4258,7 +4268,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -4295,7 +4305,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -4332,7 +4342,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -4396,7 +4406,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -4440,7 +4450,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;
@@ -4484,7 +4494,7 @@ namespace Manager.Services.Specific
               view.SourcePlan = res.SourcePlan;
               view.StatusPlan = res.StatusPlan;
               view.StatusPlanApproved = res.StatusPlanApproved;
-              view.UserInclude = res.UserInclude;
+              view.UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault();
               view.TypeAction = res.TypeAction;
               view.TypePlan = res.TypePlan;
               view.Evaluation = res.Evaluation;

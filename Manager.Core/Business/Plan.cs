@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ namespace Manager.Core.Business
     public string Description { get; set; }
     public DateTime? Deadline { get; set; }
     public List<Skill> Skills { get; set; }
-    public Person UserInclude { get; set; }
     public DateTime? DateInclude { get; set; }
     public EnumTypePlan TypePlan { get; set; }
     public EnumSourcePlan SourcePlan { get; set; }
@@ -30,5 +30,8 @@ namespace Manager.Core.Business
     public List<AttachmentField> Attachments { get; set; }
     public EnumNewAction NewAction { get; set; }
     public List<StructPlan> StructPlans { get; set; }
+
+    public string _idMonitoring { get; set; }
+    public ViewListPerson Person { get; set; }
   }
 }
