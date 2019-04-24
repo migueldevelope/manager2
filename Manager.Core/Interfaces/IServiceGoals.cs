@@ -23,7 +23,7 @@ namespace Manager.Core.Interfaces
     string UpdateGoalsPeriod(ViewCrudGoalPeriod view);
     string DeleteGoalsPeriod(string id);
     ViewCrudGoalPeriod GetGoalsPeriod(string id);
-    List<ViewListGoalPeriod> ListGoalsPeriod(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewCrudGoalPeriod> ListGoalsPeriod(ref long total, int count = 10, int page = 1, string filter = "");
 
     string NewGoalsCompany(ViewCrudGoalCompany view);
     string UpdateGoalsCompany(ViewCrudGoalCompany view);

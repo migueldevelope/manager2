@@ -204,6 +204,7 @@ namespace Manager.Services.Specific
         GoalsPeriod goalsPeriod =  serviceGoalsPeriod.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudGoalPeriod()
         {
+          _id = goalsPeriod._id,
           Review = goalsPeriod.Review,
           Name = goalsPeriod.Name,
           ChangeCheck = goalsPeriod.ChangeCheck,
@@ -216,15 +217,19 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListGoalPeriod> ListGoalsPeriod(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudGoalPeriod> ListGoalsPeriod(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        List<ViewListGoalPeriod> detail = serviceGoalsPeriod.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
-          .Select(p => new ViewListGoalPeriod()
+        List<ViewCrudGoalPeriod> detail = serviceGoalsPeriod.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(p => new ViewCrudGoalPeriod()
           {
             _id = p._id,
-            Name = p.Name
+            Review = p.Review,
+            Name = p.Name,
+            ChangeCheck = p.ChangeCheck,
+            DateBegin = p.DateBegin,
+            DateEnd = p.DateEnd
           }).ToList();
 
         total = serviceGoalsPeriod.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;

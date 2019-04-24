@@ -121,7 +121,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsperiod")]
-    public List<ViewListGoalPeriod> ListGoalsPeriod(int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudGoalPeriod> ListGoalsPeriod(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsPeriod(ref total, count, page, filter);
