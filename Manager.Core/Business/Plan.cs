@@ -2,6 +2,8 @@
 using Manager.Core.BusinessModel;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
@@ -30,8 +32,9 @@ namespace Manager.Core.Business
     public List<AttachmentField> Attachments { get; set; }
     public EnumNewAction NewAction { get; set; }
     public List<StructPlan> StructPlans { get; set; }
-
+    [BsonRepresentation(BsonType.ObjectId)]
     public string _idMonitoring { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
     public string _idItem { get; set; }
     public ViewListPersonPlan Person { get; set; }
   }
