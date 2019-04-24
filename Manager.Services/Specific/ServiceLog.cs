@@ -17,6 +17,7 @@ namespace Manager.Services.Specific
   {
 
     private readonly ServiceGeneric<Log> serviceLog;
+    private readonly ServiceGeneric<LogOld> serviceLogOld;
     private readonly ServiceGeneric<Person> servicePerson;
 
     #region Constructor
@@ -25,6 +26,7 @@ namespace Manager.Services.Specific
       try
       {
         serviceLog = new ServiceGeneric<Log>(contextLog);
+        serviceLogOld = new ServiceGeneric<LogOld>(contextLog);
         servicePerson = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
@@ -54,7 +56,7 @@ namespace Manager.Services.Specific
         var person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault();
         var log = new Log
         {
-          Person = person,
+          Person = person.GetViewList(),
           DataLog = DateTime.Now,
           Description = view.Description,
           Status = EnumStatus.Enabled,
@@ -89,5 +91,34 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+    #region Migrar LogOld -> Log
+    public void MigrarOld()
+    {
+      try
+      {
+        IQueryable<LogOld> logs = serviceLogOld.GetAll();
+        Log log = null;
+        foreach (var logOld in logs)
+        {
+          log = new Log()
+          {
+            DataLog = logOld.DataLog,
+            Description = logOld.Description,
+            Local = logOld.Local,
+            Person = logOld.Person.GetViewList(),
+            Status = logOld.Status,
+            _id = logOld._id,
+            _idAccount = logOld._idAccount
+          };
+          log = serviceLog.InsertFreeNewVersion(log).Result;
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
   }
 }

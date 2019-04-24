@@ -122,5 +122,13 @@ namespace Manager.Controllers
     }
     #endregion
 
+    [Authorize]
+    [HttpGet]
+    [Route("migrarlog")]
+    public string MigrarLog()
+    {
+      serviceLog.MigrarOld();
+      return "ok";
+    }
   }
 }
