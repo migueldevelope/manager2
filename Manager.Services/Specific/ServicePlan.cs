@@ -1238,20 +1238,47 @@ namespace Manager.Services.Specific
         };
 
         if (plan.SourcePlan == EnumSourcePlan.Activite)
-          view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Activities.Where(
+        {
+          try
+          {
+            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Activities.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
 
         if (plan.SourcePlan == EnumSourcePlan.Skill)
-          view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().SkillsCompany.Where(
-            p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
-            p._id != plan._id).FirstOrDefault();
+        {
+          try
+          {
+            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().SkillsCompany.Where(
+           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
+           p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
+
 
         if (plan.SourcePlan == EnumSourcePlan.Schooling)
-          view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Schoolings.Where(
+        {
+          try
+          {
+            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Schoolings.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
 
+          }
+        }
         return view;
 
       }
@@ -1802,19 +1829,48 @@ namespace Manager.Services.Specific
           Bomb = GetBomb((DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).Days)
         };
         if (plan.SourcePlan == EnumSourcePlan.Activite)
-          resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Activities.Where(
+        {
+          try
+          {
+            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Activities.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
 
         if (plan.SourcePlan == EnumSourcePlan.Skill)
-          resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().SkillsCompany.Where(
-            p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
-            p._id != plan._id).FirstOrDefault();
+        {
+          try
+          {
+            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().SkillsCompany.Where(
+           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
+           p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
+         
 
         if (plan.SourcePlan == EnumSourcePlan.Schooling)
-          resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Schoolings.Where(
+        {
+          try
+          {
+            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Schoolings.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
+        
 
         return resultPlan;
       }
