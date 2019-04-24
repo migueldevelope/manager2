@@ -63,6 +63,27 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public string New(List<ViewListDictionarySystem> list)
+    {
+      try
+      {
+        DictionarySystem dictionarySystem;
+        foreach (ViewListDictionarySystem view in list)
+        {
+          dictionarySystem = new DictionarySystem()
+          {
+            Name = view.Name,
+            Description = view.Description
+          };
+          dictionarySystem = serviceDictionarySystem.InsertNewVersion(dictionarySystem).Result;
+        }
+        return "List dictionary system added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public string Update(ViewCrudDictionarySystem view)
     {
       try
@@ -139,30 +160,6 @@ namespace Manager.Services.Specific
             }).ToList();
         total = serviceDictionarySystem.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    #endregion
-
-    #region Old
-    public string New(List<ViewListDictionarySystem> list)
-    {
-      try
-      {
-        DictionarySystem dictionarySystem;
-        foreach (var view in list)
-        {
-          dictionarySystem = new DictionarySystem()
-          {
-            Name = view.Name,
-            Description = view.Description
-          };
-          dictionarySystem = serviceDictionarySystem.InsertNewVersion(dictionarySystem).Result;
-        }
-        return "List dictionary system added!";
       }
       catch (Exception e)
       {

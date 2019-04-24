@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using Manager.Core.Base;
-using Manager.Core.Business;
-using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -217,70 +214,6 @@ namespace Manager.Controllers
       return service.UpdateCertification(certification, idperson, idcertification);
     }
     #endregion
-
-    #region old
-    [Authorize]
-    [HttpPost]
-    [Route("old/addperson/{idcertification}")]
-    public string AddPersonOld([FromBody]BaseFields person, string idcertification)
-    {
-      return service.AddPersonOld(idcertification, person);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/approvedcertification/{idcertificationperson}")]
-    public string ApprovedCertificationOld([FromBody]CertificationPerson view, string idcertificationperson)
-    {
-      return service.ApprovedCertificationOld(idcertificationperson, view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/getlistexclud")]
-    public List<Certification> GetListExcludOld(string filter = "", int count = 999999999, int page = 1)
-    {
-      long total = 0;
-      return service.GetListExcludOld(ref total, filter, count, page);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/certificationswaitperson/{idcertification}")]
-    public Certification CertificationsWaitPersonOld(string idcertification)
-    {
-      return service.CertificationsWaitPersonOld(idcertification);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listpersons/{idcertification}")]
-    public List<BaseFields> ListPersonsOld(string idcertification, string filter = "", int count = 999999999, int page = 1)
-    {
-      long total = 0;
-      return service.ListPersonsOld(idcertification, ref total, filter, count, page);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [Route("old/newcertification/{idperson}")]
-    public Certification NewCertificationOld([FromBody]CertificationItem item, string idperson)
-    {
-      return service.NewCertificationOld(item, idperson);
-    }
-
-
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/updatecertification/{idperson}/{idmonitoring}")]
-    public string UpdateCertificationOld([FromBody]Certification certification, string idperson, string idmonitoring)
-    {
-      return service.UpdateCertificationOld(certification, idperson, idmonitoring);
-    }
-
-
-    #endregion
-    
+  
   }
 }

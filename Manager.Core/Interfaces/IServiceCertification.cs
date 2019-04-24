@@ -1,7 +1,4 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Business;
-using Manager.Core.BusinessModel;
-using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
@@ -11,10 +8,8 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceCertification
   {
-    #region Certification
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-
     string DeletePerson(string idcertifcation, string idcertificationperson);
     void SetAttachment(string idcertification, string url, string fileName, string attachmentid);
     string DeleteCertification(string idcertification);
@@ -31,19 +26,5 @@ namespace Manager.Core.Interfaces
     ViewCrudCertification CertificationsWaitPerson(string idcertification);
     string UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson);
     List<ViewListCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page);
-    #endregion
-
-    #region Old
-    List<BaseFields> ListPersonsOld(string idcertification, ref long total, string filter, int count, int page);
-    ViewListCertificationProfile GetProfileOld(string idperson);
-    Certification NewCertificationOld(CertificationItem item, string idperson);
-    string AddPersonOld(string idcertification, BaseFields person);
-    string ApprovedCertificationOld(string idcertificationperson, CertificationPerson view);
-    string UpdateCertificationOld(Certification certification, string idperson, string idmonitoring);
-    List<Certification> GetListExcludOld(ref long total, string filter, int count, int page);
-    Certification CertificationsWaitPersonOld(string idcertification);
-
-    #endregion
-
   }
 }

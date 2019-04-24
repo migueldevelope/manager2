@@ -864,204 +864,15 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    #endregion
-
-    #region Old
-
-    public List<Checkpoint> ListCheckpointsEndOld(string idmanager, ref long total, string filter, int count, int page)
+    private async Task LogSave(string idperson, string local)
     {
       try
       {
-        Task.Run(() => LogSave(idmanager, "ListEnd"));
-        int skip = (count * (page - 1));
-        var detail = serviceCheckpoint.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceCheckpoint.GetAll(p => p.Person.Manager._id == idmanager & p.StatusCheckpoint == EnumStatusCheckpoint.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public Checkpoint PersonCheckpointEndOld(string idperson)
-    {
-      try
-      {
-        Task.Run(() => LogSave(idperson, "PersonEnd"));
-        return serviceCheckpoint.GetAll(p => p.Person._id == idperson & p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<Checkpoint> ListCheckpointsWaitOld(string idmanager, ref long total, string filter, int count, int page)
-    {
-      try
-      {
-        LogSave(idmanager, "List");
-        int skip = (count * (page - 1));
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p.Manager._id == idmanager
-        & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-        .ToList();
-
-        var detail = new List<Checkpoint>();
-        foreach (var item in list)
-        {
-          if (item.Checkpoint == null)
-            detail.Add(new Checkpoint
-            {
-              Person = item.Person,
-              _id = null,
-              StatusCheckpoint = EnumStatusCheckpoint.Open
-            });
-          else
-            if (item.Checkpoint.StatusCheckpoint != EnumStatusCheckpoint.End)
-            detail.Add(item.Checkpoint);
-        }
-
-        total = detail.Count();
-        return detail.Skip(skip).Take(count).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public Checkpoint ListCheckpointsWaitPersonOld(string idperson)
-    {
-      try
-      {
-        LogSave(idperson, "List");
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Checkpoint & p._id == idperson)
-        .OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
-        .ToList();
-
-        var detail = new List<Checkpoint>();
-        foreach (var item in list)
-        {
-          if (item.Checkpoint == null)
-            detail.Add(new Checkpoint
-            {
-              Person = item.Person,
-              _id = null,
-              StatusCheckpoint = EnumStatusCheckpoint.Open
-            });
-          else
-            detail.Add(item.Checkpoint);
-        }
-
-
-        return detail.FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public Checkpoint GetCheckpointsOld(string id)
-    {
-      try
-      {
-        return serviceCheckpoint.GetAll(p => p._id == id)
-          .ToList().Select(p => new Checkpoint()
-          {
-            _id = p._id,
-            _idAccount = p._idAccount,
-            Status = p.Status,
-            Person = p.Person,
-            DateBegin = p.DateBegin,
-            DateEnd = p.DateEnd,
-            Comments = p.Comments,
-            Questions = p.Questions.OrderBy(x => x.Question.Order).ToList(),
-            StatusCheckpoint = p.StatusCheckpoint,
-            TypeCheckpoint = p.TypeCheckpoint,
-            TextDefault = p.TextDefault,
-            DataAccess = p.DataAccess
-          })
-          .FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public Checkpoint NewCheckpointOld(Checkpoint checkpoint, string idperson)
-    {
-      try
-      {
-        LogSave(checkpoint.Person._id, "Checkpoint Process");
-        checkpoint.StatusCheckpoint = EnumStatusCheckpoint.Wait;
-        checkpoint.DateBegin = DateTime.Now;
-        checkpoint = LoadMap(checkpoint);
-        if (checkpoint.Person.User.DateAdm != null)
-          checkpoint.DataAccess = DateTime.Parse(checkpoint.Person.User.DateAdm.ToString()).AddDays(Deadline());
-        else
-          checkpoint.DataAccess = DateTime.Now;
-
-        if (checkpoint._id != null)
-          return checkpoint;
-        else
-          return serviceCheckpoint.Insert(checkpoint);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateCheckpointOld(Checkpoint checkpoint, string idperson)
-    {
-      try
-      {
-        LogSave(checkpoint.Person._id, "Checkpoint update");
-        if (checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End)
-        {
-          checkpoint.DateEnd = DateTime.Now;
-          if (checkpoint.TypeCheckpoint == EnumCheckpoint.Approved)
-          {
-            checkpoint.Person.TypeJourney = EnumTypeJourney.Monitoring;
-            servicePerson.Update(checkpoint.Person, null);
-            MailRhApproved(checkpoint.Person, "Aprovado");
-            MailPerson(checkpoint.Person, "Aprovado");
-
-            serviceLogMessages.NewLogMessage("Checkpoint", " Colaborador " + checkpoint.Person.User.Name + " aprovado no Checkpoint", checkpoint.Person);
-          }
-          else
-          {
-            MailRhDisapproved(checkpoint.Person, "Reprovado");
-
-          }
-        }
-
-
-        serviceCheckpoint.Update(checkpoint, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public async Task LogSave(string idperson, string local)
-    {
-      try
-      {
-        var user = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
-        var log = new ViewLog()
+        ViewLog log = new ViewLog()
         {
           Description = "Checkpoint",
           Local = local,
-          _idPerson = user._id
+          _idPerson = idperson
         };
         serviceLog.NewLog(log);
       }
@@ -1070,13 +881,12 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     private string MailDefault()
     {
       try
       {
-        var par = serviceParameter.GetAll(p => p.Key == "mailcheckpoint").FirstOrDefault();
-        if (par == null)
+        Parameter parameter = serviceParameter.GetAll(p => p.Key == "mailcheckpoint").FirstOrDefault();
+        if (parameter == null)
           return serviceParameter.Insert(new Parameter()
           {
             Name = "E-mail do RH para enviar aviso de Decisão de Efetivação | Checkpoint",
@@ -1086,7 +896,7 @@ namespace Manager.Services.Specific
             Status = EnumStatus.Enabled
           }).Content;
         else
-          return par.Content;
+          return parameter.Content;
       }
       catch (Exception e)
       {
@@ -1113,42 +923,6 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string RemoveCheckpointOld(string idperson)
-    {
-      try
-      {
-        LogSave(_user._idPerson, "RemoveOnboarding:" + idperson);
-        var checkpoint = serviceCheckpoint.GetAll(p => p.Person._id == idperson).FirstOrDefault();
-        if (checkpoint == null)
-          return "deleted";
-
-        checkpoint.Status = EnumStatus.Disabled;
-        serviceCheckpoint.Update(checkpoint, null);
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-
-    public List<Checkpoint> GetListExcludOld(ref long total, string filter, int count, int page)
-    {
-      try
-      {
-        LogSave(_user._idPerson, "ListExclud");
-        int skip = (count * (page - 1));
-        var detail = serviceCheckpoint.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceCheckpoint.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     #endregion
 
   }

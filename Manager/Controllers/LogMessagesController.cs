@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -114,72 +113,6 @@ namespace Manager.Controllers
     public IActionResult Delete(string id)
     {
       return Ok(service.Delete(id));
-    }
-    #endregion
-
-    #region Old
-    [HttpPost]
-    [Route("old/new")]
-    public string Post([FromBody]LogMessages view)
-    {
-      return service.New(view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/list")]
-    public List<LogMessages> List(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.List(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listmanager/{id}")]
-    public List<LogMessages> ListManagerOld(string id, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListManagerOld(id, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listperson/{id}")]
-    public List<LogMessages> ListPersonOld(string id, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListPersonOld(id, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/get")]
-    public LogMessages ListOld(string id)
-    {
-      return service.GetOld(id);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/update")]
-    public string Update([FromBody]LogMessages view)
-    {
-      return service.Update(view);
-    }
-
-    [Authorize]
-    [HttpDelete]
-    [Route("old/delete/{id}")]
-    public string DeleteOld(string id)
-    {
-      return service.RemoveOld(id);
     }
     #endregion
 

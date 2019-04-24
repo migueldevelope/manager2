@@ -36,11 +36,24 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="view">View do dicionario de dados</param>
     /// <returns></returns>
+    [Authorize]
     [HttpPost]
     [Route("new")]
     public string New([FromBody]ViewCrudDictionarySystem view)
     {
       return service.New(view);
+    }
+    /// <summary>
+    /// Incluir vários discionários de dados ao mesmo tempo
+    /// </summary>
+    /// <param name="list">Lista de objetos de discionário para incluir</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("newlist")]
+    public string NewList([FromBody]List<ViewListDictionarySystem> list)
+    {
+      return service.New(list);
     }
     /// <summary>
     /// Listar os dicionarios do sistema
@@ -106,15 +119,6 @@ namespace Manager.Controllers
     public IActionResult Delete(string id)
     {
       return Ok(service.Delete(id));
-    }
-    #endregion
-
-    #region Old
-    [HttpPost]
-    [Route("newlist")]
-    public string Post([FromBody]List<ViewListDictionarySystem> list)
-    {
-      return service.New(list);
     }
     #endregion
 

@@ -1,6 +1,4 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Business;
-using Manager.Core.BusinessModel;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
@@ -11,9 +9,6 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceOnBoarding
   {
-    #region OnBoardgin
-    List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page);
-
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     List<ViewListOnBoarding> List(string idmanager, ref long total, string filter, int count, int page);
@@ -31,21 +26,6 @@ namespace Manager.Core.Interfaces
     List<ViewCrudComment> AddComments(string idonboarding, string iditem, ViewCrudComment comments);
     string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
     List<ViewCrudComment> ListComments(string idonboarding, string iditem);
-    #endregion
-
-    #region Old
-    List<OnBoarding> ListOnBoardingsWaitOld(string idmanager, ref long total, string filter, int count, int page);
-    OnBoarding PersonOnBoardingsWaitOld(string idmanager);
-    OnBoarding NewOnBoardingOld(OnBoarding onboarding, string idperson);
-    List<OnBoarding> ListOnBoardingsEndOld(string idmanager, ref long total, string filter, int count, int page);
-    OnBoarding GetOnBoardingsOld(string id);
-    List<OnBoarding> PersonOnBoardingsEndOld(string idmanager, ref long total, string filter, int count, int page);
-    string UpdateOnBoardingOld(OnBoarding onboarding, string idperson);
-    List<OnBoarding> GetListExcludOld(ref long total, string filter, int count, int page);
-    List<ListComments> AddCommentsOld(string idonboarding, string iditem, ListComments comments);
-    string UpdateCommentsOld(string idonboarding, string iditem, ListComments comments);
-    List<ListComments> GetListCommentsOld(string idonboarding, string iditem);
-    #endregion
-
+    List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page);
   }
 }

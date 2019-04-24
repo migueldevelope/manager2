@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -181,89 +180,6 @@ namespace Manager.Controllers
     {
       return Ok(service.RemoveEstablishment(id));
     }
-    #endregion
-
-    #region Old
-    [HttpPost]
-    [Route("old/new")]
-    public string PostOld([FromBody]Company view)
-    {
-      return service.NewOld(view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/list")]
-    public List<Company> ListOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/get/{id}")]
-    public Company ListOld(string id)
-    {
-      return service.GetOld(id);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/update")]
-    public string UpdateOld([FromBody]Company view)
-    {
-      return service.UpdateOld(view);
-    }
-
-
-    [HttpPost]
-    [Route("old/newestablishment")]
-    public string PostEstablishmentOld([FromBody]Establishment view)
-    {
-      return service.NewEstablishmentOld(view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listestablishment/{idcompany}")]
-    public List<Establishment> ListEstablishmentOld(string idcompany, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEstablishmentOld(idcompany, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listestablishment")]
-    public List<Establishment> ListEstablishmentOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEstablishmentOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/getestablishment/{id}")]
-    public Establishment ListEstablishmentOld(string id)
-    {
-      return service.GetEstablishmentOld(id);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/updateestablishment")]
-    public string UpdateEstablishmentOld([FromBody]Establishment view)
-    {
-      return service.UpdateEstablishmentOld(view);
-    }
-
     #endregion
 
   }

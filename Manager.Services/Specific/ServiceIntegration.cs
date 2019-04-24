@@ -59,6 +59,40 @@ namespace Manager.Services.Specific
         throw;
       }
     }
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+      User(contextAccessor);
+      personService._user = _user;
+      userService._user = _user;
+      schoolingService._user = _user;
+      companyService._user = _user;
+      accountService._user = _user;
+      occupationService._user = _user;
+      establishmentService._user = _user;
+      integrationSchoolingService._user = _user;
+      integrationCompanyService._user = _user;
+      integrationEstablishmentService._user = _user;
+      integrationOccupationService._user = _user;
+      integrationPersonService._user = _user;
+      parameterService._user = _user;
+      logService.SetUser(contextAccessor);
+    }
+    public void SetUser(BaseUser user)
+    {
+      _user = user;
+      personService._user = user;
+      schoolingService._user = user;
+      companyService._user = user;
+      accountService._user = user;
+      occupationService._user = _user;
+      establishmentService._user = _user;
+      integrationSchoolingService._user = _user;
+      integrationCompanyService._user = _user;
+      integrationEstablishmentService._user = _user;
+      integrationOccupationService._user = _user;
+      integrationPersonService._user = _user;
+      parameterService._user = _user;
+    }
     #endregion
 
     // Ok
@@ -122,7 +156,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    // Parcial
+    // Ok
     #region IntegrationCompany
     public IntegrationCompany GetIntegrationCompany(string key, string name)
     {
@@ -160,7 +194,6 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-
     public List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
@@ -237,7 +270,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    // Parcial
+    // Ok
     #region IntegrationEstablishment
     public IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany)
     {
@@ -358,7 +391,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    // Parcial
+    // Ok
     #region IntegrationOccupation
     public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany)
     {
@@ -479,7 +512,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    // Parcial
+    // Ok
     #region IntegrationSchooling
     public IntegrationSchooling GetIntegrationSchooling(string key, string name)
     {
@@ -593,7 +626,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    // ok
+    // Ok
     #region IntegrationParameter
     /// <summary>
     /// Localizar os parâmetros de integração
@@ -705,6 +738,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+    // Ok
     #region IntegrationPerson
     public IntegrationPerson GetIntegrationPerson(string key)
     {
@@ -766,6 +800,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+    // Ok
     #region Gets isolados por id
     public ViewListSchooling GetSchooling(string id)
     {
@@ -868,44 +903,8 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    #region Configuração de contexto
-    public void SetUser(IHttpContextAccessor contextAccessor)
-    {
-      User(contextAccessor);
-      personService._user = _user;
-      userService._user = _user;
-      schoolingService._user = _user;
-      companyService._user = _user;
-      accountService._user = _user;
-      occupationService._user = _user;
-      establishmentService._user = _user;
-      integrationSchoolingService._user = _user;
-      integrationCompanyService._user = _user;
-      integrationEstablishmentService._user = _user;
-      integrationOccupationService._user = _user;
-      integrationPersonService._user = _user;
-      parameterService._user = _user;
-      logService.SetUser(contextAccessor);
-    }
-
-    public void SetUser(BaseUser user)
-    {
-      _user = user;
-      personService._user = user;
-      schoolingService._user = user;
-      companyService._user = user;
-      accountService._user = user;
-      occupationService._user = _user;
-      establishmentService._user = _user;
-      integrationSchoolingService._user = _user;
-      integrationCompanyService._user = _user;
-      integrationEstablishmentService._user = _user;
-      integrationOccupationService._user = _user;
-      integrationPersonService._user = _user;
-      parameterService._user = _user;
-    }
-    #endregion
-
+    // Ok
+    #region Gets isolados por Key
     public ViewCrudUser GetUserByKey(string document)
     {
       try
@@ -937,7 +936,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public ViewCrudPerson GetPersonByKey(string idcompany, string idestablishment, string document, string registration)
     {
       try
@@ -1036,5 +1034,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    #endregion
+
   }
 }

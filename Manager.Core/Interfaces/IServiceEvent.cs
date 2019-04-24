@@ -1,6 +1,4 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Business;
-using Manager.Core.BusinessModel;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
@@ -10,8 +8,6 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceEvent
   {
-
-    #region Event
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     string ReopeningEvent(string idevent);
@@ -57,45 +53,5 @@ namespace Manager.Core.Interfaces
     List<ViewListEvent> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListEvent> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListEvent> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
-
-    //string NewEventHistoric(EventHistoric view);
-
-    //string UpdateEventHistoric(EventHistoric view);
-
-    #endregion
-
-    #region Old
-    Event NewOld(Event view);
-    Event UpdateOld(Event view);
-    Event GetOld(string id);
-    List<Event> ListOld(ref long total, int count = 10, int page = 1, string filter = "");
-    List<EventHistoric> ListEventHistoricPersonOld(string id, ref long total, int count = 10, int page = 1, string filter = "");
-    string NewCourseOld(Course view);
-    string UpdateCourseOld(Course view);
-    Course GetCourseOld(string id);
-    List<Course> ListCourseOld(ref long total, int count = 10, int page = 1, string filter = "");
-    string NewCourseESocialOld(CourseESocial view);
-    string UpdateCourseESocialOld(CourseESocial view);
-    CourseESocial GetCourseESocialOld(string id);
-    List<CourseESocial> ListCourseESocialOld(ref long total, int count = 10, int page = 1, string filter = "");
-    string NewEventHistoricOld(EventHistoric view);
-    string NewEventHistoricFrontEndOld(EventHistoric view);
-    string UpdateEventHistoricOld(EventHistoric view);
-    string UpdateEventHistoricFrontEndOld(EventHistoric view);
-    EventHistoric GetEventHistoricOld(string id);
-    List<EventHistoric> ListEventHistoricOld(ref long total, int count = 10, int page = 1, string filter = "");
-    string AddParticipantOld(string idevent, Participant participant);
-    string AddDaysOld(string idevent, DaysEvent days);
-    string AddInstructorOld(string idevent, Instructor instructor);
-    List<Entity> ListEntityOld(ref long total, int count = 10, int page = 1, string filter = "");
-    List<Person> ListPersonInstructorOld(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
-    List<Person> ListPersonParticipantsOld(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
-    List<Participant> ListParticipantsOld(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
-    List<Event> ListEventOpenOld(ref long total, int count = 10, int page = 1, string filter = "");
-    List<Event> ListEventEndOld(ref long total, int count = 10, int page = 1, string filter = "");
-    List<Event> ListEventOpenSubscriptionOld(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
-    List<Event> ListEventSubscriptionOld(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
-    #endregion
-
   }
 }

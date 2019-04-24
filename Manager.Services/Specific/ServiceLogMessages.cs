@@ -211,118 +211,19 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    #region Old
+    #region Internal Call
     public void NewLogMessage(string subject, string message, Person person)
     {
       try
       {
-        var model = new LogMessages();
-        model.Message = message;
-        model.Subject = subject;
-        model.StatusMessage = EnumStatusMessage.New;
-        model.Person = person;
+        LogMessages model = new LogMessages
+        {
+          Message = message,
+          Subject = subject,
+          StatusMessage = EnumStatusMessage.New,
+          Person = person
+        };
         serviceLogMessages.Insert(model);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string New(LogMessages view)
-    {
-      try
-      {
-        serviceLogMessages.Insert(view);
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string Update(LogMessages view)
-    {
-      try
-      {
-        serviceLogMessages.Update(view, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string RemoveOld(string id)
-    {
-      try
-      {
-        var item = serviceLogMessages.GetAll(p => p._id == id).FirstOrDefault();
-        item.Status = EnumStatus.Disabled;
-        serviceLogMessages.Update(item, null);
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public LogMessages GetOld(string id)
-    {
-      try
-      {
-        return serviceLogMessages.GetAll(p => p._id == id).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<LogMessages> List(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var detail = serviceLogMessages.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceLogMessages.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail.ToList();
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<LogMessages> ListManagerOld(string idmanager, ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        //var manager = personService.GetAll(p => p._id == idmanager).FirstOrDefault();
-        var detail = serviceLogMessages.GetAll(p => p.Person.Manager._id == idmanager & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceLogMessages.GetAll(p => p.Person.Manager._id == idmanager & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail.ToList();
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<LogMessages> ListPersonOld(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var detail = serviceLogMessages.GetAll(p => p.Person._id == idperson & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceLogMessages.GetAll(p => p.Person._id == idperson & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
-
-        return detail.ToList();
-
       }
       catch (Exception e)
       {

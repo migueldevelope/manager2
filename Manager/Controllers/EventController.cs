@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Manager.Core.Business;
-using Manager.Core.BusinessModel;
+﻿using System.Collections.Generic;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -13,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// Controlador de Registro de Turmas de Treinamento
+  /// </summary>
   [Produces("application/json")]
   [Route("event")]
   public class EventController : Controller
@@ -20,50 +18,73 @@ namespace Manager.Controllers
     private readonly IServiceEvent service;
 
     #region Constructor
+    /// <summary>
+    /// Construtor do controle
+    /// </summary>
+    /// <param name="_service">Serviço específico</param>
+    /// <param name="contextAccessor">Token de segurança</param>
     public EventController(IServiceEvent _service, IHttpContextAccessor contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
-
     #endregion
 
     #region event
-
+    /// <summary>
+    /// Excluir um evento
+    /// </summary>
+    /// <param name="id">Identificador do evento</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public string Remove(string id)
+    public string Delete(string id)
     {
       return service.Remove(id);
     }
-
+    /// <summary>
+    /// Excluir um evento histórico
+    /// </summary>
+    /// <param name="id">Identificador do evento histórico</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("deleteeventhistoric/{id}")]
-    public string RemoveEventHistoric(string id)
+    public string DeleteEventHistoric(string id)
     {
       return service.RemoveEventHistoric(id);
     }
-
-
+    /// <summary>
+    /// Excluir um curso
+    /// </summary>
+    /// <param name="id">Identificador do curso</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("deletecourse/{id}")]
-    public string RemoveCourse(string id)
+    public string DeleteCourse(string id)
     {
       return service.RemoveCourse(id);
     }
-
+    /// <summary>
+    /// Excluir um curso do e-Social
+    /// </summary>
+    /// <param name="id">Identificador do curso do e-Social</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("deletecourseesocial/{id}")]
-    public string RemoveCourseESocial(string id)
+    public string DeleteCourseESocial(string id)
     {
       return service.RemoveCourseESocial(id);
     }
-
-
+    /// <summary>
+    /// Excluir um participante do evento
+    /// </summary>
+    /// <param name="idevent">Identificador do evento</param>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removeparticipant/{idevent}/{idperson}")]
@@ -71,8 +92,14 @@ namespace Manager.Controllers
     {
       return service.RemoveParticipant(idevent, idperson);
     }
-
-
+    /// <summary>
+    /// Excluir um dia do evento
+    /// </summary>
+    /// <param name="idevent">Identificador do evento</param>
+    /// <param name="begin">Inicio</param>
+    /// <param name="end">Fim</param>
+    /// <param name="idday">Identificador do dia</param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removedays/{idevent}/{idday}")]
@@ -80,16 +107,26 @@ namespace Manager.Controllers
     {
       return service.RemoveDays(idevent, idday);
     }
-
-
+    /// <summary>
+    /// Excluir instrutor do evento
+    /// </summary>
+    /// <param name="idevent">Identificador do evento</param>
+    /// <param name="id">Identificador do instrutor</param>
+    /// <returns></returns>
     [HttpDelete]
     [Route("removeinstructor/{idevent}/{id}")]
     public string RemoveInstructor(string idevent, string id)
     {
       return service.RemoveInstructor(idevent, id);
     }
-
-
+    /// <summary>
+    /// Marcar a presença do aluno
+    /// </summary>
+    /// <param name="idevent">Identificador do evento</param>
+    /// <param name="idparticipant">Identificador do participante</param>
+    /// <param name="idday">Identificador do dia</param>
+    /// <param name="present">Marcar presença o retirar presença</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("present/{idevent}/{idparticipant}/{idday}/{present}")]
@@ -97,7 +134,13 @@ namespace Manager.Controllers
     {
       return service.Present(idevent, idparticipant, idday, present);
     }
-
+    /// <summary>
+    /// Setar a grade de participantes
+    /// </summary>
+    /// <param name="idevent">Identificador do evento</param>
+    /// <param name="idparticipant">Identificador do perticipante</param>
+    /// <param name="grade"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("setgrade/{idevent}/{idparticipant}/{grade}")]
@@ -105,7 +148,11 @@ namespace Manager.Controllers
     {
       return service.SetGrade(idevent, idparticipant, grade);
     }
-
+    /// <summary>
+    /// Reabrir evento
+    /// </summary>
+    /// <param name="idevent">Identificador do evento</param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("reopeningevent/{idevent}")]
@@ -113,8 +160,6 @@ namespace Manager.Controllers
     {
       return service.ReopeningEvent(idevent);
     }
-
-
     /// <summary>
     /// Inclusão de um evento
     /// </summary>
@@ -126,7 +171,6 @@ namespace Manager.Controllers
     {
       return service.New(view);
     }
-
     /// <summary>
     /// Lista eventos
     /// </summary>
@@ -144,7 +188,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista eventos para inscrição
     /// </summary>
@@ -163,7 +206,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista eventos inscritos
     /// </summary>
@@ -182,7 +224,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista eventos abertos
     /// </summary>
@@ -200,7 +241,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista eventos encerrados
     /// </summary>
@@ -218,7 +258,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista instrutores de um evento
     /// </summary>
@@ -238,7 +277,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista participante do evento
     /// </summary>
@@ -258,7 +296,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista entidades
     /// </summary>
@@ -276,7 +313,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Busca informações de evento para editar 
     /// </summary>
@@ -289,7 +325,6 @@ namespace Manager.Controllers
     {
       return service.Get(id);
     }
-
     /// <summary>
     /// Atualiza informações de um evento
     /// </summary>
@@ -302,8 +337,6 @@ namespace Manager.Controllers
     {
       return service.Update(view);
     }
-
-
     /// <summary>
     /// Inclusão histórico de evento
     /// </summary>
@@ -315,7 +348,6 @@ namespace Manager.Controllers
     {
       return service.NewEventHistoricFrontEnd(view);
     }
-
     /// <summary>
     /// Lista histórico de eventos
     /// </summary>
@@ -333,7 +365,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Lista os histórico de evento de um contrato
     /// </summary>
@@ -351,7 +382,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Busca informações para editar um histórico de evento
     /// </summary>
@@ -364,7 +394,6 @@ namespace Manager.Controllers
     {
       return service.GetEventHistoric(id);
     }
-
     /// <summary>
     /// Atualiza informações de um historico de eventos
     /// </summary>
@@ -377,8 +406,6 @@ namespace Manager.Controllers
     {
       return service.UpdateEventHistoricFrontEnd(view);
     }
-
-
     /// <summary>
     /// Inclusão de um novo curso
     /// </summary>
@@ -390,7 +417,6 @@ namespace Manager.Controllers
     {
       return service.NewCourse(view);
     }
-
     /// <summary>
     /// Lista os cursos
     /// </summary>
@@ -408,7 +434,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Busca informações para editar um curso
     /// </summary>
@@ -421,7 +446,6 @@ namespace Manager.Controllers
     {
       return service.GetCourse(id);
     }
-
     /// <summary>
     /// Atualizar informaçõe de um curso
     /// </summary>
@@ -434,7 +458,6 @@ namespace Manager.Controllers
     {
       return service.UpdateCourse(view);
     }
-
     /// <summary>
     /// Inclusão curso esocial
     /// </summary>
@@ -446,7 +469,6 @@ namespace Manager.Controllers
     {
       return service.NewCourseESocial(view);
     }
-
     /// <summary>
     /// Lista cursos do esocial
     /// </summary>
@@ -464,7 +486,6 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     /// <summary>
     /// Busca informações de um curso do esocial para editar
     /// </summary>
@@ -477,7 +498,6 @@ namespace Manager.Controllers
     {
       return service.GetCourseESocial(id);
     }
-
     /// <summary>
     /// Atualiza informações de um curso do esocial
     /// </summary>
@@ -490,7 +510,6 @@ namespace Manager.Controllers
     {
       return service.UpdateCourseESocial(view);
     }
-
     /// <summary>
     /// Adiciona um participante a um evento
     /// </summary>
@@ -503,7 +522,6 @@ namespace Manager.Controllers
     {
       return service.AddParticipant(idevent, participant);
     }
-
     /// <summary>
     /// Adicionar dias a um evento
     /// </summary>
@@ -516,7 +534,6 @@ namespace Manager.Controllers
     {
       return service.AddDays(idevent, days);
     }
-
     /// <summary>
     /// Adiciona um instrutor em um evento
     /// </summary>
@@ -529,7 +546,6 @@ namespace Manager.Controllers
     {
       return service.AddInstructor(idevent, view);
     }
-
     /// <summary>
     /// Lista os participante de um evento
     /// </summary>
@@ -548,272 +564,7 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
-
     #endregion
-
-    #region old
-    [HttpPost]
-    [Route("old/new")]
-    public Event NewOld([FromBody]Event view)
-    {
-      return service.NewOld(view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/list")]
-    public List<Event> ListOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listeventopensubscription/{idperson}")]
-    public List<Event> ListEventOpenSubscriptionOld(string idperson, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventOpenSubscriptionOld(idperson, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listeventsubscription/{idperson}")]
-    public List<Event> ListEventSubscriptionOld(string idperson, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventSubscriptionOld(idperson, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listeventopen")]
-    public List<Event> ListEventOpenOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventOpenOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listeventend")]
-    public List<Event> ListEventEndOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventEndOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listpersoninstructor/{idevent}/{idcompany}")]
-    public List<Person> ListPersonInstructorOld(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListPersonInstructorOld(idevent, idcompany, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listpersonparticipants/{idevent}/{idcompany}")]
-    public List<Person> ListPersonParticipantsOld(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListPersonParticipantsOld(idevent, idcompany, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listentity")]
-    public List<Entity> ListEntityOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEntityOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/get/{id}")]
-    public Event GetOld(string id)
-    {
-      return service.GetOld(id);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/update")]
-    public Event UpdateOld([FromBody]Event view)
-    {
-      return service.UpdateOld(view);
-    }
-
-
-    [HttpPost]
-    [Route("old/neweventhistoric")]
-    public string NewEventHistoricFrontEndOld([FromBody]EventHistoric view)
-    {
-      return service.NewEventHistoricFrontEndOld(view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listeventhistoric")]
-    public List<EventHistoric> ListEventHistoricOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventHistoricOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [HttpGet]
-    [Route("old/listeventhistoricperson/{id}")]
-    public List<EventHistoric> ListEventHistoricPersonOld(string id, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventHistoricPersonOld(id, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/geteventhistoric/{id}")]
-    public EventHistoric GetEventHistoricOld(string id)
-    {
-      return service.GetEventHistoricOld(id);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/updateeventhistoric")]
-    public string UpdateEventHistoricFrontEndOld([FromBody]EventHistoric view)
-    {
-      return service.UpdateEventHistoricFrontEndOld(view);
-    }
-
-    [HttpPost]
-    [Route("old/newcourse")]
-    public string NewCourseOld([FromBody]Course view)
-    {
-      return service.NewCourseOld(view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listcourse")]
-    public List<Course> ListCourseOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListCourseOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/getcourse/{id}")]
-    public Course GetCourseOld(string id)
-    {
-      return service.GetCourseOld(id);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/updatecourse")]
-    public string UpdateCourseOld([FromBody]Course view)
-    {
-      return service.UpdateCourseOld(view);
-    }
-
-    [HttpPost]
-    [Route("old/newcourseesocial")]
-    public string NewCourseESocialOld([FromBody]CourseESocial view)
-    {
-      return service.NewCourseESocialOld(view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listcourseesocial")]
-    public List<CourseESocial> ListCourseESocialOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListCourseESocialOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/getcourseesocial/{id}")]
-    public CourseESocial ListCourseESocialOld(string id)
-    {
-      return service.GetCourseESocialOld(id);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/updatecourseesocial")]
-    public string UpdateCourseESocialOld([FromBody]CourseESocial view)
-    {
-      return service.UpdateCourseESocialOld(view);
-    }
-
-
-    [HttpPost]
-    [Route("old/addparticipant/{idevent}")]
-    public string AddParticipantOld([FromBody]Participant participant, string idevent)
-    {
-      return service.AddParticipantOld(idevent, participant);
-    }
-
-    [HttpPost]
-    [Route("old/adddays/{idevent}")]
-    public string AddDaysOld([FromBody]DaysEvent days, string idevent)
-    {
-      return service.AddDaysOld(idevent, days);
-    }
-
-    [HttpPost]
-    [Route("old/addinstructor/{idevent}")]
-    public string AddInstructorOld([FromBody]Instructor view, string idevent)
-    {
-      return service.AddInstructorOld(idevent, view);
-    }
-
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/listparticipants/{idevent}")]
-    public List<Participant> ListParticipantsOld(string idevent, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListParticipantsOld(idevent, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    #endregion
-
-
-
 
   }
 }

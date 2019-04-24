@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -107,50 +106,6 @@ namespace Manager.Controllers
     public IActionResult Delete(string id)
     {
       return Ok(service.Delete(id));
-    }
-    #endregion
-
-    #region Old
-    [HttpPost]
-    [Route("old/new")]
-    public string PostOld([FromBody]Parameter view)
-    {
-      return service.NewOld(view);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/list")]
-    public List<Parameter> ListOld(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListOld(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/get/{id}")]
-    public Parameter ListOld(string id)
-    {
-      return service.GetOld(id);
-    }
-
-    [Authorize]
-    [HttpGet]
-    [Route("old/getname/{name}")]
-    public Parameter GetNameOld(string name)
-    {
-      return service.GetNameOld(name);
-    }
-
-    [Authorize]
-    [HttpPut]
-    [Route("old/update")]
-    public string UpdateOld([FromBody]Parameter view)
-    {
-      return service.UpdateOld(view);
     }
     #endregion
 

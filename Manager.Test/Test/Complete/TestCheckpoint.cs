@@ -34,8 +34,8 @@ namespace Manager.Test.Test.Complete
         long total = 0;
         var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
 
-        var list = serviceCheckpoint.ListCheckpointsWaitOld(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
-        var newOn = serviceCheckpoint.NewCheckpointOld(list, person.Manager._id);
+        //var list = serviceCheckpoint.ListCheckpointsWaitOld(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
+        //var newOn = serviceCheckpoint.NewCheckpointOld(list, person.Manager._id);
 
 
 
@@ -54,7 +54,7 @@ namespace Manager.Test.Test.Complete
       {
 
         var person = "5b8e9a6adc2492055f5fb68b";
-        serviceCheckpoint.RemoveCheckpointOld(person);
+        //serviceCheckpoint.RemoveCheckpointOld(person);
 
       }
       catch (Exception e)

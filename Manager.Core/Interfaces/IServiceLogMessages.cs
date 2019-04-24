@@ -1,5 +1,4 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Business;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
@@ -17,17 +16,5 @@ namespace Manager.Core.Interfaces
     ViewCrudLogMessages Get(string id);
     string Update(ViewCrudLogMessages view);
     string Delete(string id);
-
-    #region Old
-    string New(LogMessages view);
-    void NewLogMessage(string subject, string message, Person person);
-    string Update(LogMessages view);
-    string RemoveOld(string id);
-    LogMessages GetOld(string id);
-    List<LogMessages> List(ref long total, int count = 10, int page = 1, string filter = "");
-    List<LogMessages> ListManagerOld(string idmanager, ref long total, int count = 10, int page = 1, string filter = "");
-    List<LogMessages> ListPersonOld(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
-    #endregion
-
   }
 }
