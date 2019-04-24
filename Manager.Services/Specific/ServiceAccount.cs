@@ -161,7 +161,7 @@ namespace Manager.Services.Specific
         if (person == null)
           person = servicePerson.GetFreeNewVersion(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).Result;
         User user = serviceUser.GetFreeNewVersion(p => p._id == person.User._id).Result;
-        LogSave(person, "Authentication Change Account");
+        Task.Run(() => LogSave(person, "Authentication Change Account"));
         return serviceAuthentication.Authentication(user, false);
       }
       catch (Exception e)
@@ -175,7 +175,7 @@ namespace Manager.Services.Specific
       {
         Person person = servicePerson.GetFreeNewVersion(p => p._id == idperson).Result;
         User user = serviceUser.GetAuthentication(p => p._id == person.User._id).FirstOrDefault();
-        LogSave(person, "Authentication Change Person");
+        Task.Run(() => LogSave(person, "Authentication Change Person"));
         return serviceAuthentication.Authentication(user, false);
       }
       catch (Exception e)
