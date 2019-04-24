@@ -40,29 +40,5 @@ namespace Manager.Core.Interfaces
     #endregion
 
 
-    #region Old
-    
-    ViewPlan GetPlanOld(string idmonitoring, string idplan);
-    string UpdatePlanOld(string idmonitoring, Plan viewPlan);
-    string NewPlanOld(string idmonitoring, string idplanold, Plan viewPlan);
-    string NewUpdatePlanOld(string idmonitoring, List<ViewPlanNewUp> viewPlan);
-    
-    List<ViewPlan> ListPlansPersonOld(ref long total, string id, string filter, int count,
-       int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
-    List<ViewPlan> ListPlansOld(ref long total, string id, string filter, int count, int page);
-    List<ViewPlan> ListPlansOld(ref long total, string id, string filter, int count,
-      int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
-    List<ViewPlanShort> ListPlansPersonOld(ref long total, string id, string filter, int count, int page);
-    List<ViewPlanStruct> ListPlansStructOld(ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan);
-    string NewStructPlanOld(string idmonitoring, string idplan, EnumSourcePlan sourceplan, StructPlan structplan);
-    StructPlan GetStructPlanOld(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan);
-    string UpdateStructPlanOld(string idmonitoring, string idplan, EnumSourcePlan sourceplan, StructPlan structplanedit);
-    List<PlanActivity> ListPlanActivityOld(ref long total, string filter, int count, int page);
-    PlanActivity GetPlanActivityOld(string id);
-    string NewPlanActivityOld(PlanActivity model);
-    string UpdatePlanActivityOld(PlanActivity model);
-    ViewPlanStruct GetPlanStructOld(string idmonitoring, string idplan);
-    #endregion
-
   }
 }

@@ -8,6 +8,7 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.WorkModel;
 using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -34,6 +35,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<OnBoarding> serviceOnboarding;
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<Plan> servicePlan;
     private readonly string path;
 
     #region Constructor
@@ -51,6 +53,7 @@ namespace Manager.Services.Specific
       serviceMonitoring = new ServiceGeneric<Monitoring>(context);
       serviceParameter = new ServiceGeneric<Parameter>(context);
       servicePerson = new ServiceGeneric<Person>(context);
+      servicePlan = new ServiceGeneric<Plan>(context);
       serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
       path = _path;
     }
@@ -69,6 +72,7 @@ namespace Manager.Services.Specific
       serviceMonitoring._user = _user;
       serviceParameter._user = _user;
       servicePerson._user = _user;
+      servicePlan._user = _user;
       serviceOnboarding._user = _user;
     }
     public void SetUser(BaseUser user)
@@ -85,6 +89,7 @@ namespace Manager.Services.Specific
       serviceMonitoring._user = user;
       serviceParameter._user = user;
       servicePerson._user = user;
+      servicePlan._user = user;
       serviceOnboarding._user = user;
     }
     #endregion
@@ -840,7 +845,7 @@ namespace Manager.Services.Specific
 
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores com situação de <strong>vencida</strong>:<br>", list,"<br>");
+            list = string.Concat("Colaboradores com situação de <strong>vencida</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST1}", list);
 
@@ -916,39 +921,19 @@ namespace Manager.Services.Specific
         List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         foreach (Person person in persons)
         {
-          List<Monitoring> monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == person._id && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
-          foreach (Monitoring monitoring in monitorings)
-          {
-            foreach (MonitoringActivities activitie in monitoring.Activities)
-            {
-              foreach (Plan plan in activitie.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open))
-              {
-                PlanWorkNotification work = PlanManagerDeadline(person, plan);
-                if (work != null)
-                  listManager.Add(work);
-              }
-            }
-            foreach (MonitoringSkills skill in monitoring.SkillsCompany)
-            {
-              foreach (Plan plan in skill.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open))
-              {
-                PlanWorkNotification work = PlanManagerDeadline(person, plan);
-                if (work != null)
-                  listManager.Add(work);
-              }
-            }
+          List<Plan> plans = servicePlan.GetAllNewVersion(p => p.StatusPlan == EnumStatusPlan.Open
+          & p.Person._id == person._id).Result;
 
-            foreach (MonitoringSchooling schooling in monitoring.Schoolings)
-            {
-              foreach (Plan plan in schooling.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open))
-              {
-                PlanWorkNotification work = PlanManagerDeadline(person, plan);
-                if (work != null)
-                  listManager.Add(work);
-              }
-            }
+          foreach (Plan plan in plans)
+          {
+            PlanWorkNotification work = PlanManagerDeadline(person, plan);
+            if (work != null)
+              listManager.Add(work);
           }
+
         }
+
+
         if (listManager.Count > 0)
         {
           // Emitir e-mails
@@ -1081,11 +1066,11 @@ namespace Manager.Services.Specific
     private PlanWorkNotification PlanManagerDeadline(Person person, Plan plan)
     {
       PlanWorkNotification result = new PlanWorkNotification()
-        {
-          Manager = person.Manager,
-          Person = person,
-          Plan = plan,
-        };
+      {
+        Manager = person.Manager,
+        Person = person,
+        Plan = plan,
+      };
 
       int days = ((DateTime)plan.Deadline - DateTime.Now).Days;
       if (days < 0)
@@ -1245,7 +1230,7 @@ namespace Manager.Services.Specific
           string list = string.Empty;
           string saveName = string.Empty;
           foreach (var personPlan in item.Defeated)
-              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
+            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
 
           if (!string.IsNullOrEmpty(list))
             list = string.Concat("Plano de ação <strong>vencido</strong>:<br><table>", list, "</table><br>");
@@ -1327,7 +1312,7 @@ namespace Manager.Services.Specific
         using (HttpClient client = new HttpClient())
         {
           client.BaseAddress = new Uri(link);
-          client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}",token));
+          client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
           HttpResponseMessage resultMail = await client.PostAsync(string.Format("mail/sendmail/{0}", idmail), null);
           return "Ok!";
         }

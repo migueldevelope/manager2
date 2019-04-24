@@ -43,24 +43,5 @@ namespace Manager.Core.Interfaces
 
     #endregion
 
-    #region Old
-    List<Monitoring> ListMonitoringsWaitOld(string idmanager, ref long total, string filter, int count, int page);
-    List<Monitoring> ListMonitoringsEndOld(string idmanager, ref long total, string filter, int count, int page);
-    Monitoring GetMonitoringsOld(string id);
-    List<Skill> GetSkillsOld(string idperson);
-    Monitoring PersonMonitoringsWaitOld(string idmanager);
-    List<Monitoring> PersonMonitoringsEndOld(string idmanager);
-    Monitoring NewMonitoringOld(Monitoring monitoring, string idperson);
-    string UpdateMonitoringOld(Monitoring monitoring, string idperson);
-    List<Monitoring> GetListExcludOld(ref long total, string filter, int count, int page);
-    MonitoringActivities GetMonitoringActivitiesOld(string idmonitoring, string idactivitie);
-    string UpdateMonitoringActivitiesOld(string idmonitoring, MonitoringActivities activitie);
-    string AddMonitoringActivitiesOld(string idmonitoring, Activitie activitie);
-    List<ListComments> AddCommentsOld(string idmonitoring, string iditem, ListComments comments);
-    string UpdateCommentsOld(string idmonitoring, string iditem, ListComments comments);
-    List<ListComments> GetListCommentsOld(string idmonitoring, string iditem);
-    List<Plan> AddPlanOld(string idmonitoring, string iditem, Plan plan);
-    List<Plan> UpdatePlanOld(string idmonitoring, string iditem, Plan plan);
-    #endregion
   }
 }

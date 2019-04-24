@@ -32,6 +32,7 @@ namespace Manager.Core.Business
     public List<StructPlan> StructPlans { get; set; }
 
     public string _idMonitoring { get; set; }
-    public ViewListPerson Person { get; set; }
+    public string _idItem { get; set; }
+    public ViewListPersonPlan Person { get; set; }
   }
 }
