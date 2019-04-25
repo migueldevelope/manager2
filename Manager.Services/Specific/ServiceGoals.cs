@@ -470,7 +470,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p.GoalsManagerList._id == id).Result;
+        GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == id).Result;
         if (goalsManager == null)
           return "Company goal deleted!";
 
@@ -622,7 +622,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p.GoalsPersonList._id == id).Result;
+        GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == id).Result;
         if (goalsPerson == null)
           return "Company goal deleted!";
 
