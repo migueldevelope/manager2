@@ -15,6 +15,8 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
 
+    List<dynamic> GetUnimedEmployee();
+
     #region ConfigurationController
     ViewCrudIntegrationParameter GetIntegrationParameter();
     ViewCrudIntegrationParameter SetIntegrationParameter(ViewCrudIntegrationParameter view);
