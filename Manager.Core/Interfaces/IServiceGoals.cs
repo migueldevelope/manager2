@@ -29,7 +29,21 @@ namespace Manager.Core.Interfaces
     string UpdateGoalsCompany(ViewCrudGoalCompany view);
     string DeleteGoalsCompany(string id);
     ViewCrudGoalCompany GetGoalsCompany(string id);
-    List<ViewCrudGoalCompanyItem> ListGoalsCompany(string idGoalsPeriod, string idCompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewCrudGoalItem> ListGoalsCompany(string idGoalsPeriod, string idCompany, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListGoalCompany> ListGoalsCompany(ref long total, int count = 10, int page = 1, string filter = "");
+
+    string NewGoalsPerson(ViewCrudGoalPerson view);
+    string UpdateGoalsPerson(ViewCrudGoalPerson view);
+    string DeleteGoalsPerson(string id);
+    ViewCrudGoalPerson GetGoalsPerson(string id);
+    List<ViewCrudGoalItem> ListGoalsPerson(string idGoalsPeriod, string idPerson, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListGoalPerson> ListGoalsPerson(ref long total, int count = 10, int page = 1, string filter = "");
+
+    string NewGoalsManager(ViewCrudGoalManager view);
+    string UpdateGoalsManager(ViewCrudGoalManager view);
+    string DeleteGoalsManager(string id);
+    ViewCrudGoalManager GetGoalsManager(string id);
+    List<ViewCrudGoalItem> ListGoalsManager(string idGoalsPeriod, string idManager, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListGoalManager> ListGoalsManager(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

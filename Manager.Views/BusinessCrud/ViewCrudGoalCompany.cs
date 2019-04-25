@@ -7,6 +7,6 @@ namespace Manager.Views.BusinessCrud
   {
     public ViewListGoalPeriod GoalsPeriod { get; set; }
     public ViewListCompany Company { get; set; }
-    public ViewCrudGoalCompanyItem GoalsCompanyList { get; set; }
+    public ViewCrudGoalItem GoalsCompanyList { get; set; }
   }
 }

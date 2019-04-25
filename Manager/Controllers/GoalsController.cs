@@ -191,7 +191,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalscompany/{idgoalsperiod}/{idcompany}")]
-    public List<ViewCrudGoalCompanyItem> ListGoalsCompany(string idgoalsperiod, string idcompany, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudGoalItem> ListGoalsCompany(string idgoalsperiod, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsCompany(idgoalsperiod, idcompany,ref total, count, page, filter);
@@ -253,5 +253,178 @@ namespace Manager.Controllers
     }
     #endregion
 
+    #region Manager Goals
+    /// <summary>
+    /// Inclusão de novos objetivos do período e empresa
+    /// </summary>
+    /// <param name="view">Objeto de manutenção</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("newgoalsmanager")]
+    public string NewGoalsManager([FromBody]ViewCrudGoalManager view)
+    {
+      return service.NewGoalsManager(view);
+    }
+    /// <summary>
+    /// Listar os objetivos da empresa e do período
+    /// </summary>
+    /// <param name="idgoalsperiod"></param>
+    /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listgoalsmanager/{idgoalsperiod}/{idmanager}")]
+    public List<ViewCrudGoalItem> ListGoalsManager(string idgoalsperiod, string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListGoalsManager(idgoalsperiod, idmanager, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Listar os objetivos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listgoalsmanager")]
+    public List<ViewListGoalManager> ListGoalsManager(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListGoalsManager(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Buscar um objetivo de empresa para um período
+    /// </summary>
+    /// <param name="id">Identificador do objetivo no período e empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getgoalsmanager/{id}")]
+    public ViewCrudGoalManager GetGoalsManager(string id)
+    {
+      return service.GetGoalsManager(id);
+    }
+    /// <summary>
+    /// Alterar um objetivo da empresa em um período
+    /// </summary>
+    /// <param name="view">Objeto de manutenção</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updategoalsmanager")]
+    public string UpdateGoalsManager([FromBody]ViewCrudGoalManager view)
+    {
+      return service.UpdateGoalsManager(view);
+    }
+    /// <summary>
+    /// Excluir um objetivo da empresa num período específico
+    /// </summary>
+    /// <param name="id">Identificador do objetivo da empresa no período</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deletegoalsmanager/{id}")]
+    public string DeleteGoalsManager(string id)
+    {
+      return service.DeleteGoalsManager(id);
+    }
+    #endregion
+
+    #region Person Goals
+    /// <summary>
+    /// Inclusão de novos objetivos do período e empresa
+    /// </summary>
+    /// <param name="view">Objeto de manutenção</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("newgoalsperson")]
+    public string NewGoalsPerson([FromBody]ViewCrudGoalPerson view)
+    {
+      return service.NewGoalsPerson(view);
+    }
+    /// <summary>
+    /// Listar os objetivos da empresa e do período
+    /// </summary>
+    /// <param name="idgoalsperiod"></param>
+    /// <param name="idperson"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listgoalsperson/{idgoalsperiod}/{idperson}")]
+    public List<ViewCrudGoalItem> ListGoalsPerson(string idgoalsperiod, string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListGoalsPerson(idgoalsperiod, idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Listar os objetivos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listgoalsperson")]
+    public List<ViewListGoalPerson> ListGoalsPerson(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListGoalsPerson(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    /// <summary>
+    /// Buscar um objetivo de empresa para um período
+    /// </summary>
+    /// <param name="id">Identificador do objetivo no período e empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getgoalsperson/{id}")]
+    public ViewCrudGoalPerson GetGoalsPerson(string id)
+    {
+      return service.GetGoalsPerson(id);
+    }
+    /// <summary>
+    /// Alterar um objetivo da empresa em um período
+    /// </summary>
+    /// <param name="view">Objeto de manutenção</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updategoalsperson")]
+    public string UpdateGoalsPerson([FromBody]ViewCrudGoalPerson view)
+    {
+      return service.UpdateGoalsPerson(view);
+    }
+    /// <summary>
+    /// Excluir um objetivo da empresa num período específico
+    /// </summary>
+    /// <param name="id">Identificador do objetivo da empresa no período</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deletegoalsperson/{id}")]
+    public string DeleteGoalsPerson(string id)
+    {
+      return service.DeleteGoalsPerson(id);
+    }
+    #endregion
   }
 }
