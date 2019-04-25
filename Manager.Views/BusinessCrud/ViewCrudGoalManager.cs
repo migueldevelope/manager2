@@ -2,7 +2,7 @@
 
 namespace Manager.Views.BusinessCrud
 {
-  public class ViewCrudGoalManager: _ViewCrudBase
+  public class ViewCrudGoalManager: _ViewCrud
   {
     public ViewListGoalPeriod GoalsPeriod { get; set; }
     public ViewListPerson Manager { get; set; }

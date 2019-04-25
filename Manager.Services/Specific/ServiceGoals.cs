@@ -8,6 +8,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -265,6 +266,7 @@ namespace Manager.Services.Specific
           Company = view.Company,
           GoalsCompanyList = view.GoalsCompanyList == null ? null : new GoalsItem()
           {
+            _id = ObjectId.GenerateNewId().ToString(),
             Weight = view.GoalsCompanyList.Weight,
             Achievement = view.GoalsCompanyList.Achievement,
             Deadline = view.GoalsCompanyList.Deadline,
@@ -334,6 +336,8 @@ namespace Manager.Services.Specific
         GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudGoalCompany()
         {
+
+          _id = goalsCompany._id,
           GoalsPeriod = goalsCompany.GoalsPeriod,
           Company = goalsCompany.Company,
           GoalsCompanyList = new ViewCrudGoalItem()
@@ -416,6 +420,7 @@ namespace Manager.Services.Specific
           Manager = view.Manager,
           GoalsManagerList = view.GoalsManagerList == null ? null : new GoalsItem()
           {
+            _id = ObjectId.GenerateNewId().ToString(),
             Weight = view.GoalsManagerList.Weight,
             Achievement = view.GoalsManagerList.Achievement,
             Deadline = view.GoalsManagerList.Deadline,
@@ -485,6 +490,7 @@ namespace Manager.Services.Specific
         GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudGoalManager()
         {
+          _id = goalsManager._id,
           GoalsPeriod = goalsManager.GoalsPeriod,
           Manager = goalsManager.Manager,
           GoalsManagerList = new ViewCrudGoalItem()
@@ -566,6 +572,7 @@ namespace Manager.Services.Specific
           Person = view.Person,
           GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
           {
+            _id = ObjectId.GenerateNewId().ToString(),
             Weight = view.GoalsPersonList.Weight,
             Achievement = view.GoalsPersonList.Achievement,
             Deadline = view.GoalsPersonList.Deadline,
@@ -635,6 +642,7 @@ namespace Manager.Services.Specific
         GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudGoalPerson()
         {
+          _id = goalsPerson._id,
           GoalsPeriod = goalsPerson.GoalsPeriod,
           Person = goalsPerson.Person,
           GoalsPersonList = new ViewCrudGoalItem()
