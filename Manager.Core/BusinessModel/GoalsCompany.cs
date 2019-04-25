@@ -11,6 +11,6 @@ namespace Manager.Core.BusinessModel
   {
     public ViewListGoalPeriod GoalsPeriod { get; set; }
     public ViewListCompany Company { get; set; }
-    public List<GoalsCompanyItem> GoalsCompanyList { get; set; }
+    public GoalsCompanyItem GoalsCompanyList { get; set; }
   }
 }

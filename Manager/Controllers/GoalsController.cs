@@ -191,7 +191,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalscompany/{idgoalsperiod}/{idcompany}")]
-    public List<ViewListGoalCompany> ListGoalsCompany(string idgoalsperiod, string idcompany, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudGoalCompanyItem> ListGoalsCompany(string idgoalsperiod, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsCompany(idgoalsperiod, idcompany,ref total, count, page, filter);

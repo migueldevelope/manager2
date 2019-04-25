@@ -84,7 +84,7 @@ namespace Manager.Services.Specific
         goal.Name = view.Name;
         goal.Concept = view.Concept;
         goal.TypeGoals = view.TypeGoals;
-        goal = serviceGoals.InsertNewVersion(goal).Result;
+        serviceGoals.Update(goal, null);
         return "Goal altered!";
       }
       catch (Exception e)
@@ -247,20 +247,21 @@ namespace Manager.Services.Specific
     {
       try
       {
+        
         GoalsCompany goalsCompany = new GoalsCompany()
         {
           GoalsPeriod = view.GoalsPeriod,
           Company = view.Company,
-          GoalsCompanyList = view.GoalsCompanyList?.Select(p => new GoalsCompanyItem()
+          GoalsCompanyList = view.GoalsCompanyList == null? null : new GoalsCompanyItem()
           {
-            Weight = p.Weight,
-            Achievement = p.Achievement,
-            Deadline = p.Deadline,
-            Goal = p.Goal,
-            Goals = p.Goals,
-            Realized = p.Realized,
-            Result = p.Result
-          }).ToList()
+            Weight = view.GoalsCompanyList.Weight,
+            Achievement = view.GoalsCompanyList.Achievement,
+            Deadline = view.GoalsCompanyList.Deadline,
+            Goals = view.GoalsCompanyList.Goals,
+            Realized = view.GoalsCompanyList.Realized,
+            Result = view.GoalsCompanyList.Result,
+            Target = view.GoalsCompanyList.Target
+          }
         };
         goalsCompany = serviceGoalsCompany.InsertNewVersion(goalsCompany).Result;
         return "Company goal added!";
@@ -277,16 +278,19 @@ namespace Manager.Services.Specific
         GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == view._id).Result;
         goalsCompany.GoalsPeriod = view.GoalsPeriod;
         goalsCompany.Company = view.Company;
-        goalsCompany.GoalsCompanyList = view.GoalsCompanyList?.Select(p => new GoalsCompanyItem()
+        goalsCompany.GoalsCompanyList = view.GoalsCompanyList == null ? null : new GoalsCompanyItem()
         {
-          Weight = p.Weight,
-          Achievement = p.Achievement,
-          Deadline = p.Deadline,
-          Goal = p.Goal,
-          Goals = p.Goals,
-          Realized = p.Realized,
-          Result = p.Result
-        }).ToList();
+          _id = view._id,
+          _idAccount = _user._idAccount,
+          Status = EnumStatus.Enabled,
+          Weight = view.GoalsCompanyList.Weight,
+          Achievement = view.GoalsCompanyList.Achievement,
+          Deadline = view.GoalsCompanyList.Deadline,
+          Goals = view.GoalsCompanyList.Goals,
+          Realized = view.GoalsCompanyList.Realized,
+          Result = view.GoalsCompanyList.Result,
+          Target = view.GoalsCompanyList.Target
+        };
         serviceGoalsCompany.Update(goalsCompany, null);
         return "Company goal altered!";
       }
@@ -299,7 +303,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == id).Result;
+        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p.GoalsCompanyList._id == id).Result;
         goalsCompany.Status = EnumStatus.Disabled;
         serviceGoalsCompany.Update(goalsCompany, null);
         return "Company goal deleted!";
@@ -313,21 +317,23 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == id).Result;
+        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p.GoalsCompanyList._id == id).Result;
         return new ViewCrudGoalCompany()
         {
           GoalsPeriod = goalsCompany.GoalsPeriod,
           Company = goalsCompany.Company,
-          GoalsCompanyList = goalsCompany.GoalsCompanyList?.Select(p => new ViewCrudGoalCompanyItem()
+          GoalsCompanyList = new ViewCrudGoalCompanyItem()
           {
-            Weight = p.Weight,
-            Achievement = p.Achievement,
-            Deadline = p.Deadline,
-            Goal = p.Goal,
-            Goals = p.Goals,
-            Realized = p.Realized,
-            Result = p.Result
-          }).ToList()
+            _id = goalsCompany.GoalsCompanyList._id,
+            Weight = goalsCompany.GoalsCompanyList.Weight,
+            Achievement = goalsCompany.GoalsCompanyList.Achievement,
+            Deadline = goalsCompany.GoalsCompanyList.Deadline,
+            Goals = goalsCompany.GoalsCompanyList.Goals,
+            Realized = goalsCompany.GoalsCompanyList.Realized,
+            Result = goalsCompany.GoalsCompanyList.Result,
+            Name  = goalsCompany.GoalsCompanyList.Goals.Name,
+            Target = goalsCompany.GoalsCompanyList.Target
+          }
         };
       }
       catch (Exception e)
@@ -335,17 +341,23 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListGoalCompany> ListGoalsCompany(string idGoalsPeriod, string idCompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudGoalCompanyItem> ListGoalsCompany(string idGoalsPeriod, string idCompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        List<ViewListGoalCompany> detail = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
+        List<ViewCrudGoalCompanyItem> detail = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Company._id == idCompany && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "Company.Name").Result
-          .Select(p => new ViewListGoalCompany()
+          .Select(p => new ViewCrudGoalCompanyItem()
           {
             _id = p._id,
-            Company = p.Company,
-            GoalsPeriod = p.GoalsPeriod
+            Weight = p.GoalsCompanyList.Weight,
+            Achievement = p.GoalsCompanyList.Achievement,
+            Deadline = p.GoalsCompanyList.Deadline,
+            Goals = p.GoalsCompanyList.Goals,
+            Realized = p.GoalsCompanyList.Realized,
+            Result = p.GoalsCompanyList.Result,
+            Name = p.GoalsCompanyList.Goals.Name,
+            Target = p.GoalsCompanyList.Target
           }).ToList();
 
         total = serviceGoalsCompany.CountNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod && p.Company._id == idCompany && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
