@@ -40,5 +40,18 @@ namespace Manager.Core.Business
         User = new ViewListUser() { _id = User._id, Name = User.Name, Document = User.Document, Mail = User.Mail, Phone = User.Phone }
       };
     }
+    public ViewListPersonPlan GetViewListManager()
+    {
+      return new ViewListPersonPlan()
+      {
+        _id = _id,
+        Company = new ViewListCompany() { _id = Company._id, Name = Company.Name },
+        Establishment = Establishment == null ? null : new ViewListEstablishment() { _id = Establishment._id, Name = Establishment.Name },
+        Registration = Registration,
+        User = new ViewListUser() { _id = User._id, Name = User.Name, Document = User.Document, Mail = User.Mail, Phone = User.Phone },
+        _idManager = Manager._id,
+        NameManager = Manager.Name
+      };
+    }
   }
 }

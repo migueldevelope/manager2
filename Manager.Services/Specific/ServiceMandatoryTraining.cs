@@ -92,7 +92,7 @@ namespace Manager.Services.Specific
         if (on == 0)
         {
           var person = servicePerson.GetAll().FirstOrDefault();
-          var zero = serviceTrainingPlan.Insert(new TrainingPlan() { Person = person, Status = EnumStatus.Disabled, Course = course });
+          var zero = serviceTrainingPlan.Insert(new TrainingPlan() { Person = null, Status = EnumStatus.Disabled, Course = null });
         }
       }
       catch (Exception)
@@ -160,8 +160,8 @@ namespace Manager.Services.Specific
         {
           serviceTrainingPlan.Insert(new TrainingPlan()
           {
-            Person = person,
-            Course = course,
+            Person = person.GetViewListManager(),
+            Course = new ViewListCourse() { _id = course._id, Name = course.Name },
             Include = DateTime.Now,
             Observartion = string.Empty,
             Status = EnumStatus.Enabled,
@@ -185,7 +185,8 @@ namespace Manager.Services.Specific
         List<EventHistoric> result = new List<EventHistoric>();
         foreach (var item in list)
         {
-          if (item.Course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
+          var course = serviceCourse.GetAll(p => p._id == item._id).FirstOrDefault();
+          if (course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
             result.Add(item);
         }
 
@@ -778,13 +779,13 @@ namespace Manager.Services.Specific
         {
           if (origin == EnumOrigin.Full)
           {
-            detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            total = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+            detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            total = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
           }
           else
           {
-            detail = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            total = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.Manager._id == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+            detail = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            total = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
           }
         }
         else
@@ -1063,9 +1064,9 @@ namespace Manager.Services.Specific
           Deadline = view.Deadline,
           Origin = view.Origin,
           StatusTrainingPlan = view.StatusTrainingPlan,
-          Person = (view.Person == null) ? null : servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault(),
-          Course = (view.Course == null) ? null : new Course() { _id = view.Course._id, Name = view.Course.Name },
-          Event = (view.Event == null) ? null : new Event() { _id = view.Event._id, Name = view.Event.Name }
+          Person = (view.Person == null) ? null : servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault().GetViewListManager(),
+          Course = (view.Course == null) ? null : new ViewListCourse() { _id = view.Course._id, Name = view.Course.Name },
+          Event = (view.Event == null) ? null : new ViewListEvent() { _id = view.Event._id, Name = view.Event.Name }
         };
 
         serviceTrainingPlan.Insert(trainingplan);
@@ -1088,9 +1089,9 @@ namespace Manager.Services.Specific
         trainingplan.Deadline = view.Deadline;
         trainingplan.Origin = view.Origin;
         trainingplan.StatusTrainingPlan = view.StatusTrainingPlan;
-        trainingplan.Person = (view.Person == null) ? null : servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault();
-        trainingplan.Course = (view.Course == null) ? null : new Course() { _id = view.Course._id, Name = view.Course.Name };
-        trainingplan.Event = (view.Event == null) ? null : new Event() { _id = view.Event._id, Name = view.Event.Name };
+        trainingplan.Person = (view.Person == null) ? null : servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault().GetViewListManager();
+        trainingplan.Course = (view.Course == null) ? null : new ViewListCourse() { _id = view.Course._id, Name = view.Course.Name };
+        trainingplan.Event = (view.Event == null) ? null : new ViewListEvent() { _id = view.Event._id, Name = view.Event.Name };
 
         serviceTrainingPlan.Update(trainingplan, null);
         return "update";

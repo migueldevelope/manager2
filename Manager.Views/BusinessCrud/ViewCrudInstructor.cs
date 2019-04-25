@@ -1,10 +1,11 @@
-﻿using Manager.Views.Enumns;
+﻿using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 
 namespace Manager.Views.BusinessCrud
 {
   public class ViewCrudInstructor: _ViewCrudBase
   {
-    public string _idPerson { get; set; }
+    public ViewListPerson Person { get; set; }
     public string Document { get; set; }
     public string Schooling { get; set; }
     public ViewCrudCbo Cbo { get; set; }

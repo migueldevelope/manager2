@@ -1576,10 +1576,15 @@ namespace Manager.Services.Specific
         {
           var trainingPlan = new TrainingPlan
           {
-            Course = (structplan.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplan.Course._id).FirstOrDefault(),
+            Course = (structplan.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplan.Course._id)
+            .Select(p => new ViewListCourse()
+            {
+              _id = p._id,
+              Name = p.Name
+            }).FirstOrDefault(),
             Deadline = deadline,
             Origin = EnumOrigin.Monitoring,
-            Person = servicePerson.GetAll(p => p._id == plan.Person._id).FirstOrDefault(),
+            Person = servicePerson.GetAll(p => p._id == plan.Person._id).FirstOrDefault().GetViewListManager(),
             Include = DateTime.Now,
             StatusTrainingPlan = EnumStatusTrainingPlan.Open
           };
@@ -1639,10 +1644,14 @@ namespace Manager.Services.Specific
             {
               var trainingPlan = new TrainingPlan
               {
-                Course = structplan.Course ?? null,
+                Course = new ViewListCourse()
+                {
+                  _id = structplan.Course?._id,
+                  Name = structplan.Course?.Name
+                } ?? null,
                 Deadline = plan.Deadline,
                 Origin = EnumOrigin.Monitoring,
-                Person = servicePerson.GetAll(p => p._id == plan.Person._id).FirstOrDefault(),
+                Person = servicePerson.GetAll(p => p._id == plan.Person._id).FirstOrDefault().GetViewListManager(),
                 Include = DateTime.Now,
                 StatusTrainingPlan = EnumStatusTrainingPlan.Open
               };
@@ -1855,7 +1864,7 @@ namespace Manager.Services.Specific
 
           }
         }
-         
+
 
         if (plan.SourcePlan == EnumSourcePlan.Schooling)
         {
@@ -1870,7 +1879,7 @@ namespace Manager.Services.Specific
 
           }
         }
-        
+
 
         return resultPlan;
       }

@@ -206,7 +206,7 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(_user._idPerson, "Delete Course " + id));
 
         var item = serviceCourse.GetAll(p => p._id == id).FirstOrDefault();
-        var exists = serviceEvent.GetAll(p => p.Course == item & p.StatusEvent == EnumStatusEvent.Open);
+        var exists = serviceEvent.GetAll(p => p.Course._id == item._id & p.StatusEvent == EnumStatusEvent.Open);
         if (exists.Count() > 0)
           return "error_exists";
 
@@ -241,7 +241,7 @@ namespace Manager.Services.Specific
       try
       {
         var events = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault();
-        foreach (var item in serviceEventHistoric.GetAll(p => p.Event == events).ToList())
+        foreach (var item in serviceEventHistoric.GetAll(p => p.Event._id == events._id).ToList())
         {
           serviceEventHistoric.Delete(item._id);
 
@@ -273,9 +273,9 @@ namespace Manager.Services.Specific
 
         if (events.Attachments == null)
         {
-          events.Attachments = new List<AttachmentField>();
+          events.Attachments = new List<ViewCrudAttachmentField>();
         }
-        events.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+        events.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
         serviceEvent.Update(events, null);
 
       }
@@ -293,9 +293,9 @@ namespace Manager.Services.Specific
 
         if (eventsHistoric.Attachments == null)
         {
-          eventsHistoric.Attachments = new List<AttachmentField>();
+          eventsHistoric.Attachments = new List<ViewCrudAttachmentField>();
         }
-        eventsHistoric.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+        eventsHistoric.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
         serviceEventHistoric.Update(eventsHistoric, null);
 
       }
@@ -387,10 +387,10 @@ namespace Manager.Services.Specific
         return new ViewCrudEvent()
         {
           _id = events._id,
-          Course = new ViewListCourse() { _id = events.Course._id, Name = events.Course.Name },
+          Course = events.Course,
           Name = events.Name,
           Content = events.Content,
-          Entity = new ViewCrudEntity() { _id = events.Entity._id, Name = events.Entity.Name },
+          Entity = events.Entity,
           MinimumFrequency = events.MinimumFrequency,
           LimitParticipants = events.LimitParticipants,
           Grade = events.Grade,
@@ -399,41 +399,13 @@ namespace Manager.Services.Specific
           Workload = events.Workload,
           Begin = events.Begin,
           End = events.End,
-          Instructors = events.Instructors?.Select(x => new ViewCrudInstructor()
-          {
-            _idPerson = x.Person._id,
-            Document = x.Person.User.Document,
-            Schooling = x.Person.User.Schooling.Name,
-            Cbo = (x.Cbo == null) ? null : new ViewCrudCbo() { _id = x.Cbo._id, Name = x.Cbo.Name, Code = x.Cbo.Code },
-            Content = x.Content,
-            TypeInstructor = x.TypeInstructor
-          }).ToList(),
-          Days = events.Days?.Select(p => new ViewCrudDaysEvent() { _id = p._id, Begin = p.Begin, End = p.End }).OrderBy(p => p.Begin).ToList(),
-          Participants = events.Participants.Select(x => new ViewCrudParticipant()
-          {
-            _id = x._id,
-            _idPerson = x.Person._id,
-            FrequencyEvent = x.FrequencyEvent?.OrderBy(k => k.DaysEvent.Begin).Select
-            (y => new ViewCrudFrequencyEvent()
-            {
-              _id = y._id,
-              Present = y.Present,
-              DaysEvent = (y.DaysEvent == null) ? null : new ViewCrudDaysEvent() { _id = y.DaysEvent._id, Begin = y.DaysEvent.Begin, End = y.DaysEvent.End }
-            }).ToList(),
-            Approved = x.Approved,
-            Grade = x.Grade,
-            Name = x.Name,
-            TypeParticipant = x.TypeParticipant
-          }).ToList(),
+          Instructors = events.Instructors,
+          Days = events.Days,
+          Participants = events.Participants,
           StatusEvent = events.StatusEvent,
           Observation = events.Observation,
           Evalution = events.Evalution,
-          Attachments = events.Attachments?.Select(p => new ViewCrudAttachmentField()
-          {
-            Url = p.Url,
-            _idAttachment = p._idAttachment,
-            Name = p.Name
-          }).ToList(),
+          Attachments = events.Attachments,
           DateEnd = events.DateEnd,
           Modality = events.Modality,
           TypeESocial = events.TypeESocial
@@ -555,32 +527,30 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = new List<Person>();
+        var detail = new List<ViewListPersonResume>();
         var participants = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Select(p => p.Person).ToList();
-        var list = servicePerson.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())
-        ).ToList();
+        var list = servicePerson.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList();
         foreach (var item in list)
         {
-          if (!participants.Contains(item))
-            detail.Add(item);
+          if (!participants.Contains(item.GetViewList()))
+            detail.Add(
+              new ViewListPersonResume()
+              {
+                _id = item._id,
+                Name = item.User.Name,
+                Document = item.User.Document,
+                Cbo = (item.Occupation.CBO == null) ? null : new ViewListCbo()
+                {
+                  _id = item.Occupation.CBO._id,
+                  Name = item.Occupation.CBO.Name,
+                  Code = item.Occupation.CBO.Code
+                }
+              });
         }
 
         total = detail.Count();
 
-        return detail.Skip(skip).Take(count).OrderBy(p => p.User.Name)
-          .Select(p => new ViewListPersonResume()
-          {
-            _id = p._id,
-            Name = p.User.Name,
-            Document = p.User.Document,
-            Cbo = (p.Occupation.CBO == null) ? null : new ViewListCbo()
-            {
-              _id = p.Occupation.CBO._id,
-              Name = p.Occupation.CBO.Name,
-              Code = p.Occupation.CBO.Code
-            }
-          })
-          .ToList();
+        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -593,31 +563,30 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = new List<Person>();
+        var detail = new List<ViewListPersonResume>();
         var instructors = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault().Instructors.Select(p => p.Person).ToList();
-        var list = servicePerson.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())
-        ).ToList();
+        var list = servicePerson.GetAll(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).ToList();
+
         foreach (var item in list)
         {
-          if (!instructors.Contains(item))
-            detail.Add(item);
+          if (!instructors.Contains(item.GetViewList()))
+            detail.Add(new ViewListPersonResume()
+            {
+              _id = item._id,
+              Name = item.User.Name,
+              Document = item.User.Document,
+              Cbo = (item.Occupation.CBO == null) ? null : new ViewListCbo()
+              {
+                _id = item.Occupation.CBO._id,
+                Name = item.Occupation.CBO.Name,
+                Code = item.Occupation.CBO.Code
+              }
+            });
         }
 
         total = detail.Count();
 
-        return detail.Select(p => new ViewListPersonResume()
-        {
-          _id = p._id,
-          Name = p.User.Name,
-          Document = p.User.Document,
-          Cbo = (p.Occupation.CBO == null) ? null : new ViewListCbo()
-          {
-            _id = p.Occupation.CBO._id,
-            Name = p.Occupation.CBO.Name,
-            Code = p.Occupation.CBO.Code
-          }
-        })
-          .ToList().Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return detail.ToList().Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -871,14 +840,14 @@ namespace Manager.Services.Specific
       {
         var events = new Event()
         {
-          Participants = new List<Participant>(),
-          Instructors = new List<Instructor>(),
-          Attachments = new List<AttachmentField>(),
-          UserInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault(),
+          Participants = new List<ViewCrudParticipant>(),
+          Instructors = new List<ViewCrudInstructor>(),
+          Attachments = new List<ViewCrudAttachmentField>(),
+          UserInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault().GetViewList(),
           DateInclude = DateTime.Now,
-          Days = new List<DaysEvent>(),
+          Days = new List<ViewCrudDaysEvent>(),
           Entity = AddEntity(view.Entity.Name),
-          Course = serviceCourse.GetAll(p => p._id == view.Course._id).FirstOrDefault(),
+          Course = serviceCourse.GetAll(p => p._id == view.Course._id).Select(p => new ViewListCourse() { _id = p._id, Name = p.Name }).FirstOrDefault(),
           Name = view.Name,
           Begin = view.Begin,
           Content = view.Content,
@@ -920,17 +889,15 @@ namespace Manager.Services.Specific
       {
 
         var events = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault();
-        var days = new DaysEvent()
+        var days = new ViewCrudDaysEvent()
         {
           Begin = view.Begin,
           End = view.End,
-          Status = EnumStatus.Enabled,
-          _idAccount = _user._idAccount,
           _id = ObjectId.GenerateNewId().ToString()
         };
 
         if (events.Days == null)
-          events.Days = new List<DaysEvent>();
+          events.Days = new List<ViewCrudDaysEvent>();
 
         events.Days.Add(days);
         MathWorkload(ref events);
@@ -972,18 +939,16 @@ namespace Manager.Services.Specific
       try
       {
         var events = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault();
-        var instructor = new Instructor()
+        var instructor = new ViewCrudInstructor()
         {
-          _idAccount = _user._idAccount,
           _id = ObjectId.GenerateNewId().ToString(),
-          Status = EnumStatus.Enabled,
           Name = view.Name,
           Content = view.Content,
           Document = view.Document,
           TypeInstructor = view.TypeInstructor,
           Schooling = view.Schooling,
-          Person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault(),
-          Cbo = (view.Cbo == null) ? null : new Cbo() { _id = view.Cbo._id, Name = view.Cbo.Name, Code = view.Cbo.Code },
+          Person = servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault().GetViewList(),
+          Cbo = (view.Cbo == null) ? null : new ViewCrudCbo() { _id = view.Cbo._id, Name = view.Cbo.Name, Code = view.Cbo.Code },
         };
 
         events.Instructors.Add(instructor);
@@ -1002,11 +967,10 @@ namespace Manager.Services.Specific
       {
 
         var events = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault();
-        var participant = new Participant()
+        var participant = new ViewCrudParticipant()
         {
           _id = ObjectId.GenerateNewId().ToString(),
-          _idAccount = _user._idAccount,
-          FrequencyEvent = new List<FrequencyEvent>(),
+          FrequencyEvent = new List<ViewCrudFrequencyEvent>(),
           Approved = true
         };
 
@@ -1014,20 +978,16 @@ namespace Manager.Services.Specific
 
         foreach (var days in events.Days)
         {
-          participant.FrequencyEvent.Add(new FrequencyEvent()
+          participant.FrequencyEvent.Add(new ViewCrudFrequencyEvent()
           {
             _id = ObjectId.GenerateNewId().ToString(),
-            _idAccount = _user._idAccount,
-            DaysEvent = new DaysEvent()
+            DaysEvent = new ViewCrudDaysEvent()
             {
               Begin = days.Begin,
               End = days.End,
-              Status = EnumStatus.Enabled,
-              _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = _user._idAccount,
+              _id = ObjectId.GenerateNewId().ToString()
             },
-            Present = true,
-            Status = EnumStatus.Enabled
+            Present = true
           });
         }
 
@@ -1057,7 +1017,7 @@ namespace Manager.Services.Specific
         return detail.Select(p => new ViewCrudParticipant()
         {
           _id = p._id,
-          _idPerson = p.Person._id,
+          Person = p.Person,
           FrequencyEvent = p.FrequencyEvent?.OrderBy(k => k.DaysEvent.Begin).Select
             (y => new ViewCrudFrequencyEvent()
             {
@@ -1084,18 +1044,24 @@ namespace Manager.Services.Specific
         var eventhistoric = new EventHistoric()
         {
           Entity = AddEntity(view.Entity.Name),
-          Person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault(),
-          Course = (view.Course == null) ? null : serviceCourse.GetAll(p => p._id == view.Course._id).FirstOrDefault(),
-          Event = (view.Event == null) ? null : serviceEvent.GetAll(p => p._id == view.Event._id).FirstOrDefault(),
+          Person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault().GetViewList(),
+          Course = (view.Course == null) ? null : serviceCourse.GetAll(p => p._id == view.Course._id)
+          .Select(p => new ViewListCourse()
+          {
+            _id = p._id,
+            Name = p.Name
+          }).FirstOrDefault(),
+          Event = (view.Event == null) ? null : serviceEvent.GetAll(p => p._id == view.Event._id).Select(p => new ViewListEvent()
+          {
+            _id = p._id,
+            Name = p.Name,
+            NameCourse = p.Course.Name,
+            _idCourse = p.Course._id
+          }).FirstOrDefault(),
           Workload = view.Workload,
           Begin = view.Begin,
           End = view.End,
-          Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new AttachmentField()
-          {
-            _idAttachment = p._idAttachment,
-            Name = p.Name,
-            Url = p.Url
-          }).ToList()
+          Attachments = view.Attachments
         };
 
 
@@ -1215,7 +1181,11 @@ namespace Manager.Services.Specific
       try
       {
         var events = serviceEvent.GetAll(p => p._id == view._id).FirstOrDefault();
-        events.Course = serviceCourse.GetAll(p => p._id == view.Course._id).FirstOrDefault();
+        events.Course = serviceCourse.GetAll(p => p._id == view.Course._id).Select(p => new ViewListCourse()
+        {
+          _id = p._id,
+          Name = p.Name
+        }).FirstOrDefault();
         events.Name = view.Name;
         events.Begin = view.Begin;
         events.Content = view.Content;
@@ -1234,7 +1204,7 @@ namespace Manager.Services.Specific
         events.Workload = view.Workload;
         Task.Run(() => LogSave(_user._idPerson, "Update Event " + view._id));
 
-        events.UserEdit = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        events.UserEdit = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault().GetViewList();
         events.Entity = AddEntity(view.Entity.Name);
         if (view.StatusEvent == EnumStatusEvent.Realized)
         {
@@ -1260,18 +1230,21 @@ namespace Manager.Services.Specific
       {
         var eventHistoric = serviceEventHistoric.GetAll(p => p._id == view._id).FirstOrDefault();
         eventHistoric.Name = view.Name;
-        eventHistoric.Person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault();
-        eventHistoric.Course = (view.Course == null) ? null : serviceCourse.GetAll(p => p._id == view.Course._id).FirstOrDefault();
-        eventHistoric.Event = (view.Event == null) ? null : serviceEvent.GetAll(p => p._id == view.Event._id).FirstOrDefault();
+        eventHistoric.Person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault().GetViewList();
+        eventHistoric.Course = (view.Course == null) ? null : serviceCourse.GetAll(p => p._id == view.Course._id).Select(p => new ViewListCourse()
+        {
+          _id = p._id,
+          Name = p.Name
+        }).FirstOrDefault();
+        eventHistoric.Event = (view.Event == null) ? null : serviceEvent.GetAll(p => p._id == view.Event._id).Select(p => new ViewListEvent()
+        {
+          _id = p._id,
+          Name = p.Name
+        }).FirstOrDefault();
         eventHistoric.Workload = view.Workload;
         eventHistoric.Begin = view.Begin;
         eventHistoric.End = view.End;
-        eventHistoric.Attachments = (view.Attachments == null) ? null : view.Attachments.Select(p => new AttachmentField()
-        {
-          _idAttachment = p._idAttachment,
-          Name = p.Name,
-          Url = p.Url
-        }).ToList();
+        eventHistoric.Attachments = view.Attachments;
         Task.Run(() => LogSave(_user._idPerson, "Update Event Historic " + view._id));
 
         eventHistoric.Entity = AddEntity(view.Entity.Name);
@@ -1359,19 +1332,17 @@ namespace Manager.Services.Specific
 
     #region private
 
-    private void UpdateAddDaysParticipant(ref Event events, DaysEvent days)
+    private void UpdateAddDaysParticipant(ref Event events, ViewCrudDaysEvent days)
     {
       try
       {
         foreach (var item in events.Participants)
         {
-          item.FrequencyEvent.Add(new FrequencyEvent()
+          item.FrequencyEvent.Add(new ViewCrudFrequencyEvent()
           {
             DaysEvent = days,
             Present = true,
-            Status = EnumStatus.Enabled,
-            _id = ObjectId.GenerateNewId().ToString(),
-            _idAccount = _user._idAccount
+            _id = ObjectId.GenerateNewId().ToString()
           });
         }
         //serviceEvent.Update(events, null);
@@ -1443,19 +1414,23 @@ namespace Manager.Services.Specific
       }
     }
 
-    private Entity AddEntity(string name)
+    private ViewCrudEntity AddEntity(string name)
     {
       try
       {
         var entity = serviceEntity.GetAuthentication(p => p.Name.ToUpper().Contains(name.ToUpper())).FirstOrDefault();
         if (entity == null)
-          return serviceEntity.Insert(new Entity()
+          entity = serviceEntity.Insert(new Entity()
           {
             Status = EnumStatus.Enabled,
             Name = name
           });
-        else
-          return entity;
+
+        return new ViewCrudEntity()
+        {
+          _id = entity._id,
+          Name = entity.Name
+        };
       }
       catch (Exception e)
       {
