@@ -40,7 +40,7 @@ namespace Manager.Services.Specific
 
 
     #region unimed integration
-    public List<dynamic> GetUnimedEmployee()
+    public List<ViewIntegrationUnimed> GetUnimedEmployee()
     {
       try
       {
@@ -72,7 +72,7 @@ namespace Manager.Services.Specific
           HttpResponseMessage result = client.PostAsync("/", content).Result;
           var resultContent = result.Content.ReadAsStringAsync().Result ;
 
-          var list = JsonConvert.DeserializeObject<List<dynamic>>(resultContent);
+          var list = JsonConvert.DeserializeObject<List<ViewIntegrationUnimed>>(resultContent);
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
             throw new Exception("User/Password invalid!");
 

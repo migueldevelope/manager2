@@ -25,7 +25,7 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("unimed/list")]
-    public List<dynamic> Unimed()
+    public List<ViewIntegrationUnimed> Unimed()
     {
       long total = 0;
       var result = service.GetUnimedEmployee();
