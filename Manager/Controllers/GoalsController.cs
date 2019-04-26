@@ -278,7 +278,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsmanager/{idgoalsperiod}/{idmanager}")]
-    public List<ViewCrudGoalItem> ListGoalsManager(string idgoalsperiod, string idmanager, int count = 10, int page = 1, string filter = "")
+    public ViewListGoalsItem ListGoalsManager(string idgoalsperiod, string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsManager(idgoalsperiod, idmanager, ref total, count, page, filter);
@@ -365,7 +365,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsperson/{idgoalsperiod}/{idperson}")]
-    public List<ViewCrudGoalItem> ListGoalsPerson(string idgoalsperiod, string idperson, int count = 10, int page = 1, string filter = "")
+    public ViewListGoalsItem ListGoalsPerson(string idgoalsperiod, string idperson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsPerson(idgoalsperiod, idperson, ref total, count, page, filter);

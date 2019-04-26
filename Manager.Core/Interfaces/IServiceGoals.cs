@@ -36,14 +36,14 @@ namespace Manager.Core.Interfaces
     string UpdateGoalsPerson(ViewCrudGoalPerson view);
     string DeleteGoalsPerson(string id);
     ViewCrudGoalPerson GetGoalsPerson(string id);
-    List<ViewCrudGoalItem> ListGoalsPerson(string idGoalsPeriod, string idPerson, ref long total, int count = 10, int page = 1, string filter = "");
+    ViewListGoalsItem ListGoalsPerson(string idGoalsPeriod, string idPerson, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListGoalPerson> ListGoalsPerson(ref long total, int count = 10, int page = 1, string filter = "");
 
     string NewGoalsManager(ViewCrudGoalManager view);
     string UpdateGoalsManager(ViewCrudGoalManager view);
     string DeleteGoalsManager(string id);
     ViewCrudGoalManager GetGoalsManager(string id);
-    List<ViewCrudGoalItem> ListGoalsManager(string idGoalsPeriod, string idManager, ref long total, int count = 10, int page = 1, string filter = "");
+    ViewListGoalsItem ListGoalsManager(string idGoalsPeriod, string idManager, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListGoalManager> ListGoalsManager(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

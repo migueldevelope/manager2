@@ -512,10 +512,26 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudGoalItem> ListGoalsManager(string idGoalsPeriod, string idManager, ref long total, int count = 10, int page = 1, string filter = "")
+    public ViewListGoalsItem ListGoalsManager(string idGoalsPeriod, string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
+        var idCompany = servicePerson.GetAllNewVersion(p => p._id == idManager).Result.FirstOrDefault().Company?._id;
+        List<ViewCrudGoalItem> detailCompany = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
+                  && p.Company._id == idCompany && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
+                  .Select(p => new ViewCrudGoalItem()
+                  {
+                    _id = p._id,
+                    Weight = p.GoalsCompanyList.Weight,
+                    Achievement = p.GoalsCompanyList.Achievement,
+                    Deadline = p.GoalsCompanyList.Deadline,
+                    Goals = p.GoalsCompanyList.Goals,
+                    Realized = p.GoalsCompanyList.Realized,
+                    Result = p.GoalsCompanyList.Result,
+                    Name = p.GoalsCompanyList.Goals.Name,
+                    Target = p.GoalsCompanyList.Target
+                  }).ToList();
+
         List<ViewCrudGoalItem> detail = serviceGoalsManager.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Manager._id == idManager && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Manager.Name").Result
           .Select(p => new ViewCrudGoalItem()
@@ -531,8 +547,14 @@ namespace Manager.Services.Specific
             Target = p.GoalsManagerList.Target
           }).ToList();
 
-        total = serviceGoalsManager.CountNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod && p.Manager._id == idManager && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+
+        ViewListGoalsItem view = new ViewListGoalsItem()
+        {
+          GoalsCompany = detailCompany,
+          GoalsManager = detail
+        };
+
+        return view;
       }
       catch (Exception e)
       {
@@ -558,6 +580,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
     #endregion
 
     #region Person Goals
@@ -664,10 +687,41 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudGoalItem> ListGoalsPerson(string idGoalsPeriod, string idPerson, ref long total, int count = 10, int page = 1, string filter = "")
+    public ViewListGoalsItem ListGoalsPerson(string idGoalsPeriod, string idPerson, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
+        var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
+        List<ViewCrudGoalItem> detailCompany = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
+                  && p.Company._id == person.Company._id && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
+                  .Select(p => new ViewCrudGoalItem()
+                  {
+                    _id = p._id,
+                    Weight = p.GoalsCompanyList.Weight,
+                    Achievement = p.GoalsCompanyList.Achievement,
+                    Deadline = p.GoalsCompanyList.Deadline,
+                    Goals = p.GoalsCompanyList.Goals,
+                    Realized = p.GoalsCompanyList.Realized,
+                    Result = p.GoalsCompanyList.Result,
+                    Name = p.GoalsCompanyList.Goals.Name,
+                    Target = p.GoalsCompanyList.Target
+                  }).ToList();
+
+        List<ViewCrudGoalItem> detailManager = serviceGoalsManager.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
+                  && p.Manager._id == person.Manager._id && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
+                  .Select(p => new ViewCrudGoalItem()
+                  {
+                    _id = p._id,
+                    Weight = p.GoalsManagerList.Weight,
+                    Achievement = p.GoalsManagerList.Achievement,
+                    Deadline = p.GoalsManagerList.Deadline,
+                    Goals = p.GoalsManagerList.Goals,
+                    Realized = p.GoalsManagerList.Realized,
+                    Result = p.GoalsManagerList.Result,
+                    Name = p.GoalsManagerList.Goals.Name,
+                    Target = p.GoalsManagerList.Target
+                  }).ToList();
+
         List<ViewCrudGoalItem> detail = serviceGoalsPerson.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Person._id == idPerson && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Person.Name").Result
           .Select(p => new ViewCrudGoalItem()
@@ -683,8 +737,15 @@ namespace Manager.Services.Specific
             Target = p.GoalsPersonList.Target
           }).ToList();
 
-        total = serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod && p.Person._id == idPerson && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+
+        ViewListGoalsItem view = new ViewListGoalsItem()
+        {
+          GoalsCompany = detailCompany,
+          GoalsManager = detailManager,
+          GoalsPerson = detail,
+        };
+        
+        return view;
       }
       catch (Exception e)
       {

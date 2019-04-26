@@ -50,7 +50,7 @@ namespace Manager.Services.Specific
 
         using (HttpClient client = new HttpClient())
         {
-
+          client.Timeout = TimeSpan.FromMinutes(30);
           client.DefaultRequestHeaders.Add("Autorization", "Basic " + password);
           client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(new UTF8Encoding().GetBytes(username + ":" + password2)));
           client.BaseAddress = new Uri("https://apip1.unimednordesters.com.br");
