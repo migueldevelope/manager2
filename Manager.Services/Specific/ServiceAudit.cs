@@ -100,7 +100,10 @@ namespace Manager.Services.Specific
                 Registration = p.Registration,
                 StatusUser = p.StatusUser.ToString(),
                 IdManager = p.Manager?._id,
-                NameManager = p.Manager?.Name
+                NameManager = p.Manager?.Name,
+                IdOccupation = p.Occupation?._id,
+                NameOccupation = p.Occupation?.Name,
+                TypeJorney = p.TypeJourney
               }).ToList();
           default:
             throw new Exception("Not available!");

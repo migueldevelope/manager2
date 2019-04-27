@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Manager.Views.Enumns;
 
 namespace Manager.Views.Audit
 {
@@ -16,5 +14,8 @@ namespace Manager.Views.Audit
     public string StatusUser { get; set; }
     public string IdManager { get; set; }
     public string NameManager { get; set; }
+    public string IdOccupation { get; set; }
+    public string NameOccupation { get; set; }
+    public EnumTypeJourney TypeJorney { get; set; }
   }
 }
