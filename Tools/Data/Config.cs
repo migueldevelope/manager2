@@ -23,5 +23,9 @@ namespace Tools.Data
     public string ServerLog { get; set; }
     [XmlElement("DataBaseLog")]
     public string DataBaseLog { get; set; }
+    [XmlElement("ServerIntegration")]
+    public string ServerIntegration { get; set; }
+    [XmlElement("DataBaseIntegration")]
+    public string DataBaseIntegration { get; set; }
   }
 }

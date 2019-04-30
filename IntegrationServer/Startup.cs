@@ -52,7 +52,7 @@ namespace IntegrationServer
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
       DataContext _contextIntegration;
-      _contextIntegration = new DataContext(conn.Server, conn.DataBase);
+      _contextIntegration = new DataContext(conn.ServerIntegration, conn.DataBaseIntegration);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
