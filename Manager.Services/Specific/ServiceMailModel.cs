@@ -909,8 +909,8 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Ola <strong>{Person}</strong>,<br><br>É necessário que você acesse o sistema e realize uma aprovação do Pdi.<br><br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.",
-          Subject = "Aprovação de PDI",
+          Message = "Ola <strong>{Manager}</strong>,<br><br>É necessário que você acesse o sistema e realize uma aprovação do Plano de Ação do colaborador(a) {Person}.<br><br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.",
+          Subject = "Notificação de Plano de Ação | Action Plan",
           Name = "planapproval",
           Link = path
         };

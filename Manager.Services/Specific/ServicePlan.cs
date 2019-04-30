@@ -614,7 +614,7 @@ namespace Manager.Services.Specific
       {
         Task.Run(() => LogSave(person._id, "Plan Process Update"));
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
-          Task.Run(() => Mail(servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault()));
+          Task.Run(() => Mail(person));
 
         servicePlan.Update(plan, null);
         //return "Plan altered!";
@@ -652,18 +652,12 @@ namespace Manager.Services.Specific
         var model = serviceMailModel.PlanApproval(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
-
-        string managername = "";
-        try
-        {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
-        }
-        catch (Exception)
-        {
-
-        }
-
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        string managername = person.Manager?.Name;
+        var body = model.Message.Replace("{Person}", person.User.Name)
+                                .Replace("{Link}", model.Link)
+                                .Replace("{Manager}", managername)
+                                .Replace("{Company}", person.Company.Name)
+                                .Replace("{Occupation}", person.Occupation.Name);
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
