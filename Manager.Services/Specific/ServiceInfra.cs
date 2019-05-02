@@ -363,8 +363,8 @@ namespace Manager.Services.Specific
               Template = null
             },
             Company = company,
-            Sphere = serviceSphere.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Sphere._id).Result,
-            Axis = serviceAxis.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Template.Axis._id).Result,
+            Sphere = item.Sphere ?? serviceSphere.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Sphere._id).Result,
+            Axis = item.Axis ?? serviceAxis.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Axis._id).Result,
             Name = item.Name,
             Status = item.Status,
             _id = item._id,
@@ -375,16 +375,16 @@ namespace Manager.Services.Specific
             Scope = new List<Scope>()
           };
 
-          if (item.Template.Schooling != null)
-            foreach (Schooling schooling in item.Template.Schooling)
+          if (item.Schooling != null)
+            foreach (Schooling schooling in item.Schooling)
               groupLocal.Schooling.Add(serviceSchooling.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == schooling._id).Result);
 
-          if (item.Template.Skills != null)
-            foreach (Skill skill in item.Template.Skills)
+          if (item.Skills != null)
+            foreach (Skill skill in item.Skills)
               groupLocal.Skills.Add(serviceSkill.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == skill._id).Result);
 
-          if (item.Template.Scope != null)
-            foreach (Scope scope in item.Template.Scope)
+          if (item.Scope != null)
+            foreach (Scope scope in item.Scope)
             {
               scope._idAccount = _user._idAccount;
               scope._id = ObjectId.GenerateNewId().ToString();
