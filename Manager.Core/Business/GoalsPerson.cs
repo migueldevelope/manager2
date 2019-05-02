@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
 using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 
 namespace Manager.Core.Business
 {

@@ -2,7 +2,9 @@
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -12,29 +14,43 @@ using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
   public class ServiceGoals : Repository<Goals>, IServiceGoals
   {
     private readonly ServiceGeneric<Goals> serviceGoals;
+    private readonly ServiceAuthentication serviceAuthentication;
     private readonly ServiceGeneric<GoalsPeriod> serviceGoalsPeriod;
     private readonly ServiceGeneric<GoalsCompany> serviceGoalsCompany;
     private readonly ServiceGeneric<GoalsManager> serviceGoalsManager;
     private readonly ServiceGeneric<GoalsPerson> serviceGoalsPerson;
+    private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<MailLog> serviceMail;
+    private readonly ServiceMailModel serviceMailModel;
+    private readonly ServiceLog serviceLog;
+    public string path;
 
     #region Constructor
-    public ServiceGoals(DataContext context) : base(context)
+    public ServiceGoals(DataContext context, DataContext contextLog, string pathToken) : base(context)
     {
       try
       {
+        serviceAuthentication = new ServiceAuthentication(context, contextLog);
         serviceGoals = new ServiceGeneric<Goals>(context);
         serviceGoalsCompany = new ServiceGeneric<GoalsCompany>(context);
         serviceGoalsPeriod = new ServiceGeneric<GoalsPeriod>(context);
         servicePerson = new ServiceGeneric<Person>(context);
+        serviceGoalsPersonControl = new ServiceGeneric<GoalsPersonControl>(context);
         serviceGoalsManager = new ServiceGeneric<GoalsManager>(context);
         serviceGoalsPerson = new ServiceGeneric<GoalsPerson>(context);
+        serviceLog = new ServiceLog(context, contextLog);
+        serviceMail = new ServiceGeneric<MailLog>(context);
+        serviceMailModel = new ServiceMailModel(context);
+        path = pathToken;
       }
       catch (Exception e)
       {
@@ -45,11 +61,15 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
       serviceGoals._user = _user;
+      serviceLog._user = _user;
       serviceGoalsCompany._user = _user;
       serviceGoalsPeriod._user = _user;
       servicePerson._user = _user;
       serviceGoalsManager._user = _user;
       serviceGoalsPerson._user = _user;
+      serviceGoalsPersonControl._user = _user;
+      serviceMail._user = _user;
+      serviceMailModel.SetUser(_user);
     }
 
     public void SetUser(BaseUser baseUser)
@@ -61,7 +81,178 @@ namespace Manager.Services.Specific
       servicePerson._user = baseUser;
       serviceGoalsManager._user = baseUser;
       serviceGoalsPerson._user = baseUser;
+      serviceGoalsPersonControl._user = baseUser;
+      serviceLog._user = baseUser;
+      serviceMail._user = baseUser;
+      serviceMailModel.SetUser(baseUser);
     }
+    #endregion
+
+    #region private
+    private async Task LogSave(string iduser, string local)
+    {
+      try
+      {
+        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Access Monitoring",
+          Local = local,
+          _idPerson = user._id
+        };
+        serviceLog.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private string SendMail(string link, Person person, string idmail)
+    {
+      try
+      {
+        string token = serviceAuthentication.AuthenticationMail(person);
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri(link);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
+          return token;
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private async Task Mail(Person person)
+    {
+      try
+      {
+        var model = serviceMailModel.GoalsApproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        string managername = "";
+        try
+        {
+          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+        }
+        catch (Exception)
+        {
+
+        }
+
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.User.Mail, person.User.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = serviceMail.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private async Task MailManager(Person person)
+    {
+      try
+      {
+        var model = serviceMailModel.GoalsApprovalManager(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        string managername = "";
+        try
+        {
+          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+        }
+        catch (Exception)
+        {
+
+        }
+
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.User.Mail, person.User.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = serviceMail.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private async Task MailDisapproval(Person person)
+    {
+      try
+      {
+        var model = serviceMailModel.GoalsDisapproval(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        string managername = "";
+        try
+        {
+          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+        }
+        catch (Exception)
+        {
+
+        }
+
+        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress(person.User.Mail, person.User.Name)
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        var mailObj = serviceMail.Insert(sendMail);
+        var token = SendMail(path, person, mailObj._id.ToString());
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region Goals
@@ -105,9 +296,17 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var count = serviceGoalsCompany.GetAll(p => p.GoalsCompanyList.Goals._id == id).Count()
+        + serviceGoalsManager.GetAll(p => p.GoalsManagerList.Goals._id == id).Count()
+        + serviceGoalsPerson.GetAll(p => p.GoalsPersonList.Goals._id == id).Count();
+
+        if (count > 0)
+          return "exists";
+
         Goals item = serviceGoals.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
         serviceGoals.Update(item, null);
+
         return "Goal deleted!";
       }
       catch (Exception e)
@@ -151,6 +350,73 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListGoal> ListCompany(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListGoal> detail = serviceGoals.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(p => new ViewListGoal()
+          {
+            _id = p._id,
+            Name = p.Name
+          }).ToList();
+
+        var goals = serviceGoalsCompany.GetAll(p => p.Company._id == id).Select(p => new ViewListGoal()
+        {
+          _id = p.GoalsCompanyList.Goals._id,
+          Name = p.GoalsCompanyList.Goals.Name
+        }).ToList();
+
+        foreach (var item in goals)
+        {
+          var goal = detail.Where(p => p.Name == item.Name).FirstOrDefault();
+          detail.Remove(goal);
+        }
+          
+
+        total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public List<ViewListGoal> ListManager(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListGoal> detail = serviceGoals.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(p => new ViewListGoal()
+          {
+            _id = p._id,
+            Name = p.Name
+          }).ToList();
+
+        var goals = serviceGoalsManager.GetAll(p => p.Manager._id == id).Select(p => new ViewListGoal()
+        {
+          _id = p.GoalsManagerList.Goals._id,
+          Name = p.GoalsManagerList.Goals.Name
+        }).ToList();
+
+        foreach (var item in goals)
+        {
+          var goal = detail.Where(p => p.Name == item.Name).FirstOrDefault();
+          detail.Remove(goal);
+        }
+
+        total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region Period Goals
@@ -199,6 +465,14 @@ namespace Manager.Services.Specific
         GoalsPeriod item = serviceGoalsPeriod.GetNewVersion(p => p._id == id).Result;
         if (item == null)
           return "Company goal deleted!";
+
+        var count = serviceGoalsCompany.GetAll(p => p.GoalsPeriod._id == id).Count()
+        + serviceGoalsManager.GetAll(p => p.GoalsPeriod._id == id).Count()
+        + serviceGoalsPerson.GetAll(p => p.GoalsPeriod._id == id).Count();
+
+        if (count > 0)
+          return "exists";
+
 
         item.Status = EnumStatus.Disabled;
         serviceGoalsPeriod.Update(item, null);
@@ -252,6 +526,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
     #endregion
 
     #region Company Goals
@@ -312,6 +587,23 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateGoalsCompanyAchievement(ViewCrudAchievement view)
+    {
+      try
+      {
+        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == view._id).Result;
+        goalsCompany.GoalsCompanyList.Achievement = view.Achievement;
+
+        serviceGoalsCompany.Update(goalsCompany, null);
+        return "Company goal altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string DeleteGoalsCompany(string id)
     {
       try
@@ -438,6 +730,39 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string NewGoalsManagerPortal(ViewCrudGoalManagerPortal view)
+    {
+      try
+      {
+
+        view.GoalsManagerList.Goals._id = ObjectId.GenerateNewId().ToString();
+        GoalsManager goalsManager = new GoalsManager()
+        {
+          GoalsPeriod = view.GoalsPeriod,
+          Manager = view.Manager,
+          GoalsManagerList = view.GoalsManagerList == null ? null : new GoalsItem()
+          {
+            _id = ObjectId.GenerateNewId().ToString(),
+            Weight = view.GoalsManagerList.Weight,
+            Achievement = view.GoalsManagerList.Achievement,
+            Deadline = view.GoalsManagerList.Deadline,
+            Goals = new ViewListGoal() { _id = view.GoalsManagerList.Goals._id, Name = view.GoalsManagerList.Name },
+            Realized = view.GoalsManagerList.Realized,
+            Result = view.GoalsManagerList.Result,
+            Target = view.GoalsManagerList.Target
+          }
+        };
+        goalsManager = serviceGoalsManager.InsertNewVersion(goalsManager).Result;
+        return "Manager goal added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     public string UpdateGoalsManager(ViewCrudGoalManager view)
     {
       try
@@ -466,6 +791,23 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateGoalsManagerAchievement(ViewCrudAchievement view)
+    {
+      try
+      {
+        GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == view._id).Result;
+        goalsManager.GoalsManagerList.Achievement = view.Achievement;
+
+        serviceGoalsManager.Update(goalsManager, null);
+        return "Company goal altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string DeleteGoalsManager(string id)
     {
       try
@@ -584,6 +926,36 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Person Goals
+    public string NewGoalsPersonPortal(ViewCrudGoalPersonPortal view)
+    {
+      try
+      {
+        view.GoalsPersonList.Goals._id = ObjectId.GenerateNewId().ToString();
+        GoalsPerson goalsPerson = new GoalsPerson()
+        {
+          GoalsPeriod = view.GoalsPeriod,
+          Person = view.Person,
+          GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
+          {
+            _id = ObjectId.GenerateNewId().ToString(),
+            Weight = view.GoalsPersonList.Weight,
+            Achievement = view.GoalsPersonList.Achievement,
+            Deadline = view.GoalsPersonList.Deadline,
+            Goals = new ViewListGoal() { _id = view.GoalsPersonList.Goals._id, Name = view.GoalsPersonList.Name },
+            Realized = view.GoalsPersonList.Realized,
+            Result = view.GoalsPersonList.Result,
+            Target = view.GoalsPersonList.Target
+          }
+        };
+        goalsPerson = serviceGoalsPerson.InsertNewVersion(goalsPerson).Result;
+        return "Person goal added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string NewGoalsPerson(ViewCrudGoalPerson view)
     {
       try
@@ -635,6 +1007,23 @@ namespace Manager.Services.Specific
         };
         serviceGoalsPerson.Update(goalsPerson, null);
         return "Person goal altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public string UpdateGoalsPersonAchievement(ViewCrudAchievement view)
+    {
+      try
+      {
+        GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == view._id).Result;
+        goalsPerson.GoalsPersonList.Achievement = view.Achievement;
+
+        serviceGoalsPerson.Update(goalsPerson, null);
+        return "Company goal altered!";
       }
       catch (Exception e)
       {
@@ -744,7 +1133,7 @@ namespace Manager.Services.Specific
           GoalsManager = detailManager,
           GoalsPerson = detail,
         };
-        
+
         return view;
       }
       catch (Exception e)
@@ -771,6 +1160,277 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListGoalPerson> ListGoalsPerson(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListGoalPerson> detail = serviceGoalsPerson.GetAllNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Person.Name").Result
+          .Select(p => new ViewListGoalPerson()
+          {
+            _id = p._id,
+            Person = p.Person,
+            GoalsPeriod = p.GoalsPeriod
+          }).ToList();
+        total = serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
+
+    #region Person Control Goals
+
+    public string NewGoalsPersonControl(string idperson, string idperiod)
+    {
+      try
+      {
+        var period = serviceGoalsPeriod.GetAll(p => p._id == idperiod)
+          .Select(p => new ViewListGoalPeriod
+          {
+            _id = p._id,
+            Name = p.Name
+          }).FirstOrDefault();
+        var person = servicePerson.GetAll(p => p._id == idperiod)
+          .Select(p => new ViewListPerson()
+          {
+            _id = p._id,
+            Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
+            Establishment = p.Establishment == null ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
+            Registration = p.Registration,
+            User = new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
+          }).FirstOrDefault();
+
+        GoalsPersonControl goalsPerson = new GoalsPersonControl()
+        {
+          GoalsPeriod = period,
+          Person = person,
+          StatusGoalsPerson = EnumStatusGoalsPerson.Open
+        };
+
+        goalsPerson = serviceGoalsPersonControl.InsertNewVersion(goalsPerson).Result;
+        return "Person goal added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateGoalsPersonControl(ViewCrudGoalPersonControl view)
+    {
+      try
+      {
+        GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetNewVersion(p => p.Person._id == view.Person._id & p.GoalsPeriod._id == view.GoalsPeriod._id).Result;
+        var person = servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault();
+
+        goalsPerson.GoalsPeriod = view.GoalsPeriod;
+        goalsPerson.Person = view.Person;
+
+
+        if (view.StatusGoalsPerson == EnumStatusGoalsPerson.Open)
+        {
+          if (_user._idPerson == view.Person._id)
+          {
+            goalsPerson.DateBeginPerson = DateTime.Now;
+            goalsPerson.StatusGoalsPerson = EnumStatusGoalsPerson.InProgressPerson;
+          }
+          else
+          {
+            goalsPerson.DateBeginManager = DateTime.Now;
+            goalsPerson.StatusGoalsPerson = EnumStatusGoalsPerson.InProgressManager;
+          }
+        }
+
+        if (goalsPerson.Person._id != _user._idPerson)
+        {
+          if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.Wait)
+          {
+            goalsPerson.DateEndManager = DateTime.Now;
+            Task.Run(() => Mail(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", goalsPerson._id)));
+          }
+          else
+          {
+            if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.End)
+            {
+              goalsPerson.DateEndEnd = DateTime.Now;
+              Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", goalsPerson._id)));
+            }
+            else if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.WaitManager)
+            {
+              goalsPerson.DateEndPerson = DateTime.Now;
+              Task.Run(() => MailManager(person));
+              Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", goalsPerson._id)));
+
+            }
+            else if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.Disapproved)
+            {
+              Task.Run(() => MailDisapproval(person));
+              Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", goalsPerson._id)));
+            }
+
+          }
+
+        }
+
+        serviceGoalsPersonControl.Update(goalsPerson, null);
+        return "Person goal altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public string DeleteGoalsPersonControl(string idperson, string idperiod)
+    {
+      try
+      {
+        GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetNewVersion(p => p.Person._id == idperson & p.GoalsPeriod._id == idperson).Result;
+        if (goalsPerson == null)
+          return "Company goal deleted!";
+
+        goalsPerson.Status = EnumStatus.Disabled;
+        serviceGoalsPersonControl.Update(goalsPerson, null);
+        return "Person goal deleted!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudGoalPersonControl GetGoalsPersonControl(string id)
+    {
+      try
+      {
+        GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudGoalPersonControl()
+        {
+          _id = goalsPerson._id,
+          GoalsPeriod = goalsPerson.GoalsPeriod,
+          Person = goalsPerson.Person,
+          StatusGoalsPerson = goalsPerson.StatusGoalsPerson
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListGoalPersonControl> ListGoalsPersonControl(string idmanager, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        var period = serviceGoalsPeriod.GetAll(p => p.ChangeCheck == true)
+          .Select(p => new ViewListGoalPeriod
+          {
+            _id = p._id,
+            Name = p.Name
+          }).FirstOrDefault();
+
+        List<ViewListGoalPersonControl> detail = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+          .Select(p => new ViewListGoalPersonControl()
+          {
+            _id = null,
+            Person = new ViewListPerson()
+            {
+              _id = p._id,
+              Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
+              Establishment = p.Establishment == null ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
+              Registration = p.Registration,
+              User = new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
+            },
+            GoalsPeriod = period,
+            StatusGoalsPerson = EnumStatusGoalsPerson.Open
+          }).ToList();
+
+        foreach (var item in detail)
+        {
+          try
+          {
+            var goals = serviceGoalsPersonControl.GetAll(p => p.Person._id == item.Person._id
+          & p.GoalsPeriod._id == item.GoalsPeriod._id).FirstOrDefault();
+            if (goals != null)
+            {
+              item.StatusGoalsPerson = goals.StatusGoalsPerson;
+              item._id = goals._id;
+            }
+          }
+          catch (Exception e)
+          {
+          }
+        }
+
+        total = serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewListGoalPersonControl ListGoalsPersonControlMe(string idperson)
+    {
+      try
+      {
+        var period = serviceGoalsPeriod.GetAll(p => p.ChangeCheck == true)
+          .Select(p => new ViewListGoalPeriod
+          {
+            _id = p._id,
+            Name = p.Name
+          }).FirstOrDefault();
+
+        ViewListGoalPersonControl detail = servicePerson.GetAll(p => p._id == idperson)
+          .Select(p => new ViewListGoalPersonControl()
+          {
+            _id = null,
+            Person = new ViewListPerson()
+            {
+              _id = p._id,
+              Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
+              Establishment = p.Establishment == null ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
+              Registration = p.Registration,
+              User = new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
+            },
+            GoalsPeriod = period,
+            StatusGoalsPerson = EnumStatusGoalsPerson.Open
+          }).FirstOrDefault();
+
+        try
+        {
+          var goals = serviceGoalsPersonControl.GetAll(p => p.Person._id == detail.Person._id
+        & p.GoalsPeriod._id == detail.GoalsPeriod._id).FirstOrDefault();
+          if (goals != null)
+          {
+            detail.StatusGoalsPerson = goals.StatusGoalsPerson;
+            detail._id = goals._id;
+          }
+        }
+        catch(Exception e)
+        {
+
+        }
+
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     #endregion
   }
 }

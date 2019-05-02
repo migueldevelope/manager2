@@ -286,7 +286,7 @@ namespace Manager.Services.Specific
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           };
-          Schooling result = serviceSchooling.InsertFreeNewVersion(item).Result;
+          Schooling result = serviceSchooling.InsertFreeNewVersion(schoolingLocal).Result;
         }
 
         // Sphere
@@ -312,7 +312,7 @@ namespace Manager.Services.Specific
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           };
-          Sphere result = serviceSphere.InsertFreeNewVersion(item).Result;
+          Sphere result = serviceSphere.InsertFreeNewVersion(sphereLocal).Result;
         }
 
         // Axis
@@ -338,7 +338,7 @@ namespace Manager.Services.Specific
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString(),
           };
-          serviceAxis.InsertFreeNewVersion(item);
+          serviceAxis.InsertFreeNewVersion(axisLocal);
         }
 
         // Group
@@ -392,7 +392,7 @@ namespace Manager.Services.Specific
             };
           groupLocal._idAccount = _user._idAccount;
           groupLocal._id = ObjectId.GenerateNewId().ToString();
-          Group result = serviceGroup.InsertFreeNewVersion(item).Result;
+          Group result = serviceGroup.InsertFreeNewVersion(groupLocal).Result;
         }
       }
       catch (Exception e)

@@ -460,6 +460,20 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public MailModel GoalsApproval(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "goalsapproval").Result;
+        return model ?? GoalsApprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private MailModel MonitoringApprovalDefault(string path)
     {
       try
@@ -470,6 +484,28 @@ namespace Manager.Services.Specific
           Message = "Olá <strong>{Person}</strong>,<br>Seu gestor <strong>{Manager}</strong> acaba de registrar ações de monitoramento da sua performance.<br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!<br><br>Para acessar o Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Aprovação do Monitoramento | Monitoring",
           Name = "monitoringapproval",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private MailModel GoalsApprovalDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá <strong>{Person}</strong>,<br>Seu gestor <strong>{Manager}</strong> acaba de registrar objetivos.<br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!<br><br>Para acessar o Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Aprovação dos Objetivos | Objetivos",
+          Name = "goalsapproval",
           Link = path
         };
         // Insert
@@ -493,6 +529,20 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public MailModel GoalsApprovalManager(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "goalsapprovalmanager").Result;
+        return model ?? GoalsApprovalManagerDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private MailModel MonitoringApprovalManagerDefault(string path)
     {
       try
@@ -514,6 +564,28 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    private MailModel GoalsApprovalManagerDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá <strong>{Manager}</strong>,<br><br>Seu colaborador <strong>{Person}</strong> acaba de propor novos objetivos.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Continuar os Objetivos | Objetivos",
+          Name = "goalsapprovalmanager",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public MailModel MonitoringDisapproval(string path)
     {
       try
@@ -526,6 +598,42 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public MailModel GoalsDisapproval(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "goalsdisapproval").Result;
+        return model ?? GoalsDisapprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private MailModel GoalsDisapprovalDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá <strong>{Manager}</strong>,<br><br>Seu colaborador <strong>{Person}</strong> acaba de propor uma revisão nos objetivos.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Revisão dos Objetivos | Objetivos",
+          Name = "goalsdisapproval",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private MailModel MonitoringDisapprovalDefault(string path)
     {
       try
