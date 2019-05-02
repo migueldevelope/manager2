@@ -38,6 +38,7 @@ namespace Manager.Core.Interfaces
     string NewGoalsPersonPortal(ViewCrudGoalPersonPortal view);
     string NewGoalsPerson(ViewCrudGoalPerson view);
     string UpdateGoalsPerson(ViewCrudGoalPerson view);
+    string UpdateGoalsPersonPortal(ViewCrudGoalPersonPortal view);
     string UpdateGoalsPersonAchievement(ViewCrudAchievement view);
     string DeleteGoalsPerson(string id);
     ViewCrudGoalPerson GetGoalsPerson(string id);
@@ -47,6 +48,7 @@ namespace Manager.Core.Interfaces
     string NewGoalsManager(ViewCrudGoalManager view);
     string NewGoalsManagerPortal(ViewCrudGoalManagerPortal view);
     string UpdateGoalsManager(ViewCrudGoalManager view);
+    string UpdateGoalsManagerPortal(ViewCrudGoalManagerPortal view);
     string UpdateGoalsManagerAchievement(ViewCrudAchievement view);
     string DeleteGoalsManager(string id);
     ViewCrudGoalManager GetGoalsManager(string id);

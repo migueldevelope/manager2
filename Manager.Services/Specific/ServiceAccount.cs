@@ -121,7 +121,8 @@ namespace Manager.Services.Specific
         serviceAccount._user._idPerson = person._id;
         // Criar os parâmetros básicos
         serviceInfra._user = serviceAccount._user;
-        Task.Run(() => serviceInfra.CopyTemplateInfraAsync(company));
+        //Task.Run(() => serviceInfra.CopyTemplateInfraAsync(company));
+        serviceInfra.CopyTemplateInfraAsync(company);
         return "Account created!";
       }
       catch (Exception e)

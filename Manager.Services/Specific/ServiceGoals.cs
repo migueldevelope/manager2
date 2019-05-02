@@ -267,7 +267,7 @@ namespace Manager.Services.Specific
           TypeGoals = view.TypeGoals
         };
         goal = serviceGoals.InsertNewVersion(goal).Result;
-        return "Goal added!";
+        return goal._id;
       }
       catch (Exception e)
       {
@@ -373,7 +373,7 @@ namespace Manager.Services.Specific
           var goal = detail.Where(p => p.Name == item.Name).FirstOrDefault();
           detail.Remove(goal);
         }
-          
+
 
         total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -545,7 +545,11 @@ namespace Manager.Services.Specific
             Weight = view.GoalsCompanyList.Weight,
             Achievement = view.GoalsCompanyList.Achievement,
             Deadline = view.GoalsCompanyList.Deadline,
-            Goals = view.GoalsCompanyList.Goals,
+            Goals = new ViewListGoal
+            {
+              _id = view.GoalsCompanyList.Goals._id,
+              Name = view.GoalsCompanyList.Goals.Name
+            },
             Realized = view.GoalsCompanyList.Realized,
             Result = view.GoalsCompanyList.Result,
             Target = view.GoalsCompanyList.Target
@@ -574,7 +578,11 @@ namespace Manager.Services.Specific
           Weight = view.GoalsCompanyList.Weight,
           Achievement = view.GoalsCompanyList.Achievement,
           Deadline = view.GoalsCompanyList.Deadline,
-          Goals = view.GoalsCompanyList.Goals,
+          Goals = new ViewListGoal
+          {
+            _id = view.GoalsCompanyList.Goals._id,
+            Name = view.GoalsCompanyList.Goals.Name
+          },
           Realized = view.GoalsCompanyList.Realized,
           Result = view.GoalsCompanyList.Result,
           Target = view.GoalsCompanyList.Target
@@ -638,7 +646,13 @@ namespace Manager.Services.Specific
             Weight = goalsCompany.GoalsCompanyList.Weight,
             Achievement = goalsCompany.GoalsCompanyList.Achievement,
             Deadline = goalsCompany.GoalsCompanyList.Deadline,
-            Goals = goalsCompany.GoalsCompanyList.Goals,
+            Goals = serviceGoals.GetAll(p => p._id == goalsCompany.GoalsCompanyList.Goals._id).Select(p => new ViewCrudGoal()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Concept = p.Concept,
+              TypeGoals = p.TypeGoals
+            }).FirstOrDefault(),
             Realized = goalsCompany.GoalsCompanyList.Realized,
             Result = goalsCompany.GoalsCompanyList.Result,
             Name = goalsCompany.GoalsCompanyList.Goals.Name,
@@ -663,7 +677,13 @@ namespace Manager.Services.Specific
             Weight = p.GoalsCompanyList.Weight,
             Achievement = p.GoalsCompanyList.Achievement,
             Deadline = p.GoalsCompanyList.Deadline,
-            Goals = p.GoalsCompanyList.Goals,
+            Goals = serviceGoals.GetAll(x => x._id == p.GoalsCompanyList.Goals._id).Select(x => new ViewCrudGoal()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Concept = x.Concept,
+              TypeGoals = x.TypeGoals
+            }).FirstOrDefault(),
             Realized = p.GoalsCompanyList.Realized,
             Result = p.GoalsCompanyList.Result,
             Name = p.GoalsCompanyList.Goals.Name,
@@ -716,7 +736,11 @@ namespace Manager.Services.Specific
             Weight = view.GoalsManagerList.Weight,
             Achievement = view.GoalsManagerList.Achievement,
             Deadline = view.GoalsManagerList.Deadline,
-            Goals = view.GoalsManagerList.Goals,
+            Goals = new ViewListGoal
+            {
+              _id = view.GoalsManagerList.Goals._id,
+              Name = view.GoalsManagerList.Goals.Name
+            },
             Realized = view.GoalsManagerList.Realized,
             Result = view.GoalsManagerList.Result,
             Target = view.GoalsManagerList.Target
@@ -737,6 +761,8 @@ namespace Manager.Services.Specific
       {
 
         view.GoalsManagerList.Goals._id = ObjectId.GenerateNewId().ToString();
+        var goal = Get(New(view.GoalsManagerList.Goals));
+
         GoalsManager goalsManager = new GoalsManager()
         {
           GoalsPeriod = view.GoalsPeriod,
@@ -747,7 +773,7 @@ namespace Manager.Services.Specific
             Weight = view.GoalsManagerList.Weight,
             Achievement = view.GoalsManagerList.Achievement,
             Deadline = view.GoalsManagerList.Deadline,
-            Goals = new ViewListGoal() { _id = view.GoalsManagerList.Goals._id, Name = view.GoalsManagerList.Name },
+            Goals = new ViewListGoal() { _id = goal._id, Name = goal.Name },
             Realized = view.GoalsManagerList.Realized,
             Result = view.GoalsManagerList.Result,
             Target = view.GoalsManagerList.Target
@@ -762,6 +788,37 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string UpdateGoalsManagerPortal(ViewCrudGoalManagerPortal view)
+    {
+      try
+      {
+        GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == view._id).Result;
+        goalsManager.GoalsPeriod = view.GoalsPeriod;
+        goalsManager.Manager = view.Manager;
+        Update(view.GoalsManagerList.Goals);
+        var goal = Get(view.GoalsManagerList.Goals._id);
+
+        goalsManager.GoalsManagerList = view.GoalsManagerList == null ? null : new GoalsItem()
+        {
+          _id = view._id,
+          _idAccount = _user._idAccount,
+          Status = EnumStatus.Enabled,
+          Weight = view.GoalsManagerList.Weight,
+          Achievement = view.GoalsManagerList.Achievement,
+          Deadline = view.GoalsManagerList.Deadline,
+          Goals = new ViewListGoal() { _id = goal._id, Name = goal.Name },
+          Realized = view.GoalsManagerList.Realized,
+          Result = view.GoalsManagerList.Result,
+          Target = view.GoalsManagerList.Target
+        };
+        serviceGoalsManager.Update(goalsManager, null);
+        return "Manager goal altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     public string UpdateGoalsManager(ViewCrudGoalManager view)
     {
@@ -778,7 +835,11 @@ namespace Manager.Services.Specific
           Weight = view.GoalsManagerList.Weight,
           Achievement = view.GoalsManagerList.Achievement,
           Deadline = view.GoalsManagerList.Deadline,
-          Goals = view.GoalsManagerList.Goals,
+          Goals = new ViewListGoal
+          {
+            _id = view.GoalsManagerList.Goals._id,
+            Name = view.GoalsManagerList.Goals.Name
+          },
           Realized = view.GoalsManagerList.Realized,
           Result = view.GoalsManagerList.Result,
           Target = view.GoalsManagerList.Target
@@ -841,7 +902,14 @@ namespace Manager.Services.Specific
             Weight = goalsManager.GoalsManagerList.Weight,
             Achievement = goalsManager.GoalsManagerList.Achievement,
             Deadline = goalsManager.GoalsManagerList.Deadline,
-            Goals = goalsManager.GoalsManagerList.Goals,
+            Goals = serviceGoals.GetAll(p => p._id == goalsManager.GoalsManagerList.Goals._id).Select(p => new ViewCrudGoal()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Concept = p.Concept,
+              TypeGoals = p.TypeGoals
+            }).FirstOrDefault(),
+
             Realized = goalsManager.GoalsManagerList.Realized,
             Result = goalsManager.GoalsManagerList.Result,
             Name = goalsManager.GoalsManagerList.Goals.Name,
@@ -867,7 +935,13 @@ namespace Manager.Services.Specific
                     Weight = p.GoalsCompanyList.Weight,
                     Achievement = p.GoalsCompanyList.Achievement,
                     Deadline = p.GoalsCompanyList.Deadline,
-                    Goals = p.GoalsCompanyList.Goals,
+                    Goals = serviceGoals.GetAll(x => x._id == p.GoalsCompanyList.Goals._id).Select(x => new ViewCrudGoal()
+                    {
+                      _id = x._id,
+                      Name = x.Name,
+                      Concept = x.Concept,
+                      TypeGoals = x.TypeGoals
+                    }).FirstOrDefault(),
                     Realized = p.GoalsCompanyList.Realized,
                     Result = p.GoalsCompanyList.Result,
                     Name = p.GoalsCompanyList.Goals.Name,
@@ -882,7 +956,13 @@ namespace Manager.Services.Specific
             Weight = p.GoalsManagerList.Weight,
             Achievement = p.GoalsManagerList.Achievement,
             Deadline = p.GoalsManagerList.Deadline,
-            Goals = p.GoalsManagerList.Goals,
+            Goals = serviceGoals.GetAll(x => x._id == p.GoalsManagerList.Goals._id).Select(x => new ViewCrudGoal()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Concept = x.Concept,
+              TypeGoals = x.TypeGoals
+            }).FirstOrDefault(),
             Realized = p.GoalsManagerList.Realized,
             Result = p.GoalsManagerList.Result,
             Name = p.GoalsManagerList.Goals.Name,
@@ -931,6 +1011,9 @@ namespace Manager.Services.Specific
       try
       {
         view.GoalsPersonList.Goals._id = ObjectId.GenerateNewId().ToString();
+        var goal = Get(New(view.GoalsPersonList.Goals));
+
+
         GoalsPerson goalsPerson = new GoalsPerson()
         {
           GoalsPeriod = view.GoalsPeriod,
@@ -941,7 +1024,7 @@ namespace Manager.Services.Specific
             Weight = view.GoalsPersonList.Weight,
             Achievement = view.GoalsPersonList.Achievement,
             Deadline = view.GoalsPersonList.Deadline,
-            Goals = new ViewListGoal() { _id = view.GoalsPersonList.Goals._id, Name = view.GoalsPersonList.Name },
+            Goals = new ViewListGoal() { _id = goal._id, Name = goal.Name },
             Realized = view.GoalsPersonList.Realized,
             Result = view.GoalsPersonList.Result,
             Target = view.GoalsPersonList.Target
@@ -971,7 +1054,11 @@ namespace Manager.Services.Specific
             Weight = view.GoalsPersonList.Weight,
             Achievement = view.GoalsPersonList.Achievement,
             Deadline = view.GoalsPersonList.Deadline,
-            Goals = view.GoalsPersonList.Goals,
+            Goals = new ViewListGoal
+            {
+              _id = view.GoalsPersonList.Goals._id,
+              Name = view.GoalsPersonList.Goals.Name
+            },
             Realized = view.GoalsPersonList.Realized,
             Result = view.GoalsPersonList.Result,
             Target = view.GoalsPersonList.Target
@@ -1000,7 +1087,11 @@ namespace Manager.Services.Specific
           Weight = view.GoalsPersonList.Weight,
           Achievement = view.GoalsPersonList.Achievement,
           Deadline = view.GoalsPersonList.Deadline,
-          Goals = view.GoalsPersonList.Goals,
+          Goals = new ViewListGoal
+          {
+            _id = view.GoalsPersonList.Goals._id,
+            Name = view.GoalsPersonList.Goals.Name
+          },
           Realized = view.GoalsPersonList.Realized,
           Result = view.GoalsPersonList.Result,
           Target = view.GoalsPersonList.Target
@@ -1013,7 +1104,37 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public string UpdateGoalsPersonPortal(ViewCrudGoalPersonPortal view)
+    {
+      try
+      {
+        GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == view._id).Result;
+        goalsPerson.GoalsPeriod = view.GoalsPeriod;
+        goalsPerson.Person = view.Person;
+        Update(view.GoalsPersonList.Goals);
+        var goal = Get(view.GoalsPersonList.Goals._id);
 
+        goalsPerson.GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
+        {
+          _id = view._id,
+          _idAccount = _user._idAccount,
+          Status = EnumStatus.Enabled,
+          Weight = view.GoalsPersonList.Weight,
+          Achievement = view.GoalsPersonList.Achievement,
+          Deadline = view.GoalsPersonList.Deadline,
+          Goals = new ViewListGoal() { _id = goal._id, Name = goal.Name },
+          Realized = view.GoalsPersonList.Realized,
+          Result = view.GoalsPersonList.Result,
+          Target = view.GoalsPersonList.Target
+        };
+        serviceGoalsPerson.Update(goalsPerson, null);
+        return "Person goal altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     public string UpdateGoalsPersonAchievement(ViewCrudAchievement view)
     {
@@ -1063,7 +1184,14 @@ namespace Manager.Services.Specific
             Weight = goalsPerson.GoalsPersonList.Weight,
             Achievement = goalsPerson.GoalsPersonList.Achievement,
             Deadline = goalsPerson.GoalsPersonList.Deadline,
-            Goals = goalsPerson.GoalsPersonList.Goals,
+            Goals = serviceGoals.GetAll(p => p._id == goalsPerson.GoalsPersonList.Goals._id).Select(p => new ViewCrudGoal()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Concept = p.Concept,
+              TypeGoals = p.TypeGoals
+            }).FirstOrDefault(),
+
             Realized = goalsPerson.GoalsPersonList.Realized,
             Result = goalsPerson.GoalsPersonList.Result,
             Name = goalsPerson.GoalsPersonList.Goals.Name,
@@ -1089,7 +1217,13 @@ namespace Manager.Services.Specific
                     Weight = p.GoalsCompanyList.Weight,
                     Achievement = p.GoalsCompanyList.Achievement,
                     Deadline = p.GoalsCompanyList.Deadline,
-                    Goals = p.GoalsCompanyList.Goals,
+                    Goals = serviceGoals.GetAll(x => x._id == p.GoalsCompanyList.Goals._id).Select(x => new ViewCrudGoal()
+                    {
+                      _id = x._id,
+                      Name = x.Name,
+                      Concept = x.Concept,
+                      TypeGoals = x.TypeGoals
+                    }).FirstOrDefault(),
                     Realized = p.GoalsCompanyList.Realized,
                     Result = p.GoalsCompanyList.Result,
                     Name = p.GoalsCompanyList.Goals.Name,
@@ -1104,7 +1238,13 @@ namespace Manager.Services.Specific
                     Weight = p.GoalsManagerList.Weight,
                     Achievement = p.GoalsManagerList.Achievement,
                     Deadline = p.GoalsManagerList.Deadline,
-                    Goals = p.GoalsManagerList.Goals,
+                    Goals = serviceGoals.GetAll(x => x._id == p.GoalsManagerList.Goals._id).Select(x => new ViewCrudGoal()
+                    {
+                      _id = x._id,
+                      Name = x.Name,
+                      Concept = x.Concept,
+                      TypeGoals = x.TypeGoals
+                    }).FirstOrDefault(),
                     Realized = p.GoalsManagerList.Realized,
                     Result = p.GoalsManagerList.Result,
                     Name = p.GoalsManagerList.Goals.Name,
@@ -1119,7 +1259,13 @@ namespace Manager.Services.Specific
             Weight = p.GoalsPersonList.Weight,
             Achievement = p.GoalsPersonList.Achievement,
             Deadline = p.GoalsPersonList.Deadline,
-            Goals = p.GoalsPersonList.Goals,
+            Goals = serviceGoals.GetAll(x => x._id == p.GoalsPersonList.Goals._id).Select(x => new ViewCrudGoal()
+            {
+              _id = x._id,
+              Name = x.Name,
+              Concept = x.Concept,
+              TypeGoals = x.TypeGoals
+            }).FirstOrDefault(),
             Realized = p.GoalsPersonList.Realized,
             Result = p.GoalsPersonList.Result,
             Name = p.GoalsPersonList.Goals.Name,
@@ -1416,7 +1562,7 @@ namespace Manager.Services.Specific
             detail._id = goals._id;
           }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
 
         }

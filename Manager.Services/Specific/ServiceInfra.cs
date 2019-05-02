@@ -363,12 +363,10 @@ namespace Manager.Services.Specific
               Template = null
             },
             Company = company,
-            Sphere = item.Sphere ?? serviceSphere.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Sphere._id).Result,
-            Axis = item.Axis ?? serviceAxis.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Axis._id).Result,
             Name = item.Name,
             Status = item.Status,
             _id = item._id,
-            _idAccount = item._idAccount,
+            _idAccount = _user._idAccount,
             Line = item.Line,
             Schooling = new List<Schooling>(),
             Skills = new List<Skill>(),
@@ -390,6 +388,11 @@ namespace Manager.Services.Specific
               scope._id = ObjectId.GenerateNewId().ToString();
               groupLocal.Scope.Add(scope);
             };
+
+
+          groupLocal.Sphere = serviceSphere.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Sphere._id).Result;
+          groupLocal.Axis = serviceAxis.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Axis._id).Result;
+
           groupLocal._idAccount = _user._idAccount;
           groupLocal._id = ObjectId.GenerateNewId().ToString();
           Group result = serviceGroup.InsertFreeNewVersion(groupLocal).Result;
@@ -1397,7 +1400,7 @@ namespace Manager.Services.Specific
 
         foreach (var item in list)
         {
-          if(item.Process != null)
+          if (item.Process != null)
           {
             var process = item.Process.Where(p => p._id == id).ToList();
             foreach (var proc in process)
@@ -4057,7 +4060,7 @@ namespace Manager.Services.Specific
         model.Comments = view.Comments;
 
         serviceProcessLevelTwo.Update(model, null);
-        
+
         Task.Run(() => UpdateProcessLevelTwoAll(model._id));
         //UpdateProcessLevelTwoAll(model._id);
         return "update";

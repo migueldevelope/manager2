@@ -389,6 +389,21 @@ namespace Manager.Controllers
     {
       return service.UpdateGoalsManager(view);
     }
+
+    /// <summary>
+    /// Alterar um objetivo da empresa em um período
+    /// </summary>
+    /// <param name="view">Objeto de manutenção</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updategoalsmanagerportal")]
+    public string UpdateGoalsManagerPortal([FromBody]ViewCrudGoalManagerPortal view)
+    {
+      return service.UpdateGoalsManagerPortal(view);
+    }
+
+
     /// <summary>
     /// Alterar um objetivo da empresa em um período
     /// </summary>
@@ -501,6 +516,19 @@ namespace Manager.Controllers
     public string UpdateGoalsPerson([FromBody]ViewCrudGoalPerson view)
     {
       return service.UpdateGoalsPerson(view);
+    }
+
+    /// <summary>
+    /// Alterar um objetivo da empresa em um período
+    /// </summary>
+    /// <param name="view">Objeto de manutenção</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updategoalspersonportal")]
+    public string UpdateGoalsPersonPortal([FromBody]ViewCrudGoalPersonPortal view)
+    {
+      return service.UpdateGoalsPersonPortal(view);
     }
 
     /// <summary>

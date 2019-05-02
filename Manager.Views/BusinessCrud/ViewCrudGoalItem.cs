@@ -5,7 +5,7 @@ namespace Manager.Views.BusinessCrud
 {
   public class ViewCrudGoalItem : _ViewCrudBase
   {
-    public ViewListGoal Goals { get; set; }
+    public ViewCrudGoal Goals { get; set; }
     public byte Weight { get; set; }
     public DateTime? Deadline { get; set; }
     public string Target { get; set; }
