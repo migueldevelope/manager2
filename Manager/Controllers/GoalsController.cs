@@ -505,18 +505,18 @@ namespace Manager.Controllers
     {
       return service.GetGoalsPerson(id);
     }
-    /// <summary>
-    /// Alterar um objetivo da empresa em um período
-    /// </summary>
-    /// <param name="view">Objeto de manutenção</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPut]
-    [Route("updategoalsperson")]
-    public string UpdateGoalsPerson([FromBody]ViewCrudGoalPerson view)
-    {
-      return service.UpdateGoalsPerson(view);
-    }
+    ///// <summary>
+    ///// Alterar um objetivo da empresa em um período
+    ///// </summary>
+    ///// <param name="view">Objeto de manutenção</param>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpPut]
+    //[Route("updategoalsperson")]
+    //public string UpdateGoalsPerson([FromBody]ViewCrudGoalPerson view)
+    //{
+    //  return service.UpdateGoalsPerson(view);
+    //}
 
     /// <summary>
     /// Alterar um objetivo da empresa em um período

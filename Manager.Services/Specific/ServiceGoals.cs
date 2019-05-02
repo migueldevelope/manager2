@@ -1073,38 +1073,38 @@ namespace Manager.Services.Specific
     //  }
     //}
 
-    public string UpdateGoalsPerson(ViewCrudGoalPerson view)
-    {
-      try
-      {
-        GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == view._id).Result;
-        goalsPerson.GoalsPeriod = view.GoalsPeriod;
-        goalsPerson.Person = view.Person;
-        goalsPerson.GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
-        {
-          _id = view._id,
-          _idAccount = _user._idAccount,
-          Status = EnumStatus.Enabled,
-          Weight = view.GoalsPersonList.Weight,
-          Achievement = view.GoalsPersonList.Achievement,
-          Deadline = view.GoalsPersonList.Deadline,
-          Goals = new ViewListGoal
-          {
-            _id = view.GoalsPersonList.Goals._id,
-            Name = view.GoalsPersonList.Goals.Name
-          },
-          Realized = view.GoalsPersonList.Realized,
-          Result = view.GoalsPersonList.Result,
-          Target = view.GoalsPersonList.Target
-        };
-        serviceGoalsPerson.Update(goalsPerson, null);
-        return "Person goal altered!";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    //public string UpdateGoalsPerson(ViewCrudGoalPerson view)
+    //{
+    //  try
+    //  {
+    //    GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == view._id).Result;
+    //    goalsPerson.GoalsPeriod = view.GoalsPeriod;
+    //    goalsPerson.Person = view.Person;
+    //    goalsPerson.GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
+    //    {
+    //      _id = view._id,
+    //      _idAccount = _user._idAccount,
+    //      Status = EnumStatus.Enabled,
+    //      Weight = view.GoalsPersonList.Weight,
+    //      Achievement = view.GoalsPersonList.Achievement,
+    //      Deadline = view.GoalsPersonList.Deadline,
+    //      Goals = new ViewListGoal
+    //      {
+    //        _id = view.GoalsPersonList.Goals._id,
+    //        Name = view.GoalsPersonList.Goals.Name
+    //      },
+    //      Realized = view.GoalsPersonList.Realized,
+    //      Result = view.GoalsPersonList.Result,
+    //      Target = view.GoalsPersonList.Target
+    //    };
+    //    serviceGoalsPerson.Update(goalsPerson, null);
+    //    return "Person goal altered!";
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
     public string UpdateGoalsPersonPortal(ViewCrudGoalPerson view)
     {
       try

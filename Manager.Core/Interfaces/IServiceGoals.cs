@@ -37,7 +37,7 @@ namespace Manager.Core.Interfaces
 
     string NewGoalsPersonPortal(ViewCrudGoalPerson view);
     //string NewGoalsPerson(ViewCrudGoalPerson view);
-    string UpdateGoalsPerson(ViewCrudGoalPerson view);
+    //string UpdateGoalsPerson(ViewCrudGoalPerson view);
     string UpdateGoalsPersonPortal(ViewCrudGoalPerson view);
     string UpdateGoalsPersonAchievement(ViewCrudAchievement view);
     string DeleteGoalsPerson(string id);
