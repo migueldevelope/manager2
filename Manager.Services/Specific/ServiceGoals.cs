@@ -1006,7 +1006,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Person Goals
-    public string NewGoalsPersonPortal(ViewCrudGoalPersonPortal view)
+    public string NewGoalsPersonPortal(ViewCrudGoalPerson view)
     {
       try
       {
@@ -1039,39 +1039,40 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewGoalsPerson(ViewCrudGoalPerson view)
-    {
-      try
-      {
+    //public string NewGoalsPerson(ViewCrudGoalPerson view)
+    //{
+    //  try
+    //  {
 
-        GoalsPerson goalsPerson = new GoalsPerson()
-        {
-          GoalsPeriod = view.GoalsPeriod,
-          Person = view.Person,
-          GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
-          {
-            _id = ObjectId.GenerateNewId().ToString(),
-            Weight = view.GoalsPersonList.Weight,
-            Achievement = view.GoalsPersonList.Achievement,
-            Deadline = view.GoalsPersonList.Deadline,
-            Goals = new ViewListGoal
-            {
-              _id = view.GoalsPersonList.Goals._id,
-              Name = view.GoalsPersonList.Goals.Name
-            },
-            Realized = view.GoalsPersonList.Realized,
-            Result = view.GoalsPersonList.Result,
-            Target = view.GoalsPersonList.Target
-          }
-        };
-        goalsPerson = serviceGoalsPerson.InsertNewVersion(goalsPerson).Result;
-        return "Person goal added!";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    //    GoalsPerson goalsPerson = new GoalsPerson()
+    //    {
+    //      GoalsPeriod = view.GoalsPeriod,
+    //      Person = view.Person,
+    //      GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
+    //      {
+    //        _id = ObjectId.GenerateNewId().ToString(),
+    //        Weight = view.GoalsPersonList.Weight,
+    //        Achievement = view.GoalsPersonList.Achievement,
+    //        Deadline = view.GoalsPersonList.Deadline,
+    //        Goals = new ViewListGoal
+    //        {
+    //          _id = view.GoalsPersonList.Goals._id,
+    //          Name = view.GoalsPersonList.Goals.Name
+    //        },
+    //        Realized = view.GoalsPersonList.Realized,
+    //        Result = view.GoalsPersonList.Result,
+    //        Target = view.GoalsPersonList.Target
+    //      }
+    //    };
+    //    goalsPerson = serviceGoalsPerson.InsertNewVersion(goalsPerson).Result;
+    //    return "Person goal added!";
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
+
     public string UpdateGoalsPerson(ViewCrudGoalPerson view)
     {
       try
@@ -1104,7 +1105,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateGoalsPersonPortal(ViewCrudGoalPersonPortal view)
+    public string UpdateGoalsPersonPortal(ViewCrudGoalPerson view)
     {
       try
       {

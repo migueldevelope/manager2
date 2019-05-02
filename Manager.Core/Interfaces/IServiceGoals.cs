@@ -35,10 +35,10 @@ namespace Manager.Core.Interfaces
     List<ViewCrudGoalItem> ListGoalsCompany(string idGoalsPeriod, string idCompany, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListGoalCompany> ListGoalsCompany(ref long total, int count = 10, int page = 1, string filter = "");
 
-    string NewGoalsPersonPortal(ViewCrudGoalPersonPortal view);
-    string NewGoalsPerson(ViewCrudGoalPerson view);
+    string NewGoalsPersonPortal(ViewCrudGoalPerson view);
+    //string NewGoalsPerson(ViewCrudGoalPerson view);
     string UpdateGoalsPerson(ViewCrudGoalPerson view);
-    string UpdateGoalsPersonPortal(ViewCrudGoalPersonPortal view);
+    string UpdateGoalsPersonPortal(ViewCrudGoalPerson view);
     string UpdateGoalsPersonAchievement(ViewCrudAchievement view);
     string DeleteGoalsPerson(string id);
     ViewCrudGoalPerson GetGoalsPerson(string id);

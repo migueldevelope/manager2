@@ -440,23 +440,23 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newgoalspersonportal")]
-    public string NewGoalsPersonPortal([FromBody]ViewCrudGoalPersonPortal view)
+    public string NewGoalsPersonPortal([FromBody]ViewCrudGoalPerson view)
     {
       return service.NewGoalsPersonPortal(view);
     }
 
-    /// <summary>
-    /// Inclusão de novos objetivos do período e empresa
-    /// </summary>
-    /// <param name="view">Objeto de manutenção</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPost]
-    [Route("newgoalsperson")]
-    public string NewGoalsPerson([FromBody]ViewCrudGoalPerson view)
-    {
-      return service.NewGoalsPerson(view);
-    }
+    ///// <summary>
+    ///// Inclusão de novos objetivos do período e empresa
+    ///// </summary>
+    ///// <param name="view">Objeto de manutenção</param>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpPost]
+    //[Route("newgoalsperson")]
+    //public string NewGoalsPerson([FromBody]ViewCrudGoalPerson view)
+    //{
+    //  return service.NewGoalsPerson(view);
+    //}
     /// <summary>
     /// Listar os objetivos da empresa e do período
     /// </summary>
@@ -526,7 +526,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalspersonportal")]
-    public string UpdateGoalsPersonPortal([FromBody]ViewCrudGoalPersonPortal view)
+    public string UpdateGoalsPersonPortal([FromBody]ViewCrudGoalPerson view)
     {
       return service.UpdateGoalsPersonPortal(view);
     }
