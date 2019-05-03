@@ -922,6 +922,44 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public ViewCrudGoalManagerPortal GetGoalsManagerPortal(string id)
+    {
+      try
+      {
+        GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudGoalManagerPortal()
+        {
+          _id = goalsManager._id,
+          GoalsPeriod = goalsManager.GoalsPeriod,
+          Manager = goalsManager.Manager,
+          GoalsManagerList = new ViewCrudGoalItemPortal()
+          {
+            _id = goalsManager.GoalsManagerList._id,
+            Weight = goalsManager.GoalsManagerList.Weight,
+            Achievement = goalsManager.GoalsManagerList.Achievement,
+            Deadline = goalsManager.GoalsManagerList.Deadline,
+            Goals = serviceGoals.GetAll(p => p._id == goalsManager.GoalsManagerList.Goals._id).Select(p => new ViewCrudGoal()
+            {
+              _id = p._id,
+              Name = p.Name,
+              Concept = p.Concept,
+              TypeGoals = p.TypeGoals
+            }).FirstOrDefault(),
+
+            Realized = goalsManager.GoalsManagerList.Realized,
+            Result = goalsManager.GoalsManagerList.Result,
+            Name = goalsManager.GoalsManagerList.Goals.Name,
+            Target = goalsManager.GoalsManagerList.Target
+          }
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewListGoalsItem ListGoalsManager(string idGoalsPeriod, string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -1360,8 +1398,7 @@ namespace Manager.Services.Specific
           StatusGoalsPerson = EnumStatusGoalsPerson.Open
         };
 
-        goalsPerson = serviceGoalsPersonControl.InsertNewVersion(goalsPerson).Result;
-        return "Person goal added!";
+        return serviceGoalsPersonControl.InsertNewVersion(goalsPerson).Result._id;
       }
       catch (Exception e)
       {

@@ -62,6 +62,7 @@ namespace Manager.Core.Interfaces
     ViewCrudGoalPersonControl GetGoalsPersonControl(string id);
     List<ViewListGoalPersonControl> ListGoalsPersonControl(string idmanager, ref long total, int count, int page, string filter);
     ViewListGoalPersonControl ListGoalsPersonControlMe(string idperson);
+    ViewCrudGoalManagerPortal GetGoalsManagerPortal(string id);
 
   }
 }

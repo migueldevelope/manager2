@@ -377,6 +377,20 @@ namespace Manager.Controllers
     {
       return service.GetGoalsManager(id);
     }
+
+    /// <summary>
+    /// Buscar um objetivo de empresa para um período
+    /// </summary>
+    /// <param name="id">Identificador do objetivo no período e empresa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getgoalsmanagerportal/{id}")]
+    public ViewCrudGoalManagerPortal GetGoalsManagerPortal(string id)
+    {
+      return service.GetGoalsManagerPortal(id);
+    }
+
     /// <summary>
     /// Alterar um objetivo da empresa em um período
     /// </summary>
