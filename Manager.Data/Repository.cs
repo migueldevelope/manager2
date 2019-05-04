@@ -336,6 +336,25 @@ namespace Manager.Data
         throw;
       }
     }
+    public async Task<List<T>> GetAllFreeNewVersion()
+    {
+      try
+      {
+        FilterDefinition<T> filter = FilterDefinition<T>.Empty;
+        Collation _caseInsensitiveCollation = new Collation("en", strength: CollationStrength.Primary);
+        var findOptions = new FindOptions<T>
+        {
+          Collation = _caseInsensitiveCollation
+        };
+        IAsyncCursor<T> result = await _collection.FindAsync(filter, findOptions);
+        return result.ToList();
+      }
+      catch
+      {
+        throw;
+      }
+    }
+
     public async Task<long> CountFreeNewVersion(Expression<Func<T, bool>> filter)
     {
       try

@@ -429,10 +429,13 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe estão na jornada de Definição de Efetivação | Checkpoint, e não foi feito ainda seu preenchimento.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
-                    "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
-                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
-          Subject = "Notificação de Vencimentos da jornada de Decisão de Efetivação | Checkpoint",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>",
+                                  "Identificamos que alguns colaboradores da sua equipe estão na jornada de Definição de Efetivação | Check-Point. Você precisa ficar atento para não perder os prazos da sua decisão de efetivação (ou não) deste novo colaborador.<br><br>",
+                                  "Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que esta ação é obrigatória dentro desta jornada!.<br><br>",
+                                  "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
+                                  "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "#VamosSerMaisFluidos<br>"),
+          Subject = "E-mail de aviso ao gestor do checkpoint, à vencer 30 dias, 15 dias, até 7 dias, vencendo hoje e vencidos",
           Name = "checkpointmanagerdeadline",
           Link = path
         };
@@ -447,20 +450,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    #region Monitoring Mail
-    public MailModel MonitoringApproval(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringapproval").Result;
-        return model ?? MonitoringApprovalDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
+    #region Goals
     public MailModel GoalsApproval(string path)
     {
       try
@@ -473,29 +463,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
-    private MailModel MonitoringApprovalDefault(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,<br>Seu gestor <strong>{Manager}</strong> acaba de registrar ações de monitoramento da sua performance.<br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!<br><br>Para acessar o Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
-          Subject = "Notificação de Aprovação do Monitoramento | Monitoring",
-          Name = "monitoringapproval",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     private MailModel GoalsApprovalDefault(string path)
     {
       try
@@ -517,47 +484,12 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public MailModel MonitoringApprovalManager(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringapprovalmanager").Result;
-        return model ?? MonitoringApprovalManagerDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     public MailModel GoalsApprovalManager(string path)
     {
       try
       {
         MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "goalsapprovalmanager").Result;
         return model ?? GoalsApprovalManagerDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private MailModel MonitoringApprovalManagerDefault(string path)
-    {
-      try
-      {
-        MailModel model = new MailModel
-        {
-          Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,<br><br>Seu colaborador <strong>{Person}</strong> acaba de propor novos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
-          Subject = "Notificação de Continuar o Monitoramento | Monitoring",
-          Name = "monitoringapprovalmanager",
-          Link = path
-        };
-        // Insert
-        model = serviceMailModel.InsertNewVersion(model).Result;
-        return model;
       }
       catch (Exception e)
       {
@@ -585,20 +517,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
-    public MailModel MonitoringDisapproval(string path)
-    {
-      try
-      {
-        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringdisapproval").Result;
-        return model ?? MonitoringDisapprovalDefault(path);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     public MailModel GoalsDisapproval(string path)
     {
       try
@@ -611,7 +529,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     private MailModel GoalsDisapprovalDefault(string path)
     {
       try
@@ -633,7 +550,87 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    #endregion
 
+    #region Monitoring Mail
+    public MailModel MonitoringApproval(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringapproval").Result;
+        return model ?? MonitoringApprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel MonitoringApprovalDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá <strong>{Person}</strong>,<br>Seu gestor <strong>{Manager}</strong> acaba de registrar ações de monitoramento da sua performance.<br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!<br><br>Para acessar o Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Aprovação do Monitoramento | Monitoring",
+          Name = "monitoringapproval",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel MonitoringApprovalManager(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringapprovalmanager").Result;
+        return model ?? MonitoringApprovalManagerDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private MailModel MonitoringApprovalManagerDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá <strong>{Manager}</strong>,<br><br>Seu colaborador <strong>{Person}</strong> acaba de propor novos registros de monitoramento.<br>Acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajado o colaborador estiver em suas ações de desenvolvimento, mais fluida será a carreira dele e melhores resultados você alcançará como gestor.<br><br>Para acessar o sistema Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Continuar o Monitoramento | Monitoring",
+          Name = "monitoringapprovalmanager",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public MailModel MonitoringDisapproval(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringdisapproval").Result;
+        return model ?? MonitoringDisapprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private MailModel MonitoringDisapprovalDefault(string path)
     {
       try
@@ -674,10 +671,13 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe, estão na jornada de Monitoramento | Monitoring, mas não temos registro de seu feedback a mais de 90 dias.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre-se que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
-                    "{LIST1}",
-                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
-          Subject = "Notificação da jornada de Monitoramento | Monitoring",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>",
+                                  "Identificamos que alguns colaboradores da sua equipe estão na Jornada de Monitoramento | Monitoring, porém não tiveram interação com você há mais de 90 dias.<br><br>",
+                                  "Para que os movimentos de carreira sejam mais fluidos e o engajamento da sua equipe seja cada vez maior, não perca tempo,... dá uma passada lá na plataforma e retome suas conversas e combinações!<br><br>",
+                                  "{LIST1}",
+                                  "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "#VamosSerMaisFluidos<br>"),
+          Subject = "E-mail de aviso ao gestor do Monitoramento | Monitoring à mais de 90 dias",
           Name = "monitoringmanagerdeadline",
           Link = path
         };
@@ -709,9 +709,12 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>Identificamos que você está na jornada de Monitoramento | Monitoring, mas não temos registro de feedback a mais de 90 dias.<br><br>Seja protagonista de sua carreira e inicie agora mesmo o seu monitoramento, assim você ajuda seu gestor a cuidar da sua carreira.<br><br>",
-                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
-          Subject = "Notificação do Colaborador da jornada de Monitoramento | Monitoring",
+          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>",
+                                  "Identificamos que você está na Jordana de Monitoramento | Monitoring, mas não teve nenhuma interação com seu gestor há mais de 90 dias.<br><br>",
+                                  "Seja protagonista de sua carreira e retome agora mesmo o seu monitoramento! <br><br>",
+                                  "Faça isso agora! Acesse a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "#VamosSerMaisFluidos<br>"),
+          Subject = "E-mail de aviso ao colaborador do Monitoramento | Monitoring à mais de 90 dias",
           Name = "monitoringmanagerdeadline",
           Link = path
         };
@@ -946,8 +949,12 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Manager}</strong>,<br><br>O(a) colaborador(a) <strong>{Person}</strong> foi admitido, é importante que você apresente a ele nossa metodologia de carreira fluida.<br><br>A apresentação é fundamental para preparar o(a) colaborador(a) para as próximas jornadas, e mostrar para ele(a) como nossa empresa se preocupa com sua carreira.<br><br>Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
-          Subject = "Notificação de Admissão para jornada de Embarque | Onboarding",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>",
+                                  "O colaborador <strong>{Person}</strong> acaba de ser admitido. Recomendamos que, após o seu período inicial de integração, você apresente a ele as funcionalidades de nossa plataforma e promova uma conversa sobre o <strong>Mapa de Competências</strong>.<br><br>",
+                                  "Esta conversa é fundamental para que você faça um acordo de expectativas em relação ao que dele é esperado no exercício do cargo.<br><br>",
+                                  "O ideal é que você possa realizar este acordo antes dos primeiros 30(trinta) dias de empresa.<br><br>",
+                                  "#VamosSerMaisFluidos<br>"),
+          Subject = "Notificação de Admissão de Novo Colaborador | Jornada de Embarque | Onboarding",
           Name = "onboardingadmission",
           Link = path
         };
@@ -979,10 +986,13 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que, alguns colaboradores da sua equipe, estão na jornada de Embarque || Onboarding, mas não tiveram ainda o seu feedback de apresentação.<br><br>Coloque na sua agenda, faça de acordo com sua disponibilidade, mas lembre que é vital para evoluirmos na gestão de pessoas fluidas.<br><br>",
-                    "{LIST1}{LIST2}{LIST3}{LIST4}",
-                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
-          Subject = "Notificação de Vencimentos da jornada de Embarque | Onboarding",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>",
+                                  "Identificamos que alguns colaboradores da sua equipe estão na jornada Embarque | Onboarding, mas não tiveram ainda o registro de sua conversa de apresentação do Mapa de Competências.<br><br>",
+                                  "Vai lá,... faça acontecer este acordo de expectativas, que será fundamental para um ótimo desenvolvimento de carreira do seu novo colaborador.<br><br>",
+                                  "{LIST1}{LIST2}{LIST3}{LIST4}",
+                                  "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "#VamosSerMaisFluidos<br>"),
+          Subject = "E-mail de aviso ao gestor do onboarding, à vencer 30 dias, 15 dias, até 7 dias, vencendo hoje e vencidos",
           Name = "onboardingmanagerdeadline",
           Link = path
         };
@@ -1050,10 +1060,13 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>Identificamos que existem alguns colaboradores com planos de ações com situações que requerem sua atenção.<br><br>Informe a resolução destes planos de ação, pois isto fecha o círculo virtuoso das carreiras fluidas.<br><br>",
-                    "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
-                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
-          Subject = "Notificação de Plano de Ação | Action Plan",
+          Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>",
+                                  "Identificamos que existem ações de desenvolvimento da sua equipe com situações que requerem sua atenção!<br><br>",
+                                  "Verifique o status destas ações, pois isto fomenta o círculo virtuoso das carreiras fluidas.<br><br>",
+                                  "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
+                                  "Para acessar a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "#VamosSerMaisFluidos<br>"),
+          Subject = "E-mail de aviso para gestor de planos de ação à vencer em 30 dias, à vencer em 15 dias, à vencer em até 7 dias, vence hoje, vencidos",
           Name = "actionplanmanagerdeadline",
           Link = path
         };
@@ -1085,10 +1098,13 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>Identificamos que existem planos de ações com situações que requerem sua atenção.<br><br>Informe a resolução destes planos de ação, pois isto fecha o círculo virtuoso das carreiras fluidas.<br><br>",
-                    "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
-                    "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos"),
-          Subject = "Notificação do Colaborador do Plano de Ação | Action Plan",
+          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>",
+                                  "Identificamos que existem ações de desenvolvimento com situações que requerem a sua atenção.<br><br>",
+                                  "Verifique o status destas ações de desenvolvimento, pois ela são fundamentais para o seu desenvolvimento e para a fluidez de sua carreira!<br><br>",
+                                  "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
+                                  "Para acessar a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "#VamosSerMaisFluidos<br>"),
+          Subject = "E-mail de aviso para o colaborador de planos de ação à vencer em 30 dias, à vencer em 15 dias, à vencer em até 7 dias, vence hoje, vencidos.",
           Name = "actionplandeadline",
           Link = path
         };
