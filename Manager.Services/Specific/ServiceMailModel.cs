@@ -410,6 +410,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    // Serviço de Notificação
     public MailModel CheckpointManagerDeadline(string path)
     {
       try
@@ -435,7 +436,7 @@ namespace Manager.Services.Specific
                                   "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
                                   "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>",
                                   "#VamosSerMaisFluidos<br>"),
-          Subject = "E-mail de aviso ao gestor do checkpoint, à vencer 30 dias, 15 dias, até 7 dias, vencendo hoje e vencidos",
+          Subject = "Notificação de Vencimentos da Jornada de Definição de Efetivação | Check-Point",
           Name = "checkpointmanagerdeadline",
           Link = path
         };
@@ -652,6 +653,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    // Serviço de Notificação
     public MailModel MonitoringManagerDeadline(string path)
     {
       try
@@ -675,9 +677,9 @@ namespace Manager.Services.Specific
                                   "Identificamos que alguns colaboradores da sua equipe estão na Jornada de Monitoramento | Monitoring, porém não tiveram interação com você há mais de 90 dias.<br><br>",
                                   "Para que os movimentos de carreira sejam mais fluidos e o engajamento da sua equipe seja cada vez maior, não perca tempo,... dá uma passada lá na plataforma e retome suas conversas e combinações!<br><br>",
                                   "{LIST1}",
-                                  "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "Para acessar a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
                                   "#VamosSerMaisFluidos<br>"),
-          Subject = "E-mail de aviso ao gestor do Monitoramento | Monitoring à mais de 90 dias",
+          Subject = "Notificação de Monitoramento | Monitoring",
           Name = "monitoringmanagerdeadline",
           Link = path
         };
@@ -714,8 +716,8 @@ namespace Manager.Services.Specific
                                   "Seja protagonista de sua carreira e retome agora mesmo o seu monitoramento! <br><br>",
                                   "Faça isso agora! Acesse a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
                                   "#VamosSerMaisFluidos<br>"),
-          Subject = "E-mail de aviso ao colaborador do Monitoramento | Monitoring à mais de 90 dias",
-          Name = "monitoringmanagerdeadline",
+          Subject = "Notificação de Monitoramento | Monitoring",
+          Name = "monitoringdeadline",
           Link = path
         };
         // Insert
@@ -930,6 +932,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    // Serviço de Notificação
     public MailModel OnboardingAdmission(string path)
     {
       try
@@ -954,7 +957,7 @@ namespace Manager.Services.Specific
                                   "Esta conversa é fundamental para que você faça um acordo de expectativas em relação ao que dele é esperado no exercício do cargo.<br><br>",
                                   "O ideal é que você possa realizar este acordo antes dos primeiros 30(trinta) dias de empresa.<br><br>",
                                   "#VamosSerMaisFluidos<br>"),
-          Subject = "Notificação de Admissão de Novo Colaborador | Jornada de Embarque | Onboarding",
+          Subject = "Notificação de Admissão de Novo Colaborador, Jornada de Embarque | Onboarding",
           Name = "onboardingadmission",
           Link = path
         };
@@ -990,9 +993,9 @@ namespace Manager.Services.Specific
                                   "Identificamos que alguns colaboradores da sua equipe estão na jornada Embarque | Onboarding, mas não tiveram ainda o registro de sua conversa de apresentação do Mapa de Competências.<br><br>",
                                   "Vai lá,... faça acontecer este acordo de expectativas, que será fundamental para um ótimo desenvolvimento de carreira do seu novo colaborador.<br><br>",
                                   "{LIST1}{LIST2}{LIST3}{LIST4}",
-                                  "Para acessar o sistema <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "Para acessar a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
                                   "#VamosSerMaisFluidos<br>"),
-          Subject = "E-mail de aviso ao gestor do onboarding, à vencer 30 dias, 15 dias, até 7 dias, vencendo hoje e vencidos",
+          Subject = "Notificação de Vencimento da Jornada de Embarque | Onboarding",
           Name = "onboardingmanagerdeadline",
           Link = path
         };
@@ -1041,6 +1044,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    // Serviço de Notificação
     public MailModel PlanManagerDeadline(string path)
     {
       try
@@ -1066,7 +1070,7 @@ namespace Manager.Services.Specific
                                   "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
                                   "Para acessar a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
                                   "#VamosSerMaisFluidos<br>"),
-          Subject = "E-mail de aviso para gestor de planos de ação à vencer em 30 dias, à vencer em 15 dias, à vencer em até 7 dias, vence hoje, vencidos",
+          Subject = "Notificação de Ação de Desenvolvimento | Action Plans",
           Name = "actionplanmanagerdeadline",
           Link = path
         };
@@ -1104,7 +1108,7 @@ namespace Manager.Services.Specific
                                   "{LIST1}{LIST2}{LIST3}{LIST4}{LIST5}",
                                   "Para acessar a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
                                   "#VamosSerMaisFluidos<br>"),
-          Subject = "E-mail de aviso para o colaborador de planos de ação à vencer em 30 dias, à vencer em 15 dias, à vencer em até 7 dias, vence hoje, vencidos.",
+          Subject = "Notificação de Ação de Desenvolvimento | Action Plans do colaborador",
           Name = "actionplandeadline",
           Link = path
         };

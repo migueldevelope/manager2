@@ -1,6 +1,5 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
-using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
@@ -8,7 +7,6 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.WorkModel;
 using Manager.Views.BusinessCrud;
-using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -361,7 +359,7 @@ namespace Manager.Services.Specific
 
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores com situação de <strong>vencida</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores que estão com o <strong>prazo expirado</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST1}", list);
 
@@ -370,7 +368,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores que a jornada <strong>vence hoje</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores onde a jornada <strong>vence hoje</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST2}", list);
 
@@ -379,7 +377,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores que a jornada <strong>vence em até 7 dias</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores onde a jornada <strong>vence em até 7 dias</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST3}", list);
 
@@ -388,7 +386,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores que a jornada <strong>vence em 15 dias</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores onde a jornada <strong>vence em 15 dias</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST4}", list);
 
@@ -397,7 +395,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores que a jornada <strong>vence em 30 dias</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores onde a jornada <strong>vence em 30 dias</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST5}", list);
 
@@ -845,7 +843,7 @@ namespace Manager.Services.Specific
 
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores com situação de <strong>vencida</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores que estão <strong>nesta situação</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST1}", list);
 
@@ -854,7 +852,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores que a jornada <strong>vence hoje</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores onde a jornada <strong>vence hoje</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST2}", list);
 
@@ -863,7 +861,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores que a jornada <strong>vence em até 7 dias</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores onde a jornada <strong>vence em até 7 dias</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST3}", list);
 
@@ -872,7 +870,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores que a jornada <strong>vence em 15 dias</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores onde a jornada <strong>vence em 15 dias</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST4}", list);
 
@@ -930,9 +928,7 @@ namespace Manager.Services.Specific
             if (work != null)
               listManager.Add(work);
           }
-
         }
-
 
         if (listManager.Count > 0)
         {
@@ -1124,7 +1120,7 @@ namespace Manager.Services.Specific
               list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Colaboradores com plano de ação <strong>vencido</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Colaboradores com ação de desenvolvimento <strong>vencida</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST1}", list);
 
@@ -1137,7 +1133,7 @@ namespace Manager.Services.Specific
               list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Colaboradores com plano de ação que <strong>vence hoje</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence hoje</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST2}", list);
 
@@ -1150,7 +1146,7 @@ namespace Manager.Services.Specific
               list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Colaboradores com plano de ação que <strong>vence em até 7 dias</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em até 7 dias</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST3}", list);
 
@@ -1163,7 +1159,7 @@ namespace Manager.Services.Specific
               list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Colaboradores com plano de ação que <strong>vence em 15 dias</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em 15 dias</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST4}", list);
 
@@ -1176,7 +1172,7 @@ namespace Manager.Services.Specific
               list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Colaboradores com plano de ação que <strong>vence em 30 dias</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em 30 dias</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST5}", list);
 
@@ -1233,7 +1229,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Plano de ação <strong>vencido</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Ação de desenvolvimento <strong>vencida</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST1}", list);
 
@@ -1243,7 +1239,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Plano de ação que <strong>vence hoje</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Ação de desenvolvimento que <strong>vence hoje</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST2}", list);
 
@@ -1253,7 +1249,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Plano de ação que <strong>vence em até 7 dias</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Ação de desenvolvimento que <strong>vence em até 7 dias</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST3}", list);
 
@@ -1263,7 +1259,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Plano de ação que <strong>vence em 15 dias</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Ação de desenvolvimento que <strong>vence em 15 dias</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST4}", list);
 
@@ -1273,7 +1269,7 @@ namespace Manager.Services.Specific
             list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
 
           if (!string.IsNullOrEmpty(list))
-            list = string.Concat("Plano de ação que <strong>vence em 30 dias</strong>:<br><table>", list, "</table><br>");
+            list = string.Concat("Ação de desenvolvimento que <strong>vence em 30 dias</strong>:<br><table>", list, "</table><br>");
 
           body = body.Replace("{LIST5}", list);
 
