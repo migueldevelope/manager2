@@ -1549,7 +1549,7 @@ namespace Manager.Services.Specific
               item._id = goals._id;
             }
           }
-          catch (Exception e)
+          catch (Exception)
           {
           }
         }
@@ -1600,7 +1600,7 @@ namespace Manager.Services.Specific
             detail._id = goals._id;
           }
         }
-        catch (Exception e)
+        catch (Exception)
         {
 
         }

@@ -25,7 +25,7 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        base.InitOffAccount();
+        //base.InitOffAccount();
         serviceAccount = new ServiceAccount(context, context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);

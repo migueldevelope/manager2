@@ -2,44 +2,45 @@
 using Manager.Core.Business;
 using Manager.Data;
 using Manager.Services.Commons;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Authentication;
-using Microsoft.AspNetCore.Http.Features;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
-using System.Threading;
 
 namespace Manager.Test.Commons
 {
   public abstract class TestCommons<TEntity> : IDisposable
   {
     public DataContext context;
-    public ServiceGeneric<Person> service;
     public BaseUser baseUser;
-    public IHttpContextAccessor contextAccessor;
 
     public void Dispose()
     {
-
       GC.SuppressFinalize(this);
+    }
+
+    protected void InitAccount()
+    {
+      try
+      {
+        context = new DataContext("mongodb://analisa_test:bti9010@10.0.0.15:27017/analisa_test", "analisa_test");
+        // Limpar todas as collections
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
 
     protected void Init()
     {
       try
       {
-        this.context = new DataContext("mongodb://test:bti9010@10.0.0.14:27017/evaluations_test", "evaluations_test");
-        //this.context = new DataContext("mongodb://homologacao:bti9010@10.0.0.15:27017/evaluations_homologacao", "evaluations_homologacao");
-        //this.context = new DataContext("mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations", "evaluations");
-        //this.context = new DataContext("mongodb://analisa:x14r53p5!a@52.170.151.68:27017/analisainfra", "analisainfra");
-        this.service = new ServiceGeneric<Person>(context);
+        context = new DataContext("mongodb://analisa_test:bti9010@10.0.0.15:27017/analisa_test", "analisa_test");
+        // Limpar todas as collections
 
-        //var user = this.service.GetAuthentication(p => p.User.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
-        var user = this.service.GetAuthentication(p => p.User.Mail == "suporte@jmsoft.com.br").FirstOrDefault();
+        // Buscar a pessoa de teste
+        ServiceGeneric<Person> service = new ServiceGeneric<Person>(context);
+        Person user = service.GetFreeNewVersion(p => p.User.Mail == "suporte@jmsoft.com.br").Result;
         baseUser = new BaseUser()
         {
           NamePerson = user.User.Name,
@@ -48,29 +49,6 @@ namespace Manager.Test.Commons
           Mail = user.User.Mail,
           NameAccount = "Suport"
         };
-
-        this.contextAccessor = new HttpContextAccessor();
-
-
-        var users = contextAccessor.HttpContext;
-        var claims = new[]
-        {
-          new Claim(ClaimTypes.Name, this.baseUser.NamePerson),
-          new Claim(ClaimTypes.Hash, this.baseUser._idAccount.ToString()),
-          new Claim(ClaimTypes.Email, this.baseUser.Mail),
-          new Claim(ClaimTypes.NameIdentifier, this.baseUser.NameAccount),
-          new Claim(ClaimTypes.UserData, this.baseUser._idPerson.ToString())
-        };
-
-        var claim = new ClaimsIdentity(claims);
-        var item = new ClaimsPrincipal(claim);
-
-        var http = new GenericHttpContext()
-        {
-          User = item
-        }; ;
-        contextAccessor.HttpContext = http;
-
       }
       catch (Exception e)
       {
@@ -78,51 +56,12 @@ namespace Manager.Test.Commons
       }
     }
 
-    protected void InitOffAccount()
-    {
-      this.context = new DataContext("mongodb://test:bti9010@10.0.0.14:27017/evaluations_test", "evaluations_test");
-      //this.context = new DataContext("mongodb://homologacao:bti9010@10.0.0.15:27017/evaluations_homologacao", "evaluations_homologacao");
-      //this.context = new DataContext("mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations", "evaluations");
-      //this.context = new DataContext("mongodb://analisa:x14r53p5!a@52.170.151.68:27017/analisainfra", "analisainfra");
-    }
-
     public IList<ValidationResult> ValidateModel(object model)
     {
-      var validationResults = new List<ValidationResult>();
-      var ctx = new ValidationContext(model, null, null);
+      List<ValidationResult> validationResults = new List<ValidationResult>();
+      ValidationContext ctx = new ValidationContext(model, null, null);
       Validator.TryValidateObject(model, ctx, validationResults, true);
       return validationResults;
     }
-
-    public class GenericHttpContext : HttpContext
-    {
-      public GenericHttpContext()
-        : base()
-      {
-      }
-
-      public override IFeatureCollection Features => throw new NotImplementedException();
-
-      public override HttpRequest Request => throw new NotImplementedException();
-
-      public override HttpResponse Response => throw new NotImplementedException();
-
-      public override ConnectionInfo Connection => throw new NotImplementedException();
-
-      public override WebSocketManager WebSockets => throw new NotImplementedException();
-
-      public override ClaimsPrincipal User { get; set; }
-      public override IDictionary<object, object> Items { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-      public override IServiceProvider RequestServices { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-      public override CancellationToken RequestAborted { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-      public override string TraceIdentifier { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-      public override ISession Session { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-      public override Microsoft.AspNetCore.Http.Authentication.AuthenticationManager Authentication => throw new NotImplementedException();
-      public override void Abort()
-      {
-        throw new NotImplementedException();
-      }
-    }
-
   }
 }

@@ -28,7 +28,7 @@ namespace Manager.Test.Test.Complete
 
         servicePerson._user = base.baseUser;
 
-        serviceIndicators.SetUser(base.contextAccessor);
+        serviceIndicators.SetUser(base.baseUser);
         //serviceIndicators._user = base.baseUser;
       }
       catch (Exception e)

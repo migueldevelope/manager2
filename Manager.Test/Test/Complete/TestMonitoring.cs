@@ -21,7 +21,7 @@ namespace Manager.Test.Test.Complete
     {
       base.Init();
       serviceMonitoring = new ServiceMonitoring(context, context, "");
-      serviceMonitoring.SetUser(base.contextAccessor);
+      serviceMonitoring.SetUser(base.baseUser);
 
       servicePerson = new ServiceGeneric<Person>(base.context);
       servicePerson._user = base.baseUser;

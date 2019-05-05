@@ -18,7 +18,7 @@ namespace Manager.Test.Test.Complete
     {
       base.Init();
       serviceCheckpoint = new ServiceCheckpoint(context, context, "");
-      serviceCheckpoint.SetUser(base.contextAccessor);
+      serviceCheckpoint.SetUser(base.baseUser);
 
       servicePerson = new ServiceGeneric<Person>(base.context)
       {

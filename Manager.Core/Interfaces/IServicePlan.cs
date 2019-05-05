@@ -1,4 +1,5 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
@@ -13,6 +14,7 @@ namespace Manager.Core.Interfaces
   {
     #region Plan
     void SetUser(IHttpContextAccessor contextAccessor);
+    void SetUser(BaseUser user);
     void SetAttachment(string idplan, string idmonitoring, string url, string fileName, string attachmentid);
     string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan);
     string RemovePlanActivity(string id);

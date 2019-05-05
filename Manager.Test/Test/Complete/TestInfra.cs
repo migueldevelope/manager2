@@ -29,7 +29,7 @@ namespace Manager.Test.Test.Complete
     {
       base.Init();
       serviceInfra = new ServiceInfra(base.context);
-      serviceInfra.SetUser(base.contextAccessor);
+      serviceInfra.SetUser(base.baseUser);
 
       servicePerson = new ServiceGeneric<Person>(base.context);
       serviceGroup = new ServiceGeneric<Group>(base.context);

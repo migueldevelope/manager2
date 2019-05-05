@@ -63,6 +63,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Listar os objetivos
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
@@ -81,6 +82,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Listar os objetivos
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
@@ -577,7 +579,8 @@ namespace Manager.Controllers
     /// <summary>
     /// Inclusão de novos objetivos do período e empresa
     /// </summary>
-    /// <param name="view">Objeto de manutenção</param>
+    /// <param name="idperson">Identificador da pessoa</param>
+    /// <param name="idperiod">Identificador do período</param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
@@ -590,9 +593,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Listar os objetivos
     /// </summary>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
+    /// <param name="id">Identificador da pessoa</param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
@@ -608,6 +609,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Listar os objetivos
     /// </summary>
+    /// <param name="id">Identificador do gestor</param>
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>

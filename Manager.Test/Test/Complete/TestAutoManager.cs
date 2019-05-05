@@ -21,11 +21,11 @@ namespace Manager.Test.Test.Complete
 
     public TestAutoManager()
     {
-      base.Init();
+      Init();
       servicePerson = new ServicePerson(context, context);
-      servicePerson.SetUser(contextAccessor);
+      servicePerson.SetUser(baseUser);
       serviceAutoManager = new ServiceAutoManager(context, context);
-      serviceAutoManager.SetUser(base.contextAccessor);
+      serviceAutoManager.SetUser(baseUser);
     }
 
     //[Fact]

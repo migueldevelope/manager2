@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Manager.Test.Test.Complete
 {
-  public class TestPlan : TestCommons<Account>
+  public class TestPlan : TestCommons<TestPlan>
   {
     private readonly IServicePlan servicePlan;
     private readonly ServiceGeneric<Person> servicePerson;
@@ -21,13 +21,13 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        base.Init();
+        Init();
         servicePlan = new ServicePlan(context, context, "");
-        servicePerson = new ServiceGeneric<Person>(base.context)
+        servicePerson = new ServiceGeneric<Person>(context)
         {
           _user = base.baseUser
         };
-        servicePlan.SetUser(base.contextAccessor);
+        servicePlan.SetUser(baseUser);
         //servicePlan._user = base.baseUser;
       }
       catch (Exception e)
