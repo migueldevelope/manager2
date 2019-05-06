@@ -1271,6 +1271,7 @@ namespace Manager.Services.Specific
 
         List<ViewCrudGoalItem> detailManager = null;
         if (person.Manager != null)
+        {
           detailManager = serviceGoalsManager.GetAll(p => p.GoalsPeriod._id == idGoalsPeriod
                     && p.Manager._id == person.Manager._id)
                     .Select(p => new ViewCrudGoalItem()
@@ -1279,19 +1280,25 @@ namespace Manager.Services.Specific
                       Weight = p.GoalsManagerList.Weight,
                       Achievement = p.GoalsManagerList.Achievement,
                       Deadline = p.GoalsManagerList.Deadline,
-                      Goals = p.GoalsManagerList == null ? null : serviceGoals.GetAll(x => x._id == p.GoalsManagerList.Goals._id).Select(x => new ViewCrudGoal()
+                      Goals = p.GoalsManagerList == null ? null : new ViewCrudGoal()
                       {
-                        _id = x._id,
-                        Name = x.Name,
-                        Concept = x.Concept,
-                        TypeGoals = x.TypeGoals
-                      }).FirstOrDefault(),
+                        _id = p.GoalsManagerList.Goals._id,
+                        Name = p.GoalsManagerList.Goals.Name
+                      },
                       Realized = p.GoalsManagerList.Realized,
                       Result = p.GoalsManagerList.Result,
                       Name = p.GoalsManagerList.Goals.Name,
                       Target = p.GoalsManagerList.Target
                     }).ToList();
 
+          foreach (var item in detailManager)
+          {
+            var goal = serviceGoals.GetAll(p => p._id == item.Goals._id).FirstOrDefault();
+            item.Goals.Concept = goal.Concept;
+            item.Goals.TypeGoals = goal.TypeGoals;
+          }
+        }
+          
         List<ViewCrudGoalItem> detail = serviceGoalsPerson.GetAll(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Person._id == idPerson).ToList()
           .Select(p => new ViewCrudGoalItem()
