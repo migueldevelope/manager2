@@ -97,7 +97,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Send();
+        // Aqui você ativa o teste para o Ricardo da resolution com true e false vai para a gestão.
+        Send(false);
         var timer = new Timer
         {
           //24 hours em milliseconds
@@ -116,7 +117,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Send();
+        // Aqui você ativa o teste para o Ricardo da resolution com true e false vai para a gestão.
+        Send(false);
       }
       catch (Exception ex)
       {
@@ -126,7 +128,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Send Messages
-    private void Send()
+    private void Send(bool sendTest)
     {
       try
       {
@@ -149,7 +151,7 @@ namespace Manager.Services.Specific
                 Local = "ManagerMessages"
               };
               serviceLog.NewLog(log);
-              SendMessageAccount();
+              SendMessageAccount(sendTest);
             }
           }
         }
@@ -159,15 +161,15 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void SendMessageAccount()
+    private void SendMessageAccount(bool sendTest)
     {
       try
       {
-        OnboardingAdmission();
-        OnboardingManagerDeadline();
-        CheckpointManagerDeadline();
-        MonitoringManagerDeadline();
-        PlanManagerDeadline();
+        OnboardingAdmission(sendTest);
+        OnboardingManagerDeadline(sendTest);
+        CheckpointManagerDeadline(sendTest);
+        MonitoringManagerDeadline(sendTest);
+        PlanManagerDeadline(sendTest);
       }
       catch (Exception)
       {
@@ -177,7 +179,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Checkpoint
-    private void CheckpointManagerDeadline()
+    private void CheckpointManagerDeadline(bool sendTest)
     {
       try
       {
@@ -326,7 +328,7 @@ namespace Manager.Services.Specific
           managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
           managerNotification.ThirtyDays = managerNotification.ThirtyDays.OrderBy(o => o.User.Name).ToList();
           listManagerNotification.Add(managerNotification);
-          MailCheckpointManagerDeadline(listManagerNotification);
+          MailCheckpointManagerDeadline(listManagerNotification, sendTest);
         }
       }
       catch (Exception)
@@ -334,7 +336,7 @@ namespace Manager.Services.Specific
 
       }
     }
-    private void MailCheckpointManagerDeadline(List<ManagerNotification> listManager)
+    private void MailCheckpointManagerDeadline(List<ManagerNotification> listManager, bool sendTest)
     {
       try
       {
@@ -402,10 +404,15 @@ namespace Manager.Services.Specific
           MailLog sendMail = new MailLog
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-            To = new List<MailLogAddress>()
-              {
-                new MailLogAddress(item.Manager.Mail, item.Manager.Name)
-              },
+            To = sendTest ?
+              new List<MailLogAddress>()
+                {
+                  new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+                }:
+              new List<MailLogAddress>()
+                {
+                  new MailLogAddress(item.Manager.Mail, item.Manager.Name)
+                },
             Priority = EnumPriorityMail.Low,
             _idPerson = item.Manager._id,
             NamePerson = item.Manager.Name,
@@ -435,7 +442,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Monitoring
-    private void MonitoringManagerDeadline()
+    private void MonitoringManagerDeadline(bool sendTest)
     {
       try
       {
@@ -505,7 +512,7 @@ namespace Manager.Services.Specific
           managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.User.Name).ToList();
           listManagerNotification.Add(managerNotification);
           // Enviar para o gestor
-          MailMonitoringManagerDeadline(listManagerNotification);
+          MailMonitoringManagerDeadline(listManagerNotification, sendTest);
           // Enviar para o colaborador
           List<Person> listPerson = new List<Person>();
           foreach (var item in listManager)
@@ -513,7 +520,7 @@ namespace Manager.Services.Specific
               listPerson.Add(item.Person);
 
           if (listPerson.Count > 0)
-            MailMonitoringDeadline(listPerson);
+            MailMonitoringDeadline(listPerson, sendTest);
         }
       }
       catch (Exception)
@@ -521,7 +528,7 @@ namespace Manager.Services.Specific
 
       }
     }
-    private void MailMonitoringManagerDeadline(List<ManagerNotification> listManager)
+    private void MailMonitoringManagerDeadline(List<ManagerNotification> listManager, bool sendTest)
     {
       try
       {
@@ -549,7 +556,12 @@ namespace Manager.Services.Specific
           MailLog sendMail = new MailLog
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-            To = new List<MailLogAddress>()
+            To = sendTest ?
+              new List<MailLogAddress>()
+              {
+                new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+              } :
+              new List<MailLogAddress>()
               {
                 new MailLogAddress(item.Manager.Mail, item.Manager.Name)
               },
@@ -579,7 +591,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void MailMonitoringDeadline(List<Person> listPerson)
+    private void MailMonitoringDeadline(List<Person> listPerson, bool sendTest)
     {
       try
       {
@@ -595,10 +607,15 @@ namespace Manager.Services.Specific
           MailLog sendMail = new MailLog
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-            To = new List<MailLogAddress>()
-              {
-                new MailLogAddress(item.Manager.Mail, item.Manager.Name)
-              },
+            To = sendTest ?
+              new List<MailLogAddress>()
+                {
+                  new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+                } :
+              new List<MailLogAddress>()
+                {
+                  new MailLogAddress(item.Manager.Mail, item.Manager.Name)
+                },
             Priority = EnumPriorityMail.Low,
             _idPerson = item._id,
             NamePerson = item.User.Name,
@@ -620,7 +637,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Onboarding
-    private void OnboardingAdmission()
+    private void OnboardingAdmission(bool sendTest)
     {
       try
       {
@@ -637,7 +654,7 @@ namespace Manager.Services.Specific
           view = serviceLogMessages.NewNotExist(view);
           if (view != null)
             if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
-              MailOnboardingAdmission(item);
+              MailOnboardingAdmission(item, sendTest);
         }
       }
       catch (Exception)
@@ -645,7 +662,7 @@ namespace Manager.Services.Specific
 
       }
     }
-    private void MailOnboardingAdmission(Person person)
+    private void MailOnboardingAdmission(Person person, bool sendTest)
     {
       try
       {
@@ -663,10 +680,15 @@ namespace Manager.Services.Specific
         MailLog sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-          To = new List<MailLogAddress>()
-          {
-            new MailLogAddress(person.Manager.Mail, person.Manager.Name)
-          },
+          To = sendTest ?
+            new List<MailLogAddress>()
+              {
+                new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+              } :
+            new List<MailLogAddress>()
+              {
+                new MailLogAddress(person.Manager.Mail, person.Manager.Name)
+              },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
           NamePerson = person.User.Name,
@@ -683,7 +705,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void OnboardingManagerDeadline()
+    private void OnboardingManagerDeadline(bool sendTest)
     {
       try
       {
@@ -811,7 +833,7 @@ namespace Manager.Services.Specific
           managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
           managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
           listManagerNotification.Add(managerNotification);
-          MailOnboardingManagerDeadline(listManagerNotification);
+          MailOnboardingManagerDeadline(listManagerNotification, sendTest);
         }
       }
       catch (Exception)
@@ -819,7 +841,7 @@ namespace Manager.Services.Specific
 
       }
     }
-    private void MailOnboardingManagerDeadline(List<ManagerNotification> listManager)
+    private void MailOnboardingManagerDeadline(List<ManagerNotification> listManager, bool sendTest)
     {
       try
       {
@@ -877,7 +899,12 @@ namespace Manager.Services.Specific
           MailLog sendMail = new MailLog
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-            To = new List<MailLogAddress>()
+            To = sendTest ?
+              new List<MailLogAddress>()
+              {
+                new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+              } :
+              new List<MailLogAddress>()
               {
                 new MailLogAddress(item.Manager.Mail, item.Manager.Name)
               },
@@ -910,7 +937,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Plan Action
-    private void PlanManagerDeadline()
+    private void PlanManagerDeadline(bool sendTest)
     {
       try
       {
@@ -924,7 +951,7 @@ namespace Manager.Services.Specific
 
           foreach (Plan plan in plans)
           {
-            PlanWorkNotification work = PlanManagerDeadline(person, plan);
+            PlanWorkNotification work = PlanManagerDeadline(person, plan, sendTest);
             if (work != null)
               listManager.Add(work);
           }
@@ -991,7 +1018,7 @@ namespace Manager.Services.Specific
           managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.Person.User.Name).ToList();
           managerNotification.ThirtyDays = managerNotification.ThirtyDays.OrderBy(o => o.Person.User.Name).ToList();
           listManagerNotification.Add(managerNotification);
-          MailPlanManagerDeadline(listManagerNotification);
+          MailPlanManagerDeadline(listManagerNotification, sendTest);
           // Enviar para o colaborador
           List<PlanNotification> listNotification = new List<PlanNotification>();
           listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Manager.Name).ToList();
@@ -1051,7 +1078,7 @@ namespace Manager.Services.Specific
           notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
           notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
           listNotification.Add(notification);
-          MailPlanDeadline(listNotification);
+          MailPlanDeadline(listNotification, sendTest);
         }
       }
       catch (Exception)
@@ -1059,7 +1086,7 @@ namespace Manager.Services.Specific
 
       }
     }
-    private PlanWorkNotification PlanManagerDeadline(Person person, Plan plan)
+    private PlanWorkNotification PlanManagerDeadline(Person person, Plan plan, bool sendTest)
     {
       PlanWorkNotification result = new PlanWorkNotification()
       {
@@ -1096,7 +1123,7 @@ namespace Manager.Services.Specific
       }
       return result;
     }
-    private void MailPlanManagerDeadline(List<PlanManagerNotification> listManager)
+    private void MailPlanManagerDeadline(List<PlanManagerNotification> listManager, bool sendTest)
     {
       try
       {
@@ -1179,7 +1206,12 @@ namespace Manager.Services.Specific
           MailLog sendMail = new MailLog
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-            To = new List<MailLogAddress>()
+            To = sendTest ?
+              new List<MailLogAddress>()
+              {
+                new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+              } :
+              new List<MailLogAddress>()
               {
                 new MailLogAddress(item.Manager.Mail, item.Manager.Name)
               },
@@ -1210,7 +1242,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void MailPlanDeadline(List<PlanNotification> listPlan)
+    private void MailPlanDeadline(List<PlanNotification> listPlan, bool sendTest)
     {
       try
       {
@@ -1276,7 +1308,12 @@ namespace Manager.Services.Specific
           MailLog sendMail = new MailLog
           {
             From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
-            To = new List<MailLogAddress>()
+            To = sendTest ?
+              new List<MailLogAddress>()
+              {
+                new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+              } :
+              new List<MailLogAddress>()
               {
                 new MailLogAddress(item.Person.User.Mail, item.Person.User.Name)
               },
