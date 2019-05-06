@@ -1249,14 +1249,14 @@ namespace Manager.Services.Specific
       {
         var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
         List<ViewCrudGoalItem> detailCompany = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
-                  && p.Company._id == person.Company._id && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
+                  && p.Company._id == person.Company._id && p.Company.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
                   .Select(p => new ViewCrudGoalItem()
                   {
                     _id = p._id,
                     Weight = p.GoalsCompanyList.Weight,
                     Achievement = p.GoalsCompanyList.Achievement,
                     Deadline = p.GoalsCompanyList.Deadline,
-                    Goals = serviceGoals.GetAll(x => x._id == p.GoalsCompanyList.Goals._id).Select(x => new ViewCrudGoal()
+                    Goals = p.GoalsCompanyList == null ? null : serviceGoals.GetAll(x => x._id == p.GoalsCompanyList.Goals._id).Select(x => new ViewCrudGoal()
                     {
                       _id = x._id,
                       Name = x.Name,
@@ -1269,36 +1269,38 @@ namespace Manager.Services.Specific
                     Target = p.GoalsCompanyList.Target
                   }).ToList();
 
-        List<ViewCrudGoalItem> detailManager = serviceGoalsManager.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
-                  && p.Manager._id == person.Manager._id && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
-                  .Select(p => new ViewCrudGoalItem()
-                  {
-                    _id = p._id,
-                    Weight = p.GoalsManagerList.Weight,
-                    Achievement = p.GoalsManagerList.Achievement,
-                    Deadline = p.GoalsManagerList.Deadline,
-                    Goals = serviceGoals.GetAll(x => x._id == p.GoalsManagerList.Goals._id).Select(x => new ViewCrudGoal()
+        List<ViewCrudGoalItem> detailManager = null;
+        if (person.Manager != null)
+          detailManager = serviceGoalsManager.GetAll(p => p.GoalsPeriod._id == idGoalsPeriod
+                    && p.Manager._id == person.Manager._id)
+                    .Select(p => new ViewCrudGoalItem()
                     {
-                      _id = x._id,
-                      Name = x.Name,
-                      Concept = x.Concept,
-                      TypeGoals = x.TypeGoals
-                    }).FirstOrDefault(),
-                    Realized = p.GoalsManagerList.Realized,
-                    Result = p.GoalsManagerList.Result,
-                    Name = p.GoalsManagerList.Goals.Name,
-                    Target = p.GoalsManagerList.Target
-                  }).ToList();
+                      _id = p._id,
+                      Weight = p.GoalsManagerList.Weight,
+                      Achievement = p.GoalsManagerList.Achievement,
+                      Deadline = p.GoalsManagerList.Deadline,
+                      Goals = p.GoalsManagerList == null ? null : serviceGoals.GetAll(x => x._id == p.GoalsManagerList.Goals._id).Select(x => new ViewCrudGoal()
+                      {
+                        _id = x._id,
+                        Name = x.Name,
+                        Concept = x.Concept,
+                        TypeGoals = x.TypeGoals
+                      }).FirstOrDefault(),
+                      Realized = p.GoalsManagerList.Realized,
+                      Result = p.GoalsManagerList.Result,
+                      Name = p.GoalsManagerList.Goals.Name,
+                      Target = p.GoalsManagerList.Target
+                    }).ToList();
 
-        List<ViewCrudGoalItem> detail = serviceGoalsPerson.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
-                  && p.Person._id == idPerson && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Person.Name").Result
+        List<ViewCrudGoalItem> detail = serviceGoalsPerson.GetAll(p => p.GoalsPeriod._id == idGoalsPeriod
+                  && p.Person._id == idPerson).ToList()
           .Select(p => new ViewCrudGoalItem()
           {
             _id = p._id,
             Weight = p.GoalsPersonList.Weight,
             Achievement = p.GoalsPersonList.Achievement,
             Deadline = p.GoalsPersonList.Deadline,
-            Goals = serviceGoals.GetAll(x => x._id == p.GoalsPersonList.Goals._id).Select(x => new ViewCrudGoal()
+            Goals = p.GoalsPersonList == null ? null : serviceGoals.GetAll(x => x._id == p.GoalsPersonList.Goals._id).Select(x => new ViewCrudGoal()
             {
               _id = x._id,
               Name = x.Name,
@@ -1381,7 +1383,7 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name
           }).FirstOrDefault();
-        var person = servicePerson.GetAll(p => p._id == idperiod)
+        var person = servicePerson.GetAll(p => p._id == idperson)
           .Select(p => new ViewListPerson()
           {
             _id = p._id,
@@ -1391,14 +1393,33 @@ namespace Manager.Services.Specific
             User = new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
           }).FirstOrDefault();
 
-        GoalsPersonControl goalsPerson = new GoalsPersonControl()
-        {
-          GoalsPeriod = period,
-          Person = person,
-          StatusGoalsPerson = EnumStatusGoalsPerson.Open
-        };
+        GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetAll(p => p.Person._id == person._id & p.GoalsPeriod._id == period._id).FirstOrDefault();
 
-        return serviceGoalsPersonControl.InsertNewVersion(goalsPerson).Result._id;
+        if (goalsPerson == null)
+        {
+          goalsPerson = serviceGoalsPersonControl.InsertNewVersion(goalsPerson = new GoalsPersonControl()
+          {
+            GoalsPeriod = period,
+            Person = person,
+            StatusGoalsPerson = EnumStatusGoalsPerson.Open
+          }).Result;
+
+          if (_user._idPerson == goalsPerson.Person._id)
+          {
+            goalsPerson.DateBeginPerson = DateTime.Now;
+            goalsPerson.StatusGoalsPerson = EnumStatusGoalsPerson.InProgressPerson;
+          }
+          else
+          {
+            goalsPerson.DateBeginManager = DateTime.Now;
+            goalsPerson.StatusGoalsPerson = EnumStatusGoalsPerson.InProgressManager;
+          }
+
+          serviceGoalsPersonControl.Update(goalsPerson, null);
+        }
+
+
+        return goalsPerson._id;
       }
       catch (Exception e)
       {
@@ -1415,21 +1436,7 @@ namespace Manager.Services.Specific
 
         goalsPerson.GoalsPeriod = view.GoalsPeriod;
         goalsPerson.Person = view.Person;
-
-
-        if (view.StatusGoalsPerson == EnumStatusGoalsPerson.Open)
-        {
-          if (_user._idPerson == view.Person._id)
-          {
-            goalsPerson.DateBeginPerson = DateTime.Now;
-            goalsPerson.StatusGoalsPerson = EnumStatusGoalsPerson.InProgressPerson;
-          }
-          else
-          {
-            goalsPerson.DateBeginManager = DateTime.Now;
-            goalsPerson.StatusGoalsPerson = EnumStatusGoalsPerson.InProgressManager;
-          }
-        }
+        goalsPerson.StatusGoalsPerson = view.StatusGoalsPerson;
 
         if (goalsPerson.Person._id != _user._idPerson)
         {
@@ -1549,12 +1556,12 @@ namespace Manager.Services.Specific
               item._id = goals._id;
             }
           }
-          catch (Exception)
+          catch (Exception e)
           {
           }
         }
 
-        total = serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = detail.Count();
         return detail;
       }
       catch (Exception e)
@@ -1574,39 +1581,40 @@ namespace Manager.Services.Specific
             Name = p.Name
           }).FirstOrDefault();
 
-        ViewListGoalPersonControl detail = servicePerson.GetAll(p => p._id == idperson)
-          .Select(p => new ViewListGoalPersonControl()
+        var detail = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
+
+        ViewListGoalPersonControl view = new ViewListGoalPersonControl()
+        {
+          _id = null,
+          Person = new ViewListPerson()
           {
-            _id = null,
-            Person = new ViewListPerson()
-            {
-              _id = p._id,
-              Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
-              Establishment = p.Establishment == null ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
-              Registration = p.Registration,
-              User = new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
-            },
-            GoalsPeriod = period,
-            StatusGoalsPerson = EnumStatusGoalsPerson.Open
-          }).FirstOrDefault();
+            _id = detail._id,
+            Company = new ViewListCompany() { _id = detail.Company._id, Name = detail.Company.Name },
+            Establishment = detail.Establishment == null ? null : new ViewListEstablishment() { _id = detail.Establishment._id, Name = detail.Establishment.Name },
+            Registration = detail.Registration,
+            User = new ViewListUser() { _id = detail.User._id, Name = detail.User.Name, Document = detail.User.Document, Mail = detail.User.Mail, Phone = detail.User.Phone }
+          },
+          GoalsPeriod = period,
+          StatusGoalsPerson = EnumStatusGoalsPerson.Open
+        };
 
         try
         {
-          var goals = serviceGoalsPersonControl.GetAll(p => p.Person._id == detail.Person._id
-        & p.GoalsPeriod._id == detail.GoalsPeriod._id).FirstOrDefault();
+          var goals = serviceGoalsPersonControl.GetAll(p => p.Person._id == view.Person._id
+        & p.GoalsPeriod._id == view.GoalsPeriod._id).FirstOrDefault();
           if (goals != null)
           {
-            detail.StatusGoalsPerson = goals.StatusGoalsPerson;
-            detail._id = goals._id;
+            view.StatusGoalsPerson = goals.StatusGoalsPerson;
+            view._id = goals._id;
           }
         }
-        catch (Exception)
+        catch (Exception e)
         {
 
         }
 
 
-        return detail;
+        return view;
       }
       catch (Exception e)
       {
