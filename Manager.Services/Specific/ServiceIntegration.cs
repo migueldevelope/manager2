@@ -104,7 +104,7 @@ namespace Manager.Services.Specific
         integrationCompanyService = new ServiceGeneric<IntegrationCompany>(contextIntegration);
         integrationEstablishmentService = new ServiceGeneric<IntegrationEstablishment>(contextIntegration);
         integrationOccupationService = new ServiceGeneric<IntegrationOccupation>(context);
-        parameterService = new ServiceGeneric<IntegrationParameter>(context);
+        parameterService = new ServiceGeneric<IntegrationParameter>(contextIntegration);
         integrationPersonService = new ServiceGeneric<IntegrationPerson>(contextIntegration);
         logService = new ServiceLog(context, contextLog);
       }
