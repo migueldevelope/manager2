@@ -29,5 +29,6 @@ namespace Manager.Core.Business
     public EnumSex Sex { get; set; }
     public string Nickname { get; set; }
     public bool UserAdmin { get; set; }
+    public List<UserTermOfService> UserTermOfServices { get; set; }
   }
 }

@@ -76,7 +76,9 @@ namespace Manager
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog);
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer);
       IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer);
+      IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
 
+      services.AddSingleton(_ => serviceTermsOfService);
       services.AddSingleton(_ => serviceGoals);
       services.AddSingleton(_ => serviceCertification);
       services.AddSingleton(_ => serviceUser);

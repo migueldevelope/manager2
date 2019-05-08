@@ -28,12 +28,14 @@ namespace Manager.Services.Auth
     private readonly ServiceLog serviceLog;
     private readonly ServiceGeneric<Account> serviceAccount;
     private readonly ServiceDictionarySystem serviceDictionarySystem;
+    private readonly ServiceTermsOfService serviceTermsOfService;
 
     #region Constructor
     public ServiceAuthentication(DataContext context, DataContext contextLog)
     {
       try
       {
+        serviceTermsOfService = new ServiceTermsOfService(context);
         serviceAccount = new ServiceGeneric<Account>(context);
         serviceLog = new ServiceLog(context, contextLog);
         servicePerson = new ServicePerson(context, contextLog);
@@ -86,6 +88,26 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+
+    public void CheckTermOfService(string iduser)
+    {
+      try
+      {
+        var user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
+        if (user.UserTermOfServices == null)
+          user.UserTermOfServices = new List<UserTermOfService>();
+
+        var term = serviceTermsOfService.GetByDate();
+        user.UserTermOfServices.Add(new UserTermOfService() { _idTermOfService = term._id, Date = term.Date });
+
+        serviceUser.Update(user, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewPerson Authentication(User user, bool registerLog)
     {
       try
@@ -94,6 +116,17 @@ namespace Manager.Services.Auth
         {
           _idAccount = user._idAccount
         };
+
+        var date = serviceTermsOfService.GetByDate();
+        var viewDate = new UserTermOfService()
+        {
+          Date = date.Date,
+          _idTermOfService = date._id
+        };
+
+        UserTermOfService term = null;
+        if (user.UserTermOfServices != null)
+          user.UserTermOfServices.Contains(viewDate);
 
         serviceDictionarySystem.SetUser(_user);
         ViewPerson person = new ViewPerson()
@@ -104,8 +137,10 @@ namespace Manager.Services.Auth
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
           NameAccount = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result.Name,
+          TermOfService = term == null ? false : true,
           DictionarySystem = null
         };
+
         person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id).Result
           .Select(x => new ViewContract()
           {
@@ -121,6 +156,8 @@ namespace Manager.Services.Auth
           serviceLog.SetUser(_user);
           Task.Run(() => LogSave(person.Contracts[0].IdPerson));
         }
+
+
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
         // Token

@@ -15,5 +15,6 @@ namespace Manager.Core.Views
     public EnumChangePassword ChangePassword { get; set; }
     public List<DictionarySystem> DictionarySystem { get; set; }
     public List<ViewContract> Contracts { get; set; }
+    public bool TermOfService { get; set; }
   }
 }
