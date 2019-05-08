@@ -93,11 +93,11 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
+        var user = serviceUser.GetFreeNewVersion(p => p._id == iduser).Result;
         if (user.UserTermOfServices == null)
           user.UserTermOfServices = new List<UserTermOfService>();
 
-        var term = serviceTermsOfService.GetByDate();
+        var term = serviceTermsOfService.GetTerm();
         user.UserTermOfServices.Add(new UserTermOfService() { _idTermOfService = term._id, Date = term.Date });
 
         serviceUser.Update(user, null);
@@ -117,7 +117,7 @@ namespace Manager.Services.Auth
           _idAccount = user._idAccount
         };
 
-        var date = serviceTermsOfService.GetByDate();
+        var date = serviceTermsOfService.GetTerm();
         var viewDate = new UserTermOfService()
         {
           Date = date.Date,

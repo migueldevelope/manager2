@@ -121,13 +121,19 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public TermsOfService GetByDate()
+    public ViewListTermsOfService GetTerm()
     {
       try
       {
         var date = serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.Max(p => p.Date);
         TermsOfService termsofservice = serviceTermsOfService.GetAllFreeNewVersion(p => p.Date == date).Result.FirstOrDefault();
-        return termsofservice;
+        return new ViewListTermsOfService()
+        {
+          Text = termsofservice.Text,
+          Date = termsofservice.Date,
+          _id = termsofservice._id
+        };
+
       }
       catch (Exception e)
       {
@@ -142,7 +148,8 @@ namespace Manager.Services.Specific
           .Select(x => new ViewListTermsOfService()
           {
             _id = x._id,
-            Text = x.Text
+            Text = x.Text,
+            Date = x.Date
           }).ToList();
         total = serviceTermsOfService.CountFreeNewVersion(p => p.Text.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;

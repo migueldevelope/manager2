@@ -71,6 +71,20 @@ namespace Manager.Controllers
     {
       return service.Get(id);
     }
+
+    /// <summary>
+    /// Retorar a empresa para manutenção
+    /// </summary>
+    /// <param name="id">Identificador da empresa</param>
+    /// <returns>Objeto de manutenção da empresa</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getterm/{id}")]
+    public ViewListTermsOfService GetTerm()
+    {
+      return service.GetTerm();
+    }
+
     /// <summary>
     /// Alterar a empresa
     /// </summary>

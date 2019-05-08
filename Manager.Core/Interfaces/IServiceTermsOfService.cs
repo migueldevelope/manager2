@@ -15,7 +15,7 @@ namespace Manager.Core.Interfaces
     string New(ViewCrudTermsOfService view);
     string Update(ViewCrudTermsOfService view);
     ViewCrudTermsOfService Get(string id);
-    TermsOfService GetByDate();
+    ViewListTermsOfService GetTerm();
     List<ViewListTermsOfService> List(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }
