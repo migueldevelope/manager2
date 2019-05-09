@@ -30,6 +30,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Person> servicePerson;
     private ServiceGeneric<Plan> servicePlan;
     private ServiceGeneric<User> serviceUser;
+    private readonly ServiceTermsOfService serviceTermsOfService;
 
     #region Constructor
     public ServiceUser(DataContext context, DataContext contextLog) : base(context)
@@ -47,6 +48,7 @@ namespace Manager.Services.Auth
         servicePerson = new ServiceGeneric<Person>(context);
         servicePlan = new ServiceGeneric<Plan>(context);
         serviceUser = new ServiceGeneric<User>(context);
+        serviceTermsOfService = new ServiceTermsOfService(context);
       }
       catch (Exception e)
       {
@@ -86,6 +88,27 @@ namespace Manager.Services.Auth
     #endregion
 
     #region User
+
+
+    public void CheckTermOfService(string iduser)
+    {
+      try
+      {
+        var user = serviceUser.GetFreeNewVersion(p => p._id == iduser).Result;
+        if (user.UserTermOfServices == null)
+          user.UserTermOfServices = new List<UserTermOfService>();
+
+        var term = serviceTermsOfService.GetTerm();
+        user.UserTermOfServices.Add(new UserTermOfService() { _idTermOfService = term._id, Date = term.Date });
+
+        serviceUser.Update(user, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListUser> List(ref long total, int count, int page, string filter, EnumTypeUser type)
     {
       try

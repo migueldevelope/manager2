@@ -5,6 +5,7 @@ using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessNew;
 using Manager.Views.Enumns;
@@ -81,7 +82,8 @@ namespace Manager.Services.Specific
         Account account = new Account()
         {
           Name = view.NameAccount,
-          Status = EnumStatus.Enabled
+          Status = EnumStatus.Enabled,
+          InfoClient = view.InfoClient
         };
         account = serviceAccount.InsertAccountNewVersion(account).Result;
         serviceAccount._user = new BaseUser()
@@ -123,6 +125,24 @@ namespace Manager.Services.Specific
         serviceInfra._user = serviceAccount._user;
         //Task.Run(() => serviceInfra.CopyTemplateInfraAsync(company));
         serviceInfra.CopyTemplateInfraAsync(company);
+        return "Account created!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateAccount(ViewCrudAccount view, string id)
+    {
+      try
+      {
+        // Criar uma nova conta
+        var account = serviceAccount.GetFreeNewVersion(p => p._id == id).Result;
+        account.Name = view.Name;
+        account.InfoClient = view.InfoClient;
+
+        serviceAccount.UpdateAccount(account, null);
         return "Account created!";
       }
       catch (Exception e)

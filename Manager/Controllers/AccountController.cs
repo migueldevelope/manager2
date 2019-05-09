@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessNew;
 using Microsoft.AspNetCore.Authorization;
@@ -47,6 +48,20 @@ namespace Manager.Controllers
     {
       return Ok(service.NewAccount(view));
     }
+
+    /// <summary>
+    /// Atualiza uma nova de cliente
+    /// </summary>
+    /// <param name="view">Objeto para conta</param>
+    /// /// <param name="id">id para conta</param>
+    /// <returns></returns>
+    [HttpPut]
+    [Route("update/{id}")]
+    public IActionResult Put([FromBody]ViewCrudAccount view, string id)
+    {
+      return Ok(service.UpdateAccount(view, id));
+    }
+
     /// <summary>
     /// Buscar todas as contas ativas
     /// </summary>

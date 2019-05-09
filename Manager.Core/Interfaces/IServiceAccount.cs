@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Views;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessNew;
 using Microsoft.AspNetCore.Http;
@@ -16,5 +17,6 @@ namespace Manager.Core.Interfaces
     ViewPerson AlterAccount(string idaccount);
     ViewPerson AlterAccountPerson(string idperson);
     string SynchronizeParameters();
+    string UpdateAccount(ViewCrudAccount view, string id);
   }
 }

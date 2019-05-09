@@ -61,6 +61,24 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
+
+
+
+    /// <summary>
+    /// Aceite do Termo de Serviço
+    /// </summary>
+    /// <param name="iduser">Identificador do usuário</param>
+    /// <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
+    [AllowAnonymous]
+    [HttpPost]
+    [Route("checktermofservice/{iduser}")]
+    public string CheckTermOfService(string iduser)
+    {
+      service.CheckTermOfService(iduser);
+      return "ok";
+    }
+
+
     /// <summary>
     /// Buscar informações para edição do usuário
     /// </summary>

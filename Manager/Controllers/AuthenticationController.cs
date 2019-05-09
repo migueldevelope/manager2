@@ -51,21 +51,6 @@ namespace Manager.Controllers
         return BadRequest(e.Message);
       }
     }
-
-    /// <summary>
-    /// Aceite do Termo de Serviço
-    /// </summary>
-    /// <param name="iduser">Identificador do usuário</param>
-    /// <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
-    [AllowAnonymous]
-    [HttpPost]
-    [Route("checktermofservice/{iduser}")]
-    public string CheckTermOfService(string iduser)
-    {
-      service.CheckTermOfService(iduser);
-      return "ok";
-    }
-
     #endregion
 
   }

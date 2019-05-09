@@ -9,5 +9,6 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public string Nickname { get; set; }
+    public string InfoClient { get; set; }
   }
 }

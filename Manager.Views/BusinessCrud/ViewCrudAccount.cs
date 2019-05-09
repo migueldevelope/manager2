@@ -2,5 +2,6 @@
 {
   public class ViewCrudAccount : _ViewCrudBase
   {
+    public string InfoClient { get; set; }
   }
 }

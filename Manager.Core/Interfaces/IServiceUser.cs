@@ -13,6 +13,8 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
+
+    void CheckTermOfService(string iduser);
     List<ViewListUser> List(ref long total, int count, int page, string filter, EnumTypeUser type);
     ViewCrudUser Get(string iduser);
     ViewCrudUser New(ViewCrudUser view);

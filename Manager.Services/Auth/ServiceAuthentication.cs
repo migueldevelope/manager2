@@ -89,24 +89,6 @@ namespace Manager.Services.Auth
       }
     }
 
-    public void CheckTermOfService(string iduser)
-    {
-      try
-      {
-        var user = serviceUser.GetFreeNewVersion(p => p._id == iduser).Result;
-        if (user.UserTermOfServices == null)
-          user.UserTermOfServices = new List<UserTermOfService>();
-
-        var term = serviceTermsOfService.GetTerm();
-        user.UserTermOfServices.Add(new UserTermOfService() { _idTermOfService = term._id, Date = term.Date });
-
-        serviceUser.Update(user, null);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
 
     public ViewPerson Authentication(User user, bool registerLog)
     {
@@ -120,13 +102,22 @@ namespace Manager.Services.Auth
         var date = serviceTermsOfService.GetTerm();
         var viewDate = new UserTermOfService()
         {
-          Date = date.Date,
-          _idTermOfService = date._id
+          Date = date?.Date,
+          _idTermOfService = date?._id
         };
 
         UserTermOfService term = null;
         if (user.UserTermOfServices != null)
-          user.UserTermOfServices.Contains(viewDate);
+        {
+            foreach(var item in user.UserTermOfServices)
+          {
+            if (viewDate._idTermOfService == item._idTermOfService)
+            {
+              term = viewDate;
+            }
+          }
+        }
+          
 
         serviceDictionarySystem.SetUser(_user);
         ViewPerson person = new ViewPerson()

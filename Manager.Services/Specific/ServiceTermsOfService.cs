@@ -19,6 +19,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<TermsOfService> serviceTermsOfService;
     private readonly ServiceGeneric<Establishment> serviceEstablishment;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<Account> serviceAccount;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
 
     #region Constructor
@@ -29,6 +30,7 @@ namespace Manager.Services.Specific
         serviceTermsOfService = new ServiceGeneric<TermsOfService>(context);
         serviceEstablishment = new ServiceGeneric<Establishment>(context);
         servicePerson = new ServiceGeneric<Person>(context);
+        serviceAccount = new ServiceGeneric<Account>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
       }
       catch (Exception e)
@@ -125,11 +127,12 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var account = serviceAccount.GetFreeNewVersion(p => p._id == _user._idAccount).Result;
         var date = serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.Max(p => p.Date);
         TermsOfService termsofservice = serviceTermsOfService.GetAllFreeNewVersion(p => p.Date == date).Result.FirstOrDefault();
         return new ViewListTermsOfService()
         {
-          Text = termsofservice.Text,
+          Text = termsofservice.Text.Replace("{CUSTOMER}", account?.InfoClient),
           Date = termsofservice.Date,
           _id = termsofservice._id
         };
