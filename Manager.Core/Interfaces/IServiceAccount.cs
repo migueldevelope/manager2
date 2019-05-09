@@ -18,5 +18,6 @@ namespace Manager.Core.Interfaces
     ViewPerson AlterAccountPerson(string idperson);
     string SynchronizeParameters();
     string UpdateAccount(ViewCrudAccount view, string id);
+    ViewCrudAccount GetAccount(string id);
   }
 }

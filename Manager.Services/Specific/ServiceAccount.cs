@@ -171,6 +171,25 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public ViewCrudAccount GetAccount(string id)
+    {
+      try
+      {
+        var view = serviceAccount.GetFreeNewVersion(p => p._id == id).Result;
+        return new ViewCrudAccount()
+        {
+          _id = view._id,
+          Name = view.Name,
+          InfoClient = view.InfoClient
+        };
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     #endregion
 
     #region Change Account Authentication or Person Authentication

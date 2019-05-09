@@ -63,6 +63,18 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// Buscar todas a conta
+    /// </summary>
+    /// <returns>Lista de contas ativas</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("get/{id}")]
+    public ViewCrudAccount GET(string id)
+    {
+      return service.GetAccount(id);
+    }
+
+    /// <summary>
     /// Buscar todas as contas ativas
     /// </summary>
     /// <param name="count">Quantidade de registros por página</param>
