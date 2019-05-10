@@ -123,8 +123,8 @@ namespace Manager.Services.Specific
             }
             else
               checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
-            
-            
+
+
             if (checkpoint?.TypeCheckpoint != EnumCheckpoint.Disapproved)
               detail.Add(item);
 
@@ -485,7 +485,7 @@ namespace Manager.Services.Specific
           _idAccount = _user._idAccount,
           Status = EnumStatus.Enabled,
           Mark = p.Mark,
-          Question = FindQuestion(p.Question._id, p.Question.Company.Name, view.Person.User.Name),
+          Question = p.Question == null ? null : FindQuestion(p.Question._id, p.Question.Company.Name, view.Person.User.Name),
           Itens = p.Itens?.Select(x => new CheckpointQuestions()
           {
             _id = x._id,
@@ -856,6 +856,9 @@ namespace Manager.Services.Specific
       try
       {
         Questions result = serviceQuestions.GetNewVersion(x => x._id == id).Result;
+        if (result == null)
+          return null;
+
         result.Content = result.Content.Replace("{company_name}", nameCompany).Replace("{employee_name}", namePerson);
         return result;
       }
