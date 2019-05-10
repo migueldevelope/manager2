@@ -169,6 +169,7 @@ namespace IntegrationServer.InfraController
             DocumentCTPF = view.Colaborador.CarteiraProfissional,
             Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others,
             Password = view.Colaborador.Documento,
+            Nickname = view.Colaborador.Apelido
           };
           userView = serviceUser.New(userView);
         }
@@ -185,6 +186,7 @@ namespace IntegrationServer.InfraController
           userView.DocumentID = view.Colaborador.Identidade;
           userView.DocumentCTPF = view.Colaborador.CarteiraProfissional;
           userView.Sex = view.Colaborador.Sexo.StartsWith("M") ? EnumSex.Male : view.Colaborador.Sexo.StartsWith("F") ? EnumSex.Female : EnumSex.Others;
+          userView.Nickname = view.Colaborador.Apelido;
           userView = serviceUser.Update(userView);
         }
         // Verificar se a person já existe

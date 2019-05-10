@@ -35,5 +35,7 @@ namespace Manager.Views.BusinessCrud
     // Subir próximo LOG
     public bool UploadNextLog { get; set; }
     public string LinkLogExecution { get; set; }
+    // Identificação da API personalizada
+    public string ApiIdentification { get; set; }
   }
 }

@@ -18,22 +18,6 @@ namespace IntegrationServer.InfraController
   {
     private readonly IServiceIntegration service;
 
-    /// <summary>
-    /// Listar os funcionários da unimed
-    /// </summary>
-    /// <returns>Lista de estabelecimentos na integração</returns>
-    [Authorize]
-    [HttpGet]
-    [Route("unimed/list")]
-    public List<ViewIntegrationUnimed> Unimed()
-    {
-      long total = 0;
-      var result = service.GetUnimedEmployee();
-      Response.Headers.Add("x-total-count", total.ToString());
-      return result;
-    }
-
-
     #region Constructor
     /// <summary>
     /// Inicializador do controlador de integração de funcionários

@@ -36,5 +36,7 @@ namespace Manager.Core.Business.Integration
     // Subir próximo LOG
     public bool UploadNextLog { get; set; }
     public string LinkLogExecution { get; set; }
+    // Identificação da API customizada do cliente
+    public string ApiIdentification { get; set; }
   }
 }

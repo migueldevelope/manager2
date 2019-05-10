@@ -165,6 +165,5 @@ namespace Manager.Services.Specific
 
     #endregion
 
-
   }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 
-namespace Manager.Views.BusinessView
+namespace Manager.Views.Integration
 {
-  public class ViewIntegrationUnimed
+#pragma warning disable IDE1006 // Estilos de Nomenclatura
+  public class ViewIntegrationUnimedNers
   {
     public long cdn_cargo { get; set; }
-    public DateTime? dat_ret_ferias { get; set; }
+    public string dat_ret_ferias { get; set; }
     public string cdn_empresa { get; set; }
-    public DateTime? dat_demissao { get; set; }
+    public string dat_demissao { get; set; }
     public long cdn_matricula_chefe { get; set; }
     public string nom_estab { get; set; }
     public string cdn_empresa_chefe { get; set; }
@@ -27,16 +28,16 @@ namespace Manager.Views.BusinessView
     public string cod_usuario_ad { get; set; }
     public string cdn_cpf_chefe { get; set; }
     public string nom_email { get; set; }
-    public DateTime? dat_ult_reajuste { get; set; }
+    public string dat_ult_reajuste { get; set; }
     public decimal val_salario_atual { get; set; }
     public long cdn_grau_instrucao { get; set; }
-    public DateTime? dat_ult_troca_cargo { get; set; }
-    public DateTime? dat_nascimento { get; set; }
+    public string dat_ult_troca_cargo { get; set; }
+    public string dat_nascimento { get; set; }
     public string nom_estab_chefe { get; set; }
     public string num_telefone { get; set; }
     public string nom_grau_instrucao { get; set; }
-    public DateTime? dat_admissao { get; set; }
+    public string dat_admissao { get; set; }
     public long cdn_matricula { get; set; }
-
   }
+#pragma warning restore IDE1006 // Estilos de Nomenclatura
 }

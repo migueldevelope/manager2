@@ -27,12 +27,12 @@ namespace IntegrationClient
 
         cboDatabaseType.DataSource = Enum.GetValues(typeof(EnumDatabaseType));
         cboProc.DataSource = Enum.GetValues(typeof(EnumIntegrationProcess));
-        cboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
         cboType.DataSource = Enum.GetValues(typeof(EnumIntegrationType));
+        cboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
 
         cboProc.SelectedIndex = cboProc.FindStringExact(serviceConfiguration.Param.Process.ToString());
-        cboMode.SelectedIndex = cboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
         cboType.SelectedIndex = cboType.FindStringExact(serviceConfiguration.Param.Type.ToString());
+        cboMode.SelectedIndex = cboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
       }
       catch (Exception ex)
       {
@@ -45,6 +45,8 @@ namespace IntegrationClient
       if (cboMode.SelectedItem.ToString().StartsWith("DataBase"))
       {
         grpBD.Visible = true;
+        grpArq.Visible = false;
+        grpApi.Visible = false;
         if (serviceConfiguration.Param.ConnectionString != null)
         {
           if (serviceConfiguration.Param.ConnectionString.StartsWith("ODBC"))
@@ -92,13 +94,14 @@ namespace IntegrationClient
           }
         }
         txtSql.Text = serviceConfiguration.Param.SqlCommand;
-        grpArq.Visible = false;
+        txtIdApi.Text = string.Empty;
         txtFileName.Text = string.Empty;
       }
       if (cboMode.SelectedItem.ToString().StartsWith("FileCsv"))
       {
         grpArq.Visible = true;
         grpBD.Visible = false;
+        grpApi.Visible = false;
         txtHostName.Text = string.Empty;
         txtUser.Text = string.Empty;
         txtPassword.Text = string.Empty;
@@ -108,12 +111,14 @@ namespace IntegrationClient
         lblSheetName.Visible = false;
         txtSheetName.Visible = false;
         txtSheetName.Text = string.Empty;
+        txtIdApi.Text = string.Empty;
         grpArq.Text = "Arquivo Csv";
       }
       if (cboMode.SelectedItem.ToString().StartsWith("FileExcel"))
       {
         grpArq.Visible = true;
         grpBD.Visible = false;
+        grpApi.Visible = false;
         txtHostName.Text = string.Empty;
         txtUser.Text = string.Empty;
         txtPassword.Text = string.Empty;
@@ -123,7 +128,25 @@ namespace IntegrationClient
         txtSheetName.Visible = true;
         txtFileName.Text = serviceConfiguration.Param.FilePathLocal;
         txtSheetName.Text = serviceConfiguration.Param.SheetName;
+        txtIdApi.Text = string.Empty;
         grpArq.Text = "Arquivo Microsoft Excel";
+      }
+      if (cboMode.SelectedItem.ToString().StartsWith("Application"))
+      {
+        grpArq.Visible = false;
+        grpBD.Visible = false;
+        grpApi.Visible = true;
+        txtHostName.Text = string.Empty;
+        txtUser.Text = string.Empty;
+        txtPassword.Text = string.Empty;
+        txtDefault.Text = string.Empty;
+        txtSql.Text = string.Empty;
+        lblSheetName.Visible = true;
+        txtSheetName.Visible = true;
+        txtFileName.Text = string.Empty;
+        txtSheetName.Text = string.Empty;
+        txtIdApi.Text = serviceConfiguration.Param.ApiIdentification;
+        txtIdApi.Focus();
       }
     }
 
@@ -252,6 +275,59 @@ namespace IntegrationClient
           lblStr.Visible = true;
           txtStr.Visible = true;
         }
+      }
+    }
+
+    private void CboProc_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      if (cboProc.SelectedItem.ToString().StartsWith("Application"))
+      {
+        cboType.Visible = false;
+        cboMode.Visible = false;
+        grpBD.Visible = false;
+        grpArq.Visible = false;
+        label3.Visible = false;
+        label2.Visible = false;
+        grpApi.Visible = true;
+      }
+      else
+      {
+        cboType.Visible = true;
+        cboMode.Visible = true;
+        label3.Visible = true;
+        label2.Visible = true;
+        grpApi.Visible = false;
+      }
+    }
+
+    private void BtSaveApi_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (string.IsNullOrEmpty(txtIdApi.Text))
+        {
+          txtIdApi.Focus();
+          throw new Exception("Identificação da API customizada deve ser informada.");
+        }
+        if (!txtIdApi.Text.ToUpper().Equals("UNIMEDNERS"))
+        {
+          txtIdApi.Focus();
+          throw new Exception("Identificação inválida, entre em contato com o suporte e solicite um ID de aplicação correto.");
+        }
+        serviceConfiguration.Param.ConnectionString = string.Empty;
+        serviceConfiguration.Param.FilePathLocal = string.Empty;
+        serviceConfiguration.Param.Process = (EnumIntegrationProcess)cboProc.SelectedItem;
+        serviceConfiguration.Param.Mode = (EnumIntegrationMode)cboMode.SelectedItem;
+        serviceConfiguration.Param.Type = (EnumIntegrationType)cboType.SelectedItem;
+        serviceConfiguration.Param.SqlCommand = string.Empty;
+        serviceConfiguration.Param.SheetName = string.Empty;
+        serviceConfiguration.Param.ApiIdentification = txtIdApi.Text;
+        serviceConfiguration.SetParameter(serviceConfiguration.Param);
+        MessageBox.Show("Parâmetro atualizado!", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
   }

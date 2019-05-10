@@ -36,6 +36,7 @@ namespace Manager.Views.Integration
     public string EstabelecimentoGestor { get; set; }
     public string NomeEstabelecimentoGestor { get; set; }
     public string MatriculaGestor { get; set; }
+    public string Apelido { get; set; }
     public string ChaveEmpresa { get { return Empresa; } }
     public string ChaveEstabelecimento { get { return string.Format("{0};{1}", Empresa, Estabelecimento); } }
     public string ChaveGrauInstrucao { get { return GrauInstrucao; } }

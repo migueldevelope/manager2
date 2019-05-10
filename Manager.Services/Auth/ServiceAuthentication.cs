@@ -69,9 +69,12 @@ namespace Manager.Services.Auth
         }
         else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1)
         {
-
           GetUnimedAsync(userLogin.Mail, userLogin.Password);
-          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
+          // Localizar pelo apelido
+          user = serviceUser.GetFreeNewVersion(p => p.Nickname == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
+          if (user == null)
+            // Localizar pelo e-mail
+            user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
           if (user == null)
             throw new Exception("User not authorized!");
         }
@@ -88,8 +91,6 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-
-
     public ViewPerson Authentication(User user, bool registerLog)
     {
       try
@@ -117,7 +118,6 @@ namespace Manager.Services.Auth
             }
           }
         }
-          
 
         serviceDictionarySystem.SetUser(_user);
         ViewPerson person = new ViewPerson()
@@ -312,7 +312,6 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-
     #endregion
 
   }

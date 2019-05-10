@@ -35,6 +35,8 @@
       this.cboMode = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.grpBD = new System.Windows.Forms.GroupBox();
+      this.txtStr = new System.Windows.Forms.TextBox();
+      this.lblStr = new System.Windows.Forms.Label();
       this.cboDatabaseType = new System.Windows.Forms.ComboBox();
       this.btSave = new System.Windows.Forms.Button();
       this.label9 = new System.Windows.Forms.Label();
@@ -55,10 +57,13 @@
       this.btSearchFile = new System.Windows.Forms.Button();
       this.txtFileName = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
-      this.lblStr = new System.Windows.Forms.Label();
-      this.txtStr = new System.Windows.Forms.TextBox();
+      this.grpApi = new System.Windows.Forms.GroupBox();
+      this.btSaveApi = new System.Windows.Forms.Button();
+      this.txtIdApi = new System.Windows.Forms.TextBox();
+      this.label4 = new System.Windows.Forms.Label();
       this.grpBD.SuspendLayout();
       this.grpArq.SuspendLayout();
+      this.grpApi.SuspendLayout();
       this.SuspendLayout();
       // 
       // cboProc
@@ -68,6 +73,7 @@
       this.cboProc.Name = "cboProc";
       this.cboProc.Size = new System.Drawing.Size(254, 24);
       this.cboProc.TabIndex = 41;
+      this.cboProc.SelectedIndexChanged += new System.EventHandler(this.CboProc_SelectedIndexChanged);
       // 
       // label12
       // 
@@ -137,6 +143,23 @@
       this.grpBD.TabStop = false;
       this.grpBD.Text = "Banco de Dados";
       this.grpBD.Visible = false;
+      // 
+      // txtStr
+      // 
+      this.txtStr.Location = new System.Drawing.Point(106, 54);
+      this.txtStr.Multiline = true;
+      this.txtStr.Name = "txtStr";
+      this.txtStr.Size = new System.Drawing.Size(685, 54);
+      this.txtStr.TabIndex = 61;
+      // 
+      // lblStr
+      // 
+      this.lblStr.AutoSize = true;
+      this.lblStr.Location = new System.Drawing.Point(35, 59);
+      this.lblStr.Name = "lblStr";
+      this.lblStr.Size = new System.Drawing.Size(65, 34);
+      this.lblStr.TabIndex = 60;
+      this.lblStr.Text = "String de\r\nConexão";
       // 
       // cboDatabaseType
       // 
@@ -317,36 +340,59 @@
       this.label10.TabIndex = 15;
       this.label10.Text = "Arquivo";
       // 
-      // lblStr
+      // grpApi
       // 
-      this.lblStr.AutoSize = true;
-      this.lblStr.Location = new System.Drawing.Point(35, 59);
-      this.lblStr.Name = "lblStr";
-      this.lblStr.Size = new System.Drawing.Size(65, 34);
-      this.lblStr.TabIndex = 60;
-      this.lblStr.Text = "String de\r\nConexão";
+      this.grpApi.Controls.Add(this.btSaveApi);
+      this.grpApi.Controls.Add(this.txtIdApi);
+      this.grpApi.Controls.Add(this.label4);
+      this.grpApi.Location = new System.Drawing.Point(10, 72);
+      this.grpApi.Name = "grpApi";
+      this.grpApi.Size = new System.Drawing.Size(802, 432);
+      this.grpApi.TabIndex = 44;
+      this.grpApi.TabStop = false;
+      this.grpApi.Text = "Application Interface";
+      this.grpApi.Visible = false;
       // 
-      // txtStr
+      // btSaveApi
       // 
-      this.txtStr.Location = new System.Drawing.Point(106, 54);
-      this.txtStr.Multiline = true;
-      this.txtStr.Name = "txtStr";
-      this.txtStr.Size = new System.Drawing.Size(685, 54);
-      this.txtStr.TabIndex = 61;
+      this.btSaveApi.Location = new System.Drawing.Point(722, 400);
+      this.btSaveApi.Name = "btSaveApi";
+      this.btSaveApi.Size = new System.Drawing.Size(69, 23);
+      this.btSaveApi.TabIndex = 20;
+      this.btSaveApi.Text = "Salvar";
+      this.btSaveApi.UseVisualStyleBackColor = true;
+      this.btSaveApi.Click += new System.EventHandler(this.BtSaveApi_Click);
+      // 
+      // txtIdApi
+      // 
+      this.txtIdApi.Location = new System.Drawing.Point(137, 27);
+      this.txtIdApi.Name = "txtIdApi";
+      this.txtIdApi.Size = new System.Drawing.Size(590, 22);
+      this.txtIdApi.TabIndex = 16;
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(8, 30);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(117, 17);
+      this.label4.TabIndex = 15;
+      this.label4.Text = "ID API Integration";
       // 
       // ImportacaoConfigurar
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(819, 505);
+      this.Controls.Add(this.grpApi);
       this.Controls.Add(this.cboProc);
       this.Controls.Add(this.label12);
       this.Controls.Add(this.cboType);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.cboMode);
       this.Controls.Add(this.label2);
-      this.Controls.Add(this.grpBD);
       this.Controls.Add(this.grpArq);
+      this.Controls.Add(this.grpBD);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
@@ -357,6 +403,8 @@
       this.grpBD.PerformLayout();
       this.grpArq.ResumeLayout(false);
       this.grpArq.PerformLayout();
+      this.grpApi.ResumeLayout(false);
+      this.grpApi.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -392,5 +440,9 @@
     private System.Windows.Forms.TextBox txtSheetName;
     private System.Windows.Forms.TextBox txtStr;
     private System.Windows.Forms.Label lblStr;
+    private System.Windows.Forms.GroupBox grpApi;
+    private System.Windows.Forms.Button btSaveApi;
+    private System.Windows.Forms.TextBox txtIdApi;
+    private System.Windows.Forms.Label label4;
   }
 }

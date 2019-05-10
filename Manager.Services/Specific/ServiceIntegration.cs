@@ -10,14 +10,10 @@ using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
-using System.Text;
-using Tools;
 
 namespace Manager.Services.Specific
 {
@@ -37,56 +33,6 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<IntegrationParameter> parameterService;
     private readonly ServiceGeneric<IntegrationPerson> integrationPersonService;
     private readonly IServiceLog logService;
-
-
-    #region unimed integration
-    public List<ViewIntegrationUnimed> GetUnimedEmployee()
-    {
-      try
-      {
-        string username = "analisa";
-        string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
-        string password2 = EncryptServices.GetMD5HashTypeTwo(password).ToLower();
-
-        using (HttpClient client = new HttpClient())
-        {
-          client.Timeout = TimeSpan.FromMinutes(30);
-          client.DefaultRequestHeaders.Add("Autorization", "Basic " + password);
-          client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(new UTF8Encoding().GetBytes(username + ":" + password2)));
-          client.BaseAddress = new Uri("https://apip1.unimednordesters.com.br");
-
-          var data = new
-          {
-            channel = "analisa",
-            parametros = new
-            {
-              dat_inicial = "",
-              dat_final = "",
-              des_situacao = "Ativo"
-            }
-          };
-          string json = JsonConvert.SerializeObject(data);
-          StringContent content = new StringContent(json);
-          content.Headers.ContentType.MediaType = "application/json";
-          client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          HttpResponseMessage result = client.PostAsync("/", content).Result;
-          var resultContent = result.Content.ReadAsStringAsync().Result ;
-
-          var list = JsonConvert.DeserializeObject<List<ViewIntegrationUnimed>>(resultContent);
-          if (result.StatusCode != System.Net.HttpStatusCode.OK)
-            throw new Exception("User/Password invalid!");
-
-          return list;
-
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    #endregion
 
     #region Constructor
     public ServiceIntegration(DataContext context, DataContext contextLog, DataContext contextIntegration) : base(context)
@@ -721,6 +667,7 @@ namespace Manager.Services.Specific
           UploadNextLog = param.UploadNextLog,
           VersionPackCustom = param.VersionPackCustom,
           VersionPackProgram = param.VersionPackProgram,
+          ApiIdentification = param.ApiIdentification,
           _id = param._id
         };
       }
@@ -760,6 +707,7 @@ namespace Manager.Services.Specific
         param.MachineIdentity = view.MachineIdentity;
         param.UploadNextLog = view.UploadNextLog;
         param.LinkLogExecution = view.LinkLogExecution;
+        param.ApiIdentification = view.ApiIdentification;
         parameterService.Update(param, null);
         return new ViewCrudIntegrationParameter()
         {

@@ -218,6 +218,60 @@ namespace IntegrationService.Data
         throw;
       }
     }
+    public ColaboradorImportar(ViewIntegrationUnimedNers view, EnumLayoutSystemCompleteV1 enumeration)
+    {
+      try
+      {
+        DateTime? dataNascimento = FieldDate(view.dat_nascimento);
+        DateTime? dataAdmissao = FieldDate(view.dat_admissao);
+        DateTime? dataRetornoFerias = FieldDate(view.dat_ret_ferias);
+        DateTime? dataDemissao = FieldDate(view.dat_demissao);
+        DateTime? dataUltimaTrocaCargo = FieldDate(view.dat_ult_troca_cargo);
+        DateTime? dataUltimoReajuste = FieldDate(view.dat_ult_reajuste);
+        Empresa = FormatedFieldKey(view.cdn_empresa);
+        NomeEmpresa = FormatedField(view.nom_empresa);
+        Estabelecimento = FormatedFieldKey(view.cdn_estab);
+        NomeEstabelecimento = FormatedField(view.nom_estab);
+        Documento = view.cdn_cpf.Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11, '0');
+        Matricula = view.cdn_matricula.ToString();
+        Nome = FormatedField(view.nom_pessoa);
+        Email = FormatedFieldKey(view.nom_email);
+        DataNascimento = dataNascimento;
+        Celular = view.num_celular.Trim();
+        Telefone = view.num_telefone.Trim();
+        Identidade = view.cdn_identidade.Trim();
+        CarteiraProfissional = view.cdn_cart_prof.Trim();
+        Sexo = view.tip_sexo.Trim();
+        DataAdmissao = dataAdmissao;
+        Situacao = view.sit_funcionario.Trim();
+        DataRetornoFerias = dataRetornoFerias;
+        MotivoAfastamento = view.des_mot_afastamento.Trim();
+        DataDemissao = dataDemissao;
+        Cargo = FormatedFieldKey(view.cdn_cargo.ToString());
+        NomeCargo = FormatedField(view.des_cargo);
+        DataUltimaTrocaCargo = dataUltimaTrocaCargo;
+        GrauInstrucao = FormatedFieldKey(view.cdn_grau_instrucao.ToString());
+        NomeGrauInstrucao = FormatedField(view.nom_grau_instrucao);
+        SalarioNominal = view.val_salario_atual;
+        DataUltimoReajuste = dataUltimoReajuste;
+        EmpresaGestor = FormatedFieldKey(view.cdn_empresa_chefe);
+        NomeEmpresaGestor = FormatedField(view.nom_empresa_chefe);
+        EstabelecimentoGestor = FormatedFieldKey(view.cdn_estab_chefe);
+        NomeEstabelecimentoGestor = FormatedField(view.nom_estab_chefe);
+        DocumentoGestor = view.cdn_cpf_chefe.Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
+        if (!string.IsNullOrEmpty(DocumentoGestor))
+          DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        MatriculaGestor = string.Empty;
+        if (view.cdn_matricula_chefe != 0)
+          MatriculaGestor = view.cdn_matricula_chefe.ToString();
+        Apelido = view.cod_usuario_ad;
+        ValidDataColaborator();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     #endregion
 
     #region Formatação de String
@@ -251,11 +305,19 @@ namespace IntegrationService.Data
     }
     private DateTime? FieldDate(string data)
     {
-      DateTime? result = null;
-      DateTime.TryParse(data, CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime resultParse);
-      if (!string.IsNullOrEmpty(data))
-        result = resultParse;
-      return result;
+      try
+      {
+        DateTime? result = null;
+        DateTime.TryParse(data.Substring(0, 10), CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime resultParse);
+        if (!string.IsNullOrEmpty(data))
+          result = resultParse;
+        return result;
+
+      }
+      catch (Exception)
+      {
+        return null;
+      }
     }
     #endregion
 
@@ -281,8 +343,8 @@ namespace IntegrationService.Data
         if (string.IsNullOrEmpty(Nome))
           Message = string.Concat(Message, "Nome não informado!;");
         // E-mail
-        if (string.IsNullOrEmpty(Email))
-          Message = string.Concat(Message, "E-mail não informado!;");
+        //if (string.IsNullOrEmpty(Email))
+        //  Message = string.Concat(Message, "E-mail não informado!;");
         // Data admissão
         if (DataAdmissao == null)
           Message = string.Concat(Message, "Data de admissão inválida!;");
