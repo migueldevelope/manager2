@@ -99,25 +99,34 @@ namespace Manager.Services.Auth
         {
           _idAccount = user._idAccount
         };
+        serviceTermsOfService.SetUser(_user);
+        serviceTermsOfService._user = _user;
 
         var date = serviceTermsOfService.GetTerm();
-        var viewDate = new UserTermOfService()
-        {
-          Date = date?.Date,
-          _idTermOfService = date?._id
-        };
 
         UserTermOfService term = null;
-        if (user.UserTermOfServices != null)
+        UserTermOfService viewDate = null;
+
+        if (date != null)
         {
-            foreach(var item in user.UserTermOfServices)
+          viewDate = new UserTermOfService()
           {
-            if (viewDate._idTermOfService == item._idTermOfService)
+            Date = date?.Date,
+            _idTermOfService = date?._id
+          };
+
+          if (user.UserTermOfServices != null)
+          {
+            foreach (var item in user.UserTermOfServices)
             {
-              term = viewDate;
+              if (viewDate._idTermOfService == item._idTermOfService)
+              {
+                term = viewDate;
+              }
             }
           }
         }
+
 
         serviceDictionarySystem.SetUser(_user);
         ViewPerson person = new ViewPerson()
@@ -128,7 +137,7 @@ namespace Manager.Services.Auth
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
           NameAccount = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result.Name,
-          TermOfService = term == null ? false : true,
+          TermOfService = date == null ? true : term == null ? false : true,
           DictionarySystem = null
         };
 

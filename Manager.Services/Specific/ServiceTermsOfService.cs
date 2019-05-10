@@ -128,6 +128,13 @@ namespace Manager.Services.Specific
       try
       {
         var account = serviceAccount.GetFreeNewVersion(p => p._id == _user._idAccount).Result;
+
+        if (account.InfoClient == null)
+          return null;
+
+        if (account.InfoClient == "")
+          return null;
+
         var date = serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.Max(p => p.Date);
         TermsOfService termsofservice = serviceTermsOfService.GetAllFreeNewVersion(p => p.Date == date).Result.FirstOrDefault();
         return new ViewListTermsOfService()

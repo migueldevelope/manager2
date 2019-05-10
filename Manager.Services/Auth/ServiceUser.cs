@@ -98,6 +98,8 @@ namespace Manager.Services.Auth
         if (user.UserTermOfServices == null)
           user.UserTermOfServices = new List<UserTermOfService>();
 
+        serviceTermsOfService.SetUser(_user);
+        serviceTermsOfService._user = _user;
         var term = serviceTermsOfService.GetTerm();
         user.UserTermOfServices.Add(new UserTermOfService() { _idTermOfService = term._id, Date = term.Date });
 
