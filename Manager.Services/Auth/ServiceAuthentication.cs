@@ -17,6 +17,7 @@ using System.Text;
 using Manager.Views.Enumns;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Manager.Core.BusinessModel;
 
 namespace Manager.Services.Auth
 {
