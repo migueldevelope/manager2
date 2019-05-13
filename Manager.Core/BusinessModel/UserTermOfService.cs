@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Manager.Core.Business
+namespace Manager.Core.BusinessModel
 {
   public class UserTermOfService
   {

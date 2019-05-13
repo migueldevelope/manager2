@@ -1,8 +1,8 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.BusinessModel;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Manager.Core.Business
 {
