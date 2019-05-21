@@ -174,7 +174,7 @@ namespace Manager.Services.Auth
             issuer: "localhost",
             audience: "localhost",
             claims: claims,
-            expires: DateTime.Now.AddYears(1),
+            expires: DateTime.Now.AddDays(2),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
         );
         person.Token = new JwtSecurityTokenHandler().WriteToken(token);
