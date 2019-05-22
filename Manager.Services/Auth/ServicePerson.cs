@@ -503,7 +503,7 @@ namespace Manager.Services.Auth
           Phone = view.User.Phone,
           PhoneFixed = view.User.PhoneFixed,
           PhotoUrl = view.User.PhotoUrl,
-          Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User._id).Result,
+          Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result,
           Sex = view.User.Sex,
           ChangePassword = EnumChangePassword.AccessFirst,
           UserAdmin = false
