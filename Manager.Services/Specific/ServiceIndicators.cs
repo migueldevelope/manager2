@@ -523,7 +523,7 @@ namespace Manager.Services.Specific
                 item.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
             DateBegin = item.Checkpoint?.DateBegin,
             DateEnd = item.Checkpoint?.DateEnd,
-            Occupation = item.Person.Occupation.Name,
+            Occupation = item.Person.Occupation?.Name,
             Result = item.Checkpoint == null ? "Não iniciado" :
               item.Checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
                 item.Checkpoint.TypeCheckpoint == EnumCheckpoint.Disapproved ? "Não Efetivado" : "Aguardando Definição"
@@ -598,8 +598,7 @@ namespace Manager.Services.Specific
           What = p.Name,
           Description = p.Description,
           Deadline = p.Deadline,
-          Status = p == null ? "Em aberto" :
-                      p.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
+          Status = p.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         p.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
           Obs = p.TextEnd,
           DateEnd = p.DateEnd
