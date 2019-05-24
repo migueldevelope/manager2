@@ -78,9 +78,9 @@ namespace Manager.Services.Specific
       {
         List<ViewIndicatorsNotes> result = new List<ViewIndicatorsNotes>();
         long totalqtd = 0;
-        var monitorings = serviceMonitoring.GetAll(p => p.Person.Manager._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Count();
-        var onboardings = serviceOnboarding.GetAll(p => p.Person.Manager._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.WaitPerson & p.StatusOnBoarding != EnumStatusOnBoarding.End).Count();
-        var workflows = serviceWorkflow.GetAll(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Count();
+        var monitorings = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Result;
+        var onboardings = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.WaitPerson & p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+        var workflows = serviceWorkflow.CountNewVersion(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Result;
 
         totalqtd = monitorings + onboardings + workflows;
 
@@ -133,7 +133,7 @@ namespace Manager.Services.Specific
       try
       {
         /*var list = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
-          Select(p => p.Activities.Where(u => u.Plans.Count() > 0).Select(
+          Select(p => p.Activities.Where(u => u.Plans.Result > 0).Select(
             x => x.Plans.Select(u => u.Skills))).ToList();*/
 
         var list = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
@@ -245,9 +245,9 @@ namespace Manager.Services.Specific
       {
         List<ViewIndicatorsNotes> result = new List<ViewIndicatorsNotes>();
         long totalqtd = 0;
-        var monitorings = serviceMonitoring.GetAll(p => p.Person._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressManager & p.StatusMonitoring != EnumStatusMonitoring.WaitManager & p.StatusMonitoring != EnumStatusMonitoring.End).Count();
-        var onboardings = serviceOnboarding.GetAll(p => p.Person._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressManager & p.StatusOnBoarding != EnumStatusOnBoarding.WaitManager & p.StatusOnBoarding != EnumStatusOnBoarding.End).Count();
-        var workflows = serviceWorkflow.GetAll(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Count();
+        var monitorings = serviceMonitoring.CountNewVersion(p => p.Person._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressManager & p.StatusMonitoring != EnumStatusMonitoring.WaitManager & p.StatusMonitoring != EnumStatusMonitoring.End).Result;
+        var onboardings = serviceOnboarding.CountNewVersion(p => p.Person._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressManager & p.StatusOnBoarding != EnumStatusOnBoarding.WaitManager & p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+        var workflows = serviceWorkflow.CountNewVersion(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Result;
 
         totalqtd = monitorings + onboardings + workflows;
         result.Add(new ViewIndicatorsNotes() { Name = "Monitoring", qtd = monitorings, total = totalqtd });

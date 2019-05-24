@@ -26,7 +26,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getnotes/{idperson}")]
-    public List<ViewIndicatorsNotes> GetNotes(string idperson)
+    public async Task<List<ViewIndicatorsNotes>> GetNotes(string idperson)
     {
       return service.GetNotes(idperson);
     }
@@ -34,7 +34,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getnotesperson/{idperson}")]
-    public List<ViewIndicatorsNotes> GetNotesPerson(string idperson)
+    public async Task<List<ViewIndicatorsNotes>> GetNotesPerson(string idperson)
     {
       return service.GetNotesPerson(idperson);
     }
@@ -42,7 +42,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listtagscloud/{idmanager}")]
-    public List<ViewTagsCloud> ListTagsCloud(string idmanager)
+    public async Task<List<ViewTagsCloud>> ListTagsCloud(string idmanager)
     {
       return service.ListTagsCloud(idmanager);
     }
@@ -50,7 +50,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listtagscloudperson/{idperson}")]
-    public List<ViewTagsCloud> ListTagsCloudPerson(string idperson)
+    public async Task<List<ViewTagsCloud>> ListTagsCloudPerson(string idperson)
     {
       return service.ListTagsCloudPerson(idperson);
     }
@@ -58,7 +58,7 @@ namespace Manager.Controllers
     //[Authorize]
     //[HttpGet]
     //[Route("exportonboarding")]
-    //public   string[] ExportStatusOnboarding(int count = 999999, int page = 1, string filter = "")
+    //public async Task<  string[] ExportStatusOnboarding(int count = 999999, int page = 1, string filter = "")
     //{
     //  long total = 0;
     //  var result = service.ExportStatusOnboarding(ref total, filter, count, page);
@@ -69,7 +69,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportonboarding")]
-    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
+    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding()
     {
       return service.ExportStatusOnboarding();
     }
@@ -77,7 +77,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportstatuscertification")]
-    public List<ViewExportStatusCertification> ExportStatusCertification()
+    public async Task<List<ViewExportStatusCertification>> ExportStatusCertification()
     {
       return service.ExportStatusCertification();
     }
@@ -85,7 +85,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportstatuscertification/{idperson}")]
-    public List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson)
+    public async Task<List<ViewExportStatusCertificationPerson>> ExportStatusCertification(string idperson)
     {
       return service.ExportStatusCertification(idperson);
     }
@@ -93,14 +93,14 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportmonitoring")]
-    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
+    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring()
     {
       return service.ExportStatusMonitoring();
     }
 
     [HttpGet]
     [Route("exportonboarding/{idperson}")]
-    public List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
+    public async Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson)
     {
       return service.ExportStatusOnboarding(idperson);
     }
@@ -108,7 +108,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportmonitoring/{idperson}")]
-    public List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson)
+    public async Task<List<ViewExportStatusMonitoring>> ExportStatusMonitoring(string idperson)
     {
       return service.ExportStatusMonitoring(idperson);
     }
@@ -116,7 +116,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportcheckpoint")]
-    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
+    public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint()
     {
       return service.ExportStatusCheckpoint();
     }
@@ -124,7 +124,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("exportplan")]
-    public List<ViewExportStatusPlan> ExportStatusPlan()
+    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan()
     {
       return service.ExportStatusPlan();
     }
@@ -140,7 +140,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartmonitoring")]
-    public IEnumerable<ViewChartMonitoring> ChartMonitoring()
+    public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring()
     {
       return service.ChartMonitoring();
     }
@@ -148,7 +148,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartcheckpoint")]
-    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint()
+    public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint()
     {
       return service.ChartCheckpoint();
     }
@@ -156,7 +156,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartplan")]
-    public IEnumerable<ViewChartPlan> ChartPlan()
+    public async Task<IEnumerable<ViewChartPlan>> ChartPlan()
     {
       return service.ChartPlan();
     }
@@ -164,7 +164,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartmonitoringrealized")]
-    public IEnumerable<ViewChartStatus> ChartMonitoringRealized()
+    public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized()
     {
       return service.ChartMonitoringRealized();
     }
@@ -172,7 +172,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartcheckpointrealized")]
-    public IEnumerable<ViewChartStatus> ChartCheckpointRealized()
+    public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized()
     {
       return service.ChartCheckpointRealized();
     }
@@ -180,7 +180,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartplanrealized")]
-    public IEnumerable<ViewChartStatus> ChartPlanRealized()
+    public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized()
     {
       return service.ChartPlanRealized();
     }
@@ -188,7 +188,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartonboardingrealized")]
-    public IEnumerable<ViewChartStatus> ChartOnboardingRealized()
+    public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized()
     {
       return service.ChartOnboardingRealized();
     }
@@ -196,7 +196,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listtagscloudcompany/{idmanager}")]
-    public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
+    public async Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager)
     {
       return service.ListTagsCloudCompany(idmanager);
     }
@@ -205,7 +205,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listtagscloudcompanyperson/{idperson}")]
-    public List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson)
+    public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPerson(string idperson)
     {
       return service.ListTagsCloudCompanyPerson(idperson);
     }
