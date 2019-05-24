@@ -10,11 +10,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Manager
 {
-    /// <summary>
-    /// Configurador do programa
-    /// </summary>
-    public class Program
-    {
+  /// <summary>
+  /// Configurador do programa
+  /// </summary>
+  public class Program
+  {
     /// <summary>
     /// Ponto de entrada
     /// </summary>
@@ -33,7 +33,9 @@ namespace Manager
            .UseUrls("http://0.0.0.0:5200/")
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
-            .UseKestrel()
+            .UseKestrel(opts => 
+                          opts.AllowSynchronousIO = true
+                      )
             .UseStartup<Startup>()
             .Build();
   }

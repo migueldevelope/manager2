@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Authorization;
@@ -35,11 +36,13 @@ namespace Manager.Controllers
     /// <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
     [AllowAnonymous]
     [HttpPost]
-    public ObjectResult PostNewAuthentication([FromBody]ViewAuthentication userLogin)
+    public async Task<ObjectResult> PostNewAuthentication([FromBody]ViewAuthentication userLogin)
     {
       try
       {
         return Ok(service.Authentication(userLogin));
+        //test
+        //return Ok(new { id = "1" });
       }
       catch (Exception e)
       {

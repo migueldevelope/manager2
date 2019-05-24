@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
-    [Produces("application/json")]
-    [Route("indicators")]
-    public class IndicatorsController : Controller
-    {
+  [Produces("application/json")]
+  [Route("indicators")]
+  public class IndicatorsController : Controller
+  {
     private readonly IServiceIndicators service;
 
     public IndicatorsController(IServiceIndicators _service, IHttpContextAccessor contextAccessor)
@@ -58,12 +58,12 @@ namespace Manager.Controllers
     //[Authorize]
     //[HttpGet]
     //[Route("exportonboarding")]
-    //public string[] ExportStatusOnboarding(int count = 999999, int page = 1, string filter = "")
+    //public   string[] ExportStatusOnboarding(int count = 999999, int page = 1, string filter = "")
     //{
     //  long total = 0;
     //  var result = service.ExportStatusOnboarding(ref total, filter, count, page);
     //  Response.Headers.Add("x-total-count", total.ToString());
-    //  return result;
+    //  return  result;
     //}
 
     [Authorize]
@@ -71,7 +71,7 @@ namespace Manager.Controllers
     [Route("exportonboarding")]
     public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
     {
-     return service.ExportStatusOnboarding();
+      return service.ExportStatusOnboarding();
     }
 
     [Authorize]
@@ -132,7 +132,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("chartonboarding")]
-    public IEnumerable<ViewChartOnboarding> ChartOnboarding()
+    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
     {
       return service.ChartOnboarding();
     }
