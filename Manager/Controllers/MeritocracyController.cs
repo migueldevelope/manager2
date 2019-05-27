@@ -176,7 +176,7 @@ namespace Manager.Controllers
     /// <returns>Lista de estabelecimentos</returns>
     [Authorize]
     [HttpGet]
-    [Route("listmeritocracyccore")]
+    [Route("listsalaryscaleccore")]
     public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
@@ -191,7 +191,7 @@ namespace Manager.Controllers
     /// <param name="view">Objeto de manutenção do estabelecimento</param>
     /// <returns>Mensagem de sucesso</returns>
     [HttpPost]
-    [Route("newmeritocracyccore")]
+    [Route("newmsalaryscale")]
     public async Task<IActionResult> PostSalaryScaleScore([FromBody]ViewCrudSalaryScaleScore view)
     {
       return Ok(service.NewSalaryScaleScore(view));
@@ -203,7 +203,7 @@ namespace Manager.Controllers
     /// <returns>Objeto de manutenção do estabelecimento</returns>
     [Authorize]
     [HttpGet]
-    [Route("getmeritocracyccore/{id}")]
+    [Route("getsalaryscale/{id}")]
     public async Task<ViewCrudSalaryScaleScore> ListSalaryScaleScore(string id)
     {
       return service.GetSalaryScaleScore(id);
@@ -215,7 +215,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
-    [Route("updatemeritocracyccore")]
+    [Route("updatesalaryscale")]
     public async Task<IActionResult> UpdateSalaryScaleScore([FromBody]ViewCrudSalaryScaleScore view)
     {
       return Ok(service.UpdateSalaryScaleScore(view));
@@ -227,7 +227,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]
-    [Route("deletemeritocracyccore/{id}")]
+    [Route("deletesalaryscale/{id}")]
     public async Task<IActionResult> DeleteSalaryScaleScore(string id)
     {
       return Ok(service.DeleteSalaryScaleScore(id));
