@@ -77,7 +77,10 @@ namespace Manager
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer);
       IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer);
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
+      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context);
 
+
+      services.AddSingleton(_ => serviceMeritocracy);
       services.AddSingleton(_ => serviceTermsOfService);
       services.AddSingleton(_ => serviceGoals);
       services.AddSingleton(_ => serviceCertification);
