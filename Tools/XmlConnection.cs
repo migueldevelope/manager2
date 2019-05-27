@@ -24,7 +24,9 @@ namespace Tools
             Server = "Server",
             ServerLog = "ServerLog",
             SignalRService = "SignalRService",
-            TokenServer = "TokenServer"
+            TokenServer = "TokenServer",
+            QueueName = "QueueName",
+            ServiceBusConnectionString = "ServiceBusConnectionString"
           }, fileName);
         }
         XmlSerializer xs = new XmlSerializer(typeof(Config));

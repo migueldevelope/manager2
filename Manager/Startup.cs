@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Auth;
+using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -51,8 +52,12 @@ namespace Manager
 
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
+      string serviceBusConnectionString = conn.ServiceBusConnectionString;
+      string queueName = conn.QueueName;
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName);
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
       IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
@@ -60,7 +65,7 @@ namespace Manager
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer);
+      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
@@ -79,7 +84,7 @@ namespace Manager
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context);
 
-
+      services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceMeritocracy);
       services.AddSingleton(_ => serviceTermsOfService);
       services.AddSingleton(_ => serviceGoals);

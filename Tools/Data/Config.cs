@@ -27,5 +27,10 @@ namespace Tools.Data
     public string ServerIntegration { get; set; }
     [XmlElement("DataBaseIntegration")]
     public string DataBaseIntegration { get; set; }
+    [XmlElement("ServiceBusConnectionString")]
+    public string ServiceBusConnectionString { get; set; }
+    [XmlElement("QueueName")]
+    public string QueueName { get; set; }
+
   }
 }

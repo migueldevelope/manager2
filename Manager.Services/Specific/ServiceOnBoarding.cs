@@ -11,6 +11,7 @@ using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,10 +34,12 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<OnBoarding> serviceOnboarding;
+    private readonly IServiceControlQueue serviceControlQueue;
+
     public string pathToken;
 
     #region Constructor
-    public ServiceOnBoarding(DataContext context, DataContext contextLog, string _pathToken) : base(context)
+    public ServiceOnBoarding(DataContext context, DataContext contextLog, string _pathToken, IServiceControlQueue _serviceControlQueue) : base(context)
     {
       try
       {
@@ -50,6 +53,9 @@ namespace Manager.Services.Specific
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
         servicePerson = new ServiceGeneric<Person>(context);
+        serviceControlQueue = _serviceControlQueue;
+
+
         pathToken = _pathToken;
       }
       catch (Exception e)
@@ -1469,6 +1475,17 @@ namespace Manager.Services.Specific
     {
       try
       {
+
+        //var data = new {
+        //  _idPerson = "123456789012123456789012",
+        //  Name = "Miguel",
+        //  _idRotine = "123456789012123456789012",
+        //  Rotine = "Onboarding"
+        //};
+
+        //serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+        //serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
+
         Task.Run(() => LogSave(_user._idPerson, "OnBoarding list for exclud"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
