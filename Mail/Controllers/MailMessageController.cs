@@ -2,6 +2,7 @@
 using Manager.Core.Views;
 using Manager.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace EvaluationMail.Controllers
 {
@@ -30,7 +31,7 @@ namespace EvaluationMail.Controllers
     /// <returns></returns>
     [HttpGet]
     [Route("{id}")]
-    public ViewMailMessage Get(string id)
+    public async Task<ViewMailMessage> Get(string id)
     {
       return this.service.GetMessage(id);
     }

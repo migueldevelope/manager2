@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Manager.Core.Interfaces;
 using Tools;
 using Tools.Data;
+using System.Threading.Tasks;
 
 namespace EvaluationMail.Controllers
 {
@@ -35,7 +36,7 @@ namespace EvaluationMail.Controllers
     [Authorize]
     [HttpPost]
     [Route("{idmail}")]
-    public IActionResult Send(string idmail)
+    public async Task<IActionResult> Send(string idmail)
     {
       try
       {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -41,7 +42,7 @@ namespace Mail.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewListMailModel> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMailModel>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(ref total, count, page, filter);
@@ -56,7 +57,7 @@ namespace Mail.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public IActionResult New([FromBody]ViewCrudMailModel view)
+    public async Task<IActionResult> New([FromBody]ViewCrudMailModel view)
     {
       return Ok(service.New(view));
     }
@@ -68,7 +69,7 @@ namespace Mail.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudMailModel Get(string id)
+    public async Task<ViewCrudMailModel> Get(string id)
     {
       return service.Get(id);
     }
@@ -80,7 +81,7 @@ namespace Mail.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult Update([FromBody]ViewCrudMailModel view)
+    public async Task<IActionResult> Update([FromBody]ViewCrudMailModel view)
     {
       return Ok(service.Update(view));
     }
