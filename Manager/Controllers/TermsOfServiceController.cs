@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -41,7 +42,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewListTermsOfService> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListTermsOfService>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListTermsOfService> result = service.List(ref total, count, page, filter);
@@ -55,7 +56,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("new")]
-    public IActionResult Post([FromBody]ViewCrudTermsOfService view)
+    public async Task<IActionResult> Post([FromBody]ViewCrudTermsOfService view)
     {
       return Ok(service.New(view));
     }
@@ -67,7 +68,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudTermsOfService Get(string id)
+    public async Task<ViewCrudTermsOfService> Get(string id)
     {
       return service.Get(id);
     }
@@ -79,7 +80,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getterm")]
-    public ViewListTermsOfService GetTerm()
+    public async Task<ViewListTermsOfService> GetTerm()
     {
       return service.GetTerm();
     }
@@ -92,7 +93,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult Update([FromBody]ViewCrudTermsOfService view)
+    public async Task<IActionResult> Update([FromBody]ViewCrudTermsOfService view)
     {
       return Ok(service.Update(view));
     }
@@ -104,7 +105,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id)
     {
       return Ok(service.Delete(id));
     }

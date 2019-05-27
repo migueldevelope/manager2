@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -42,7 +43,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listwaitmanager/{idmanager}")]
-    public List<ViewListCheckpoint> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListWaitManager(idmanager, ref total, filter, count, page);
@@ -57,7 +58,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listwaitperson/{idperson}")]
-    public ViewListCheckpoint ListWaitPerson(string idperson)
+    public async Task<ViewListCheckpoint> ListWaitPerson(string idperson)
     {
       return service.ListWaitPerson(idperson);
     }
@@ -69,7 +70,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new/{idperson}")]
-    public ViewListCheckpoint NewCheckpoint(string idperson)
+    public async Task<ViewListCheckpoint> NewCheckpoint(string idperson)
     {
       return service.NewCheckpoint(idperson);
     }
@@ -81,7 +82,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudCheckpoint GetCheckpoint(string id)
+    public async Task<ViewCrudCheckpoint> GetCheckpoint(string id)
     {
       return service.GetCheckpoint(id);
     }
@@ -93,7 +94,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult UpdateCheckpoint([FromBody]ViewCrudCheckpoint view)
+    public async Task<IActionResult> UpdateCheckpoint([FromBody]ViewCrudCheckpoint view)
     {
       return Ok(service.UpdateCheckpoint(view));
     }
@@ -105,7 +106,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personcheckpointend/{id}")]
-    public ViewCrudCheckpoint PersonCheckpointEnd(string id)
+    public async Task<ViewCrudCheckpoint> PersonCheckpointEnd(string id)
     {
       return service.PersonCheckpointEnd(id);
     }
@@ -117,7 +118,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public string DeleteCheckpoint(string id)
+    public async Task<string> DeleteCheckpoint(string id)
     {
       return service.DeleteCheckpoint(id);
     }
@@ -131,7 +132,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listended")]
-    public List<ViewListCheckpoint> ListEnded(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCheckpoint>> ListEnded(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEnded(ref total, filter, count, page);

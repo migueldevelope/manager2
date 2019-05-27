@@ -25,7 +25,7 @@ namespace Manager.Controllers
 
     [HttpPost]
     [Route("new")]
-    public string Post([FromBody]ConfigurationNotification view)
+    public async Task<string> Post([FromBody]ConfigurationNotification view)
     {
       return service.New(view);
     }
@@ -33,7 +33,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ConfigurationNotification> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ConfigurationNotification>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(ref total, count, page, filter);
@@ -44,7 +44,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get")]
-    public ConfigurationNotification List(string id)
+    public async Task<ConfigurationNotification> List(string id)
     {
       return service.Get(id);
     }
@@ -52,7 +52,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string Update([FromBody]ConfigurationNotification view)
+    public async Task<string> Update([FromBody]ConfigurationNotification view)
     {
       return service.Update(view);
     }
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       return service.Remove(id);
     }

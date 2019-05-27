@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -39,7 +40,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public string New([FromBody]ViewCrudDictionarySystem view)
+    public async Task<string> New([FromBody]ViewCrudDictionarySystem view)
     {
       return service.New(view);
     }
@@ -51,7 +52,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newlist")]
-    public string NewList([FromBody]List<ViewListDictionarySystem> list)
+    public async Task<string> NewList([FromBody]List<ViewListDictionarySystem> list)
     {
       return service.New(list);
     }
@@ -65,7 +66,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewListDictionarySystem> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListDictionarySystem>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListDictionarySystem> result = service.List(ref total, count, page, filter);
@@ -80,7 +81,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudDictionarySystem Get(string id)
+    public async Task<ViewCrudDictionarySystem> Get(string id)
     {
       return service.Get(id);
     }
@@ -92,7 +93,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getname/{name}")]
-    public ViewListDictionarySystem GetName(string name)
+    public async Task<ViewListDictionarySystem> GetName(string name)
     {
       return service.GetName(name);
     }
@@ -104,7 +105,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult Update([FromBody]ViewCrudDictionarySystem view)
+    public async Task<IActionResult> Update([FromBody]ViewCrudDictionarySystem view)
     {
       return Ok(service.Update(view));
     }
@@ -116,7 +117,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id)
     {
       return Ok(service.Delete(id));
     }

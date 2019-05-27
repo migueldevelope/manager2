@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
@@ -54,7 +55,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public List<ViewListUser> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListUser>> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(ref total, count, page, filter, type);
@@ -72,7 +73,7 @@ namespace Manager.Controllers
     [AllowAnonymous]
     [HttpPost]
     [Route("checktermofservice/{iduser}")]
-    public string CheckTermOfService(string iduser)
+    public async Task<string> CheckTermOfService(string iduser)
     {
       service.CheckTermOfService(iduser);
       return "ok";
@@ -87,7 +88,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{iduser}")]
-    public ViewCrudUser Get(string iduser)
+    public async Task<ViewCrudUser> Get(string iduser)
     {
       return service.Get(iduser);
     }
@@ -99,7 +100,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public ViewCrudUser New([FromBody] ViewCrudUser view)
+    public async Task<ViewCrudUser> New([FromBody] ViewCrudUser view)
     {
       return service.New(view);
     }
@@ -111,7 +112,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public ViewCrudUser Update([FromBody] ViewCrudUser view)
+    public async Task<ViewCrudUser> Update([FromBody] ViewCrudUser view)
     {
       return service.Update(view);
     }
@@ -123,7 +124,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("photo/{iduser}")]
-    public string GetPhoto(string iduser)
+    public async Task<string> GetPhoto(string iduser)
     {
       return service.GetPhoto(iduser);
     }
@@ -141,7 +142,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listperson/{iduser}")]
-    public List<ViewListPersonInfo> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonInfo>> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPerson(iduser, ref total, filter, count, page);
@@ -160,7 +161,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("alterpass/{idUser}")]
-    public string AlterPassword([FromBody]ViewAlterPass view, string idUser)
+    public async Task<string> AlterPassword([FromBody]ViewAlterPass view, string idUser)
     {
       return service.AlterPassword(view, idUser);
     }
@@ -172,7 +173,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso, ou error_valid</returns>
     [HttpPut]
     [Route("forgotpassword/{foreign}/alter")]
-    public string AlterPasswordForgot([FromBody]ViewAlterPass view, string foreign)
+    public async Task<string> AlterPasswordForgot([FromBody]ViewAlterPass view, string foreign)
     {
       return service.AlterPasswordForgot(view, foreign);
     }
@@ -184,7 +185,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso!</returns>
     [HttpPut]
     [Route("forgotpassword/{mail}")]
-    public string ForgotPassword([FromBody]ViewForgotPassword view, string mail)
+    public async Task<string> ForgotPassword([FromBody]ViewForgotPassword view, string mail)
     {
       Config conn = XmlConnection.ReadConfig();
       return service.ForgotPassword(mail, view, conn.SendGridKey).Result;

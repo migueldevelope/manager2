@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manager.Controllers
 {
@@ -38,14 +39,14 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("removestructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
-    public string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    public async Task<string> RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       return service.RemoveStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
     [Authorize]
     [HttpDelete]
     [Route("removeplanactivity/{id}")]
-    public string RemovePlanActivity(string id)
+    public async Task<string> RemovePlanActivity(string id)
     {
       return service.RemovePlanActivity(id);
     }
@@ -67,7 +68,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplans/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}/{wait}")]
-    public List<ViewGetPlan> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewGetPlan>> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlans(ref total, id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
@@ -85,7 +86,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplans/{id}")]
-    public List<ViewPlanShort> ListPlans(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewPlanShort>> ListPlans(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlans(ref total, id, filter, count, page);
@@ -103,7 +104,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplansperson/{id}")]
-    public List<ViewPlanShort> ListPlansPerson(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewPlanShort>> ListPlansPerson(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlansPerson(ref total, id, filter, count, page);
@@ -128,7 +129,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplansperson/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}/{wait}")]
-    public List<ViewGetPlan> ListPlansPerson(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewGetPlan>> ListPlansPerson(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlansPerson(ref total, id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
@@ -144,7 +145,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getplan/{idmonitoring}/{idplan}")]
-    public ViewGetPlan GetPlan(string idmonitoring, string idplan)
+    public async Task<ViewGetPlan> GetPlan(string idmonitoring, string idplan)
     {
       return service.GetPlan(idmonitoring, idplan);
     }
@@ -157,7 +158,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateplan/{idmonitoring}")]
-    public string UpdatePlan([FromBody]ViewCrudPlan plan, string idmonitoring)
+    public async Task<string> UpdatePlan([FromBody]ViewCrudPlan plan, string idmonitoring)
     {
       return service.UpdatePlan(idmonitoring, plan);
     }
@@ -171,7 +172,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newplan/{idmonitoring}/{idplanold}")]
-    public string NewPlan([FromBody]ViewCrudPlan plan, string idmonitoring, string idplanold)
+    public async Task<string> NewPlan([FromBody]ViewCrudPlan plan, string idmonitoring, string idplanold)
     {
       return service.NewPlan(idmonitoring, idplanold, plan);
     }
@@ -184,7 +185,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("newupdateplan/{idmonitoring}")]
-    public string NewUpdatePlan([FromBody]List<ViewCrudNewPlanUp> plan, string idmonitoring)
+    public async Task<string> NewUpdatePlan([FromBody]List<ViewCrudNewPlanUp> plan, string idmonitoring)
     {
       return service.NewUpdatePlan(idmonitoring, plan);
     }
@@ -201,7 +202,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplansstruct/{activities}/{skillcompany}/{schooling}/{structplan}")]
-    public List<ViewListPlanStruct> ListPlansStruct(byte activities, byte skillcompany, byte schooling, byte structplan, int count = 10, int page = 1)
+    public async Task<List<ViewListPlanStruct>> ListPlansStruct(byte activities, byte skillcompany, byte schooling, byte structplan, int count = 10, int page = 1)
     {
       long total = 0;
       var result = service.ListPlansStruct(ref total, "", count, page, activities, skillcompany, schooling, structplan);
@@ -219,7 +220,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newstructplan/{idmonitoring}/{idplan}/{sourceplan}")]
-    public string NewStructPlan([FromBody] ViewCrudStructPlan structplan, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
+    public async Task<string> NewStructPlan([FromBody] ViewCrudStructPlan structplan, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
     {
       return service.NewStructPlan(idmonitoring, idplan, sourceplan, structplan);
     }
@@ -234,7 +235,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getstructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
-    public ViewCrudStructPlan GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    public async Task<ViewCrudStructPlan> GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       return service.GetStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
@@ -247,7 +248,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getplanstruct/{idmonitoring}/{idplan}")]
-    public ViewListPlanStruct GetPlanStruct(string idmonitoring, string idplan)
+    public async Task<ViewListPlanStruct> GetPlanStruct(string idmonitoring, string idplan)
     {
       return service.GetPlanStruct(idmonitoring, idplan);
     }
@@ -262,7 +263,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatestructplan/{idmonitoring}/{idplan}/{sourceplan}")]
-    public string UpdateStructPlan([FromBody]ViewCrudStructPlan structplanedit, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
+    public async Task<string> UpdateStructPlan([FromBody]ViewCrudStructPlan structplanedit, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
     {
       return service.UpdateStructPlan(idmonitoring, idplan, sourceplan, structplanedit);
     }
@@ -276,7 +277,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplanactivity")]
-    public List<ViewPlanActivity> ListPlanActivity(string filter = "", int count = 10, int page = 1)
+    public async Task<List<ViewPlanActivity>> ListPlanActivity(string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
       var result = service.ListPlanActivity(ref total, filter, count, page);
@@ -291,7 +292,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getplanactivity/{id}")]
-    public ViewPlanActivity GetPlanActivity(string id)
+    public async Task<ViewPlanActivity> GetPlanActivity(string id)
     {
       return service.GetPlanActivity(id);
     }
@@ -303,7 +304,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newplanactivity")]
-    public string NewPlanActivity([FromBody]ViewPlanActivity model)
+    public async Task<string> NewPlanActivity([FromBody]ViewPlanActivity model)
     {
       return service.NewPlanActivity(model);
     }
@@ -315,7 +316,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateplanactivity")]
-    public string UpdatePlanActivity([FromBody]ViewPlanActivity model)
+    public async Task<string> UpdatePlanActivity([FromBody]ViewPlanActivity model)
     {
       return service.UpdatePlanActivity(model);
     }

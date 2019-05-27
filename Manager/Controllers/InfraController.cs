@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
@@ -53,7 +54,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getareasbyid/{idarea}")]
-    public ViewCrudArea GetAreasById(string idarea)
+    public async Task<ViewCrudArea> GetAreasById(string idarea)
     {
       return service.GetAreasById(idarea);
     }
@@ -64,7 +65,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getareas")]
-    public List<ViewListArea> GetAreas()
+    public async Task<List<ViewListArea>> GetAreas()
     {
       return service.GetAreas();
     }
@@ -76,7 +77,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getareas/{idcompany}")]
-    public List<ViewListArea> GetAreas(string idcompany)
+    public async Task<List<ViewListArea>> GetAreas(string idcompany)
     {
       return service.GetAreas(idcompany);
     }
@@ -88,7 +89,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addarea")]
-    public string AddArea([FromBody]ViewCrudArea view)
+    public async Task<string> AddArea([FromBody]ViewCrudArea view)
     {
       return service.AddArea(view);
     }
@@ -103,7 +104,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("areaorder/{idcompany}/{idarea}/{order}/{sum}")]
-    public string AreaOrder(string idcompany, string idarea, long order, bool sum)
+    public async Task<string> AreaOrder(string idcompany, string idarea, long order, bool sum)
     {
       return service.AreaOrder(idcompany, idarea, order, sum);
     }
@@ -115,7 +116,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletearea/{id}")]
-    public string DeleteArea(string id)
+    public async Task<string> DeleteArea(string id)
     {
       return service.DeleteArea(id);
     }
@@ -127,7 +128,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatearea")]
-    public string UpdateArea([FromBody]ViewCrudArea view)
+    public async Task<string> UpdateArea([FromBody]ViewCrudArea view)
     {
       return service.UpdateArea(view);
     }
@@ -141,7 +142,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getaxis")]
-    public List<ViewListAxis> GetAxis()
+    public async Task<List<ViewListAxis>> GetAxis()
     {
       return service.GetAxis();
     }
@@ -153,7 +154,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getaxis/{idcompany}")]
-    public List<ViewListAxis> GetAxis(string idcompany)
+    public async Task<List<ViewListAxis>> GetAxis(string idcompany)
     {
       return service.GetAxis(idcompany);
     }
@@ -165,7 +166,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getaxisbyid/{id}")]
-    public ViewCrudAxis GetAxisById(string id)
+    public async Task<ViewCrudAxis> GetAxisById(string id)
     {
       return service.GetAxisById(id);
     }
@@ -177,7 +178,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addaxis")]
-    public string AddAxis([FromBody]ViewCrudAxis view)
+    public async Task<string> AddAxis([FromBody]ViewCrudAxis view)
     {
       return service.AddAxis(view);
     }
@@ -189,7 +190,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteaxis/{idaxis}")]
-    public string DeleteAxis(string idaxis)
+    public async Task<string> DeleteAxis(string idaxis)
     {
       return service.DeleteAxis(idaxis);
     }
@@ -201,7 +202,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateaxis")]
-    public string UpdateAxis([FromBody]ViewCrudAxis view)
+    public async Task<string> UpdateAxis([FromBody]ViewCrudAxis view)
     {
       return service.UpdateAxis(view);
     }
@@ -215,7 +216,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcbo")]
-    public List<ViewListCbo> ListCBO()
+    public async Task<List<ViewListCbo>> ListCBO()
     {
       return service.ListCBO();
     }
@@ -227,7 +228,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getcbo/{id}")]
-    public ViewCrudCbo GetCBO(string id)
+    public async Task<ViewCrudCbo> GetCBO(string id)
     {
       return service.GetCBO(id);
     }
@@ -239,7 +240,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcbo")]
-    public string AddCbo([FromBody]ViewCrudCbo view)
+    public async Task<string> AddCbo([FromBody]ViewCrudCbo view)
     {
       return service.AddCBO(view);
     }
@@ -251,7 +252,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletecbo/{id}")]
-    public string DeleteCBO(string id)
+    public async Task<string> DeleteCBO(string id)
     {
       return service.DeleteCBO(id);
     }
@@ -263,7 +264,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecbo")]
-    public string UpdateCBO([FromBody]ViewCrudCbo view)
+    public async Task<string> UpdateCBO([FromBody]ViewCrudCbo view)
     {
       return service.UpdateCBO(view);
     }
@@ -277,7 +278,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getcompanies")]
-    public List<ViewListCompany> GetCompanies()
+    public async Task<List<ViewListCompany>> GetCompanies()
     {
       return service.GetCompanies();
     }
@@ -293,7 +294,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getcourseoccupation/{idoccupation}/{type}")]
-    public List<ViewListCourse> GetCourseOccupation(string idoccupation, EnumTypeMandatoryTraining type)
+    public async Task<List<ViewListCourse>> GetCourseOccupation(string idoccupation, EnumTypeMandatoryTraining type)
     {
       return service.GetCourseOccupation(idoccupation, type);
     }
@@ -308,7 +309,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getessential/{idcompany}")]
-    public List<ViewListSkill> GetEssential(string idcompany)
+    public async Task<List<ViewListSkill>> GetEssential(string idcompany)
     {
       return service.GetEssential(idcompany);
     }
@@ -320,7 +321,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addessential")]
-    public string AddEssential([FromBody]ViewCrudEssential view)
+    public async Task<string> AddEssential([FromBody]ViewCrudEssential view)
     {
       return service.AddEssential(view);
     }
@@ -333,7 +334,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteessential/{idcompany}/{id}")]
-    public string DeleteEssential(string idcompany, string id)
+    public async Task<string> DeleteEssential(string idcompany, string id)
     {
       return service.DeleteEssential(idcompany, id);
     }
@@ -349,7 +350,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getmapgroupscope/{idgroup}/{idscope}")]
-    public ViewCrudMapGroupScope GetMapGroupScopeById(string idgroup, string idscope)
+    public async Task<ViewCrudMapGroupScope> GetMapGroupScopeById(string idgroup, string idscope)
     {
       return service.GetMapGroupScopeById(idgroup, idscope);
     }
@@ -361,7 +362,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgroup/{id}")]
-    public ViewCrudGroup GetGroup(string id)
+    public async Task<ViewCrudGroup> GetGroup(string id)
     {
       return service.GetGroup(id);
     }
@@ -372,7 +373,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgroups")]
-    public List<ViewListGroup> GetGroups()
+    public async Task<List<ViewListGroup>> GetGroups()
     {
       return service.GetGroups();
     }
@@ -384,7 +385,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getmapgroup/{id}")]
-    public ViewMapGroup GetMapGroup(string id)
+    public async Task<ViewMapGroup> GetMapGroup(string id)
     {
       return service.GetMapGroup(id);
     }
@@ -396,7 +397,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgroups/{idcompany}")]
-    public List<ViewGroupListLO> GetGroups(string idcompany)
+    public async Task<List<ViewGroupListLO>> GetGroups(string idcompany)
     {
       return service.GetGroups(idcompany);
     }
@@ -408,7 +409,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgroupsprint/{idcompany}")]
-    public List<ViewListGroup> GetGroupsPrint(string idcompany)
+    public async Task<List<ViewListGroup>> GetGroupsPrint(string idcompany)
     {
       return service.GetGroupsPrint(idcompany);
     }
@@ -423,7 +424,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("reordergroupscope/{idcompany}/{idgroup}/{idscope}/{sum}")]
-    public string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
+    public async Task<string> ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
     {
       return service.ReorderGroupScope(idcompany, idgroup, idscope, sum);
     }
@@ -438,7 +439,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("reordergroupscopemanual/{idcompany}/{idgroup}/{idscope}/{order}")]
-    public string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
+    public async Task<string> ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
     {
       return service.ReorderGroupScopeManual(idcompany, idgroup, idscope, order);
     }
@@ -450,7 +451,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addmapgroupschooling")]
-    public string AddMapGroupSchooling([FromBody]ViewCrudMapGroupSchooling view)
+    public async Task<string> AddMapGroupSchooling([FromBody]ViewCrudMapGroupSchooling view)
     {
       return service.AddMapGroupSchooling(view);
     }
@@ -462,7 +463,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addgroup")]
-    public string AddGroup([FromBody]ViewCrudGroup view)
+    public async Task<string> AddGroup([FromBody]ViewCrudGroup view)
     {
       service.AddGroup(view);
       return "OK";
@@ -475,7 +476,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addmapgroupscope")]
-    public string AddMapGroupScope([FromBody]ViewCrudMapGroupScope view)
+    public async Task<string> AddMapGroupScope([FromBody]ViewCrudMapGroupScope view)
     {
       return service.AddMapGroupScope(view);
     }
@@ -487,7 +488,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addmapgroupskill")]
-    public string AddMapGroupSkill([FromBody]ViewCrudMapGroupSkill view)
+    public async Task<string> AddMapGroupSkill([FromBody]ViewCrudMapGroupSkill view)
     {
       return service.AddMapGroupSkill(view);
     }
@@ -499,7 +500,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletegroup/{id}")]
-    public string DeleteGroup(string id)
+    public async Task<string> DeleteGroup(string id)
     {
       return service.DeleteGroup(id);
     }
@@ -512,7 +513,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletemapgroupschooling/{idgroup}/{id}")]
-    public string DeleteMapGroupSchooling(string idgroup, string id)
+    public async Task<string> DeleteMapGroupSchooling(string idgroup, string id)
     {
       return service.DeleteMapGroupSchooling(idgroup, id);
     }
@@ -525,7 +526,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletemapgroupskill/{idgroup}/{id}")]
-    public string DeleteMapGroupSkill(string idgroup, string id)
+    public async Task<string> DeleteMapGroupSkill(string idgroup, string id)
     {
       return service.DeleteMapGroupSkill(idgroup, id);
     }
@@ -538,7 +539,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletemapgroupscope/{idgroup}/{scope}")]
-    public string DeleteMapGroupScope(string idgroup, string scope)
+    public async Task<string> DeleteMapGroupScope(string idgroup, string scope)
     {
       return service.DeleteMapGroupScope(idgroup, scope);
     }
@@ -551,7 +552,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatemapgroupscope/{idgroup}")]
-    public string UpdateMapGroupScope([FromBody]ViewCrudScope scope, string idgroup)
+    public async Task<string> UpdateMapGroupScope([FromBody]ViewCrudScope scope, string idgroup)
     {
       return service.UpdateMapGroupScope(idgroup, scope);
     }
@@ -564,7 +565,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatemapgroupschooling/{idgroup}")]
-    public string UpdateMapGroupSchooling([FromBody]ViewCrudSchooling schooling, string idgroup)
+    public async Task<string> UpdateMapGroupSchooling([FromBody]ViewCrudSchooling schooling, string idgroup)
     {
       return service.UpdateMapGroupSchooling(idgroup, schooling);
     }
@@ -576,7 +577,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategroup")]
-    public string UpdateGroup([FromBody]ViewCrudGroup view)
+    public async Task<string> UpdateGroup([FromBody]ViewCrudGroup view)
     {
       return service.UpdateGroup(view);
     }
@@ -588,7 +589,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getcsvcomparegroup/{idcompany}")]
-    public string GetCSVCompareGroup(string idcompany)
+    public async Task<string> GetCSVCompareGroup(string idcompany)
     {
       return service.GetCSVCompareGroup(idcompany, XmlConnection.ReadConfig().BlobKey);
     }
@@ -603,7 +604,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getmapoccupation/{id}")]
-    public ViewMapOccupation GetMapOccupation(string id)
+    public async Task<ViewMapOccupation> GetMapOccupation(string id)
     {
       return service.GetMapOccupation(id);
     }
@@ -615,7 +616,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getoccupation/{id}")]
-    public ViewCrudOccupation GetOccupation(string id)
+    public async Task<ViewCrudOccupation> GetOccupation(string id)
     {
       return service.GetOccupation(id);
     }
@@ -626,7 +627,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getoccupations")]
-    public List<ViewListOccupation> GetOccupations()
+    public async Task<List<ViewListOccupation>> GetOccupations()
     {
       return service.GetOccupations();
     }
@@ -643,7 +644,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupationedit/{idcompany}/{idarea}")]
-    public List<ViewOccupationListEdit> ListOccupationEdit(string idcompany, string idarea, int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    public async Task<List<ViewOccupationListEdit>> ListOccupationEdit(string idcompany, string idarea, int count = 10, int page = 1, string filter = "", string filterGroup = "")
     {
       long total = 0;
       var result = service.ListOccupationsEdit(idcompany, idarea, ref total, filter, count, page, filterGroup);
@@ -659,7 +660,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getoccupations/{idcompany}/{idarea}")]
-    public List<ViewGetOccupation> GetOccupations(string idcompany, string idarea)
+    public async Task<List<ViewGetOccupation>> GetOccupations(string idcompany, string idarea)
     {
       return service.GetOccupations(idcompany, idarea);
     }
@@ -674,7 +675,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("reorderoccupationactivitie/{idcompany}/{idoccupation}/{idactivitie}/{sum}")]
-    public string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
+    public async Task<string> ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
     {
       return service.ReorderOccupationActivitie(idcompany, idoccupation, idactivitie, sum);
     }
@@ -689,7 +690,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("reorderoccupationactivitiemanual/{idcompany}/{idoccupation}/{idactivitie}/{order}")]
-    public string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
+    public async Task<string> ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
     {
       return service.ReorderOccupationActivitieManual(idcompany, idoccupation, idactivitie, order);
     }
@@ -702,7 +703,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addspecificrequirements/{idoccupation}")]
-    public string AddSpecificRequirements([FromBody]ViewCrudSpecificRequirements view, string idoccupation)
+    public async Task<string> AddSpecificRequirements([FromBody]ViewCrudSpecificRequirements view, string idoccupation)
     {
       return service.AddSpecificRequirements(idoccupation, view);
     }
@@ -714,7 +715,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addoccupationactivities")]
-    public string AddOccupationActivities([FromBody]ViewCrudOccupationActivities view)
+    public async Task<string> AddOccupationActivities([FromBody]ViewCrudOccupationActivities view)
     {
       return service.AddOccupationActivities(view);
     }
@@ -726,7 +727,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addoccupation")]
-    public string AddOccupation([FromBody]ViewCrudOccupation view)
+    public async Task<string> AddOccupation([FromBody]ViewCrudOccupation view)
     {
       return service.AddOccupation(view);
     }
@@ -738,7 +739,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addoccupationactivitieslist")]
-    public string AddOccupationActivitiesList([FromBody]List<ViewCrudOccupationActivities> list)
+    public async Task<string> AddOccupationActivitiesList([FromBody]List<ViewCrudOccupationActivities> list)
     {
       return service.AddOccupationActivitiesList(list);
     }
@@ -750,7 +751,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addoccupationskill")]
-    public string AddOccupationSkill([FromBody]ViewCrudOccupationSkill view)
+    public async Task<string> AddOccupationSkill([FromBody]ViewCrudOccupationSkill view)
     {
       return service.AddOccupationSkill(view);
     }
@@ -762,7 +763,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteoccupation/{id}")]
-    public string DeleteOccupation(string id)
+    public async Task<string> DeleteOccupation(string id)
     {
       return service.DeleteOccupation(id);
     }
@@ -775,7 +776,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteoccupationactivities/{idoccupation}/{idactivitie}")]
-    public string DeleteOccupationActivities(string idoccupation, string idactivitie)
+    public async Task<string> DeleteOccupationActivities(string idoccupation, string idactivitie)
     {
       return service.DeleteOccupationActivities(idoccupation, idactivitie);
     }
@@ -788,7 +789,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteoccupationskill/{idoccupation}/{id}")]
-    public string DeleteOccupationSkill(string idoccupation, string id)
+    public async Task<string> DeleteOccupationSkill(string idoccupation, string id)
     {
       return service.DeleteOccupationSkill(idoccupation, id);
     }
@@ -801,7 +802,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatemapoccupationschooling/{idoccupation}")]
-    public string UpdateMapOccupationSchooling([FromBody]ViewCrudSchooling schooling, string idoccupation)
+    public async Task<string> UpdateMapOccupationSchooling([FromBody]ViewCrudSchooling schooling, string idoccupation)
     {
       return service.UpdateMapOccupationSchooling(idoccupation, schooling);
     }
@@ -814,7 +815,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatemapoccupationactivities/{idoccupation}")]
-    public string UpdateMapOccupationActivities([FromBody]ViewCrudActivities activitie, string idoccupation)
+    public async Task<string> UpdateMapOccupationActivities([FromBody]ViewCrudActivities activitie, string idoccupation)
     {
       return service.UpdateMapOccupationActivities(idoccupation, activitie);
     }
@@ -826,7 +827,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateoccupation")]
-    public string UpdateOccupation([FromBody]ViewCrudOccupation view)
+    public async Task<string> UpdateOccupation([FromBody]ViewCrudOccupation view)
     {
       return service.UpdateOccupation(view);
     }
@@ -841,7 +842,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistprocessleveonebyarea/{idarea}")]
-    public List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea)
+    public async Task<List<ViewListProcessLevelOneByArea>> GetListProcessLevelOneByArea(string idarea)
     {
       return service.GetListProcessLevelOneByArea(idarea);
     }
@@ -853,7 +854,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addprocesslevelone")]
-    public string AddProcessLevelOne([FromBody]ViewCrudProcessLevelOne processLevelOne)
+    public async Task<string> AddProcessLevelOne([FromBody]ViewCrudProcessLevelOne processLevelOne)
     {
       service.AddProcessLevelOne(processLevelOne);
       return "ok";
@@ -866,7 +867,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteprocesslevelone/{id}")]
-    public string DeleteProcessLevelOne(string id)
+    public async Task<string> DeleteProcessLevelOne(string id)
     {
       return service.DeleteProcessLevelOne(id);
     }
@@ -878,7 +879,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateprocesslevelone")]
-    public string UpdateProcessLevelOne([FromBody]ViewCrudProcessLevelOne view)
+    public async Task<string> UpdateProcessLevelOne([FromBody]ViewCrudProcessLevelOne view)
     {
       return service.UpdateProcessLevelOne(view);
     }
@@ -893,7 +894,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistprocessleveltwobyid/{id}")]
-    public ViewCrudProcessLevelTwo GetListProcessLevelTwoById(string id)
+    public async Task<ViewCrudProcessLevelTwo> GetListProcessLevelTwoById(string id)
     {
       return service.GetListProcessLevelTwoById(id);
     }
@@ -905,7 +906,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getprocessleveltwo/{idarea}")]
-    public List<ViewListProcessLevelTwo> GetProcessLevelTwo(string idarea)
+    public async Task<List<ViewListProcessLevelTwo>> GetProcessLevelTwo(string idarea)
     {
       return service.GetProcessLevelTwoFilter(idarea);
     }
@@ -916,7 +917,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getprocessleveltwo")]
-    public List<ViewListProcessLevelTwo> GetProcessLevelTwo()
+    public async Task<List<ViewListProcessLevelTwo>> GetProcessLevelTwo()
     {
       return service.GetProcessLevelTwo();
     }
@@ -928,7 +929,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addprocessleveltwo")]
-    public string AddProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo processLevelTwo)
+    public async Task<string> AddProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo processLevelTwo)
     {
       service.AddProcessLevelTwo(processLevelTwo);
       return "ok";
@@ -941,7 +942,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteprocessleveltwo/{id}")]
-    public string DeleteProcessLevelTwo(string id)
+    public async Task<string> DeleteProcessLevelTwo(string id)
     {
       return service.DeleteProcessLevelTwo(id);
     }
@@ -953,7 +954,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateprocessleveltwo")]
-    public string UpdateProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo view)
+    public async Task<string> UpdateProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo view)
     {
       return service.UpdateProcessLevelTwo(view);
     }
@@ -968,7 +969,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listquestions/{idcompany}")]
-    public List<ViewListQuestions> GetQuestions(string idcompany)
+    public async Task<List<ViewListQuestions>> GetQuestions(string idcompany)
     {
       return service.ListQuestions(idcompany);
     }
@@ -980,7 +981,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getquestions/{id}")]
-    public ViewCrudQuestions GetQuestionsId(string id)
+    public async Task<ViewCrudQuestions> GetQuestionsId(string id)
     {
       return service.GetQuestions(id);
     }
@@ -992,7 +993,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addquestions")]
-    public string AddQuestions([FromBody]ViewCrudQuestions questions)
+    public async Task<string> AddQuestions([FromBody]ViewCrudQuestions questions)
     {
       service.AddQuestions(questions);
       return "ok";
@@ -1005,7 +1006,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletequestion/{id}")]
-    public string DeleteQuestion(string id)
+    public async Task<string> DeleteQuestion(string id)
     {
       return service.DeleteQuestion(id);
     }
@@ -1017,7 +1018,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatequestions")]
-    public string UpdateQuestions([FromBody]ViewCrudQuestions view)
+    public async Task<string> UpdateQuestions([FromBody]ViewCrudQuestions view)
     {
       return service.UpdateQuestions(view);
     }
@@ -1031,7 +1032,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getschooling")]
-    public List<ViewListSchooling> GetSchooling()
+    public async Task<List<ViewListSchooling>> GetSchooling()
     {
       return service.GetSchooling();
     }
@@ -1043,7 +1044,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getschoolingbyid/{id}")]
-    public ViewCrudSchooling GetSchoolingById(string id)
+    public async Task<ViewCrudSchooling> GetSchoolingById(string id)
     {
       return service.GetSchoolingById(id);
     }
@@ -1055,7 +1056,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addschooling")]
-    public string AddSchooling([FromBody]ViewCrudSchooling schooling)
+    public async Task<string> AddSchooling([FromBody]ViewCrudSchooling schooling)
     {
       service.AddSchooling(schooling);
       return "ok";
@@ -1068,7 +1069,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteschooling/{idschooling}")]
-    public string DeleteSchooling(string idschooling)
+    public async Task<string> DeleteSchooling(string idschooling)
     {
       return service.DeleteSchooling(idschooling);
     }
@@ -1080,7 +1081,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateschooling")]
-    public string UpdateSchooling([FromBody]ViewCrudSchooling view)
+    public async Task<string> UpdateSchooling([FromBody]ViewCrudSchooling view)
     {
       return service.UpdateSchooling(view);
     }
@@ -1097,7 +1098,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills")]
-    public List<ViewListSkill> GetSkills(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListSkill>> GetSkills(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkills(ref total, filter, count, page);
@@ -1112,7 +1113,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addskill")]
-    public ViewCrudSkill AddSkill([FromBody]ViewCrudSkill view)
+    public async Task<ViewCrudSkill> AddSkill([FromBody]ViewCrudSkill view)
     {
       return service.AddSkill(view);
     }
@@ -1124,7 +1125,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskillbyid/{id}")]
-    public ViewCrudSkill GetSkillById(string id)
+    public async Task<ViewCrudSkill> GetSkillById(string id)
     {
       return service.GetSkillById(id);
     }
@@ -1139,7 +1140,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills/{company}")]
-    public List<ViewSkills> GetSkills(string company, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewSkills>> GetSkills(string company, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkills(company, ref total, filter, count, page);
@@ -1158,7 +1159,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills/{idcompany}/{idgroup}")]
-    public List<ViewSkills> GetSkills(string idcompany, string idgroup, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewSkills>> GetSkills(string idcompany, string idgroup, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkillsGroup(idgroup, idcompany, ref total, filter, count, page);
@@ -1178,7 +1179,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills/{idcompany}/{idgroup}/{idoccupation}")]
-    public List<ViewSkills> GetSkills(string idcompany, string idgroup, string idoccupation, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewSkills>> GetSkills(string idcompany, string idgroup, string idoccupation, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkillsOccupation(idgroup, idcompany, idoccupation, ref total, filter, count, page);
@@ -1193,7 +1194,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteskill/{idskill}")]
-    public string DeleteSkill(string idskill)
+    public async Task<string> DeleteSkill(string idskill)
     {
       return service.DeleteSkill(idskill);
     }
@@ -1205,7 +1206,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateskill")]
-    public string UpdateSkill([FromBody]ViewCrudSkill view)
+    public async Task<string> UpdateSkill([FromBody]ViewCrudSkill view)
     {
       return service.UpdateSkill(view);
     }
@@ -1217,7 +1218,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addskills")]
-    public string AddSkills([FromBody]List<ViewCrudSkill> view)
+    public async Task<string> AddSkills([FromBody]List<ViewCrudSkill> view)
     {
       service.AddSkills(view);
       return "ok";
@@ -1232,7 +1233,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getspheres")]
-    public List<ViewListSphere> GetSpheres()
+    public async Task<List<ViewListSphere>> GetSpheres()
     {
       return service.GetSpheres();
     }
@@ -1244,7 +1245,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getspheres/{idcompany}")]
-    public List<ViewListSphere> GetSpheres(string idcompany)
+    public async Task<List<ViewListSphere>> GetSpheres(string idcompany)
     {
       return service.GetSpheres(idcompany);
     }
@@ -1256,7 +1257,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getspherebyid/{id}")]
-    public ViewCrudSphere GetSphereById(string id)
+    public async Task<ViewCrudSphere> GetSphereById(string id)
     {
       return service.GetSphereById(id);
     }
@@ -1268,7 +1269,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addsphere")]
-    public string AddSphere([FromBody]ViewCrudSphere view)
+    public async Task<string> AddSphere([FromBody]ViewCrudSphere view)
     {
       return service.AddSphere(view);
     }
@@ -1280,7 +1281,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletesphere/{idsphere}")]
-    public string DeleteSphere(string idsphere)
+    public async Task<string> DeleteSphere(string idsphere)
     {
       return service.DeleteSphere(idsphere);
     }
@@ -1292,7 +1293,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatesphere")]
-    public string UpdateSphere([FromBody]ViewCrudSphere view)
+    public async Task<string> UpdateSphere([FromBody]ViewCrudSphere view)
     {
       return service.UpdateSphere(view);
     }
@@ -1308,7 +1309,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("gettextdefault/{idcompany}/{name}")]
-    public ViewCrudTextDefault GetTextDefault(string idcompany, string name)
+    public async Task<ViewCrudTextDefault> GetTextDefault(string idcompany, string name)
     {
       return service.GetTextDefault(idcompany, name);
     }
@@ -1320,7 +1321,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("gettextdefault/{id}")]
-    public ViewCrudTextDefault GetTextDefault(string id)
+    public async Task<ViewCrudTextDefault> GetTextDefault(string id)
     {
       return service.GetTextDefault(id);
     }
@@ -1332,7 +1333,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listtextdefault/{idcompany}")]
-    public List<ViewListTextDefault> ListTextDefault(string idcompany)
+    public async Task<List<ViewListTextDefault>> ListTextDefault(string idcompany)
     {
       return service.ListTextDefault(idcompany);
     }
@@ -1344,7 +1345,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addtextdefault")]
-    public string AddTextDefault([FromBody]ViewCrudTextDefault textDefault)
+    public async Task<string> AddTextDefault([FromBody]ViewCrudTextDefault textDefault)
     {
       service.AddTextDefault(textDefault);
       return "ok";
@@ -1357,7 +1358,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletetextdefault/{id}")]
-    public string DeleteTextDefault(string id)
+    public async Task<string> DeleteTextDefault(string id)
     {
       return service.DeleteTextDefault(id);
     }
@@ -1369,7 +1370,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatetextdefault")]
-    public string UpdateTextDefault([FromBody]ViewCrudTextDefault view)
+    public async Task<string> UpdateTextDefault([FromBody]ViewCrudTextDefault view)
     {
       return service.UpdateTextDefault(view);
     }

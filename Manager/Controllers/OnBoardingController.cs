@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -43,7 +44,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
-    public List<ViewListOnBoarding> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> List(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListOnBoarding> result = service.List(idmanager, ref total, filter, count, page);
@@ -58,7 +59,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personwait/{idperson}")]
-    public ViewListOnBoarding PersonWait(string idperson)
+    public async Task<ViewListOnBoarding> PersonWait(string idperson)
     {
       return service.PersonWait(idperson);
     }
@@ -70,7 +71,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new/{idperson}")]
-    public ViewListOnBoarding New(string idperson)
+    public async Task<ViewListOnBoarding> New(string idperson)
     {
       return service.New(idperson);
     }
@@ -82,7 +83,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudOnboarding Get(string id)
+    public async Task<ViewCrudOnboarding> Get(string id)
     {
       return service.Get(id);
     }
@@ -96,7 +97,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletecomments/{idonboarding}/{iditem}/{idcomments}")]
-    public IActionResult DeleteComments(string idonboarding, string iditem, string idcomment)
+    public async Task<IActionResult> DeleteComments(string idonboarding, string iditem, string idcomment)
     {
       return Ok(service.DeleteComments(idonboarding, iditem, idcomment));
     }
@@ -110,7 +111,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecommentsview/{idonboarding}/{iditem}/{usercomment}")]
-    public IActionResult UpdateCommentsView(string idonboarding, string iditem, EnumUserComment usercomment)
+    public async Task<IActionResult> UpdateCommentsView(string idonboarding, string iditem, EnumUserComment usercomment)
     {
       return Ok(service.UpdateCommentsView(idonboarding, iditem, usercomment));
     }
@@ -122,7 +123,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id)
     {
       return Ok(service.Delete(id));
     }
@@ -134,7 +135,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult Update([FromBody]ViewCrudOnboarding onboarding)
+    public async Task<IActionResult> Update([FromBody]ViewCrudOnboarding onboarding)
     {
       return Ok(service.Update(onboarding));
     }
@@ -149,7 +150,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listend/{idmanager}")]
-    public List<ViewListOnBoarding> ListEnded(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEnded(idmanager, ref total, filter, count, page);
@@ -167,7 +168,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personend/{idmanager}")]
-    public List<ViewListOnBoarding> ListPersonEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPersonEnd(idmanager, ref total, filter, count, page);
@@ -184,7 +185,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public List<ViewListOnBoarding> ListExcluded(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListExcluded(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListExcluded(ref total, filter, count, page);
@@ -201,7 +202,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecomments/{idonboarding}/{iditem}")]
-    public string UpdateComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
+    public async Task<string> UpdateComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
     {
       return service.UpdateComments(idonboarding, iditem, comments);
     }
@@ -214,7 +215,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcomments/{idonboarding}/{iditem}")]
-    public List<ViewCrudComment> ListComments(string idonboarding, string iditem)
+    public async Task<List<ViewCrudComment>> ListComments(string idonboarding, string iditem)
     {
       return service.ListComments(idonboarding, iditem);
     }
@@ -228,7 +229,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcomments/{idonboarding}/{iditem}")]
-    public List<ViewCrudComment> AddComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
+    public async Task<List<ViewCrudComment>> AddComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
     {
       return service.AddComments(idonboarding, iditem, comments);
     }

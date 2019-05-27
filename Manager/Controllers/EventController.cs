@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -39,7 +40,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       return service.Remove(id);
     }
@@ -51,7 +52,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteeventhistoric/{id}")]
-    public string DeleteEventHistoric(string id)
+    public async Task<string> DeleteEventHistoric(string id)
     {
       return service.RemoveEventHistoric(id);
     }
@@ -63,7 +64,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletecourse/{id}")]
-    public string DeleteCourse(string id)
+    public async Task<string> DeleteCourse(string id)
     {
       return service.RemoveCourse(id);
     }
@@ -75,7 +76,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletecourseesocial/{id}")]
-    public string DeleteCourseESocial(string id)
+    public async Task<string> DeleteCourseESocial(string id)
     {
       return service.RemoveCourseESocial(id);
     }
@@ -88,7 +89,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("removeparticipant/{idevent}/{idperson}")]
-    public string RemoveParticipant(string idevent, string idperson)
+    public async Task<string> RemoveParticipant(string idevent, string idperson)
     {
       return service.RemoveParticipant(idevent, idperson);
     }
@@ -103,7 +104,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("removedays/{idevent}/{idday}")]
-    public string RemoveDays(string idevent, string begin, string end, string idday)
+    public async Task<string> RemoveDays(string idevent, string begin, string end, string idday)
     {
       return service.RemoveDays(idevent, idday);
     }
@@ -115,7 +116,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpDelete]
     [Route("removeinstructor/{idevent}/{id}")]
-    public string RemoveInstructor(string idevent, string id)
+    public async Task<string> RemoveInstructor(string idevent, string id)
     {
       return service.RemoveInstructor(idevent, id);
     }
@@ -130,7 +131,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("present/{idevent}/{idparticipant}/{idday}/{present}")]
-    public string Present(string idevent, string idparticipant, string idday, bool present)
+    public async Task<string> Present(string idevent, string idparticipant, string idday, bool present)
     {
       return service.Present(idevent, idparticipant, idday, present);
     }
@@ -144,7 +145,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("setgrade/{idevent}/{idparticipant}/{grade}")]
-    public string SetGrade(string idevent, string idparticipant, decimal grade)
+    public async Task<string> SetGrade(string idevent, string idparticipant, decimal grade)
     {
       return service.SetGrade(idevent, idparticipant, grade);
     }
@@ -156,7 +157,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("reopeningevent/{idevent}")]
-    public string ReopeningEvent(string idevent)
+    public async Task<string> ReopeningEvent(string idevent)
     {
       return service.ReopeningEvent(idevent);
     }
@@ -167,7 +168,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("new")]
-    public ViewListEvent New([FromBody]ViewCrudEvent view)
+    public async Task<ViewListEvent> New([FromBody]ViewCrudEvent view)
     {
       return service.New(view);
     }
@@ -181,7 +182,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewListEvent> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(ref total, count, page, filter);
@@ -199,7 +200,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventopensubscription/{idperson}")]
-    public List<ViewListEvent> ListEventOpenSubscription(string idperson, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventOpenSubscription(string idperson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventOpenSubscription(idperson, ref total, count, page, filter);
@@ -217,7 +218,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventsubscription/{idperson}")]
-    public List<ViewListEvent> ListEventSubscription(string idperson, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventSubscription(string idperson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventSubscription(idperson, ref total, count, page, filter);
@@ -234,7 +235,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventopen")]
-    public List<ViewListEvent> ListEventOpen(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventOpen(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventOpen(ref total, count, page, filter);
@@ -251,7 +252,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventend")]
-    public List<ViewListEvent> ListEventEnd(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventEnd(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventEnd(ref total, count, page, filter);
@@ -270,7 +271,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersoninstructor/{idevent}/{idcompany}")]
-    public List<ViewListPersonResume> ListPersonInstructor(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonResume>> ListPersonInstructor(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPersonInstructor(idevent, idcompany, ref total, count, page, filter);
@@ -289,7 +290,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersonparticipants/{idevent}/{idcompany}")]
-    public List<ViewListPersonResume> ListPersonParticipants(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonResume>> ListPersonParticipants(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPersonParticipants(idevent, idcompany, ref total, count, page, filter);
@@ -306,7 +307,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listentity")]
-    public List<ViewCrudEntity> ListEntity(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudEntity>> ListEntity(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEntity(ref total, count, page, filter);
@@ -321,7 +322,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudEvent List(string id)
+    public async Task<ViewCrudEvent> List(string id)
     {
       return service.Get(id);
     }
@@ -333,7 +334,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public ViewListEvent Update([FromBody]ViewCrudEvent view)
+    public async Task<ViewListEvent> Update([FromBody]ViewCrudEvent view)
     {
       return service.Update(view);
     }
@@ -344,7 +345,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("neweventhistoric")]
-    public string NewEventHistoricFrontEnd([FromBody]ViewCrudEventHistoric view)
+    public async Task<string> NewEventHistoricFrontEnd([FromBody]ViewCrudEventHistoric view)
     {
       return service.NewEventHistoricFrontEnd(view);
     }
@@ -358,7 +359,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventhistoric")]
-    public List<ViewListEventHistoric> ListEventHistoric(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventHistoric>> ListEventHistoric(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventHistoric(ref total, count, page, filter);
@@ -375,7 +376,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpGet]
     [Route("listeventhistoricperson/{id}")]
-    public List<ViewListEventHistoric> ListEventHistoricPerson(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventHistoric>> ListEventHistoricPerson(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventHistoricPerson(id, ref total, count, page, filter);
@@ -390,7 +391,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("geteventhistoric/{id}")]
-    public ViewCrudEventHistoric GetEventHistoric(string id)
+    public async Task<ViewCrudEventHistoric> GetEventHistoric(string id)
     {
       return service.GetEventHistoric(id);
     }
@@ -402,7 +403,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateeventhistoric")]
-    public string UpdateEventHistoric([FromBody]ViewCrudEventHistoric view)
+    public async Task<string> UpdateEventHistoric([FromBody]ViewCrudEventHistoric view)
     {
       return service.UpdateEventHistoricFrontEnd(view);
     }
@@ -413,7 +414,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("newcourse")]
-    public string NewCourse([FromBody]ViewCrudCourse view)
+    public async Task<string> NewCourse([FromBody]ViewCrudCourse view)
     {
       return service.NewCourse(view);
     }
@@ -427,7 +428,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcourse")]
-    public List<ViewListCourse> ListCourse(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCourse>> ListCourse(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListCourse(ref total, count, page, filter);
@@ -442,7 +443,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getcourse/{id}")]
-    public ViewCrudCourse GetCourse(string id)
+    public async Task<ViewCrudCourse> GetCourse(string id)
     {
       return service.GetCourse(id);
     }
@@ -454,7 +455,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecourse")]
-    public string UpdateCourse([FromBody]ViewCrudCourse view)
+    public async Task<string> UpdateCourse([FromBody]ViewCrudCourse view)
     {
       return service.UpdateCourse(view);
     }
@@ -465,7 +466,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("newcourseesocial")]
-    public string NewCourseESocial([FromBody]ViewCrudCourseESocial view)
+    public async Task<string> NewCourseESocial([FromBody]ViewCrudCourseESocial view)
     {
       return service.NewCourseESocial(view);
     }
@@ -479,7 +480,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcourseesocial")]
-    public List<ViewCrudCourseESocial> ListCourseESocial(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudCourseESocial>> ListCourseESocial(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListCourseESocial(ref total, count, page, filter);
@@ -494,7 +495,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getcourseesocial/{id}")]
-    public ViewCrudCourseESocial GetCourseESocial(string id)
+    public async Task<ViewCrudCourseESocial> GetCourseESocial(string id)
     {
       return service.GetCourseESocial(id);
     }
@@ -506,7 +507,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecourseesocial")]
-    public string UpdateCourseESocial([FromBody]ViewCrudCourseESocial view)
+    public async Task<string> UpdateCourseESocial([FromBody]ViewCrudCourseESocial view)
     {
       return service.UpdateCourseESocial(view);
     }
@@ -518,7 +519,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("addparticipant/{idevent}")]
-    public string AddParticipant([FromBody]ViewCrudParticipant participant, string idevent)
+    public async Task<string> AddParticipant([FromBody]ViewCrudParticipant participant, string idevent)
     {
       return service.AddParticipant(idevent, participant);
     }
@@ -530,7 +531,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("adddays/{idevent}")]
-    public string AddDays([FromBody]ViewCrudDaysEvent days, string idevent)
+    public async Task<string> AddDays([FromBody]ViewCrudDaysEvent days, string idevent)
     {
       return service.AddDays(idevent, days);
     }
@@ -542,7 +543,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("addinstructor/{idevent}")]
-    public string AddDays([FromBody]ViewCrudInstructor view, string idevent)
+    public async Task<string> AddDays([FromBody]ViewCrudInstructor view, string idevent)
     {
       return service.AddInstructor(idevent, view);
     }
@@ -557,7 +558,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listparticipants/{idevent}")]
-    public List<ViewCrudParticipant> ListParticipants(string idevent, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudParticipant>> ListParticipants(string idevent, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListParticipants(idevent, ref total, count, page, filter);

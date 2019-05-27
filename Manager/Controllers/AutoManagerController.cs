@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
@@ -39,7 +40,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/listapproved")]
-    public List<ViewAutoManager> ListApproved(string idmanager)
+    public async Task<List<ViewAutoManager>> ListApproved(string idmanager)
     {
       return service.ListApproved(idmanager);
     }
@@ -54,7 +55,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/list")]
-    public List<ViewAutoManagerPerson> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewAutoManagerPerson>> List(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(idmanager, ref total, count, page, filter);
@@ -70,7 +71,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/new")]
-    public IActionResult New([FromBody]ViewManager view, string idperson)
+    public async Task<IActionResult> New([FromBody]ViewManager view, string idperson)
     {
       service.SetManagerPerson(view, idperson, XmlConnection.ReadConfig().TokenServer);
       return Ok("Auto manager added!");
@@ -85,7 +86,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/approved/{idmanager}")]
-    public string Approved([FromBody]ViewWorkflow view, string idperson, string idmanager)
+    public async Task<string> Approved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
       return service.Approved(view, idperson, idmanager);
     }
@@ -99,7 +100,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/disapproved/{idmanager}")]
-    public string Disapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
+    public async Task<string> Disapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
       return service.Disapproved(view, idperson, idmanager);
     }
@@ -111,7 +112,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("{idperson}/delete")]
-    public IActionResult Delete(string idperson)
+    public async Task<IActionResult> Delete(string idperson)
     {
       service.DeleteManager(idperson);
       return Ok("Person deleted!");
@@ -127,7 +128,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("{idperson}/canceled/{idmanager}")]
-    public IActionResult PutCanceled(string idperson, string idmanager)
+    public async Task<IActionResult> PutCanceled(string idperson, string idmanager)
     {
       service.Canceled(idperson, idmanager);
       return Ok("Auto manager canceled!");

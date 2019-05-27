@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manager.Controllers
 {
@@ -44,7 +45,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("new")]
-    public IActionResult Post([FromBody]ViewNewAccount view)
+    public async Task<IActionResult> Post([FromBody]ViewNewAccount view)
     {
       return Ok(service.NewAccount(view));
     }
@@ -57,7 +58,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPut]
     [Route("update/{id}")]
-    public IActionResult Put([FromBody]ViewCrudAccount view, string id)
+    public async Task<IActionResult> Put([FromBody]ViewCrudAccount view, string id)
     {
       return Ok(service.UpdateAccount(view, id));
     }
@@ -69,7 +70,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudAccount GET(string id)
+    public async Task<ViewCrudAccount> Get(string id)
     {
       return service.GetAccount(id);
     }
@@ -84,7 +85,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewListAccount> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListAccount>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetAll(ref total, count, page, filter);
@@ -99,7 +100,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("alteraccount/{idaccount}")]
-    public ViewPerson AlterAccount(string idaccount)
+    public async Task<ViewPerson> AlterAccount(string idaccount)
     {
       return service.AlterAccount(idaccount);
     }
@@ -111,7 +112,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("alteraccountperson/{idperson}")]
-    public ViewPerson AlterAccountPerson(string idperson)
+    public async Task<ViewPerson> AlterAccountPerson(string idperson)
     {
       return service.AlterAccountPerson(idperson);
     }
@@ -122,7 +123,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("synchronize")]
-    public string Synchronize()
+    public async Task<string> Synchronize()
     {
       return service.SynchronizeParameters();
     }
@@ -140,7 +141,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listlog/{idaccount}")]
-    public List<ViewListLog> ListLogs(string idaccount, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListLog>> ListLogs(string idaccount, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = serviceLog.ListLogs(idaccount, ref total, count, page, filter);

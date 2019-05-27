@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -41,7 +42,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewListCompany> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCompany>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListCompany> result = service.List(ref total, count, page, filter);
@@ -55,7 +56,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("new")]
-    public IActionResult Post([FromBody]ViewCrudCompany view)
+    public async Task<IActionResult> Post([FromBody]ViewCrudCompany view)
     {
       return Ok(service.New(view));
     }
@@ -67,7 +68,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudCompany Get(string id)
+    public async Task<ViewCrudCompany> Get(string id)
     {
       return service.Get(id);
     }
@@ -79,7 +80,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult Update([FromBody]ViewCrudCompany view)
+    public async Task<IActionResult> Update([FromBody]ViewCrudCompany view)
     {
       return Ok(service.Update(view));
     }
@@ -91,7 +92,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id)
     {
       return Ok(service.Delete(id));
     }
@@ -108,7 +109,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listestablishment")]
-    public List<ViewListEstablishment> ListEstablishment(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEstablishment>> ListEstablishment(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListEstablishment> result = service.ListEstablishment(ref total, count, page, filter);
@@ -126,7 +127,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listestablishment/{idcompany}")]
-    public List<ViewListEstablishment> ListEstablishment(string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEstablishment>> ListEstablishment(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListEstablishment> result = service.ListEstablishment(idcompany, ref total, count, page, filter);
@@ -140,7 +141,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso</returns>
     [HttpPost]
     [Route("newestablishment")]
-    public IActionResult PostEstablishment([FromBody]ViewCrudEstablishment view)
+    public async Task<IActionResult> PostEstablishment([FromBody]ViewCrudEstablishment view)
     {
       return Ok(service.NewEstablishment(view));
     }
@@ -152,7 +153,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getestablishment/{id}")]
-    public ViewCrudEstablishment ListEstablishment(string id)
+    public async Task<ViewCrudEstablishment> ListEstablishment(string id)
     {
       return service.GetEstablishment(id);
     }
@@ -164,7 +165,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateestablishment")]
-    public IActionResult UpdateEstablishment([FromBody]ViewCrudEstablishment view)
+    public async Task<IActionResult> UpdateEstablishment([FromBody]ViewCrudEstablishment view)
     {
       return Ok(service.UpdateEstablishment(view));
     }
@@ -176,7 +177,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteestablishment/{id}")]
-    public IActionResult DeleteEstablishment(string id)
+    public async Task<IActionResult> DeleteEstablishment(string id)
     {
       return Ok(service.RemoveEstablishment(id));
     }

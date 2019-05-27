@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -42,7 +43,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listperson/{id}")]
-    public List<ViewListLogMessages> ListPerson(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListLogMessages>> ListPerson(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListLogMessages> result = service.ListPerson(id, ref total, count, page, filter);
@@ -60,7 +61,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager/{id}")]
-    public List<ViewListLogMessages> ListManager(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListLogMessages>> ListManager(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListLogMessages> result = service.ListManager(id, ref total, count, page, filter);
@@ -74,7 +75,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso</returns>
     [HttpPost]
     [Route("new")]
-    public IActionResult New([FromBody]ViewCrudLogMessages view)
+    public async Task<IActionResult> New([FromBody]ViewCrudLogMessages view)
     {
       return Ok(service.New(view));
     }
@@ -86,7 +87,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get")]
-    public ViewCrudLogMessages Get(string id)
+    public async Task<ViewCrudLogMessages> Get(string id)
     {
       return service.Get(id);
     }
@@ -98,7 +99,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult Update([FromBody]ViewCrudLogMessages view)
+    public async Task<IActionResult> Update([FromBody]ViewCrudLogMessages view)
     {
       return Ok(service.Update(view));
     }
@@ -110,7 +111,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id)
     {
       return Ok(service.Delete(id));
     }

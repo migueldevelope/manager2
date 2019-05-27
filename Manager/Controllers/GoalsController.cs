@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -39,7 +40,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public string New([FromBody]ViewCrudGoal view)
+    public async Task<string> New([FromBody]ViewCrudGoal view)
     {
       return service.New(view);
     }
@@ -53,7 +54,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public List<ViewListGoal> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoal>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListGoal> result = service.List(ref total, count, page, filter);
@@ -71,7 +72,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager/{id}")]
-    public List<ViewListGoal> ListManager(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoal>> ListManager(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListGoal> result = service.ListManager(id, ref total, count, page, filter);
@@ -90,7 +91,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcompany/{id}")]
-    public List<ViewListGoal> ListCompany(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoal>> ListCompany(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListGoal> result = service.ListCompany(id, ref total, count, page, filter);
@@ -106,7 +107,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudGoal Get(string id)
+    public async Task<ViewCrudGoal> Get(string id)
     {
       return service.Get(id);
     }
@@ -118,7 +119,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string Update([FromBody]ViewCrudGoal view)
+    public async Task<string> Update([FromBody]ViewCrudGoal view)
     {
       return service.Update(view);
     }
@@ -130,7 +131,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       return service.Delete(id);
     }
@@ -145,7 +146,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newgoalsperiod")]
-    public string NewGoalsPeriod([FromBody]ViewCrudGoalPeriod view)
+    public async Task<string> NewGoalsPeriod([FromBody]ViewCrudGoalPeriod view)
     {
       return service.NewGoalsPeriod(view);
     }
@@ -159,7 +160,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsperiod")]
-    public List<ViewCrudGoalPeriod> ListGoalsPeriod(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudGoalPeriod>> ListGoalsPeriod(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsPeriod(ref total, count, page, filter);
@@ -174,7 +175,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgoalsperiod/{id}")]
-    public ViewCrudGoalPeriod GetGoalsPeriod(string id)
+    public async Task<ViewCrudGoalPeriod> GetGoalsPeriod(string id)
     {
       return service.GetGoalsPeriod(id);
     }
@@ -186,7 +187,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalsperiod")]
-    public string UpdateGoalsPeriod([FromBody]ViewCrudGoalPeriod view)
+    public async Task<string> UpdateGoalsPeriod([FromBody]ViewCrudGoalPeriod view)
     {
       return service.UpdateGoalsPeriod(view);
     }
@@ -198,7 +199,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletegoalsperiod/{id}")]
-    public string DeleteGoalsPeriod(string id)
+    public async Task<string> DeleteGoalsPeriod(string id)
     {
       return service.DeleteGoalsPeriod(id);
     }
@@ -213,7 +214,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newgoalscompany")]
-    public string NewGoalsCompany([FromBody]ViewCrudGoalCompany view)
+    public async Task<string> NewGoalsCompany([FromBody]ViewCrudGoalCompany view)
     {
       return service.NewGoalsCompany(view);
     }
@@ -229,7 +230,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalscompany/{idgoalsperiod}/{idcompany}")]
-    public List<ViewCrudGoalItem> ListGoalsCompany(string idgoalsperiod, string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudGoalItem>> ListGoalsCompany(string idgoalsperiod, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsCompany(idgoalsperiod, idcompany, ref total, count, page, filter);
@@ -246,7 +247,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalscompany")]
-    public List<ViewListGoalCompany> ListGoalsCompany(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoalCompany>> ListGoalsCompany(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsCompany(ref total, count, page, filter);
@@ -261,7 +262,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgoalscompany/{id}")]
-    public ViewCrudGoalCompany GetGoalsCompany(string id)
+    public async Task<ViewCrudGoalCompany> GetGoalsCompany(string id)
     {
       return service.GetGoalsCompany(id);
     }
@@ -273,7 +274,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalscompany")]
-    public string UpdateGoalsCompany([FromBody]ViewCrudGoalCompany view)
+    public async Task<string> UpdateGoalsCompany([FromBody]ViewCrudGoalCompany view)
     {
       return service.UpdateGoalsCompany(view);
     }
@@ -285,7 +286,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalscompanyachievement")]
-    public string UpdateGoalsCompanyAchievement([FromBody]ViewCrudAchievement view)
+    public async Task<string> UpdateGoalsCompanyAchievement([FromBody]ViewCrudAchievement view)
     {
       return service.UpdateGoalsCompanyAchievement(view);
     }
@@ -298,7 +299,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletegoalscompany/{id}")]
-    public string DeleteGoalsCompany(string id)
+    public async Task<string> DeleteGoalsCompany(string id)
     {
       return service.DeleteGoalsCompany(id);
     }
@@ -314,7 +315,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newgoalsmanagerportal")]
-    public string NewGoalsManagerPortal([FromBody]ViewCrudGoalManagerPortal view)
+    public async Task<string> NewGoalsManagerPortal([FromBody]ViewCrudGoalManagerPortal view)
     {
       return service.NewGoalsManagerPortal(view);
     }
@@ -327,7 +328,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newgoalsmanager")]
-    public string NewGoalsManager([FromBody]ViewCrudGoalManager view)
+    public async Task<string> NewGoalsManager([FromBody]ViewCrudGoalManager view)
     {
       return service.NewGoalsManager(view);
     }
@@ -343,7 +344,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsmanager/{idgoalsperiod}/{idmanager}")]
-    public ViewListGoalsItem ListGoalsManager(string idgoalsperiod, string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<ViewListGoalsItem> ListGoalsManager(string idgoalsperiod, string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsManager(idgoalsperiod, idmanager, ref total, count, page, filter);
@@ -360,7 +361,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsmanager")]
-    public List<ViewListGoalManager> ListGoalsManager(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoalManager>> ListGoalsManager(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsManager(ref total, count, page, filter);
@@ -375,7 +376,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgoalsmanager/{id}")]
-    public ViewCrudGoalManager GetGoalsManager(string id)
+    public async Task<ViewCrudGoalManager> GetGoalsManager(string id)
     {
       return service.GetGoalsManager(id);
     }
@@ -388,7 +389,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgoalsmanagerportal/{id}")]
-    public ViewCrudGoalManagerPortal GetGoalsManagerPortal(string id)
+    public async Task<ViewCrudGoalManagerPortal> GetGoalsManagerPortal(string id)
     {
       return service.GetGoalsManagerPortal(id);
     }
@@ -401,7 +402,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalsmanager")]
-    public string UpdateGoalsManager([FromBody]ViewCrudGoalManager view)
+    public async Task<string> UpdateGoalsManager([FromBody]ViewCrudGoalManager view)
     {
       return service.UpdateGoalsManager(view);
     }
@@ -414,7 +415,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalsmanagerportal")]
-    public string UpdateGoalsManagerPortal([FromBody]ViewCrudGoalManagerPortal view)
+    public async Task<string> UpdateGoalsManagerPortal([FromBody]ViewCrudGoalManagerPortal view)
     {
       return service.UpdateGoalsManagerPortal(view);
     }
@@ -428,7 +429,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalsmanagerachievement")]
-    public string UpdateGoalsManagerAchievement([FromBody]ViewCrudAchievement view)
+    public async Task<string> UpdateGoalsManagerAchievement([FromBody]ViewCrudAchievement view)
     {
       return service.UpdateGoalsManagerAchievement(view);
     }
@@ -441,7 +442,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletegoalsmanager/{id}")]
-    public string DeleteGoalsManager(string id)
+    public async Task<string> DeleteGoalsManager(string id)
     {
       return service.DeleteGoalsManager(id);
     }
@@ -456,7 +457,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newgoalspersonportal")]
-    public string NewGoalsPersonPortal([FromBody]ViewCrudGoalPerson view)
+    public async Task<string> NewGoalsPersonPortal([FromBody]ViewCrudGoalPerson view)
     {
       return service.NewGoalsPersonPortal(view);
     }
@@ -469,7 +470,7 @@ namespace Manager.Controllers
     //[Authorize]
     //[HttpPost]
     //[Route("newgoalsperson")]
-    //public string NewGoalsPerson([FromBody]ViewCrudGoalPerson view)
+    //public async Task< string NewGoalsPerson([FromBody]ViewCrudGoalPerson view)
     //{
     //  return service.NewGoalsPerson(view);
     //}
@@ -485,7 +486,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsperson/{idgoalsperiod}/{idperson}")]
-    public ViewListGoalsItem ListGoalsPerson(string idgoalsperiod, string idperson, int count = 10, int page = 1, string filter = "")
+    public async Task<ViewListGoalsItem> ListGoalsPerson(string idgoalsperiod, string idperson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsPerson(idgoalsperiod, idperson, ref total, count, page, filter);
@@ -502,7 +503,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsperson")]
-    public List<ViewListGoalPerson> ListGoalsPerson(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoalPerson>> ListGoalsPerson(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsPerson(ref total, count, page, filter);
@@ -517,7 +518,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgoalsperson/{id}")]
-    public ViewCrudGoalPerson GetGoalsPerson(string id)
+    public async Task<ViewCrudGoalPerson> GetGoalsPerson(string id)
     {
       return service.GetGoalsPerson(id);
     }
@@ -529,7 +530,7 @@ namespace Manager.Controllers
     //[Authorize]
     //[HttpPut]
     //[Route("updategoalsperson")]
-    //public string UpdateGoalsPerson([FromBody]ViewCrudGoalPerson view)
+    //public async Task< string UpdateGoalsPerson([FromBody]ViewCrudGoalPerson view)
     //{
     //  return service.UpdateGoalsPerson(view);
     //}
@@ -542,7 +543,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalspersonportal")]
-    public string UpdateGoalsPersonPortal([FromBody]ViewCrudGoalPerson view)
+    public async Task<string> UpdateGoalsPersonPortal([FromBody]ViewCrudGoalPerson view)
     {
       return service.UpdateGoalsPersonPortal(view);
     }
@@ -555,7 +556,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalspersonachievement")]
-    public string UpdateGoalsPersonAchievement([FromBody]ViewCrudAchievement view)
+    public async Task<string> UpdateGoalsPersonAchievement([FromBody]ViewCrudAchievement view)
     {
       return service.UpdateGoalsPersonAchievement(view);
     }
@@ -568,7 +569,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletegoalsperson/{id}")]
-    public string DeleteGoalsPerson(string id)
+    public async Task<string> DeleteGoalsPerson(string id)
     {
       return service.DeleteGoalsPerson(id);
     }
@@ -585,7 +586,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newgoalspersoncontrol/{idperson}/{idperiod}")]
-    public string NewGoalsPersonControl(string idperson, string idperiod)
+    public async Task<string> NewGoalsPersonControl(string idperson, string idperiod)
     {
       return service.NewGoalsPersonControl(idperson, idperiod);
     }
@@ -598,7 +599,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalspersoncontrolme/{id}")]
-    public ViewListGoalPersonControl ListGoalsPersonControlMe(string id)
+    public async Task<ViewListGoalPersonControl> ListGoalsPersonControlMe(string id)
     {
       long total = 0;
       var result = service.ListGoalsPersonControlMe(id);
@@ -617,7 +618,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalspersoncontrol/{id}")]
-    public List<ViewListGoalPersonControl> ListGoalsPersonControl(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoalPersonControl>> ListGoalsPersonControl(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGoalsPersonControl(id, ref total, count, page, filter);
@@ -632,7 +633,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgoalspersoncontrol/{id}")]
-    public ViewCrudGoalPersonControl GetGoalsPersonControl(string id)
+    public async Task<ViewCrudGoalPersonControl> GetGoalsPersonControl(string id)
     {
       return service.GetGoalsPersonControl(id);
     }
@@ -644,7 +645,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategoalspersoncontrol")]
-    public string UpdateGoalsPersonControl([FromBody]ViewCrudGoalPersonControl view)
+    public async Task<string> UpdateGoalsPersonControl([FromBody]ViewCrudGoalPersonControl view)
     {
       return service.UpdateGoalsPersonControl(view);
     }
@@ -659,7 +660,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletegoalspersoncontrol/{idperson}/{idperiod}")]
-    public string DeleteGoalsPersonControl(string idperson, string idperiod)
+    public async Task<string> DeleteGoalsPersonControl(string idperson, string idperiod)
     {
       return service.DeleteGoalsPersonControl(idperson, idperiod);
     }

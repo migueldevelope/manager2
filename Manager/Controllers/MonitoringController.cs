@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
@@ -42,7 +43,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deleteall/{idperson}")]
-    public string RemoveAllMonitoring(string idperson)
+    public async Task<string> RemoveAllMonitoring(string idperson)
     {
       return service.RemoveAllMonitoring(idperson);
     }
@@ -54,7 +55,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{idmonitoring}")]
-    public string RemoveOnBoarding(string idmonitoring)
+    public async Task<string> RemoveOnBoarding(string idmonitoring)
     {
       return service.RemoveMonitoring(idmonitoring);
     }
@@ -66,7 +67,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletelast/{idperson}")]
-    public string RemoveLastMonitoring(string idperson)
+    public async Task<string> RemoveLastMonitoring(string idperson)
     {
       return service.RemoveLastMonitoring(idperson);
     }
@@ -79,7 +80,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("removemonitoringactivities/{idmonitoring}/{idactivitie}")]
-    public string RemoveMonitoringActivities(string idmonitoring, string idactivitie)
+    public async Task<string> RemoveMonitoringActivities(string idmonitoring, string idactivitie)
     {
       return service.RemoveMonitoringActivities(idmonitoring, idactivitie);
     }
@@ -93,7 +94,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletecomments/{idmonitoring}/{iditem}/{idcomments}")]
-    public string DeleteComments(string idmonitoring, string iditem, string idcomments)
+    public async Task<string> DeleteComments(string idmonitoring, string iditem, string idcomments)
     {
       return service.DeleteComments(idmonitoring, iditem, idcomments);
     }
@@ -107,7 +108,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecommentsview/{idmonitoring}/{iditem}/{usercomment}")]
-    public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment usercomment)
+    public async Task<string> UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment usercomment)
     {
       return service.UpdateCommentsView(idmonitoring, iditem, usercomment);
     }
@@ -119,7 +120,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("validcomments/{idmonitoring}")]
-    public bool UpdateCommentsView(string idmonitoring)
+    public async Task<bool> UpdateCommentsView(string idmonitoring)
     {
       return service.ValidComments(idmonitoring);
     }
@@ -131,7 +132,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new/{idperson}")]
-    public ViewListMonitoring NewMonitoring(string idperson)
+    public async Task<ViewListMonitoring> NewMonitoring(string idperson)
     {
       return service.NewMonitoring(idperson);
     }
@@ -143,7 +144,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string UpdateMonitoring([FromBody]ViewCrudMonitoring monitoring)
+    public async Task<string> UpdateMonitoring([FromBody]ViewCrudMonitoring monitoring)
     {
       return service.UpdateMonitoring(monitoring);
     }
@@ -158,7 +159,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listend/{idmanager}")]
-    public List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListMonitoringsEnd(idmanager, ref total, filter, count, page);
@@ -175,7 +176,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public List<ViewListMonitoring> GetListExclud(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> GetListExclud(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetListExclud(ref total, filter, count, page);
@@ -193,7 +194,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
-    public List<ViewListMonitoring> ListMonitoringsWait(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListMonitoringsWait(idmanager, ref total, filter, count, page);
@@ -208,7 +209,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personend/{idmanager}")]
-    public List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager)
+    public async Task<List<ViewListMonitoring>> PersonMonitoringsEnd(string idmanager)
     {
       return service.PersonMonitoringsEnd(idmanager);
     }
@@ -220,7 +221,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personwait/{idmanager}")]
-    public ViewListMonitoring PersonMonitoringsWait(string idmanager)
+    public async Task<ViewListMonitoring> PersonMonitoringsWait(string idmanager)
     {
       return service.PersonMonitoringsWait(idmanager);
     }
@@ -232,7 +233,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudMonitoring GetMonitoring(string id)
+    public async Task<ViewCrudMonitoring> GetMonitoring(string id)
     {
       return service.GetMonitorings(id);
     }
@@ -244,7 +245,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills/{idperson}")]
-    public List<ViewListSkill> GetSkills(string idperson)
+    public async Task<List<ViewListSkill>> GetSkills(string idperson)
     {
       return service.GetSkills(idperson);
     }
@@ -257,7 +258,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getmonitoringactivities/{idmonitoring}/{idactivitie}")]
-    public ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
+    public async Task<ViewCrudMonitoringActivities> GetMonitoringActivities(string idmonitoring, string idactivitie)
     {
       return service.GetMonitoringActivities(idmonitoring, idactivitie);
     }
@@ -270,7 +271,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatemonitoringactivities/{idmonitoring}")]
-    public string UpdateMonitoringActivities([FromBody]ViewCrudMonitoringActivities activitie, string idmonitoring)
+    public async Task<string> UpdateMonitoringActivities([FromBody]ViewCrudMonitoringActivities activitie, string idmonitoring)
     {
       return service.UpdateMonitoringActivities(idmonitoring, activitie);
     }
@@ -283,7 +284,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addmonitoringactivities/{idmonitoring}")]
-    public string AddMonitoringActivities([FromBody] ViewCrudActivities activitie, string idmonitoring)
+    public async Task<string> AddMonitoringActivities([FromBody] ViewCrudActivities activitie, string idmonitoring)
     {
       return service.AddMonitoringActivities(idmonitoring, activitie);
     }
@@ -296,7 +297,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcomments/{idmonitoring}/{iditem}")]
-    public List<ViewCrudComment> GetListComments(string idmonitoring, string iditem)
+    public async Task<List<ViewCrudComment>> GetListComments(string idmonitoring, string iditem)
     {
       return service.GetListComments(idmonitoring, iditem);
     }
@@ -311,7 +312,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcomments/{idmonitoring}/{iditem}")]
-    public List<ViewCrudComment> AddComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
+    public async Task<List<ViewCrudComment>> AddComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
     {
       return service.AddComments(idmonitoring, iditem, comments);
     }
@@ -325,7 +326,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecomments/{idmonitoring}/{iditem}")]
-    public string UpdateComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
+    public async Task<string> UpdateComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
     {
       return service.UpdateComments(idmonitoring, iditem, comments);
     }
@@ -339,7 +340,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addplan/{idmonitoring}/{iditem}")]
-    public List<ViewCrudPlan> AddPlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
+    public async Task<List<ViewCrudPlan>> AddPlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
     {
       return service.AddPlan(idmonitoring, iditem, plan);
     }
@@ -353,7 +354,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updateplan/{idmonitoring}/{iditem}")]
-    public List<ViewCrudPlan> UpdatePlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
+    public async Task<List<ViewCrudPlan>> UpdatePlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
     {
       return service.UpdatePlan(idmonitoring, iditem, plan);
     }

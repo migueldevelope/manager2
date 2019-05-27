@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -42,7 +43,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idcompany}")]
-    public List<ViewListSalaryScale> List(string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListSalaryScale>> List(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(idcompany, ref total, count, page, filter);
@@ -57,7 +58,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public ViewCrudSalaryScale Get(string id)
+    public async Task<ViewCrudSalaryScale> Get(string id)
     {
       return service.Get(id);
     }
@@ -69,7 +70,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public IActionResult New([FromBody]ViewCrudSalaryScale view)
+    public async Task<IActionResult> New([FromBody]ViewCrudSalaryScale view)
     {
       return Ok(service.New(view));
     }
@@ -81,7 +82,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult Update([FromBody]ViewCrudSalaryScale view)
+    public async Task<IActionResult> Update([FromBody]ViewCrudSalaryScale view)
     {
       return Ok(service.Update(view));
     }
@@ -93,7 +94,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id)
     {
       return Ok(service.Delete(id));
     }
@@ -111,7 +112,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgrade/{idsalaryscale}")]
-    public List<ViewListGrade> ListGrade(string idsalaryscale, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGrade>> ListGrade(string idsalaryscale, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGrade(idsalaryscale, ref total, count, page, filter);
@@ -129,7 +130,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgrades/{idcompany}")]
-    public List<ViewListGradeFilter> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGradeFilter>> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGrades(idcompany, ref total, count, page, filter);
@@ -145,7 +146,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getgrade/{idsalaryscale}/{id}")]
-    public ViewCrudGrade GetGrade(string idsalaryscale, string id)
+    public async Task<ViewCrudGrade> GetGrade(string idsalaryscale, string id)
     {
       return service.GetGrade(idsalaryscale, id);
     }
@@ -157,7 +158,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addgrade")]
-    public IActionResult AddGrade([FromBody]ViewCrudGrade view)
+    public async Task<IActionResult> AddGrade([FromBody]ViewCrudGrade view)
     {
       return Ok(service.AddGrade(view));
     }
@@ -169,7 +170,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategrade")]
-    public IActionResult UpdateGrade([FromBody]ViewCrudGrade view)
+    public async Task<IActionResult> UpdateGrade([FromBody]ViewCrudGrade view)
     {
       return Ok(service.UpdateGrade(view));
     }
@@ -183,7 +184,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updategradeposition/{idsalaryscale}/{idgrade}")]
-    public IActionResult UpdateGradePosition(string idsalaryscale, string idgrade, int position)
+    public async Task<IActionResult> UpdateGradePosition(string idsalaryscale, string idgrade, int position)
     {
       return Ok(service.UpdateGradePosition(idsalaryscale, idgrade, position));
     }
@@ -196,7 +197,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpDelete]
     [Route("deletegrade/{idsalaryscale}/{id}")]
-    public string DeleteGrade(string idsalaryscale, string id)
+    public async Task<string> DeleteGrade(string idsalaryscale, string id)
     {
       return service.DeleteGrade(idsalaryscale, id);
     }
@@ -211,7 +212,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatestep")]
-    public IActionResult UpdateStep([FromBody]ViewCrudStep view)
+    public async Task<IActionResult> UpdateStep([FromBody]ViewCrudStep view)
     {
       return Ok(service.UpdateStep(view));
     }

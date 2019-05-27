@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -51,7 +52,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public List<ViewListPersonCrud> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonCrud>> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(ref total, count, page, filter, type);
@@ -66,7 +67,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("edit/{id}")]
-    public ViewCrudPerson Get(string id)
+    public async Task<ViewCrudPerson> Get(string id)
     {
       return service.Get(id);
     }
@@ -78,7 +79,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public ViewCrudPerson New([FromBody] ViewCrudPerson view)
+    public async Task<ViewCrudPerson> New([FromBody] ViewCrudPerson view)
     {
       return service.New(view);
     }
@@ -90,7 +91,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public IActionResult Update([FromBody] ViewCrudPerson view)
+    public async Task<IActionResult> Update([FromBody] ViewCrudPerson view)
     {
       return Ok(service.Update(view));
     }
@@ -106,7 +107,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("directteam/{idmanager}")]
-    public List<ViewListPersonTeam> ListTeam(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonTeam>> ListTeam(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListTeam(ref total, idmanager, filter, count, page);
@@ -124,7 +125,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listsalaryscale/{idoccupation}")]
-    public List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation)
+    public async Task<List<ViewListSalaryScalePerson>> ListSalaryScale(string idoccupation)
     {
       return service.ListSalaryScale(idoccupation);
     }
@@ -141,7 +142,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupation")]
-    public List<ViewListOccupation> ListOccupation(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOccupation>> ListOccupation(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListOccupation(ref total, filter, count, page);
@@ -158,7 +159,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcompany")]
-    public List<ViewListCompany> ListCompany(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCompany>> ListCompany(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListCompany(ref total, filter, count, page);
@@ -175,7 +176,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager")]
-    public List<ViewListPerson> ListManager(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPerson>> ListManager(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListManager(ref total, filter, count, page);
