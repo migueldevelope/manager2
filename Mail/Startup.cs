@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Data;
+using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -46,6 +47,10 @@ namespace Mail
 
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
+      string serviceBusConnectionString = conn.ServiceBusConnectionString;
+      string queueName = conn.QueueName;
+
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceMailMessage serviceMailMessage = new ServiceMailMessage(_contextLog);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Auth;
+using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +34,10 @@ namespace Attachment
 
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
+      string serviceBusConnectionString = conn.ServiceBusConnectionString;
+      string queueName = conn.QueueName;
+
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
@@ -42,7 +47,7 @@ namespace Attachment
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer);
+      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
       IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer);

@@ -15,6 +15,11 @@ namespace Manager.Core.Interfaces
     string Update(ViewCrudMeritocracy view);
     ViewCrudMeritocracy Get(string id);
     List<ViewListMeritocracy> List(ref long total, int count = 10, int page = 1, string filter = "");
+    string UpdateOccupationDate(ViewCrudMeritocracyDate view, string id);
+    string UpdateCompanyDate(ViewCrudMeritocracyDate view, string id);
+    string UpdateOccupationActivitiesExcellence(ViewCrudMeritocracyWeight view, string id);
+    string UpdateOccupationMaturity(ViewCrudMeritocracyWeight view, string id);
+
     string NewMeritocracyScore(ViewCrudMeritocracyScore view);
     string UpdateMeritocracyScore(ViewCrudMeritocracyScore view);
     ViewCrudMeritocracyScore GetMeritocracyScore(string id);

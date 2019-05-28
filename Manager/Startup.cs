@@ -58,6 +58,7 @@ namespace Manager
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName);
+
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
       IServicePerson servicePerson = new ServicePerson(_context, _contextLog);

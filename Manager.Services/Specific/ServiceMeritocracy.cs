@@ -84,6 +84,8 @@ namespace Manager.Services.Specific
           _id = view._id,
           ActivitiesExcellence = 0,
           Maturity = 0,
+          DateBegin = DateTime.Now,
+          StatusMeritocracy = EnumStatusMeritocracy.Wait,
           Person = person,
           Status = EnumStatus.Enabled
         }).Result;
@@ -101,9 +103,11 @@ namespace Manager.Services.Specific
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == view._id).Result;
         
         meritocracy.ActivitiesExcellence = 0;
-        
-        serviceMeritocracy.Update(meritocracy, null);
+        meritocracy.StatusMeritocracy = view.StatusMeritocracy;
+        if (meritocracy.StatusMeritocracy == EnumStatusMeritocracy.End)
+          meritocracy.DateEnd = DateTime.Now;
 
+        serviceMeritocracy.Update(meritocracy, null);
 
         return "Meritocracy altered!";
       }
@@ -112,6 +116,71 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateCompanyDate(ViewCrudMeritocracyDate view, string id)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+        meritocracy.Person.CompanyDate = view.Date;
+        serviceMeritocracy.Update(meritocracy, null);
+
+        return "Meritocracy altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateOccupationDate(ViewCrudMeritocracyDate view, string id)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+        meritocracy.Person.OccupationDate = view.Date;
+        serviceMeritocracy.Update(meritocracy, null);
+
+        return "Meritocracy altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateOccupationActivitiesExcellence(ViewCrudMeritocracyWeight view, string id)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+        meritocracy.ActivitiesExcellence = view.Weight;
+        serviceMeritocracy.Update(meritocracy, null);
+
+        return "Meritocracy altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateOccupationMaturity(ViewCrudMeritocracyWeight view, string id)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+        meritocracy.Maturity = view.Weight;
+        serviceMeritocracy.Update(meritocracy, null);
+
+        return "Meritocracy altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewCrudMeritocracy Get(string id)
     {
       try
@@ -148,6 +217,62 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+    //public List<ViewListMeritocracy> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
+    //{
+    //  try
+    //  {
+    //    List<ViewListMeritocracy> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+    //                                    p.TypeUser != EnumTypeUser.Administrator &&
+    //                                    p.TypeJourney == EnumTypeJourney.Meritocracy &&
+    //                                    p.Manager._id == idmanager &&
+    //                                    p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+    //                                    .Select(p => new ViewListMeritocracy()
+    //                                    {
+    //                                      _id = string.Empty,
+    //                                      _idPerson = p._id,
+    //                                      Name = p.User.Name,
+    //                                      OccupationName = p.Occupation.Name,
+    //                                      StatusMeritocracy = EnumStatusMeritocracy.Open,
+    //                                      TypeMeritocracy = EnumMeritocracy.None
+    //                                    }).ToList();
+    //    List<ViewListMeritocracy> detail = new List<ViewListMeritocracy>();
+    //    if (serviceMeritocracy.Exists("Meritocracy"))
+    //    {
+    //      Meritocracy meritocracy;
+    //      foreach (var item in list)
+    //      {
+    //        meritocracy = serviceMeritocracy.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusMeritocracy != EnumStatusMeritocracy.End).Result;
+    //        if (meritocracy != null)
+    //        {
+    //          item._id = meritocracy._id;
+    //          item.StatusMeritocracy = meritocracy.StatusMeritocracy;
+    //        }
+    //        else
+    //          meritocracy = serviceMeritocracy.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusMeritocracy == EnumStatusMeritocracy.End).Result;
+
+
+    //        if (meritocracy?.TypeMeritocracy != EnumMeritocracy.Disapproved)
+    //          detail.Add(item);
+
+    //      }
+    //    }
+    //    else
+    //      detail = list;
+
+    //    total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+    //                            p.TypeUser != EnumTypeUser.Administrator &&
+    //                            p.Manager._id == idmanager &&
+    //                            p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+    //    return detail;
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
+
     #endregion
 
     #region MeritocracyScore
