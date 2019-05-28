@@ -433,11 +433,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListMeritocracyScore> ListMeritocracyScore(ref long total, int count = 10, int page = 1, string filter = "")
+    public ViewListMeritocracyScore ListMeritocracyScore()
     {
       try
       {
-        List<ViewListMeritocracyScore> detail = serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled, count, count * (page - 1), "Name").Result
+        ViewListMeritocracyScore detail = serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
           .Select(p => new ViewListMeritocracyScore
           {
             _id = p._id,
@@ -453,8 +453,7 @@ namespace Manager.Services.Specific
             WeightActivitiesExcellence = p.WeightActivitiesExcellence,
             WeightMaturity = p.WeightMaturity,
             WeightGoals = p.WeightGoals
-          }).ToList();
-        total = serviceMeritocracyScore.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+          }).FirstOrDefault();
         return detail;
       }
       catch (Exception e)

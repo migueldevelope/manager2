@@ -193,11 +193,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmeritocracyscore")]
-    public async Task<List<ViewListMeritocracyScore>> ListMeritocracyScore(int count = 10, int page = 1, string filter = "")
+    public async Task<ViewListMeritocracyScore> ListMeritocracyScore()
     {
-      long total = 0;
-      List<ViewListMeritocracyScore> result = service.ListMeritocracyScore(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
+      ViewListMeritocracyScore result = service.ListMeritocracyScore();
       return result;
     }
 
