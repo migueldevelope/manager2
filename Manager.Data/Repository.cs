@@ -49,7 +49,7 @@ namespace Manager.Data
         if (ci.Type == ClaimTypes.NameIdentifier)
           _user.NameAccount = ci.Value;
         if (ci.Type == ClaimTypes.UserData)
-          _user._idPerson = ci.Value;
+          _user._idUser = ci.Value;
       }
     }
     #endregion

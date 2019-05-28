@@ -1766,7 +1766,7 @@ namespace Manager.Services.Specific
             };
         }
 
-        if (_user._idPerson == person._id)
+        if (_user._idUser == person.User._id)
         {
           planNew.StatusPlanApproved = EnumStatusPlanApproved.Invisible;
           NewPlanView(idmonitoring, planUpdate, planNew);

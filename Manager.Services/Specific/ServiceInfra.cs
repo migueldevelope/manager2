@@ -1042,7 +1042,7 @@ namespace Manager.Services.Specific
             PublicAccess = BlobContainerPublicAccessType.Blob
           });
         }
-        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", _user._idPerson.ToString(), ".csv"));
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", _user._idUser.ToString(), ".csv"));
         blockBlob.Properties.ContentType = "text/csv";
         blockBlob.UploadFromStreamAsync(stream.BaseStream).Wait();
         return blockBlob.Uri.ToString();

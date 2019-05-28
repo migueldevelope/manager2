@@ -50,7 +50,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Person person = servicePerson.GetFreeNewVersion(p => p._id == serviceUser._user._idPerson).Result;
+        Person person = servicePerson.GetFreeNewVersion(p => p.User._id == serviceUser._user._idUser).Result;
         switch (person.TypeUser)
         {
           case EnumTypeUser.Support:
@@ -78,7 +78,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Person person = servicePerson.GetFreeNewVersion(p => p._id == serviceUser._user._idPerson).Result;
+        Person person = servicePerson.GetFreeNewVersion(p => p.User._id == serviceUser._user._idUser).Result;
         switch (person.TypeUser)
         {
           case EnumTypeUser.Support:

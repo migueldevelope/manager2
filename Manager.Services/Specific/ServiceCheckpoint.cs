@@ -194,7 +194,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "List ended"));
+        
         int skip = (count * (page - 1));
         var detail = serviceCheckpoint.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Person.User.Name").Result
           .Select(p => new ViewListCheckpoint()
@@ -435,7 +435,7 @@ namespace Manager.Services.Specific
         if (checkpoint == null)
           return "Checkpoint not available!";
 
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | {0}", idcheckpoint)));
+        Task.Run(() => LogSave(checkpoint.Person._id, string.Format("Delete | {0}", idcheckpoint)));
         checkpoint.Status = EnumStatus.Disabled;
         serviceCheckpoint.Update(checkpoint, null);
         return "Checkpoint deleted!";

@@ -1411,7 +1411,7 @@ namespace Manager.Services.Specific
             StatusGoalsPerson = EnumStatusGoalsPerson.Open
           }).Result;
 
-          if (_user._idPerson == goalsPerson.Person._id)
+          if (_user._idUser == person.User._id)
           {
             goalsPerson.DateBeginPerson = DateTime.Now;
             goalsPerson.StatusGoalsPerson = EnumStatusGoalsPerson.InProgressPerson;
@@ -1445,32 +1445,32 @@ namespace Manager.Services.Specific
         goalsPerson.Person = view.Person;
         goalsPerson.StatusGoalsPerson = view.StatusGoalsPerson;
 
-        if (goalsPerson.Person._id != _user._idPerson)
+        if (person.User._id != _user._idUser)
         {
           if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.Wait)
           {
             goalsPerson.DateEndManager = DateTime.Now;
             Task.Run(() => Mail(person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", goalsPerson._id)));
+            Task.Run(() => LogSave(person._id, string.Format("Send person approval | {0}", goalsPerson._id)));
           }
           else
           {
             if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.End)
             {
               goalsPerson.DateEndEnd = DateTime.Now;
-              Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", goalsPerson._id)));
+              Task.Run(() => LogSave(person._id, string.Format("Conclusion process | {0}", goalsPerson._id)));
             }
             else if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.WaitManager)
             {
               goalsPerson.DateEndPerson = DateTime.Now;
               Task.Run(() => MailManager(person));
-              Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", goalsPerson._id)));
+              Task.Run(() => LogSave(person._id, string.Format("Send manager approval | {0}", goalsPerson._id)));
 
             }
             else if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.Disapproved)
             {
               Task.Run(() => MailDisapproval(person));
-              Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", goalsPerson._id)));
+              Task.Run(() => LogSave(person._id, string.Format("Send manager review | {0}", goalsPerson._id)));
             }
 
           }

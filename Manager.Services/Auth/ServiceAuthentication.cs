@@ -168,7 +168,7 @@ namespace Manager.Services.Auth
         new Claim(ClaimTypes.Hash, person.IdAccount),
         new Claim(ClaimTypes.Email, user.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
-        new Claim(ClaimTypes.UserData, person.Contracts.FirstOrDefault().IdPerson)
+        new Claim(ClaimTypes.UserData, person.IdUser)
         };
         JwtSecurityToken token = new JwtSecurityToken(
             issuer: "localhost",
@@ -225,7 +225,7 @@ namespace Manager.Services.Auth
         new Claim(ClaimTypes.Hash, person.IdAccount),
         new Claim(ClaimTypes.Email, loginPerson.User.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
-        new Claim(ClaimTypes.UserData, person.Contracts.FirstOrDefault().IdPerson)
+        new Claim(ClaimTypes.UserData, person.IdUser)
         };
         JwtSecurityToken token = new JwtSecurityToken(
             issuer: "localhost",

@@ -85,9 +85,11 @@ namespace Manager.Services.Specific
       try
       {
 
-        Task.Run(() => LogSave(_user._idPerson, "Remove Days Event: " + idevent + " | day: " + iddays));
+
 
         var events = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault();
+        Task.Run(() => LogSave(events.UserInclude._id, "Remove Days Event: " + idevent + " | day: " + iddays));
+
         foreach (var item in events.Days)
         {
           if (item._id == iddays)
@@ -159,9 +161,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "Delete Event " + id));
+
 
         var item = serviceEvent.GetAll(p => p._id == id).FirstOrDefault();
+        Task.Run(() => LogSave(item.UserInclude._id, "Delete Event " + id));
         item.Status = EnumStatus.Disabled;
         serviceEvent.Update(item, null);
         return "deleted";
@@ -176,10 +179,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "Delete Event Historic " + id));
+
 
 
         var item = serviceEventHistoric.GetAll(p => p._id == id).FirstOrDefault();
+        Task.Run(() => LogSave(item.Person._id, "Delete Event Historic " + id));
         var obs = "Realized Event: " + item.Name + ", ID_Historic: " + item._id;
         var trainingplan = serviceTrainingPlan.GetAll(p => p.Person._id == item.Person._id
         & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
@@ -203,9 +207,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "Delete Course " + id));
+
 
         var item = serviceCourse.GetAll(p => p._id == id).FirstOrDefault();
+
         var exists = serviceEvent.GetAll(p => p.Course._id == item._id & p.StatusEvent == EnumStatusEvent.Open);
         if (exists.Count() > 0)
           return "error_exists";
@@ -381,8 +386,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "Get Event by ID"));
+
         var events = serviceEvent.GetAll(p => p._id == id).FirstOrDefault();
+        Task.Run(() => LogSave(events.UserInclude._id, "Get Event by ID"));
 
         return new ViewCrudEvent()
         {
@@ -421,7 +427,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "Get Course by ID"));
+
         var course = serviceCourse.GetAll(p => p._id == id).FirstOrDefault();
 
         return new ViewCrudCourse()
@@ -473,8 +479,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
+
         var eventhistoric = serviceEventHistoric.GetAll(p => p._id == id).FirstOrDefault();
+        Task.Run(() => LogSave(eventhistoric.Person._id, "Get Historic by ID"));
 
         return new ViewCrudEventHistoric()
         {
@@ -598,7 +605,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "List Event"));
+
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
         total = serviceEvent.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -621,7 +628,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "List Open Events"));
+
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceEvent.CountNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result;
@@ -725,7 +732,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "List Realized Events"));
+
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Realized & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Realized & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
@@ -748,7 +755,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "List Historic Events"));
+
 
         int skip = (count * (page - 1));
         var detail = serviceEventHistoric.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
@@ -772,7 +779,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "List Historic Person"));
+
         int skip = (count * (page - 1));
         var detail = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceEventHistoric.CountNewVersion(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
@@ -795,7 +802,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "List Course"));
+
 
         int skip = (count * (page - 1));
         var detail = serviceCourse.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
@@ -838,12 +845,13 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var person = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
         var events = new Event()
         {
           Participants = new List<ViewCrudParticipant>(),
           Instructors = new List<ViewCrudInstructor>(),
           Attachments = new List<ViewCrudAttachmentField>(),
-          UserInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault().GetViewList(),
+          UserInclude = person.GetViewList(),
           DateInclude = DateTime.Now,
           Days = new List<ViewCrudDaysEvent>(),
           Entity = AddEntity(view.Entity.Name),
@@ -868,7 +876,7 @@ namespace Manager.Services.Specific
         };
 
         serviceEvent.InsertNewVersion(events);
-        Task.Run(() => LogSave(_user._idPerson, "Insert Event" + events._id));
+
         return new ViewListEvent()
         {
           _id = events._id,
@@ -904,7 +912,7 @@ namespace Manager.Services.Specific
         UpdateAddDaysParticipant(ref events, days);
         serviceEvent.Update(events, null);
 
-        Task.Run(() => LogSave(_user._idPerson, "Insert Days Event: " + " | day :" + days._id));
+
         return "add success";
       }
       catch (Exception e)
@@ -974,7 +982,7 @@ namespace Manager.Services.Specific
           Approved = true
         };
 
-        Task.Run(() => LogSave(_user._idPerson, "Add participant Event: " + idevent + " | participant: " + participant._id));
+        
 
         foreach (var days in events.Days)
         {
@@ -1148,7 +1156,7 @@ namespace Manager.Services.Specific
           }).ToList()
 
         }).Result;
-        Task.Run(() => LogSave(_user._idPerson, "New Course " + course._id));
+
 
         return "add success";
       }
@@ -1180,6 +1188,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var person = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
         var events = serviceEvent.GetAll(p => p._id == view._id).FirstOrDefault();
         events.Course = serviceCourse.GetAll(p => p._id == view.Course._id).Select(p => new ViewListCourse()
         {
@@ -1202,9 +1211,9 @@ namespace Manager.Services.Specific
         events.StatusEvent = view.StatusEvent;
         events.TypeESocial = view.TypeESocial;
         events.Workload = view.Workload;
-        Task.Run(() => LogSave(_user._idPerson, "Update Event " + view._id));
 
-        events.UserEdit = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault().GetViewList();
+
+        events.UserEdit = person.GetViewList();
         events.Entity = AddEntity(view.Entity.Name);
         if (view.StatusEvent == EnumStatusEvent.Realized)
         {
@@ -1245,7 +1254,7 @@ namespace Manager.Services.Specific
         eventHistoric.Begin = view.Begin;
         eventHistoric.End = view.End;
         eventHistoric.Attachments = view.Attachments;
-        Task.Run(() => LogSave(_user._idPerson, "Update Event Historic " + view._id));
+        
 
         eventHistoric.Entity = AddEntity(view.Entity.Name);
         serviceEventHistoric.Update(eventHistoric, null);
@@ -1261,7 +1270,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "Update Event Historic " + view._id));
+        
 
         if (view.Workload.ToString().Contains(","))
           view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
@@ -1298,7 +1307,7 @@ namespace Manager.Services.Specific
           Name = p.Name
         }).ToList();
 
-        Task.Run(() => LogSave(_user._idPerson, "Update Course " + view._id));
+        
 
         serviceCourse.Update(course, null);
 

@@ -338,7 +338,7 @@ namespace Manager.Services.Auth
           _idAccount = user._idAccount,
           NamePerson = user.Name,
           Mail = user.Mail,
-          _idPerson = user._id
+          _idUser = user._id
         };
         string newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
         user.Password = newPass;
@@ -371,7 +371,7 @@ namespace Manager.Services.Auth
           _idAccount = user._idAccount,
           NamePerson = user.Name,
           Mail = user.Mail,
-          _idPerson = user._id
+          _idUser= user._id
         };
         serviceMail._user = serviceUser._user;
 

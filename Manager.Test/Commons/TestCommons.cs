@@ -45,7 +45,7 @@ namespace Manager.Test.Commons
         {
           NamePerson = user.User.Name,
           _idAccount = user._idAccount,
-          _idPerson = user._id,
+          _idUser = user._id,
           Mail = user.User.Mail,
           NameAccount = "Suport"
         };

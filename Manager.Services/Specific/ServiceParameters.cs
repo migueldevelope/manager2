@@ -70,7 +70,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Person person = servicePerson.GetNewVersion(p => p._id == _user._idPerson).Result;
+        Person person = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
         if (person.TypeUser != EnumTypeUser.Support)
           throw new Exception("Add parameter not available!");
 

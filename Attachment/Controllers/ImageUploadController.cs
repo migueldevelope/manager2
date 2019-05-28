@@ -44,7 +44,7 @@ namespace EdeskIntegration.Controllers
           baseUser.NameAccount = ci.Value;
 
         if (ci.Type == ClaimTypes.UserData)
-          baseUser._idPerson = ci.Value;
+          baseUser._idUser = ci.Value;
 
       }
       Config conn = XmlConnection.ReadConfig();

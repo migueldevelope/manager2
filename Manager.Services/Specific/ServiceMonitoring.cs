@@ -113,7 +113,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete all monitoring person | {0}", idperson)));
+        
         var monitorings = serviceMonitoring.GetAll(p => p.Person._id == idperson).ToList();
         foreach (var monitoring in monitorings)
         {
@@ -131,7 +131,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete monitoring | {0}", idmonitoring)));
+        
         var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         monitoring.Status = EnumStatus.Disabled;
         serviceMonitoring.Update(monitoring, null);
@@ -146,7 +146,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete last monitoring person | {0}", idperson)));
+        
         var monitoring = serviceMonitoring.GetAll(p => p.Person._id == idperson).LastOrDefault();
         monitoring.Status = EnumStatus.Disabled;
         serviceMonitoring.Update(monitoring, null);
@@ -292,12 +292,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var userInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        var userInclude = servicePerson.GetAll(p => p.User._id == _user._idUser).FirstOrDefault();
         var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
-          if (monitoring.Person._id == _user._idPerson)
+          if (monitoring.Person.User._id == _user._idUser)
           {
             monitoring.DateBeginPerson = DateTime.Now;
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
@@ -950,7 +950,7 @@ namespace Manager.Services.Specific
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
-          if (monitoring.Person._id == _user._idPerson)
+          if (monitoring.Person.User._id == _user._idUser)
           {
             monitoring.DateBeginPerson = DateTime.Now;
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
@@ -1027,7 +1027,7 @@ namespace Manager.Services.Specific
 
           monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
           serviceMonitoring.InsertNewVersion(monitoring);
-          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
+          Task.Run(() => LogSave(monitoring.Person._id, string.Format("Start new process | {0}", monitoring._id)));
         }
         else
         {
@@ -1083,7 +1083,7 @@ namespace Manager.Services.Specific
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
-          if (monitoring.Person._id == _user._idPerson)
+          if (monitoring.Person.User._id == _user._idUser)
           {
             monitoring.DateBeginPerson = DateTime.Now;
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
@@ -1095,15 +1095,15 @@ namespace Manager.Services.Specific
           }
         }
 
-        var userInclude = servicePerson.GetAll(p => p._id == _user._idPerson).FirstOrDefault();
+        var userInclude = servicePerson.GetAll(p => p.User._id == _user._idUser).FirstOrDefault();
 
-        if (monitoring.Person._id != _user._idPerson)
+        if (monitoring.Person.User._id != _user._idUser)
         {
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.Wait)
           {
             monitoring.DateEndManager = DateTime.Now;
             Task.Run(() => Mail(monitoring.Person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
+            Task.Run(() => LogSave(userInclude._id, string.Format("Send person approval | {0}", monitoring._id)));
           }
         }
         else
@@ -1118,19 +1118,19 @@ namespace Manager.Services.Specific
               serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.User.Name + " foi elogiado pelo gestor", monitoring.Person);
             }
             monitoring.DateEndEnd = DateTime.Now;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
+            Task.Run(() => LogSave(userInclude._id, string.Format("Conclusion process | {0}", monitoring._id)));
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
             Task.Run(() => MailManager(monitoring.Person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
+            Task.Run(() => LogSave(userInclude._id, string.Format("Send manager approval | {0}", monitoring._id)));
 
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
           {
             Task.Run(() => MailDisApproval(monitoring.Person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
+            Task.Run(() => LogSave(userInclude._id, string.Format("Send manager review | {0}", monitoring._id)));
           }
         }
         serviceMonitoring.Update(monitoring, null);
@@ -1170,7 +1170,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => LogSave(_user._idPerson, "List monitoring exclud"));
+        
         int skip = (count * (page - 1));
         var detail = serviceMonitoring.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
@@ -1195,7 +1195,7 @@ namespace Manager.Services.Specific
         var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
-          if (monitoring.Person._id == _user._idPerson)
+          if (monitoring.Person.User._id == _user._idUser)
           {
             monitoring.DateBeginPerson = DateTime.Now;
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
@@ -1234,7 +1234,7 @@ namespace Manager.Services.Specific
                 StatusView = comments.StatusView,
                 UserComment = comments.UserComment
               });
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(monitoring.Person._id, string.Format("Add comment | {0}", idmonitoring)));
             serviceMonitoring.Update(monitoring, null);
 
             return item.Comments.Select(p => new ViewCrudComment()
@@ -1278,7 +1278,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null);
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(monitoring.Person._id, string.Format("Add comment | {0}", idmonitoring)));
 
             return item.Comments.Select(p => new ViewCrudComment()
             {
@@ -1322,7 +1322,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null);
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(monitoring.Person._id, string.Format("Add comment | {0}", idmonitoring)));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,

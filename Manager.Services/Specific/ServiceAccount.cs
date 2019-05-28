@@ -120,7 +120,7 @@ namespace Manager.Services.Specific
           User = user
         };
         person = servicePerson.InsertNewVersion(person).Result;
-        serviceAccount._user._idPerson = person._id;
+        serviceAccount._user._idUser = person.User._id;
         // Criar os parâmetros básicos
         serviceInfra._user = serviceAccount._user;
         //Task.Run(() => serviceInfra.CopyTemplateInfraAsync(company));
