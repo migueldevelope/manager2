@@ -150,7 +150,7 @@ namespace Manager.Services.Specific
                 _idPerson = null,
                 Local = "ManagerMessages"
               };
-              serviceLog.NewLog(log);
+              serviceLog.NewLogService(log);
               SendMessageAccount(sendTest);
             }
           }

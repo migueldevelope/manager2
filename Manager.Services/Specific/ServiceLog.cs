@@ -67,6 +67,25 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public void NewLogService(ViewLog view)
+    {
+      try
+      {
+        var log = new Log
+        {
+          Person = null,
+          DataLog = DateTime.Now,
+          Description = view.Description,
+          Status = EnumStatus.Enabled,
+          Local = view.Local
+        };
+        log = serviceLog.InsertNewVersion(log).Result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public List<ViewListLog> ListLogs(string idaccount, ref long total, int count, int page, string filter)
     {
       try
