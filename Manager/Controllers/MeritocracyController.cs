@@ -50,6 +50,22 @@ namespace Manager.Controllers
       return result;
     }
 
+    /// <summary>
+    /// Listar as empresas
+    /// </summary>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da empresa</param>
+    /// <returns>Lista de empresas cadastradas</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listmeritocracyactivitie/{idmeritocracy}")]
+    public async Task<List<ViewListMeritocracyActivitie>> ListMeritocracyActivitie(string idmeritocracy)
+    {
+      List<ViewListMeritocracyActivitie> result = service.ListMeritocracyActivitie(idmeritocracy);
+      return result;
+    }
+
 
     /// <summary>
     /// Listar estabelecimentos
@@ -69,6 +85,23 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
+    
+
+    /// <summary>
+    /// Atualiza informações de avaliação das entregas
+    /// </summary>
+    /// <param name="idmeritocracy"></param>
+    /// <param name="idactivitie"></param>
+    /// <param name="mark"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateactivitiemark/{idmeritocracy}/{idactivitie}/{mark}")]
+    public async Task<IActionResult> UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark)
+    {
+      return Ok(service.UpdateActivitieMark(idmeritocracy, idactivitie, mark));
+    }
+
 
     /// <summary>
     /// Cadastrar uma nova empresa
@@ -159,7 +192,7 @@ namespace Manager.Controllers
     /// <returns>Lista de estabelecimentos</returns>
     [Authorize]
     [HttpGet]
-    [Route("listmeritocracyccore")]
+    [Route("listmeritocracyscore")]
     public async Task<List<ViewListMeritocracyScore>> ListMeritocracyScore(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
@@ -174,7 +207,7 @@ namespace Manager.Controllers
     /// <param name="view">Objeto de manutenção do estabelecimento</param>
     /// <returns>Mensagem de sucesso</returns>
     [HttpPost]
-    [Route("newmeritocracyccore")]
+    [Route("newmeritocracyscore")]
     public async Task<IActionResult> PostMeritocracyScore([FromBody]ViewCrudMeritocracyScore view)
     {
       return Ok(service.NewMeritocracyScore(view));
@@ -186,7 +219,7 @@ namespace Manager.Controllers
     /// <returns>Objeto de manutenção do estabelecimento</returns>
     [Authorize]
     [HttpGet]
-    [Route("getmeritocracyccore/{id}")]
+    [Route("getmeritocracyscore/{id}")]
     public async Task<ViewCrudMeritocracyScore> ListMeritocracyScore(string id)
     {
       return service.GetMeritocracyScore(id);
@@ -198,7 +231,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
-    [Route("updatemeritocracyccore")]
+    [Route("updatemeritocracyscore")]
     public async Task<IActionResult> UpdateMeritocracyScore([FromBody]ViewCrudMeritocracyScore view)
     {
       return Ok(service.UpdateMeritocracyScore(view));
@@ -210,7 +243,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]
-    [Route("deletemeritocracyccore/{id}")]
+    [Route("deletemeritocracyscore/{id}")]
     public async Task<IActionResult> DeleteMeritocracyScore(string id)
     {
       return Ok(service.RemoveMeritocracyScore(id));
@@ -227,7 +260,7 @@ namespace Manager.Controllers
     /// <returns>Lista de estabelecimentos</returns>
     [Authorize]
     [HttpGet]
-    [Route("listsalaryscaleccore")]
+    [Route("listsalaryscalescore")]
     public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;

@@ -10,5 +10,6 @@ namespace Manager.Views.BusinessList
     public string OccupationName { get; set; }
     public DateTime? OccupationDate { get; set; }
     public DateTime? CompanyDate { get; set; }
+    public decimal Salary { get; set; }
   }
 }

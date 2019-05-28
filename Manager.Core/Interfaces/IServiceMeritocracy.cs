@@ -19,6 +19,8 @@ namespace Manager.Core.Interfaces
     string UpdateCompanyDate(ViewCrudMeritocracyDate view, string id);
     string UpdateOccupationActivitiesExcellence(ViewCrudMeritocracyWeight view, string id);
     string UpdateOccupationMaturity(ViewCrudMeritocracyWeight view, string id);
+    string UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark);
+    List<ViewListMeritocracyActivitie> ListMeritocracyActivitie(string idmeritocracy);
     List<ViewListMeritocracy> ListWaitManager(string idmanager, ref long total, string filter, int count, int page);
     string NewMeritocracyScore(ViewCrudMeritocracyScore view);
     string UpdateMeritocracyScore(ViewCrudMeritocracyScore view);

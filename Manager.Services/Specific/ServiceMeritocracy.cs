@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
@@ -19,6 +20,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Meritocracy> serviceMeritocracy;
     private readonly ServiceGeneric<MeritocracyScore> serviceMeritocracyScore;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<SalaryScaleScore> serviceSalaryScaleScore;
 
@@ -32,6 +34,7 @@ namespace Manager.Services.Specific
         servicePerson = new ServiceGeneric<Person>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSalaryScaleScore = new ServiceGeneric<SalaryScaleScore>(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
       }
       catch (Exception e)
       {
@@ -46,6 +49,7 @@ namespace Manager.Services.Specific
       servicePerson._user = _user;
       serviceSalaryScale._user = _user;
       serviceSalaryScaleScore._user = _user;
+      serviceOccupation._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -55,6 +59,7 @@ namespace Manager.Services.Specific
       servicePerson._user = user;
       serviceSalaryScale._user = user;
       serviceSalaryScaleScore._user = user;
+      serviceOccupation._user = _user;
     }
     #endregion
 
@@ -77,7 +82,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        ViewListPersonMeritocracy person = null;
+
+        var person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
+
+        List<Activitie> activities = null;
+        if (occupation != null)
+          activities = occupation.Activities;
 
         Meritocracy meritocracy = serviceMeritocracy.InsertNewVersion(new Meritocracy()
         {
@@ -86,9 +97,18 @@ namespace Manager.Services.Specific
           Maturity = 0,
           DateBegin = DateTime.Now,
           StatusMeritocracy = EnumStatusMeritocracy.Wait,
-          Person = person,
-          Status = EnumStatus.Enabled
+          Person = view.Person,
+          Status = EnumStatus.Enabled,
+          MeritocracyActivities = new List<MeritocracyActivities>()
         }).Result;
+
+        foreach (var item in activities)
+          meritocracy.MeritocracyActivities.Add(new MeritocracyActivities()
+          {
+            Activities = item,
+            Mark = 0
+          });
+
         return "Meritocracy added!";
       }
       catch (Exception e)
@@ -102,7 +122,6 @@ namespace Manager.Services.Specific
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == view._id).Result;
 
-        meritocracy.ActivitiesExcellence = 0;
         meritocracy.StatusMeritocracy = view.StatusMeritocracy;
         if (meritocracy.StatusMeritocracy == EnumStatusMeritocracy.End)
           meritocracy.DateEnd = DateTime.Now;
@@ -218,6 +237,25 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListMeritocracyActivitie> ListMeritocracyActivitie(string idmeritocracy)
+    {
+      try
+      {
+        List<ViewListMeritocracyActivitie> detail = serviceMeritocracy.GetAllNewVersion(p => p._id == idmeritocracy).Result.
+          FirstOrDefault().MeritocracyActivities
+          .Select(x => new ViewListMeritocracyActivitie()
+          {
+            Activitie = new ViewListActivitie() { _id = x.Activities._id, Name = x.Activities.Name, Order = x.Activities.Order },
+            Mark = x.Mark
+          }).ToList();
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     public List<ViewListMeritocracy> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
     {
@@ -235,6 +273,7 @@ namespace Manager.Services.Specific
                                           OccupationName = p.Occupation.Name,
                                           OccupationDate = p.DateLastOccupation,
                                           CompanyDate = p.User.DateAdm,
+                                          Salary = p.Salary,
                                           StatusMeritocracy = EnumStatusMeritocracy.Open,
                                         }).ToList();
         List<ViewListMeritocracy> detail = new List<ViewListMeritocracy>();
@@ -263,6 +302,33 @@ namespace Manager.Services.Specific
                                 p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == idmeritocracy).Result;
+        decimal averageActivities = 0;
+
+        foreach (var item in meritocracy.MeritocracyActivities)
+        {
+          if (item.Activities._id == idactivitie)
+            item.Mark = mark;
+
+          averageActivities += item.Mark;
+        }
+
+        meritocracy.ActivitiesExcellence = ((averageActivities * 100) / (meritocracy.MeritocracyActivities.Count() == 0 ? 1 : meritocracy.MeritocracyActivities.Count()));
+
+        serviceMeritocracy.Update(meritocracy, null);
+
+        return "Meritocracy altered!";
       }
       catch (Exception e)
       {
