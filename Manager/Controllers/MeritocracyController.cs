@@ -49,6 +49,27 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
+
+
+    /// <summary>
+    /// Listar estabelecimentos
+    /// </summary>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    ///  <param name="idmanager">Identificador gestor</param>
+    /// <param name="filter">Filtro para o nome do estabelecimento</param>
+    /// <returns>Lista de estabelecimentos</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listwaitmanager/{idmanager}")]
+    public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      List<ViewListMeritocracy> result = service.ListWaitManager(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
     /// <summary>
     /// Cadastrar uma nova empresa
     /// </summary>
@@ -84,6 +105,34 @@ namespace Manager.Controllers
     {
       return Ok(service.Update(view));
     }
+
+    /// <summary>
+    /// Alterar a empresa
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatecompanydate/{id}")]
+    public async Task<IActionResult> UpdateCompanyDate([FromBody]ViewCrudMeritocracyDate view, string id)
+    {
+      return Ok(service.UpdateCompanyDate(view, id));
+    }
+
+    /// <summary>
+    /// Alterar a empresa
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateoccupationdate/{id}")]
+    public async Task<IActionResult> UpdateOccupationDate([FromBody]ViewCrudMeritocracyDate view, string id)
+    {
+      return Ok(service.UpdateOccupationDate(view, id));
+    }
+
+
     /// <summary>
     /// Excluir uma empresa
     /// </summary>
@@ -99,6 +148,8 @@ namespace Manager.Controllers
     #endregion
 
     #region MeritocracyScore
+
+
     /// <summary>
     /// Listar estabelecimentos
     /// </summary>

@@ -8,7 +8,7 @@ namespace Manager.Views.BusinessList
     public DateTime? OccupationDate { get; set; }
     public string CurrentSchooling { get; set; }
     public string OccupationSchooling { get; set; }
-    public string Occupation { get; set; }
+    public string OccupationName { get; set; }
     public decimal Salary { get; set; }
   }
 }
