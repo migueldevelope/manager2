@@ -508,7 +508,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = serviceEntity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEntity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceEntity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewCrudEntity()
         {
@@ -624,7 +624,7 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(_user._idPerson, "List Open Events"));
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceEvent.CountNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListEvent()
         {
@@ -775,7 +775,7 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(_user._idPerson, "List Historic Person"));
         int skip = (count * (page - 1));
         var detail = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceEventHistoric.CountNewVersion(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListEventHistoric()
         {
@@ -799,7 +799,7 @@ namespace Manager.Services.Specific
 
         int skip = (count * (page - 1));
         var detail = serviceCourse.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceCourse.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceCourse.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListCourse()
         {
@@ -819,7 +819,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = serviceCourseESocial.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceCourseESocial.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceCourseESocial.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewCrudCourseESocial()
         {
@@ -867,7 +867,7 @@ namespace Manager.Services.Specific
           Workload = view.Workload
         };
 
-        serviceEvent.Insert(events);
+        serviceEvent.InsertNewVersion(events);
         Task.Run(() => LogSave(_user._idPerson, "Insert Event" + events._id));
         return new ViewListEvent()
         {
@@ -1012,7 +1012,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        //total = serviceEvent.CountNewVersion(p => p._id == idevent).Result.FirstOrDefault().Participants.Where(p => p.Name.ToUpper().Contains(filter.ToUpper()));
 
         return detail.Select(p => new ViewCrudParticipant()
         {
@@ -1078,7 +1078,7 @@ namespace Manager.Services.Specific
         //double minutes2 = difference2.TotalMinutes; 
         //view.Workload = decimal.Parse(minutes2.ToString());
 
-        var events = serviceEventHistoric.Insert(eventhistoric);
+        var events = serviceEventHistoric.InsertNewVersion(eventhistoric).Result;
         var plan = serviceTrainingPlan.GetAll(p => p.Person._id == eventhistoric.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
         if (plan != null)
@@ -1100,7 +1100,7 @@ namespace Manager.Services.Specific
       try
       {
         view.Entity = AddEntity(view.Entity.Name);
-        var events = serviceEventHistoric.Insert(view);
+        var events = serviceEventHistoric.InsertNewVersion(view).Result;
         var plan = serviceTrainingPlan.GetAll(p => p.Person._id == view.Person._id & p.Course._id == view.Course._id
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
         if (plan != null)
@@ -1122,7 +1122,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var course = serviceCourse.Insert(new Course()
+        var course = serviceCourse.InsertNewVersion(new Course()
         {
           Name = view.Name,
           Wordkload = view.Wordkload,
@@ -1147,7 +1147,7 @@ namespace Manager.Services.Specific
             _idAccount = _user._idAccount
           }).ToList()
 
-        });
+        }).Result;
         Task.Run(() => LogSave(_user._idPerson, "New Course " + course._id));
 
         return "add success";
@@ -1162,7 +1162,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceCourseESocial.InsertAccount(new CourseESocial()
+        serviceCourseESocial.InsertFreeNewVersion(new CourseESocial()
         {
           Name = view.Name,
           Code = view.Code,
@@ -1420,11 +1420,11 @@ namespace Manager.Services.Specific
       {
         var entity = serviceEntity.GetAuthentication(p => p.Name.ToUpper().Contains(name.ToUpper())).FirstOrDefault();
         if (entity == null)
-          entity = serviceEntity.Insert(new Entity()
+          entity = serviceEntity.InsertNewVersion(new Entity()
           {
             Status = EnumStatus.Enabled,
             Name = name
-          });
+          }).Result;
 
         return new ViewCrudEntity()
         {

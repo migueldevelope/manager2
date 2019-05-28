@@ -50,7 +50,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        configurationNotificationsService.Insert(view);
+        configurationNotificationsService.InsertNewVersion(view);
         return "add success";
       }
       catch (Exception e)
@@ -115,7 +115,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = configurationNotificationsService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = configurationNotificationsService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = configurationNotificationsService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.ToList();
 

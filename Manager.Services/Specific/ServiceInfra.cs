@@ -1806,7 +1806,7 @@ namespace Manager.Services.Specific
           Company = view.Company,
           Scope = new List<Scope>()
         };
-        var result = serviceGroup.Insert(group);
+        var result = serviceGroup.InsertNewVersion(group).Result;
 
         return new ViewCrudGroup()
         {
@@ -1887,7 +1887,7 @@ namespace Manager.Services.Specific
           Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
           Scope = new List<Scope>()
         };
-        var result = serviceGroup.Insert(group);
+        var result = serviceGroup.InsertNewVersion(group).Result;
 
         return new ViewCrudGroup()
         {
@@ -2145,7 +2145,7 @@ namespace Manager.Services.Specific
           TypeSkill = view.TypeSkill,
           Status = EnumStatus.Enabled
         };
-        serviceSkill.Insert(skill);
+        serviceSkill.InsertNewVersion(skill);
         return new ViewCrudSkill()
         {
           _id = skill._id,
@@ -2171,7 +2171,7 @@ namespace Manager.Services.Specific
           TypeSkill = view.TypeSkill,
           Status = EnumStatus.Enabled
         };
-        return serviceSkill.Insert(skill);
+        return serviceSkill.InsertNewVersion(skill).Result;
       }
       catch (Exception e)
       {
@@ -2189,7 +2189,7 @@ namespace Manager.Services.Specific
         //  return "error_line";
 
 
-        serviceArea.Insert(new Area()
+        serviceArea.InsertNewVersion(new Area()
         {
           Name = view.Name,
           Order = view.Order,
@@ -2209,7 +2209,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceCbo.InsertAccount(new Cbo()
+        serviceCbo.InsertFreeNewVersion(new Cbo()
         {
           Name = view.Name,
           Code = view.Code,
@@ -2227,7 +2227,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceAxis.Insert(new Axis()
+        serviceAxis.InsertNewVersion(new Axis()
         {
           Name = view.Name,
           TypeAxis = view.TypeAxis,
@@ -2281,7 +2281,7 @@ namespace Manager.Services.Specific
         if (group.Schooling != null)
           occupation.Schooling = group.Schooling;
 
-        serviceOccupation.Insert(occupation);
+        serviceOccupation.InsertNewVersion(occupation);
         return "ok";
       }
       catch (Exception)
@@ -2295,14 +2295,14 @@ namespace Manager.Services.Specific
       try
       {
 
-        return serviceSchooling.Insert(new Schooling()
+        return serviceSchooling.InsertNewVersion(new Schooling()
         {
           Name = schooling.Name,
           Order = schooling.Order,
           Complement = schooling.Complement,
           Type = schooling.Type,
           Status = EnumStatus.Enabled
-        });
+        }).Result;
       }
       catch (Exception e)
       {
@@ -2314,7 +2314,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceSphere.Insert(new Sphere()
+        serviceSphere.InsertNewVersion(new Sphere()
         {
           Name = view.Name,
           TypeSphere = view.TypeSphere,
@@ -2333,7 +2333,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceQuestions.Insert(new Questions()
+        serviceQuestions.InsertNewVersion(new Questions()
         {
           Name = view.Name,
           Order = view.Order,
@@ -2366,7 +2366,7 @@ namespace Manager.Services.Specific
         }
 
 
-        serviceProcessLevelOne.Insert(new ProcessLevelOne()
+        serviceProcessLevelOne.InsertNewVersion(new ProcessLevelOne()
         {
           Name = model.Name,
           Area = serviceArea.GetAll(p => p._id == model.Area._id).FirstOrDefault(),
@@ -2386,7 +2386,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceTextDefault.Insert(new TextDefault()
+        serviceTextDefault.InsertNewVersion(new TextDefault()
         {
           Name = model.Name,
           Company = serviceCompany.GetAll(p => p._id == model.Company._id).FirstOrDefault(),
@@ -2416,7 +2416,7 @@ namespace Manager.Services.Specific
           model.Order = 1;
         }
 
-        serviceProcessLevelTwo.Insert(new ProcessLevelTwo()
+        serviceProcessLevelTwo.InsertNewVersion(new ProcessLevelTwo()
         {
           Name = model.Name,
           Comments = model.Comments,
@@ -2946,7 +2946,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListSkill()
         {
@@ -2989,7 +2989,7 @@ namespace Manager.Services.Specific
                         Exists = skills.Contains(p.Name)
                       }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        total = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail;
       }
@@ -3035,7 +3035,7 @@ namespace Manager.Services.Specific
                         ExistsGroup = skillsGroup.Contains(p.Name)
                       }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        total = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail;
       }
@@ -3090,7 +3090,7 @@ namespace Manager.Services.Specific
                         ExistsOccupation = skillsOccupation.Contains(p.Name)
                       }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        total = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail;
       }
@@ -3222,7 +3222,7 @@ namespace Manager.Services.Specific
             TypeSkill = item.TypeSkill,
             Status = EnumStatus.Enabled
           };
-          serviceSkill.Insert(skill);
+          serviceSkill.InsertNewVersion(skill);
         }
 
         return "ok";

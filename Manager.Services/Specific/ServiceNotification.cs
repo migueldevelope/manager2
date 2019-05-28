@@ -423,14 +423,14 @@ namespace Manager.Services.Specific
           };
           if (personManager != null)
           {
-            sendMail = serviceMailLog.Insert(sendMail);
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
             string token = SendMailApi(path, personManager, sendMail._id).Result;
           }
           else
           {
             sendMail.StatusMail = EnumStatusMail.Error;
             sendMail.MessageError = "Manager null in checkpoint messages.";
-            sendMail = serviceMailLog.Insert(sendMail);
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
           }
         }
       }
@@ -575,14 +575,14 @@ namespace Manager.Services.Specific
           };
           if (personManager != null)
           {
-            sendMail = serviceMailLog.Insert(sendMail);
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
             string token = SendMailApi(path, personManager, sendMail._id).Result;
           }
           else
           {
             sendMail.StatusMail = EnumStatusMail.Error;
             sendMail.MessageError = "Manager null in monitoring manager messages.";
-            sendMail = serviceMailLog.Insert(sendMail);
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
           }
         }
       }
@@ -624,8 +624,8 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject
           };
-          MailLog mailObj = serviceMailLog.Insert(sendMail);
-          sendMail = serviceMailLog.Insert(sendMail);
+          MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
+          sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
           string token = SendMailApi(path, item, sendMail._id).Result;
         }
       }
@@ -697,7 +697,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        sendMail = serviceMailLog.Insert(sendMail);
+        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
         string token = SendMailApi(path, person, sendMail._id).Result;
       }
       catch (Exception e)
@@ -918,14 +918,14 @@ namespace Manager.Services.Specific
           };
           if (personManager != null)
           {
-            sendMail = serviceMailLog.Insert(sendMail);
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
             string token = SendMailApi(path, personManager, sendMail._id).Result;
           }
           else
           {
             sendMail.StatusMail = EnumStatusMail.Error;
             sendMail.MessageError = "Manager null in onboarding manager messages.";
-            sendMail = serviceMailLog.Insert(sendMail);
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
           }
         }
       }
@@ -1223,17 +1223,17 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject
           };
-          MailLog mailObj = serviceMailLog.Insert(sendMail);
+          MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
           if (personManager != null)
           {
-            sendMail = serviceMailLog.Insert(sendMail);
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
             string token = SendMailApi(path, personManager, sendMail._id).Result;
           }
           else
           {
             sendMail.StatusMail = EnumStatusMail.Error;
             sendMail.MessageError = "Manager null in plan action manager messages.";
-            sendMail = serviceMailLog.Insert(sendMail);
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
           }
         }
       }
@@ -1325,7 +1325,7 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject
           };
-          sendMail = serviceMailLog.Insert(sendMail);
+          sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
           string token = SendMailApi(path, item.Person, sendMail._id).Result;
         }
       }

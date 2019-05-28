@@ -87,7 +87,7 @@ namespace Manager.Services.Auth
     {
       int skip = (count * (page - 1));
       var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-      total = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).Count();
+      total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
       return detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name }).ToList();
     }
@@ -121,7 +121,7 @@ namespace Manager.Services.Auth
       var detail = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
         .Skip(skip).Take(count).ToList()
         ;
-      total = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+      total = serviceOccupation.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
       return detail.Select(p => new ViewListOccupation()
       {
@@ -222,9 +222,9 @@ namespace Manager.Services.Auth
           user.ChangePassword = Manager.Views.Enumns.EnumChangePassword.No;
 
         //person.User = user;
-        person.User = serviceUser.Insert(user);
+        person.User = serviceUser.InsertNewVersion(user).Result;
 
-        servicePerson.Insert(person);
+        servicePerson.InsertNewVersion(person);
 
         return "ok";
       }
@@ -759,7 +759,7 @@ namespace Manager.Services.Auth
       {
         var parameter = serviceParameter.GetAll(p => p.Key == "typeregisterperson").FirstOrDefault();
         if (parameter == null)
-          serviceParameter.Insert(new Parameter()
+          serviceParameter.InsertNewVersion(new Parameter()
           {
             Name = "Tipo do cadastro da pessoa",
             Key = "typeregisterperson",

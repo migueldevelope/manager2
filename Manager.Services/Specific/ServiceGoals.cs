@@ -160,7 +160,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -202,7 +202,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -244,7 +244,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)

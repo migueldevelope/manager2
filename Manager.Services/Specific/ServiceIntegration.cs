@@ -174,7 +174,7 @@ namespace Manager.Services.Specific
             NameCompany = string.Empty,
             Status = EnumStatus.Enabled
           };
-          integrationCompanyService.Insert(item);
+          integrationCompanyService.InsertNewVersion(item);
         }
         if (item.IdCompany.Equals("000000000000000000000000"))
         {
@@ -288,7 +288,7 @@ namespace Manager.Services.Specific
             NameEstablishment = string.Empty,
             Status = EnumStatus.Enabled
           };
-          integrationEstablishmentService.Insert(item);
+          integrationEstablishmentService.InsertNewVersion(item);
         }
         if (item.IdEstablishment.Equals("000000000000000000000000"))
         {
@@ -409,7 +409,7 @@ namespace Manager.Services.Specific
             NameOccupation = string.Empty,
             Status = EnumStatus.Enabled
           };
-          integrationOccupationService.Insert(item);
+          integrationOccupationService.InsertNewVersion(item);
         }
         if (item.IdOccupation.Equals("000000000000000000000000"))
         {
@@ -530,7 +530,7 @@ namespace Manager.Services.Specific
             NameSchooling = string.Empty,
             Status = EnumStatus.Enabled
           };
-          integrationSchoolingService.Insert(item);
+          integrationSchoolingService.InsertNewVersion(item);
         }
         if (item.IdSchooling.Equals("000000000000000000000000"))
         {
@@ -639,12 +639,12 @@ namespace Manager.Services.Specific
         IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
         if (param == null)
         {
-          param = parameterService.Insert(new IntegrationParameter()
+          param = parameterService.InsertNewVersion(new IntegrationParameter()
           {
             Mode = EnumIntegrationMode.DataBaseV1,
             Type = EnumIntegrationType.Complete,
             Status = EnumStatus.Enabled
-          });
+          }).Result;
         }
         return new ViewCrudIntegrationParameter()
         {
@@ -758,7 +758,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        integrationPersonService.Insert(integrationPerson);
+        integrationPersonService.InsertNewVersion(integrationPerson);
       }
       catch (Exception)
       {

@@ -96,7 +96,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.Insert(attachment);
+        this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -145,7 +145,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.Insert(attachment);
+        this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -197,7 +197,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.Insert(attachment);
+        this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -253,7 +253,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.Insert(attachment);
+        this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -306,7 +306,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.Insert(attachment);
+        this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -359,7 +359,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.Insert(attachment);
+        this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -413,7 +413,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.Insert(attachment);
+        this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -466,7 +466,7 @@ namespace EdeskIntegration.Controllers
     //      Status = EnumStatus.Enabled,
     //      Saved = true
     //    };
-    //    this.service.Insert(attachment);
+    //    this.service.InsertNewVersion(attachment);
     //    try
     //    {
     //      CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);

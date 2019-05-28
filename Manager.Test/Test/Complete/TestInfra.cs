@@ -64,7 +64,7 @@ namespace Manager.Test.Test.Complete
     //      Status = EnumStatus.Enabled
     //    };
 
-    //    serviceCompany.Insert(comp);
+    //    serviceCompany.InsertNewVersion(comp);
 
 
     //  }

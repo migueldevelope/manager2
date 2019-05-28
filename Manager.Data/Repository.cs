@@ -67,50 +67,50 @@ namespace Manager.Data
       }
     }
 
-    public T Insert(T entity)
-    {
-      try
-      {
-        entity._idAccount = _user._idAccount;
-        entity._id = ObjectId.GenerateNewId().ToString();
-        _collection.InsertOne(entity);
+    //public T Insert(T entity)
+    //{
+    //  try
+    //  {
+    //    entity._idAccount = _user._idAccount;
+    //    entity._id = ObjectId.GenerateNewId().ToString();
+    //    _collection.InsertOne(entity);
 
-        return entity;
-      }
-      catch
-      {
-        throw;
-      }
-    }
+    //    return entity;
+    //  }
+    //  catch
+    //  {
+    //    throw;
+    //  }
+    //}
 
-    public T InsertAccount(T entity)
-    {
-      try
-      {
-        entity._id = ObjectId.GenerateNewId().ToString();
-        _collection.InsertOne(entity);
+    //public T InsertAccount(T entity)
+    //{
+    //  try
+    //  {
+    //    entity._id = ObjectId.GenerateNewId().ToString();
+    //    _collection.InsertOne(entity);
 
-        return entity;
-      }
-      catch
-      {
-        throw;
-      }
-    }
+    //    return entity;
+    //  }
+    //  catch
+    //  {
+    //    throw;
+    //  }
+    //}
 
-    public T InsertAccountId(T entity)
-    {
-      try
-      {
-        _collection.InsertOne(entity);
+    //public T InsertAccountId(T entity)
+    //{
+    //  try
+    //  {
+    //    _collection.InsertOne(entity);
 
-        return entity;
-      }
-      catch
-      {
-        throw;
-      }
-    }
+    //    return entity;
+    //  }
+    //  catch
+    //  {
+    //    throw;
+    //  }
+    //}
 
     public void Update(T entity, FilterDefinition<T> filter)
     {
@@ -225,18 +225,18 @@ namespace Manager.Data
       }
     }
 
-    public int Count(Expression<Func<T, bool>> predicate = null)
-    {
-      try
-      {
-        var set = CreateSet();
-        return (predicate == null ? set.Count() : set.Where(p => p._idAccount == _user._idAccount).Count(predicate));
-      }
-      catch
-      {
-        throw;
-      }
-    }
+    //public int Count(Expression<Func<T, bool>> predicate = null)
+    //{
+    //  try
+    //  {
+    //    var set = CreateSet();
+    //    return (predicate == null ? set.Count() : set.Where(p => p._idAccount == _user._idAccount).Count(predicate));
+    //  }
+    //  catch
+    //  {
+    //    throw;
+    //  }
+    //}
 
     public bool Exists(Expression<Func<T, bool>> predicate)
     {

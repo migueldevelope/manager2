@@ -74,7 +74,7 @@ namespace Manager.Services.Specific
           Requestor = manager,
           Sequence = 1
         };
-        serviceWorkflow.Insert(workflow);
+        serviceWorkflow.InsertNewVersion(workflow);
         result.Add(workflow);
         return result;
       }

@@ -252,7 +252,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -286,7 +286,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -319,7 +319,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -353,7 +353,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -535,7 +535,8 @@ namespace Manager.Services.Specific
 
         var result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         result = result.Distinct(new ViewCertificationComparer()).ToList();
-        total = result.Count();
+        //total = result.Count();
+        total = 999999;
 
 
         return result;
@@ -567,7 +568,8 @@ namespace Manager.Services.Specific
           p.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationHard ? EnumItemCertificationView.Hard : EnumItemCertificationView.Soft
         }).ToList();
 
-        total = result.Count();
+        //total = result.Count();
+        total = 999999;
 
         return result;
       }
@@ -585,7 +587,7 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(_user._idPerson, "List exclud"));
         int skip = (count * (page - 1));
         var detail = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceCertification.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListCertification()
         {
@@ -851,7 +853,7 @@ namespace Manager.Services.Specific
           TextDefaultEnd = textEnd.Content
         };
 
-        cerPerson = serviceCertificationPerson.Insert(cerPerson);
+        cerPerson = serviceCertificationPerson.InsertNewVersion(cerPerson).Result;
 
         certification.ListPersons.Add(cerPerson);
 

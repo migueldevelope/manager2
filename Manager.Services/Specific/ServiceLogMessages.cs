@@ -223,7 +223,7 @@ namespace Manager.Services.Specific
           StatusMessage = EnumStatusMessage.New,
           Person = person
         };
-        serviceLogMessages.Insert(model);
+        serviceLogMessages.InsertNewVersion(model);
       }
       catch (Exception e)
       {

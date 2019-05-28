@@ -207,7 +207,7 @@ namespace Manager.Services.Specific
             OccupationName = p.Occupation?.Name
           }).ToList();
 
-        total = serviceCheckpoint.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceCheckpoint.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail;
       }
@@ -726,14 +726,14 @@ namespace Manager.Services.Specific
         var parameter = serviceParameter.GetAll(p => p.Key == "DeadlineAdm").FirstOrDefault();
         if (parameter == null)
         {
-          return int.Parse(serviceParameter.Insert(new Parameter()
+          return int.Parse(serviceParameter.InsertNewVersion(new Parameter()
           {
             Name = "Total de dias do contrato de experiência",
             Key = "DeadlineAdm",
             Help = "Quantidade de dias para o final do contrato de experiência, a contar da data de admissão.",
             Status = EnumStatus.Enabled,
             Content = "90"
-          }).Content);
+          }).Result.Content);
         }
         else
           return int.Parse(parameter.Content);
@@ -772,7 +772,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -809,7 +809,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -843,7 +843,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -890,14 +890,14 @@ namespace Manager.Services.Specific
       {
         Parameter parameter = serviceParameter.GetAll(p => p.Key == "mailcheckpoint").FirstOrDefault();
         if (parameter == null)
-          return serviceParameter.Insert(new Parameter()
+          return serviceParameter.InsertNewVersion(new Parameter()
           {
             Name = "E-mail do RH para enviar aviso de Decisão de Efetivação | Checkpoint",
             Key = "mailcheckpoint",
             Help = "Informe um e-mail, ou vários e-mails separados por ponto-e-virgula, para enviar os avisos.",
             Content = "suporte@jmsoft.com.br",
             Status = EnumStatus.Enabled
-          }).Content;
+          }).Result.Content;
         else
           return parameter.Content;
       }

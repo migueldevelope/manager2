@@ -572,7 +572,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-        total = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListMonitoring()
         {
@@ -1026,7 +1026,7 @@ namespace Manager.Services.Specific
           LoadMap(monitoring);
 
           monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
-          serviceMonitoring.Insert(monitoring);
+          serviceMonitoring.InsertNewVersion(monitoring);
           Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
         }
         else
@@ -1173,7 +1173,7 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(_user._idPerson, "List monitoring exclud"));
         int skip = (count * (page - 1));
         var detail = serviceMonitoring.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceMonitoring.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListMonitoring()
         {
@@ -1526,7 +1526,7 @@ namespace Manager.Services.Specific
           Registration = person.Registration,
           Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name }
         };
-        return servicePlan.Insert(plan);
+        return servicePlan.InsertNewVersion(plan).Result;
       }
       catch (Exception e)
       {
@@ -1598,7 +1598,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -1640,7 +1640,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -1682,7 +1682,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)

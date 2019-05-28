@@ -588,7 +588,7 @@ namespace Manager.Services.Specific
           Registration = person.Registration,
           Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name }
         };
-        return servicePlan.Insert(plan);
+        return servicePlan.InsertNewVersion(plan).Result;
       }
       catch (Exception e)
       {
@@ -600,7 +600,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceStructPlan.Insert(structPlan);
+        return serviceStructPlan.InsertNewVersion(structPlan).Result;
       }
       catch (Exception e)
       {
@@ -672,7 +672,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.Insert(sendMail);
+        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception)
@@ -856,7 +856,7 @@ namespace Manager.Services.Specific
         List<ViewPlan> result = new List<ViewPlan>();
 
         var detail = servicePlanActivity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        total = servicePlanActivity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = servicePlanActivity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewPlanActivity()
         {
@@ -891,7 +891,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        servicePlanActivity.Insert(new PlanActivity() { Name = model.Name, Status = EnumStatus.Enabled });
+        servicePlanActivity.InsertNewVersion(new PlanActivity() { Name = model.Name, Status = EnumStatus.Enabled });
         return "add plan activity";
       }
       catch (Exception e)

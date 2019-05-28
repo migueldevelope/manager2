@@ -646,7 +646,7 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(idmanager, "List ended"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListOnBoarding()
         {
@@ -1161,7 +1161,7 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(idmanager, "List ended for person"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceOnboarding.CountNewVersion(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListOnBoarding()
         {
@@ -1489,7 +1489,7 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(_user._idPerson, "OnBoarding list for exclud"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceOnboarding.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListOnBoarding()
         {
@@ -1728,7 +1728,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMailLog.Insert(sendMail);
+        var mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
         SendMail(pathToken, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -1770,7 +1770,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMailLog.Insert(sendMail);
+        var mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
         var token = SendMail(pathToken, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -1802,7 +1802,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMailLog.Insert(sendMail);
+        var mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
         var token = SendMail(pathToken, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -1844,7 +1844,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMailLog.Insert(sendMail);
+        var mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
         var token = SendMail(pathToken, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -1886,7 +1886,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMailLog.Insert(sendMail);
+        var mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
         var token = SendMail(pathToken, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -1927,7 +1927,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMailLog.Insert(sendMail);
+        var mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
         var token = SendMail(pathToken, person, mailObj._id.ToString());
       }
       catch (Exception e)

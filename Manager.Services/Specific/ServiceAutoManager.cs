@@ -76,7 +76,8 @@ namespace Manager.Services.Specific
         if (filter != string.Empty)
         {
           var listEnd = ListEnd(idManager, filter);
-          total = listEnd.Count();
+          //total = listEnd.Count();
+          total = 999999;
           return listEnd.Skip(skip).Take(count).ToList();
         }
         else
@@ -96,9 +97,10 @@ namespace Manager.Services.Specific
                     where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
                     select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
 
-        total = (from person in servicePerson.GetAll()
-                 where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
-                 select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Count();
+        total = 99999;
+        //total = (from person in servicePerson.GetAll()
+        //         where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
+        //         select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Count();
 
         return list;
       }
@@ -167,7 +169,7 @@ namespace Manager.Services.Specific
             OpenDate = DateTime.Now,
             Workflow = serviceWorkflow.NewFlow(viewFlow)
           };
-          serviceAutoManager.Insert(auto);
+          serviceAutoManager.InsertNewVersion(auto);
           //searsh model mail database
           var model = serviceMailModel.AutoManager(path);
           if (model.StatusMail == EnumStatus.Disabled)
@@ -181,7 +183,7 @@ namespace Manager.Services.Specific
             Url = url,
             Body = " { '_idWorkFlow': '" + auto.Workflow.FirstOrDefault()._id.ToString() + "' } "
           };
-          var idMessageApv = serviceMailMessage.Insert(message)._id;
+          var idMessageApv = serviceMailMessage.InsertNewVersion(message).Result._id;
           var requestor = servicePerson.GetAll(p => p._id == auto.Workflow.FirstOrDefault().Requestor._id).FirstOrDefault();
           var body = model.Message.Replace("{Person}", auto.Workflow.FirstOrDefault().Requestor.User.Name).Replace("{Manager}", requestor.User.Name);
           body = body.Replace("{Requestor}", auto.Requestor.User.Name);
@@ -191,7 +193,7 @@ namespace Manager.Services.Specific
           url = path + "manager/automanager/" + person._id.ToString() + "/disapproved/" + manager._id.ToString();
           //disapproved link
           message.Url = url;
-          var idMessageDis = serviceMailMessage.Insert(message)._id;
+          var idMessageDis = serviceMailMessage.InsertNewVersion(message).Result._id;
           body = body.Replace("{Disapproved}", model.Link + "genericmessage/" + idMessageDis.ToString());
           var sendMail = new MailLog
           {
@@ -207,7 +209,7 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject,
           };
-          serviceMailLog.Insert(sendMail);
+          serviceMailLog.InsertNewVersion(sendMail);
           var messageApv = serviceMailMessage.GetAll(p => p._id == idMessageApv).FirstOrDefault();
           var messageDis = serviceMailMessage.GetAll(p => p._id == idMessageDis).FirstOrDefault();
           var token = SendMail(path, person, sendMail._id.ToString());
