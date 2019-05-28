@@ -1298,7 +1298,7 @@ namespace Manager.Services.Specific
             item.Goals.TypeGoals = goal.TypeGoals;
           }
         }
-          
+
         List<ViewCrudGoalItem> detail = serviceGoalsPerson.GetAll(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Person._id == idPerson).ToList()
           .Select(p => new ViewCrudGoalItem()
@@ -1475,6 +1475,55 @@ namespace Manager.Services.Specific
 
           }
 
+        }
+
+        if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.End)
+        {
+          var goalsPersonAvg = serviceGoalsPerson.GetAllNewVersion(p => p.Person._id == goalsPerson.Person._id & p.GoalsPeriod._id == goalsPerson.GoalsPeriod._id).Result.ToList();
+          var goalsCompanyAvg = serviceGoalsCompany.GetAllNewVersion(p => p.Company._id == goalsPerson.Person.Company._id & p.GoalsPeriod._id == goalsPerson.GoalsPeriod._id).Result.ToList();
+          var goalsManager = serviceGoalsManager.GetAllNewVersion(p => p.Manager._id == person.Manager._id & p.GoalsPeriod._id == goalsPerson.GoalsPeriod._id).Result.ToList();
+
+
+          decimal avgPerson = 0;
+          decimal totalPerson = 0;
+
+          decimal avgCompany = 0;
+          decimal totalCompany = 0;
+
+          decimal avgManager = 0;
+          decimal totalManager = 0;
+
+          if (goalsPersonAvg.Count() > 0)
+          {
+            foreach (var item in goalsPersonAvg)
+            {
+              totalPerson += item.GoalsPersonList.Achievement;
+            }
+            avgPerson = totalPerson / goalsPersonAvg.Count();
+          }
+          if (goalsCompanyAvg.Count() > 0)
+          {
+            foreach (var item in goalsCompanyAvg)
+            {
+              totalCompany += item.GoalsCompanyList.Achievement;
+            }
+            avgCompany = totalCompany / goalsCompanyAvg.Count();
+          }
+          if (goalsManager.Count() > 0)
+          {
+            foreach (var item in goalsManager)
+            {
+              totalManager += item.GoalsManagerList.Achievement;
+            }
+            avgManager = totalManager / goalsManager.Count();
+          }
+
+          if ((goalsCompanyAvg.Count > 0) & (goalsManager.Count == 0))
+            goalsPerson.AchievementEnd = (avgPerson + avgCompany) / 2;
+          else if ((goalsCompanyAvg.Count == 0) & (goalsManager.Count > 0))
+            goalsPerson.AchievementEnd = (avgPerson + avgManager) / 2;
+          else
+            goalsPerson.AchievementEnd = (avgPerson + avgCompany + avgManager) / 3;
         }
 
         serviceGoalsPersonControl.Update(goalsPerson, null);

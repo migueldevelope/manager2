@@ -16,5 +16,6 @@ namespace Manager.Core.Business
     public DateTime? DateEndPerson { get; set; }
     public DateTime? DateEndManager { get; set; }
     public DateTime? DateEndEnd { get; set; }
+    public decimal AchievementEnd { get; set; }
   }
 }

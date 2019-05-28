@@ -23,6 +23,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<SalaryScaleScore> serviceSalaryScaleScore;
+    private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
 
     #region Constructor
     public ServiceMeritocracy(DataContext context) : base(context)
@@ -35,6 +36,7 @@ namespace Manager.Services.Specific
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSalaryScaleScore = new ServiceGeneric<SalaryScaleScore>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceGoalsPersonControl = new ServiceGeneric<GoalsPersonControl>(context);
       }
       catch (Exception e)
       {
@@ -50,6 +52,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceSalaryScaleScore._user = _user;
       serviceOccupation._user = _user;
+      serviceGoalsPersonControl._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -59,12 +62,13 @@ namespace Manager.Services.Specific
       servicePerson._user = user;
       serviceSalaryScale._user = user;
       serviceSalaryScaleScore._user = user;
-      serviceOccupation._user = _user;
+      serviceOccupation._user = user;
+      serviceGoalsPersonControl._user = user;
     }
     #endregion
 
     #region private
-    private async Task MathMeritocracy(Person person)
+    private async Task MathMeritocracy(Person person, Meritocracy meritocracy)
     {
       try
       {
@@ -72,7 +76,7 @@ namespace Manager.Services.Specific
         byte companyDateWeight = 0;
         byte occupationDateWeight = 0;
         byte maturityWeight = 0;
-        byte goalsWeight = 0;
+        EnumMeritocracyGoals goalsWeight = EnumMeritocracyGoals.NotReach;
 
         //schooling
         var schoolingResult = person.User.Schooling.Order - person.Occupation.Schooling.Where(p => p.Type == EnumTypeSchooling.Basic).FirstOrDefault().Order;
@@ -86,7 +90,7 @@ namespace Manager.Services.Specific
           schoolingWeight = 4;
         else
           schoolingWeight = 5;
-        
+
         //company time
         var companyTimeResult = ((12 * (DateTime.Now.Year - person.User.DateAdm.Value.Year)) + (DateTime.Now.Month - person.User.DateAdm.Value.Month));
         if (companyTimeResult < 13)
@@ -114,7 +118,27 @@ namespace Manager.Services.Specific
         else
           occupationDateWeight = 5;
 
+        //goals
+        var goals = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == person._id & p.StatusGoalsPerson == EnumStatusGoalsPerson.End).Result.LastOrDefault();
+        if (goals != null)
+        {
+          if (goals.AchievementEnd < 100)
+            goalsWeight = EnumMeritocracyGoals.NotReach;
+          else if ((goals.AchievementEnd >= 100) &(goals.AchievementEnd < 120))
+            goalsWeight = EnumMeritocracyGoals.Reached;
+          else 
+          goalsWeight = EnumMeritocracyGoals.Best;
+        }
+          
 
+
+        meritocracy.WeightSchooling = schoolingWeight;
+        meritocracy.WeightCompanyDate = companyDateWeight;
+        meritocracy.WeightOccupationDate = occupationDateWeight;
+        meritocracy.WeightMaturity = maturityWeight;
+        meritocracy.WeightGoals = goalsWeight;
+
+        serviceMeritocracy.Update(meritocracy, null);
       }
       catch (Exception e)
       {
@@ -386,8 +410,9 @@ namespace Manager.Services.Specific
           averageActivities += item.Mark;
         }
 
-        meritocracy.ActivitiesExcellence = ((averageActivities * 100) / (meritocracy.MeritocracyActivities.Count() == 0 ? 1 : meritocracy.MeritocracyActivities.Count()));
+        meritocracy.ActivitiesExcellence = ((averageActivities) / (meritocracy.MeritocracyActivities.Count() == 0 ? 1 : meritocracy.MeritocracyActivities.Count()));
 
+        meritocracy.WeightActivitiesExcellence = byte.Parse(Math.Truncate(meritocracy.ActivitiesExcellence).ToString());
         serviceMeritocracy.Update(meritocracy, null);
 
         return "Meritocracy altered!";

@@ -16,12 +16,12 @@ namespace Manager.Core.Business
     public DateTime? DateEnd { get; set; }
     public List<MeritocracyActivities> MeritocracyActivities { get; set; }
 
-    public decimal WeightCompanyDate { get; set; }
-    public decimal WeightOccupationDate { get; set; }
-    public decimal WeightSchooling { get; set; }
-    public decimal WeightMaturity { get; set; }
-    public decimal WeightActivitiesExcellence { get; set; }
-    public decimal WeightGoals { get; set; }
+    public byte WeightCompanyDate { get; set; }
+    public byte WeightOccupationDate { get; set; }
+    public byte WeightSchooling { get; set; }
+    public byte WeightMaturity { get; set; }
+    public byte WeightActivitiesExcellence { get; set; }
+    public EnumMeritocracyGoals WeightGoals { get; set; }
 
   }
 }
