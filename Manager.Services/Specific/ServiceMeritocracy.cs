@@ -63,6 +63,68 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+    #region private
+    private async Task MathMeritocracy(Person person)
+    {
+      try
+      {
+        byte schoolingWeight = 0;
+        byte companyDateWeight = 0;
+        byte occupationDateWeight = 0;
+        byte maturityWeight = 0;
+        byte goalsWeight = 0;
+
+        //schooling
+        var schoolingResult = person.User.Schooling.Order - person.Occupation.Schooling.Where(p => p.Type == EnumTypeSchooling.Basic).FirstOrDefault().Order;
+        if (schoolingResult <= -2)
+          schoolingWeight = 1;
+        else if (schoolingResult == -1)
+          schoolingWeight = 2;
+        else if (schoolingResult == 0)
+          schoolingWeight = 3;
+        else if (schoolingResult == 1)
+          schoolingWeight = 4;
+        else
+          schoolingWeight = 5;
+        
+        //company time
+        var companyTimeResult = ((12 * (DateTime.Now.Year - person.User.DateAdm.Value.Year)) + (DateTime.Now.Month - person.User.DateAdm.Value.Month));
+        if (companyTimeResult < 13)
+          companyDateWeight = 1;
+        else if ((companyTimeResult >= 13) && (companyTimeResult <= 24))
+          companyDateWeight = 2;
+        else if ((companyTimeResult >= 25) && (companyTimeResult <= 48))
+          companyDateWeight = 3;
+        else if ((companyTimeResult >= 49) && (companyTimeResult <= 84))
+          companyDateWeight = 4;
+        else
+          companyDateWeight = 5;
+
+
+        //occupation time
+        var occupationTimeResult = ((12 * (DateTime.Now.Year - person.DateLastOccupation.Value.Year)) + (DateTime.Now.Month - person.DateLastOccupation.Value.Month));
+        if (occupationTimeResult < 7)
+          occupationDateWeight = 1;
+        else if ((occupationTimeResult >= 7) && (occupationTimeResult <= 12))
+          occupationDateWeight = 2;
+        else if ((occupationTimeResult >= 13) && (occupationTimeResult <= 24))
+          occupationDateWeight = 3;
+        else if ((occupationTimeResult >= 25) && (occupationTimeResult <= 48))
+          occupationDateWeight = 4;
+        else
+          occupationDateWeight = 5;
+
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    #endregion
+
     #region Meritocracy
     public string Delete(string id)
     {
@@ -386,18 +448,18 @@ namespace Manager.Services.Specific
       try
       {
         MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p._id == view._id).Result;
-        meritocracyScore.EnabledCompanyDate = meritocracyScore.EnabledCompanyDate;
-        meritocracyScore.EnabledOccupationDate = meritocracyScore.EnabledOccupationDate;
-        meritocracyScore.EnabledSchooling = meritocracyScore.EnabledSchooling;
-        meritocracyScore.EnabledActivitiesExcellence = meritocracyScore.EnabledActivitiesExcellence;
-        meritocracyScore.EnabledMaturity = meritocracyScore.EnabledMaturity;
-        meritocracyScore.EnabledGoals = meritocracyScore.EnabledGoals;
-        meritocracyScore.WeightCompanyDate = meritocracyScore.WeightCompanyDate;
-        meritocracyScore.WeightOccupationDate = meritocracyScore.WeightOccupationDate;
-        meritocracyScore.WeightSchooling = meritocracyScore.WeightSchooling;
-        meritocracyScore.WeightActivitiesExcellence = meritocracyScore.WeightActivitiesExcellence;
-        meritocracyScore.WeightMaturity = meritocracyScore.WeightMaturity;
-        meritocracyScore.WeightGoals = meritocracyScore.WeightGoals;
+        meritocracyScore.EnabledCompanyDate = view.EnabledCompanyDate;
+        meritocracyScore.EnabledOccupationDate = view.EnabledOccupationDate;
+        meritocracyScore.EnabledSchooling = view.EnabledSchooling;
+        meritocracyScore.EnabledActivitiesExcellence = view.EnabledActivitiesExcellence;
+        meritocracyScore.EnabledMaturity = view.EnabledMaturity;
+        meritocracyScore.EnabledGoals = view.EnabledGoals;
+        meritocracyScore.WeightCompanyDate = view.WeightCompanyDate;
+        meritocracyScore.WeightOccupationDate = view.WeightOccupationDate;
+        meritocracyScore.WeightSchooling = view.WeightSchooling;
+        meritocracyScore.WeightActivitiesExcellence = view.WeightActivitiesExcellence;
+        meritocracyScore.WeightMaturity = view.WeightMaturity;
+        meritocracyScore.WeightGoals = view.WeightGoals;
         serviceMeritocracyScore.Update(meritocracyScore, null);
         return "MeritocracyScore altered!";
       }
