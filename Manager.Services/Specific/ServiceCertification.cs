@@ -536,8 +536,8 @@ namespace Manager.Services.Specific
 
         var result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         result = result.Distinct(new ViewCertificationComparer()).ToList();
-        //total = result.Count();
-        total = 999999;
+        total = result.Count();
+        
 
 
         return result;
@@ -569,8 +569,7 @@ namespace Manager.Services.Specific
           p.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationHard ? EnumItemCertificationView.Hard : EnumItemCertificationView.Soft
         }).ToList();
 
-        //total = result.Count();
-        total = 999999;
+        total = result.Count();
 
         return result;
       }
@@ -639,7 +638,8 @@ namespace Manager.Services.Specific
 
         var detail = details.Where(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(o => o.User.Name).ToList();
 
-        total = 999999;
+        
+        total = detail.Count();
         var listExclud = serviceCertification.GetAll(p => p._id == idcertification).FirstOrDefault().ListPersons;
         foreach (var item in listExclud)
         {

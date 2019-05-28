@@ -144,7 +144,7 @@ namespace Manager.Services.Specific
       try
       {
         //LogSave(idperson, "ListWait");
-        Person person = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
+        Person person = servicePerson.GetNewVersion(p => p.Manager != null & p.StatusUser != EnumStatusUser.Disabled &&
                                              p.TypeUser > EnumTypeUser.Administrator &&
                                              (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
                                              p._id == idperson).Result;
@@ -184,7 +184,7 @@ namespace Manager.Services.Specific
                                              (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
                                              p._id == idperson).Result;
 
-        var manager = servicePerson.GetAllNewVersion(p => p.User._id == person.Manager._id).Result.FirstOrDefault();
+        var manager = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault();
 
         if (person == null)
           throw new Exception("Person not available!");
