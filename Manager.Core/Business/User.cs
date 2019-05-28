@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
@@ -30,5 +31,16 @@ namespace Manager.Core.Business
     public string Nickname { get; set; }
     public bool UserAdmin { get; set; }
     public List<UserTermOfService> UserTermOfServices { get; set; }
+    public ViewListUser GetViewList()
+    {
+      return new ViewListUser()
+      {
+        _id = _id,
+        Document = Document,
+        Mail = Mail,
+        Name = Name,
+        Phone = Phone
+      };
+    }
   }
 }

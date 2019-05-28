@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 
 namespace Manager.Core.Business
@@ -12,5 +13,14 @@ namespace Manager.Core.Business
     public EnumTypeAxis TypeAxis { get; set; }
     public Axis Template { get; set; }
     public Company Company { get; set; }
+    public ViewListAxis GetViewList()
+    {
+      return new ViewListAxis()
+      {
+        _id = _id,
+        Name = Name,
+        TypeAxis = TypeAxis
+      };
+    }
   }
 }

@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessList;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
@@ -14,5 +15,15 @@ namespace Manager.Core.Business
     public long Order { get; set; }
     [BsonIgnore]
     public List<ProcessLevelTwo> Process { get; set; }
+    public ViewListProcessLevelOne GetViewList()
+    {
+      return new ViewListProcessLevelOne()
+      {
+        _id = _id,
+        Name = Name,
+        Area = Area.GetViewList(),
+        Order = Order
+      };
+    }
   }
 }

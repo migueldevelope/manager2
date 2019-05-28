@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 
 namespace Manager.Core.Business
@@ -12,5 +13,14 @@ namespace Manager.Core.Business
     public EnumTypeSphere TypeSphere { get; set; }
     public Company Company { get; set; }
     public Sphere Template { get; set; }
+    public ViewListSphere GetViewList()
+    {
+      return new ViewListSphere()
+      {
+        _id = _id,
+        Name = Name,
+        TypeSphere = TypeSphere
+      };
+    }
   }
 }

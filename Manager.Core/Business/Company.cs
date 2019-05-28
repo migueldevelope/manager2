@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessList;
 using System.Collections.Generic;
 
 namespace Manager.Core.Business
@@ -12,6 +13,13 @@ namespace Manager.Core.Business
     public string Logo { get; set; }
     public List<Skill> Skills { get; set; }
     public Company Template  { get; set; }
-
+    public ViewListCompany GetViewList()
+    {
+      return new ViewListCompany()
+      {
+        _id = _id,
+        Name = Name
+      };
+    }
   }
 }
