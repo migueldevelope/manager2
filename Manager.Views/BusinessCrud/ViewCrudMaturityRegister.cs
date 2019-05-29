@@ -10,5 +10,6 @@ namespace Manager.Views.BusinessCrud
     public string _idRegister { get; set; }
     public DateTime? Date { get; set; }
     public byte Evaluation { get; set; }
+    public string _idAccount { get; set; }
   }
 }

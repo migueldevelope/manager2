@@ -37,7 +37,8 @@ namespace Attachment
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
 
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName);
+      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName,serviceMaturity);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
@@ -55,6 +56,7 @@ namespace Attachment
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
 
+      services.AddSingleton(_ => serviceMaturity);
       services.AddSingleton(_ => serviceCertification);
       services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceMandatoryTraining);

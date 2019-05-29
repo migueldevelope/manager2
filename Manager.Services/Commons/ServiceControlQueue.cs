@@ -1,4 +1,6 @@
-﻿using Manager.Core.Interfaces;
+﻿using Manager.Core.Base;
+using Manager.Core.Interfaces;
+using Manager.Views.BusinessCrud;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 using System;
@@ -11,10 +13,12 @@ namespace Manager.Services.Commons
   public class ServiceControlQueue : IServiceControlQueue
   {
     private readonly IQueueClient queueClient;
+    private readonly IServiceMaturity serviceMaturity;
 
-    public ServiceControlQueue(string serviceBusConnectionString, string queueName)
+    public ServiceControlQueue(string serviceBusConnectionString, string queueName, IServiceMaturity _serviceMaturity)
     {
       queueClient = new QueueClient(serviceBusConnectionString, queueName);
+      serviceMaturity = _serviceMaturity;
     }
 
     public async Task SendMessageAsync(dynamic view)
@@ -50,7 +54,12 @@ namespace Manager.Services.Commons
 
     private async Task ProcessMessagesAsync(Message message, CancellationToken token)
     {
-      var body = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(message.Body));
+      var view = JsonConvert.DeserializeObject<ViewCrudMaturityRegister>(Encoding.UTF8.GetString(message.Body));
+      serviceMaturity.SetUser(new BaseUser() {
+        _idAccount = view._idAccount
+      });
+
+      serviceMaturity.NewMaturityRegister(view);
 
       await queueClient.CompleteAsync(message.SystemProperties.LockToken);
     }

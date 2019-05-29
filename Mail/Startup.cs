@@ -50,13 +50,15 @@ namespace Mail
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
 
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName);
+      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceMailMessage serviceMailMessage = new ServiceMailMessage(_contextLog);
       IServiceSendGrid serviceSendGrid = new ServiceSendGrid(_contextLog);
       IServiceMailModel serviceMailModel = new ServiceMailModel(_context);
 
+      services.AddSingleton(_ => serviceMaturity);
       services.AddSingleton(_ => serviceMailMessage);
       services.AddSingleton(_ => serviceSendGrid);
       services.AddSingleton(_ => serviceMailModel);

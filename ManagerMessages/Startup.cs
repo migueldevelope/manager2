@@ -38,7 +38,8 @@ namespace ManagerMessages
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
 
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName);
+      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
@@ -61,6 +62,8 @@ namespace ManagerMessages
       IServiceNotification serviceNotification = new ServiceNotification(_context, _contextLog, conn.TokenServer);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
 
+
+      services.AddSingleton(_ => serviceMaturity);
       services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceLogMessages);
       /// Start service

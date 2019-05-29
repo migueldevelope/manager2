@@ -57,7 +57,8 @@ namespace Manager
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName);
+      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
 
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
@@ -85,6 +86,9 @@ namespace Manager
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context);
 
+      serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
+
+      services.AddSingleton(_ => serviceMaturity);
       services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceMeritocracy);
       services.AddSingleton(_ => serviceTermsOfService);

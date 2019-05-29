@@ -1496,7 +1496,8 @@ namespace Manager.Services.Specific
           _idPerson = idperson,
           TypeMaturity = EnumTypeMaturity.Monitoring,
           _idRegister = id,
-          Date = DateTime.Now
+          Date = DateTime.Now,
+          _idAccount = _user._idAccount
         };
 
         serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
