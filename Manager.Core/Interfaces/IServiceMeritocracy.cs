@@ -28,7 +28,6 @@ namespace Manager.Core.Interfaces
     string RemoveMeritocracyScore(string id);
     ViewListMeritocracyScore ListMeritocracyScore();
     string DeleteSalaryScaleScore(string id);
-    string NewSalaryScaleScore(ViewCrudSalaryScaleScore view);
     string UpdateSalaryScaleScore(ViewCrudSalaryScaleScore view);
     ViewCrudSalaryScaleScore GetSalaryScaleScore(string id);
     List<ViewCrudSalaryScaleScore> ListSalaryScaleScore(ref long total, int count = 10, int page = 1, string filter = "");

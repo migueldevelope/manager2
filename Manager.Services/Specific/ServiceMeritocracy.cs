@@ -69,14 +69,88 @@ namespace Manager.Services.Specific
       serviceGoalsPersonControl._user = user;
       serviceMaturity._user = user;
     }
+
+    private async Task<string> NewSalaryScaleScore()
+    {
+      try
+      {
+        for (byte step = 0; step <= 7; step++)
+        {
+          for (byte ranking = 1; ranking <= 8; ranking++)
+          {
+            await serviceSalaryScaleScore.InsertFreeNewVersion(new SalaryScaleScore()
+            {
+              Ranking = ranking,
+              Step = (EnumSteps)step,
+              Value = decimal.Parse("0")
+            });
+          }
+        }
+
+        return "SalaryScaleScore added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private string NewSalaryScaleScore(ViewCrudSalaryScaleScore view)
+    {
+      try
+      {
+        SalaryScaleScore salaryScaleScore = serviceSalaryScaleScore.InsertFreeNewVersion(
+          new SalaryScaleScore()
+          {
+            _id = view._id,
+            Ranking = view.Ranking,
+            Step = view.Step,
+            Value = view.Value
+          }).Result;
+        return "SalaryScaleScore added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region private
+
+    public string NewMeritocracyScore(ViewCrudMeritocracyScore view)
+    {
+      try
+      {
+        MeritocracyScore meritocracyScore = serviceMeritocracyScore.InsertNewVersion(
+          new MeritocracyScore()
+          {
+            _id = view._id,
+            EnabledCompanyDate = view.EnabledCompanyDate,
+            EnabledOccupationDate = view.EnabledOccupationDate,
+            EnabledSchooling = view.EnabledSchooling,
+            EnabledActivitiesExcellence = view.EnabledActivitiesExcellence,
+            EnabledMaturity = view.EnabledMaturity,
+            EnabledGoals = view.EnabledGoals,
+            WeightCompanyDate = view.WeightCompanyDate,
+            WeightOccupationDate = view.WeightOccupationDate,
+            WeightSchooling = view.WeightSchooling,
+            WeightActivitiesExcellence = view.WeightActivitiesExcellence,
+            WeightMaturity = view.WeightMaturity,
+            WeightGoals = view.WeightGoals
+          }).Result;
+        return "MeritocracyScore added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private async Task MathMeritocracy(Person person, Meritocracy meritocracy)
     {
       try
       {
-
         byte schoolingWeight = 0;
         byte companyDateWeight = 0;
         byte occupationDateWeight = 0;
@@ -472,34 +546,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string NewMeritocracyScore(ViewCrudMeritocracyScore view)
-    {
-      try
-      {
-        MeritocracyScore meritocracyScore = serviceMeritocracyScore.InsertNewVersion(
-          new MeritocracyScore()
-          {
-            _id = view._id,
-            EnabledCompanyDate = view.EnabledCompanyDate,
-            EnabledOccupationDate = view.EnabledOccupationDate,
-            EnabledSchooling = view.EnabledSchooling,
-            EnabledActivitiesExcellence = view.EnabledActivitiesExcellence,
-            EnabledMaturity = view.EnabledMaturity,
-            EnabledGoals = view.EnabledGoals,
-            WeightCompanyDate = view.WeightCompanyDate,
-            WeightOccupationDate = view.WeightOccupationDate,
-            WeightSchooling = view.WeightSchooling,
-            WeightActivitiesExcellence = view.WeightActivitiesExcellence,
-            WeightMaturity = view.WeightMaturity,
-            WeightGoals = view.WeightGoals
-          }).Result;
-        return "MeritocracyScore added!";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     public string UpdateMeritocracyScore(ViewCrudMeritocracyScore view)
     {
       try
@@ -587,29 +633,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScaleScore item = serviceSalaryScaleScore.GetNewVersion(p => p._id == id).Result;
+        SalaryScaleScore item = serviceSalaryScaleScore.GetFreeNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceSalaryScaleScore.Update(item, null);
+        serviceSalaryScaleScore.UpdateAccount(item, null);
         return "SalaryScaleScore deleted!";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string NewSalaryScaleScore(ViewCrudSalaryScaleScore view)
-    {
-      try
-      {
-        SalaryScaleScore salaryScaleScore = serviceSalaryScaleScore.InsertNewVersion(
-          new SalaryScaleScore()
-          {
-            _id = view._id,
-            Ranking = view.Ranking,
-            Step = view.Step,
-            Value = view.Value
-          }).Result;
-        return "SalaryScaleScore added!";
       }
       catch (Exception e)
       {
@@ -620,11 +647,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScaleScore salaryScaleScore = serviceSalaryScaleScore.GetNewVersion(p => p._id == view._id).Result;
+        SalaryScaleScore salaryScaleScore = serviceSalaryScaleScore.GetFreeNewVersion(p => p._id == view._id).Result;
         salaryScaleScore.Ranking = view.Ranking;
         salaryScaleScore.Step = view.Step;
         salaryScaleScore.Value = view.Value;
-        serviceSalaryScaleScore.Update(salaryScaleScore, null);
+        serviceSalaryScaleScore.UpdateAccount(salaryScaleScore, null);
         return "SalaryScaleScore altered!";
       }
       catch (Exception e)
@@ -636,7 +663,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScaleScore salaryScaleScore = serviceSalaryScaleScore.GetNewVersion(p => p._id == id).Result;
+        SalaryScaleScore salaryScaleScore = serviceSalaryScaleScore.GetFreeNewVersion(p => p._id == id).Result;
         return new ViewCrudSalaryScaleScore()
         {
           _id = salaryScaleScore._id,
@@ -654,6 +681,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (!serviceSalaryScaleScore.Exists("SalaryScaleScore"))
+          NewSalaryScaleScore();
+
         List<ViewCrudSalaryScaleScore> detail = serviceSalaryScaleScore.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled, count, count * (page - 1), "_id").Result
           .Select(p => new ViewCrudSalaryScaleScore
           {

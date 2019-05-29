@@ -21,7 +21,27 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
 
-    #region Maturity
+    #region private
+
+
+    private async Task MathMaturity(Maturity maturity)
+    {
+      try
+      {
+        maturity.LevelMonitoring = (maturity.CountMonitoring >= 4) ? byte.Parse("5") : byte.Parse((maturity.CountMonitoring + 1).ToString());
+        maturity.LevelCertification = (maturity.CountCertification >= 4) ? byte.Parse("5") : byte.Parse((maturity.CountCertification + 1).ToString());
+        maturity.LevelPraise = (maturity.CountPraise >= 4) ? byte.Parse("5") : byte.Parse((maturity.CountPraise + 1).ToString());
+        maturity.LevelPlan = (maturity.CountPlan <= 1) ? byte.Parse("1") : byte.Parse(maturity.CountPlan.ToString());
+
+        maturity.Value = byte.Parse(Math.Round(decimal.Parse(((maturity.LevelMonitoring + maturity.LevelCertification + maturity.LevelPlan + maturity.LevelPraise) / 4).ToString()), 0).ToString());
+
+        serviceMaturity.Update(maturity, null);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     #endregion
 
@@ -114,7 +134,7 @@ namespace Manager.Services.Specific
         maturity.LevelPlan = view.LevelPlan;
         maturity.LevelPraise = view.LevelPraise;
         maturity.LevelCertification = view.LevelCertification;
-        
+
         serviceMaturity.Update(maturity, null);
 
 
@@ -199,6 +219,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var oneyearbefore = DateTime.Now.AddYears(-1);
+
         MaturityRegister maturityregister = serviceMaturityRegister.InsertNewVersion(
           new MaturityRegister()
           {
@@ -208,6 +230,43 @@ namespace Manager.Services.Specific
             Date = view.Date,
             _idRegister = view._idRegister
           }).Result;
+
+        var maturity = serviceMaturity.GetAllNewVersion(p => p._idPerson == view._idPerson).Result.FirstOrDefault();
+        if (maturity == null)
+          New(new ViewCrudMaturity()
+          {
+            _idPerson = view._idPerson
+          });
+
+        if (view.TypeMaturity == EnumTypeMaturity.Monitoring)
+        {
+          var monitorings = serviceMaturityRegister.CountNewVersion(p => p._idPerson == view._idPerson
+          && p.TypeMaturity == EnumTypeMaturity.Monitoring && p.Date >= oneyearbefore).Result;
+          maturity.CountMonitoring = monitorings;
+        }
+        else if (view.TypeMaturity == EnumTypeMaturity.Certification)
+        {
+          var certifications = serviceMaturityRegister.CountNewVersion(p => p._idPerson == view._idPerson
+          && p.TypeMaturity == EnumTypeMaturity.Certification && p.Date >= oneyearbefore).Result;
+          maturity.CountCertification = certifications;
+        }
+        else if (view.TypeMaturity == EnumTypeMaturity.Plan)
+        {
+          var plans = serviceMaturityRegister.GetAllNewVersion(p => p._idPerson == view._idPerson
+          && p.TypeMaturity == EnumTypeMaturity.Plan && p.Date >= oneyearbefore).Result.Average(p => p.Evaluation);
+          maturity.CountPlan = long.Parse(plans.ToString());
+        }
+        else if (view.TypeMaturity == EnumTypeMaturity.Praise)
+        {
+          var praises = serviceMaturityRegister.CountNewVersion(p => p._idPerson == view._idPerson
+          && p.TypeMaturity == EnumTypeMaturity.Praise && p.Date >= oneyearbefore).Result;
+          maturity.CountPraise = praises;
+        }
+
+        serviceMaturity.Update(maturity, null);
+
+        MathMaturity(maturity);
+
         return "MaturityRegister added!";
       }
       catch (Exception e)

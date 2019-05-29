@@ -11,6 +11,7 @@ using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,11 +33,12 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Plan> servicePlan;
+    private readonly IServiceControlQueue serviceControlQueue;
 
     public string path;
 
     #region Constructor
-    public ServiceMonitoring(DataContext context, DataContext contextLog, string pathToken) : base(context)
+    public ServiceMonitoring(DataContext context, DataContext contextLog, string pathToken, IServiceControlQueue _serviceControlQueue) : base(context)
     {
       try
       {
@@ -50,6 +52,7 @@ namespace Manager.Services.Specific
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         servicePlan = new ServiceGeneric<Plan>(context);
+        serviceControlQueue = _serviceControlQueue;
         path = pathToken;
       }
       catch (Exception e)
@@ -113,7 +116,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        
+
         var monitorings = serviceMonitoring.GetAll(p => p.Person._id == idperson).ToList();
         foreach (var monitoring in monitorings)
         {
@@ -131,7 +134,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        
+
         var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
         monitoring.Status = EnumStatus.Disabled;
         serviceMonitoring.Update(monitoring, null);
@@ -146,7 +149,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        
+
         var monitoring = serviceMonitoring.GetAll(p => p.Person._id == idperson).LastOrDefault();
         monitoring.Status = EnumStatus.Disabled;
         serviceMonitoring.Update(monitoring, null);
@@ -1010,6 +1013,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
     public ViewListMonitoring NewMonitoring(string idperson)
     {
       try
@@ -1058,6 +1062,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        List<string> countpraise = new List<string>();
+
         var monitoring = serviceMonitoring.GetAll(p => p._id == view._id).FirstOrDefault();
         monitoring.StatusMonitoring = view.StatusMonitoring;
         monitoring.CommentsEnd = view.CommentsEnd;
@@ -1068,16 +1074,24 @@ namespace Manager.Services.Specific
         {
           var item = view.SkillsCompany.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();
           row.Praise = item.Praise;
+          if (item.Praise != null)
+            countpraise.Add(item.Praise);
+
         };
         foreach (var row in monitoring.Schoolings)
         {
           var item = view.Schoolings.Where(p => p.Schooling._id == row.Schooling._id).FirstOrDefault();
           row.Praise = item.Praise;
+          if (item.Praise != null)
+            countpraise.Add(item.Praise);
+
         };
         foreach (var row in monitoring.Activities)
         {
           var item = view.Activities.Where(p => p.Activities._id == row.Activities._id).FirstOrDefault();
           row.Praise = item.Praise;
+          if (item.Praise != null)
+            countpraise.Add(item.Praise);
         };
 
 
@@ -1118,6 +1132,7 @@ namespace Manager.Services.Specific
               serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.User.Name + " foi elogiado pelo gestor", monitoring.Person);
             }
             monitoring.DateEndEnd = DateTime.Now;
+            Task.Run(() => SendQueue(monitoring._id, monitoring.Person._id, countpraise));
             Task.Run(() => LogSave(userInclude._id, string.Format("Conclusion process | {0}", monitoring._id)));
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
@@ -1170,7 +1185,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        
+
         int skip = (count * (page - 1));
         var detail = serviceMonitoring.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
@@ -1472,6 +1487,41 @@ namespace Manager.Services.Specific
 
     #region private
 
+    private async Task SendQueue(string id, string idperson, List<string> countpraise)
+    {
+      try
+      {
+        var data = new ViewCrudMaturityRegister
+        {
+          _idPerson = idperson,
+          TypeMaturity = EnumTypeMaturity.Monitoring,
+          _idRegister = id,
+          Date = DateTime.Now
+        };
+
+        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+
+
+        foreach(var item in countpraise)
+        {
+          data = new ViewCrudMaturityRegister
+          {
+            _idPerson = idperson,
+            TypeMaturity = EnumTypeMaturity.Praise,
+            _idRegister = item,
+            Date = DateTime.Now
+          };
+          serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+        }
+
+
+        //serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private async Task LogSave(string iduser, string local)
     {
       try

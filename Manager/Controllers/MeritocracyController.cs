@@ -267,17 +267,17 @@ namespace Manager.Controllers
       return result;
     }
 
-    /// <summary>
-    /// Novo estabelecimento
-    /// </summary>
-    /// <param name="view">Objeto de manutenção do estabelecimento</param>
-    /// <returns>Mensagem de sucesso</returns>
-    [HttpPost]
-    [Route("newmsalaryscale")]
-    public async Task<IActionResult> PostSalaryScaleScore([FromBody]ViewCrudSalaryScaleScore view)
-    {
-      return Ok(service.NewSalaryScaleScore(view));
-    }
+    ///// <summary>
+    ///// Novo estabelecimento
+    ///// </summary>
+    ///// <param name="view">Objeto de manutenção do estabelecimento</param>
+    ///// <returns>Mensagem de sucesso</returns>
+    //[HttpPost]
+    //[Route("newmsalaryscale")]
+    //public async Task<IActionResult> PostSalaryScaleScore([FromBody]ViewCrudSalaryScaleScore view)
+    //{
+    //  return Ok(service.NewSalaryScaleScore(view));
+    //}
     /// <summary>
     /// Buscar estabelecimento para manutenção
     /// </summary>

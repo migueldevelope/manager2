@@ -11,6 +11,7 @@ using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,10 +36,12 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Questions> serviceQuestions;
     private readonly ServiceGeneric<TextDefault> serviceTextDefault;
+    private readonly IServiceControlQueue serviceControlQueue;
+
     public string path;
 
     #region Constructor
-    public ServiceCertification(DataContext context, DataContext contextLog, string pathToken) : base(context)
+    public ServiceCertification(DataContext context, DataContext contextLog, string pathToken, IServiceControlQueue _serviceControlQueue) : base(context)
     {
       try
       {
@@ -55,6 +58,7 @@ namespace Manager.Services.Specific
         servicePerson = new ServiceGeneric<Person>(context);
         serviceQuestions = new ServiceGeneric<Questions>(context);
         serviceTextDefault = new ServiceGeneric<TextDefault>(context);
+        serviceControlQueue = _serviceControlQueue;
         path = pathToken;
       }
       catch (Exception e)
@@ -97,6 +101,29 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
+
+    private async Task SendQueue(string id, string idperson)
+    {
+      try
+      {
+        var data = new ViewCrudMaturityRegister
+        {
+          _idPerson = idperson,
+          TypeMaturity = EnumTypeMaturity.Certification,
+          _idRegister = id,
+          Date = DateTime.Now
+        };
+
+        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private class ViewCertificationComparer : IEqualityComparer<ViewListCertificationPerson>
     {
       public bool Equals(ViewListCertificationPerson x, ViewListCertificationPerson y)
@@ -260,7 +287,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailApproved(Person person, string skillName)
+    private async Task MailApproved(Person person, string skillName)
     {
       try
       {
@@ -294,7 +321,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailApprovedPerson(Person person, string skillName)
+    private async Task MailApprovedPerson(Person person, string skillName)
     {
       try
       {
@@ -327,7 +354,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void MailDisapproved(Person person, string skillName)
+    private async Task MailDisapproved(Person person, string skillName)
     {
       try
       {
@@ -407,7 +434,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        
+
         var certification = serviceCertification.GetAll(p => p.Person._id == idcertification).FirstOrDefault();
         Task.Run(() => LogSave(certification.Person._id, string.Format("Delete | ", idcertification)));
         if (certification == null)
@@ -476,8 +503,9 @@ namespace Manager.Services.Specific
 
               if (certification.StatusCertification == EnumStatusCertification.Approved)
               {
-                MailApproved(certification.Person, certification.CertificationItem.Name);
-                MailApprovedPerson(certification.Person, certification.CertificationItem.Name);
+                Task.Run(() => MailApproved(certification.Person, certification.CertificationItem.Name));
+                Task.Run(() => MailApprovedPerson(certification.Person, certification.CertificationItem.Name));
+                Task.Run(() => SendQueue(certification._id, certification.Person._id));
               }
             }
 
@@ -537,7 +565,7 @@ namespace Manager.Services.Specific
         var result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         result = result.Distinct(new ViewCertificationComparer()).ToList();
         total = result.Count();
-        
+
 
 
         return result;
@@ -584,7 +612,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        
+
         int skip = (count * (page - 1));
         var detail = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceCertification.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
@@ -638,7 +666,7 @@ namespace Manager.Services.Specific
 
         var detail = details.Where(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(o => o.User.Name).ToList();
 
-        
+
         total = detail.Count();
         var listExclud = serviceCertification.GetAll(p => p._id == idcertification).FirstOrDefault().ListPersons;
         foreach (var item in listExclud)

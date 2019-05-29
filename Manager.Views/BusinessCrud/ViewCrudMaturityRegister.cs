@@ -7,7 +7,8 @@ namespace Manager.Views.BusinessCrud
   {
     public string _idPerson { get; set; }
     public EnumTypeMaturity TypeMaturity { get; set; }
-    public DateTime? Date { get; set; }
     public string _idRegister { get; set; }
+    public DateTime? Date { get; set; }
+    public byte Evaluation { get; set; }
   }
 }

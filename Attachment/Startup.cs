@@ -48,12 +48,12 @@ namespace Attachment
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer);
+      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer);
+      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer);
+      IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
 
       services.AddSingleton(_ => serviceCertification);
       services.AddSingleton(_ => serviceUser);

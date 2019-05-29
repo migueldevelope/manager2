@@ -67,10 +67,10 @@ namespace Manager
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer);
+      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer);
+      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
@@ -80,7 +80,7 @@ namespace Manager
       IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog);
-      IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer);
+      IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer);
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context);

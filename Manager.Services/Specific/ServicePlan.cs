@@ -10,6 +10,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +37,12 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Skill> serviceSkill;
     private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlans;
     private readonly ServiceGeneric<Attachments> serviceAttachment;
+    private readonly IServiceControlQueue serviceControlQueue;
 
     public string path;
 
     #region Constructor
-    public ServicePlan(DataContext context, DataContext contextLog, string pathToken) : base(context)
+    public ServicePlan(DataContext context, DataContext contextLog, string pathToken, IServiceControlQueue _serviceControlQueue) : base(context)
     {
       try
       {
@@ -59,6 +61,7 @@ namespace Manager.Services.Specific
         serviceTrainingPlans = new ServiceGeneric<TrainingPlan>(context);
         serviceSkill = new ServiceGeneric<Skill>(context);
         serviceAttachment = new ServiceGeneric<Attachments>(context);
+        serviceControlQueue = _serviceControlQueue;
         path = pathToken;
       }
       catch (Exception e)
@@ -121,6 +124,29 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Private
+
+    private async Task SendQueue(string idplan, string idperson, byte evaluation)
+    {
+      try
+      {
+
+        var data = new ViewCrudMaturityRegister
+        {
+          _idPerson = idperson,
+          TypeMaturity = EnumTypeMaturity.Plan,
+          _idRegister = idplan,
+          Date = DateTime.Now,
+          Evaluation = evaluation
+        };
+        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private string UpdatePlan(string idmonitoring, Plan viewPlan)
     {
       try
@@ -612,6 +638,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+
+        Task.Run(() => SendQueue(plan._id, plan.Person._id, plan.Evaluation));
+
         Task.Run(() => LogSave(person._id, "Plan Process Update"));
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
           Task.Run(() => Mail(person));

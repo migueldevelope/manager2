@@ -10,5 +10,6 @@ namespace Manager.Core.Business
     public EnumTypeMaturity TypeMaturity { get; set; }
     public DateTime? Date { get; set; }
     public string _idRegister { get; set; }
+    public byte Evaluation { get; set; }
   }
 }

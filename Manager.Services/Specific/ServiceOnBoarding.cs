@@ -1483,16 +1483,6 @@ namespace Manager.Services.Specific
       try
       {
 
-        //var data = new {
-        //  _idPerson = "123456789012123456789012",
-        //  Name = "Miguel",
-        //  _idRotine = "123456789012123456789012",
-        //  Rotine = "Onboarding"
-        //};
-
-        //serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
-        //serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
-
         
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
