@@ -24,6 +24,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<SalaryScaleScore> serviceSalaryScaleScore;
     private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
+    private readonly ServiceGeneric<Maturity> serviceMaturity;
 
     #region Constructor
     public ServiceMeritocracy(DataContext context) : base(context)
@@ -37,6 +38,7 @@ namespace Manager.Services.Specific
         serviceSalaryScaleScore = new ServiceGeneric<SalaryScaleScore>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceGoalsPersonControl = new ServiceGeneric<GoalsPersonControl>(context);
+        serviceMaturity = new ServiceGeneric<Maturity>(context);
       }
       catch (Exception e)
       {
@@ -53,6 +55,7 @@ namespace Manager.Services.Specific
       serviceSalaryScaleScore._user = _user;
       serviceOccupation._user = _user;
       serviceGoalsPersonControl._user = _user;
+      serviceMaturity._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -64,6 +67,7 @@ namespace Manager.Services.Specific
       serviceSalaryScaleScore._user = user;
       serviceOccupation._user = user;
       serviceGoalsPersonControl._user = user;
+      serviceMaturity._user = user;
     }
     #endregion
 
@@ -72,6 +76,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         byte schoolingWeight = 0;
         byte companyDateWeight = 0;
         byte occupationDateWeight = 0;
@@ -124,12 +129,17 @@ namespace Manager.Services.Specific
         {
           if (goals.AchievementEnd < 100)
             goalsWeight = EnumMeritocracyGoals.NotReach;
-          else if ((goals.AchievementEnd >= 100) &(goals.AchievementEnd < 120))
+          else if ((goals.AchievementEnd >= 100) & (goals.AchievementEnd < 120))
             goalsWeight = EnumMeritocracyGoals.Reached;
-          else 
-          goalsWeight = EnumMeritocracyGoals.Best;
+          else
+            goalsWeight = EnumMeritocracyGoals.Best;
         }
-          
+
+        //maturity
+        var maturity = serviceMaturity.GetAll(p => p._idPerson == person._id).FirstOrDefault();
+        if (maturity != null)
+          maturityWeight = maturity.Value;
+
 
 
         meritocracy.WeightSchooling = schoolingWeight;
@@ -139,6 +149,7 @@ namespace Manager.Services.Specific
         meritocracy.WeightGoals = goalsWeight;
 
         serviceMeritocracy.Update(meritocracy, null);
+        EndMath(meritocracy);
       }
       catch (Exception e)
       {
@@ -146,6 +157,26 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async Task EndMath(Meritocracy meritocracy)
+    {
+      try
+      {
+        var score = serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
+        decimal percMaturity = Math.Round((meritocracy.WeightMaturity * 100) / (score.WeightMaturity == 0 ? 1 : score.WeightMaturity), 2);
+        decimal percSchooling = Math.Round((meritocracy.WeightSchooling * 100) / (score.WeightSchooling == 0 ? 1 : score.WeightSchooling), 2);
+        decimal percCompanyDate = Math.Round((meritocracy.WeightCompanyDate * 100) / (score.WeightCompanyDate == 0 ? 1 : score.WeightCompanyDate), 2);
+        decimal percOccupationDate = Math.Round((meritocracy.WeightOccupationDate * 100) / (score.WeightOccupationDate == 0 ? 1 : score.WeightOccupationDate), 2);
+        decimal percGoals = Math.Round((decimal.Parse(meritocracy.WeightGoals.ToString()) * 100) / (score.WeightGoals == 0 ? 1 : score.WeightGoals), 2);
+        decimal percActivitie = Math.Round((meritocracy.WeightActivitiesExcellence * 100) / (score.WeightActivitiesExcellence == 0 ? 1 : score.WeightActivitiesExcellence), 2);
+
+
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     #endregion
 
@@ -261,6 +292,7 @@ namespace Manager.Services.Specific
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         meritocracy.ActivitiesExcellence = view.Weight;
         serviceMeritocracy.Update(meritocracy, null);
+        EndMath(meritocracy);
 
         return "Meritocracy altered!";
       }

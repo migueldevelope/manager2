@@ -3551,23 +3551,7 @@ namespace Manager.Services.Specific
               Line = p.Group.Line,
               Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
               Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, Name = p.Group.Sphere.Name, TypeSphere = p.Group.Sphere.TypeSphere }
-            },
-            Process = (p.Process != null) ? p.Process.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
-            .Select(x => new ViewListProcessLevelTwo()
-            {
-              _id = x._id,
-              Name = x.Name,
-              Order = x.Order,
-              ProcessLevelOne = new
-            ViewListProcessLevelOne()
-              {
-                _id = x.ProcessLevelOne._id,
-                Name = x.ProcessLevelOne.Name,
-                Order = x.ProcessLevelOne.Order,
-                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
-              }
-            })
-            .ToList() : null
+            }
           })
           .ToList();
       }
