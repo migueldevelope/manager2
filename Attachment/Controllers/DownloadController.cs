@@ -42,6 +42,8 @@ namespace EdeskIntegration.Controllers
 
         if (ci.Type == ClaimTypes.UserData)
           baseUser._idUser = ci.Value;
+        if (ci.Type == ClaimTypes.Actor)
+          baseUser._idPerson = ci.Value;
 
       }
       foreach (Claim ci in user.Claims)

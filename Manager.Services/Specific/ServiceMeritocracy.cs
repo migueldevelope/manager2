@@ -269,44 +269,58 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string New(ViewCrudMeritocracy view)
+
+    public string New(string idperson)
     {
       try
       {
-
-        var person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault();
+        var person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
         var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
 
         List<Activitie> activities = null;
         if (occupation != null)
           activities = occupation.Activities;
 
-        Meritocracy meritocracy = serviceMeritocracy.InsertNewVersion(new Meritocracy()
+        var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == idperson && p.StatusMeritocracy != EnumStatusMeritocracy.End).Result.FirstOrDefault();
+
+        if (meritocracy == null)
         {
-          _id = view._id,
-          ActivitiesExcellence = 0,
-          Maturity = 0,
-          DateBegin = DateTime.Now,
-          StatusMeritocracy = EnumStatusMeritocracy.Wait,
-          Person = view.Person,
-          Status = EnumStatus.Enabled,
-          MeritocracyActivities = new List<MeritocracyActivities>()
-        }).Result;
-
-        foreach (var item in activities)
-          meritocracy.MeritocracyActivities.Add(new MeritocracyActivities()
+          meritocracy = serviceMeritocracy.InsertNewVersion(new Meritocracy()
           {
-            Activities = item,
-            Mark = 0
-          });
+            ActivitiesExcellence = 0,
+            Maturity = 0,
+            DateBegin = DateTime.Now,
+            StatusMeritocracy = EnumStatusMeritocracy.Wait,
+            Status = EnumStatus.Enabled,
+            Person = new ViewListPersonMeritocracy()
+            {
+              CompanyDate = person.User.DateAdm,
+              OccupationDate = person.DateLastOccupation,
+              OccupationName = person.Occupation?.Name,
+              Name = person.User.Name,
+              CurrentSchooling = person.User.Schooling?.Name,
+              Salary = person.Salary,
+              OccupationSchooling = person.Occupation?.Schooling.FirstOrDefault()?.Name
+            },
+            MeritocracyActivities = new List<MeritocracyActivities>()
+          }).Result;
 
-        return "Meritocracy added!";
+          foreach (var item in activities)
+            meritocracy.MeritocracyActivities.Add(new MeritocracyActivities()
+            {
+              Activities = item,
+              Mark = 0
+            });
+        }
+
+        return meritocracy._id;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+
     public string Update(ViewCrudMeritocracy view)
     {
       try
@@ -396,20 +410,29 @@ namespace Manager.Services.Specific
     {
       try
       {
+        MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMeritocracy()
         {
           _id = meritocracy._id,
           ActivitiesExcellence = meritocracy.ActivitiesExcellence,
           Maturity = meritocracy.Maturity,
-          Person = meritocracy.Person
+          Person = meritocracy.Person,
+          EnabledCompanyDate = meritocracyScore.EnabledCompanyDate,
+          EnabledOccupationDate = meritocracyScore.EnabledOccupationDate,
+          EnabledSchooling = meritocracyScore.EnabledSchooling,
+          EnabledMaturity = meritocracyScore.EnabledMaturity,
+          EnabledActivitiesExcellence = meritocracyScore.EnabledActivitiesExcellence,
+          EnabledGoals = meritocracyScore.EnabledGoals
         };
+
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+
     public List<ViewListMeritocracy> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -462,10 +485,6 @@ namespace Manager.Services.Specific
                                           _id = string.Empty,
                                           _idPerson = p._id,
                                           Name = p.User.Name,
-                                          OccupationName = p.Occupation.Name,
-                                          OccupationDate = p.DateLastOccupation,
-                                          CompanyDate = p.User.DateAdm,
-                                          Salary = p.Salary,
                                           StatusMeritocracy = EnumStatusMeritocracy.Open,
                                         }).ToList();
         List<ViewListMeritocracy> detail = new List<ViewListMeritocracy>();

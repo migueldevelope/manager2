@@ -50,6 +50,8 @@ namespace Manager.Data
           _user.NameAccount = ci.Value;
         if (ci.Type == ClaimTypes.UserData)
           _user._idUser = ci.Value;
+        if (ci.Type == ClaimTypes.Actor)
+          _user._idPerson = ci.Value;
       }
     }
     #endregion

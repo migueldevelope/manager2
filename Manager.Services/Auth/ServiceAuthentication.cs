@@ -51,6 +51,40 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Authentication
+
+    public string AlterContract(string idperson)
+    {
+      try
+      {
+        var person = servicePerson.GetAllFreeNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        var account = serviceAccount.GetAllFreeNewVersion(p => p._id == person._idAccount).Result.FirstOrDefault();
+
+        // Token
+        Claim[] claims = new[]
+        {
+        new Claim(ClaimTypes.Name, person.User.Name),
+        new Claim(ClaimTypes.Hash, person._idAccount),
+        new Claim(ClaimTypes.Email, person.User.Mail),
+        new Claim(ClaimTypes.NameIdentifier, account.Name),
+        new Claim(ClaimTypes.UserData, person.User._id),
+        new Claim(ClaimTypes.Actor, idperson),
+        };
+        JwtSecurityToken token = new JwtSecurityToken(
+            issuer: "localhost",
+            audience: "localhost",
+            claims: claims,
+            expires: DateTime.Now.AddDays(2),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
+        );
+        return new JwtSecurityTokenHandler().WriteToken(token);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     public ViewPerson Authentication(ViewAuthentication userLogin)
     {
       try
@@ -168,7 +202,8 @@ namespace Manager.Services.Auth
         new Claim(ClaimTypes.Hash, person.IdAccount),
         new Claim(ClaimTypes.Email, user.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
-        new Claim(ClaimTypes.UserData, person.IdUser)
+        new Claim(ClaimTypes.UserData, person.IdUser),
+        new Claim(ClaimTypes.Actor, person.Contracts.FirstOrDefault().IdPerson)
         };
         JwtSecurityToken token = new JwtSecurityToken(
             issuer: "localhost",

@@ -11,7 +11,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     string Delete(string id);
-    string New(ViewCrudMeritocracy view);
+    string New(string idperson);
     string Update(ViewCrudMeritocracy view);
     ViewCrudMeritocracy Get(string id);
     List<ViewListMeritocracy> List(ref long total, int count = 10, int page = 1, string filter = "");

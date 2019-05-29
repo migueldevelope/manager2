@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Manager.Controllers
 {
   /// <summary>
-  /// Controlador da empresa
+  /// Controlador da meritocracia
   /// </summary>
   [Produces("application/json")]
   [Route("meritocracy")]
@@ -22,7 +22,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Construtor
     /// </summary>
-    /// <param name="_service">Serviço da empresa</param>
+    /// <param name="_service">Serviço da meritocracia</param>
     /// <param name="contextAccessor">Token de segurança</param>
     public MeritocracyController(IServiceMeritocracy _service, IHttpContextAccessor contextAccessor)
     {
@@ -33,12 +33,12 @@ namespace Manager.Controllers
 
     #region Meritocracy
     /// <summary>
-    /// Listar as empresas
+    /// Listar as meritocracias
     /// </summary>
     /// <param name="count">Quantidade de registros</param>
     /// <param name="page">Página para mostrar</param>
-    /// <param name="filter">Filtro para o nome da empresa</param>
-    /// <returns>Lista de empresas cadastradas</returns>
+    /// <param name="filter">Filtro para o nome da meritocracia</param>
+    /// <returns>Lista de meritocracias cadastradas</returns>
     [Authorize]
     [HttpGet]
     [Route("list")]
@@ -51,12 +51,12 @@ namespace Manager.Controllers
     }
 
     /// <summary>
-    /// Listar as empresas
+    /// Listar as meritocracias
     /// </summary>
     /// <param name="count">Quantidade de registros</param>
     /// <param name="page">Página para mostrar</param>
-    /// <param name="filter">Filtro para o nome da empresa</param>
-    /// <returns>Lista de empresas cadastradas</returns>
+    /// <param name="filter">Filtro para o nome da meritocracia</param>
+    /// <returns>Lista de meritocracias cadastradas</returns>
     [Authorize]
     [HttpGet]
     [Route("listmeritocracyactivitie/{idmeritocracy}")]
@@ -68,13 +68,13 @@ namespace Manager.Controllers
 
 
     /// <summary>
-    /// Listar estabelecimentos
+    /// Listar ponutação de meritocracias
     /// </summary>
     /// <param name="count">Quantidade de registros</param>
     /// <param name="page">Página para mostrar</param>
     ///  <param name="idmanager">Identificador gestor</param>
-    /// <param name="filter">Filtro para o nome do estabelecimento</param>
-    /// <returns>Lista de estabelecimentos</returns>
+    /// <param name="filter">Filtro para o nome do ponutação de meritocracia</param>
+    /// <returns>Lista de ponutação de meritocracias</returns>
     [Authorize]
     [HttpGet]
     [Route("listwaitmanager/{idmanager}")]
@@ -104,21 +104,21 @@ namespace Manager.Controllers
 
 
     /// <summary>
-    /// Cadastrar uma nova empresa
+    /// Cadastrar uma nova meritocracia
     /// </summary>
-    /// <param name="view">Objeto de cadastro da empresa</param>
+    /// <param name="idperson">Identificador da pessoa</param>
     /// <returns></returns>
     [HttpPost]
-    [Route("new")]
-    public async Task<IActionResult> Post([FromBody]ViewCrudMeritocracy view)
+    [Route("new/{idperson}")]
+    public async Task<IActionResult> Post(string idperson)
     {
-      return Ok(service.New(view));
+      return Ok(service.New(idperson));
     }
     /// <summary>
-    /// Retorar a empresa para manutenção
+    /// Retorar a meritocracia para manutenção
     /// </summary>
-    /// <param name="id">Identificador da empresa</param>
-    /// <returns>Objeto de manutenção da empresa</returns>
+    /// <param name="id">Identificador da meritocracia</param>
+    /// <returns>Objeto de manutenção da meritocracia</returns>
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
@@ -127,9 +127,9 @@ namespace Manager.Controllers
       return service.Get(id);
     }
     /// <summary>
-    /// Alterar a empresa
+    /// Alterar a meritocracia
     /// </summary>
-    /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <param name="view">Objeto de manutenção da meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -140,9 +140,9 @@ namespace Manager.Controllers
     }
 
     /// <summary>
-    /// Alterar a empresa
+    /// Alterar a meritocracia
     /// </summary>
-    /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <param name="view">Objeto de manutenção da meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -153,9 +153,9 @@ namespace Manager.Controllers
     }
 
     /// <summary>
-    /// Alterar a empresa
+    /// Alterar a meritocracia
     /// </summary>
-    /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <param name="view">Objeto de manutenção da meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -167,9 +167,9 @@ namespace Manager.Controllers
 
 
     /// <summary>
-    /// Excluir uma empresa
+    /// Excluir uma meritocracia
     /// </summary>
-    /// <param name="id">Identificação da empresa</param>
+    /// <param name="id">Identificação da meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]
@@ -184,12 +184,12 @@ namespace Manager.Controllers
 
 
     /// <summary>
-    /// Listar estabelecimentos
+    /// Listar ponutação de meritocracias
     /// </summary>
     /// <param name="count">Quantidade de registros</param>
     /// <param name="page">Página para mostrar</param>
-    /// <param name="filter">Filtro para o nome do estabelecimento</param>
-    /// <returns>Lista de estabelecimentos</returns>
+    /// <param name="filter">Filtro para o nome do ponutação de meritocracia</param>
+    /// <returns>Lista de ponutação de meritocracias</returns>
     [Authorize]
     [HttpGet]
     [Route("listmeritocracyscore")]
@@ -200,9 +200,9 @@ namespace Manager.Controllers
     }
 
     /// <summary>
-    /// Novo estabelecimento
+    /// Novo ponutação de meritocracia
     /// </summary>
-    /// <param name="view">Objeto de manutenção do estabelecimento</param>
+    /// <param name="view">Objeto de manutenção do ponutação de meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [HttpPost]
     [Route("newmeritocracyscore")]
@@ -211,10 +211,10 @@ namespace Manager.Controllers
       return Ok(service.NewMeritocracyScore(view));
     }
     /// <summary>
-    /// Buscar estabelecimento para manutenção
+    /// Buscar ponutação de meritocracia para manutenção
     /// </summary>
-    /// <param name="id">Identificador do estabelecimento</param>
-    /// <returns>Objeto de manutenção do estabelecimento</returns>
+    /// <param name="id">Identificador do ponutação de meritocracia</param>
+    /// <returns>Objeto de manutenção do ponutação de meritocracia</returns>
     [Authorize]
     [HttpGet]
     [Route("getmeritocracyscore/{id}")]
@@ -223,9 +223,9 @@ namespace Manager.Controllers
       return service.GetMeritocracyScore(id);
     }
     /// <summary>
-    /// Alterar o estabelecimento
+    /// Alterar o ponutação de meritocracia
     /// </summary>
-    /// <param name="view">Objeto de manutenção do estabelecimento</param>
+    /// <param name="view">Objeto de manutenção do ponutação de meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -235,9 +235,9 @@ namespace Manager.Controllers
       return Ok(service.UpdateMeritocracyScore(view));
     }
     /// <summary>
-    /// Deletar um estabelecimento
+    /// Deletar um ponutação de meritocracia
     /// </summary>
-    /// <param name="id">Identificador do estabelecimento</param>
+    /// <param name="id">Identificador do ponutação de meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]
@@ -250,12 +250,12 @@ namespace Manager.Controllers
 
     #region SalaryScaleScore
     /// <summary>
-    /// Listar estabelecimentos
+    /// Listar ponutação de meritocracias
     /// </summary>
     /// <param name="count">Quantidade de registros</param>
     /// <param name="page">Página para mostrar</param>
-    /// <param name="filter">Filtro para o nome do estabelecimento</param>
-    /// <returns>Lista de estabelecimentos</returns>
+    /// <param name="filter">Filtro para o nome do ponutação de meritocracia</param>
+    /// <returns>Lista de ponutação de meritocracias</returns>
     [Authorize]
     [HttpGet]
     [Route("listsalaryscalescore")]
@@ -268,9 +268,9 @@ namespace Manager.Controllers
     }
 
     ///// <summary>
-    ///// Novo estabelecimento
+    ///// Novo ponutação de meritocracia
     ///// </summary>
-    ///// <param name="view">Objeto de manutenção do estabelecimento</param>
+    ///// <param name="view">Objeto de manutenção do ponutação de meritocracia</param>
     ///// <returns>Mensagem de sucesso</returns>
     //[HttpPost]
     //[Route("newmsalaryscale")]
@@ -279,10 +279,10 @@ namespace Manager.Controllers
     //  return Ok(service.NewSalaryScaleScore(view));
     //}
     /// <summary>
-    /// Buscar estabelecimento para manutenção
+    /// Buscar ponutação de meritocracia para manutenção
     /// </summary>
-    /// <param name="id">Identificador do estabelecimento</param>
-    /// <returns>Objeto de manutenção do estabelecimento</returns>
+    /// <param name="id">Identificador do ponutação de meritocracia</param>
+    /// <returns>Objeto de manutenção do ponutação de meritocracia</returns>
     [Authorize]
     [HttpGet]
     [Route("getsalaryscale/{id}")]
@@ -291,9 +291,9 @@ namespace Manager.Controllers
       return service.GetSalaryScaleScore(id);
     }
     /// <summary>
-    /// Alterar o estabelecimento
+    /// Alterar o ponutação de meritocracia
     /// </summary>
-    /// <param name="view">Objeto de manutenção do estabelecimento</param>
+    /// <param name="view">Objeto de manutenção do ponutação de meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -303,9 +303,9 @@ namespace Manager.Controllers
       return Ok(service.UpdateSalaryScaleScore(view));
     }
     /// <summary>
-    /// Deletar um estabelecimento
+    /// Deletar um ponutação de meritocracia
     /// </summary>
-    /// <param name="id">Identificador do estabelecimento</param>
+    /// <param name="id">Identificador do ponutação de meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]

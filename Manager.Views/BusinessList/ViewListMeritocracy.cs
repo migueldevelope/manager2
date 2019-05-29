@@ -7,9 +7,5 @@ namespace Manager.Views.BusinessList
   {
     public string _idPerson { get; set; }
     public EnumStatusMeritocracy StatusMeritocracy {get;set;}
-    public string OccupationName { get; set; }
-    public DateTime? OccupationDate { get; set; }
-    public DateTime? CompanyDate { get; set; }
-    public decimal Salary { get; set; }
   }
 }

@@ -49,6 +49,22 @@ namespace Manager.Controllers
         return BadRequest(e.Message);
       }
     }
+
+    [Authorize]
+    [HttpPost]
+    [Route("altercontract/{idperson}")]
+    public async Task<string> AlterContract(string idperson)
+    {
+      try
+      {
+        return service.AlterContract(idperson);
+      }
+      catch (Exception e)
+      {
+        return "";
+      }
+    }
+
     #endregion
 
   }
