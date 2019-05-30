@@ -2,6 +2,7 @@
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
@@ -25,9 +26,13 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<SalaryScaleScore> serviceSalaryScaleScore;
     private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
     private readonly ServiceGeneric<Maturity> serviceMaturity;
+    private readonly ServiceLog serviceLog;
+    private readonly ServiceLogMessages serviceLogMessages;
+    private readonly ServiceGeneric<MailLog> serviceMail;
+    private readonly ServiceMailModel serviceMailModel;
 
     #region Constructor
-    public ServiceMeritocracy(DataContext context) : base(context)
+    public ServiceMeritocracy(DataContext context, DataContext contextLog) : base(context)
     {
       try
       {
@@ -39,6 +44,10 @@ namespace Manager.Services.Specific
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceGoalsPersonControl = new ServiceGeneric<GoalsPersonControl>(context);
         serviceMaturity = new ServiceGeneric<Maturity>(context);
+        serviceLog = new ServiceLog(context, contextLog);
+        serviceLogMessages = new ServiceLogMessages(context);
+        serviceMail = new ServiceGeneric<MailLog>(context);
+        serviceMailModel = new ServiceMailModel(context);
       }
       catch (Exception e)
       {
@@ -56,6 +65,10 @@ namespace Manager.Services.Specific
       serviceOccupation._user = _user;
       serviceGoalsPersonControl._user = _user;
       serviceMaturity._user = _user;
+      serviceLog.SetUser(_user);
+      serviceLogMessages.SetUser(_user);
+      serviceMail._user = _user;
+      serviceMailModel.SetUser(_user);
     }
     public void SetUser(BaseUser user)
     {
@@ -68,6 +81,10 @@ namespace Manager.Services.Specific
       serviceOccupation._user = user;
       serviceGoalsPersonControl._user = user;
       serviceMaturity._user = user;
+      serviceLog.SetUser(_user);
+      serviceLogMessages.SetUser(_user);
+      serviceMail._user = _user;
+      serviceMailModel.SetUser(_user);
     }
 
     private async Task<string> NewSalaryScaleScore()
@@ -118,6 +135,25 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
+
+    private async Task LogSave(string iduser, string local)
+    {
+      try
+      {
+        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Access Meritocracy",
+          Local = local,
+          _idPerson = user._id
+        };
+        serviceLog.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     public string NewMeritocracyScore(ViewCrudMeritocracyScore view)
     {
@@ -262,6 +298,8 @@ namespace Manager.Services.Specific
         Meritocracy item = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
         serviceMeritocracy.Update(item, null);
+
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Remove process | {0}", item._id)));
         return "Meritocracy deleted!";
       }
       catch (Exception e)
@@ -285,6 +323,8 @@ namespace Manager.Services.Specific
 
         if (meritocracy == null)
         {
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", meritocracy._id)));
+
           meritocracy = serviceMeritocracy.InsertNewVersion(new Meritocracy()
           {
             ActivitiesExcellence = 0,
@@ -326,6 +366,8 @@ namespace Manager.Services.Specific
       try
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == view._id).Result;
+
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Update process | {0}", meritocracy._id)));
 
         meritocracy.StatusMeritocracy = view.StatusMeritocracy;
         if (meritocracy.StatusMeritocracy == EnumStatusMeritocracy.End)

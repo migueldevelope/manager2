@@ -88,7 +88,7 @@ namespace Manager.Services.Specific
 
 
         var events = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault();
-        Task.Run(() => LogSave(events.UserInclude._id, "Remove Days Event: " + idevent + " | day: " + iddays));
+        Task.Run(() => LogSave(_user._idPerson, "Remove Days Event: " + idevent + " | day: " + iddays));
 
         foreach (var item in events.Days)
         {
@@ -164,7 +164,7 @@ namespace Manager.Services.Specific
 
 
         var item = serviceEvent.GetAll(p => p._id == id).FirstOrDefault();
-        Task.Run(() => LogSave(item.UserInclude._id, "Delete Event " + id));
+        Task.Run(() => LogSave(_user._idPerson, "Delete Event " + id));
         item.Status = EnumStatus.Disabled;
         serviceEvent.Update(item, null);
         return "deleted";
@@ -183,7 +183,7 @@ namespace Manager.Services.Specific
 
 
         var item = serviceEventHistoric.GetAll(p => p._id == id).FirstOrDefault();
-        Task.Run(() => LogSave(item.Person._id, "Delete Event Historic " + id));
+        Task.Run(() => LogSave(_user._idPerson, "Delete Event Historic " + id));
         var obs = "Realized Event: " + item.Name + ", ID_Historic: " + item._id;
         var trainingplan = serviceTrainingPlan.GetAll(p => p.Person._id == item.Person._id
         & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
@@ -388,7 +388,7 @@ namespace Manager.Services.Specific
       {
 
         var events = serviceEvent.GetAll(p => p._id == id).FirstOrDefault();
-        Task.Run(() => LogSave(events.UserInclude._id, "Get Event by ID"));
+        Task.Run(() => LogSave(_user._idPerson, "Get Event by ID"));
 
         return new ViewCrudEvent()
         {
@@ -481,7 +481,7 @@ namespace Manager.Services.Specific
       {
 
         var eventhistoric = serviceEventHistoric.GetAll(p => p._id == id).FirstOrDefault();
-        Task.Run(() => LogSave(eventhistoric.Person._id, "Get Historic by ID"));
+        Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
 
         return new ViewCrudEventHistoric()
         {

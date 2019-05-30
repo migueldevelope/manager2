@@ -285,7 +285,7 @@ namespace Manager.Services.Specific
           };
           checkpoint = LoadMap(checkpoint);
           checkpoint = serviceCheckpoint.InsertNewVersion(checkpoint).Result;
-          Task.Run(() => LogSave(idperson, string.Format("Start new process | {0}", checkpoint._id)));
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", checkpoint._id)));
         }
         return new ViewListCheckpoint()
         {
@@ -435,7 +435,7 @@ namespace Manager.Services.Specific
         if (checkpoint == null)
           return "Checkpoint not available!";
 
-        Task.Run(() => LogSave(checkpoint.Person._id, string.Format("Delete | {0}", idcheckpoint)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | {0}", idcheckpoint)));
         checkpoint.Status = EnumStatus.Disabled;
         serviceCheckpoint.Update(checkpoint, null);
         return "Checkpoint deleted!";
@@ -470,12 +470,12 @@ namespace Manager.Services.Specific
             Task.Run(() => MailPerson(person, "Aprovado"));
 
             serviceLogMessages.NewLogMessage("Checkpoint", string.Format(" Colaborador {0} aprovado no Checkpoint", person.User.Name), person);
-            Task.Run(() => LogSave(view.Person._id, string.Format("Approved | {0}.", view._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Approved | {0}.", view._id)));
           }
           else
           {
             Task.Run(() => MailRhDisapproved(person, "Reprovado"));
-            Task.Run(() => LogSave(view.Person._id, string.Format("Disapproved | {0}.", view._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Disapproved | {0}.", view._id)));
           }
         }
         checkpoint.Comments = view.Comments;
@@ -525,7 +525,7 @@ namespace Manager.Services.Specific
           return null;
         //throw new Exception("Checkpoint not available!");
 
-        Task.Run(() => LogSave(idperson, string.Format("Person ended | {0}", checkpoint._id)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Person ended | {0}", checkpoint._id)));
 
         return new ViewCrudCheckpoint()
         {

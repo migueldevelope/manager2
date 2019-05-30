@@ -84,7 +84,7 @@ namespace Manager
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer);
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
-      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context);
+      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
 

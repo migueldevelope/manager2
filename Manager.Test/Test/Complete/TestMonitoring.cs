@@ -20,8 +20,8 @@ namespace Manager.Test.Test.Complete
     public TestMonitoring()
     {
       base.Init();
-      serviceMonitoring = new ServiceMonitoring(context, context, "");
-      serviceMonitoring.SetUser(base.baseUser);
+      //serviceMonitoring = new ServiceMonitoring(context, context, "");
+      //serviceMonitoring.SetUser(base.baseUser);
 
       servicePerson = new ServiceGeneric<Person>(base.context);
       servicePerson._user = base.baseUser;

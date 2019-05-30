@@ -1031,7 +1031,7 @@ namespace Manager.Services.Specific
 
           monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
           serviceMonitoring.InsertNewVersion(monitoring);
-          Task.Run(() => LogSave(monitoring.Person._id, string.Format("Start new process | {0}", monitoring._id)));
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
         }
         else
         {
@@ -1117,7 +1117,7 @@ namespace Manager.Services.Specific
           {
             monitoring.DateEndManager = DateTime.Now;
             Task.Run(() => Mail(monitoring.Person));
-            Task.Run(() => LogSave(userInclude._id, string.Format("Send person approval | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
           }
         }
         else
@@ -1133,19 +1133,19 @@ namespace Manager.Services.Specific
             }
             monitoring.DateEndEnd = DateTime.Now;
             Task.Run(() => SendQueue(monitoring._id, monitoring.Person._id, countpraise));
-            Task.Run(() => LogSave(userInclude._id, string.Format("Conclusion process | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
             Task.Run(() => MailManager(monitoring.Person));
-            Task.Run(() => LogSave(userInclude._id, string.Format("Send manager approval | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
 
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
           {
             Task.Run(() => MailDisApproval(monitoring.Person));
-            Task.Run(() => LogSave(userInclude._id, string.Format("Send manager review | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
           }
         }
         serviceMonitoring.Update(monitoring, null);
@@ -1249,7 +1249,7 @@ namespace Manager.Services.Specific
                 StatusView = comments.StatusView,
                 UserComment = comments.UserComment
               });
-            Task.Run(() => LogSave(monitoring.Person._id, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
             serviceMonitoring.Update(monitoring, null);
 
             return item.Comments.Select(p => new ViewCrudComment()
@@ -1293,7 +1293,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null);
-            Task.Run(() => LogSave(monitoring.Person._id, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
 
             return item.Comments.Select(p => new ViewCrudComment()
             {
@@ -1337,7 +1337,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null);
-            Task.Run(() => LogSave(monitoring.Person._id, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,

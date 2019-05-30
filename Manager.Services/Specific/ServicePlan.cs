@@ -642,7 +642,7 @@ namespace Manager.Services.Specific
 
         Task.Run(() => SendQueue(plan._id, plan.Person._id, plan.Evaluation));
 
-        Task.Run(() => LogSave(person._id, "Plan Process Update"));
+        Task.Run(() => LogSave(_user._idPerson, "Plan Process Update"));
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
           Task.Run(() => Mail(person));
 

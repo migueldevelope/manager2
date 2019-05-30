@@ -437,7 +437,7 @@ namespace Manager.Services.Specific
       {
 
         var certification = serviceCertification.GetAll(p => p.Person._id == idcertification).FirstOrDefault();
-        Task.Run(() => LogSave(certification.Person._id, string.Format("Delete | ", idcertification)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | ", idcertification)));
         if (certification == null)
           return "Certification deleted!";
 
@@ -807,7 +807,7 @@ namespace Manager.Services.Specific
         certification = LoadMap(certification);
 
         certification = serviceCertification.InsertNewVersion(certification).Result;
-        Task.Run(() => LogSave(certification.Person._id, string.Format("Start new process | {0}", certification._id)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", certification._id)));
         return new ViewCrudCertification()
         {
           _id = certification._id,
@@ -914,7 +914,7 @@ namespace Manager.Services.Specific
           }
           serviceCertificationPerson.Update(item, null);
           serviceCertification.Update(certification, null);
-          Task.Run(() => LogSave(certification.Person._id, string.Format("Certification approved | {0}", certification._id)));
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Certification approved | {0}", certification._id)));
           return "Certification approved!";
         }
         return "Certification not found!";
