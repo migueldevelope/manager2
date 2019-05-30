@@ -246,7 +246,8 @@ namespace Manager.Services.Specific
             _idPerson = view._idPerson,
             TypeMaturity = view.TypeMaturity,
             Date = view.Date,
-            _idRegister = view._idRegister
+            _idRegister = view._idRegister,
+            Evaluation = view.Evaluation
           }).Result;
 
         var maturity = serviceMaturity.GetAllNewVersion(p => p._idPerson == view._idPerson).Result.FirstOrDefault();
@@ -273,6 +274,7 @@ namespace Manager.Services.Specific
           var plans = serviceMaturityRegister.GetAllNewVersion(p => p._idPerson == view._idPerson
           && p.TypeMaturity == EnumTypeMaturity.Plan && p.Date >= oneyearbefore).Result.Average(p => p.Evaluation);
           maturity.CountPlan = long.Parse(plans.ToString());
+          
         }
         else if (view.TypeMaturity == EnumTypeMaturity.Praise)
         {

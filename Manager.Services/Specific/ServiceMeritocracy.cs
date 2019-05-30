@@ -259,7 +259,7 @@ namespace Manager.Services.Specific
         byte maturityWeight = 0;
         EnumMeritocracyGoals goalsWeight = EnumMeritocracyGoals.NotReach;
 
-        if(person.User.Schooling != null)
+        if (person.User.Schooling != null)
         {
           //schooling
           var schoolingResult = person.User.Schooling.Order - person.Occupation.Schooling.Where(p => p.Type == EnumTypeSchooling.Basic).FirstOrDefault().Order;
@@ -274,9 +274,9 @@ namespace Manager.Services.Specific
           else
             schoolingWeight = 5;
         }
-        
 
-        if(person.User.DateAdm != null)
+
+        if (person.User.DateAdm != null)
         {
           //company time
           var companyTimeResult = ((12 * (DateTime.Now.Year - person.User.DateAdm.Value.Year)) + (DateTime.Now.Month - person.User.DateAdm.Value.Month));
@@ -291,9 +291,9 @@ namespace Manager.Services.Specific
           else
             companyDateWeight = 5;
         }
-        
 
-        if(person.DateLastOccupation != null)
+
+        if (person.DateLastOccupation != null)
         {
           //occupation time
           var occupationTimeResult = ((12 * (DateTime.Now.Year - person.DateLastOccupation.Value.Year)) + (DateTime.Now.Month - person.DateLastOccupation.Value.Month));
@@ -308,7 +308,7 @@ namespace Manager.Services.Specific
           else
             occupationDateWeight = 5;
         }
-        
+
 
         //goals
         var goals = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == person._id & p.StatusGoalsPerson == EnumStatusGoalsPerson.End).Result.LastOrDefault();
@@ -354,13 +354,13 @@ namespace Manager.Services.Specific
           case 1:
             return 0;
           case 2:
-            return (point * decimal.Parse("0.8"));
+            return decimal.Parse((double.Parse(point.ToString()) * 0.8).ToString());
           case 3:
-            return (point * decimal.Parse("0.9333"));
+            return decimal.Parse((double.Parse(point.ToString()) * 0.9333).ToString());
           case 4:
-            return (point * decimal.Parse("1.0666"));
+            return decimal.Parse((double.Parse(point.ToString()) * 1.066).ToString());
           case 5:
-            return (point * decimal.Parse("1.2"));
+            return decimal.Parse((double.Parse(point.ToString()) * 1.2).ToString());
         }
 
         return 0;
@@ -388,12 +388,17 @@ namespace Manager.Services.Specific
         meritocracy.PercentOccupationDate = percOccupationDate;
         meritocracy.PercentSchooling = percSchooling;
         meritocracy.PercentActivitiesExcellence = percActivitie;
-        meritocracy.PercentGoals = percGoals;
+        if (score.EnabledGoals)
+          meritocracy.PercentGoals = percGoals;
+        else
+          percGoals = 0;
+
         meritocracy.PercentMaturity = percMaturity;
 
         meritocracy.ResultEnd = percCompanyDate + percOccupationDate + percSchooling
           + percMaturity + percGoals + percActivitie;
 
+        serviceMeritocracy.Update(meritocracy, null);
       }
       catch (Exception e)
       {
