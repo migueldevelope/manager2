@@ -220,6 +220,9 @@ namespace Manager.Services.Specific
       try
       {
         var oneyearbefore = DateTime.Now.AddYears(-1);
+        _user = new BaseUser() { _idAccount = view._idAccount } ;
+        serviceMaturityRegister._user = _user;
+        serviceMaturity._user = _user;
 
         MaturityRegister maturityregister = serviceMaturityRegister.InsertNewVersion(
           new MaturityRegister()

@@ -168,7 +168,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        if ((enabled) && meritocracy.Person.CurrentSchooling == string.Empty)
+        if ((enabled) && meritocracy.Person.CurrentSchooling == null)
           return false;
         return true;
       }
@@ -259,45 +259,56 @@ namespace Manager.Services.Specific
         byte maturityWeight = 0;
         EnumMeritocracyGoals goalsWeight = EnumMeritocracyGoals.NotReach;
 
-        //schooling
-        var schoolingResult = person.User.Schooling.Order - person.Occupation.Schooling.Where(p => p.Type == EnumTypeSchooling.Basic).FirstOrDefault().Order;
-        if (schoolingResult <= -2)
-          schoolingWeight = 1;
-        else if (schoolingResult == -1)
-          schoolingWeight = 2;
-        else if (schoolingResult == 0)
-          schoolingWeight = 3;
-        else if (schoolingResult == 1)
-          schoolingWeight = 4;
-        else
-          schoolingWeight = 5;
+        if(person.User.Schooling != null)
+        {
+          //schooling
+          var schoolingResult = person.User.Schooling.Order - person.Occupation.Schooling.Where(p => p.Type == EnumTypeSchooling.Basic).FirstOrDefault().Order;
+          if (schoolingResult <= -2)
+            schoolingWeight = 1;
+          else if (schoolingResult == -1)
+            schoolingWeight = 2;
+          else if (schoolingResult == 0)
+            schoolingWeight = 3;
+          else if (schoolingResult == 1)
+            schoolingWeight = 4;
+          else
+            schoolingWeight = 5;
+        }
+        
 
-        //company time
-        var companyTimeResult = ((12 * (DateTime.Now.Year - person.User.DateAdm.Value.Year)) + (DateTime.Now.Month - person.User.DateAdm.Value.Month));
-        if (companyTimeResult < 13)
-          companyDateWeight = 1;
-        else if ((companyTimeResult >= 13) && (companyTimeResult <= 24))
-          companyDateWeight = 2;
-        else if ((companyTimeResult >= 25) && (companyTimeResult <= 48))
-          companyDateWeight = 3;
-        else if ((companyTimeResult >= 49) && (companyTimeResult <= 84))
-          companyDateWeight = 4;
-        else
-          companyDateWeight = 5;
+        if(person.User.DateAdm != null)
+        {
+          //company time
+          var companyTimeResult = ((12 * (DateTime.Now.Year - person.User.DateAdm.Value.Year)) + (DateTime.Now.Month - person.User.DateAdm.Value.Month));
+          if (companyTimeResult < 13)
+            companyDateWeight = 1;
+          else if ((companyTimeResult >= 13) && (companyTimeResult <= 24))
+            companyDateWeight = 2;
+          else if ((companyTimeResult >= 25) && (companyTimeResult <= 48))
+            companyDateWeight = 3;
+          else if ((companyTimeResult >= 49) && (companyTimeResult <= 84))
+            companyDateWeight = 4;
+          else
+            companyDateWeight = 5;
+        }
+        
 
-
-        //occupation time
-        var occupationTimeResult = ((12 * (DateTime.Now.Year - person.DateLastOccupation.Value.Year)) + (DateTime.Now.Month - person.DateLastOccupation.Value.Month));
-        if (occupationTimeResult < 7)
-          occupationDateWeight = 1;
-        else if ((occupationTimeResult >= 7) && (occupationTimeResult <= 12))
-          occupationDateWeight = 2;
-        else if ((occupationTimeResult >= 13) && (occupationTimeResult <= 24))
-          occupationDateWeight = 3;
-        else if ((occupationTimeResult >= 25) && (occupationTimeResult <= 48))
-          occupationDateWeight = 4;
-        else
-          occupationDateWeight = 5;
+        if(person.DateLastOccupation != null)
+        {
+          //occupation time
+          var occupationTimeResult = ((12 * (DateTime.Now.Year - person.DateLastOccupation.Value.Year)) + (DateTime.Now.Month - person.DateLastOccupation.Value.Month));
+          if (occupationTimeResult < 7)
+            occupationDateWeight = 1;
+          else if ((occupationTimeResult >= 7) && (occupationTimeResult <= 12))
+            occupationDateWeight = 2;
+          else if ((occupationTimeResult >= 13) && (occupationTimeResult <= 24))
+            occupationDateWeight = 3;
+          else if ((occupationTimeResult >= 25) && (occupationTimeResult <= 48))
+            occupationDateWeight = 4;
+          else
+            occupationDateWeight = 5;
+        }
+        
 
         //goals
         var goals = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == person._id & p.StatusGoalsPerson == EnumStatusGoalsPerson.End).Result.LastOrDefault();
@@ -565,6 +576,8 @@ namespace Manager.Services.Specific
       {
         MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+        MathMeritocracy(meritocracy);
+        meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMeritocracy()
         {
           _id = meritocracy._id,
@@ -760,6 +773,7 @@ namespace Manager.Services.Specific
       try
       {
         MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p._id == id).Result;
+
         return new ViewCrudMeritocracyScore()
         {
           _id = meritocracyScore._id,
