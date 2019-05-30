@@ -8,5 +8,6 @@ namespace Manager.Core.Interfaces
   {
     Task SendMessageAsync(dynamic view);
     void RegisterOnMessageHandlerAndReceiveMesssages();
+    void StartMathMaturity();
   }
 }

@@ -40,6 +40,7 @@ namespace ManagerMessages
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
+      serviceControlQueue.StartMathMaturity();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);

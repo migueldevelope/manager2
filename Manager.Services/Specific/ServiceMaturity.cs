@@ -24,6 +24,21 @@ namespace Manager.Services.Specific
     #region private
 
 
+    public async Task MathMonth()
+    {
+      try
+      {
+        var list = serviceMaturity.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.ToList();
+
+        foreach (var item in list)
+          await MathMaturity(item);
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private async Task MathMaturity(Maturity maturity)
     {
       try
@@ -220,7 +235,7 @@ namespace Manager.Services.Specific
       try
       {
         var oneyearbefore = DateTime.Now.AddYears(-1);
-        _user = new BaseUser() { _idAccount = view._idAccount } ;
+        _user = new BaseUser() { _idAccount = view._idAccount };
         serviceMaturityRegister._user = _user;
         serviceMaturity._user = _user;
 

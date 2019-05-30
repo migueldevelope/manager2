@@ -1,6 +1,9 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Interfaces;
+using Manager.Data;
 using Manager.Views.BusinessCrud;
+using Manager.Views.Enumns;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 using System;
@@ -19,6 +22,41 @@ namespace Manager.Services.Commons
     {
       queueClient = new QueueClient(serviceBusConnectionString, queueName);
       serviceMaturity = _serviceMaturity;
+    }
+
+    private void Maturity_Tick(object Sender, EventArgs e)
+    {
+      try
+      {
+        //Math Maturity
+        if(DateTime.Now.Day == 1)
+          Task.Run(() => serviceMaturity.MathMonth());
+        
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+
+    public void StartMathMaturity()
+    {
+      try
+      {
+        
+       var timer = new System.Timers.Timer
+       {
+          //24 hours em milliseconds
+          Interval = 86400000
+        };
+        timer.Elapsed += new System.Timers.ElapsedEventHandler(Maturity_Tick);
+        timer.Enabled = true;
+        timer.Start();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
 
     public async Task SendMessageAsync(dynamic view)

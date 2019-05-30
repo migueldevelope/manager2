@@ -3,6 +3,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
 {
@@ -20,5 +21,6 @@ namespace Manager.Core.Interfaces
     ViewCrudMaturityRegister GetMaturityRegister(string id);
     string DeleteMaturityRegister(string id);
     List<ViewCrudMaturityRegister> ListMaturityRegister(ref long total, int count = 10, int page = 1, string filter = "");
+    Task MathMonth();
   }
 }
