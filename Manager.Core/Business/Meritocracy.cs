@@ -23,5 +23,15 @@ namespace Manager.Core.Business
     public byte WeightActivitiesExcellence { get; set; }
     public EnumMeritocracyGoals WeightGoals { get; set; }
 
+
+    public decimal PercentCompanyDate { get; set; }
+    public decimal PercentOccupationDate { get; set; }
+    public decimal PercentSchooling { get; set; }
+    public decimal PercentMaturity { get; set; }
+    public decimal PercentActivitiesExcellence { get; set; }
+    public decimal PercentGoals { get; set; }
+
+    public decimal ResultEnd { get; set; }
+
   }
 }

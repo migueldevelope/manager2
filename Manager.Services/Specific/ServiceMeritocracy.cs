@@ -136,15 +136,60 @@ namespace Manager.Services.Specific
 
     #region private
 
-    private bool Valid(Meritocracy meritocracy)
+    private bool ValidCompanyDate(Meritocracy meritocracy, bool enabled)
     {
       try
       {
-        var score = serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
-
-        if ((score.EnabledCompanyDate) && meritocracy.Person.CompanyDate == null)
+        if ((enabled) && meritocracy.Person.CompanyDate == null)
           return false;
+        return true;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
+    private bool ValidOccupationDate(Meritocracy meritocracy, bool enabled)
+    {
+      try
+      {
+        if ((enabled) && meritocracy.Person.OccupationDate == null)
+          return false;
+        return true;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private bool ValidSchooling(Meritocracy meritocracy, bool enabled)
+    {
+      try
+      {
+        if ((enabled) && meritocracy.Person.CurrentSchooling == string.Empty)
+          return false;
+        return true;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private bool ValidActivitiesExcellence(Meritocracy meritocracy, bool enabled)
+    {
+      try
+      {
+        if (enabled)
+        {
+          foreach (var item in meritocracy.MeritocracyActivities)
+          {
+            if (item.Mark == 0)
+              return false;
+          }
+        }
 
         return true;
       }
@@ -153,6 +198,8 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
     private async Task LogSave(string iduser, string local)
     {
       try
@@ -278,7 +325,34 @@ namespace Manager.Services.Specific
         meritocracy.WeightGoals = goalsWeight;
 
         serviceMeritocracy.Update(meritocracy, null);
-        EndMath(meritocracy);
+
+        Task.Run(() => EndMath(meritocracy));
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private decimal ResultLevel(byte level, decimal point)
+    {
+      try
+      {
+        switch (level)
+        {
+          case 1:
+            return 0;
+          case 2:
+            return (point * decimal.Parse("0.8"));
+          case 3:
+            return (point * decimal.Parse("0.9333"));
+          case 4:
+            return (point * decimal.Parse("1.0666"));
+          case 5:
+            return (point * decimal.Parse("1.2"));
+        }
+
+        return 0;
       }
       catch (Exception e)
       {
@@ -291,14 +365,23 @@ namespace Manager.Services.Specific
       try
       {
         var score = serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
-        //decimal percMaturity = Math.Round((meritocracy.WeightMaturity * 100) / (score.WeightMaturity == 0 ? 1 : score.WeightMaturity), 2);
-        //decimal percSchooling = Math.Round((meritocracy.WeightSchooling * 100) / (score.WeightSchooling == 0 ? 1 : score.WeightSchooling), 2);
-        //decimal percCompanyDate = Math.Round((meritocracy.WeightCompanyDate * 100) / (score.WeightCompanyDate == 0 ? 1 : score.WeightCompanyDate), 2);
-        //decimal percOccupationDate = Math.Round((meritocracy.WeightOccupationDate * 100) / (score.WeightOccupationDate == 0 ? 1 : score.WeightOccupationDate), 2);
-        //decimal percGoals = Math.Round((decimal.Parse(meritocracy.WeightGoals.ToString()) * 100) / (score.WeightGoals == 0 ? 1 : score.WeightGoals), 2);
-        //decimal percActivitie = Math.Round((meritocracy.WeightActivitiesExcellence * 100) / (score.WeightActivitiesExcellence == 0 ? 1 : score.WeightActivitiesExcellence), 2);
+        decimal percMaturity = ResultLevel(meritocracy.WeightMaturity, score.WeightMaturity);
+        decimal percSchooling = ResultLevel(meritocracy.WeightSchooling, score.WeightSchooling);
+        decimal percCompanyDate = ResultLevel(meritocracy.WeightCompanyDate, score.WeightCompanyDate);
+        decimal percOccupationDate = ResultLevel(meritocracy.WeightOccupationDate, score.WeightOccupationDate);
+        decimal percGoals = meritocracy.WeightGoals == EnumMeritocracyGoals.NotReach ? 80 : meritocracy.WeightGoals == EnumMeritocracyGoals.Reached ? 100 : 120;
+        decimal percActivitie = ResultLevel(meritocracy.WeightActivitiesExcellence, score.WeightActivitiesExcellence);
 
 
+        meritocracy.PercentCompanyDate = percCompanyDate;
+        meritocracy.PercentOccupationDate = percOccupationDate;
+        meritocracy.PercentSchooling = percSchooling;
+        meritocracy.PercentActivitiesExcellence = percActivitie;
+        meritocracy.PercentGoals = percGoals;
+        meritocracy.PercentMaturity = percMaturity;
+
+        meritocracy.ResultEnd = percCompanyDate + percOccupationDate + percSchooling
+          + percMaturity + percGoals + percActivitie;
 
       }
       catch (Exception e)
@@ -449,9 +532,8 @@ namespace Manager.Services.Specific
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         meritocracy.ActivitiesExcellence = view.Weight;
         serviceMeritocracy.Update(meritocracy, null);
-        EndMath(meritocracy);
-        Task.Run(() => MathMeritocracy(meritocracy));
 
+        Task.Run(() => MathMeritocracy(meritocracy));
         return "Meritocracy altered!";
       }
       catch (Exception e)
@@ -490,17 +572,23 @@ namespace Manager.Services.Specific
           Maturity = meritocracy.Maturity,
           Person = meritocracy.Person,
           WeightCompanyDate = meritocracy.WeightCompanyDate,
-          WeightOccupationDate = meritocracyScore.WeightOccupationDate,
-          WeightSchooling = meritocracyScore.WeightSchooling,
-          WeightMaturity = meritocracyScore.WeightMaturity,
-          WeightActivitiesExcellence = meritocracyScore.WeightActivitiesExcellence,
-          WeightGoals = meritocracyScore.WeightGoals,
+          WeightOccupationDate = meritocracy.WeightOccupationDate,
+          WeightSchooling = meritocracy.WeightSchooling,
+          WeightMaturity = meritocracy.WeightMaturity,
+          WeightActivitiesExcellence = meritocracy.WeightActivitiesExcellence,
+          WeightGoals = meritocracy.WeightGoals,
           EnabledCompanyDate = meritocracyScore.EnabledCompanyDate,
           EnabledOccupationDate = meritocracyScore.EnabledOccupationDate,
           EnabledSchooling = meritocracyScore.EnabledSchooling,
           EnabledMaturity = meritocracyScore.EnabledMaturity,
           EnabledActivitiesExcellence = meritocracyScore.EnabledActivitiesExcellence,
-          EnabledGoals = meritocracyScore.EnabledGoals
+          EnabledGoals = meritocracyScore.EnabledGoals,
+          StatusMeritocracy = meritocracy.StatusMeritocracy,
+          ValidCompanyDate = ValidCompanyDate(meritocracy, meritocracyScore.EnabledCompanyDate),
+          ValidOccupationDate = ValidOccupationDate(meritocracy, meritocracyScore.EnabledOccupationDate),
+          ValidActivitiesExcellence = ValidActivitiesExcellence(meritocracy, meritocracyScore.EnabledActivitiesExcellence),
+          ValidSchooling = ValidSchooling(meritocracy, meritocracyScore.EnabledSchooling),
+          ResultEnd = meritocracy.ResultEnd
         };
 
       }
