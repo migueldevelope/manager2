@@ -260,7 +260,8 @@ namespace Manager.Services.Auth
         new Claim(ClaimTypes.Hash, person.IdAccount),
         new Claim(ClaimTypes.Email, loginPerson.User.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
-        new Claim(ClaimTypes.UserData, person.IdUser)
+        new Claim(ClaimTypes.UserData, person.IdUser),
+        new Claim(ClaimTypes.Actor, person.Contracts.FirstOrDefault().IdPerson)
         };
         JwtSecurityToken token = new JwtSecurityToken(
             issuer: "localhost",
