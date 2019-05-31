@@ -30,5 +30,8 @@ namespace Manager.Views.BusinessCrud
     public bool EnabledGoals { get; set; }
 
     public decimal ResultEnd { get; set; }
+
+    public EnumSteps ResultStep { get; set; }
+    public ViewListGrade Grade { get; set; }
   }
 }

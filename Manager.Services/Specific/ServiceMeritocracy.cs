@@ -93,11 +93,11 @@ namespace Manager.Services.Specific
       {
         for (byte step = 0; step <= 7; step++)
         {
-          for (byte ranking = 1; ranking <= 8; ranking++)
+          for (byte countSteps = 1; countSteps <= 8; countSteps++)
           {
             await serviceSalaryScaleScore.InsertFreeNewVersion(new SalaryScaleScore()
             {
-              Ranking = ranking,
+              CountSteps = countSteps,
               Step = (EnumSteps)step,
               Value = decimal.Parse("0")
             });
@@ -120,7 +120,7 @@ namespace Manager.Services.Specific
           new SalaryScaleScore()
           {
             _id = view._id,
-            Ranking = view.Ranking,
+            CountSteps = view.CountSteps,
             Step = view.Step,
             Value = view.Value
           }).Result;
@@ -403,6 +403,74 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw e;
+      }
+    }
+
+    private async Task MathSalaryScale(Meritocracy meritocracy)
+    {
+      try
+      {
+        var resultEnd = meritocracy.ResultEnd;
+        EnumSteps resultStep = EnumSteps.A;
+        Grade grade = null;
+
+        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
+        if (occupation.SalaryScales != null)
+        {
+          var scales = occupation.SalaryScales.Where(p => p._idSalaryScale == person.SalaryScales._idSalaryScale).FirstOrDefault();
+          grade = serviceSalaryScale.GetAllNewVersion(p => p._id == scales._idSalaryScale).Result.FirstOrDefault().
+            Grades.Where(p => p._id == scales._idGrade).FirstOrDefault();
+          var steps = grade.ListSteps;
+          var count = steps.Count();
+          var scores = serviceSalaryScaleScore.GetAllNewVersion(p => p.CountSteps == count).Result;
+
+          if (count == 2)
+          {
+            var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
+            var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
+            if (resultEnd <= a)
+              resultStep = EnumSteps.A;
+            else
+              resultStep = EnumSteps.B;
+          }
+
+          else if (count == 8)
+          {
+            var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
+            var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
+            var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
+            var d = scores.Where(p => p.Step == EnumSteps.D).FirstOrDefault().Value;
+            var e = scores.Where(p => p.Step == EnumSteps.E).FirstOrDefault().Value;
+            var f = scores.Where(p => p.Step == EnumSteps.F).FirstOrDefault().Value;
+            var g = scores.Where(p => p.Step == EnumSteps.G).FirstOrDefault().Value;
+            var h = scores.Where(p => p.Step == EnumSteps.H).FirstOrDefault().Value;
+
+            if (resultEnd <= a)
+              resultStep = EnumSteps.A;
+            else if((resultEnd > a) &&(resultEnd <= b))
+              resultStep = EnumSteps.B;
+            else if ((resultEnd > c) && (resultEnd <= d))
+              resultStep = EnumSteps.C;
+            else if ((resultEnd > d) && (resultEnd <= e))
+              resultStep = EnumSteps.D;
+            else if ((resultEnd > e) && (resultEnd <= f))
+              resultStep = EnumSteps.E;
+            else if ((resultEnd > f) && (resultEnd <= g))
+              resultStep = EnumSteps.F;
+            else if (resultEnd > g)
+              resultStep = EnumSteps.H;
+          }
+
+        }
+
+
+
+
+      }
+      catch (Exception e)
+      {
+
       }
     }
 
@@ -851,7 +919,7 @@ namespace Manager.Services.Specific
       try
       {
         SalaryScaleScore salaryScaleScore = serviceSalaryScaleScore.GetFreeNewVersion(p => p._id == view._id).Result;
-        salaryScaleScore.Ranking = view.Ranking;
+        salaryScaleScore.CountSteps = view.CountSteps;
         salaryScaleScore.Step = view.Step;
         salaryScaleScore.Value = view.Value;
         serviceSalaryScaleScore.UpdateAccount(salaryScaleScore, null);
@@ -870,7 +938,7 @@ namespace Manager.Services.Specific
         return new ViewCrudSalaryScaleScore()
         {
           _id = salaryScaleScore._id,
-          Ranking = salaryScaleScore.Ranking,
+          CountSteps = salaryScaleScore.CountSteps,
           Step = salaryScaleScore.Step,
           Value = salaryScaleScore.Value
         };
@@ -891,7 +959,7 @@ namespace Manager.Services.Specific
           .Select(p => new ViewCrudSalaryScaleScore
           {
             _id = p._id,
-            Ranking = p.Ranking,
+            CountSteps = p.CountSteps,
             Step = p.Step,
             Value = p.Value,
           }).ToList();
