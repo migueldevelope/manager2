@@ -32,7 +32,7 @@ namespace Manager.Core.Interfaces
     string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list);
     ViewCrudOccupation GetOccupation(string idcompany, string filterName);
     List<ViewListGroup> GetGroups();
-    List<ViewListOccupation> GetOccupations();
+    List<ViewListOccupationView> GetOccupations();
     ViewCrudTextDefault GetTextDefault(string idcompany, string name);
     ViewCrudTextDefault GetTextDefault(string id);
     List<ViewListTextDefault> ListTextDefault(string idcompany);
@@ -121,5 +121,6 @@ namespace Manager.Core.Interfaces
     string UpdateProcessLevelOne(ViewCrudProcessLevelOne view);
     string UpdateProcessLevelTwo(ViewCrudProcessLevelTwo view);
     string UpdateCBO(ViewCrudCbo view);
+    ViewCrudProcessLevelOne GetListProcessLevelOneById(string id);
   }
 }

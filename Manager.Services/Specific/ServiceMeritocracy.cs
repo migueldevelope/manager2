@@ -399,6 +399,8 @@ namespace Manager.Services.Specific
           + percMaturity + percGoals + percActivitie;
 
         serviceMeritocracy.Update(meritocracy, null);
+
+        Task.Run(() => MathSalaryScale(meritocracy));
       }
       catch (Exception e)
       {
@@ -410,6 +412,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         var resultEnd = meritocracy.ResultEnd;
         EnumSteps resultStep = EnumSteps.A;
         Grade grade = null;
@@ -435,6 +438,107 @@ namespace Manager.Services.Specific
               resultStep = EnumSteps.B;
           }
 
+          else if (count == 3)
+          {
+            var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
+            var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
+            var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
+
+            if (resultEnd <= a)
+              resultStep = EnumSteps.A;
+            else if ((resultEnd > a) && (resultEnd <= b))
+              resultStep = EnumSteps.B;
+            else if (resultEnd > b)
+              resultStep = EnumSteps.C;
+          }
+
+          else if (count == 4)
+          {
+            var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
+            var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
+            var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
+            var d = scores.Where(p => p.Step == EnumSteps.D).FirstOrDefault().Value;
+
+            if (resultEnd <= a)
+              resultStep = EnumSteps.A;
+            else if ((resultEnd > a) && (resultEnd <= b))
+              resultStep = EnumSteps.B;
+            else if ((resultEnd > b) && (resultEnd <= c))
+              resultStep = EnumSteps.C;
+            else if (resultEnd > c)
+              resultStep = EnumSteps.D;
+          }
+
+          else if (count == 5)
+          {
+            var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
+            var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
+            var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
+            var d = scores.Where(p => p.Step == EnumSteps.D).FirstOrDefault().Value;
+            var e = scores.Where(p => p.Step == EnumSteps.E).FirstOrDefault().Value;
+
+            if (resultEnd <= a)
+              resultStep = EnumSteps.A;
+            else if ((resultEnd > a) && (resultEnd <= b))
+              resultStep = EnumSteps.B;
+            else if ((resultEnd > b) && (resultEnd <= c))
+              resultStep = EnumSteps.C;
+            else if ((resultEnd > c) && (resultEnd <= d))
+              resultStep = EnumSteps.D;
+            else if (resultEnd > d)
+              resultStep = EnumSteps.E;
+          }
+
+          else if (count == 6)
+          {
+            var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
+            var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
+            var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
+            var d = scores.Where(p => p.Step == EnumSteps.D).FirstOrDefault().Value;
+            var e = scores.Where(p => p.Step == EnumSteps.E).FirstOrDefault().Value;
+            var f = scores.Where(p => p.Step == EnumSteps.F).FirstOrDefault().Value;
+
+            if (resultEnd <= a)
+              resultStep = EnumSteps.A;
+            else if ((resultEnd > a) && (resultEnd <= b))
+              resultStep = EnumSteps.B;
+            else if ((resultEnd > b) && (resultEnd <= c))
+              resultStep = EnumSteps.C;
+            else if ((resultEnd > c) && (resultEnd <= d))
+              resultStep = EnumSteps.D;
+            else if ((resultEnd > d) && (resultEnd <= e))
+              resultStep = EnumSteps.E;
+            else if (resultEnd > e)
+              resultStep = EnumSteps.F;
+          }
+
+
+          else if (count == 7)
+          {
+            var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
+            var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
+            var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
+            var d = scores.Where(p => p.Step == EnumSteps.D).FirstOrDefault().Value;
+            var e = scores.Where(p => p.Step == EnumSteps.E).FirstOrDefault().Value;
+            var f = scores.Where(p => p.Step == EnumSteps.F).FirstOrDefault().Value;
+            var g = scores.Where(p => p.Step == EnumSteps.G).FirstOrDefault().Value;
+
+            if (resultEnd <= a)
+              resultStep = EnumSteps.A;
+            else if ((resultEnd > a) && (resultEnd <= b))
+              resultStep = EnumSteps.B;
+            else if ((resultEnd > b) && (resultEnd <= c))
+              resultStep = EnumSteps.C;
+            else if ((resultEnd > c) && (resultEnd <= d))
+              resultStep = EnumSteps.D;
+            else if ((resultEnd > d) && (resultEnd <= e))
+              resultStep = EnumSteps.E;
+            else if ((resultEnd > e) && (resultEnd <= f))
+              resultStep = EnumSteps.F;
+            else if (resultEnd > f)
+              resultStep = EnumSteps.G;
+          }
+
           else if (count == 8)
           {
             var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
@@ -448,25 +552,26 @@ namespace Manager.Services.Specific
 
             if (resultEnd <= a)
               resultStep = EnumSteps.A;
-            else if((resultEnd > a) &&(resultEnd <= b))
+            else if ((resultEnd > a) && (resultEnd <= b))
               resultStep = EnumSteps.B;
-            else if ((resultEnd > c) && (resultEnd <= d))
+            else if ((resultEnd > b) && (resultEnd <= c))
               resultStep = EnumSteps.C;
-            else if ((resultEnd > d) && (resultEnd <= e))
+            else if ((resultEnd > c) && (resultEnd <= d))
               resultStep = EnumSteps.D;
-            else if ((resultEnd > e) && (resultEnd <= f))
+            else if ((resultEnd > d) && (resultEnd <= e))
               resultStep = EnumSteps.E;
-            else if ((resultEnd > f) && (resultEnd <= g))
+            else if ((resultEnd > e) && (resultEnd <= f))
               resultStep = EnumSteps.F;
+            else if ((resultEnd > f) && (resultEnd <= g))
+              resultStep = EnumSteps.G;
             else if (resultEnd > g)
               resultStep = EnumSteps.H;
           }
 
         }
+        meritocracy.ResultStep = resultStep;
 
-
-
-
+        serviceMeritocracy.Update(meritocracy, null);
       }
       catch (Exception e)
       {

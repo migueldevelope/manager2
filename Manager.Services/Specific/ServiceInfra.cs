@@ -3415,7 +3415,7 @@ namespace Manager.Services.Specific
             Name = p.Name,
             SalaryScales = p.SalaryScales?.Select(s => new ViewCrudSalaryScaleOccupation()
             {
-              _id = s._id,
+              _id = s._idSalaryScale,
               Name = s.NameSalaryScale,
               NameGrade = s.NameGrade,
               _idGrade = s._idGrade
@@ -3533,27 +3533,27 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListOccupation> GetOccupations()
+    public List<ViewListOccupationView> GetOccupations()
     {
       try
       {
-        return serviceOccupation.GetAll().OrderBy(p => p.Name)
-          .Select(p => new ViewListOccupation()
+        var list = serviceOccupation.GetAll().OrderBy(p => p.Name).ToList();
+        List<ViewListOccupationView> result = new List<ViewListOccupationView>();
+        foreach (var item in list)
+        {
+          foreach (var proc in item.Process)
           {
-            _id = p._id,
-            Name = p.Name,
-            Line = p.Line,
-            Company = new ViewListCompany() { _id = p.Group.Company._id, Name = p.Group.Company.Name },
-            Group = new ViewListGroup()
+            result.Add(new ViewListOccupationView()
             {
-              _id = p.Group._id,
-              Name = p.Group.Name,
-              Line = p.Group.Line,
-              Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
-              Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, Name = p.Group.Sphere.Name, TypeSphere = p.Group.Sphere.TypeSphere }
-            }
-          })
-          .ToList();
+              _id = item._id,
+              Name = item.Name,
+              NameGroup = item.Group.Name,
+              NameArea = proc.ProcessLevelOne.Area.Name
+            });
+          }
+
+        }
+        return result;
       }
       catch (Exception e)
       {
@@ -3869,19 +3869,16 @@ namespace Manager.Services.Specific
         {
           foreach (var item in view.SalaryScales)
           {
-            foreach (var grade in serviceSalaryScales.GetAll(p => p._id == item._id).FirstOrDefault().Grades)
+            occupation.SalaryScales.Add(new SalaryScaleGrade()
             {
-              occupation.SalaryScales.Add(new SalaryScaleGrade()
-              {
-                _idSalaryScale = item._id,
-                NameSalaryScale = item.Name,
-                _idGrade = grade._id,
-                NameGrade = grade.Name,
-                Status = EnumStatus.Enabled,
-                _idAccount = _user._idAccount,
-                _id = ObjectId.GenerateNewId().ToString()
-              });
-            }
+              _idSalaryScale = item._id,
+              NameSalaryScale = item.Name,
+              _idGrade = item._idGrade,
+              NameGrade = item.NameGrade,
+              Status = EnumStatus.Enabled,
+              _idAccount = _user._idAccount,
+              _id = ObjectId.GenerateNewId().ToString()
+            });
           }
         }
 
@@ -3931,6 +3928,7 @@ namespace Manager.Services.Specific
         UpdateOccupationAll(occupation);
         return "update";
       }
+
       catch (Exception e)
       {
         throw e;
@@ -4298,6 +4296,28 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+    public ViewCrudProcessLevelOne GetListProcessLevelOneById(string id)
+    {
+      try
+      {
+        return serviceProcessLevelOne.GetAll(p => p._id == id).Select(p => new ViewCrudProcessLevelOne()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Order = p.Order,
+          Area = new ViewListArea()
+          {
+            _id = p.Area._id,
+            Name = p.Area.Name
+          }
+        }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public ViewCrudProcessLevelTwo GetListProcessLevelTwoById(string id)
     {

@@ -627,7 +627,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getoccupations")]
-    public async Task<List<ViewListOccupation>> GetOccupations()
+    public async Task<List<ViewListOccupationView>> GetOccupations()
     {
       return service.GetOccupations();
     }
@@ -883,6 +883,20 @@ namespace Manager.Controllers
     {
       return service.UpdateProcessLevelOne(view);
     }
+
+    /// <summary>
+    /// Retorna o processo nivel 2
+    /// </summary>
+    /// <param name="id">Identificador do processo nivel 1</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getlistprocesslevelonebyid/{id}")]
+    public async Task<ViewCrudProcessLevelOne> GetListProcessLevelOneById(string id)
+    {
+      return service.GetListProcessLevelOneById(id);
+    }
+
     #endregion
 
     #region Process Level Two
@@ -898,6 +912,7 @@ namespace Manager.Controllers
     {
       return service.GetListProcessLevelTwoById(id);
     }
+
     /// <summary>
     /// Listas os processos nivel 2 filtrando pela area
     /// </summary>

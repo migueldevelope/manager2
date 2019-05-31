@@ -458,6 +458,11 @@ namespace Manager.Services.Auth
           StatusUser = person.StatusUser,
           TypeJourney = person.TypeJourney,
           TypeUser = person.TypeUser,
+          SalaryScales = person.SalaryScales == null ? null : new Views.BusinessNew.ViewSalaryScalePerson()
+          {
+            _idSalaryScale = person.SalaryScales._idSalaryScale,
+            NameSalaryScale = person.SalaryScales.NameSalaryScale
+          },
           User = new ViewCrudUser()
           {
             Name = person.User.Name,
@@ -678,8 +683,8 @@ namespace Manager.Services.Auth
         }
         SalaryScalePerson salaryScale = null;
         if (view.SalaryScales != null)
-          salaryScale = serviceSalaryScale.GetAll(p => p._id == view.SalaryScales._idSalaryScale)
-            .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
+          salaryScale = serviceSalaryScale.GetAllNewVersion(p => p._id == view.SalaryScales._idSalaryScale)
+            .Result.Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
             .FirstOrDefault();
 
         Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
