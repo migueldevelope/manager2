@@ -1154,37 +1154,39 @@ namespace Manager.Services.Specific
 
         foreach (var res in plan)
         {
-          result.Add(new ViewGetPlan()
-          {
-            _id = res._id,
-            Name = res.Name,
-            DateInclude = res.DateInclude,
-            Deadline = res.Deadline,
-            Description = res.Description,
-            Skills = res.Skills?.Select(p => new ViewListSkill()
+          var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == res._idMonitoring).Result.FirstOrDefault().StatusMonitoring;
+          if (monitoring == EnumStatusMonitoring.End)
+            result.Add(new ViewGetPlan()
             {
-              _id = p._id,
-              TypeSkill = p.TypeSkill,
-              Concept = p.Concept,
-              Name = p.Name
-            }).ToList(),
-            UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
-            TypePlan = res.TypePlan,
-            _idPerson = res.Person._id,
-            NamePerson = res.Person.User.Name,
-            SourcePlan = res.SourcePlan,
-            IdMonitoring = res._id,
-            Evaluation = res.Evaluation,
-            StatusPlan = res.StatusPlan,
-            TypeAction = res.TypeAction,
-            StatusPlanApproved = res.StatusPlanApproved,
-            TextEnd = res.TextEnd,
-            TextEndManager = res.TextEndManager,
-            Status = res.Status,
-            DateEnd = res.DateEnd,
-            NewAction = res.NewAction,
-            Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
-          });
+              _id = res._id,
+              Name = res.Name,
+              DateInclude = res.DateInclude,
+              Deadline = res.Deadline,
+              Description = res.Description,
+              Skills = res.Skills?.Select(p => new ViewListSkill()
+              {
+                _id = p._id,
+                TypeSkill = p.TypeSkill,
+                Concept = p.Concept,
+                Name = p.Name
+              }).ToList(),
+              UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
+              TypePlan = res.TypePlan,
+              _idPerson = res.Person._id,
+              NamePerson = res.Person.User.Name,
+              SourcePlan = res.SourcePlan,
+              IdMonitoring = res._id,
+              Evaluation = res.Evaluation,
+              StatusPlan = res.StatusPlan,
+              TypeAction = res.TypeAction,
+              StatusPlanApproved = res.StatusPlanApproved,
+              TextEnd = res.TextEnd,
+              TextEndManager = res.TextEndManager,
+              Status = res.Status,
+              DateEnd = res.DateEnd,
+              NewAction = res.NewAction,
+              Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+            });
         }
 
 
