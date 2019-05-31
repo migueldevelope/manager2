@@ -841,6 +841,7 @@ namespace Manager.Services.Specific
                                           _id = string.Empty,
                                           _idPerson = p._id,
                                           Name = p.User.Name,
+                                          OccupationName = p.Occupation?.Name,
                                           StatusMeritocracy = EnumStatusMeritocracy.Open,
                                         }).ToList();
         List<ViewListMeritocracy> detail = new List<ViewListMeritocracy>();

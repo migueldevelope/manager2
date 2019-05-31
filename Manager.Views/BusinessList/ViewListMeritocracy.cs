@@ -6,6 +6,7 @@ namespace Manager.Views.BusinessList
   public class ViewListMeritocracy : _ViewListBase
   {
     public string _idPerson { get; set; }
+    public string OccupationName { get; set; }
     public EnumStatusMeritocracy StatusMeritocracy {get;set;}
   }
 }
