@@ -644,7 +644,13 @@ namespace Manager.Services.Specific
 
         Task.Run(() => LogSave(_user._idPerson, "Plan Process Update"));
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
-          Task.Run(() => Mail(person));
+        {
+          if (plan.Person._id == _user._idPerson)
+            Task.Run(() => Mail(person, person.Manager.Name, person.Manager.Mail));
+          else
+            Task.Run(() => Mail(person, person.User.Name, person.User.Mail));
+        }
+          
 
         servicePlan.Update(plan, null);
         //return "Plan altered!";
@@ -674,7 +680,7 @@ namespace Manager.Services.Specific
       }
     }
     // send mail
-    private async Task Mail(Person person)
+    private async Task Mail(Person person, string namereceived, string mailreceived)
     {
       try
       {
@@ -682,17 +688,17 @@ namespace Manager.Services.Specific
         var model = serviceMailModel.PlanApproval(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
-        string managername = person.Manager?.Name;
+        //string managername = person.Manager?.Name;
         var body = model.Message.Replace("{Person}", person.User.Name)
                                 .Replace("{Link}", model.Link)
-                                .Replace("{Manager}", managername)
+                                .Replace("{Manager}", namereceived)
                                 .Replace("{Company}", person.Company.Name)
                                 .Replace("{Occupation}", person.Occupation.Name);
         var sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
           To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.User.Mail, person.User.Name)
+                        new MailLogAddress(mailreceived, namereceived)
                     },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
