@@ -651,7 +651,7 @@ namespace Manager.Services.Specific
             Person = item.GetViewList(),
             StatusMessage = EnumStatusMessage.New
           };
-          view = serviceLogMessages.NewNotExist(view);
+          view = serviceLogMessages.NewNotExist(view).Result;
           if (view != null)
             if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
               MailOnboardingAdmission(item, sendTest);

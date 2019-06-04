@@ -137,7 +137,7 @@ namespace Manager.Services.Auth
         serviceTermsOfService.SetUser(_user);
         serviceTermsOfService._user = _user;
 
-        var date = serviceTermsOfService.GetTerm();
+        var date = serviceTermsOfService.GetTerm().Result;
 
         UserTermOfService term = null;
         UserTermOfService viewDate = null;

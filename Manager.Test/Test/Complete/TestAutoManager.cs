@@ -38,10 +38,10 @@ namespace Manager.Test.Test.Complete
     //    var employee = this.servicePerson.ListPerson(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
     //    var origin = this.servicePerson.ListPerson(p => p._id == employee.Manager._id).FirstOrDefault();
     //    //List Persons
-    //    var listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "");
-    //    var listTeam = this.servicePerson.ListTeam(ref total, manager._id.ToString(), "", 10, 1);
+    //    var listPersons = this.serviceAutoManager.List(manager._id.ToString(), 999, 1, "");
+    //    var listTeam = this.servicePerson.ListTeam(manager._id.ToString(), "", 10, 1);
     //    //List Persons Filter
-    //    listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "Ariel");
+    //    listPersons = this.serviceAutoManager.List(manager._id.ToString(), 999, 1, "Ariel");
     //    //Request
     //    foreach (var item in listPersons)
     //    {
@@ -62,14 +62,14 @@ namespace Manager.Test.Test.Complete
 
     //    //List Team Filter
     //    //employee = this.servicePerson.ListPerson(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
-    //    listTeam = this.servicePerson.ListTeam(ref total, employee.Manager._id, "Ariel", 10, 1);
+    //    listTeam = this.servicePerson.ListTeam(employee.Manager._id, "Ariel", 10, 1);
     //    foreach (var item in listTeam)
     //    {
     //      //this.serviceAutoManager.DeleteManager(item.IdPerson);
     //    }
 
     //    //Set origin manager
-    //    listPersons = this.serviceAutoManager.List(manager._id.ToString(), ref total, 999, 1, "Ariel");
+    //    listPersons = this.serviceAutoManager.List(manager._id.ToString(), 999, 1, "Ariel");
     //    foreach (var item in listPersons)
     //    {
     //      var view = new ViewManager()

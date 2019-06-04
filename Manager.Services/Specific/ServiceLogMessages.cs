@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -46,7 +47,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Mensageria
-    public List<ViewListLogMessages> ListPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListLogMessages>> ListPerson(string idperson,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -63,7 +64,7 @@ namespace Manager.Services.Specific
               User = new ViewListUser() { _id = x.Person.User._id, Name = x.Person.User.Name, Document = x.Person.User.Document, Mail = x.Person.User.Mail, Phone = x.Person.User.Phone }
             }
           }).ToList();
-        total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -71,7 +72,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListLogMessages> ListManager(string idmanager, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListLogMessages>> ListManager(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -89,7 +90,7 @@ namespace Manager.Services.Specific
         //      User = new ViewListUser() { _id = x.Person.User._id, Name = x.Person.User.Name, Document = x.Person.User.Document, Mail = x.Person.User.Mail, Phone = x.Person.User.Phone }
         //    }
         //  }).ToList();
-        //total = logMessagesService.CountNewVersion(p => p.Person._id == idmanager && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        //var total = logMessagesService.CountNewVersion(p => p.Person._id == idmanager && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         //return detail;
       }
       catch (Exception e)
@@ -97,7 +98,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string New(ViewCrudLogMessages view)
+    public async Task<string> New(ViewCrudLogMessages view)
     {
       try
       {
@@ -117,7 +118,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudLogMessages NewNotExist(ViewCrudLogMessages view)
+    public async Task<ViewCrudLogMessages> NewNotExist(ViewCrudLogMessages view)
     {
       try
       {
@@ -151,7 +152,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudLogMessages Get(string id)
+    public async Task<ViewCrudLogMessages> Get(string id)
     {
       try
       {
@@ -178,7 +179,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudLogMessages view)
+    public async Task<string> Update(ViewCrudLogMessages view)
     {
       try
       {
@@ -195,7 +196,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -212,7 +213,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Internal Call
-    public void NewLogMessage(string subject, string message, Person person)
+    public async Task NewLogMessage(string subject, string message, Person person)
     {
       try
       {

@@ -46,9 +46,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListLogMessages>> ListPerson(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListLogMessages> result = service.ListPerson(id, ref total, count, page, filter);
+      List<ViewListLogMessages> result = await service.ListPerson(id, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return  result;
     }
     /// <summary>
     /// Listar as mensagens da equipe do gestor
@@ -64,9 +64,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListLogMessages>> ListManager(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListLogMessages> result = service.ListManager(id, ref total, count, page, filter);
+      List<ViewListLogMessages> result = await service.ListManager(id, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return  result;
     }
     /// <summary>
     /// Nova mensagem
@@ -77,7 +77,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> New([FromBody]ViewCrudLogMessages view)
     {
-      return Ok(service.New(view));
+      return Ok(await  service.New(view));
     }
     /// <summary>
     /// Buscar objeto para manutenção
@@ -89,7 +89,7 @@ namespace Manager.Controllers
     [Route("get")]
     public async Task<ViewCrudLogMessages> Get(string id)
     {
-      return service.Get(id);
+      return await service.Get(id);
     }
     /// <summary>
     /// Alterar uma mensagem do log de mensagerias
@@ -101,7 +101,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudLogMessages view)
     {
-      return Ok(service.Update(view));
+      return Ok(await  service.Update(view));
     }
     /// <summary>
     /// Excluir uma mensagem
@@ -113,7 +113,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok(service.Delete(id));
+      return Ok(await  service.Delete(id));
     }
     #endregion
 

@@ -288,7 +288,7 @@ namespace Manager.Test.Test.Complete
         //long total = 0;
         //var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
 
-        //var list = serviceOnBoarding.ListOnBoardingsWaitOld(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
+        //var list = serviceOnBoarding.ListOnBoardingsWaitOld(person.Manager._id, "Ariel", 10, 1).FirstOrDefault();
         //var newOn = serviceOnBoarding.NewOnBoardingOld(list, person.Manager._id);
 
         //foreach(var item in newOn.SkillsCompany)

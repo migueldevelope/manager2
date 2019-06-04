@@ -4,6 +4,7 @@ using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
 {
@@ -11,17 +12,17 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type);
-    ViewCrudPerson Get(string id);
-    ViewCrudPerson New(ViewCrudPerson view);
-    string Update(ViewCrudPerson person);
-    List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page);
-    List<ViewListPerson> ListManager(ref long total, string filter, int count, int page);
-    List<ViewListCompany> ListCompany(ref long total, string filter, int count, int page);
-    List<ViewListPerson> GetPersons(string idcompany, string filter);
-    string AddPersonUser(ViewCrudPersonUser view);
-    string UpdatePersonUser(ViewCrudPersonUser view);
-    List<ViewListPersonTeam> ListTeam(ref long total, string idPerson, string filter, int count, int page);
-    List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation);
+    Task<List<ViewListPersonCrud>> List( int count, int page, string filter, EnumTypeUser type);
+    Task<ViewCrudPerson> Get(string id);
+    Task<ViewCrudPerson> New(ViewCrudPerson view);
+    Task<string> Update(ViewCrudPerson person);
+    Task<List<ViewListOccupation>> ListOccupation( string filter, int count, int page);
+    Task<List<ViewListPerson>> ListManager( string filter, int count, int page);
+    Task<List<ViewListCompany>> ListCompany( string filter, int count, int page);
+    Task<List<ViewListPerson>> GetPersons(string idcompany, string filter);
+    Task<string> AddPersonUser(ViewCrudPersonUser view);
+    Task<string> UpdatePersonUser(ViewCrudPersonUser view);
+    Task<List<ViewListPersonTeam>> ListTeam( string idPerson, string filter, int count, int page);
+    Task<List<ViewListSalaryScalePerson>> ListSalaryScale(string idoccupation);
   }
 }

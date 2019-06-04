@@ -42,7 +42,7 @@ namespace Manager.Controllers
     [Route("{idmanager}/listapproved")]
     public async Task<List<ViewAutoManager>> ListApproved(string idmanager)
     {
-      return service.ListApproved(idmanager);
+      return await service.ListApproved(idmanager);
     }
     /// <summary>
     /// Listar colaboradores sem gestão
@@ -58,9 +58,9 @@ namespace Manager.Controllers
     public async Task<List<ViewAutoManagerPerson>> List(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(idmanager, ref total, count, page, filter);
+      var result = service.List(idmanager, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Alterar o gestor do colaborador
@@ -88,7 +88,7 @@ namespace Manager.Controllers
     [Route("{idperson}/approved/{idmanager}")]
     public async Task<string> Approved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
-      return service.Approved(view, idperson, idmanager);
+      return await service.Approved(view, idperson, idmanager);
     }
     /// <summary>
     /// Não aprovar o colaborador para o gestor
@@ -102,7 +102,7 @@ namespace Manager.Controllers
     [Route("{idperson}/disapproved/{idmanager}")]
     public async Task<string> Disapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
-      return service.Disapproved(view, idperson, idmanager);
+      return await service.Disapproved(view, idperson, idmanager);
     }
     /// <summary>
     /// Exclusão do colaborador da equipe

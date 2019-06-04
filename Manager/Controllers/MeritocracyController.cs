@@ -45,9 +45,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListMeritocracy>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListMeritocracy> result = service.List(ref total, count, page, filter);
+      List<ViewListMeritocracy> result = await service.List(count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return  result;
     }
 
     /// <summary>
@@ -62,8 +62,8 @@ namespace Manager.Controllers
     [Route("listmeritocracyactivitie/{idmeritocracy}")]
     public async Task<List<ViewListMeritocracyActivitie>> ListMeritocracyActivitie(string idmeritocracy)
     {
-      List<ViewListMeritocracyActivitie> result = service.ListMeritocracyActivitie(idmeritocracy);
-      return result;
+      List<ViewListMeritocracyActivitie> result = await service.ListMeritocracyActivitie(idmeritocracy);
+      return  result;
     }
 
 
@@ -81,9 +81,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListMeritocracy> result = service.ListWaitManager(idmanager, ref total, filter, count, page);
+      List<ViewListMeritocracy> result = await service.ListWaitManager(idmanager, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return  result;
     }
     
 
@@ -99,7 +99,7 @@ namespace Manager.Controllers
     [Route("updateactivitiemark/{idmeritocracy}/{idactivitie}/{mark}")]
     public async Task<IActionResult> UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark)
     {
-      return Ok(service.UpdateActivitieMark(idmeritocracy, idactivitie, mark));
+      return Ok(await  service.UpdateActivitieMark(idmeritocracy, idactivitie, mark));
     }
 
 
@@ -112,7 +112,7 @@ namespace Manager.Controllers
     [Route("new/{idperson}")]
     public async Task<IActionResult> Post(string idperson)
     {
-      return Ok(service.New(idperson));
+      return Ok(await  service.New(idperson));
     }
     /// <summary>
     /// Retorar a meritocracia para manutenção
@@ -124,7 +124,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudMeritocracy> Get(string id)
     {
-      return service.Get(id);
+      return await service.Get(id);
     }
     /// <summary>
     /// Alterar a meritocracia
@@ -136,7 +136,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudMeritocracy view)
     {
-      return Ok(service.Update(view));
+      return Ok(await  service.Update(view));
     }
 
     /// <summary>
@@ -149,7 +149,7 @@ namespace Manager.Controllers
     [Route("updatecompanydate/{id}")]
     public async Task<IActionResult> UpdateCompanyDate([FromBody]ViewCrudMeritocracyDate view, string id)
     {
-      return Ok(service.UpdateCompanyDate(view, id));
+      return Ok(await  service.UpdateCompanyDate(view, id));
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ namespace Manager.Controllers
     [Route("updateoccupationdate/{id}")]
     public async Task<IActionResult> UpdateOccupationDate([FromBody]ViewCrudMeritocracyDate view, string id)
     {
-      return Ok(service.UpdateOccupationDate(view, id));
+      return Ok(await  service.UpdateOccupationDate(view, id));
     }
 
 
@@ -176,7 +176,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok(service.Delete(id));
+      return Ok(await  service.Delete(id));
     }
     #endregion
 
@@ -195,8 +195,8 @@ namespace Manager.Controllers
     [Route("listmeritocracyscore")]
     public async Task<ViewListMeritocracyScore> ListMeritocracyScore()
     {
-      ViewListMeritocracyScore result = service.ListMeritocracyScore();
-      return result;
+      ViewListMeritocracyScore result = await service.ListMeritocracyScore();
+      return  result;
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ namespace Manager.Controllers
     [Route("newmeritocracyscore")]
     public async Task<IActionResult> PostMeritocracyScore([FromBody]ViewCrudMeritocracyScore view)
     {
-      return Ok(service.NewMeritocracyScore(view));
+      return Ok(await  service.NewMeritocracyScore(view));
     }
     /// <summary>
     /// Buscar ponutação de meritocracia para manutenção
@@ -220,7 +220,7 @@ namespace Manager.Controllers
     [Route("getmeritocracyscore/{id}")]
     public async Task<ViewCrudMeritocracyScore> ListMeritocracyScore(string id)
     {
-      return service.GetMeritocracyScore(id);
+      return await service.GetMeritocracyScore(id);
     }
     /// <summary>
     /// Alterar o ponutação de meritocracia
@@ -232,7 +232,7 @@ namespace Manager.Controllers
     [Route("updatemeritocracyscore")]
     public async Task<IActionResult> UpdateMeritocracyScore([FromBody]ViewCrudMeritocracyScore view)
     {
-      return Ok(service.UpdateMeritocracyScore(view));
+      return Ok(await  service.UpdateMeritocracyScore(view));
     }
     /// <summary>
     /// Deletar um ponutação de meritocracia
@@ -244,7 +244,7 @@ namespace Manager.Controllers
     [Route("deletemeritocracyscore/{id}")]
     public async Task<IActionResult> DeleteMeritocracyScore(string id)
     {
-      return Ok(service.RemoveMeritocracyScore(id));
+      return Ok(await  service.RemoveMeritocracyScore(id));
     }
     #endregion
 
@@ -262,9 +262,9 @@ namespace Manager.Controllers
     public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewCrudSalaryScaleScore> result = service.ListSalaryScaleScore(ref total, count, page, filter);
+      List<ViewCrudSalaryScaleScore> result = await service.ListSalaryScaleScore(count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return  result;
     }
 
     ///// <summary>
@@ -276,7 +276,7 @@ namespace Manager.Controllers
     //[Route("newmsalaryscale")]
     //public async Task<IActionResult> PostSalaryScaleScore([FromBody]ViewCrudSalaryScaleScore view)
     //{
-    //  return Ok(service.NewSalaryScaleScore(view));
+    //  return Ok(await  service.NewSalaryScaleScore(view));
     //}
     /// <summary>
     /// Buscar ponutação de meritocracia para manutenção
@@ -288,7 +288,7 @@ namespace Manager.Controllers
     [Route("getsalaryscale/{id}")]
     public async Task<ViewCrudSalaryScaleScore> ListSalaryScaleScore(string id)
     {
-      return service.GetSalaryScaleScore(id);
+      return await service.GetSalaryScaleScore(id);
     }
     /// <summary>
     /// Alterar o ponutação de meritocracia
@@ -300,7 +300,7 @@ namespace Manager.Controllers
     [Route("updatesalaryscale")]
     public async Task<IActionResult> UpdateSalaryScaleScore([FromBody]ViewCrudSalaryScaleScore view)
     {
-      return Ok(service.UpdateSalaryScaleScore(view));
+      return Ok(await  service.UpdateSalaryScaleScore(view));
     }
     /// <summary>
     /// Deletar um ponutação de meritocracia
@@ -312,7 +312,7 @@ namespace Manager.Controllers
     [Route("deletesalaryscale/{id}")]
     public async Task<IActionResult> DeleteSalaryScaleScore(string id)
     {
-      return Ok(service.DeleteSalaryScaleScore(id));
+      return Ok(await  service.DeleteSalaryScaleScore(id));
     }
     #endregion
   }

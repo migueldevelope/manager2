@@ -11,6 +11,7 @@ using Manager.Core.Base;
 using Manager.Views.BusinessView;
 using Manager.Services.Auth;
 using Manager.Views.Enumns;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -47,12 +48,12 @@ namespace Manager.Services.Specific
     #endregion
 
     #region WorkFlow
-    public List<Workflow> NewFlow(ViewFlow view)
+    public async Task<List<Workflow>> NewFlow(ViewFlow view)
     {
       try
       {
         if (view.Type == EnumTypeFlow.Manager)
-          return Manager(view);
+          return Manager(view).Result;
         return null;
       }
       catch (Exception e)
@@ -60,7 +61,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<Workflow> Manager(ViewFlow view)
+    public async Task<List<Workflow>> Manager(ViewFlow view)
     {
       try
       {
@@ -83,7 +84,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public Workflow Approved(ViewWorkflow view)
+    public async Task<Workflow> Approved(ViewWorkflow view)
     {
       try
       {
@@ -99,7 +100,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public Workflow Disapproved(ViewWorkflow view)
+    public async Task<Workflow> Disapproved(ViewWorkflow view)
     {
       try
       {

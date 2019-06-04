@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -52,7 +53,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Parameter
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -66,7 +67,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string New(ViewCrudParameter view)
+    public async Task<string> New(ViewCrudParameter view)
     {
       try
       {
@@ -97,7 +98,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudParameter view)
+    public async Task<string> Update(ViewCrudParameter view)
     {
       try
       {
@@ -114,7 +115,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudParameter Get(string id)
+    public async Task<ViewCrudParameter> Get(string id)
     {
       try
       {
@@ -133,7 +134,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudParameter GetKey(string key)
+    public async Task<ViewCrudParameter> GetKey(string key)
     {
       try
       {
@@ -151,7 +152,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListParameter> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListParameter>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -162,7 +163,7 @@ namespace Manager.Services.Specific
             Name = p.Name,
             Content = p.Content
           }).ToList();
-        total = serviceParameter.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceParameter.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)

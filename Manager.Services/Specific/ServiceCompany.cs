@@ -55,7 +55,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Company
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -69,7 +69,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void SetLogo(string idCompany, string url)
+    public async Task SetLogo(string idCompany, string url)
     {
       try
       {
@@ -82,7 +82,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string GetLogo(string idCompany)
+    public async Task<string> GetLogo(string idCompany)
     {
       try
       {
@@ -93,7 +93,7 @@ namespace Manager.Services.Specific
         return string.Empty;
       }
     }
-    public string New(ViewCrudCompany view)
+    public async Task<string> New(ViewCrudCompany view)
     {
       try
       {
@@ -110,7 +110,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudCompany view)
+    public async Task<string> Update(ViewCrudCompany view)
     {
       try
       {
@@ -134,7 +134,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudCompany Get(string id)
+    public async Task<ViewCrudCompany> Get(string id)
     {
       try
       {
@@ -151,7 +151,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudCompany GetByName(string name)
+    public async Task<ViewCrudCompany> GetByName(string name)
     {
       try
       {
@@ -168,7 +168,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListCompany> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCompany>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -178,7 +178,7 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Name            
           }).ToList();
-        total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -190,10 +190,11 @@ namespace Manager.Services.Specific
     {
 
     }
+
     #endregion
 
     #region Establishment
-    public string RemoveEstablishment(string id)
+    public async Task<string> RemoveEstablishment(string id)
     {
       try
       {
@@ -207,7 +208,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string NewEstablishment(ViewCrudEstablishment view)
+    public async Task<string> NewEstablishment(ViewCrudEstablishment view)
     {
       try
       {
@@ -226,7 +227,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateEstablishment(ViewCrudEstablishment view)
+    public async Task<string> UpdateEstablishment(ViewCrudEstablishment view)
     {
       try
       {
@@ -242,7 +243,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudEstablishment GetEstablishment(string id)
+    public async Task<ViewCrudEstablishment> GetEstablishment(string id)
     {
       try
       {
@@ -259,7 +260,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudEstablishment GetEstablishmentByName(string idCompany, string name)
+    public async Task<ViewCrudEstablishment >GetEstablishmentByName(string idCompany, string name)
     {
       try
       {
@@ -276,7 +277,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListEstablishment> ListEstablishment(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEstablishment>> ListEstablishment(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -286,7 +287,7 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name
           }).ToList();
-        total = serviceEstablishment.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceEstablishment.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -294,7 +295,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListEstablishment> ListEstablishment(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEstablishment>> ListEstablishment( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -304,7 +305,7 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name
           }).ToList();
-        total = serviceEstablishment.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceEstablishment.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)

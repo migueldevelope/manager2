@@ -90,7 +90,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Monitoring
-    public string RemoveMonitoringActivities(string idmonitoring, string idactivitie)
+    public async Task<string> RemoveMonitoringActivities(string idmonitoring, string idactivitie)
     {
       try
       {
@@ -111,7 +111,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemoveAllMonitoring(string idperson)
+    public async Task<string> RemoveAllMonitoring(string idperson)
     {
       try
       {
@@ -130,7 +130,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemoveMonitoring(string idmonitoring)
+    public async Task<string> RemoveMonitoring(string idmonitoring)
     {
       try
       {
@@ -145,7 +145,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemoveLastMonitoring(string idperson)
+    public async Task<string> RemoveLastMonitoring(string idperson)
     {
       try
       {
@@ -160,7 +160,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment)
+    public async Task<string> UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment)
     {
       try
       {
@@ -211,7 +211,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string DeleteComments(string idmonitoring, string iditem, string idcomments)
+    public async Task<string> DeleteComments(string idmonitoring, string iditem, string idcomments)
     {
       try
       {
@@ -268,7 +268,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public bool ValidComments(string id)
+    public async Task<bool> ValidComments(string id)
     {
       try
       {
@@ -291,7 +291,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan)
+    public async Task<List<ViewCrudPlan>> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan)
     {
       try
       {
@@ -443,7 +443,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan view)
+    public async Task<List<ViewCrudPlan>> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan view)
     {
       try
       {
@@ -569,13 +569,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager,  string filter, int count, int page)
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-        total = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListMonitoring()
         {
@@ -590,7 +590,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListMonitoring> ListMonitoringsWait(string idmanager, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager,  string filter, int count, int page)
     {
       try
       {
@@ -620,7 +620,7 @@ namespace Manager.Services.Specific
 
         }
 
-        total = detail.Count();
+        var total = detail.Count();
         return detail.Skip(skip).Take(count).Select(p => new ViewListMonitoring()
         {
           _id = p._id,
@@ -636,7 +636,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager)
+    public async Task<List<ViewListMonitoring>> PersonMonitoringsEnd(string idmanager)
     {
       try
       {
@@ -656,7 +656,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListMonitoring PersonMonitoringsWait(string idmanager)
+    public async Task<ViewListMonitoring> PersonMonitoringsWait(string idmanager)
     {
       try
       {
@@ -697,7 +697,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudMonitoring GetMonitorings(string id)
+    public async Task<ViewCrudMonitoring> GetMonitorings(string id)
     {
       try
       {
@@ -854,7 +854,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
+    public async Task<ViewCrudMonitoringActivities> GetMonitoringActivities(string idmonitoring, string idactivitie)
     {
       try
       {
@@ -887,7 +887,7 @@ namespace Manager.Services.Specific
         //throw e;
       }
     }
-    public string UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view)
+    public async Task<string> UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view)
     {
       try
       {
@@ -944,7 +944,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string AddMonitoringActivities(string idmonitoring, ViewCrudActivities view)
+    public async Task<string> AddMonitoringActivities(string idmonitoring, ViewCrudActivities view)
     {
       try
       {
@@ -1014,7 +1014,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewListMonitoring NewMonitoring(string idperson)
+    public async Task<ViewListMonitoring> NewMonitoring(string idperson)
     {
       try
       {
@@ -1058,7 +1058,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateMonitoring(ViewCrudMonitoring view)
+    public async Task<string> UpdateMonitoring(ViewCrudMonitoring view)
     {
       try
       {
@@ -1156,7 +1156,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListSkill> GetSkills(string idperson)
+    public async Task<List<ViewListSkill>> GetSkills(string idperson)
     {
       try
       {
@@ -1181,14 +1181,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListMonitoring> GetListExclud(ref long total, string filter, int count, int page)
+    public async Task<List<ViewListMonitoring>> GetListExclud( string filter, int count, int page)
     {
       try
       {
 
         int skip = (count * (page - 1));
         var detail = serviceMonitoring.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListMonitoring()
         {
@@ -1203,7 +1203,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments)
+    public async Task<List<ViewCrudComment>> AddComments(string idmonitoring, string iditem, ViewCrudComment comments)
     {
       try
       {
@@ -1355,7 +1355,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
+    public async Task<string> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
     {
       try
       {
@@ -1423,7 +1423,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudComment> GetListComments(string idmonitoring, string iditem)
+    public async Task<List<ViewCrudComment>> GetListComments(string idmonitoring, string iditem)
     {
       try
       {

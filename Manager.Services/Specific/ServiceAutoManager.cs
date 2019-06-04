@@ -13,6 +13,7 @@ using Manager.Core.Base;
 using Manager.Services.Auth;
 using Manager.Views.Enumns;
 using Manager.Views.BusinessView;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -68,27 +69,28 @@ namespace Manager.Services.Specific
     #endregion
 
     #region AutoManager
-    public List<ViewAutoManagerPerson> List(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewAutoManagerPerson>> List(string idManager, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
+        long total = 0;
         if (filter != string.Empty)
         {
-          var listEnd = ListEnd(idManager, filter);
+          var listEnd = ListEnd(idManager, filter).Result;
           total = listEnd.Count();
-          
+
           return listEnd.Skip(skip).Take(count).ToList();
         }
         else
-          return ListOpen(idManager, ref total, count, page, filter);
+          return ListOpen(idManager, count, page, filter).Result;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public List<ViewAutoManagerPerson> ListOpen(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewAutoManagerPerson>> ListOpen(string idManager, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -97,10 +99,13 @@ namespace Manager.Services.Specific
                     where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
                     select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
 
-        total = servicePerson.CountNewVersion(person => person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager).Result;
-        //total = (from person in servicePerson.GetAll()
+        var total = servicePerson.CountNewVersion(person => person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager).Result;
+        //var total = (from person in servicePerson.GetAll()
         //         where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
         //         select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Count();
+
+        if (list.Count > 0)
+          list.FirstOrDefault().total = total;
 
         return list;
       }
@@ -109,7 +114,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewAutoManagerPerson> ListEnd(string idManager, string filter)
+    public async Task<List<ViewAutoManagerPerson>> ListEnd(string idManager, string filter)
     {
       try
       {
@@ -136,7 +141,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void SetManagerPerson(ViewManager view, string idPerson, string path)
+    public async Task SetManagerPerson(ViewManager view, string idPerson, string path)
     {
       try
       {
@@ -167,7 +172,7 @@ namespace Manager.Services.Specific
             StatusAutoManager = EnumStatusAutoManager.Requested,
             Status = EnumStatus.Enabled,
             OpenDate = DateTime.Now,
-            Workflow = serviceWorkflow.NewFlow(viewFlow)
+            Workflow = serviceWorkflow.NewFlow(viewFlow).Result
           };
           serviceAutoManager.InsertNewVersion(auto);
           //searsh model mail database
@@ -212,7 +217,7 @@ namespace Manager.Services.Specific
           serviceMailLog.InsertNewVersion(sendMail);
           var messageApv = serviceMailMessage.GetAll(p => p._id == idMessageApv).FirstOrDefault();
           var messageDis = serviceMailMessage.GetAll(p => p._id == idMessageDis).FirstOrDefault();
-          var token = SendMail(path, person, sendMail._id.ToString());
+          var token = SendMail(path, person, sendMail._id.ToString()).Result;
           messageApv.Token = token;
           messageApv.Name = "automanagerapproved";
           serviceMailMessage.Update(messageApv, null);
@@ -226,7 +231,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string SendMail(string link, Person person, string idmail)
+    public async Task<string> SendMail(string link, Person person, string idmail)
     {
       try
       {
@@ -244,7 +249,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Disapproved(ViewWorkflow view, string idPerson, string idManager)
+    public async Task<string> Disapproved(ViewWorkflow view, string idPerson, string idManager)
     {
       try
       {
@@ -254,11 +259,11 @@ namespace Manager.Services.Specific
 
         var list = new List<Workflow>();
         foreach (var item in auto.Workflow)
-          list.Add(serviceWorkflow.Disapproved(view));
+          list.Add(serviceWorkflow.Disapproved(view).Result);
         auto.Workflow = list;
         auto.StatusAutoManager = EnumStatusAutoManager.Disapproved;
         serviceAutoManager.Update(auto, null);
-        
+
         return "disapproved";
       }
       catch (Exception e)
@@ -266,7 +271,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Approved(ViewWorkflow view, string idPerson, string idManager)
+    public async Task<string> Approved(ViewWorkflow view, string idPerson, string idManager)
     {
       try
       {
@@ -276,7 +281,7 @@ namespace Manager.Services.Specific
 
         var list = new List<Workflow>();
         foreach (var item in auto.Workflow)
-          list.Add(serviceWorkflow.Approved(view));
+          list.Add(serviceWorkflow.Approved(view).Result);
         auto.Workflow = list;
         auto.StatusAutoManager = EnumStatusAutoManager.Approved;
         var manager = servicePerson.GetAll(p => p._id == idManager).FirstOrDefault();
@@ -297,7 +302,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void Canceled(string idPerson, string idManager)
+    public async Task Canceled(string idPerson, string idManager)
     {
       try
       {
@@ -310,7 +315,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewAutoManager> ListApproved(string idManager)
+    public async Task<List<ViewAutoManager>> ListApproved(string idManager)
     {
       try
       {
@@ -333,7 +338,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void DeleteManager(string idPerson)
+    public async Task DeleteManager(string idPerson)
     {
       try
       {

@@ -12,6 +12,7 @@ using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -56,7 +57,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Salary Scale
-    public List<ViewListSalaryScale> List(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListSalaryScale>> List(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -67,7 +68,7 @@ namespace Manager.Services.Specific
             Name = x.Name,
             Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name }
           }).ToList();
-        total = serviceSalaryScale.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceSalaryScale.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -75,7 +76,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudSalaryScale Get(string id)
+    public async Task<ViewCrudSalaryScale> Get(string id)
     {
       try
       {
@@ -92,7 +93,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string New(ViewCrudSalaryScale view)
+    public async Task<string> New(ViewCrudSalaryScale view)
     {
       try
       {
@@ -110,7 +111,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudSalaryScale view)
+    public async Task<string> Update(ViewCrudSalaryScale view)
     {
       try
       {
@@ -124,7 +125,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -141,7 +142,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Grades
-    public List<ViewListGrade> ListGrade(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGrade>> ListGrade(string idsalaryscale,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -171,7 +172,7 @@ namespace Manager.Services.Specific
           }
           detail.Add(view);
         }
-        total = 1;
+        var total = 1;
         return detail;
       }
       catch (Exception e)
@@ -179,7 +180,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string AddGrade(ViewCrudGrade view)
+    public async Task<string> AddGrade(ViewCrudGrade view)
     {
       try
       {
@@ -214,7 +215,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateGrade(ViewCrudGrade view)
+    public async Task<string> UpdateGrade(ViewCrudGrade view)
     {
       try
       {
@@ -239,7 +240,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateGradePosition(string idsalaryscale, string idgrade, int position)
+    public async Task<string> UpdateGradePosition(string idsalaryscale, string idgrade, int position)
     {
       try
       {
@@ -263,7 +264,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeleteGrade(string idsalaryscale, string id)
+    public async Task<string> DeleteGrade(string idsalaryscale, string id)
     {
       try
       {
@@ -281,7 +282,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudGrade GetGrade(string idsalaryscale, string id)
+    public async Task<ViewCrudGrade> GetGrade(string idsalaryscale, string id)
     {
       try
       {
@@ -309,7 +310,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateStep(ViewCrudStep view)
+    public async Task<string> UpdateStep(ViewCrudStep view)
     {
       try
       {
@@ -342,7 +343,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListGradeFilter> ListGrades(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGradeFilter>> ListGrades(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       try
       {

@@ -57,7 +57,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region TermsOfService
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -72,7 +72,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string New(ViewCrudTermsOfService view)
+    public async Task<string> New(ViewCrudTermsOfService view)
     {
       try
       {
@@ -89,7 +89,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudTermsOfService view)
+    public async Task<string> Update(ViewCrudTermsOfService view)
     {
       try
       {
@@ -106,7 +106,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudTermsOfService Get(string id)
+    public async Task<ViewCrudTermsOfService> Get(string id)
     {
       try
       {
@@ -123,7 +123,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListTermsOfService GetTerm()
+    public async Task<ViewListTermsOfService> GetTerm()
     {
       try
       {
@@ -150,7 +150,7 @@ namespace Manager.Services.Specific
         return null;
       }
     }
-    public List<ViewListTermsOfService> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListTermsOfService>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -161,7 +161,7 @@ namespace Manager.Services.Specific
             Text = x.Text,
             Date = x.Date
           }).ToList();
-        total = serviceTermsOfService.CountFreeNewVersion(p => p.Text.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceTermsOfService.CountFreeNewVersion(p => p.Text.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)

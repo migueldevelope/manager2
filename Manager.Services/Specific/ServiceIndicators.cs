@@ -72,7 +72,7 @@ namespace Manager.Services.Specific
       serviceCheckpoint._user = _user;
     }
 
-    public List<ViewIndicatorsNotes> GetNotes(string id)
+    public async Task<List<ViewIndicatorsNotes>> GetNotes(string id)
     {
       try
       {
@@ -96,7 +96,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
+    public async Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager)
     {
       try
       {
@@ -128,7 +128,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTagsCloud> ListTagsCloud(string idmanager)
+    public async Task<List<ViewTagsCloud>> ListTagsCloud(string idmanager)
     {
       try
       {
@@ -169,7 +169,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTagsCloud> ListTagsCloudPerson(string idperson)
+    public async Task<List<ViewTagsCloud>> ListTagsCloudPerson(string idperson)
     {
       try
       {
@@ -207,7 +207,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson)
+    public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPerson(string idperson)
     {
       try
       {
@@ -239,7 +239,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewIndicatorsNotes> GetNotesPerson(string id)
+    public async Task<List<ViewIndicatorsNotes>> GetNotesPerson(string id)
     {
       try
       {
@@ -262,7 +262,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public bool VerifyAccount(string id)
+    public async Task<bool> VerifyAccount(string id)
     {
       try
       {
@@ -338,7 +338,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson)
+    public async Task<List<ViewExportStatusMonitoring>> ExportStatusMonitoring(string idperson)
     {
       try
       {
@@ -366,7 +366,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
+    public async Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson)
     {
       try
       {
@@ -394,7 +394,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewExportStatusCertification> ExportStatusCertification()
+    public async Task<List<ViewExportStatusCertification>> ExportStatusCertification()
     {
       try
       {
@@ -425,7 +425,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson)
+    public async Task<List<ViewExportStatusCertificationPerson>> ExportStatusCertification(string idperson)
     {
       try
       {
@@ -453,7 +453,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
+    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding()
     {
       try
       {
@@ -502,7 +502,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
+    public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint()
     {
       try
       {
@@ -538,7 +538,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
+    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring()
     {
       try
       {
@@ -586,7 +586,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewExportStatusPlan> ExportStatusPlan()
+    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan()
     {
       try
       {
@@ -614,7 +614,7 @@ namespace Manager.Services.Specific
     }
 
 
-    //public string[] ExportStatusOnboarding(ref long total, string filter, int count, int page)
+    //public string[] ExportStatusOnboarding( string filter, int count, int page)
     //{
     //  try
     //  {
@@ -719,7 +719,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public IEnumerable<ViewChartOnboarding> ChartOnboarding()
+    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
     {
       try
       {
@@ -740,7 +740,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartOnboardingRealized()
+    public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized()
     {
       try
       {
@@ -761,7 +761,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartMonitoring> ChartMonitoring()
+    public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring()
     {
       try
       {
@@ -782,7 +782,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartMonitoringRealized()
+    public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized()
     {
       try
       {
@@ -803,7 +803,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint()
+    public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint()
     {
       try
       {
@@ -824,7 +824,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartCheckpointRealized()
+    public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized()
     {
       try
       {
@@ -845,7 +845,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartPlan> ChartPlan()
+    public async Task<IEnumerable<ViewChartPlan>> ChartPlan()
     {
       try
       {
@@ -910,7 +910,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartPlanRealized()
+    public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized()
     {
       try
       {
@@ -974,6 +974,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
   }
 #pragma warning restore 4014
 }

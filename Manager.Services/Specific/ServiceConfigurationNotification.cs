@@ -9,6 +9,7 @@ using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -46,7 +47,7 @@ namespace Manager.Services.Specific
       personService._user = baseUser;
     }
 
-    public string New(ConfigurationNotification view)
+    public async Task<string> New(ConfigurationNotification view)
     {
       try
       {
@@ -59,7 +60,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string Update(ConfigurationNotification view)
+    public async Task<string> Update(ConfigurationNotification view)
     {
       try
       {
@@ -72,7 +73,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string Remove(string id)
+    public async Task<string> Remove(string id)
     {
       try
       {
@@ -87,7 +88,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ConfigurationNotification Get(string id)
+    public async Task<ConfigurationNotification> Get(string id)
     {
       try
       {
@@ -98,7 +99,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ConfigurationNotification GetByName(string name)
+    public async Task<ConfigurationNotification> GetByName(string name)
     {
       try
       {
@@ -109,13 +110,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ConfigurationNotification> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ConfigurationNotification>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = configurationNotificationsService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = configurationNotificationsService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = configurationNotificationsService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.ToList();
 

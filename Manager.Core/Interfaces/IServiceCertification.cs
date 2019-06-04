@@ -3,6 +3,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
 {
@@ -10,21 +11,21 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    string DeletePerson(string idcertifcation, string idcertificationperson);
-    void SetAttachment(string idcertification, string url, string fileName, string attachmentid);
-    string DeleteCertification(string idcertification);
+    Task<string> DeletePerson(string idcertifcation, string idcertificationperson);
+    Task SetAttachment(string idcertification, string url, string fileName, string attachmentid);
+    Task<string> DeleteCertification(string idcertification);
 
 
-    List<ViewListPerson> ListPersons(string idcertification, ref long total, string filter, int count, int page);
-    ViewListCertificationProfile GetProfile(string idperson);
-    ViewCrudCertification NewCertification(ViewListCertificationItem item, string idperson);
-    string AddPerson(string idcertification, ViewListPerson person);
-    string ApprovedCertification(string idcertificationperson, ViewCrudCertificationPerson view);
-    string UpdateCertification(ViewCrudCertification view, string idperson, string idcertification);
-    List<ViewListCertification> ListEnded(ref long total, string filter, int count, int page);
-    List<ViewListCertificationPerson> ListCertificationsWaitPerson(string idperson, ref long total, string filter, int count, int page);
-    ViewCrudCertification CertificationsWaitPerson(string idcertification);
-    string UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson);
-    List<ViewListCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page);
+    Task<List<ViewListPerson>> ListPersons(string idcertification,  string filter, int count, int page);
+    Task<ViewListCertificationProfile> GetProfile(string idperson);
+    Task<ViewCrudCertification> NewCertification(ViewListCertificationItem item, string idperson);
+    Task<string> AddPerson(string idcertification, ViewListPerson person);
+    Task<string> ApprovedCertification(string idcertificationperson, ViewCrudCertificationPerson view);
+    Task<string> UpdateCertification(ViewCrudCertification view, string idperson, string idcertification);
+    Task<List<ViewListCertification>> ListEnded( string filter, int count, int page);
+    Task<List<ViewListCertificationPerson>> ListCertificationsWaitPerson(string idperson,  string filter, int count, int page);
+    Task<ViewCrudCertification> CertificationsWaitPerson(string idcertification);
+    Task<string> UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson);
+    Task<List<ViewListCertificationItem>> ListCertificationPerson(string idperson,  string filter, int count, int page);
   }
 }

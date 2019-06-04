@@ -25,7 +25,7 @@ namespace Manager.Web
 
     public async Task GetNotes(string idperson, string idaccount)
     {
-      if (service.VerifyAccount(idaccount) == false)
+      if (await service.VerifyAccount(idaccount) == false)
         throw new Exception();
 
       var baseUser = new BaseUser()
@@ -41,7 +41,7 @@ namespace Manager.Web
 
     public async Task GetNotesPerson(string idperson, string idaccount)
     {
-      if (service.VerifyAccount(idaccount) == false)
+      if (await service.VerifyAccount(idaccount) == false)
         throw new Exception();
 
       var baseUser = new BaseUser()

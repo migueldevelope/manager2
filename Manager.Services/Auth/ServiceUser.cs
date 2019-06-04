@@ -91,7 +91,7 @@ namespace Manager.Services.Auth
     #region User
 
 
-    public void CheckTermOfService(string iduser)
+    public async Task CheckTermOfService(string iduser)
     {
       try
       {
@@ -101,7 +101,7 @@ namespace Manager.Services.Auth
 
         serviceTermsOfService.SetUser(_user);
         serviceTermsOfService._user = _user;
-        var term = serviceTermsOfService.GetTerm();
+        var term = serviceTermsOfService.GetTerm().Result;
         user.UserTermOfServices.Add(new UserTermOfService() { _idTermOfService = term._id, Date = term.Date });
 
         serviceUser.Update(user, null);
@@ -112,7 +112,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<ViewListUser> List(ref long total, int count, int page, string filter, EnumTypeUser type)
+    public async Task<List<ViewListUser>> List( int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
@@ -120,7 +120,7 @@ namespace Manager.Services.Auth
         {
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
-            total = serviceUser.CountNewVersion(p => p.Name.Contains(filter)).Result;
+            var total = serviceUser.CountNewVersion(p => p.Name.Contains(filter)).Result;
             return serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)).Result
             .Select(x => new ViewListUser()
             {
@@ -128,7 +128,8 @@ namespace Manager.Services.Auth
               Document = x.Document,
               Mail = x.Mail,
               Name = x.Name,
-              Phone = x.Phone
+              Phone = x.Phone,
+              total = total
             }).ToList();
           default:
             total = serviceUser.CountNewVersion(p => p.UserAdmin == false && p.Name.Contains(filter)).Result;
@@ -139,7 +140,8 @@ namespace Manager.Services.Auth
               Document = x.Document,
               Mail = x.Mail,
               Name = x.Name,
-              Phone = x.Phone
+              Phone = x.Phone,
+              total = total
             }).ToList();
         }
       }
@@ -148,7 +150,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudUser Get(string iduser)
+    public async Task<ViewCrudUser> Get(string iduser)
     {
       try
       {
@@ -177,7 +179,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudUser New(ViewCrudUser view)
+    public async Task<ViewCrudUser> New(ViewCrudUser view)
     {
       try
       {
@@ -231,7 +233,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public ViewCrudUser Update(ViewCrudUser view)
+    public async Task<ViewCrudUser> Update(ViewCrudUser view)
     {
       try
       {
@@ -279,7 +281,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public string GetPhoto(string idUser)
+    public async Task<string> GetPhoto(string idUser)
     {
       try
       {
@@ -290,7 +292,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public void SetPhoto(string idUser, string url)
+    public async Task SetPhoto(string idUser, string url)
     {
       try
       {
@@ -307,7 +309,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Password
-    public string AlterPassword(ViewAlterPass resetPass, string idUser)
+    public async Task<string> AlterPassword(ViewAlterPass resetPass, string idUser)
     {
       try
       {
@@ -326,7 +328,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public string AlterPasswordForgot(ViewAlterPass resetPass, string foreign)
+    public async Task<string> AlterPasswordForgot(ViewAlterPass resetPass, string foreign)
     {
       try
       {
@@ -403,10 +405,10 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Person
-    public List<ViewListPersonInfo> ListPerson(string iduser, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListPersonInfo>> ListPerson(string iduser,  string filter, int count, int page)
     {
       List<Person> detail = servicePerson.GetAllNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
-      total = servicePerson.CountNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+      var total = servicePerson.CountNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
       return detail.Select(p => new ViewListPersonInfo
       {
         _id = p._id,
@@ -423,7 +425,8 @@ namespace Manager.Services.Auth
           Mail = p.User.Mail,
           Name = p.User.Name,
           Phone = p.User.Phone,
-          _id = p.User._id
+          _id = p.User._id,
+          total = total
         }
       }).ToList();
     }

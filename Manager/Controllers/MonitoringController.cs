@@ -45,7 +45,7 @@ namespace Manager.Controllers
     [Route("deleteall/{idperson}")]
     public async Task<string> RemoveAllMonitoring(string idperson)
     {
-      return service.RemoveAllMonitoring(idperson);
+      return await service.RemoveAllMonitoring(idperson);
     }
     /// <summary>
     /// Exclusão de um monitoramento
@@ -57,7 +57,7 @@ namespace Manager.Controllers
     [Route("delete/{idmonitoring}")]
     public async Task<string> RemoveOnBoarding(string idmonitoring)
     {
-      return service.RemoveMonitoring(idmonitoring);
+      return await service.RemoveMonitoring(idmonitoring);
     }
     /// <summary>
     /// Exclusão do último monitoramento
@@ -69,7 +69,7 @@ namespace Manager.Controllers
     [Route("deletelast/{idperson}")]
     public async Task<string> RemoveLastMonitoring(string idperson)
     {
-      return service.RemoveLastMonitoring(idperson);
+      return await service.RemoveLastMonitoring(idperson);
     }
     /// <summary>
     /// Exclusão de atividade do monitoramento
@@ -82,7 +82,7 @@ namespace Manager.Controllers
     [Route("removemonitoringactivities/{idmonitoring}/{idactivitie}")]
     public async Task<string> RemoveMonitoringActivities(string idmonitoring, string idactivitie)
     {
-      return service.RemoveMonitoringActivities(idmonitoring, idactivitie);
+      return await service.RemoveMonitoringActivities(idmonitoring, idactivitie);
     }
     /// <summary>
     /// Exclusão de compentário
@@ -96,7 +96,7 @@ namespace Manager.Controllers
     [Route("deletecomments/{idmonitoring}/{iditem}/{idcomments}")]
     public async Task<string> DeleteComments(string idmonitoring, string iditem, string idcomments)
     {
-      return service.DeleteComments(idmonitoring, iditem, idcomments);
+      return await service.DeleteComments(idmonitoring, iditem, idcomments);
     }
     /// <summary>
     /// Alteração de comentário
@@ -110,7 +110,7 @@ namespace Manager.Controllers
     [Route("updatecommentsview/{idmonitoring}/{iditem}/{usercomment}")]
     public async Task<string> UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment usercomment)
     {
-      return service.UpdateCommentsView(idmonitoring, iditem, usercomment);
+      return await service.UpdateCommentsView(idmonitoring, iditem, usercomment);
     }
     /// <summary>
     /// Alteração do comentário
@@ -122,7 +122,7 @@ namespace Manager.Controllers
     [Route("validcomments/{idmonitoring}")]
     public async Task<bool> UpdateCommentsView(string idmonitoring)
     {
-      return service.ValidComments(idmonitoring);
+      return await service.ValidComments(idmonitoring);
     }
     /// <summary>
     /// Inclusão monitoring
@@ -134,7 +134,7 @@ namespace Manager.Controllers
     [Route("new/{idperson}")]
     public async Task<ViewListMonitoring> NewMonitoring(string idperson)
     {
-      return service.NewMonitoring(idperson);
+      return await service.NewMonitoring(idperson);
     }
     /// <summary>
     /// Atualiza informações monitogin
@@ -146,7 +146,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<string> UpdateMonitoring([FromBody]ViewCrudMonitoring monitoring)
     {
-      return service.UpdateMonitoring(monitoring);
+      return await service.UpdateMonitoring(monitoring);
     }
     /// <summary>
     /// Lista monitoring finalizado para gestor
@@ -162,9 +162,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListMonitoringsEnd(idmanager, ref total, filter, count, page);
+      var result = service.ListMonitoringsEnd(idmanager, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Lista monitoring para exclusão
@@ -179,9 +179,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListMonitoring>> GetListExclud(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetListExclud(ref total, filter, count, page);
+      var result = service.GetListExclud(filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Lista monitoring em andamento para gestor
@@ -197,9 +197,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListMonitoringsWait(idmanager, ref total, filter, count, page);
+      var result = service.ListMonitoringsWait(idmanager, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Lista monitoring para pessoa
@@ -211,7 +211,7 @@ namespace Manager.Controllers
     [Route("personend/{idmanager}")]
     public async Task<List<ViewListMonitoring>> PersonMonitoringsEnd(string idmanager)
     {
-      return service.PersonMonitoringsEnd(idmanager);
+      return await service.PersonMonitoringsEnd(idmanager);
     }
     /// <summary>
     /// Lista monitoring para pessoa
@@ -223,7 +223,7 @@ namespace Manager.Controllers
     [Route("personwait/{idmanager}")]
     public async Task<ViewListMonitoring> PersonMonitoringsWait(string idmanager)
     {
-      return service.PersonMonitoringsWait(idmanager);
+      return await service.PersonMonitoringsWait(idmanager);
     }
     /// <summary>
     /// Busca informação monitoring para editar
@@ -235,7 +235,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudMonitoring> GetMonitoring(string id)
     {
-      return service.GetMonitorings(id);
+      return await service.GetMonitorings(id);
     }
     /// <summary>
     /// Lista skills
@@ -247,7 +247,7 @@ namespace Manager.Controllers
     [Route("getskills/{idperson}")]
     public async Task<List<ViewListSkill>> GetSkills(string idperson)
     {
-      return service.GetSkills(idperson);
+      return await service.GetSkills(idperson);
     }
     /// <summary>
     /// Busca informações para editar entrega
@@ -260,7 +260,7 @@ namespace Manager.Controllers
     [Route("getmonitoringactivities/{idmonitoring}/{idactivitie}")]
     public async Task<ViewCrudMonitoringActivities> GetMonitoringActivities(string idmonitoring, string idactivitie)
     {
-      return service.GetMonitoringActivities(idmonitoring, idactivitie);
+      return await service.GetMonitoringActivities(idmonitoring, idactivitie);
     }
     /// <summary>
     /// Atualiza entrega monitoring
@@ -273,7 +273,7 @@ namespace Manager.Controllers
     [Route("updatemonitoringactivities/{idmonitoring}")]
     public async Task<string> UpdateMonitoringActivities([FromBody]ViewCrudMonitoringActivities activitie, string idmonitoring)
     {
-      return service.UpdateMonitoringActivities(idmonitoring, activitie);
+      return await service.UpdateMonitoringActivities(idmonitoring, activitie);
     }
     /// <summary>
     /// Adiciona um entrega no monitoring
@@ -286,7 +286,7 @@ namespace Manager.Controllers
     [Route("addmonitoringactivities/{idmonitoring}")]
     public async Task<string> AddMonitoringActivities([FromBody] ViewCrudActivities activitie, string idmonitoring)
     {
-      return service.AddMonitoringActivities(idmonitoring, activitie);
+      return await service.AddMonitoringActivities(idmonitoring, activitie);
     }
     /// <summary>
     /// Lista comentarios de um item do monitoring
@@ -299,7 +299,7 @@ namespace Manager.Controllers
     [Route("listcomments/{idmonitoring}/{iditem}")]
     public async Task<List<ViewCrudComment>> GetListComments(string idmonitoring, string iditem)
     {
-      return service.GetListComments(idmonitoring, iditem);
+      return await service.GetListComments(idmonitoring, iditem);
     }
 
     /// <summary>
@@ -314,7 +314,7 @@ namespace Manager.Controllers
     [Route("addcomments/{idmonitoring}/{iditem}")]
     public async Task<List<ViewCrudComment>> AddComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
     {
-      return service.AddComments(idmonitoring, iditem, comments);
+      return await service.AddComments(idmonitoring, iditem, comments);
     }
     /// <summary>
     /// Atualiza comentario item do monitoring
@@ -328,7 +328,7 @@ namespace Manager.Controllers
     [Route("updatecomments/{idmonitoring}/{iditem}")]
     public async Task<string> UpdateComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
     {
-      return service.UpdateComments(idmonitoring, iditem, comments);
+      return await service.UpdateComments(idmonitoring, iditem, comments);
     }
     /// <summary>
     /// Adiciona um plano
@@ -342,7 +342,7 @@ namespace Manager.Controllers
     [Route("addplan/{idmonitoring}/{iditem}")]
     public async Task<List<ViewCrudPlan>> AddPlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
     {
-      return service.AddPlan(idmonitoring, iditem, plan);
+      return await service.AddPlan(idmonitoring, iditem, plan);
     }
     /// <summary>
     /// Atualiza informações do plano dentro de um item do monitoring
@@ -356,7 +356,7 @@ namespace Manager.Controllers
     [Route("updateplan/{idmonitoring}/{iditem}")]
     public async Task<List<ViewCrudPlan>> UpdatePlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
     {
-      return service.UpdatePlan(idmonitoring, iditem, plan);
+      return await service.UpdatePlan(idmonitoring, iditem, plan);
     }
     #endregion
 

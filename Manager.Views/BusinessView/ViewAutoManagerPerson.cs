@@ -7,5 +7,6 @@ namespace Manager.Views.BusinessView
     public string IdPerson { get; set; }
     public string NamePerson { get; set; }
     public EnumStatusAutoManagerView Status { get; set; }
+    public long total { get; set; }
   }
 }

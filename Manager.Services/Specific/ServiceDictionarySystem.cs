@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -46,7 +47,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Dictonary System
-    public string New(ViewCrudDictionarySystem view)
+    public async Task<string> New(ViewCrudDictionarySystem view)
     {
       try
       {
@@ -63,7 +64,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string New(List<ViewListDictionarySystem> list)
+    public async Task<string> New(List<ViewListDictionarySystem> list)
     {
       try
       {
@@ -84,7 +85,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudDictionarySystem view)
+    public async Task<string> Update(ViewCrudDictionarySystem view)
     {
       try
       {
@@ -98,7 +99,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -112,7 +113,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudDictionarySystem Get(string id)
+    public async Task<ViewCrudDictionarySystem> Get(string id)
     {
       try
       {
@@ -129,7 +130,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListDictionarySystem GetName(string name)
+    public async Task<ViewListDictionarySystem> GetName(string name)
     {
       try
       {
@@ -146,7 +147,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListDictionarySystem> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListDictionarySystem>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -158,7 +159,7 @@ namespace Manager.Services.Specific
               Name = x.Name,
               Description = x.Description
             }).ToList();
-        total = serviceDictionarySystem.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceDictionarySystem.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)

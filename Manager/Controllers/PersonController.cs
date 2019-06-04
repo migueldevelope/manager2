@@ -55,9 +55,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListPersonCrud>> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(ref total, count, page, filter, type);
+      var result = service.List(count, page, filter, type);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Buscar informações da pessoa para alteração
@@ -69,7 +69,7 @@ namespace Manager.Controllers
     [Route("edit/{id}")]
     public async Task<ViewCrudPerson> Get(string id)
     {
-      return service.Get(id);
+      return await service.Get(id);
     }
     /// <summary>
     /// Incluir uma nova pessoa
@@ -81,7 +81,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<ViewCrudPerson> New([FromBody] ViewCrudPerson view)
     {
-      return service.New(view);
+      return await service.New(view);
     }
     /// <summary>
     /// Alterar uma pessoa
@@ -93,7 +93,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody] ViewCrudPerson view)
     {
-      return Ok(service.Update(view));
+      return Ok(await  service.Update(view));
     }
 
     /// <summary>
@@ -110,9 +110,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListPersonTeam>> ListTeam(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListTeam(ref total, idmanager, filter, count, page);
+      var result = service.ListTeam(idmanager, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     #endregion
 
@@ -127,7 +127,7 @@ namespace Manager.Controllers
     [Route("listsalaryscale/{idoccupation}")]
     public async Task<List<ViewListSalaryScalePerson>> ListSalaryScale(string idoccupation)
     {
-      return service.ListSalaryScale(idoccupation);
+      return await service.ListSalaryScale(idoccupation);
     }
     #endregion
 
@@ -145,9 +145,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListOccupation>> ListOccupation(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListOccupation(ref total, filter, count, page);
+      var result = service.ListOccupation(filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Listar as empresas para manutenção da pessoa
@@ -162,9 +162,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListCompany>> ListCompany(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListCompany(ref total, filter, count, page);
+      var result = service.ListCompany(filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Listar os gestores para manutenção da pessoa
@@ -179,9 +179,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListPerson>> ListManager(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListManager(ref total, filter, count, page);
+      var result = service.ListManager(filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     #endregion
 

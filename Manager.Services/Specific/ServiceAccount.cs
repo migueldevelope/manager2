@@ -74,7 +74,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region New account
-    public Task<string> NewAccount(ViewNewAccount view)
+    public async Task<string> NewAccount(ViewNewAccount view)
     {
       try
       {
@@ -125,7 +125,7 @@ namespace Manager.Services.Specific
         serviceInfra._user = serviceAccount._user;
         //Task.Run(() => serviceInfra.CopyTemplateInfraAsync(company));
         serviceInfra.CopyTemplateInfraAsync(company);
-        return Task.FromResult("Account created!");
+        return "Account created!";
       }
       catch (Exception e)
       {
@@ -133,7 +133,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<string> UpdateAccount(ViewCrudAccount view, string id)
+    public async Task<string> UpdateAccount(ViewCrudAccount view, string id)
     {
       try
       {
@@ -143,7 +143,7 @@ namespace Manager.Services.Specific
         account.InfoClient = view.InfoClient;
 
         serviceAccount.UpdateAccount(account, null);
-        return Task.FromResult("Account altered!");
+        return "Account altered!";
       }
       catch (Exception e)
       {
@@ -153,18 +153,19 @@ namespace Manager.Services.Specific
     #endregion
 
     #region List Account
-    public Task<List<ViewListAccount>> GetAll(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListAccount>> GetAll( int count = 10, int page = 1, string filter = "")
     {
       try
       {
         Task<List<Account>> detail = serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name");
-        total = serviceAccount.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail.Result
+        var total = serviceAccount.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail.Result
           .Select(x => new ViewListAccount()
           {
             _id = x._id,
-            Name = x.Name
-          }).ToList());
+            Name = x.Name,
+            total = total
+          }).ToList();
       }
       catch (Exception e)
       {
@@ -172,17 +173,17 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<ViewCrudAccount> GetAccount(string id)
+    public async Task<ViewCrudAccount> GetAccount(string id)
     {
       try
       {
         var view = serviceAccount.GetFreeNewVersion(p => p._id == id).Result;
-        return Task.FromResult(new ViewCrudAccount()
+        return new ViewCrudAccount()
         {
           _id = view._id,
           Name = view.Name,
           InfoClient = view.InfoClient
-        });
+        };
       }
       catch (Exception e)
       {
@@ -192,7 +193,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Change Account Authentication or Person Authentication
-    public Task<ViewPerson> AlterAccount(string idaccount)
+    public async Task<ViewPerson> AlterAccount(string idaccount)
     {
       try
       {
@@ -201,21 +202,21 @@ namespace Manager.Services.Specific
           person = servicePerson.GetFreeNewVersion(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).Result;
         User user = serviceUser.GetFreeNewVersion(p => p._id == person.User._id).Result;
         Task.Run(() => LogSave(person, "Authentication Change Account"));
-        return Task.FromResult(serviceAuthentication.Authentication(user, false));
+        return serviceAuthentication.Authentication(user, false);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public Task<ViewPerson> AlterAccountPerson(string idperson)
+    public async Task<ViewPerson> AlterAccountPerson(string idperson)
     {
       try
       {
         Person person = servicePerson.GetFreeNewVersion(p => p._id == idperson).Result;
         User user = serviceUser.GetAuthentication(p => p._id == person.User._id).FirstOrDefault();
         Task.Run(() => LogSave(person, "Authentication Change Person"));
-        return Task.FromResult(serviceAuthentication.Authentication(user, false));
+        return serviceAuthentication.Authentication(user, false);
       }
       catch (Exception e)
       {
@@ -242,10 +243,10 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Syncronize Parameters
-    public Task<string> SynchronizeParameters()
+    public async Task<string> SynchronizeParameters()
     {
       Task.Run(() => serviceInfra.SynchronizeParametersAsync());
-      return Task.FromResult("Parameters synchonized!");
+      return "Parameters synchonized!";
     }
     #endregion
 

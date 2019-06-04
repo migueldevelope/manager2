@@ -14,16 +14,16 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
 
-    void CheckTermOfService(string iduser);
-    List<ViewListUser> List(ref long total, int count, int page, string filter, EnumTypeUser type);
-    ViewCrudUser Get(string iduser);
-    ViewCrudUser New(ViewCrudUser view);
-    ViewCrudUser Update(ViewCrudUser view);
-    string GetPhoto(string idUser);
-    void SetPhoto(string idUser, string url);
-    string AlterPassword(ViewAlterPass resetPass, string idUser);
-    string AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
+    Task CheckTermOfService(string iduser);
+    Task<List<ViewListUser>> List( int count, int page, string filter, EnumTypeUser type);
+    Task<ViewCrudUser> Get(string iduser);
+    Task<ViewCrudUser> New(ViewCrudUser view);
+    Task<ViewCrudUser> Update(ViewCrudUser view);
+    Task<string> GetPhoto(string idUser);
+    Task SetPhoto(string idUser, string url);
+    Task<string> AlterPassword(ViewAlterPass resetPass, string idUser);
+    Task<string> AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
     Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid);
-    List<ViewListPersonInfo> ListPerson(string iduser, ref long total, string filter, int count, int page);
+    Task<List<ViewListPersonInfo>> ListPerson(string iduser,  string filter, int count, int page);
   }
 }

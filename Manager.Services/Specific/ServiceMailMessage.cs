@@ -6,6 +6,7 @@ using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using System;
 using Manager.Core.Base;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -38,7 +39,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MailMessage
-    public ViewMailMessage GetMessage(string id)
+    public async Task<ViewMailMessage> GetMessage(string id)
     {
       try
       {
