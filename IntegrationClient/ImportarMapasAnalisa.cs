@@ -1,6 +1,7 @@
 ﻿using IntegrationService.Api;
 using IntegrationService.Enumns;
 using IntegrationService.Tools;
+using Manager.Views.BusinessList;
 using Manager.Views.Integration;
 using Newtonsoft.Json;
 using OracleTools;
@@ -22,7 +23,7 @@ namespace IntegrationClient
   {
     public ViewPersonLogin Person { get; set; }
     public string Conn { get; set; }
-    private ViewIntegrationProcessLevelTwo ProcessLevelTwo { get; set; }
+    private ViewListProcessLevelTwo ProcessLevelTwo { get; set; }
 
     public ImportarMapasAnalisa()
     {
@@ -61,7 +62,7 @@ namespace IntegrationClient
       string salvaGrupoCargo = string.Empty;
       string salvaCargo = string.Empty;
       string salvaCargoCodigo = string.Empty;
-      ViewIntegrationGroup grupoCargo = null;
+      //ViewIntegrationGroup grupoCargo = null;
       ViewIntegrationProfileOccupation cargo = null;
       Boolean novoCargo = false;
       foreach (DataRow item in occupations.Rows)
@@ -73,16 +74,16 @@ namespace IntegrationClient
             if (novoCargo)
             {
               // gravar cargo
-              cargo = infraIntegration.AddOccupation(cargo);
-              string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}", cargo.IdOccupation));
-              FileClass.SaveLog(file, registro, EnumTypeLineOpportunityg.Register);
-              txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
+//              cargo = infraIntegration.AddOccupation(cargo);
+              //string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}", cargo.IdOccupation));
+              //FileClass.SaveLog(file, registro, EnumTypeLineOpportunityg.Register);
+              //txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
               novoCargo = false;
             }
             lblGrpCar.Text = item["nome_grupo_cargo"].ToString();
             this.Refresh();
-            grupoCargo = infraIntegration.GetGroupByName(ProcessLevelTwo.IdCompany, item["nome_grupo_cargo"].ToString().Trim());
-            salvaGrupoCargo = grupoCargo.Name.ToUpper();
+//            grupoCargo = infraIntegration.GetGroupByName(ProcessLevelTwo.IdCompany, item["nome_grupo_cargo"].ToString().Trim());
+//            salvaGrupoCargo = grupoCargo.Name.ToUpper();
           }
           if (!salvaCargo.Equals(item["nome_cargo"].ToString().Trim().ToUpper()))
           {
@@ -91,16 +92,16 @@ namespace IntegrationClient
               if (novoCargo)
               {
                 // gravar cargo
-                cargo = infraIntegration.AddOccupation(cargo);
-                string registroNovo = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}", cargo.IdOccupation));
-                FileClass.SaveLog(file, registroNovo, EnumTypeLineOpportunityg.Register);
-                txtLog.Text = string.Concat(txtLog.Text, registroNovo, Environment.NewLine);
+//                cargo = infraIntegration.AddOccupation(cargo);
+//                string registroNovo = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}", cargo.IdOccupation));
+                //FileClass.SaveLog(file, registroNovo, EnumTypeLineOpportunityg.Register);
+                //txtLog.Text = string.Concat(txtLog.Text, registroNovo, Environment.NewLine);
                 novoCargo = false;
               }
-              cargo = infraIntegration.GetOccupationByName(ProcessLevelTwo.IdCompany, item["nome_cargo"].ToString().Trim());
-              string registro = string.Format("Ok;{0};{1};{2}", item["nome_cargo"].ToString(), item["cargo"].ToString(), cargo.IdOccupation);
-              FileClass.SaveLog(file, registro, EnumTypeLineOpportunityg.Register);
-              txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
+//              cargo = infraIntegration.GetOccupationByName(ProcessLevelTwo.IdCompany, item["nome_cargo"].ToString().Trim());
+//              string registro = string.Format("Ok;{0};{1};{2}", item["nome_cargo"].ToString(), item["cargo"].ToString(), cargo.IdOccupation);
+//              FileClass.SaveLog(file, registro, EnumTypeLineOpportunityg.Register);
+              //txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
             }
             catch (Exception)
             {
@@ -118,23 +119,23 @@ namespace IntegrationClient
               cargo = new ViewIntegrationProfileOccupation()
               {
                 Name = item["nome_cargo"].ToString().Trim(),
-                NameGroup = grupoCargo.Name,
-                IdCompany = ProcessLevelTwo.IdCompany,
-                NameCompany = ProcessLevelTwo.NameCompany,
-                IdArea = ProcessLevelTwo.IdArea,
-                NameArea = ProcessLevelTwo.NameArea,
-                IdProcessLevelOne = ProcessLevelTwo.IdProcessLevelOne,
-                NameProcessLevelOne = ProcessLevelTwo.NameProcessLevelOne,
-                IdProcessLevelTwo = ProcessLevelTwo.Id,
-                NameProcessLevelTwo = ProcessLevelTwo.Name,
+                //NameGroup = grupoCargo.Name,
+                //IdCompany = ProcessLevelTwo.IdCompany,
+                //NameCompany = ProcessLevelTwo.NameCompany,
+                //IdArea = ProcessLevelTwo.IdArea,
+                //NameArea = ProcessLevelTwo.NameArea,
+                //IdProcessLevelOne = ProcessLevelTwo.IdProcessLevelOne,
+                //NameProcessLevelOne = ProcessLevelTwo.NameProcessLevelOne,
+                //IdProcessLevelTwo = ProcessLevelTwo.Id,
+                //NameProcessLevelTwo = ProcessLevelTwo.Name,
                 Skills = new List<string>(),
-                Schooling = grupoCargo.Schooling,
+                //Schooling = grupoCargo.Schooling,
                 SchoolingComplement = new List<string>(),
                 Activities = new List<string>(),
                 SpecificRequirements = null
               };
-              for (int i = 0; i < grupoCargo.Schooling.Count; i++)
-                cargo.SchoolingComplement.Add(string.Empty);
+              //for (int i = 0; i < grupoCargo.Schooling.Count; i++)
+                //cargo.SchoolingComplement.Add(string.Empty);
             }
             switch (Int16.Parse(item["tipo"].ToString()))
             {
@@ -170,10 +171,10 @@ namespace IntegrationClient
       if (novoCargo)
       {
         // gravar cargo
-        cargo = infraIntegration.AddOccupation(cargo);
-        string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}",cargo.IdOccupation));
-        FileClass.SaveLog(file, registro, EnumTypeLineOpportunityg.Register);
-        txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
+//        cargo = infraIntegration.AddOccupation(cargo);
+        //string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}",cargo.IdOccupation));
+        //FileClass.SaveLog(file, registro, EnumTypeLineOpportunityg.Register);
+        //txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
         novoCargo = false;
       }
       MessageBox.Show("Importação de cargos realizada!");
@@ -184,7 +185,7 @@ namespace IntegrationClient
       if (File.Exists(string.Format("{0}/Occupation_cmd.txt", this.Person.IdAccount)))
         txtCmd.Text = FileClass.ReadFromBinaryFile<string>(string.Format("{0}/Occupation_cmd.txt", this.Person.IdAccount));
       if (File.Exists(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount))){
-        ProcessLevelTwo = JsonConvert.DeserializeObject<ViewIntegrationProcessLevelTwo>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount)));
+        ProcessLevelTwo = JsonConvert.DeserializeObject<ViewListProcessLevelTwo>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount)));
         btImp.Enabled = true;
         txtSubProc.Text = ProcessLevelTwo.Name;
       }
@@ -198,7 +199,7 @@ namespace IntegrationClient
         btImp.Enabled = false;
         ProcessLevelTwo = null;
         InfraIntegration process = new InfraIntegration(Person);
-        ProcessLevelTwo = process.GetProcessByName(txtSubProc.Text);
+//        ProcessLevelTwo = process.GetProcessByName(txtSubProc.Text);
         FileClass.WriteToBinaryFile<string>(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount), JsonConvert.SerializeObject(ProcessLevelTwo), false);
         btImp.Enabled = true;
         txtSubProc.Text = ProcessLevelTwo.Name;

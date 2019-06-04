@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Manager.Core.Interfaces;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
+using Manager.Views.Integration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -87,7 +89,7 @@ namespace IntegrationServer.InfraController
     public List<ViewListIntegrationCompany> GetCompanyList(int count = 10, int page = 1, string filter = "", bool all = false)
     {
       long total = 0;
-      var result = service.CompanyList(ref total, count, page, filter, all);
+      List<ViewListIntegrationCompany> result = service.CompanyList(ref total, count, page, filter, all);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -115,6 +117,20 @@ namespace IntegrationServer.InfraController
     public string DeleteCompany(string idintegration)
     {
       return service.CompanyDelete(idintegration);
+    }
+    /// <summary>
+    /// Listar as empresas
+    /// </summary>
+    /// <returns>Lista de empresas</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("company/list/root")]
+    public List<ViewListCompany> GetCompanyRootList()
+    {
+      long total = 0;
+      List<ViewListCompany> result = service.CompanyRootList(ref total);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
     #endregion
 
@@ -253,6 +269,53 @@ namespace IntegrationServer.InfraController
     public string SchoolingCompany(string idintegration)
     {
       return service.SchoolingDelete(idintegration);
+    }
+    #endregion
+
+    #region ProcessLevelTwo
+    /// <summary>
+    /// Listar de subprocessos do cliente
+    /// </summary>
+    /// <returns>Lista de subprocessos</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("processleveltwo/list")]
+    public List<ViewListProcessLevelTwo> GetProcessLevelTwoList()
+    {
+      long total = 0;
+      var result = service.ProcessLevelTwoList(ref total);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+    #endregion
+
+    #region Skill
+    /// <summary>
+    /// Atualizar o registro de integração da escolaridade do ANALISA para com o da FOLHA
+    /// </summary>
+    /// <param name="view">Competência para validar</param>
+    /// <returns>Objeto atualizado</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("skill")]
+    public ViewCrudSkill PostSkill([FromBody] ViewCrudSkill view)
+    {
+      return service.IntegrationSkill(view);
+    }
+    #endregion
+
+    #region Occupation
+    /// <summary>
+    /// Atualizar o cargo e o mapa do cargo através de integração com o ANALISA
+    /// </summary>
+    /// <param name="view">Cargo para validar</param>
+    /// <returns>Objeto atualizado</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("profile")]
+    public ViewIntegrationProfileOccupation PostOccupation([FromBody] ViewIntegrationProfileOccupation view)
+    {
+      return service.IntegrationProfile(view);
     }
     #endregion
 

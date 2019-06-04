@@ -32,6 +32,8 @@
       this.impCol = new System.Windows.Forms.ToolStripMenuItem();
       this.impColConfig = new System.Windows.Forms.ToolStripMenuItem();
       this.impColImport = new System.Windows.Forms.ToolStripMenuItem();
+      this.impAna = new System.Windows.Forms.ToolStripMenuItem();
+      this.impAnaCar = new System.Windows.Forms.ToolStripMenuItem();
       this.perfil = new System.Windows.Forms.ToolStripMenuItem();
       this.perfilTrocar = new System.Windows.Forms.ToolStripMenuItem();
       this.perfilSair = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +54,7 @@
       this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.impCol,
+            this.impAna,
             this.perfil,
             this.testeDeLeituraEmExcelToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -83,6 +86,21 @@
       this.impColImport.Size = new System.Drawing.Size(207, 26);
       this.impColImport.Text = "&Importação";
       this.impColImport.Click += new System.EventHandler(this.ImpColImport_Click);
+      // 
+      // impAna
+      // 
+      this.impAna.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.impAnaCar});
+      this.impAna.Name = "impAna";
+      this.impAna.Size = new System.Drawing.Size(150, 24);
+      this.impAna.Text = "Importação &Analisa";
+      // 
+      // impAnaCar
+      // 
+      this.impAnaCar.Name = "impAnaCar";
+      this.impAnaCar.Size = new System.Drawing.Size(216, 26);
+      this.impAnaCar.Text = "&Cargos e Mapas";
+      this.impAnaCar.Click += new System.EventHandler(this.ImpAnaCar_Click);
       // 
       // perfil
       // 
@@ -205,5 +223,7 @@
     private System.Windows.Forms.ToolStripLabel tbarAccount;
     private System.Windows.Forms.ToolStripMenuItem impColImport;
     private System.Windows.Forms.ToolStripMenuItem testeDeLeituraEmExcelToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem impAna;
+    private System.Windows.Forms.ToolStripMenuItem impAnaCar;
   }
 }

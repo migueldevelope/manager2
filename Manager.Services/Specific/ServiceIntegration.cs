@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Business.Integration;
+using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
@@ -10,8 +11,10 @@ using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -33,6 +36,10 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<IntegrationParameter> parameterService;
     private readonly ServiceGeneric<IntegrationPerson> integrationPersonService;
     private readonly IServiceLog logService;
+    // Integração de Skills, Cargos e Mapas do ANALISA
+    private readonly ServiceGeneric<ProcessLevelTwo> processLevelTwoService;
+    private readonly ServiceGeneric<Skill> skillService;
+    private readonly ServiceGeneric<Group> groupService;
 
     #region Constructor
     public ServiceIntegration(DataContext context, DataContext contextLog, DataContext contextIntegration) : base(context)
@@ -49,10 +56,13 @@ namespace Manager.Services.Specific
         integrationSchoolingService = new ServiceGeneric<IntegrationSchooling>(contextIntegration);
         integrationCompanyService = new ServiceGeneric<IntegrationCompany>(contextIntegration);
         integrationEstablishmentService = new ServiceGeneric<IntegrationEstablishment>(contextIntegration);
-        integrationOccupationService = new ServiceGeneric<IntegrationOccupation>(context);
+        integrationOccupationService = new ServiceGeneric<IntegrationOccupation>(contextIntegration);
         parameterService = new ServiceGeneric<IntegrationParameter>(contextIntegration);
         integrationPersonService = new ServiceGeneric<IntegrationPerson>(contextIntegration);
         logService = new ServiceLog(context, contextLog);
+        processLevelTwoService = new ServiceGeneric<ProcessLevelTwo>(context);
+        skillService = new ServiceGeneric<Skill>(context);
+        groupService = new ServiceGeneric<Group>(context);
       }
       catch (Exception)
       {
@@ -75,6 +85,9 @@ namespace Manager.Services.Specific
       integrationOccupationService._user = _user;
       integrationPersonService._user = _user;
       parameterService._user = _user;
+      processLevelTwoService._user = _user;
+      skillService._user = _user;
+      groupService._user = _user;
       logService.SetUser(contextAccessor);
     }
     public void SetUser(BaseUser user)
@@ -84,14 +97,17 @@ namespace Manager.Services.Specific
       schoolingService._user = user;
       companyService._user = user;
       accountService._user = user;
-      occupationService._user = _user;
-      establishmentService._user = _user;
-      integrationSchoolingService._user = _user;
-      integrationCompanyService._user = _user;
-      integrationEstablishmentService._user = _user;
-      integrationOccupationService._user = _user;
-      integrationPersonService._user = _user;
-      parameterService._user = _user;
+      occupationService._user = user;
+      establishmentService._user = user;
+      integrationSchoolingService._user = user;
+      integrationCompanyService._user = user;
+      integrationEstablishmentService._user = user;
+      integrationOccupationService._user = user;
+      integrationPersonService._user = user;
+      parameterService._user = user;
+      processLevelTwoService._user = user;
+      skillService._user = user;
+      groupService._user = user;
     }
     #endregion
 
@@ -266,6 +282,24 @@ namespace Manager.Services.Specific
       catch (Exception)
       {
         throw;
+      }
+    }
+    public List<ViewListCompany> CompanyRootList(ref long total)
+    {
+      try
+      {
+        List<ViewListCompany> result = companyService.GetAllNewVersion()
+          .Select(x => new ViewListCompany()
+          {
+            _id = x._id,
+            Name = x.Name
+          }).ToList();
+        total = processLevelTwoService.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
       }
     }
     #endregion
@@ -730,6 +764,7 @@ namespace Manager.Services.Specific
           UploadNextLog = param.UploadNextLog,
           VersionPackCustom = param.VersionPackCustom,
           VersionPackProgram = param.VersionPackProgram,
+          ApiIdentification = param.ApiIdentification,
           _id = param._id
         };
       }
@@ -1034,6 +1069,155 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         throw e;
+      }
+    }
+    #endregion
+
+    #region ProcessLevelTwo
+    public List<ViewListProcessLevelTwo> ProcessLevelTwoList(ref long total)
+    {
+      try
+      {
+        List<ViewListProcessLevelTwo> result = processLevelTwoService.GetAllNewVersion().OrderBy(o => o.Name)
+          .Select(x => new ViewListProcessLevelTwo()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Order = x.Order,
+            ProcessLevelOne = new
+            ViewListProcessLevelOne()
+            {
+              _id = x.ProcessLevelOne._id,
+              Name = x.ProcessLevelOne.Name,
+              Order = x.ProcessLevelOne.Order,
+              Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+            }
+          }).ToList();
+        total = processLevelTwoService.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        return result;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    #endregion
+
+    #region Skill
+    public ViewCrudSkill IntegrationSkill(ViewCrudSkill view)
+    {
+      var skill = skillService.GetNewVersion(p => p.Name == view.Name).Result;
+      if (skill == null)
+      {
+        skill = new Skill()
+        {
+          Name = view.Name,
+          Concept = view.Concept,
+          TypeSkill = view.TypeSkill,
+          Template = null
+        };
+        skill = skillService.InsertNewVersion(skill).Result;
+      }
+      return new ViewCrudSkill()
+      {
+        _id = skill._id,
+        Name = skill.Name,
+        Concept = skill.Concept,
+        TypeSkill = skill.TypeSkill
+      };
+    }
+    #endregion
+
+    #region Occupation
+    public ViewIntegrationProfileOccupation IntegrationProfile(ViewIntegrationProfileOccupation view)
+    {
+      Occupation occupation = occupationService.GetNewVersion(p => p.Name == view.Name).Result;
+      if (occupation == null)
+      {
+        occupation = new Occupation()
+        {
+          Group = groupService.GetNewVersion(p => p.Name == view.NameGroup).Result,
+          CBO = null,
+          Name = Capitalization(view.Name),
+          SpecificRequirements = view.SpecificRequirements,
+          SalaryScales = null,
+          Process = new List<ProcessLevelTwo>(),
+          Skills = new List<Skill>(),
+          Activities = new List<Activitie>(),
+          Schooling = new List<Schooling>(),
+          Line = 0
+        };
+        occupation.Process.Add(processLevelTwoService.GetNewVersion(p => p._id == view.IdProcessLevelTwo).Result);
+        Skill skill;
+        foreach (string item in view.Skills)
+        {
+          skill = skillService.GetNewVersion(p => p.Name == item).Result;
+          occupation.Skills.Add(skill);
+        }
+        int order = 0;
+        foreach (string item in view.Activities)
+        {
+          order++;
+          occupation.Activities.Add(new Activitie()
+          {
+            _id = ObjectId.GenerateNewId().ToString(),
+            _idAccount = _user._idAccount,
+            Name = item,
+            Order = order,
+            Status = EnumStatus.Enabled
+          });
+        }
+        occupation.Schooling = occupation.Group.Schooling;
+        for (int i = 0; i < view.Schooling.Count; i++)
+        {
+          for (int lin = 0; lin < occupation.Schooling.Count; lin++)
+          {
+            if (occupation.Schooling[lin].Name.ToUpper().Equals(view.Schooling[i].ToUpper()))
+            {
+              occupation.Schooling[lin].Complement = view.SchoolingComplement[i];
+              break;
+            }
+          }
+        }
+        occupation = occupationService.InsertNewVersion(occupation).Result;
+      }
+      return new ViewIntegrationProfileOccupation()
+      {
+        _id = occupation._id,
+        IdCompany = occupation.Group.Company._id,
+        IdProcessLevelTwo = occupation.Process[0]._id,
+        Name = occupation.Name,
+        NameGroup = occupation.Group.Name,
+        Activities = occupation.Activities.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
+        Skills = occupation.Skills.OrderBy(o => o.Name).Select(x => x.Name).ToList(),
+        SpecificRequirements = occupation.SpecificRequirements,
+        Schooling = occupation.Group.Schooling.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
+        SchoolingComplement = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Complement).ToList()
+      };
+    }
+    private string Capitalization(string nome)
+    {
+      try
+      {
+        TextInfo myTI = new CultureInfo("pt-BR", false).TextInfo;
+        nome = myTI.ToTitleCase(nome.Trim().ToLower()).Replace(" Por ", " por ").Replace(" Com ", " com ").Replace(" E ", " e ").Replace(" De ", " de ").Replace(" Da ", " da ").Replace(" Dos ", " dos ").Replace(" Do ", " do ");
+        switch (nome.Substring(nome.Length - 2, 2))
+        {
+          case "Jr":
+          case "Pl":
+          case "Sr":
+          case "II":
+            nome = string.Concat(nome.Substring(0, nome.Length - 1), nome.Substring(nome.Length - 1).ToUpper());
+            break;
+          default:
+            break;
+        }
+        nome = nome.Trim().Replace(" Jr", " JR").Replace(" Pl", " PL").Replace(" Sr", " SR");
+        return nome;
+      }
+      catch (Exception)
+      {
+        throw;
       }
     }
     #endregion

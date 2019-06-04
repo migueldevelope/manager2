@@ -91,11 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="FileModel\Connection.cs" />
+    <Compile Include="ImportacaoAnalisaCargosMapas.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ImportacaoAnalisaCargosMapas.Designer.cs">
+      <DependentUpon>ImportacaoAnalisaCargosMapas.cs</DependentUpon>
     </Compile>
     <Compile Include="ImportacaoConfigurar.cs">
       <SubType>Form</SubType>
@@ -127,22 +128,10 @@
     <Compile Include="Menu.Designer.cs">
       <DependentUpon>Menu.cs</DependentUpon>
     </Compile>
-    <Compile Include="MenuPrincipal.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MenuPrincipal.Designer.cs">
-      <DependentUpon>MenuPrincipal.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SincronizarCompetencia.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SincronizarCompetencia.Designer.cs">
-      <DependentUpon>SincronizarCompetencia.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="ImportacaoAnalisaCargosMapas.resx">
+      <DependentUpon>ImportacaoAnalisaCargosMapas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImportacaoConfigurar.resx">
       <DependentUpon>ImportacaoConfigurar.cs</DependentUpon>
@@ -159,9 +148,6 @@
     <EmbeddedResource Include="Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MenuPrincipal.resx">
-      <DependentUpon>MenuPrincipal.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -171,9 +157,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="SincronizarCompetencia.resx">
-      <DependentUpon>SincronizarCompetencia.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

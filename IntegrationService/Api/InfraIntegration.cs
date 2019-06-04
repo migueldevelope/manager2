@@ -1,11 +1,10 @@
-﻿using Manager.Views.Integration;
+﻿using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
+using Manager.Views.Integration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntegrationService.Api
 {
@@ -14,6 +13,7 @@ namespace IntegrationService.Api
     private HttpClient clientSkill;
     private readonly ViewPersonLogin Person;
 
+    #region Constructor
     public InfraIntegration(ViewPersonLogin person)
     {
       Person = person;
@@ -23,112 +23,62 @@ namespace IntegrationService.Api
       clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
     }
+    #endregion
 
-    public ViewIntegrationSkill GetSkillByName(string name)
+    #region Company
+    public List<ViewListCompany> GetCompanyList()
+    {
+      HttpResponseMessage result = clientSkill.GetAsync("integration/company/list/root").Result;
+      return result.IsSuccessStatusCode == false
+        ? null
+        : JsonConvert.DeserializeObject<List<ViewListCompany>>(result.Content.ReadAsStringAsync().Result);
+    }
+    #endregion
+
+    #region ProcessLevelTwo
+    public List<ViewListProcessLevelTwo> GetProcessLevelTwoList()
+    {
+      HttpResponseMessage result = clientSkill.GetAsync("integration/processleveltwo/list").Result;
+      return result.IsSuccessStatusCode == false
+        ? null
+        : JsonConvert.DeserializeObject<List<ViewListProcessLevelTwo>>(result.Content.ReadAsStringAsync().Result);
+    }
+    #endregion
+
+    #region Skill
+    public ViewCrudSkill IntegrationSkill(ViewCrudSkill view)
     {
       try
       {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { Name = name }));
+        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
         content.Headers.ContentType.MediaType = "application/json";
 
-        var result = clientSkill.PostAsync("infra/skill", content).Result;
+        var result = clientSkill.PostAsync("integration/skill", content).Result;
         if (result.IsSuccessStatusCode == false)
         {
-          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
-          if (messageResult == null)
-            throw new Exception("Skill não encontrada!");
-          else
-            throw new Exception(messageResult);
+          throw new Exception("Skill não encontrada!");
         }
-        return JsonConvert.DeserializeObject<ViewIntegrationSkill>(result.Content.ReadAsStringAsync().Result);
+        return JsonConvert.DeserializeObject<ViewCrudSkill>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {
         throw;
       }
     }
+    #endregion
 
-    public ViewIntegrationSkill AddSkill(ViewIntegrationSkill newSkill)
+    #region Occupation and Profile
+    public ViewIntegrationProfileOccupation IntegrationProfile(ViewIntegrationProfileOccupation view)
     {
       try
       {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(newSkill));
-        content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("infra/skill/new", content).Result;
-        if (result.IsSuccessStatusCode == false)
-        {
-          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
-          throw new Exception(messageResult);
-        }
-        return JsonConvert.DeserializeObject<ViewIntegrationSkill>(result.Content.ReadAsStringAsync().Result);
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-
-    public ViewIntegrationProcessLevelTwo GetProcessByName(string id)
-    {
-      try
-      {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { Id = id }));
+        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
         content.Headers.ContentType.MediaType = "application/json";
 
-        var result = clientSkill.PostAsync("infra/processleveltwo", content).Result;
+        var result = clientSkill.PostAsync("integration/profile", content).Result;
         if (result.IsSuccessStatusCode == false)
         {
-          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
-          if (messageResult == null)
-            throw new Exception("Sub processo não encontrado!");
-          else
-            throw new Exception(messageResult);
-        }
-        return JsonConvert.DeserializeObject<ViewIntegrationProcessLevelTwo>(result.Content.ReadAsStringAsync().Result);
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-    public ViewIntegrationGroup GetGroupByName(string idCompany, string name)
-    {
-      try
-      {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { IdCompany = idCompany, Name = name }));
-        content.Headers.ContentType.MediaType = "application/json";
-
-        var result = clientSkill.PostAsync("infra/group", content).Result;
-        if (result.IsSuccessStatusCode == false)
-        {
-          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
-          if (messageResult == null)
-            throw new Exception("Grupo de cargo não encontrado!");
-          else
-            throw new Exception(messageResult);
-        }
-        return JsonConvert.DeserializeObject<ViewIntegrationGroup>(result.Content.ReadAsStringAsync().Result);
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-    public ViewIntegrationProfileOccupation GetOccupationByName(string idCompany, string name)
-    {
-      try
-      {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(new ViewIntegrationFilterName() { IdCompany = idCompany, Name = name }));
-        content.Headers.ContentType.MediaType = "application/json";
-
-        var result = clientSkill.PostAsync("infra/occupation", content).Result;
-        if (result.IsSuccessStatusCode == false)
-        {
-          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
-          if (messageResult == null)
-            throw new Exception("Cargo não encontrado!");
-          else
-            throw new Exception(messageResult);
+          throw new Exception("Cargo não atualizado!");
         }
         return JsonConvert.DeserializeObject<ViewIntegrationProfileOccupation>(result.Content.ReadAsStringAsync().Result);
       }
@@ -137,24 +87,7 @@ namespace IntegrationService.Api
         throw;
       }
     }
-    public ViewIntegrationProfileOccupation AddOccupation(ViewIntegrationProfileOccupation newOccupation)
-    {
-      try
-      {
-        StringContent content = new StringContent(JsonConvert.SerializeObject(newOccupation));
-        content.Headers.ContentType.MediaType = "application/json";
-        var result = clientSkill.PostAsync("infra/occupation/new", content).Result;
-        if (result.IsSuccessStatusCode == false)
-        {
-          string messageResult = JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
-          throw new Exception(messageResult);
-        }
-        return JsonConvert.DeserializeObject<ViewIntegrationProfileOccupation>(result.Content.ReadAsStringAsync().Result);
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
+    #endregion
+
   }
 }

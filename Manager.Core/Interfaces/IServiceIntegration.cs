@@ -24,6 +24,7 @@ namespace Manager.Core.Interfaces
     ViewIntegrationDashboard GetStatusDashboard();
     string GetStatusIntegration();
 
+    List<ViewListCompany> CompanyRootList(ref long total);
     List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationCompany CompanyUpdate(string idIntegration, string idCompany);
     string CompanyDelete(string idIntegration);
@@ -38,6 +39,7 @@ namespace Manager.Core.Interfaces
     string SchoolingDelete(string idIntegration);
     #endregion
 
+    #region Integration
     IntegrationCompany GetIntegrationCompany(string key, string name);
     IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany);
     IntegrationSchooling GetIntegrationSchooling(string key, string name);
@@ -48,10 +50,16 @@ namespace Manager.Core.Interfaces
     ViewListCompany GetCompany(string id);
     ViewListEstablishment GetEstablishment(string id);
     ViewListOccupation GetOccupation(string id);
-
     IntegrationPerson GetIntegrationPerson(string key);
     void PostIntegrationPerson(IntegrationPerson integrationPerson);
     void PutIntegrationPerson(IntegrationPerson integrationPerson);
     List<string> EmployeeChange(ViewColaborador oldEmployee, ViewColaborador newEmployee);
+    #endregion
+
+    #region Integration Skill, Occupation, Maps from ANALISA
+    List<ViewListProcessLevelTwo> ProcessLevelTwoList(ref long total);
+    ViewCrudSkill IntegrationSkill(ViewCrudSkill view);
+    ViewIntegrationProfileOccupation IntegrationProfile(ViewIntegrationProfileOccupation view);
+    #endregion
   }
 }

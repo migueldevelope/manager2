@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Manager.Views.Integration
+﻿namespace Manager.Views.Integration
 {
 #pragma warning disable IDE1006 // Estilos de Nomenclatura
   public class ViewIntegrationUnimedNers

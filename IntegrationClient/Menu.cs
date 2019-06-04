@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -109,6 +104,16 @@ namespace IntegrationClient
         linha++;
       }
       package.Save();
+    }
+
+    private void ImpAnaCar_Click(object sender, EventArgs e)
+    {
+      ImportacaoAnalisaCargosMapas form = new ImportacaoAnalisaCargosMapas
+      {
+        MdiParent = this,
+        WindowState = FormWindowState.Normal
+      };
+      form.Show();
     }
   }
 }
