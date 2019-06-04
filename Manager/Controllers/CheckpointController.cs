@@ -46,9 +46,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListWaitManager(idmanager, ref total, filter, count, page);
+      var result = service.ListWaitManager(idmanager, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Listar status de checkpoint para colaborador
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("listwaitperson/{idperson}")]
     public async Task<ViewListCheckpoint> ListWaitPerson(string idperson)
     {
-      return service.ListWaitPerson(idperson);
+      return await service.ListWaitPerson(idperson);
     }
     /// <summary>
     /// Inclusão de novo checkpoint
@@ -72,7 +72,7 @@ namespace Manager.Controllers
     [Route("new/{idperson}")]
     public async Task<ViewListCheckpoint> NewCheckpoint(string idperson)
     {
-      return service.NewCheckpoint(idperson);
+      return await service.NewCheckpoint(idperson);
     }
     /// <summary>
     /// Buscar checkpoint para manutenção
@@ -84,7 +84,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudCheckpoint> GetCheckpoint(string id)
     {
-      return service.GetCheckpoint(id);
+      return await service.GetCheckpoint(id);
     }
     /// <summary>
     /// Alterar objeto de checkpoint
@@ -96,7 +96,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> UpdateCheckpoint([FromBody]ViewCrudCheckpoint view)
     {
-      return Ok(service.UpdateCheckpoint(view));
+      return Ok(await  service.UpdateCheckpoint(view));
     }
     /// <summary>
     /// Buscar checkpoint finalizado para mostrar no histórico
@@ -108,7 +108,7 @@ namespace Manager.Controllers
     [Route("personcheckpointend/{id}")]
     public async Task<ViewCrudCheckpoint> PersonCheckpointEnd(string id)
     {
-      return service.PersonCheckpointEnd(id);
+      return await service.PersonCheckpointEnd(id);
     }
     /// <summary>
     /// Remover um checkpoint
@@ -120,7 +120,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<string> DeleteCheckpoint(string id)
     {
-      return service.DeleteCheckpoint(id);
+      return await service.DeleteCheckpoint(id);
     }
     /// <summary>
     /// Listar checkpoints finalizados
@@ -135,9 +135,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListCheckpoint>> ListEnded(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEnded(ref total, filter, count, page);
+      var result = service.ListEnded(filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     #endregion
 

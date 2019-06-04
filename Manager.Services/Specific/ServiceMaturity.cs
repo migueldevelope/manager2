@@ -95,7 +95,7 @@ namespace Manager.Services.Specific
 
     #region Maturity
 
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -110,7 +110,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string New(ViewCrudMaturity view)
+    public async Task<string> New(ViewCrudMaturity view)
     {
       try
       {
@@ -134,7 +134,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudMaturity view)
+    public async Task<string> Update(ViewCrudMaturity view)
     {
       try
       {
@@ -160,7 +160,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudMaturity Get(string id)
+    public async Task<ViewCrudMaturity> Get(string id)
     {
       try
       {
@@ -186,7 +186,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCrudMaturity> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudMaturity>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -204,7 +204,7 @@ namespace Manager.Services.Specific
             LevelPraise = x.LevelPraise,
             LevelCertification = x.LevelCertification
           }).ToList();
-        total = serviceMaturity.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceMaturity.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -216,7 +216,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MaturityRegister
-    public string DeleteMaturityRegister(string id)
+    public async Task<string> DeleteMaturityRegister(string id)
     {
       try
       {
@@ -230,7 +230,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string NewMaturityRegister(ViewCrudMaturityRegister view)
+    public async Task<string> NewMaturityRegister(ViewCrudMaturityRegister view)
     {
       try
       {
@@ -294,7 +294,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateMaturityRegister(ViewCrudMaturityRegister view)
+    public async Task<string> UpdateMaturityRegister(ViewCrudMaturityRegister view)
     {
       try
       {
@@ -311,7 +311,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudMaturityRegister GetMaturityRegister(string id)
+    public async Task<ViewCrudMaturityRegister> GetMaturityRegister(string id)
     {
       try
       {
@@ -330,7 +330,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudMaturityRegister> ListMaturityRegister(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudMaturityRegister>> ListMaturityRegister( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -343,7 +343,7 @@ namespace Manager.Services.Specific
             Date = p.Date,
             _idRegister = p._idRegister
           }).ToList();
-        total = serviceMaturityRegister.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceMaturityRegister.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)

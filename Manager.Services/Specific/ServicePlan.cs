@@ -741,7 +741,7 @@ namespace Manager.Services.Specific
 
     #region Plan
 
-    public string UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan)
+    public async Task<string> UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan)
     {
       try
       {
@@ -783,7 +783,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    public async Task<string> RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       try
       {
@@ -806,7 +806,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemovePlanActivity(string id)
+    public async Task<string> RemovePlanActivity(string id)
     {
       try
       {
@@ -820,7 +820,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void SetAttachment(string idplan, string idmonitoring, string url, string fileName, string attachmentid)
+    public async Task SetAttachment(string idplan, string idmonitoring, string url, string fileName, string attachmentid)
     {
       try
       {
@@ -884,7 +884,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewPlanActivity> ListPlanActivity(ref long total, string filter, int count, int page)
+    public async Task<List<ViewPlanActivity>> ListPlanActivity( string filter, int count, int page)
     {
       try
       {
@@ -892,7 +892,7 @@ namespace Manager.Services.Specific
         List<ViewPlan> result = new List<ViewPlan>();
 
         var detail = servicePlanActivity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        total = servicePlanActivity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = servicePlanActivity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewPlanActivity()
         {
@@ -906,7 +906,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewPlanActivity GetPlanActivity(string id)
+    public async Task<ViewPlanActivity> GetPlanActivity(string id)
     {
       try
       {
@@ -923,7 +923,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewPlanActivity(ViewPlanActivity model)
+    public async Task<string> NewPlanActivity(ViewPlanActivity model)
     {
       try
       {
@@ -936,7 +936,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdatePlanActivity(ViewPlanActivity model)
+    public async Task<string> UpdatePlanActivity(ViewPlanActivity model)
     {
       try
       {
@@ -955,7 +955,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPlanStruct> ListPlansStruct(ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
+    public async Task<List<ViewListPlanStruct>> ListPlansStruct( string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
     {
       try
       {
@@ -1042,7 +1042,7 @@ namespace Manager.Services.Specific
 
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
-        total = result.Count();
+        var total = result.Count();
 
         return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
       }
@@ -1053,7 +1053,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewGetPlan> ListPlans(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
+    public async Task<List<ViewGetPlan>> ListPlans( string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -1073,39 +1073,42 @@ namespace Manager.Services.Specific
 
         foreach (var res in plan)
         {
-          var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == res._idMonitoring).Result.FirstOrDefault().StatusMonitoring;
-          if (monitoring == EnumStatusMonitoring.End)
-            result.Add(new ViewGetPlan()
-            {
-              _id = res._id,
-              Name = res.Name,
-              DateInclude = res.DateInclude,
-              Deadline = res.Deadline,
-              Description = res.Description,
-              Skills = res.Skills?.Select(p => new ViewListSkill()
+          var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == res._idMonitoring).Result.FirstOrDefault();
+          if (monitoring != null)
+          {
+            if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
+              result.Add(new ViewGetPlan()
               {
-                _id = p._id,
-                TypeSkill = p.TypeSkill,
-                Concept = p.Concept,
-                Name = p.Name
-              }).ToList(),
-              UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
-              TypePlan = res.TypePlan,
-              _idPerson = res.Person._id,
-              NamePerson = res.Person.User.Name,
-              SourcePlan = res.SourcePlan,
-              IdMonitoring = res._id,
-              Evaluation = res.Evaluation,
-              StatusPlan = res.StatusPlan,
-              TypeAction = res.TypeAction,
-              StatusPlanApproved = res.StatusPlanApproved,
-              TextEnd = res.TextEnd,
-              TextEndManager = res.TextEndManager,
-              Status = res.Status,
-              DateEnd = res.DateEnd,
-              NewAction = res.NewAction,
-              Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
-            });
+                _id = res._id,
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills?.Select(p => new ViewListSkill()
+                {
+                  _id = p._id,
+                  TypeSkill = p.TypeSkill,
+                  Concept = p.Concept,
+                  Name = p.Name
+                }).ToList(),
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
+                TypePlan = res.TypePlan,
+                _idPerson = res.Person._id,
+                NamePerson = res.Person.User.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = res._id,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan,
+                TypeAction = res.TypeAction,
+                StatusPlanApproved = res.StatusPlanApproved,
+                TextEnd = res.TextEnd,
+                TextEndManager = res.TextEndManager,
+                Status = res.Status,
+                DateEnd = res.DateEnd,
+                NewAction = res.NewAction,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+              });
+          }
         }
 
 
@@ -1124,7 +1127,7 @@ namespace Manager.Services.Specific
           result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Wait).ToList();
 
 
-        total = result.Count();
+        var total = result.Count();
 
         return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
       }
@@ -1134,7 +1137,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewGetPlan> ListPlansPerson(ref long total, string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
+    public async Task<List<ViewGetPlan>> ListPlansPerson( string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -1154,8 +1157,8 @@ namespace Manager.Services.Specific
 
         foreach (var res in plan)
         {
-          var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == res._idMonitoring).Result.FirstOrDefault().StatusMonitoring;
-          if (monitoring == EnumStatusMonitoring.End)
+          var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == res._idMonitoring).Result.FirstOrDefault();
+          if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
             result.Add(new ViewGetPlan()
             {
               _id = res._id,
@@ -1190,6 +1193,7 @@ namespace Manager.Services.Specific
         }
 
 
+
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
         if (open == 0)
@@ -1205,7 +1209,7 @@ namespace Manager.Services.Specific
           result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Wait).ToList();
 
 
-        total = result.Count();
+        var total = result.Count();
 
         return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
       }
@@ -1216,7 +1220,7 @@ namespace Manager.Services.Specific
 
     }
 
-    public ViewListPlanStruct GetPlanStruct(string idmonitoring, string idplan)
+    public async Task<ViewListPlanStruct> GetPlanStruct(string idmonitoring, string idplan)
     {
       try
       {
@@ -1323,7 +1327,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewPlanShort> ListPlansPerson(ref long total, string id, string filter, int count, int page)
+    public async Task<List<ViewPlanShort>> ListPlansPerson( string id, string filter, int count, int page)
     {
       try
       {
@@ -1370,11 +1374,10 @@ namespace Manager.Services.Specific
 
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
-        total = result.Count();
+        var total = result.Count();
 
         result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
 
-        total = result.Count();
         result = result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
         var viewReturn = result.GroupBy(i => i.Name).Select(g => new ViewPlanShort
         {
@@ -1390,7 +1393,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewPlanShort> ListPlans(ref long total, string id, string filter, int count, int page)
+    public async Task<List<ViewPlanShort>> ListPlans( string id, string filter, int count, int page)
     {
       try
       {
@@ -1436,7 +1439,7 @@ namespace Manager.Services.Specific
 
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
-        total = result.Count();
+        var total = result.Count();
         result = result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
         var viewReturn = result.GroupBy(i => i.Name).Select(g => new ViewPlanShort
         {
@@ -1452,7 +1455,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewPlan(string idmonitoring, string idplanold, ViewCrudPlan view)
+    public async Task<string> NewPlan(string idmonitoring, string idplanold, ViewCrudPlan view)
     {
       try
       {
@@ -1590,7 +1593,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplan)
+    public async Task<string> NewStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplan)
     {
       try
       {
@@ -1634,7 +1637,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudStructPlan GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    public async Task<ViewCrudStructPlan> GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       try
       {
@@ -1663,7 +1666,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplanedit)
+    public async Task<string> UpdateStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplanedit)
     {
       try
       {
@@ -1718,7 +1721,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewUpdatePlan(string idmonitoring, List<ViewCrudNewPlanUp> viewPlan)
+    public async Task<string> NewUpdatePlan(string idmonitoring, List<ViewCrudNewPlanUp> viewPlan)
     {
       try
       {
@@ -1828,7 +1831,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewGetPlan GetPlan(string idmonitoring, string idplan)
+    public async Task<ViewGetPlan> GetPlan(string idmonitoring, string idplan)
     {
       try
       {

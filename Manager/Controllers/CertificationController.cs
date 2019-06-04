@@ -46,9 +46,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListCertificationPerson>> ListCertificationsWaitPerson(string idperson, string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListCertificationsWaitPerson(idperson, ref total, filter, count, page);
+      var result = service.ListCertificationsWaitPerson(idperson, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Apaga uma acreditação
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("removecertification/{idcertification}")]
     public async Task<IActionResult> DeleteCertification(string idcertification)
     {
-      return Ok(service.DeleteCertification(idcertification));
+      return Ok(await  service.DeleteCertification(idcertification));
     }
     /// <summary>
     /// Retira uma pessoa da acreditãção
@@ -73,7 +73,7 @@ namespace Manager.Controllers
     [Route("removeperson/{idcertification}/{idperson}")]
     public async Task<string> DeletePerson(string idcertification, string idperson)
     {
-      return service.DeletePerson(idcertification, idperson);
+      return await service.DeletePerson(idcertification, idperson);
     }
     /// <summary>
     /// Retornar as competências que podem ser acreditadas para uma pessoa
@@ -85,7 +85,7 @@ namespace Manager.Controllers
     [Route("getprofile/{idperson}")]
     public async Task<ViewListCertificationProfile> GetProfile(string idperson)
     {
-      return service.GetProfile(idperson);
+      return await service.GetProfile(idperson);
     }
     /// <summary>
     /// Lista as acreditações pendentes para uma pessoa
@@ -101,9 +101,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListCertificationItem>> ListCertificationPerson(string idperson, string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListCertificationPerson(idperson, ref total, filter, count, page);
+      var result = service.ListCertificationPerson(idperson, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Atualizar a situação 
@@ -116,7 +116,7 @@ namespace Manager.Controllers
     [Route("updatestatuscertification/{idperson}")]
     public async Task<string> UpdateStatusCertification([FromBody]ViewCrudCertificationPersonStatus certification, string idperson)
     {
-      return service.UpdateStatusCertification(certification, idperson);
+      return await service.UpdateStatusCertification(certification, idperson);
     }
     /// <summary>
     /// Inclusão pessoa para acreditação
@@ -129,7 +129,7 @@ namespace Manager.Controllers
     [Route("addperson/{idcertification}")]
     public async Task<string> AddPerson([FromBody]ViewListPerson person, string idcertification)
     {
-      return service.AddPerson(idcertification, person);
+      return await service.AddPerson(idcertification, person);
     }
     /// <summary>
     /// Acreditação de contrato 
@@ -142,7 +142,7 @@ namespace Manager.Controllers
     [Route("approvedcertification/{idcertificationperson}")]
     public async Task<string> ApprovedCertification([FromBody]ViewCrudCertificationPerson view, string idcertificationperson)
     {
-      return service.ApprovedCertification(idcertificationperson, view);
+      return await service.ApprovedCertification(idcertificationperson, view);
     }
     /// <summary>
     /// Lista acreditação para excluir
@@ -157,7 +157,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListCertification>> ListEnded(string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
-      return service.ListEnded(ref total, filter, count, page);
+      return await service.ListEnded(filter, count, page);
     }
     /// <summary>
     /// Busca informação de acreditção
@@ -169,7 +169,7 @@ namespace Manager.Controllers
     [Route("certificationswaitperson/{idcertification}")]
     public async Task<ViewCrudCertification> CertificationsWaitPerson(string idcertification)
     {
-      return service.CertificationsWaitPerson(idcertification);
+      return await service.CertificationsWaitPerson(idcertification);
     }
     /// <summary>
     /// Lista contratos para adicionar na acreditçaão
@@ -185,7 +185,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListPerson>> ListPersons(string idcertification, string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
-      return service.ListPersons(idcertification, ref total, filter, count, page);
+      return await service.ListPersons(idcertification, filter, count, page);
     }
     /// <summary>
     /// Inclusão de nova acreditação
@@ -198,7 +198,7 @@ namespace Manager.Controllers
     [Route("newcertification/{idperson}")]
     public async Task<ViewCrudCertification> NewCertification([FromBody]ViewListCertificationItem item, string idperson)
     {
-      return service.NewCertification(item, idperson);
+      return await service.NewCertification(item, idperson);
     }
     /// <summary>
     /// Atualiza informações da acreidtação
@@ -212,7 +212,7 @@ namespace Manager.Controllers
     [Route("updatecertification/{idperson}/{idcertification}")]
     public async Task<string> UpdateCertification([FromBody]ViewCrudCertification certification, string idperson, string idcertification)
     {
-      return service.UpdateCertification(certification, idperson, idcertification);
+      return await service.UpdateCertification(certification, idperson, idcertification);
     }
     #endregion
 

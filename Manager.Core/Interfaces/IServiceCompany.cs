@@ -3,6 +3,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
 {
@@ -10,20 +11,20 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    void SetLogo(string idCompany, string url);
-    string GetLogo(string idCompany);
-    string Delete(string id);
-    string RemoveEstablishment(string id);
-    string New(ViewCrudCompany view);
-    string Update(ViewCrudCompany view);
-    ViewCrudCompany Get(string id);
-    ViewCrudCompany GetByName(string id);
-    List<ViewListCompany> List(ref long total, int count = 10, int page = 1, string filter = "");
-    string NewEstablishment(ViewCrudEstablishment view);
-    string UpdateEstablishment(ViewCrudEstablishment view);
-    ViewCrudEstablishment GetEstablishment(string id);
-    ViewCrudEstablishment GetEstablishmentByName(string idCompany, string name);
-    List<ViewListEstablishment> ListEstablishment(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
-    List<ViewListEstablishment> ListEstablishment(ref long total, int count = 10, int page = 1, string filter = "");
+    Task SetLogo(string idCompany, string url);
+    Task<string> GetLogo(string idCompany);
+    Task<string> Delete(string id);
+    Task<string> RemoveEstablishment(string id);
+    Task<string> New(ViewCrudCompany view);
+    Task<string> Update(ViewCrudCompany view);
+    Task<ViewCrudCompany> Get(string id);
+    Task<ViewCrudCompany> GetByName(string id);
+    Task<List<ViewListCompany>> List( int count = 10, int page = 1, string filter = "");
+    Task<string> NewEstablishment(ViewCrudEstablishment view);
+    Task<string> UpdateEstablishment(ViewCrudEstablishment view);
+    Task<ViewCrudEstablishment> GetEstablishment(string id);
+    Task<ViewCrudEstablishment> GetEstablishmentByName(string idCompany, string name);
+    Task<List<ViewListEstablishment>> ListEstablishment(string idcompany,  int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListEstablishment>> ListEstablishment( int count = 10, int page = 1, string filter = "");
   }
 }

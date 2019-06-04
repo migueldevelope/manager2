@@ -45,9 +45,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListTermsOfService>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListTermsOfService> result = service.List(ref total, count, page, filter);
+      List<ViewListTermsOfService> result = await service.List(count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return  result;
     }
     /// <summary>
     /// Cadastrar uma nova empresa
@@ -58,7 +58,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> Post([FromBody]ViewCrudTermsOfService view)
     {
-      return Ok(service.New(view));
+      return Ok(await  service.New(view));
     }
     /// <summary>
     /// Retorar a empresa para manutenção
@@ -70,7 +70,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudTermsOfService> Get(string id)
     {
-      return service.Get(id);
+      return await service.Get(id);
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ namespace Manager.Controllers
     [Route("getterm")]
     public async Task<ViewListTermsOfService> GetTerm()
     {
-      return service.GetTerm();
+      return await service.GetTerm();
     }
 
     /// <summary>
@@ -95,7 +95,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudTermsOfService view)
     {
-      return Ok(service.Update(view));
+      return Ok(await  service.Update(view));
     }
     /// <summary>
     /// Excluir uma empresa
@@ -107,7 +107,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok(service.Delete(id));
+      return Ok(await  service.Delete(id));
     }
     #endregion
 

@@ -4,6 +4,7 @@ using Manager.Core.Views;
 using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
 {
@@ -11,9 +12,9 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    List<Workflow> NewFlow(ViewFlow view);
-    List<Workflow> Manager(ViewFlow view);
-    Workflow Approved(ViewWorkflow view);
-    Workflow Disapproved(ViewWorkflow view);
+    Task<List<Workflow>> NewFlow(ViewFlow view);
+    Task<List<Workflow>> Manager(ViewFlow view);
+    Task<Workflow> Approved(ViewWorkflow view);
+    Task<Workflow> Disapproved(ViewWorkflow view);
   }
 }

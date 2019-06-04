@@ -89,7 +89,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Checkpoint
-    public List<ViewListCheckpoint> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager,  string filter, int count, int page)
     {
       try
       {
@@ -133,11 +133,14 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+        var total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
                                 p.TypeUser != EnumTypeUser.Administrator &&
                                 p.TypeJourney == EnumTypeJourney.Checkpoint &&
                                 p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        if (detail.Count > 0)
+          detail.FirstOrDefault().total = total;
+
         return detail;
       }
       catch (Exception e)
@@ -145,7 +148,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListCheckpoint ListWaitPerson(string idperson)
+    public async Task<ViewListCheckpoint> ListWaitPerson(string idperson)
     {
       try
       {
@@ -190,7 +193,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListCheckpoint> ListEnded(ref long total, string filter, int count, int page)
+    public async Task<List<ViewListCheckpoint>> ListEnded( string filter, int count, int page)
     {
       try
       {
@@ -207,7 +210,10 @@ namespace Manager.Services.Specific
             OccupationName = p.Occupation?.Name
           }).ToList();
 
-        total = serviceCheckpoint.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceCheckpoint.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        if (detail.Count > 0)
+          detail.FirstOrDefault().total = total;
 
         return detail;
       }
@@ -216,7 +222,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListCheckpoint NewCheckpoint(string idperson)
+    public async Task<ViewListCheckpoint> NewCheckpoint(string idperson)
     {
       try
       {
@@ -303,7 +309,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudCheckpoint GetCheckpoint(string id)
+    public async Task<ViewCrudCheckpoint> GetCheckpoint(string id)
     {
       try
       {
@@ -427,7 +433,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string DeleteCheckpoint(string idcheckpoint)
+    public async Task<string> DeleteCheckpoint(string idcheckpoint)
     {
       try
       {
@@ -445,7 +451,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateCheckpoint(ViewCrudCheckpoint view)
+    public async Task<string> UpdateCheckpoint(ViewCrudCheckpoint view)
     {
       try
       {
@@ -516,7 +522,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudCheckpoint PersonCheckpointEnd(string idperson)
+    public async Task<ViewCrudCheckpoint> PersonCheckpointEnd(string idperson)
     {
       try
       {

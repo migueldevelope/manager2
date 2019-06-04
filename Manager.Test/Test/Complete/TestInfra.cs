@@ -80,14 +80,14 @@ namespace Manager.Test.Test.Complete
       try
       {
         var ares = serviceInfra.GetAreas();
-        var company = serviceInfra.GetCompanies().FirstOrDefault();
+        var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
         serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
         long total = 0;
-        var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).FirstOrDefault();
+        var skill = serviceInfra.GetSkills("3", 100, 1).Result.FirstOrDefault();
         //serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
-        var sphere = serviceInfra.GetSpheres().FirstOrDefault();
+        var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
         //serviceInfra.AddAxis(new Axis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator });
-        var axis = serviceInfra.GetAxis().FirstOrDefault();
+        var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
         //serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
 
       }
@@ -138,11 +138,11 @@ namespace Manager.Test.Test.Complete
         //var id = "5b5a23bd3ac6f1466cdd7d3d";
         //serviceInfra.DeleteEssential(idcompany, id);
 
-        var schooling = serviceInfra.GetSchooling().Where(p => p.Name.Contains("Teste")).FirstOrDefault();
+        var schooling = serviceInfra.GetSchooling().Result.Where(p => p.Name.Contains("Teste")).FirstOrDefault();
         schooling.Name = schooling.Name + " Teste 1";
         //serviceInfra.UpdateSchooling(schooling);
-        var company = serviceInfra.GetCompanies().FirstOrDefault();
-        var area = serviceInfra.GetAreas().FirstOrDefault();
+        var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
+        var area = serviceInfra.GetAreas().Result.FirstOrDefault();
         var map = serviceInfra.GetOccupations(company._id, area._id);
 
         var group = serviceInfra.GetGroups(company._id);
@@ -350,7 +350,7 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var item = serviceInfra.GetAreas().Where(p => p._id == "5ba8d349ea4b69b2d3e2408d").FirstOrDefault();
+        var item = serviceInfra.GetAreas().Result.Where(p => p._id == "5ba8d349ea4b69b2d3e2408d").FirstOrDefault();
         item.Name = "nv area 51 v5";
         //serviceInfra.UpdateArea(item);
 
@@ -367,13 +367,13 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var company = serviceInfra.GetCompanies().FirstOrDefault();
+        var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
         long total = 0;
         var groups = serviceInfra.GetGroups();
-        //var skills = serviceInfra.GetSkills(ref total, "", 100, 1);
-        var skill = serviceInfra.GetSkills(company._id, ref total, "", 100, 1).FirstOrDefault();
-        var sphere = serviceInfra.GetSpheres().FirstOrDefault();
-        var axis = serviceInfra.GetAxis().FirstOrDefault();
+        //var skills = serviceInfra.GetSkills("", 100, 1);
+        var skill = serviceInfra.GetSkills(company._id, "", 100, 1).Result.FirstOrDefault();
+        var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
+        var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
 
         sphere.Name = sphere.Name + " test";
         //serviceInfra.UpdateSphere(sphere);

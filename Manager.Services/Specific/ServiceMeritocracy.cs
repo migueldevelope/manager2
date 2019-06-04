@@ -218,35 +218,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
-    public string NewMeritocracyScore(ViewCrudMeritocracyScore view)
-    {
-      try
-      {
-        MeritocracyScore meritocracyScore = serviceMeritocracyScore.InsertNewVersion(
-          new MeritocracyScore()
-          {
-            _id = view._id,
-            EnabledCompanyDate = view.EnabledCompanyDate,
-            EnabledOccupationDate = view.EnabledOccupationDate,
-            EnabledSchooling = view.EnabledSchooling,
-            EnabledActivitiesExcellence = view.EnabledActivitiesExcellence,
-            EnabledMaturity = view.EnabledMaturity,
-            EnabledGoals = view.EnabledGoals,
-            WeightCompanyDate = view.WeightCompanyDate,
-            WeightOccupationDate = view.WeightOccupationDate,
-            WeightSchooling = view.WeightSchooling,
-            WeightActivitiesExcellence = view.WeightActivitiesExcellence,
-            WeightMaturity = view.WeightMaturity,
-            WeightGoals = view.WeightGoals
-          }).Result;
-        return "MeritocracyScore added!";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     private async Task MathMeritocracy(Meritocracy meritocracy)
     {
       try
@@ -582,7 +553,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Meritocracy
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -599,7 +570,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string New(string idperson)
+    public async Task<string> New(string idperson)
     {
       try
       {
@@ -657,7 +628,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string Update(ViewCrudMeritocracy view)
+    public async Task<string> Update(ViewCrudMeritocracy view)
     {
       try
       {
@@ -680,7 +651,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateCompanyDate(ViewCrudMeritocracyDate view, string id)
+    public async Task<string> UpdateCompanyDate(ViewCrudMeritocracyDate view, string id)
     {
       try
       {
@@ -697,7 +668,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateOccupationDate(ViewCrudMeritocracyDate view, string id)
+    public async Task<string> UpdateOccupationDate(ViewCrudMeritocracyDate view, string id)
     {
       try
       {
@@ -714,7 +685,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateOccupationActivitiesExcellence(ViewCrudMeritocracyWeight view, string id)
+    public async Task<string> UpdateOccupationActivitiesExcellence(ViewCrudMeritocracyWeight view, string id)
     {
       try
       {
@@ -731,7 +702,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateOccupationMaturity(ViewCrudMeritocracyWeight view, string id)
+    public async Task<string> UpdateOccupationMaturity(ViewCrudMeritocracyWeight view, string id)
     {
       try
       {
@@ -748,7 +719,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudMeritocracy Get(string id)
+    public async Task<ViewCrudMeritocracy> Get(string id)
     {
       try
       {
@@ -789,7 +760,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListMeritocracy> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMeritocracy>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -799,7 +770,7 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Person.Name
           }).ToList();
-        total = serviceMeritocracy.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceMeritocracy.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -808,7 +779,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListMeritocracyActivitie> ListMeritocracyActivitie(string idmeritocracy)
+    public async Task<List<ViewListMeritocracyActivitie>> ListMeritocracyActivitie(string idmeritocracy)
     {
       try
       {
@@ -828,7 +799,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListMeritocracy> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager,  string filter, int count, int page)
     {
       try
       {
@@ -865,7 +836,7 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+        var total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
                                 p.TypeUser != EnumTypeUser.Administrator &&
                                 p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
@@ -877,7 +848,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark)
+    public async Task<string> UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark)
     {
       try
       {
@@ -908,7 +879,36 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MeritocracyScore
-    public string RemoveMeritocracyScore(string id)
+
+    public async Task<string> NewMeritocracyScore(ViewCrudMeritocracyScore view)
+    {
+      try
+      {
+        MeritocracyScore meritocracyScore = serviceMeritocracyScore.InsertNewVersion(
+          new MeritocracyScore()
+          {
+            _id = view._id,
+            EnabledCompanyDate = view.EnabledCompanyDate,
+            EnabledOccupationDate = view.EnabledOccupationDate,
+            EnabledSchooling = view.EnabledSchooling,
+            EnabledActivitiesExcellence = view.EnabledActivitiesExcellence,
+            EnabledMaturity = view.EnabledMaturity,
+            EnabledGoals = view.EnabledGoals,
+            WeightCompanyDate = view.WeightCompanyDate,
+            WeightOccupationDate = view.WeightOccupationDate,
+            WeightSchooling = view.WeightSchooling,
+            WeightActivitiesExcellence = view.WeightActivitiesExcellence,
+            WeightMaturity = view.WeightMaturity,
+            WeightGoals = view.WeightGoals
+          }).Result;
+        return "MeritocracyScore added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public async Task<string> RemoveMeritocracyScore(string id)
     {
       try
       {
@@ -922,7 +922,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateMeritocracyScore(ViewCrudMeritocracyScore view)
+    public async Task<string> UpdateMeritocracyScore(ViewCrudMeritocracyScore view)
     {
       try
       {
@@ -947,7 +947,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudMeritocracyScore GetMeritocracyScore(string id)
+    public async Task<ViewCrudMeritocracyScore> GetMeritocracyScore(string id)
     {
       try
       {
@@ -975,7 +975,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListMeritocracyScore ListMeritocracyScore()
+    public async Task<ViewListMeritocracyScore> ListMeritocracyScore()
     {
       try
       {
@@ -1006,7 +1006,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region SalaryScaleScore
-    public string DeleteSalaryScaleScore(string id)
+    public async Task<string> DeleteSalaryScaleScore(string id)
     {
       try
       {
@@ -1020,7 +1020,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateSalaryScaleScore(ViewCrudSalaryScaleScore view)
+    public async Task<string> UpdateSalaryScaleScore(ViewCrudSalaryScaleScore view)
     {
       try
       {
@@ -1036,7 +1036,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudSalaryScaleScore GetSalaryScaleScore(string id)
+    public async Task<ViewCrudSalaryScaleScore> GetSalaryScaleScore(string id)
     {
       try
       {
@@ -1054,7 +1054,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudSalaryScaleScore> ListSalaryScaleScore(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1069,7 +1069,7 @@ namespace Manager.Services.Specific
             Step = p.Step,
             Value = p.Value,
           }).ToList();
-        total = serviceSalaryScaleScore.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var total = serviceSalaryScaleScore.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         return detail;
       }
       catch (Exception e)

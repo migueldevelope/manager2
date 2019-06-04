@@ -10,39 +10,39 @@ namespace Manager.Core.Interfaces
   public interface IServiceIndicators
   {
     void SetUser(IHttpContextAccessor contextAccessor);
-    List<ViewIndicatorsNotes> GetNotes(string id);
-    List<ViewIndicatorsNotes> GetNotesPerson(string id);
-    bool VerifyAccount(string id);
+    Task<List<ViewIndicatorsNotes>> GetNotes(string id);
+    Task<List<ViewIndicatorsNotes>> GetNotesPerson(string id);
+    Task<bool> VerifyAccount(string id);
     void SetUser(BaseUser baseUser);
     Task SendMessages(string link);
-    List<ViewTagsCloud> ListTagsCloud(string idmanager);
-    List<ViewTagsCloud> ListTagsCloudCompany(string idmanager);
-    List<ViewTagsCloud> ListTagsCloudPerson(string idperson);
-    List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
-    //string[] ExportStatusOnboarding(ref long total, string filter, int count, int page);
-    List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding();
-    List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring();
-    List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson);
-    List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson);
-    List<ViewExportStatusCheckpoint> ExportStatusCheckpoint();
-    List<ViewExportStatusPlan> ExportStatusPlan();
-    List<ViewExportStatusCertification> ExportStatusCertification();
-    List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson);
+    Task<List<ViewTagsCloud>> ListTagsCloud(string idmanager);
+    Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager);
+    Task<List<ViewTagsCloud>> ListTagsCloudPerson(string idperson);
+    Task<List<ViewTagsCloud>> ListTagsCloudCompanyPerson(string idperson);
+    //string[] ExportStatusOnboarding( string filter, int count, int page);
+    Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding();
+    Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring();
+    Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson);
+    Task<List<ViewExportStatusMonitoring>> ExportStatusMonitoring(string idperson);
+    Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint();
+    Task<List<ViewExportStatusPlan>> ExportStatusPlan();
+    Task<List<ViewExportStatusCertification>> ExportStatusCertification();
+    Task<List<ViewExportStatusCertificationPerson>> ExportStatusCertification(string idperson);
 
-    IEnumerable<ViewChartOnboarding> ChartOnboarding();
+    Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding();
 
-    IEnumerable<ViewChartStatus> ChartOnboardingRealized();
+    Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized();
 
-    IEnumerable<ViewChartMonitoring> ChartMonitoring();
+    Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring();
 
-    IEnumerable<ViewChartCheckpoint> ChartCheckpoint();
+    Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint();
 
-    IEnumerable<ViewChartPlan> ChartPlan();
+    Task<IEnumerable<ViewChartPlan>> ChartPlan();
 
-    IEnumerable<ViewChartStatus> ChartMonitoringRealized();
+    Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized();
 
-    IEnumerable<ViewChartStatus> ChartCheckpointRealized();
+    Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized();
 
-    IEnumerable<ViewChartStatus> ChartPlanRealized();
+    Task<IEnumerable<ViewChartStatus>> ChartPlanRealized();
   }
 }

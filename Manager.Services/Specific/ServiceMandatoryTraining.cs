@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -312,7 +313,7 @@ namespace Manager.Services.Specific
 
     #region mandatorytraining
 
-    public string NewTrainingPlanInternal(TrainingPlan view)
+    public async Task<string> NewTrainingPlanInternal(TrainingPlan view)
     {
       try
       {
@@ -330,7 +331,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateTrainingPlanInternal(TrainingPlan view)
+    public async Task<string> UpdateTrainingPlanInternal(TrainingPlan view)
     {
       try
       {
@@ -343,7 +344,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddOccupation(ViewCrudOccupationMandatory view)
+    public async Task<string> AddOccupation(ViewCrudOccupationMandatory view)
     {
       try
       {
@@ -384,7 +385,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string AddPerson(ViewCrudPersonMandatory view)
+    public async Task<string> AddPerson(ViewCrudPersonMandatory view)
     {
       try
       {
@@ -426,7 +427,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string AddCompany(ViewCrudCompanyMandatory view)
+    public async Task<string> AddCompany(ViewCrudCompanyMandatory view)
     {
       try
       {
@@ -467,7 +468,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemoveOccupation(string idcourse, string idoccupation)
+    public async Task<string> RemoveOccupation(string idcourse, string idoccupation)
     {
       try
       {
@@ -490,7 +491,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemovePerson(string idcourse, string idperson)
+    public async Task<string> RemovePerson(string idcourse, string idperson)
     {
       try
       {
@@ -513,7 +514,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async void RemovePersonPlan(string idperson, string idcourse)
+    public async Task RemovePersonPlan(string idperson, string idcourse)
     {
       try
       {
@@ -527,7 +528,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async void RemoveOccupationPlan(string idoccoupation, string idcourse)
+    public async Task RemoveOccupationPlan(string idoccoupation, string idcourse)
     {
       try
       {
@@ -541,7 +542,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async void RemoveCompanyPlan(string idcompany, string idcourse)
+    public async Task RemoveCompanyPlan(string idcompany, string idcourse)
     {
       try
       {
@@ -555,7 +556,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string RemoveCompany(string idcourse, string idcompany)
+    public async Task<string> RemoveCompany(string idcourse, string idcompany)
     {
       try
       {
@@ -579,7 +580,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public void RemoveCompanyMandatory(string id)
+    public async Task RemoveCompanyMandatory(string id)
     {
       try
       {
@@ -593,7 +594,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public void RemoveOccupationMandatory(string id)
+    public async Task RemoveOccupationMandatory(string id)
     {
       try
       {
@@ -607,7 +608,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public void RemovePersonMandatory(string id)
+    public async Task RemovePersonMandatory(string id)
     {
       try
       {
@@ -621,7 +622,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListOccupation> ListOccupation(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOccupation>> ListOccupation(string idcourse, string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -644,7 +645,7 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Name
           }).ToList();
-        total = detail.Count();
+        var total = detail.Count();
         return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
@@ -653,7 +654,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPerson> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPerson>> ListPerson(string idcourse, string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -680,7 +681,7 @@ namespace Manager.Services.Specific
             User = new ViewListUser() { _id = x._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone }
           }).ToList();
 
-        total = detail.Count();
+        var total = detail.Count();
 
         return detail.Skip(skip).Take(count).ToList();
 
@@ -691,7 +692,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCompany> ListCompany(string idcourse, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCompany>> ListCompany(string idcourse,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -716,7 +717,7 @@ namespace Manager.Services.Specific
           }).ToList();
         ;
 
-        total = detail.Count();
+        var total = detail.Count();
 
         return detail.Skip(skip).Take(count).ToList();
 
@@ -727,13 +728,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTrainingPlan> ListTrainingPlanPerson(string iduser, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewTrainingPlan>> ListTrainingPlanPerson(string iduser,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
         var list = new List<ViewTrainingPlan>();
         var countRealized = 0;
         var countNo = 0;
@@ -769,7 +770,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTrainingPlanList> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewTrainingPlanList>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -780,12 +781,12 @@ namespace Manager.Services.Specific
           if (origin == EnumOrigin.Full)
           {
             detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            var total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
           else
           {
             detail = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            var total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
         }
         else
@@ -793,12 +794,12 @@ namespace Manager.Services.Specific
           if (origin == EnumOrigin.Full)
           {
             detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            var total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
           else
           {
             detail = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            var total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
         }
 
@@ -879,7 +880,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string RemoveTrainingPlan(string id)
+    public async Task<string> RemoveTrainingPlan(string id)
     {
       try
       {
@@ -896,13 +897,13 @@ namespace Manager.Services.Specific
 
 
 
-    public List<ViewCrudMandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudMandatoryTraining>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
-        total = serviceMandatoryTraining.CountNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceMandatoryTraining.CountNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewCrudMandatoryTraining()
         {
@@ -969,7 +970,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse)
+    public async Task<ViewCrudMandatoryTraining> GetMandatoryTraining(string idcourse)
     {
       try
       {
@@ -1051,7 +1052,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewTrainingPlan(ViewCrudTrainingPlan view)
+    public async Task<string> NewTrainingPlan(ViewCrudTrainingPlan view)
     {
       try
       {
@@ -1079,7 +1080,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateTrainingPlan(ViewCrudTrainingPlan view)
+    public async Task<string> UpdateTrainingPlan(ViewCrudTrainingPlan view)
     {
       try
       {
@@ -1102,7 +1103,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudTrainingPlan GetTrainingPlan(string id)
+    public async Task<ViewCrudTrainingPlan> GetTrainingPlan(string id)
     {
       try
       {
@@ -1127,13 +1128,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.CountNewVersion(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceTrainingPlan.CountNewVersion(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewCrudTrainingPlan()
         {
@@ -1154,13 +1155,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany, string idperson,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.CountNewVersion(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceTrainingPlan.CountNewVersion(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewCrudTrainingPlan()
         {
@@ -1184,13 +1185,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region old
-    public List<MandatoryTraining> ListOld(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<MandatoryTraining> ListOld( int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
-        total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
 
@@ -1270,13 +1271,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<TrainingPlan> ListTrainingPlanOld(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
       }
@@ -1286,13 +1287,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson,  int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
       }
@@ -1303,14 +1304,6 @@ namespace Manager.Services.Specific
     }
 
     #endregion
-
-
-
-
-
-
-
-
 
   }
 #pragma warning restore 1998

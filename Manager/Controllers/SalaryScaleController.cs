@@ -46,9 +46,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListSalaryScale>> List(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(idcompany, ref total, count, page, filter);
+      var result = service.List(idcompany, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Buscar objeto de manutenção da tabela salarial
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudSalaryScale> Get(string id)
     {
-      return service.Get(id);
+      return await service.Get(id);
     }
     /// <summary>
     /// Incluir nova tabela salarial
@@ -72,7 +72,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> New([FromBody]ViewCrudSalaryScale view)
     {
-      return Ok(service.New(view));
+      return Ok(await  service.New(view));
     }
     /// <summary>
     /// Atualizar uma tabela salarial
@@ -84,7 +84,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudSalaryScale view)
     {
-      return Ok(service.Update(view));
+      return Ok(await  service.Update(view));
     }
     /// <summary>
     /// Excluir uma tabela salarial
@@ -96,7 +96,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok(service.Delete(id));
+      return Ok(await  service.Delete(id));
     }
     #endregion
 
@@ -115,9 +115,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListGrade>> ListGrade(string idsalaryscale, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGrade(idsalaryscale, ref total, count, page, filter);
+      var result = service.ListGrade(idsalaryscale, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Lista todos os grades para filtro
@@ -133,9 +133,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListGradeFilter>> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGrades(idcompany, ref total, count, page, filter);
+      var result = service.ListGrades(idcompany, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Buscar grade para alteração
@@ -148,7 +148,7 @@ namespace Manager.Controllers
     [Route("getgrade/{idsalaryscale}/{id}")]
     public async Task<ViewCrudGrade> GetGrade(string idsalaryscale, string id)
     {
-      return service.GetGrade(idsalaryscale, id);
+      return await service.GetGrade(idsalaryscale, id);
     }
     /// <summary>
     /// Incluir um novo grade na tabela salarial
@@ -160,7 +160,7 @@ namespace Manager.Controllers
     [Route("addgrade")]
     public async Task<IActionResult> AddGrade([FromBody]ViewCrudGrade view)
     {
-      return Ok(service.AddGrade(view));
+      return Ok(await  service.AddGrade(view));
     }
     /// <summary>
     /// Alterar um grade da tabela salarial
@@ -172,7 +172,7 @@ namespace Manager.Controllers
     [Route("updategrade")]
     public async Task<IActionResult> UpdateGrade([FromBody]ViewCrudGrade view)
     {
-      return Ok(service.UpdateGrade(view));
+      return Ok(await  service.UpdateGrade(view));
     }
     /// <summary>
     /// Alterar a ordem do grade
@@ -186,7 +186,7 @@ namespace Manager.Controllers
     [Route("updategradeposition/{idsalaryscale}/{idgrade}")]
     public async Task<IActionResult> UpdateGradePosition(string idsalaryscale, string idgrade, int position)
     {
-      return Ok(service.UpdateGradePosition(idsalaryscale, idgrade, position));
+      return Ok(await  service.UpdateGradePosition(idsalaryscale, idgrade, position));
     }
     /// <summary>
     /// Remover um grade da tabela salarial
@@ -199,7 +199,7 @@ namespace Manager.Controllers
     [Route("deletegrade/{idsalaryscale}/{id}")]
     public async Task<string> DeleteGrade(string idsalaryscale, string id)
     {
-      return service.DeleteGrade(idsalaryscale, id);
+      return await service.DeleteGrade(idsalaryscale, id);
     }
     #endregion
 
@@ -214,7 +214,7 @@ namespace Manager.Controllers
     [Route("updatestep")]
     public async Task<IActionResult> UpdateStep([FromBody]ViewCrudStep view)
     {
-      return Ok(service.UpdateStep(view));
+      return Ok(await  service.UpdateStep(view));
     }
     #endregion
 

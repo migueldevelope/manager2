@@ -48,7 +48,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Log
-    public void NewLog(ViewLog view)
+    public async Task NewLog(ViewLog view)
     {
       try
       {
@@ -68,7 +68,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void NewLogService(ViewLog view)
+    public async Task NewLogService(ViewLog view)
     {
       try
       {
@@ -87,13 +87,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListLog> ListLogs(string idaccount, ref long total, int count, int page, string filter)
+    public async Task<List<ViewListLog>> ListLogs(string idaccount,  int count, int page, string filter)
     {
       try
       {
         int skip = (count * (page - 1));
         List<Log> detail = serviceLog.GetAllFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "DataLog DESC").Result;
-        total = serviceLog.CountFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceLog.CountFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.Select(p => new ViewListLog()
         {
           DataLog = p.DataLog,

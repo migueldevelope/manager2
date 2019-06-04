@@ -14,7 +14,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser _user);
     Task<string> NewAccount(ViewNewAccount view);
-    Task<List<ViewListAccount>> GetAll(ref long total, int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListAccount>> GetAll( int count = 10, int page = 1, string filter = "");
     Task<ViewPerson> AlterAccount(string idaccount);
     Task<ViewPerson> AlterAccountPerson(string idperson);
     Task<string> SynchronizeParameters();

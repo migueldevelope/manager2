@@ -7,5 +7,6 @@ namespace Manager.Views.BusinessList
   {
     [BsonRepresentation(BsonType.ObjectId)]
     public string _id { get; set; }
+    public long total { get; set; }
   }
 }

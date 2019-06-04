@@ -93,7 +93,7 @@ namespace Manager.Services.Specific
 
     #region OnBoarding
 
-    public List<ViewListOnBoarding> List(string idmanager, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListOnBoarding>> List(string idmanager,  string filter, int count, int page)
     {
       try
       {
@@ -128,7 +128,7 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator &&
+        var total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator &&
           (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
           p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
@@ -139,7 +139,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListOnBoarding PersonWait(string idperson)
+    public async Task<ViewListOnBoarding> PersonWait(string idperson)
     {
       try
       {
@@ -174,7 +174,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewListOnBoarding New(string idperson)
+    public async Task<ViewListOnBoarding> New(string idperson)
     {
       try
       {
@@ -231,7 +231,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudOnboarding Get(string id)
+    public async Task<ViewCrudOnboarding> Get(string id)
     {
       try
       {
@@ -425,7 +425,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment)
+    public async Task<string> UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment)
     {
       try
       {
@@ -519,7 +519,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string DeleteComments(string idonboarding, string iditem, string idcomments)
+    public async Task<string> DeleteComments(string idonboarding, string iditem, string idcomments)
     {
       try
       {
@@ -628,7 +628,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Delete(string id)
+    public async Task<string> Delete(string id)
     {
       try
       {
@@ -645,14 +645,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListOnBoarding> ListEnded(string idmanager, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager,  string filter, int count, int page)
     {
       try
       {
         Task.Run(() => LogSave(_user._idPerson, "List ended"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListOnBoarding()
         {
@@ -668,7 +668,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudComment> AddComments(string idonboarding, string iditem, ViewCrudComment comments)
+    public async Task<List<ViewCrudComment>> AddComments(string idonboarding, string iditem, ViewCrudComment comments)
     {
       try
       {
@@ -934,7 +934,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments)
+    public async Task<string> UpdateComments(string idonboarding, string iditem, ViewCrudComment comments)
     {
       try
       {
@@ -1060,7 +1060,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudComment> ListComments(string idonboarding, string iditem)
+    public async Task<List<ViewCrudComment>> ListComments(string idonboarding, string iditem)
     {
       try
       {
@@ -1161,14 +1161,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListOnBoarding> ListPersonEnd(string idmanager, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager,  string filter, int count, int page)
     {
       try
       {
         Task.Run(() => LogSave(_user._idPerson, "List ended for person"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceOnboarding.CountNewVersion(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceOnboarding.CountNewVersion(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListOnBoarding()
         {
@@ -1185,7 +1185,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudOnboarding GetOnBoardings(string id)
+    public async Task<ViewCrudOnboarding> GetOnBoardings(string id)
     {
       try
       {
@@ -1379,7 +1379,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudOnboarding view)
+    public async Task<string> Update(ViewCrudOnboarding view)
     {
       try
       {
@@ -1478,7 +1478,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListOnBoarding> ListExcluded(ref long total, string filter, int count, int page)
+    public async Task<List<ViewListOnBoarding>> ListExcluded( string filter, int count, int page)
     {
       try
       {
@@ -1486,7 +1486,7 @@ namespace Manager.Services.Specific
         
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceOnboarding.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceOnboarding.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         //Task.Run(() => LogSaves(detail.Person._id, "OnBoarding list for exclud"));
 
         return detail.Select(p => new ViewListOnBoarding()
@@ -1504,7 +1504,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListOnBoarding>> ListOnBoardingsWait(string idmanager,  string filter, int count, int page)
     {
       try
       {
@@ -1533,7 +1533,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        total = detail.Count();
+        var total = detail.Count();
         return detail.Skip(skip).Take(count)
           .Select(p => new ViewListOnBoarding()
           {

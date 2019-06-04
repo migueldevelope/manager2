@@ -41,14 +41,14 @@ namespace Manager.Controllers
     [Route("removestructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
     public async Task<string> RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
-      return service.RemoveStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
+      return await service.RemoveStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
     [Authorize]
     [HttpDelete]
     [Route("removeplanactivity/{id}")]
     public async Task<string> RemovePlanActivity(string id)
     {
-      return service.RemovePlanActivity(id);
+      return await service.RemovePlanActivity(id);
     }
     /// <summary>
     /// Lista os planos para tela principal
@@ -71,9 +71,9 @@ namespace Manager.Controllers
     public async Task<List<ViewGetPlan>> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPlans(ref total, id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
+      var result = service.ListPlans(id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Lista os planos filtrando pelo gestor
@@ -89,9 +89,9 @@ namespace Manager.Controllers
     public async Task<List<ViewPlanShort>> ListPlans(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPlans(ref total, id, filter, count, page);
+      var result = service.ListPlans(id, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Lista os planos filtrando pelo contrato
@@ -107,9 +107,9 @@ namespace Manager.Controllers
     public async Task<List<ViewPlanShort>> ListPlansPerson(string id, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPlansPerson(ref total, id, filter, count, page);
+      var result = service.ListPlansPerson(id, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Lista o monitoring para tela principal filtrando pelo contrato
@@ -132,9 +132,9 @@ namespace Manager.Controllers
     public async Task<List<ViewGetPlan>> ListPlansPerson(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPlansPerson(ref total, id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
+      var result = service.ListPlansPerson(id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Busca informações de plano para editar
@@ -147,7 +147,7 @@ namespace Manager.Controllers
     [Route("getplan/{idmonitoring}/{idplan}")]
     public async Task<ViewGetPlan> GetPlan(string idmonitoring, string idplan)
     {
-      return service.GetPlan(idmonitoring, idplan);
+      return await service.GetPlan(idmonitoring, idplan);
     }
     /// <summary>
     /// Atualiza informações do plano
@@ -160,7 +160,7 @@ namespace Manager.Controllers
     [Route("updateplan/{idmonitoring}")]
     public async Task<string> UpdatePlan([FromBody]ViewCrudPlan plan, string idmonitoring)
     {
-      return service.UpdatePlan(idmonitoring, plan);
+      return await service.UpdatePlan(idmonitoring, plan);
     }
     /// <summary>
     /// Inclusão de novo plano
@@ -174,7 +174,7 @@ namespace Manager.Controllers
     [Route("newplan/{idmonitoring}/{idplanold}")]
     public async Task<string> NewPlan([FromBody]ViewCrudPlan plan, string idmonitoring, string idplanold)
     {
-      return service.NewPlan(idmonitoring, idplanold, plan);
+      return await service.NewPlan(idmonitoring, idplanold, plan);
     }
     /// <summary>
     /// Inclusão de novo plano quando reprovado (não concorda) o plano anterior
@@ -187,7 +187,7 @@ namespace Manager.Controllers
     [Route("newupdateplan/{idmonitoring}")]
     public async Task<string> NewUpdatePlan([FromBody]List<ViewCrudNewPlanUp> plan, string idmonitoring)
     {
-      return service.NewUpdatePlan(idmonitoring, plan);
+      return await service.NewUpdatePlan(idmonitoring, plan);
     }
     /// <summary>
     /// Lista planos para curadoria
@@ -205,9 +205,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListPlanStruct>> ListPlansStruct(byte activities, byte skillcompany, byte schooling, byte structplan, int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListPlansStruct(ref total, "", count, page, activities, skillcompany, schooling, structplan);
+      var result = service.ListPlansStruct("", count, page, activities, skillcompany, schooling, structplan);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Inclusão da Curadoria
@@ -222,7 +222,7 @@ namespace Manager.Controllers
     [Route("newstructplan/{idmonitoring}/{idplan}/{sourceplan}")]
     public async Task<string> NewStructPlan([FromBody] ViewCrudStructPlan structplan, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
     {
-      return service.NewStructPlan(idmonitoring, idplan, sourceplan, structplan);
+      return await service.NewStructPlan(idmonitoring, idplan, sourceplan, structplan);
     }
     /// <summary>
     /// Busca informações para editar curadoria
@@ -237,7 +237,7 @@ namespace Manager.Controllers
     [Route("getstructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
     public async Task<ViewCrudStructPlan> GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
-      return service.GetStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
+      return await service.GetStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
     /// <summary>
     /// Busca informações para editar plano para curadoria
@@ -250,7 +250,7 @@ namespace Manager.Controllers
     [Route("getplanstruct/{idmonitoring}/{idplan}")]
     public async Task<ViewListPlanStruct> GetPlanStruct(string idmonitoring, string idplan)
     {
-      return service.GetPlanStruct(idmonitoring, idplan);
+      return await service.GetPlanStruct(idmonitoring, idplan);
     }
     /// <summary>
     /// Atualiza informações da curadoria
@@ -265,7 +265,7 @@ namespace Manager.Controllers
     [Route("updatestructplan/{idmonitoring}/{idplan}/{sourceplan}")]
     public async Task<string> UpdateStructPlan([FromBody]ViewCrudStructPlan structplanedit, string idmonitoring, string idplan, EnumSourcePlan sourceplan)
     {
-      return service.UpdateStructPlan(idmonitoring, idplan, sourceplan, structplanedit);
+      return await service.UpdateStructPlan(idmonitoring, idplan, sourceplan, structplanedit);
     }
     /// <summary>
     /// Lista planos de entregas
@@ -280,9 +280,9 @@ namespace Manager.Controllers
     public async Task<List<ViewPlanActivity>> ListPlanActivity(string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListPlanActivity(ref total, filter, count, page);
+      var result = service.ListPlanActivity(filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
     /// <summary>
     /// Busca informações para editar planos de entrega
@@ -294,7 +294,7 @@ namespace Manager.Controllers
     [Route("getplanactivity/{id}")]
     public async Task<ViewPlanActivity> GetPlanActivity(string id)
     {
-      return service.GetPlanActivity(id);
+      return await service.GetPlanActivity(id);
     }
     /// <summary>
     /// Adiciona entrega
@@ -306,7 +306,7 @@ namespace Manager.Controllers
     [Route("newplanactivity")]
     public async Task<string> NewPlanActivity([FromBody]ViewPlanActivity model)
     {
-      return service.NewPlanActivity(model);
+      return await service.NewPlanActivity(model);
     }
     /// <summary>
     /// Atualiza informações de entrega
@@ -318,7 +318,7 @@ namespace Manager.Controllers
     [Route("updateplanactivity")]
     public async Task<string> UpdatePlanActivity([FromBody]ViewPlanActivity model)
     {
-      return service.UpdatePlanActivity(model);
+      return await service.UpdatePlanActivity(model);
     }
     #endregion
 

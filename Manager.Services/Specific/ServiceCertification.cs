@@ -412,7 +412,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region certification
-    public void SetAttachment(string idcertification, string url, string fileName, string attachmentid)
+    public async Task SetAttachment(string idcertification, string url, string fileName, string attachmentid)
     {
       try
       {
@@ -431,7 +431,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeleteCertification(string idcertification)
+    public async Task<string> DeleteCertification(string idcertification)
     {
       try
       {
@@ -451,7 +451,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeletePerson(string idcertification, string idcertificationperson)
+    public async Task<string> DeletePerson(string idcertification, string idcertificationperson)
     {
       try
       {
@@ -474,7 +474,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson)
+    public async Task<string> UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson)
     {
       try
       {
@@ -523,7 +523,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCertificationPerson> ListCertificationsWaitPerson(string idperson, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListCertificationPerson>> ListCertificationsWaitPerson(string idperson,  string filter, int count, int page)
     {
       try
       {
@@ -565,9 +565,10 @@ namespace Manager.Services.Specific
 
         var result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         result = result.Distinct(new ViewCertificationComparer()).ToList();
-        total = result.Count();
+        var total = result.Count();
 
-
+        if(result.Count > 0)
+          result.FirstOrDefault().total = total;
 
         return result;
       }
@@ -577,7 +578,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListCertificationItem>> ListCertificationPerson(string idperson,  string filter, int count, int page)
     {
       try
       {
@@ -598,7 +599,9 @@ namespace Manager.Services.Specific
           p.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationHard ? EnumItemCertificationView.Hard : EnumItemCertificationView.Soft
         }).ToList();
 
-        total = result.Count();
+        var total = result.Count();
+        if (result.Count > 0)
+          result.FirstOrDefault().total = total;
 
         return result;
       }
@@ -609,21 +612,22 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewListCertification> ListEnded(ref long total, string filter, int count, int page)
+    public async Task<List<ViewListCertification>> ListEnded( string filter, int count, int page)
     {
       try
       {
 
         int skip = (count * (page - 1));
         var detail = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceCertification.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceCertification.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListCertification()
         {
           _id = p._id,
           Name = p.Person.User.Name,
           _idPerson = p.Person._id,
-          StatusCertification = p.StatusCertification
+          StatusCertification = p.StatusCertification,
+          total = total
         }).ToList();
       }
       catch (Exception e)
@@ -632,7 +636,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPerson> ListPersons(string idcertification, ref long total, string filter, int count, int page)
+    public async Task<List<ViewListPerson>> ListPersons(string idcertification,  string filter, int count, int page)
     {
       try
       {
@@ -668,13 +672,16 @@ namespace Manager.Services.Specific
         var detail = details.Where(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(o => o.User.Name).ToList();
 
 
-        total = detail.Count();
+        var total = detail.Count();
         var listExclud = serviceCertification.GetAll(p => p._id == idcertification).FirstOrDefault().ListPersons;
         foreach (var item in listExclud)
         {
           detail.RemoveAll(p => p._id == item.Person._id);
         }
         detail.RemoveAll(p => p._id == certificaiton.Person._id);
+
+        if (detail.Count > 0)
+          detail.FirstOrDefault().total = total;
 
         return detail;
       }
@@ -684,7 +691,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewListCertificationProfile GetProfile(string idperson)
+    public async Task<ViewListCertificationProfile> GetProfile(string idperson)
     {
       try
       {
@@ -778,7 +785,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudCertification NewCertification(ViewListCertificationItem item, string idperson)
+    public async Task<ViewCrudCertification> NewCertification(ViewListCertificationItem item, string idperson)
     {
       try
       {
@@ -856,7 +863,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddPerson(string idcertification, ViewListPerson person)
+    public async Task<string> AddPerson(string idcertification, ViewListPerson person)
     {
       try
       {
@@ -899,7 +906,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string ApprovedCertification(string idcertification, ViewCrudCertificationPerson view)
+    public async Task<string> ApprovedCertification(string idcertification, ViewCrudCertificationPerson view)
     {
       try
       {
@@ -925,7 +932,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateCertification(ViewCrudCertification view, string idperson, string idmonitoring)
+    public async Task<string> UpdateCertification(ViewCrudCertification view, string idperson, string idmonitoring)
     {
       try
       {
@@ -974,7 +981,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public ViewCrudCertification CertificationsWaitPerson(string idcertification)
+    public async Task<ViewCrudCertification> CertificationsWaitPerson(string idcertification)
     {
       try
       {

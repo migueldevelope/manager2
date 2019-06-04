@@ -27,7 +27,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<string> Post([FromBody]ConfigurationNotification view)
     {
-      return service.New(view);
+      return await service.New(view);
     }
 
     [Authorize]
@@ -36,9 +36,9 @@ namespace Manager.Controllers
     public async Task<List<ConfigurationNotification>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(ref total, count, page, filter);
+      var result = service.List(count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await result;
     }
 
     [Authorize]
@@ -46,7 +46,7 @@ namespace Manager.Controllers
     [Route("get")]
     public async Task<ConfigurationNotification> List(string id)
     {
-      return service.Get(id);
+      return await service.Get(id);
     }
 
     [Authorize]
@@ -54,7 +54,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<string> Update([FromBody]ConfigurationNotification view)
     {
-      return service.Update(view);
+      return await service.Update(view);
     }
 
     [Authorize]
@@ -62,7 +62,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<string> Delete(string id)
     {
-      return service.Remove(id);
+      return await service.Remove(id);
     }
 
   }

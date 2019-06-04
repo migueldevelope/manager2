@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
@@ -43,7 +44,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MailModel
-    public List<ViewListMailModel> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMailModel>> List( int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -56,7 +57,7 @@ namespace Manager.Services.Specific
             Subject = p.Subject
           }).ToList();
 
-        total = serviceMailModel.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var total = serviceMailModel.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -64,7 +65,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string New(ViewCrudMailModel view)
+    public async Task<string> New(ViewCrudMailModel view)
     {
       try
       {
@@ -84,7 +85,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Update(ViewCrudMailModel view)
+    public async Task<string> Update(ViewCrudMailModel view)
     {
       try
       {
@@ -103,7 +104,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string Remove(string id)
+    public async Task<string> Remove(string id)
     {
       try
       {
@@ -117,7 +118,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudMailModel Get(string id)
+    public async Task<ViewCrudMailModel> Get(string id)
     {
       try
       {
