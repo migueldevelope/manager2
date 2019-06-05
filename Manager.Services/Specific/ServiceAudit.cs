@@ -130,11 +130,15 @@ namespace Manager.Services.Specific
         {
           if (occupation.Skills != null)
             foreach (var item in occupation.Skills)
-              result.Add(new ViewAuditOccupationSkills()
-              {
-                OccupationName = occupation.Name,
-                SkillsName = item.Name
-              });
+            {
+              if (item != null)
+                result.Add(new ViewAuditOccupationSkills()
+                {
+                  OccupationName = occupation.Name,
+                  SkillsName = item.Name
+                });
+            }
+
         }
 
 

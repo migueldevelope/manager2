@@ -84,7 +84,7 @@ namespace IntegrationServer.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("person")]
+    [Route("occupationskills")]
     public List<ViewAuditOccupationSkills> ListOccupationSkills()
     {
       var result = service.ListOccupationSkills();
