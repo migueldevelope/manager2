@@ -74,6 +74,9 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
+        if (filter == null)
+          return null;
+
         if (filter != string.Empty)
         {
           var listEnd = ListEnd(idManager, filter).Result;
@@ -82,7 +85,7 @@ namespace Manager.Services.Specific
           return Task.FromResult(listEnd.Skip(skip).Take(count).ToList());
         }
         else
-          return Task.FromResult(ListOpen(idManager,ref total, count, page, filter).Result);
+          return Task.FromResult(ListOpen(idManager, ref total, count, page, filter).Result);
       }
       catch (Exception e)
       {

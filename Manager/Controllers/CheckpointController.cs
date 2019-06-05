@@ -46,7 +46,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListWaitManager(idmanager, filter, count, page);
+      var result = service.ListWaitManager(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -135,7 +135,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListCheckpoint>> ListEnded( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEnded(filter, count, page);
+      var result = service.ListEnded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

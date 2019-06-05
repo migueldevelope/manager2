@@ -22,7 +22,7 @@ namespace Manager.Core.Interfaces
     Task<string> UpdateOccupationMaturity(ViewCrudMeritocracyWeight view, string id);
     Task<string> UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark);
     Task<List<ViewListMeritocracyActivitie>> ListMeritocracyActivitie(string idmeritocracy);
-    Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager,  string filter, int count, int page);
+    Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, ref  long total,  string filter, int count, int page);
     Task<string> NewMeritocracyScore(ViewCrudMeritocracyScore view);
     Task<string> UpdateMeritocracyScore(ViewCrudMeritocracyScore view);
     Task<ViewCrudMeritocracyScore> GetMeritocracyScore(string id);

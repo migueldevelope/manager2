@@ -569,28 +569,28 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager, ref  long total,  string filter, int count,int page)
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
-        var total = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListMonitoring()
+        return Task.FromResult(detail.Select(p => new ViewListMonitoring()
         {
           _id = p._id,
           Name = p.Person.User.Name,
           idPerson = p.Person._id,
           StatusMonitoring = p.StatusMonitoring
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -620,8 +620,8 @@ namespace Manager.Services.Specific
 
         }
 
-        var total = detail.Count();
-        return detail.Skip(skip).Take(count).Select(p => new ViewListMonitoring()
+        total = detail.Count();
+        return Task.FromResult(detail.Skip(skip).Take(count).Select(p => new ViewListMonitoring()
         {
           _id = p._id,
           Name = p.Person.User.Name,
@@ -629,7 +629,7 @@ namespace Manager.Services.Specific
           StatusMonitoring = p.StatusMonitoring,
           DateEndEnd = p.DateEndEnd,
           OccupationName = p.Person.Occupation.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -1181,22 +1181,22 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListMonitoring>> GetListExclud( string filter, int count, int page)
+    public Task<List<ViewListMonitoring>> GetListExclud(ref  long total,  string filter, int count,int page)
     {
       try
       {
 
         int skip = (count * (page - 1));
         var detail = serviceMonitoring.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListMonitoring()
+        return Task.FromResult(detail.Select(p => new ViewListMonitoring()
         {
           _id = p._id,
           Name = p.Person.User.Name,
           idPerson = p.Person._id,
           StatusMonitoring = p.StatusMonitoring
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {

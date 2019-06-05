@@ -19,7 +19,7 @@ namespace Manager.Core.Interfaces
     Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager);
     Task<List<ViewTagsCloud>> ListTagsCloudPerson(string idperson);
     Task<List<ViewTagsCloud>> ListTagsCloudCompanyPerson(string idperson);
-    //string[] ExportStatusOnboarding( string filter, int count, int page);
+    //string[] ExportStatusOnboarding(ref  long total,  string filter, int count, int page);
     Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding();
     Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring();
     Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson);

@@ -47,7 +47,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListOnBoarding>> List(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListOnBoarding> result = await service.List(idmanager, filter, count, page);
+      List<ViewListOnBoarding> result = await service.List(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -153,7 +153,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEnded(idmanager, filter, count, page);
+      var result = service.ListEnded(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -171,7 +171,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPersonEnd(idmanager, filter, count, page);
+      var result = service.ListPersonEnd(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -188,7 +188,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListOnBoarding>> ListExcluded( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListExcluded(filter, count, page);
+      var result = service.ListExcluded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

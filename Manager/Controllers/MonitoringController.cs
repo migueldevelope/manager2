@@ -162,7 +162,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListMonitoringsEnd(idmanager, filter, count, page);
+      var result = service.ListMonitoringsEnd(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -179,7 +179,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListMonitoring>> GetListExclud( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetListExclud(filter, count, page);
+      var result = service.GetListExclud(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -197,7 +197,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListMonitoringsWait(idmanager, filter, count, page);
+      var result = service.ListMonitoringsWait(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

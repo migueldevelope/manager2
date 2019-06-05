@@ -799,7 +799,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -836,11 +836,11 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        var total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
                                 p.TypeUser != EnumTypeUser.Administrator &&
                                 p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

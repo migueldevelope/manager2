@@ -614,7 +614,7 @@ namespace Manager.Services.Specific
     }
 
 
-    //public string[] ExportStatusOnboarding( string filter, int count, int page)
+    //public string[] ExportStatusOnboarding(ref  long total,  string filter, int count,int page)
     //{
     //  try
     //  {

@@ -647,7 +647,7 @@ namespace Manager.Controllers
     public async Task<List<ViewOccupationListEdit>> ListOccupationEdit(string idcompany, string idarea,  int count = 10, int page = 1, string filter = "", string filterGroup = "")
     {
       long total = 0;
-      var result = service.ListOccupationsEdit(idcompany, idarea, filter, count, page, filterGroup);
+      var result = service.ListOccupationsEdit(idcompany, idarea, ref total, filter, count, page, filterGroup);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -1116,7 +1116,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListSkill>> GetSkills( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetSkills(filter, count, page);
+      var result = service.GetSkills(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -1158,7 +1158,7 @@ namespace Manager.Controllers
     public async Task<List<ViewSkills>> GetSkills(string company,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetSkills(company, filter, count, page);
+      var result = service.GetSkills(company, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -1177,7 +1177,7 @@ namespace Manager.Controllers
     public async Task<List<ViewSkills>> GetSkills(string idcompany, string idgroup,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetSkillsGroup(idgroup, idcompany, filter, count, page);
+      var result = service.GetSkillsGroup(idgroup, idcompany, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -1197,7 +1197,7 @@ namespace Manager.Controllers
     public async Task<List<ViewSkills>> GetSkills(string idcompany, string idgroup, string idoccupation,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetSkillsOccupation(idgroup, idcompany, idoccupation, filter, count, page);
+      var result = service.GetSkillsOccupation(idgroup, idcompany, idoccupation, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

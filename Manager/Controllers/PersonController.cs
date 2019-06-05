@@ -55,7 +55,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListPersonCrud>> List(EnumTypeUser type,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(count, page, filter, type);
+      var result = service.List(ref total, count, page, filter, type);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -110,7 +110,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListPersonTeam>> ListTeam(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListTeam(idmanager, filter, count, page);
+      var result = service.ListTeam(ref total, idmanager, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -145,7 +145,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListOccupation>> ListOccupation( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListOccupation(filter, count, page);
+      var result = service.ListOccupation(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -162,7 +162,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListCompany>> ListCompany( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListCompany(filter, count, page);
+      var result = service.ListCompany(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -179,7 +179,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListPerson>> ListManager( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListManager(filter, count, page);
+      var result = service.ListManager(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

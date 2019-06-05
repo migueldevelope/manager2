@@ -24,15 +24,15 @@ namespace Manager.Core.Interfaces
     Task<string> RemoveMonitoringActivities(string idmonitoring, string idactivitie);
 
 
-    Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager,  string filter, int count, int page);
-    Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager,  string filter, int count, int page);
+    Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager, ref  long total,  string filter, int count, int page);
+    Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager, ref  long total,  string filter, int count, int page);
     Task<ViewCrudMonitoring> GetMonitorings(string id);
     Task<List<ViewListSkill>> GetSkills(string idperson);
     Task<ViewListMonitoring> PersonMonitoringsWait(string idmanager);
     Task<List<ViewListMonitoring>> PersonMonitoringsEnd(string idmanager);
     Task<ViewListMonitoring> NewMonitoring(string idperson);
     Task<string> UpdateMonitoring(ViewCrudMonitoring view);
-    Task<List<ViewListMonitoring>> GetListExclud( string filter, int count, int page);
+    Task<List<ViewListMonitoring>> GetListExclud(ref  long total,  string filter, int count, int page);
     Task<ViewCrudMonitoringActivities> GetMonitoringActivities(string idmonitoring, string idactivitie);
     Task<string> UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view);
     Task<string> AddMonitoringActivities(string idmonitoring, ViewCrudActivities view);

@@ -403,11 +403,11 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Person
-    public async Task<List<ViewListPersonInfo>> ListPerson(string iduser,  string filter, int count, int page)
+    public Task<List<ViewListPersonInfo>> ListPerson(string iduser, ref  long total,  string filter, int count,int page)
     {
       List<Person> detail = servicePerson.GetAllNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
-      var total = servicePerson.CountNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-      return detail.Select(p => new ViewListPersonInfo
+      total = servicePerson.CountNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+      return Task.FromResult(detail.Select(p => new ViewListPersonInfo
       {
         _id = p._id,
         TypeJourney = p.TypeJourney,
@@ -425,7 +425,7 @@ namespace Manager.Services.Auth
           Phone = p.User.Phone,
           _id = p.User._id
         }
-      }).ToList();
+      }).ToList());
     }
     #endregion
 

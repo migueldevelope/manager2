@@ -93,7 +93,7 @@ namespace Manager.Services.Specific
 
     #region OnBoarding
 
-    public async Task<List<ViewListOnBoarding>> List(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListOnBoarding>> List(string idmanager, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -128,11 +128,11 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        var total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator &&
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator &&
           (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
           p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -645,23 +645,23 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListOnBoarding>> ListEnded(string idmanager, ref  long total,  string filter, int count,int page)
     {
       try
       {
         Task.Run(() => LogSave(_user._idPerson, "List ended"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListOnBoarding()
+        return Task.FromResult(detail.Select(p => new ViewListOnBoarding()
         {
           _id = p._id,
           Name = p.Person.User.Name,
           _idPerson = p.Person._id,
           StatusOnBoarding = p.StatusOnBoarding,
           OccupationName = p.Person.Occupation.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -1161,16 +1161,16 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager, ref  long total,  string filter, int count,int page)
     {
       try
       {
         Task.Run(() => LogSave(_user._idPerson, "List ended for person"));
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceOnboarding.CountNewVersion(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceOnboarding.CountNewVersion(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListOnBoarding()
+        return Task.FromResult(detail.Select(p => new ViewListOnBoarding()
         {
           _id = p._id,
           Name = p.Person.User.Name,
@@ -1178,7 +1178,7 @@ namespace Manager.Services.Specific
           StatusOnBoarding = p.StatusOnBoarding,
           OccupationName = p.Person.Occupation.Name,
           DateEndEnd = p.DateEndEnd
-        }).ToList(); ;
+        }).ToList()); 
       }
       catch (Exception e)
       {
@@ -1478,7 +1478,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListOnBoarding>> ListExcluded( string filter, int count, int page)
+    public Task<List<ViewListOnBoarding>> ListExcluded(ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -1486,17 +1486,17 @@ namespace Manager.Services.Specific
         
         int skip = (count * (page - 1));
         var detail = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceOnboarding.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceOnboarding.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         //Task.Run(() => LogSaves(detail.Person._id, "OnBoarding list for exclud"));
 
-        return detail.Select(p => new ViewListOnBoarding()
+        return Task.FromResult(detail.Select(p => new ViewListOnBoarding()
         {
           _id = p._id,
           Name = p.Person.User.Name,
           _idPerson = p.Person._id,
           StatusOnBoarding = p.StatusOnBoarding,
           OccupationName = p.Person.Occupation?.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -1504,7 +1504,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListOnBoarding>> ListOnBoardingsWait(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListOnBoarding>> ListOnBoardingsWait(string idmanager, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -1533,8 +1533,8 @@ namespace Manager.Services.Specific
           }
         }
 
-        var total = detail.Count();
-        return detail.Skip(skip).Take(count)
+        total = detail.Count();
+        return Task.FromResult(detail.Skip(skip).Take(count)
           .Select(p => new ViewListOnBoarding()
           {
             _id = p._id,
@@ -1542,7 +1542,7 @@ namespace Manager.Services.Specific
             _idPerson = p.Person._id,
             StatusOnBoarding = p.StatusOnBoarding,
             OccupationName = p.Person.Occupation.Name
-          }).ToList();
+          }).ToList());
       }
       catch (Exception e)
       {

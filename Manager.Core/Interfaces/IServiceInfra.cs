@@ -56,10 +56,10 @@ namespace Manager.Core.Interfaces
     Task<List<ViewListProcessLevelTwo>> GetProcessLevelTwoFilter(string idarea);
     Task<List<ViewListCompany>> GetCompanies();
     Task<ViewCrudSkill> GetSkill(string filterName);
-    Task<List<ViewListSkill>> GetSkills( string filter, int count, int page);
-    Task<List<ViewSkills>> GetSkills(string company,  string filter, int count, int page);
-    Task<List<ViewSkills>> GetSkillsGroup(string idgroup, string idcompany,  string filter, int count, int page);
-    Task<List<ViewSkills>> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation,  string filter, int count, int page);
+    Task<List<ViewListSkill>> GetSkills(ref  long total,  string filter, int count, int page);
+    Task<List<ViewSkills>> GetSkills(string company, ref  long total,  string filter, int count, int page);
+    Task<List<ViewSkills>> GetSkillsGroup(string idgroup, string idcompany, ref  long total,  string filter, int count, int page);
+    Task<List<ViewSkills>> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref  long total,  string filter, int count, int page);
     Task<string> AddSpecificRequirements(string idoccupation, ViewCrudSpecificRequirements view);
     Task<string> DeleteEssential(string idcompany, string id);
     Task<string> DeleteSkill(string idskill);
@@ -85,7 +85,7 @@ namespace Manager.Core.Interfaces
     Task<string> ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order);
     Task<string> ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order);
     Task<string> GetCSVCompareGroup(string idcompany, string link);
-    Task<List<ViewOccupationListEdit>> ListOccupationsEdit(string idcompany, string idarea,  string filter, int count, int page, string filterGroup);
+    Task<List<ViewOccupationListEdit>> ListOccupationsEdit(string idcompany, string idarea, ref  long total,  string filter, int count, int page, string filterGroup);
     Task<List<ViewGroupListLO>> GetGroups(string idcompany);
     Task<ViewCrudSkill> AddSkill(ViewCrudSkill view);
     Task<ViewCrudGroup> AddGroup(ViewCrudGroup view);

@@ -81,7 +81,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListMeritocracy> result = await service.ListWaitManager(idmanager, filter, count, page);
+      List<ViewListMeritocracy> result = await service.ListWaitManager(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

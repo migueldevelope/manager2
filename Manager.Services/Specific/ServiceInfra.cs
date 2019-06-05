@@ -2413,7 +2413,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewOccupationListEdit>> ListOccupationsEdit(string idcompany, string idarea,  string filter, int count, int page, string filterGroup)
+    public Task<List<ViewOccupationListEdit>> ListOccupationsEdit(string idcompany, string idarea, ref  long total,  string filter, int count,int page, string filterGroup)
     {
       try
       {
@@ -2468,9 +2468,9 @@ namespace Manager.Services.Specific
             Schooling = p.Schooling.Where(x => x.Complement != null).Count()
           }).ToList();
 
-        var total = list.Count();
+        total = list.Count();
 
-        return itensResult;
+        return Task.FromResult(itensResult);
       }
       catch (Exception e)
       {
@@ -2512,21 +2512,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListSkill>> GetSkills( string filter, int count, int page)
+    public Task<List<ViewListSkill>> GetSkills(ref  long total,  string filter, int count,int page)
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListSkill()
+        return Task.FromResult(detail.Select(p => new ViewListSkill()
         {
           _id = p._id,
           Name = p.Name,
           Concept = p.Concept,
           TypeSkill = p.TypeSkill
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -2534,7 +2534,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewSkills>> GetSkills(string company,  string filter, int count, int page)
+    public Task<List<ViewSkills>> GetSkills(string company, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -2561,9 +2561,9 @@ namespace Manager.Services.Specific
                         Exists = skills.Contains(p.Name)
                       }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        var total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -2571,7 +2571,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewSkills>> GetSkillsGroup(string idgroup, string idcompany,  string filter, int count, int page)
+    public Task<List<ViewSkills>> GetSkillsGroup(string idgroup, string idcompany, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -2607,9 +2607,9 @@ namespace Manager.Services.Specific
                         ExistsGroup = skillsGroup.Contains(p.Name)
                       }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        var total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -2617,7 +2617,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewSkills>> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation,  string filter, int count, int page)
+    public Task<List<ViewSkills>> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -2662,9 +2662,9 @@ namespace Manager.Services.Specific
                         ExistsOccupation = skillsOccupation.Contains(p.Name)
                       }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
-        var total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

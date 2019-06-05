@@ -145,7 +145,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListPersonInfo>> ListPerson(string iduser,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPerson(iduser, filter, count, page);
+      var result = service.ListPerson(iduser, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
