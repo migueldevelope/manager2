@@ -123,14 +123,22 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupations = serviceOccupation.GetAllFreeNewVersion().Result
-          .Select(p => new ViewAuditOccupationSkills()
-          {
-            OccupationName = p.Name//,
-            //SkillsName = p.Skills
-          }).ToList();
+        var occupations = serviceOccupation.GetAllFreeNewVersion().Result.ToList();
 
-        return occupations;
+        List<ViewAuditOccupationSkills> result = new List<ViewAuditOccupationSkills>();
+        foreach (var occupation in occupations)
+        {
+          if (occupation.Skills != null)
+            foreach (var item in occupation.Skills)
+              result.Add(new ViewAuditOccupationSkills()
+              {
+                OccupationName = occupation.Name,
+                SkillsName = item.Name
+              });
+        }
+
+
+        return result;
       }
       catch (Exception e)
       {

@@ -11,7 +11,7 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser _user);
-
+    List<ViewAuditOccupationSkills> ListOccupationSkills();
     List<ViewAuditPerson> ListPerson();
     List<ViewAuditUser> ListUser();
   }
