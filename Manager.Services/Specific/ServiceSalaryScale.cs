@@ -349,12 +349,11 @@ namespace Manager.Services.Specific
       {
         var salaryScale = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany).Result.FirstOrDefault();
         
-
-        if (salaryScale == null || salaryScale.Grades == null)
-          return null;
+        if (salaryScale == null )
+          return Task.FromResult(new List<ViewListGradeFilter>());
 
         if (salaryScale.Grades == null)
-          return null;
+          return Task.FromResult(new List<ViewListGradeFilter>());
 
         total = salaryScale.Grades.Count();
 

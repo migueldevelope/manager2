@@ -363,7 +363,8 @@ namespace Manager.Services.Auth
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser,
-              Occupation = x.Occupation?.Name
+              Occupation = x.Occupation?.Name,
+              Manager = x.Manager?.Name
             }).OrderBy(p => p.User.Name).ToList());
           case EnumTypeUser.HR:
           case EnumTypeUser.ManagerHR:
@@ -379,7 +380,8 @@ namespace Manager.Services.Auth
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser,
-              Occupation = x.Occupation?.Name
+              Occupation = x.Occupation?.Name,
+              Manager = x.Manager?.Name
             }).ToList());
           default:
             total = 0;
