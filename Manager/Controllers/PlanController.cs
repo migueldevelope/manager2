@@ -68,7 +68,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplans/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}/{wait}")]
-    public async Task<List<ViewGetPlan>> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewGetPlan>> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlans(id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
@@ -86,7 +86,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplans/{id}")]
-    public async Task<List<ViewPlanShort>> ListPlans(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewPlanShort>> ListPlans(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlans(id, filter, count, page);
@@ -104,7 +104,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplansperson/{id}")]
-    public async Task<List<ViewPlanShort>> ListPlansPerson(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewPlanShort>> ListPlansPerson(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPlansPerson(id, filter, count, page);
@@ -129,10 +129,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplansperson/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}/{wait}")]
-    public async Task<List<ViewGetPlan>> ListPlansPerson(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewGetPlan>> ListPlansPerson(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPlansPerson(id, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
+      var result = service.ListPlansPerson(id, filter,count, page, activities, skillcompany, schooling, open, expired, end, wait);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

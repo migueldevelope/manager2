@@ -159,7 +159,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listend/{idmanager}")]
-    public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListMonitoringsEnd(idmanager, filter, count, page);
@@ -176,7 +176,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public async Task<List<ViewListMonitoring>> GetListExclud(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> GetListExclud( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetListExclud(filter, count, page);
@@ -194,7 +194,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
-    public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListMonitoringsWait(idmanager, filter, count, page);

@@ -42,10 +42,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListMeritocracy>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMeritocracy>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListMeritocracy> result = await service.List(count, page, filter);
+      List<ViewListMeritocracy> result = await service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -78,7 +78,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listwaitmanager/{idmanager}")]
-    public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListMeritocracy> result = await service.ListWaitManager(idmanager, filter, count, page);
@@ -259,10 +259,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listsalaryscalescore")]
-    public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewCrudSalaryScaleScore> result = await service.ListSalaryScaleScore(count, page, filter);
+      List<ViewCrudSalaryScaleScore> result = await service.ListSalaryScaleScore(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

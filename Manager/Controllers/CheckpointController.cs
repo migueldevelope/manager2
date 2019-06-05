@@ -43,7 +43,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listwaitmanager/{idmanager}")]
-    public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListWaitManager(idmanager, filter, count, page);
@@ -132,7 +132,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listended")]
-    public async Task<List<ViewListCheckpoint>> ListEnded(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCheckpoint>> ListEnded( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEnded(filter, count, page);

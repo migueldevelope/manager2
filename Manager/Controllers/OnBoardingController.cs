@@ -44,7 +44,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
-    public async Task<List<ViewListOnBoarding>> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> List(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListOnBoarding> result = await service.List(idmanager, filter, count, page);
@@ -150,7 +150,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listend/{idmanager}")]
-    public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEnded(idmanager, filter, count, page);
@@ -168,7 +168,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personend/{idmanager}")]
-    public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPersonEnd(idmanager, filter, count, page);
@@ -185,7 +185,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public async Task<List<ViewListOnBoarding>> ListExcluded(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListExcluded( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListExcluded(filter, count, page);

@@ -90,7 +90,7 @@ namespace Manager.Services.Auth
       var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
       var total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-      return detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name, total = total }).ToList();
+      return detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name }).ToList();
     }
     #endregion
 

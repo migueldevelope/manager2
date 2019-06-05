@@ -150,7 +150,7 @@ namespace Manager.Services.Specific
         return null;
       }
     }
-    public async Task<List<ViewListTermsOfService>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListTermsOfService>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -161,8 +161,8 @@ namespace Manager.Services.Specific
             Text = x.Text,
             Date = x.Date
           }).ToList();
-        var total = serviceTermsOfService.CountFreeNewVersion(p => p.Text.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceTermsOfService.CountFreeNewVersion(p => p.Text.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

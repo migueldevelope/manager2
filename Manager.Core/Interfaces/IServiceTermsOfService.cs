@@ -17,6 +17,6 @@ namespace Manager.Core.Interfaces
     Task<string> Update(ViewCrudTermsOfService view);
     Task<ViewCrudTermsOfService> Get(string id);
     Task<ViewListTermsOfService> GetTerm();
-    Task<List<ViewListTermsOfService>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListTermsOfService>> List( ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

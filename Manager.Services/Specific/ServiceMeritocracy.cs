@@ -760,7 +760,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListMeritocracy>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListMeritocracy>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -770,8 +770,8 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Person.Name
           }).ToList();
-        var total = serviceMeritocracy.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceMeritocracy.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -1054,7 +1054,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1069,8 +1069,8 @@ namespace Manager.Services.Specific
             Step = p.Step,
             Value = p.Value,
           }).ToList();
-        var total = serviceSalaryScaleScore.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        return detail;
+        total = serviceSalaryScaleScore.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

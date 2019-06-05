@@ -147,7 +147,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListDictionarySystem>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListDictionarySystem>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -159,8 +159,8 @@ namespace Manager.Services.Specific
               Name = x.Name,
               Description = x.Description
             }).ToList();
-        var total = serviceDictionarySystem.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceDictionarySystem.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

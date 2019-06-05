@@ -66,10 +66,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListDictionarySystem>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListDictionarySystem>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListDictionarySystem> result = await service.List(count, page, filter);
+      List<ViewListDictionarySystem> result = await service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

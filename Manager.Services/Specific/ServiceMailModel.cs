@@ -44,7 +44,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MailModel
-    public async Task<List<ViewListMailModel>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListMailModel>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -57,8 +57,8 @@ namespace Manager.Services.Specific
             Subject = p.Subject
           }).ToList();
 
-        var total = serviceMailModel.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceMailModel.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

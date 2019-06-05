@@ -22,31 +22,31 @@ namespace Manager.Core.Interfaces
     Task<string> RemoveOccupation(string idcourse, string idoccupation);
     Task<string> RemovePerson(string idcourse, string idperson);
     Task<string> RemoveCompany(string idcourse, string idcompany);
-    Task<List<ViewListOccupation>> ListOccupation(string idcourse, string idcompany,  int count = 10, int page = 1, string filter = "");
-    Task<List<ViewListPerson>> ListPerson(string idcourse, string idcompany,  int count = 10, int page = 1, string filter = "");
-    Task<List<ViewListCompany>> ListCompany(string idcourse,  int count = 10, int page = 1, string filter = "");
-    Task<List<ViewTrainingPlan>> ListTrainingPlanPerson(string iduser,  int count = 10, int page = 1, string filter = "");
-    Task<List<ViewTrainingPlanList>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListOccupation>> ListOccupation(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListPerson>> ListPerson(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListCompany>> ListCompany(string idcourse,  ref long total, int count = 10, int page = 1, string filter = "");
+    Task<List<ViewTrainingPlan>> ListTrainingPlanPerson(string iduser,  ref long total, int count = 10, int page = 1, string filter = "");
+    Task<List<ViewTrainingPlanList>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  ref long total, int count = 10, int page = 1, string filter = "");
     Task<ViewCrudMandatoryTraining> GetMandatoryTraining(string idcourse);
-    Task<List<ViewCrudMandatoryTraining>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewCrudMandatoryTraining>> List( ref long total, int count = 10, int page = 1, string filter = "");
     Task<string> NewTrainingPlanInternal(TrainingPlan view);
     Task<string> UpdateTrainingPlanInternal(TrainingPlan view);
     Task<string> NewTrainingPlan(ViewCrudTrainingPlan view);
     Task<string> UpdateTrainingPlan(ViewCrudTrainingPlan view);
     Task<ViewCrudTrainingPlan> GetTrainingPlan(string id);
-    Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany,  int count = 10, int page = 1, string filter = "");
-    Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany, string idperson,  int count = 10, int page = 1, string filter = "");
+    Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+    Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany, string idperson,  ref long total, int count = 10, int page = 1, string filter = "");
 
     #endregion
 
     #region old
     MandatoryTraining GetMandatoryTrainingOld(string idcourse);
-    List<MandatoryTraining> ListOld( int count = 10, int page = 1, string filter = "");
+    List<MandatoryTraining> ListOld( ref long total, int count = 10, int page = 1, string filter = "");
     string NewTrainingPlanOld(TrainingPlan view);
     string UpdateTrainingPlanOld(TrainingPlan view);
     TrainingPlan GetTrainingPlanOld(string id);
-    List<TrainingPlan> ListTrainingPlanOld(string idcompany,  int count = 10, int page = 1, string filter = "");
-    List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson,  int count = 10, int page = 1, string filter = "");
+    List<TrainingPlan> ListTrainingPlanOld(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+    List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson,  ref long total, int count = 10, int page = 1, string filter = "");
     #endregion
 
 

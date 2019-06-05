@@ -15,7 +15,7 @@ namespace Manager.Core.Interfaces
     Task<string> New(string idperson);
     Task<string> Update(ViewCrudMeritocracy view);
     Task<ViewCrudMeritocracy> Get(string id);
-    Task<List<ViewListMeritocracy>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListMeritocracy>> List( ref long total, int count = 10, int page = 1, string filter = "");
     Task<string> UpdateOccupationDate(ViewCrudMeritocracyDate view, string id);
     Task<string> UpdateCompanyDate(ViewCrudMeritocracyDate view, string id);
     Task<string> UpdateOccupationActivitiesExcellence(ViewCrudMeritocracyWeight view, string id);
@@ -31,6 +31,6 @@ namespace Manager.Core.Interfaces
     Task<string> DeleteSalaryScaleScore(string id);
     Task<string> UpdateSalaryScaleScore(ViewCrudSalaryScaleScore view);
     Task<ViewCrudSalaryScaleScore> GetSalaryScaleScore(string id);
-    Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

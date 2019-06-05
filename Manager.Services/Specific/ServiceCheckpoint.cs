@@ -138,8 +138,7 @@ namespace Manager.Services.Specific
                                 p.TypeJourney == EnumTypeJourney.Checkpoint &&
                                 p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        if (detail.Count > 0)
-          detail.FirstOrDefault().total = total;
+
 
         return detail;
       }
@@ -211,9 +210,6 @@ namespace Manager.Services.Specific
           }).ToList();
 
         var total = serviceCheckpoint.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        if (detail.Count > 0)
-          detail.FirstOrDefault().total = total;
 
         return detail;
       }

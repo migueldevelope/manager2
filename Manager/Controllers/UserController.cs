@@ -55,7 +55,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public async Task<List<ViewListUser>> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListUser>> List(EnumTypeUser type,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(count, page, filter, type);
@@ -142,7 +142,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listperson/{iduser}")]
-    public async Task<List<ViewListPersonInfo>> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonInfo>> ListPerson(string iduser,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPerson(iduser, filter, count, page);

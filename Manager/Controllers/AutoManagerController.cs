@@ -55,10 +55,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/list")]
-    public async Task<List<ViewAutoManagerPerson>> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewAutoManagerPerson>> List(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(idmanager, count, page, filter);
+      var result = service.List(idmanager, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

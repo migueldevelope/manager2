@@ -13,7 +13,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
 
-    Task<List<ViewListMailModel>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListMailModel>> List( ref long total, int count = 10, int page = 1, string filter = "");
     Task<string> New(ViewCrudMailModel view);
     Task<ViewCrudMailModel> Get(string id);
     Task<string> Update(ViewCrudMailModel view);

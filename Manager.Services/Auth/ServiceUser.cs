@@ -128,8 +128,7 @@ namespace Manager.Services.Auth
               Document = x.Document,
               Mail = x.Mail,
               Name = x.Name,
-              Phone = x.Phone,
-              total = total
+              Phone = x.Phone
             }).ToList();
           default:
             total = serviceUser.CountNewVersion(p => p.UserAdmin == false && p.Name.Contains(filter)).Result;
@@ -140,8 +139,7 @@ namespace Manager.Services.Auth
               Document = x.Document,
               Mail = x.Mail,
               Name = x.Name,
-              Phone = x.Phone,
-              total = total
+              Phone = x.Phone
             }).ToList();
         }
       }
@@ -425,8 +423,7 @@ namespace Manager.Services.Auth
           Mail = p.User.Mail,
           Name = p.User.Name,
           Phone = p.User.Phone,
-          _id = p.User._id,
-          total = total
+          _id = p.User._id
         }
       }).ToList();
     }

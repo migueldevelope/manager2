@@ -42,10 +42,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListCompany>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCompany>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListCompany> result = await service.List(count, page, filter);
+      List<ViewListCompany> result = await service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -109,10 +109,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listestablishment")]
-    public async Task<List<ViewListEstablishment>> ListEstablishment(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEstablishment>> ListEstablishment( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListEstablishment> result = await service.ListEstablishment(count, page, filter);
+      List<ViewListEstablishment> result = await service.ListEstablishment(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -127,10 +127,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listestablishment/{idcompany}")]
-    public async Task<List<ViewListEstablishment>> ListEstablishment(string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEstablishment>> ListEstablishment(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListEstablishment> result = await service.ListEstablishment(idcompany, count, page, filter);
+      List<ViewListEstablishment> result = await service.ListEstablishment(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

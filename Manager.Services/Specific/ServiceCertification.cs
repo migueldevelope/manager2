@@ -567,9 +567,6 @@ namespace Manager.Services.Specific
         result = result.Distinct(new ViewCertificationComparer()).ToList();
         var total = result.Count();
 
-        if(result.Count > 0)
-          result.FirstOrDefault().total = total;
-
         return result;
       }
       catch (Exception e)
@@ -599,10 +596,7 @@ namespace Manager.Services.Specific
           p.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationHard ? EnumItemCertificationView.Hard : EnumItemCertificationView.Soft
         }).ToList();
 
-        var total = result.Count();
-        if (result.Count > 0)
-          result.FirstOrDefault().total = total;
-
+        
         return result;
       }
       catch (Exception e)
@@ -626,8 +620,7 @@ namespace Manager.Services.Specific
           _id = p._id,
           Name = p.Person.User.Name,
           _idPerson = p.Person._id,
-          StatusCertification = p.StatusCertification,
-          total = total
+          StatusCertification = p.StatusCertification
         }).ToList();
       }
       catch (Exception e)
@@ -680,8 +673,6 @@ namespace Manager.Services.Specific
         }
         detail.RemoveAll(p => p._id == certificaiton.Person._id);
 
-        if (detail.Count > 0)
-          detail.FirstOrDefault().total = total;
 
         return detail;
       }

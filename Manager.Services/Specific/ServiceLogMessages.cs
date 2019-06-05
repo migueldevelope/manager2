@@ -47,7 +47,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Mensageria
-    public async Task<List<ViewListLogMessages>> ListPerson(string idperson,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListLogMessages>> ListPerson(string idperson,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -64,15 +64,15 @@ namespace Manager.Services.Specific
               User = new ViewListUser() { _id = x.Person.User._id, Name = x.Person.User.Name, Document = x.Person.User.Document, Mail = x.Person.User.Mail, Phone = x.Person.User.Phone }
             }
           }).ToList();
-        var total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewListLogMessages>> ListManager(string idmanager,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListLogMessages>> ListManager(string idmanager,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {

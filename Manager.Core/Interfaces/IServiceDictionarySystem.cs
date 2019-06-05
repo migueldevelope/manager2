@@ -17,6 +17,6 @@ namespace Manager.Core.Interfaces
     Task<string> Delete(string id);
     Task<ViewCrudDictionarySystem> Get(string id);
     Task<ViewListDictionarySystem> GetName(string name);
-    Task<List<ViewListDictionarySystem>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListDictionarySystem>> List( ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

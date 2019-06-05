@@ -28,13 +28,13 @@ namespace Manager.Core.Interfaces
     List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationCompany CompanyUpdate(string idIntegration, string idCompany);
     string CompanyDelete(string idIntegration);
-    List<ViewListIntegrationEstablishment> EstablishmentList( int count = 10, int page = 1, string filter = "", bool all = false);
+    List<ViewListIntegrationEstablishment> EstablishmentList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationEstablishment EstablishmentUpdate(string idIntegration, string idEstablishment);
     string EstablishmentDelete(string idIntegration);
-    List<ViewListIntegrationOccupation> OccupationList( int count = 10, int page = 1, string filter = "", bool all = false);
+    List<ViewListIntegrationOccupation> OccupationList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation);
     string OccupationDelete(string idIntegration);
-    List<ViewListIntegrationSchooling> SchoolingList( int count = 10, int page = 1, string filter = "", bool all = false);
+    List<ViewListIntegrationSchooling> SchoolingList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling);
     string SchoolingDelete(string idIntegration);
     #endregion

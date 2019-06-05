@@ -622,7 +622,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListOccupation>> ListOccupation(string idcourse, string idcompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListOccupation>> ListOccupation(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -645,8 +645,8 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Name
           }).ToList();
-        var total = detail.Count();
-        return detail.Skip(skip).Take(count).ToList();
+        total = detail.Count();
+        return Task.FromResult(detail.Skip(skip).Take(count).ToList());
       }
       catch (Exception e)
       {
@@ -654,7 +654,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListPerson>> ListPerson(string idcourse, string idcompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListPerson>> ListPerson(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -681,9 +681,9 @@ namespace Manager.Services.Specific
             User = new ViewListUser() { _id = x._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone }
           }).ToList();
 
-        var total = detail.Count();
+        total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return Task.FromResult(detail.Skip(skip).Take(count).ToList());
 
       }
       catch (Exception e)
@@ -692,7 +692,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListCompany>> ListCompany(string idcourse,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListCompany>> ListCompany(string idcourse,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -717,9 +717,9 @@ namespace Manager.Services.Specific
           }).ToList();
         ;
 
-        var total = detail.Count();
+        total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return Task.FromResult(detail.Skip(skip).Take(count).ToList());
 
       }
       catch (Exception e)
@@ -728,13 +728,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewTrainingPlan>> ListTrainingPlanPerson(string iduser,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewTrainingPlan>> ListTrainingPlanPerson(string iduser,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
         var list = new List<ViewTrainingPlan>();
         var countRealized = 0;
         var countNo = 0;
@@ -762,7 +762,7 @@ namespace Manager.Services.Specific
         }
 
 
-        return list;
+        return Task.FromResult(list);
       }
       catch (Exception e)
       {
@@ -770,7 +770,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewTrainingPlanList>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewTrainingPlanList>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -781,12 +781,12 @@ namespace Manager.Services.Specific
           if (origin == EnumOrigin.Full)
           {
             detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            var total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
           else
           {
             detail = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            var total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
         }
         else
@@ -794,12 +794,12 @@ namespace Manager.Services.Specific
           if (origin == EnumOrigin.Full)
           {
             detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            var total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
           else
           {
             detail = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-            var total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+            total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
         }
 
@@ -872,7 +872,7 @@ namespace Manager.Services.Specific
 
         }
 
-        return result;
+        return Task.FromResult(result);
       }
       catch (Exception e)
       {
@@ -897,15 +897,15 @@ namespace Manager.Services.Specific
 
 
 
-    public async Task<List<ViewCrudMandatoryTraining>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudMandatoryTraining>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
-        var total = serviceMandatoryTraining.CountNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceMandatoryTraining.CountNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewCrudMandatoryTraining()
+        return Task.FromResult(detail.Select(p => new ViewCrudMandatoryTraining()
         {
           _id = p._id,
           Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
@@ -961,7 +961,7 @@ namespace Manager.Services.Specific
             }
           }).ToList()
 
-        }).ToList();
+        }).ToList());
 
       }
       catch (Exception e)
@@ -1128,15 +1128,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceTrainingPlan.CountNewVersion(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceTrainingPlan.CountNewVersion(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewCrudTrainingPlan()
+        return Task.FromResult(detail.Select(p => new ViewCrudTrainingPlan()
         {
           _id = p._id,
           Deadline = p.Deadline,
@@ -1147,7 +1147,7 @@ namespace Manager.Services.Specific
           Person = (p.Person == null) ? null : new ViewListPersonResume() { _id = p.Person._id, Name = p.Person.User.Name },
           Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
           Event = (p.Event == null) ? null : new ViewListEvent() { _id = p.Event._id, Name = p.Event.Name }
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -1155,15 +1155,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany, string idperson,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany, string idperson,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceTrainingPlan.CountNewVersion(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceTrainingPlan.CountNewVersion(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewCrudTrainingPlan()
+        return Task.FromResult(detail.Select(p => new ViewCrudTrainingPlan()
         {
           _id = p._id,
           Deadline = p.Deadline,
@@ -1174,7 +1174,7 @@ namespace Manager.Services.Specific
           Person = (p.Person == null) ? null : new ViewListPersonResume() { _id = p.Person._id, Name = p.Person.User.Name },
           Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
           Event = (p.Event == null) ? null : new ViewListEvent() { _id = p.Event._id, Name = p.Event.Name }
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -1185,13 +1185,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region old
-    public List<MandatoryTraining> ListOld( int count = 10, int page = 1, string filter = "")
+    public List<MandatoryTraining> ListOld( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
-        var total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
 
@@ -1271,13 +1271,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<TrainingPlan> ListTrainingPlanOld(string idcompany,  int count = 10, int page = 1, string filter = "")
+    public List<TrainingPlan> ListTrainingPlanOld(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
       }
@@ -1287,13 +1287,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson,  int count = 10, int page = 1, string filter = "")
+    public List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
         return detail.ToList();
       }

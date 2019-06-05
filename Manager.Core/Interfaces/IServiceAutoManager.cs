@@ -12,8 +12,8 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Task<List<ViewAutoManagerPerson>> List(string idManager,  int count = 10, int page = 1, string filter = "");
-    Task<List<ViewAutoManagerPerson>> ListOpen(string idManager,  int count = 10, int page = 1, string filter = "");
+    Task<List<ViewAutoManagerPerson>> List(string idManager,  ref long total, int count = 10, int page = 1, string filter = "");
+    Task<List<ViewAutoManagerPerson>> ListOpen(string idManager,  ref long total, int count = 10, int page = 1, string filter = "");
     Task<List<ViewAutoManagerPerson>> ListEnd(string idManager, string filter);
     Task SetManagerPerson(ViewManager view, string idPerson, string path);
     Task<string> SendMail(string link, Person person, string idmail);

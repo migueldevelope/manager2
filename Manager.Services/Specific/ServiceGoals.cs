@@ -332,7 +332,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListGoal>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGoal>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -342,8 +342,8 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name
           }).ToList();
-        var total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -351,7 +351,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListGoal>> ListCompany(string id,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGoal>> ListCompany(string id,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -375,8 +375,8 @@ namespace Manager.Services.Specific
         }
 
 
-        var total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -385,7 +385,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<List<ViewListGoal>> ListManager(string id,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGoal>> ListManager(string id,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -408,8 +408,8 @@ namespace Manager.Services.Specific
           detail.Remove(goal);
         }
 
-        var total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoals.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -503,7 +503,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewCrudGoalPeriod>> ListGoalsPeriod( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudGoalPeriod>> ListGoalsPeriod( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -518,8 +518,8 @@ namespace Manager.Services.Specific
             DateEnd = p.DateEnd
           }).ToList();
 
-        var total = serviceGoalsPeriod.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoalsPeriod.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -665,7 +665,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewCrudGoalItem>> ListGoalsCompany(string idGoalsPeriod, string idCompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudGoalItem>> ListGoalsCompany(string idGoalsPeriod, string idCompany,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -690,15 +690,15 @@ namespace Manager.Services.Specific
             Target = p.GoalsCompanyList.Target
           }).ToList();
 
-        var total = serviceGoalsCompany.CountNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod && p.Company._id == idCompany && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoalsCompany.CountNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod && p.Company._id == idCompany && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewListGoalCompany>> ListGoalsCompany( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGoalCompany>> ListGoalsCompany( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -709,8 +709,8 @@ namespace Manager.Services.Specific
             Company = p.Company,
             GoalsPeriod = p.GoalsPeriod
           }).ToList();
-        var total = serviceGoalsCompany.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoalsCompany.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -960,7 +960,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewListGoalsItem> ListGoalsManager(string idGoalsPeriod, string idManager,  int count = 10, int page = 1, string filter = "")
+    public Task<ViewListGoalsItem> ListGoalsManager(string idGoalsPeriod, string idManager,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1014,14 +1014,14 @@ namespace Manager.Services.Specific
           GoalsManager = detail
         };
 
-        return view;
+        return Task.FromResult(view);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewListGoalManager>> ListGoalsManager( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGoalManager>> ListGoalsManager( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1032,8 +1032,8 @@ namespace Manager.Services.Specific
             Manager = p.Manager,
             GoalsPeriod = p.GoalsPeriod
           }).ToList();
-        var total = serviceGoalsManager.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoalsManager.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -1243,7 +1243,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewListGoalsItem> ListGoalsPerson(string idGoalsPeriod, string idPerson,  int count = 10, int page = 1, string filter = "")
+    public Task<ViewListGoalsItem> ListGoalsPerson(string idGoalsPeriod, string idPerson,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1328,14 +1328,14 @@ namespace Manager.Services.Specific
           GoalsPerson = detail,
         };
 
-        return view;
+        return Task.FromResult(view);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewListGoalPerson>> ListGoalsPerson( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGoalPerson>> ListGoalsPerson( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1346,8 +1346,8 @@ namespace Manager.Services.Specific
             Person = p.Person,
             GoalsPeriod = p.GoalsPeriod
           }).ToList();
-        var total = serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -1355,7 +1355,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListGoalPerson>> ListGoalsPerson(string id,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGoalPerson>> ListGoalsPerson(string id,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1366,8 +1366,8 @@ namespace Manager.Services.Specific
             Person = p.Person,
             GoalsPeriod = p.GoalsPeriod
           }).ToList();
-        var total = serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -1573,7 +1573,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListGoalPersonControl>> ListGoalsPersonControl(string idmanager,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGoalPersonControl>> ListGoalsPersonControl(string idmanager,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1617,8 +1617,8 @@ namespace Manager.Services.Specific
           }
         }
 
-        var total = detail.Count();
-        return detail;
+        total = detail.Count();
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

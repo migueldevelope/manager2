@@ -52,7 +52,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public async Task<List<ViewListPersonCrud>> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonCrud>> List(EnumTypeUser type,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(count, page, filter, type);
@@ -107,7 +107,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("directteam/{idmanager}")]
-    public async Task<List<ViewListPersonTeam>> ListTeam(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonTeam>> ListTeam(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListTeam(idmanager, filter, count, page);
@@ -142,7 +142,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupation")]
-    public async Task<List<ViewListOccupation>> ListOccupation(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOccupation>> ListOccupation( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListOccupation(filter, count, page);
@@ -159,7 +159,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcompany")]
-    public async Task<List<ViewListCompany>> ListCompany(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCompany>> ListCompany( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListCompany(filter, count, page);
@@ -176,7 +176,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager")]
-    public async Task<List<ViewListPerson>> ListManager(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPerson>> ListManager( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListManager(filter, count, page);

@@ -149,7 +149,7 @@ namespace IntegrationServer.InfraController
     public List<ViewListIntegrationEstablishment> GetEstablishmentList(int count = 10, int page = 1, string filter = "", bool all = false)
     {
       long total = 0;
-      var result = service.EstablishmentList(count, page, filter, all);
+      var result = service.EstablishmentList(ref total, count, page, filter, all);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -195,7 +195,7 @@ namespace IntegrationServer.InfraController
     public List<ViewListIntegrationOccupation> GetOccupationList(int count = 10, int page = 1, string filter = "", bool all = false)
     {
       long total = 0;
-      var result = service.OccupationList(count, page, filter, all);
+      var result = service.OccupationList(ref total, count, page, filter, all);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -241,7 +241,7 @@ namespace IntegrationServer.InfraController
     public List<ViewListIntegrationSchooling> GetSchoolingList(int count = 10, int page = 1, string filter = "", bool all = false)
     {
       long total = 0;
-      var result = service.SchoolingList(count, page, filter, all);
+      var result = service.SchoolingList(ref total, count, page, filter, all);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
