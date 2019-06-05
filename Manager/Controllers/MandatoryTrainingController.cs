@@ -18,13 +18,13 @@ namespace Manager.Controllers
 {
   [Produces("application/json")]
   [Route("mandatorytraining")]
-  public class MandatoryTrainingController : Controller
+  public class MandatoryTrainingController : DefaultController
   {
     private readonly IServiceMandatoryTraining service;
 
 
     #region constructor
-    public MandatoryTrainingController(IServiceMandatoryTraining _service, IHttpContextAccessor contextAccessor)
+    public MandatoryTrainingController(IServiceMandatoryTraining _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

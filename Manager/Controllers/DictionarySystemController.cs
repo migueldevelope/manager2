@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("dictionarysystem")]
-  public class DictionarySystemController : Controller
+  public class DictionarySystemController : DefaultController
   {
     private readonly IServiceDictionarySystem service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Servio do dicionário do sistema</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public DictionarySystemController(IServiceDictionarySystem _service, IHttpContextAccessor contextAccessor)
+    public DictionarySystemController(IServiceDictionarySystem _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

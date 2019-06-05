@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("checkpoint")]
-  public class CheckpointController : Controller
+  public class CheckpointController : DefaultController
   {
     private readonly IServiceCheckpoint service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Servico do checkpoint</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public CheckpointController(IServiceCheckpoint _service, IHttpContextAccessor contextAccessor)
+    public CheckpointController(IServiceCheckpoint _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

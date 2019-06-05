@@ -15,7 +15,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("onboarding")]
-  public class OnBoardingController : Controller
+  public class OnBoardingController : DefaultController
   {
     private readonly IServiceOnBoarding service;
 
@@ -25,7 +25,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de Onboarding</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public OnBoardingController(IServiceOnBoarding _service, IHttpContextAccessor contextAccessor)
+    public OnBoardingController(IServiceOnBoarding _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

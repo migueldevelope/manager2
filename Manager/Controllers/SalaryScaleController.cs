@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("salaryscale")]
-  public class SalaryScaleController : Controller
+  public class SalaryScaleController : DefaultController
   {
     private readonly IServiceSalaryScale service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da tabela salarial</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public SalaryScaleController(IServiceSalaryScale _service, IHttpContextAccessor contextAccessor)
+    public SalaryScaleController(IServiceSalaryScale _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

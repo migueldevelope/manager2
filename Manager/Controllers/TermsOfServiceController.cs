@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("termsofservice")]
-  public class TermsOfServiceController : Controller
+  public class TermsOfServiceController : DefaultController
   {
     private readonly IServiceTermsOfService service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da empresa</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public TermsOfServiceController(IServiceTermsOfService _service, IHttpContextAccessor contextAccessor)
+    public TermsOfServiceController(IServiceTermsOfService _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

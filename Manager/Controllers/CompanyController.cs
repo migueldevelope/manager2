@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("company")]
-  public class CompanyController : Controller
+  public class CompanyController : DefaultController
   {
     private readonly IServiceCompany service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da empresa</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public CompanyController(IServiceCompany _service, IHttpContextAccessor contextAccessor)
+    public CompanyController(IServiceCompany _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

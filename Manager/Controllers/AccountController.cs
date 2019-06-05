@@ -16,7 +16,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("account")]
-  public class AccountController : Controller
+  public class AccountController : DefaultController
   {
     private readonly IServiceAccount service;
     private readonly IServiceLog serviceLog;
@@ -28,7 +28,7 @@ namespace Manager.Controllers
     /// <param name="_service">Serviço de contas do cliente</param>
     /// <param name="_serviceLog">Serviço de Logs</param>
     /// <param name="contextAccessor">Autorização</param>
-    public AccountController(IServiceAccount _service, IServiceLog _serviceLog, IHttpContextAccessor contextAccessor)
+    public AccountController(IServiceAccount _service, IServiceLog _serviceLog, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       serviceLog = _serviceLog;

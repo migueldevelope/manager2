@@ -18,7 +18,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("plan")]
-  public class PlanController : Controller
+  public class PlanController : DefaultController
   {
     private readonly IServicePlan service;
 
@@ -28,7 +28,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço do plano de desenvolvimento</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public PlanController(IServicePlan _service, IHttpContextAccessor contextAccessor)
+    public PlanController(IServicePlan _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

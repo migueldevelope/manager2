@@ -13,11 +13,11 @@ namespace Manager.Controllers
 {
   [Produces("application/json")]
   [Route("configurationnotifications")]
-  public class ConfigurationNotificationsController : Controller
+  public class ConfigurationNotificationsController : DefaultController
   {
     private readonly IServiceConfigurationNotifications service;
 
-    public ConfigurationNotificationsController(IServiceConfigurationNotifications _service, IHttpContextAccessor contextAccessor)
+    public ConfigurationNotificationsController(IServiceConfigurationNotifications _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

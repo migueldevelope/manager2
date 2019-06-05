@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("meritocracy")]
-  public class MeritocracyController : Controller
+  public class MeritocracyController : DefaultController
   {
     private readonly IServiceMeritocracy service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da meritocracia</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public MeritocracyController(IServiceMeritocracy _service, IHttpContextAccessor contextAccessor)
+    public MeritocracyController(IServiceMeritocracy _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("parameters")]
-  public class ParametersController : Controller
+  public class ParametersController : DefaultController
   {
     private readonly IServiceParameters service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de parâmetros</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public ParametersController(IServiceParameters _service, IHttpContextAccessor contextAccessor)
+    public ParametersController(IServiceParameters _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

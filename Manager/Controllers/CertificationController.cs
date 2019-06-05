@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("certification")]
-  public class CertificationController : Controller
+  public class CertificationController : DefaultController
   {
     private readonly IServiceCertification service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da acreditação</param>
     /// <param name="contextAccessor">Token de autenticação</param>
-    public CertificationController(IServiceCertification _service, IHttpContextAccessor contextAccessor)
+    public CertificationController(IServiceCertification _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

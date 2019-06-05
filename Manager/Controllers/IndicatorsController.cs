@@ -13,11 +13,11 @@ namespace Manager.Controllers
 {
   [Produces("application/json")]
   [Route("indicators")]
-  public class IndicatorsController : Controller
+  public class IndicatorsController : DefaultController
   {
     private readonly IServiceIndicators service;
 
-    public IndicatorsController(IServiceIndicators _service, IHttpContextAccessor contextAccessor)
+    public IndicatorsController(IServiceIndicators _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

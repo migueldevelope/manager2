@@ -19,7 +19,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("user")]
-  public class UserController : Controller
+  public class UserController : DefaultController
   {
     private readonly IServiceUser service;
 
@@ -29,7 +29,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de usuário</param>
     /// <param name="contextAccessor">Autorização</param>
-    public UserController(IServiceUser _service, IHttpContextAccessor contextAccessor)
+    public UserController(IServiceUser _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       try
       {

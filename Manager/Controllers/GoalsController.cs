@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("goals")]
-  public class GoalsController : Controller
+  public class GoalsController : DefaultController
   {
     private readonly IServiceGoals service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">serviço dos objetivos</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public GoalsController(IServiceGoals _service, IHttpContextAccessor contextAccessor)
+    public GoalsController(IServiceGoals _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

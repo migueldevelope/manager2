@@ -19,7 +19,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("infra")]
-  public class InfraController : Controller
+  public class InfraController : DefaultController
   {
     private readonly IServiceInfra service;
 
@@ -29,7 +29,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Servico associado</param>
     /// <param name="contextAccessor">Token de autenticação</param>
-    public InfraController(IServiceInfra _service, IHttpContextAccessor contextAccessor)
+    public InfraController(IServiceInfra _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       try
       {

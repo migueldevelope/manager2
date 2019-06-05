@@ -17,7 +17,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("monitoring")]
-  public class MonitoringController : Controller
+  public class MonitoringController : DefaultController
   {
     private readonly IServiceMonitoring service;
 
@@ -27,7 +27,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de acompanhamento</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public MonitoringController(IServiceMonitoring _service, IHttpContextAccessor contextAccessor)
+    public MonitoringController(IServiceMonitoring _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

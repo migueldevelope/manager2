@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("automanager")]
-  public class AutoManagerController : Controller
+  public class AutoManagerController : DefaultController
   {
     private readonly IServiceAutoManager service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de auto gestão de equipe</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public AutoManagerController(IServiceAutoManager _service, IHttpContextAccessor contextAccessor)
+    public AutoManagerController(IServiceAutoManager _service, IHttpContextAccessor contextAccessor): base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);

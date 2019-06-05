@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("event")]
-  public class EventController : Controller
+  public class EventController : DefaultController
   {
     private readonly IServiceEvent service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço específico</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public EventController(IServiceEvent _service, IHttpContextAccessor contextAccessor)
+    public EventController(IServiceEvent _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
