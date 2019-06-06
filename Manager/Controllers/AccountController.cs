@@ -85,7 +85,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListAccount>> List( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListAccount>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = await service.GetAll(ref total, count, page, filter);
@@ -141,10 +141,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listlog/{idaccount}")]
-    public async Task<List<ViewListLog>> ListLogs(string idaccount,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListLog>> ListLogs(string idaccount, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = serviceLog.ListLogs(idaccount, count, page, filter);
+      var result = serviceLog.ListLogs(idaccount, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
