@@ -724,15 +724,27 @@ namespace Manager.Services.Specific
       try
       {
         MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         MathMeritocracy(meritocracy);
+        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
         meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMeritocracy()
         {
           _id = meritocracy._id,
           ActivitiesExcellence = meritocracy.ActivitiesExcellence,
           Maturity = meritocracy.Maturity,
-          Person = meritocracy.Person,
+          Person = new ViewListPersonMeritocracy()
+          {
+            _id = person._id,
+            CompanyDate = person.User.DateAdm,
+            OccupationDate = person.DateLastOccupation,
+            OccupationName = person.Occupation?.Name,
+            Name = person.User.Name,
+            CurrentSchooling = person.User.Schooling?.Name,
+            Salary = person.Salary,
+            OccupationSchooling = person.Occupation?.Schooling.FirstOrDefault()?.Name
+          },
           WeightCompanyDate = meritocracy.WeightCompanyDate,
           WeightOccupationDate = meritocracy.WeightOccupationDate,
           WeightSchooling = meritocracy.WeightSchooling,
