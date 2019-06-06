@@ -150,6 +150,37 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async Task GradeScale(Meritocracy meritocracy)
+    {
+      try
+      {
+        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
+        if ((occupation.SalaryScales != null) && (person.SalaryScales != null))
+        {
+          var grades = occupation.SalaryScales.Where(p => p._idSalaryScale == person.SalaryScales._idSalaryScale).FirstOrDefault();
+          var salaryscale = serviceSalaryScale.GetAllNewVersion(p => p._id == person.SalaryScales._idSalaryScale).Result.FirstOrDefault();
+          var grade = salaryscale.Grades.Where(p => p._id == grades._id).FirstOrDefault();
+          meritocracy.GradeScale = grade;
+          foreach (var item in grade.ListSteps.OrderBy(p => p.Step))
+          {
+            if (person.Salary <= item.Salary)
+            {
+              meritocracy.ResultStepScale = item.Step;
+              serviceMeritocracy.Update(meritocracy, null);
+              return;
+            }
+          }
+
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private bool ValidOccupationDate(Meritocracy meritocracy, bool enabled)
     {
       try
@@ -619,6 +650,7 @@ namespace Manager.Services.Specific
         }
 
         Task.Run(() => MathMeritocracy(meritocracy));
+        Task.Run(() => GradeScale(meritocracy));
 
         return meritocracy._id;
       }
@@ -724,7 +756,7 @@ namespace Manager.Services.Specific
       try
       {
         MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        
+
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         MathMeritocracy(meritocracy);
         var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
@@ -762,7 +794,27 @@ namespace Manager.Services.Specific
           ValidOccupationDate = ValidOccupationDate(meritocracy, meritocracyScore.EnabledOccupationDate),
           ValidActivitiesExcellence = ValidActivitiesExcellence(meritocracy, meritocracyScore.EnabledActivitiesExcellence),
           ValidSchooling = ValidSchooling(meritocracy, meritocracyScore.EnabledSchooling),
-          ResultEnd = meritocracy.ResultEnd
+          ResultEnd = meritocracy.ResultEnd,
+          ResultStep = meritocracy.ResultStep,
+          ResultStepScale = meritocracy.ResultStepScale,
+          Grade = meritocracy.Grade == null ? null : new ViewListGrade()
+          {
+            _id = meritocracy.Grade._id,
+            Name = meritocracy.Grade.Name,
+            Order = meritocracy.Grade.Order,
+            StepMedium = meritocracy.Grade.StepMedium,
+            Steps = meritocracy.Grade.ListSteps.Select
+          (x => new ViewListStep() { Step = x.Step, Salary = x.Salary }).ToList()
+          },
+          GradeScale = meritocracy.GradeScale == null ? null : new ViewListGrade()
+          {
+            _id = meritocracy.GradeScale._id,
+            Name = meritocracy.GradeScale.Name,
+            Order = meritocracy.GradeScale.Order,
+            StepMedium = meritocracy.GradeScale.StepMedium,
+            Steps = meritocracy.GradeScale.ListSteps.Select
+          (x => new ViewListStep() { Step = x.Step, Salary = x.Salary }).ToList()
+          }
         };
 
       }
@@ -772,7 +824,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewListMeritocracy>> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListMeritocracy>> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -811,7 +863,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, ref  long total,  string filter, int count,int page)
+    public Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1066,7 +1118,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( ref long total, int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {

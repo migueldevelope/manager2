@@ -34,7 +34,9 @@ namespace Manager.Core.Business
 
     public decimal ResultEnd { get; set; }
     public EnumSteps ResultStep { get; set; }
+    public EnumSteps ResultStepScale { get; set; }
     public Grade Grade { get; set; }
+    public Grade GradeScale { get; set; }
 
   }
 }

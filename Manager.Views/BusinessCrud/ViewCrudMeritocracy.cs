@@ -33,5 +33,9 @@ namespace Manager.Views.BusinessCrud
 
     public EnumSteps ResultStep { get; set; }
     public ViewListGrade Grade { get; set; }
+
+
+    public EnumSteps ResultStepScale { get; set; }
+    public ViewListGrade GradeScale { get; set; }
   }
 }
