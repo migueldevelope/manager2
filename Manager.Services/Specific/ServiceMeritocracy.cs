@@ -160,7 +160,7 @@ namespace Manager.Services.Specific
         {
           var grades = occupation.SalaryScales.Where(p => p._idSalaryScale == person.SalaryScales._idSalaryScale).FirstOrDefault();
           var salaryscale = serviceSalaryScale.GetAllNewVersion(p => p._id == person.SalaryScales._idSalaryScale).Result.FirstOrDefault();
-          var grade = salaryscale.Grades.Where(p => p._id == grades._id).FirstOrDefault();
+          var grade = salaryscale.Grades.Where(p => p._id == grades._idGrade).FirstOrDefault();
           meritocracy.GradeScale = grade;
           foreach (var item in grade.ListSteps.OrderBy(p => p.Step))
           {
@@ -199,6 +199,10 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
+        if (meritocracy.Person.CurrentSchooling == null)
+          meritocracy.Person.CurrentSchooling = person.User.Schooling?.Name;
+
         if ((enabled) && meritocracy.Person.CurrentSchooling == null)
           return false;
         return true;
@@ -215,6 +219,9 @@ namespace Manager.Services.Specific
       {
         if (enabled)
         {
+          if (meritocracy.MeritocracyActivities.Count == 0)
+            return false;
+
           foreach (var item in meritocracy.MeritocracyActivities)
           {
             if (item.Mark == 0)
@@ -226,7 +233,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        return false;
       }
     }
 
@@ -254,6 +261,16 @@ namespace Manager.Services.Specific
       try
       {
         var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
+        if ((person.User.DateAdm == null) && (meritocracy.Person.CompanyDate != null))
+        {
+          person.User.DateAdm = meritocracy.Person.CompanyDate;
+          servicePerson.Update(person, null);
+        }
+        if ((person.DateLastOccupation == null) && (meritocracy.Person.OccupationDate != null))
+        {
+          person.DateLastOccupation = meritocracy.Person.OccupationDate;
+          servicePerson.Update(person, null);
+        }
 
         byte schoolingWeight = 0;
         byte companyDateWeight = 0;
@@ -759,6 +776,7 @@ namespace Manager.Services.Specific
 
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         MathMeritocracy(meritocracy);
+        GradeScale(meritocracy);
         var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
         meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMeritocracy()
@@ -769,8 +787,8 @@ namespace Manager.Services.Specific
           Person = new ViewListPersonMeritocracy()
           {
             _id = person._id,
-            CompanyDate = person.User.DateAdm,
-            OccupationDate = person.DateLastOccupation,
+            CompanyDate = person.User.DateAdm ?? meritocracy.Person.CompanyDate,
+            OccupationDate = person.DateLastOccupation ?? meritocracy.Person.OccupationDate,
             OccupationName = person.Occupation?.Name,
             Name = person.User.Name,
             CurrentSchooling = person.User.Schooling?.Name,
