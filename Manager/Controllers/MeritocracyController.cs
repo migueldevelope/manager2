@@ -146,6 +146,19 @@ namespace Manager.Controllers
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
+    [Route("end/{id}")]
+    public async Task<IActionResult> Update(string id)
+    {
+      return Ok(await service.End(id));
+    }
+
+    /// <summary>
+    /// Alterar a meritocracia
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da meritocracia</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
     [Route("updatecompanydate/{id}")]
     public async Task<IActionResult> UpdateCompanyDate([FromBody]ViewCrudMeritocracyDate view, string id)
     {

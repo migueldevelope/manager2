@@ -285,7 +285,8 @@ namespace Manager.Services.Specific
         if (person.User.Schooling != null)
         {
           var schoolingPerson = serviceSchooling.GetAllNewVersion(p => p._id == person.User.Schooling._id).Result.FirstOrDefault();
-          var schoolingOccupation = serviceSchooling.GetAllNewVersion(p => p._id == person.Occupation.Schooling.Where(x => x.Type == EnumTypeSchooling.Basic).FirstOrDefault()._id).Result.FirstOrDefault();
+          var idschooling = person.Occupation.Schooling.Where(x => x.Type == EnumTypeSchooling.Basic).FirstOrDefault()._id;
+          var schoolingOccupation = serviceSchooling.GetAllNewVersion(p => p._id == idschooling).Result.FirstOrDefault();
 
           //schooling
           var schoolingResult = schoolingPerson.Order - schoolingOccupation.Order;
@@ -684,6 +685,28 @@ namespace Manager.Services.Specific
       }
     }
 
+    public async Task<string> End(string id)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+
+        Task.Run(() => LogSave(_user._idPerson, string.Format("End process | {0}", meritocracy._id)));
+
+        meritocracy.StatusMeritocracy = EnumStatusMeritocracy.End;
+        meritocracy.DateEnd = DateTime.Now;
+
+        serviceMeritocracy.Update(meritocracy, null);
+        Task.Run(() => MathMeritocracy(meritocracy));
+
+        return "Meritocracy altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public async Task<string> Update(ViewCrudMeritocracy view)
     {
       try
@@ -867,6 +890,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
 
     public async Task<List<ViewListMeritocracyActivitie>> ListMeritocracyActivitie(string idmeritocracy)
     {
