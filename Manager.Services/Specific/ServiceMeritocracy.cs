@@ -26,6 +26,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<SalaryScaleScore> serviceSalaryScaleScore;
     private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
     private readonly ServiceGeneric<Maturity> serviceMaturity;
+    private readonly ServiceGeneric<Schooling> serviceSchooling;
     private readonly ServiceLog serviceLog;
     private readonly ServiceLogMessages serviceLogMessages;
     private readonly ServiceGeneric<MailLog> serviceMail;
@@ -48,6 +49,7 @@ namespace Manager.Services.Specific
         serviceLogMessages = new ServiceLogMessages(context);
         serviceMail = new ServiceGeneric<MailLog>(context);
         serviceMailModel = new ServiceMailModel(context);
+        serviceSchooling = new ServiceGeneric<Schooling>(context);
       }
       catch (Exception e)
       {
@@ -68,6 +70,7 @@ namespace Manager.Services.Specific
       serviceLog.SetUser(_user);
       serviceLogMessages.SetUser(_user);
       serviceMail._user = _user;
+      serviceSchooling._user = _user;
       serviceMailModel.SetUser(_user);
     }
     public void SetUser(BaseUser user)
@@ -83,7 +86,8 @@ namespace Manager.Services.Specific
       serviceMaturity._user = user;
       serviceLog.SetUser(_user);
       serviceLogMessages.SetUser(_user);
-      serviceMail._user = _user;
+      serviceMail._user = user;
+      serviceSchooling._user = _user;
       serviceMailModel.SetUser(_user);
     }
 
@@ -280,8 +284,11 @@ namespace Manager.Services.Specific
 
         if (person.User.Schooling != null)
         {
+          var schoolingPerson = serviceSchooling.GetAllNewVersion(p => p._id == person.User.Schooling._id).Result.FirstOrDefault();
+          var schoolingOccupation = serviceSchooling.GetAllNewVersion(p => p._id == person.Occupation.Schooling.Where(x => x.Type == EnumTypeSchooling.Basic).FirstOrDefault()._id).Result.FirstOrDefault();
+
           //schooling
-          var schoolingResult = person.User.Schooling.Order - person.Occupation.Schooling.Where(p => p.Type == EnumTypeSchooling.Basic).FirstOrDefault().Order;
+          var schoolingResult = schoolingPerson.Order - schoolingOccupation.Order;
           if (schoolingResult <= -2)
             schoolingWeight = 1;
           else if (schoolingResult == -1)
