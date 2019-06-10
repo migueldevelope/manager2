@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("logmessages")]
-  public class LogMessagesController : Controller
+  public class LogMessagesController : DefaultController
   {
     private readonly IServiceLogMessages service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da Mensageria</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public LogMessagesController(IServiceLogMessages _service, IHttpContextAccessor contextAccessor)
+    public LogMessagesController(IServiceLogMessages _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -43,10 +43,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listperson/{id}")]
-    public async Task<List<ViewListLogMessages>> ListPerson(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListLogMessages>> ListPerson(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListLogMessages> result = await service.ListPerson(id, count, page, filter);
+      List<ViewListLogMessages> result = await service.ListPerson(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -61,10 +61,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager/{id}")]
-    public async Task<List<ViewListLogMessages>> ListManager(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListLogMessages>> ListManager(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListLogMessages> result = await service.ListManager(id, count, page, filter);
+      List<ViewListLogMessages> result = await service.ListManager(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

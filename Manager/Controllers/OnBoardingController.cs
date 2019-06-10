@@ -15,7 +15,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("onboarding")]
-  public class OnBoardingController : Controller
+  public class OnBoardingController : DefaultController
   {
     private readonly IServiceOnBoarding service;
 
@@ -25,7 +25,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de Onboarding</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public OnBoardingController(IServiceOnBoarding _service, IHttpContextAccessor contextAccessor)
+    public OnBoardingController(IServiceOnBoarding _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -44,10 +44,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
-    public async Task<List<ViewListOnBoarding>> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> List(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListOnBoarding> result = await service.List(idmanager, filter, count, page);
+      List<ViewListOnBoarding> result = await service.List(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -150,10 +150,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listend/{idmanager}")]
-    public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEnded(idmanager, filter, count, page);
+      var result = service.ListEnded(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -168,10 +168,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("personend/{idmanager}")]
-    public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPersonEnd(idmanager, filter, count, page);
+      var result = service.ListPersonEnd(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -185,10 +185,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public async Task<List<ViewListOnBoarding>> ListExcluded(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> ListExcluded( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListExcluded(filter, count, page);
+      var result = service.ListExcluded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

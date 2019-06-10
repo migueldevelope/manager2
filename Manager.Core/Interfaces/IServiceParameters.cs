@@ -16,6 +16,6 @@ namespace Manager.Core.Interfaces
     Task<string> Update(ViewCrudParameter view);
     Task<ViewCrudParameter> Get(string id);
     Task<ViewCrudParameter> GetKey(string key);
-    Task<List<ViewListParameter>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListParameter>> List( ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

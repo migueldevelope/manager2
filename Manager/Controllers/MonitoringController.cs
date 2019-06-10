@@ -17,7 +17,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("monitoring")]
-  public class MonitoringController : Controller
+  public class MonitoringController : DefaultController
   {
     private readonly IServiceMonitoring service;
 
@@ -27,7 +27,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de acompanhamento</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public MonitoringController(IServiceMonitoring _service, IHttpContextAccessor contextAccessor)
+    public MonitoringController(IServiceMonitoring _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -159,10 +159,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listend/{idmanager}")]
-    public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> ListMonitoringsEnd(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListMonitoringsEnd(idmanager, filter, count, page);
+      var result = service.ListMonitoringsEnd(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -176,10 +176,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlistexclud")]
-    public async Task<List<ViewListMonitoring>> GetListExclud(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> GetListExclud( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetListExclud(filter, count, page);
+      var result = service.GetListExclud(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -194,10 +194,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
-    public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMonitoring>> ListMonitoringsWait(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListMonitoringsWait(idmanager, filter, count, page);
+      var result = service.ListMonitoringsWait(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

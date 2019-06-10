@@ -87,20 +87,20 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListLog>> ListLogs(string idaccount,  int count, int page, string filter)
+    public Task<List<ViewListLog>> ListLogs(string idaccount,  ref long total, int count, int page, string filter)
     {
       try
       {
         int skip = (count * (page - 1));
         List<Log> detail = serviceLog.GetAllFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "DataLog DESC").Result;
-        var total = serviceLog.CountFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail.Select(p => new ViewListLog()
+        total = serviceLog.CountFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail.Select(p => new ViewListLog()
         {
           DataLog = p.DataLog,
           Description = p.Description,
           Local = p.Local,
           Person = (p.Person == null)? "Service" : p.Person.User.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {

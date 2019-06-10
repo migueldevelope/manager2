@@ -77,5 +77,24 @@ namespace IntegrationServer.Controllers
     }
     #endregion
 
+    #region OccupationsSkills
+    /// <summary>
+    /// Retornar uma lista crud das pessoas da conta
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("occupationskills")]
+    public List<ViewAuditOccupationSkills> ListOccupationSkills()
+    {
+      var result = service.ListOccupationSkills();
+      // Gravar arquivo CSV
+      string csv = Tools.CSVService.ToCsv(result, "", "");
+      System.IO.File.WriteAllText("export/occupationskills.csv", csv);
+      //
+      return result;
+    }
+    #endregion
+
   }
 }

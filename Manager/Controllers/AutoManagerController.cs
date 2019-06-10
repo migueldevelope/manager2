@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("automanager")]
-  public class AutoManagerController : Controller
+  public class AutoManagerController : DefaultController
   {
     private readonly IServiceAutoManager service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de auto gestão de equipe</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public AutoManagerController(IServiceAutoManager _service, IHttpContextAccessor contextAccessor)
+    public AutoManagerController(IServiceAutoManager _service, IHttpContextAccessor contextAccessor): base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -55,10 +55,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("{idmanager}/list")]
-    public async Task<List<ViewAutoManagerPerson>> List(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewAutoManagerPerson>> List(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(idmanager, count, page, filter);
+      var result = service.List(idmanager, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

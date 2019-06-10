@@ -110,15 +110,15 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ConfigurationNotification>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ConfigurationNotification>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = configurationNotificationsService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = configurationNotificationsService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = configurationNotificationsService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.ToList();
+        return Task.FromResult(detail.ToList());
 
       }
       catch (Exception e)

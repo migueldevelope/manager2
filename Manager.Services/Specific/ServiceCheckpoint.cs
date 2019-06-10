@@ -89,7 +89,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Checkpoint
-    public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -133,15 +133,14 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        var total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
                                 p.TypeUser != EnumTypeUser.Administrator &&
                                 p.TypeJourney == EnumTypeJourney.Checkpoint &&
                                 p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        if (detail.Count > 0)
-          detail.FirstOrDefault().total = total;
 
-        return detail;
+
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -193,7 +192,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListCheckpoint>> ListEnded( string filter, int count, int page)
+    public Task<List<ViewListCheckpoint>> ListEnded(ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -210,12 +209,9 @@ namespace Manager.Services.Specific
             OccupationName = p.Occupation?.Name
           }).ToList();
 
-        var total = serviceCheckpoint.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceCheckpoint.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        if (detail.Count > 0)
-          detail.FirstOrDefault().total = total;
-
-        return detail;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

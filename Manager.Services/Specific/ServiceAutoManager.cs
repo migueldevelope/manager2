@@ -69,28 +69,30 @@ namespace Manager.Services.Specific
     #endregion
 
     #region AutoManager
-    public async Task<List<ViewAutoManagerPerson>> List(string idManager, int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewAutoManagerPerson>> List(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        long total = 0;
+        if (filter == null)
+          return null;
+
         if (filter != string.Empty)
         {
           var listEnd = ListEnd(idManager, filter).Result;
           total = listEnd.Count();
 
-          return listEnd.Skip(skip).Take(count).ToList();
+          return Task.FromResult(listEnd.Skip(skip).Take(count).ToList());
         }
         else
-          return ListOpen(idManager, count, page, filter).Result;
+          return Task.FromResult(ListOpen(idManager, ref total, count, page, filter).Result);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewAutoManagerPerson>> ListOpen(string idManager, int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewAutoManagerPerson>> ListOpen(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -99,7 +101,7 @@ namespace Manager.Services.Specific
                     where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
                     select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
 
-        var total = servicePerson.CountNewVersion(person => person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager).Result;
+        total = servicePerson.CountNewVersion(person => person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager).Result;
         //var total = (from person in servicePerson.GetAll()
         //         where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
         //         select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Count();
@@ -107,7 +109,7 @@ namespace Manager.Services.Specific
         if (list.Count > 0)
           list.FirstOrDefault().total = total;
 
-        return list;
+        return Task.FromResult(list);
       }
       catch (Exception e)
       {

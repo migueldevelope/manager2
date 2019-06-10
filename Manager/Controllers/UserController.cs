@@ -19,7 +19,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("user")]
-  public class UserController : Controller
+  public class UserController : DefaultController
   {
     private readonly IServiceUser service;
 
@@ -29,7 +29,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de usuário</param>
     /// <param name="contextAccessor">Autorização</param>
-    public UserController(IServiceUser _service, IHttpContextAccessor contextAccessor)
+    public UserController(IServiceUser _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       try
       {
@@ -55,7 +55,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{type}")]
-    public async Task<List<ViewListUser>> List(EnumTypeUser type, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListUser>> List(EnumTypeUser type,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(count, page, filter, type);
@@ -142,10 +142,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listperson/{iduser}")]
-    public async Task<List<ViewListPersonInfo>> ListPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonInfo>> ListPerson(string iduser,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPerson(iduser, filter, count, page);
+      var result = service.ListPerson(iduser, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

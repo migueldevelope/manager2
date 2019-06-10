@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("salaryscale")]
-  public class SalaryScaleController : Controller
+  public class SalaryScaleController : DefaultController
   {
     private readonly IServiceSalaryScale service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da tabela salarial</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public SalaryScaleController(IServiceSalaryScale _service, IHttpContextAccessor contextAccessor)
+    public SalaryScaleController(IServiceSalaryScale _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -43,10 +43,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idcompany}")]
-    public async Task<List<ViewListSalaryScale>> List(string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListSalaryScale>> List(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(idcompany, count, page, filter);
+      var result = service.List(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -112,10 +112,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgrade/{idsalaryscale}")]
-    public async Task<List<ViewListGrade>> ListGrade(string idsalaryscale, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGrade>> ListGrade(string idsalaryscale,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGrade(idsalaryscale, count, page, filter);
+      var result = service.ListGrade(idsalaryscale, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -130,10 +130,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgrades/{idcompany}")]
-    public async Task<List<ViewListGradeFilter>> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGradeFilter>> ListGrades(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGrades(idcompany, count, page, filter);
+      var result = service.ListGrades(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

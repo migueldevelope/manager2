@@ -15,6 +15,6 @@ namespace Manager.Core.Interfaces
     Task<string> Update(ConfigurationNotification view);
     Task<string> Remove(string id);
     Task<ConfigurationNotification> Get(string id);
-    Task<List<ConfigurationNotification>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ConfigurationNotification>> List( ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

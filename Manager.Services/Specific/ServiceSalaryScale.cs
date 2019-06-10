@@ -57,7 +57,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Salary Scale
-    public async Task<List<ViewListSalaryScale>> List(string idcompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListSalaryScale>> List(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -68,8 +68,8 @@ namespace Manager.Services.Specific
             Name = x.Name,
             Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name }
           }).ToList();
-        var total = serviceSalaryScale.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceSalaryScale.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Grades
-    public async Task<List<ViewListGrade>> ListGrade(string idsalaryscale,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGrade>> ListGrade(string idsalaryscale,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -172,8 +172,8 @@ namespace Manager.Services.Specific
           }
           detail.Add(view);
         }
-        var total = 1;
-        return detail;
+        total = detail.Count();
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -343,24 +343,27 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListGradeFilter>> ListGrades(string idcompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListGradeFilter>> ListGrades(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        var salaryScale = serviceSalaryScale.GetAll(p => p.Company._id == idcompany).FirstOrDefault();
-        if (salaryScale == null || salaryScale.Grades == null)
-          return null;
+        var salaryScale = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany).Result.FirstOrDefault();
+        
+        if (salaryScale == null )
+          return Task.FromResult(new List<ViewListGradeFilter>());
 
         if (salaryScale.Grades == null)
-          return null;
+          return Task.FromResult(new List<ViewListGradeFilter>());
 
-        return salaryScale.Grades.Select(p => new ViewListGradeFilter()
+        total = salaryScale.Grades.Count();
+
+        return Task.FromResult(salaryScale.Grades.Select(p => new ViewListGradeFilter()
         {
           idGrade = p._id,
           NameGrade = p.Name,
           idSalaryScale = salaryScale._id,
           NameSalaryScale = salaryScale.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {

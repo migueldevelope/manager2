@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("certification")]
-  public class CertificationController : Controller
+  public class CertificationController : DefaultController
   {
     private readonly IServiceCertification service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da acreditação</param>
     /// <param name="contextAccessor">Token de autenticação</param>
-    public CertificationController(IServiceCertification _service, IHttpContextAccessor contextAccessor)
+    public CertificationController(IServiceCertification _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -46,7 +46,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListCertificationPerson>> ListCertificationsWaitPerson(string idperson, string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListCertificationsWaitPerson(idperson, filter, count, page);
+      var result = service.ListCertificationsWaitPerson(idperson, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -101,7 +101,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListCertificationItem>> ListCertificationPerson(string idperson, string filter = "", int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListCertificationPerson(idperson, filter, count, page);
+      var result = service.ListCertificationPerson(idperson, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -157,7 +157,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListCertification>> ListEnded(string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
-      return await service.ListEnded(filter, count, page);
+      return await service.ListEnded(ref total, filter, count, page);
     }
     /// <summary>
     /// Busca informação de acreditção
@@ -185,7 +185,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListPerson>> ListPersons(string idcertification, string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
-      return await service.ListPersons(idcertification, filter, count, page);
+      return await service.ListPersons(idcertification, ref total, filter, count, page);
     }
     /// <summary>
     /// Inclusão de nova acreditação

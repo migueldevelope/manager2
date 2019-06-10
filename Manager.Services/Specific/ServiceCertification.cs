@@ -523,7 +523,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListCertificationPerson>> ListCertificationsWaitPerson(string idperson,  string filter, int count, int page)
+    public Task<List<ViewListCertificationPerson>> ListCertificationsWaitPerson(string idperson, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -565,12 +565,9 @@ namespace Manager.Services.Specific
 
         var result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         result = result.Distinct(new ViewCertificationComparer()).ToList();
-        var total = result.Count();
+        total = result.Count();
 
-        if(result.Count > 0)
-          result.FirstOrDefault().total = total;
-
-        return result;
+        return Task.FromResult(result);
       }
       catch (Exception e)
       {
@@ -578,14 +575,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListCertificationItem>> ListCertificationPerson(string idperson,  string filter, int count, int page)
+    public Task<List<ViewListCertificationItem>> ListCertificationPerson(string idperson, ref  long total,  string filter, int count,int page)
     {
       try
       {
         int skip = (count * (page - 1));
 
-        var result = serviceCertification.GetAll(p => p.Person._id == idperson & p.StatusCertification == EnumStatusCertification.Approved
-        & p.CertificationItem.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.CertificationItem.Name).Skip(skip).Take(count)
+        var result = serviceCertification.GetAllNewVersion(p => p.Person._id == idperson & p.StatusCertification == EnumStatusCertification.Approved
+        & p.CertificationItem.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.CertificationItem.Name).Skip(skip).Take(count)
         .Select(p => new ViewListCertificationItem
         {
           _id = p.CertificationItem._id,
@@ -599,11 +596,8 @@ namespace Manager.Services.Specific
           p.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationHard ? EnumItemCertificationView.Hard : EnumItemCertificationView.Soft
         }).ToList();
 
-        var total = result.Count();
-        if (result.Count > 0)
-          result.FirstOrDefault().total = total;
-
-        return result;
+        total = serviceCertification.CountNewVersion(p => p.Person._id == idperson & p.StatusCertification == EnumStatusCertification.Approved).Result;
+        return Task.FromResult(result);
       }
       catch (Exception e)
       {
@@ -612,23 +606,22 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<List<ViewListCertification>> ListEnded( string filter, int count, int page)
+    public Task<List<ViewListCertification>> ListEnded(ref  long total,  string filter, int count,int page)
     {
       try
       {
 
         int skip = (count * (page - 1));
         var detail = serviceCertification.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        var total = serviceCertification.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceCertification.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListCertification()
+        return Task.FromResult(detail.Select(p => new ViewListCertification()
         {
           _id = p._id,
           Name = p.Person.User.Name,
           _idPerson = p.Person._id,
-          StatusCertification = p.StatusCertification,
-          total = total
-        }).ToList();
+          StatusCertification = p.StatusCertification
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -636,7 +629,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListPerson>> ListPersons(string idcertification,  string filter, int count, int page)
+    public Task<List<ViewListPerson>> ListPersons(string idcertification, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -672,7 +665,6 @@ namespace Manager.Services.Specific
         var detail = details.Where(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(o => o.User.Name).ToList();
 
 
-        var total = detail.Count();
         var listExclud = serviceCertification.GetAll(p => p._id == idcertification).FirstOrDefault().ListPersons;
         foreach (var item in listExclud)
         {
@@ -680,10 +672,9 @@ namespace Manager.Services.Specific
         }
         detail.RemoveAll(p => p._id == certificaiton.Person._id);
 
-        if (detail.Count > 0)
-          detail.FirstOrDefault().total = total;
+        total = detail.Count();
 
-        return detail;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

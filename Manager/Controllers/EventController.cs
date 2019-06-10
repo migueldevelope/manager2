@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("event")]
-  public class EventController : Controller
+  public class EventController : DefaultController
   {
     private readonly IServiceEvent service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço específico</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public EventController(IServiceEvent _service, IHttpContextAccessor contextAccessor)
+    public EventController(IServiceEvent _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -182,10 +182,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListEvent>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(count, page, filter);
+      var result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -200,10 +200,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventopensubscription/{idperson}")]
-    public async Task<List<ViewListEvent>> ListEventOpenSubscription(string idperson, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventOpenSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEventOpenSubscription(idperson, count, page, filter);
+      var result = service.ListEventOpenSubscription(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -218,10 +218,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventsubscription/{idperson}")]
-    public async Task<List<ViewListEvent>> ListEventSubscription(string idperson, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEventSubscription(idperson, count, page, filter);
+      var result = service.ListEventSubscription(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -235,10 +235,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventopen")]
-    public async Task<List<ViewListEvent>> ListEventOpen(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventOpen( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEventOpen(count, page, filter);
+      var result = service.ListEventOpen(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -252,10 +252,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventend")]
-    public async Task<List<ViewListEvent>> ListEventEnd(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventEnd( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEventEnd(count, page, filter);
+      var result = service.ListEventEnd(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -271,10 +271,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersoninstructor/{idevent}/{idcompany}")]
-    public async Task<List<ViewListPersonResume>> ListPersonInstructor(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonResume>> ListPersonInstructor(string idevent, string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPersonInstructor(idevent, idcompany, count, page, filter);
+      var result = service.ListPersonInstructor(idevent, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -290,10 +290,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersonparticipants/{idevent}/{idcompany}")]
-    public async Task<List<ViewListPersonResume>> ListPersonParticipants(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonResume>> ListPersonParticipants(string idevent, string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListPersonParticipants(idevent, idcompany, count, page, filter);
+      var result = service.ListPersonParticipants(idevent, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -307,10 +307,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listentity")]
-    public async Task<List<ViewCrudEntity>> ListEntity(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudEntity>> ListEntity( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEntity(count, page, filter);
+      var result = service.ListEntity(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -359,10 +359,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventhistoric")]
-    public async Task<List<ViewListEventHistoric>> ListEventHistoric(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventHistoric>> ListEventHistoric( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEventHistoric(count, page, filter);
+      var result = service.ListEventHistoric(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -376,10 +376,10 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpGet]
     [Route("listeventhistoricperson/{id}")]
-    public async Task<List<ViewListEventHistoric>> ListEventHistoricPerson(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventHistoric>> ListEventHistoricPerson(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEventHistoricPerson(id, count, page, filter);
+      var result = service.ListEventHistoricPerson(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -428,10 +428,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcourse")]
-    public async Task<List<ViewListCourse>> ListCourse(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCourse>> ListCourse( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListCourse(count, page, filter);
+      var result = service.ListCourse(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -480,10 +480,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcourseesocial")]
-    public async Task<List<ViewCrudCourseESocial>> ListCourseESocial(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudCourseESocial>> ListCourseESocial( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListCourseESocial(count, page, filter);
+      var result = service.ListCourseESocial(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -558,10 +558,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listparticipants/{idevent}")]
-    public async Task<List<ViewCrudParticipant>> ListParticipants(string idevent, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudParticipant>> ListParticipants(string idevent,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListParticipants(idevent, count, page, filter);
+      var result = service.ListParticipants(idevent, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

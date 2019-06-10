@@ -31,10 +31,15 @@ namespace Manager.Core.Business
     public decimal PercentMaturity { get; set; }
     public decimal PercentActivitiesExcellence { get; set; }
     public decimal PercentGoals { get; set; }
+    public decimal SalaryNew { get; set; }
+    public decimal SalaryDifference { get; set; }
+    public decimal PercentSalary { get; set; }
 
     public decimal ResultEnd { get; set; }
     public EnumSteps ResultStep { get; set; }
+    public EnumSteps ResultStepScale { get; set; }
     public Grade Grade { get; set; }
+    public Grade GradeScale { get; set; }
 
   }
 }

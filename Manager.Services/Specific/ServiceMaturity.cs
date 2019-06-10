@@ -186,7 +186,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewCrudMaturity>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudMaturity>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -204,8 +204,8 @@ namespace Manager.Services.Specific
             LevelPraise = x.LevelPraise,
             LevelCertification = x.LevelCertification
           }).ToList();
-        var total = serviceMaturity.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceMaturity.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -330,7 +330,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewCrudMaturityRegister>> ListMaturityRegister( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudMaturityRegister>> ListMaturityRegister( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -343,8 +343,8 @@ namespace Manager.Services.Specific
             Date = p.Date,
             _idRegister = p._idRegister
           }).ToList();
-        var total = serviceMaturityRegister.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceMaturityRegister.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

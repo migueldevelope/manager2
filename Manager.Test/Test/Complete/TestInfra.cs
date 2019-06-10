@@ -79,16 +79,16 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var ares = serviceInfra.GetAreas();
-        var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
-        serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
-        long total = 0;
-        var skill = serviceInfra.GetSkills("3", 100, 1).Result.FirstOrDefault();
-        //serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
-        var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
-        //serviceInfra.AddAxis(new Axis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator });
-        var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
-        //serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
+        //var ares = serviceInfra.GetAreas();
+        //var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
+        //serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
+        //long total = 0;
+        //var skill = serviceInfra.GetSkills("3", 100, 1).Result.FirstOrDefault();
+        ////serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
+        //var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
+        ////serviceInfra.AddAxis(new Axis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator });
+        //var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
+        ////serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
 
       }
       catch (Exception e)
@@ -367,15 +367,15 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
-        long total = 0;
-        var groups = serviceInfra.GetGroups();
-        //var skills = serviceInfra.GetSkills("", 100, 1);
-        var skill = serviceInfra.GetSkills(company._id, "", 100, 1).Result.FirstOrDefault();
-        var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
-        var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
+        //var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
+        //long total = 0;
+        //var groups = serviceInfra.GetGroups();
+        ////var skills = serviceInfra.GetSkills("", 100, 1);
+        //var skill = serviceInfra.GetSkills(company._id, "", 100, 1).Result.FirstOrDefault();
+        //var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
+        //var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
 
-        sphere.Name = sphere.Name + " test";
+        //sphere.Name = sphere.Name + " test";
         //serviceInfra.UpdateSphere(sphere);
 
         //var idcompany = "5b59d5bda49e0f344cd97fb6";

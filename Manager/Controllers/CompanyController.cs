@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("company")]
-  public class CompanyController : Controller
+  public class CompanyController : DefaultController
   {
     private readonly IServiceCompany service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da empresa</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public CompanyController(IServiceCompany _service, IHttpContextAccessor contextAccessor)
+    public CompanyController(IServiceCompany _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -42,10 +42,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListCompany>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCompany>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListCompany> result = await service.List(count, page, filter);
+      List<ViewListCompany> result = await service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -109,10 +109,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listestablishment")]
-    public async Task<List<ViewListEstablishment>> ListEstablishment(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEstablishment>> ListEstablishment( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListEstablishment> result = await service.ListEstablishment(count, page, filter);
+      List<ViewListEstablishment> result = await service.ListEstablishment(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -127,10 +127,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listestablishment/{idcompany}")]
-    public async Task<List<ViewListEstablishment>> ListEstablishment(string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEstablishment>> ListEstablishment(string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListEstablishment> result = await service.ListEstablishment(idcompany, count, page, filter);
+      List<ViewListEstablishment> result = await service.ListEstablishment(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

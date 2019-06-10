@@ -153,19 +153,18 @@ namespace Manager.Services.Specific
     #endregion
 
     #region List Account
-    public async Task<List<ViewListAccount>> GetAll( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListAccount>> GetAll( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         Task<List<Account>> detail = serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name");
-        var total = serviceAccount.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail.Result
+        total = serviceAccount.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail.Result
           .Select(x => new ViewListAccount()
           {
             _id = x._id,
-            Name = x.Name,
-            total = total
-          }).ToList();
+            Name = x.Name
+          }).ToList());
       }
       catch (Exception e)
       {

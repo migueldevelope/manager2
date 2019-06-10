@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("dictionarysystem")]
-  public class DictionarySystemController : Controller
+  public class DictionarySystemController : DefaultController
   {
     private readonly IServiceDictionarySystem service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Servio do dicionário do sistema</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public DictionarySystemController(IServiceDictionarySystem _service, IHttpContextAccessor contextAccessor)
+    public DictionarySystemController(IServiceDictionarySystem _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -66,10 +66,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListDictionarySystem>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListDictionarySystem>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListDictionarySystem> result = await service.List(count, page, filter);
+      List<ViewListDictionarySystem> result = await service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

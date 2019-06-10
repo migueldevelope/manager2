@@ -16,7 +16,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("account")]
-  public class AccountController : Controller
+  public class AccountController : DefaultController
   {
     private readonly IServiceAccount service;
     private readonly IServiceLog serviceLog;
@@ -28,7 +28,7 @@ namespace Manager.Controllers
     /// <param name="_service">Serviço de contas do cliente</param>
     /// <param name="_serviceLog">Serviço de Logs</param>
     /// <param name="contextAccessor">Autorização</param>
-    public AccountController(IServiceAccount _service, IServiceLog _serviceLog, IHttpContextAccessor contextAccessor)
+    public AccountController(IServiceAccount _service, IServiceLog _serviceLog, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       serviceLog = _serviceLog;
@@ -88,7 +88,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListAccount>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = await service.GetAll(count, page, filter);
+      var result = await service.GetAll(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -144,7 +144,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListLog>> ListLogs(string idaccount, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = serviceLog.ListLogs(idaccount, count, page, filter);
+      var result = serviceLog.ListLogs(idaccount, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

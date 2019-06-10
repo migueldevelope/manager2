@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("goals")]
-  public class GoalsController : Controller
+  public class GoalsController : DefaultController
   {
     private readonly IServiceGoals service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">serviço dos objetivos</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public GoalsController(IServiceGoals _service, IHttpContextAccessor contextAccessor)
+    public GoalsController(IServiceGoals _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -54,10 +54,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListGoal>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoal>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListGoal> result = await service.List(count, page, filter);
+      List<ViewListGoal> result = await service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -72,10 +72,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager/{id}")]
-    public async Task<List<ViewListGoal>> ListManager(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoal>> ListManager(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListGoal> result = await service.ListManager(id, count, page, filter);
+      List<ViewListGoal> result = await service.ListManager(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -91,10 +91,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcompany/{id}")]
-    public async Task<List<ViewListGoal>> ListCompany(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoal>> ListCompany(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListGoal> result = await service.ListCompany(id, count, page, filter);
+      List<ViewListGoal> result = await service.ListCompany(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -160,10 +160,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsperiod")]
-    public async Task<List<ViewCrudGoalPeriod>> ListGoalsPeriod(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudGoalPeriod>> ListGoalsPeriod( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGoalsPeriod(count, page, filter);
+      var result = service.ListGoalsPeriod(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -230,10 +230,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalscompany/{idgoalsperiod}/{idcompany}")]
-    public async Task<List<ViewCrudGoalItem>> ListGoalsCompany(string idgoalsperiod, string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudGoalItem>> ListGoalsCompany(string idgoalsperiod, string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGoalsCompany(idgoalsperiod, idcompany, count, page, filter);
+      var result = service.ListGoalsCompany(idgoalsperiod, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -247,10 +247,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalscompany")]
-    public async Task<List<ViewListGoalCompany>> ListGoalsCompany(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoalCompany>> ListGoalsCompany( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGoalsCompany(count, page, filter);
+      var result = service.ListGoalsCompany(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -344,10 +344,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsmanager/{idgoalsperiod}/{idmanager}")]
-    public async Task<ViewListGoalsItem> ListGoalsManager(string idgoalsperiod, string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<ViewListGoalsItem> ListGoalsManager(string idgoalsperiod, string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGoalsManager(idgoalsperiod, idmanager, count, page, filter);
+      var result = service.ListGoalsManager(idgoalsperiod, idmanager, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -361,10 +361,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsmanager")]
-    public async Task<List<ViewListGoalManager>> ListGoalsManager(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoalManager>> ListGoalsManager( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGoalsManager(count, page, filter);
+      var result = service.ListGoalsManager(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -486,10 +486,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsperson/{idgoalsperiod}/{idperson}")]
-    public async Task<ViewListGoalsItem> ListGoalsPerson(string idgoalsperiod, string idperson, int count = 10, int page = 1, string filter = "")
+    public async Task<ViewListGoalsItem> ListGoalsPerson(string idgoalsperiod, string idperson,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGoalsPerson(idgoalsperiod, idperson, count, page, filter);
+      var result = service.ListGoalsPerson(idgoalsperiod, idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -503,10 +503,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalsperson")]
-    public async Task<List<ViewListGoalPerson>> ListGoalsPerson(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoalPerson>> ListGoalsPerson( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGoalsPerson(count, page, filter);
+      var result = service.ListGoalsPerson(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -618,10 +618,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgoalspersoncontrol/{id}")]
-    public async Task<List<ViewListGoalPersonControl>> ListGoalsPersonControl(string id, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGoalPersonControl>> ListGoalsPersonControl(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListGoalsPersonControl(id, count, page, filter);
+      var result = service.ListGoalsPersonControl(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

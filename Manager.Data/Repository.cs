@@ -54,6 +54,7 @@ namespace Manager.Data
           _user._idPerson = ci.Value;
       }
     }
+
     #endregion
 
     #region Old

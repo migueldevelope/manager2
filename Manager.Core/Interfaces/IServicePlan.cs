@@ -20,21 +20,21 @@ namespace Manager.Core.Interfaces
     Task<string> RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan);
     Task<string> RemovePlanActivity(string id);
 
-    Task<List<ViewGetPlan>> ListPlans( string id, string filter, int count,
+    Task<List<ViewGetPlan>> ListPlans( string id,ref  long total,  string filter, int count,
       int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
-    Task<List<ViewGetPlan>> ListPlansPerson( string id, string filter, int count,
+    Task<List<ViewGetPlan>> ListPlansPerson( string id,ref  long total,  string filter, int count,
       int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
     Task<ViewGetPlan> GetPlan(string idmonitoring, string idplan);
     Task<string> UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan);
     Task<string> NewPlan(string idmonitoring, string idplanold, ViewCrudPlan viewPlan);
     Task<string> NewUpdatePlan(string idmonitoring, List<ViewCrudNewPlanUp> viewPlan);
-    Task<List<ViewPlanShort>> ListPlans( string id, string filter, int count, int page);
-    Task<List<ViewPlanShort>> ListPlansPerson( string id, string filter, int count, int page);
-    Task<List<ViewListPlanStruct>> ListPlansStruct( string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan);
+    Task<List<ViewPlanShort>> ListPlans( string id,ref  long total,  string filter, int count, int page);
+    Task<List<ViewPlanShort>> ListPlansPerson( string id,ref  long total,  string filter, int count, int page);
+    Task<List<ViewListPlanStruct>> ListPlansStruct(ref  long total,  string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan);
     Task<string> NewStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplan);
     Task<ViewCrudStructPlan> GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan);
     Task<string> UpdateStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplanedit);
-    Task<List<ViewPlanActivity>> ListPlanActivity( string filter, int count, int page);
+    Task<List<ViewPlanActivity>> ListPlanActivity(ref  long total,  string filter, int count, int page);
     Task<ViewPlanActivity> GetPlanActivity(string id);
     Task<string> NewPlanActivity(ViewPlanActivity model);
     Task<string> UpdatePlanActivity(ViewPlanActivity model);

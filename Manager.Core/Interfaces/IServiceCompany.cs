@@ -19,12 +19,12 @@ namespace Manager.Core.Interfaces
     Task<string> Update(ViewCrudCompany view);
     Task<ViewCrudCompany> Get(string id);
     Task<ViewCrudCompany> GetByName(string id);
-    Task<List<ViewListCompany>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListCompany>> List( ref long total, int count = 10, int page = 1, string filter = "");
     Task<string> NewEstablishment(ViewCrudEstablishment view);
     Task<string> UpdateEstablishment(ViewCrudEstablishment view);
     Task<ViewCrudEstablishment> GetEstablishment(string id);
     Task<ViewCrudEstablishment> GetEstablishmentByName(string idCompany, string name);
-    Task<List<ViewListEstablishment>> ListEstablishment(string idcompany,  int count = 10, int page = 1, string filter = "");
-    Task<List<ViewListEstablishment>> ListEstablishment( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListEstablishment>> ListEstablishment(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+    Task<List<ViewListEstablishment>> ListEstablishment( ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

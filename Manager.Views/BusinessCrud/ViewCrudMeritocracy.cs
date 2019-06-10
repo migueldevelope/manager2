@@ -33,5 +33,14 @@ namespace Manager.Views.BusinessCrud
 
     public EnumSteps ResultStep { get; set; }
     public ViewListGrade Grade { get; set; }
+
+
+    public EnumSteps ResultStepScale { get; set; }
+    public ViewListGrade GradeScale { get; set; }
+
+    public decimal SalaryNew { get; set; }
+    public decimal SalaryDifference { get; set; }
+    public decimal PercentSalary { get; set; }
+
   }
 }

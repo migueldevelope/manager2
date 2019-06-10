@@ -15,12 +15,12 @@ namespace Manager.Core.Interfaces
     Task<string> New(ViewCrudMaturity view);
     Task<string> Update(ViewCrudMaturity view);
     Task<ViewCrudMaturity> Get(string id);
-    Task<List<ViewCrudMaturity>> List( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewCrudMaturity>> List( ref long total, int count = 10, int page = 1, string filter = "");
     Task<string> NewMaturityRegister(ViewCrudMaturityRegister view);
     Task<string> UpdateMaturityRegister(ViewCrudMaturityRegister view);
     Task<ViewCrudMaturityRegister> GetMaturityRegister(string id);
     Task<string> DeleteMaturityRegister(string id);
-    Task<List<ViewCrudMaturityRegister>> ListMaturityRegister( int count = 10, int page = 1, string filter = "");
+    Task<List<ViewCrudMaturityRegister>> ListMaturityRegister( ref long total, int count = 10, int page = 1, string filter = "");
     Task MathMonth();
   }
 }

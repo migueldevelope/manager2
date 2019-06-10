@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("parameters")]
-  public class ParametersController : Controller
+  public class ParametersController : DefaultController
   {
     private readonly IServiceParameters service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço de parâmetros</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public ParametersController(IServiceParameters _service, IHttpContextAccessor contextAccessor)
+    public ParametersController(IServiceParameters _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -53,10 +53,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListParameter>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListParameter>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListParameter> result = await service.List(count, page, filter);
+      List<ViewListParameter> result = await service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

@@ -270,7 +270,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task  SetAttachment(string idevent, string url, string fileName, string attachmentid)
+    public async Task SetAttachment(string idevent, string url, string fileName, string attachmentid)
     {
       try
       {
@@ -509,19 +509,19 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewCrudEntity>> ListEntity( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudEntity>> ListEntity(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceEntity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = serviceEntity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceEntity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewCrudEntity()
+        return Task.FromResult(detail.Select(p => new ViewCrudEntity()
         {
           _id = p._id,
           Name = p.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -529,7 +529,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListPersonResume>> ListPersonParticipants(string idevent, string idcompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListPersonResume>> ListPersonParticipants(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -555,9 +555,9 @@ namespace Manager.Services.Specific
               });
         }
 
-        var total = detail.Count();
+        total = detail.Count();
 
-        return detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return Task.FromResult(detail.Skip(skip).Take(count).OrderBy(p => p.Name).ToList());
       }
       catch (Exception e)
       {
@@ -565,7 +565,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListPersonResume>> ListPersonInstructor(string idevent, string idcompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListPersonResume>> ListPersonInstructor(string idevent, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -591,9 +591,9 @@ namespace Manager.Services.Specific
             });
         }
 
-        var total = detail.Count();
+        total = detail.Count();
 
-        return detail.ToList().Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        return Task.FromResult(detail.ToList().Skip(skip).Take(count).OrderBy(p => p.Name).ToList());
       }
       catch (Exception e)
       {
@@ -601,22 +601,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListEvent>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEvent>> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
 
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
-        var total = serviceEvent.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceEvent.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Select(p => new ViewListEvent()
+        return Task.FromResult(detail.Select(p => new ViewListEvent()
         {
           _id = p._id,
           Name = p.Name,
           _idCourse = p.Course._id,
           NameCourse = p.Course.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -624,22 +624,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListEvent>> ListEventOpen( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEvent>> ListEventOpen(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
 
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = serviceEvent.CountNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceEvent.CountNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListEvent()
+        return Task.FromResult(detail.Select(p => new ViewListEvent()
         {
           _id = p._id,
           Name = p.Name,
           _idCourse = p.Course._id,
           NameCourse = p.Course.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -647,7 +647,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListEvent>> ListEventOpenSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEvent>> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -670,15 +670,15 @@ namespace Manager.Services.Specific
             }
           }
         }
-        var total = result.Count();
+        total = result.Count();
 
-        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEvent()
+        return Task.FromResult(result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEvent()
         {
           _id = p._id,
           Name = p.Name,
           _idCourse = p.Course._id,
           NameCourse = p.Course.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -686,7 +686,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListEvent>> ListEventSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEvent>> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -712,15 +712,15 @@ namespace Manager.Services.Specific
             }
           }
         }
-        var total = result.Count();
+        total = result.Count();
 
-        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEvent()
+        return Task.FromResult(result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEvent()
         {
           _id = p._id,
           Name = p.Name,
           _idCourse = p.Course._id,
           NameCourse = p.Course.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -728,22 +728,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListEvent>> ListEventEnd( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEvent>> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
 
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Realized & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Realized & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceEvent.GetAll(p => p.StatusEvent == EnumStatusEvent.Realized & p.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Select(p => new ViewListEvent()
+        return Task.FromResult(detail.Select(p => new ViewListEvent()
         {
           _id = p._id,
           Name = p.Name,
           _idCourse = p.Course._id,
           NameCourse = p.Course.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -751,7 +751,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListEventHistoric>> ListEventHistoric( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEventHistoric>> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -759,15 +759,15 @@ namespace Manager.Services.Specific
 
         int skip = (count * (page - 1));
         var detail = serviceEventHistoric.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = serviceEventHistoric.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        total = serviceEventHistoric.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
 
-        return detail.Select(p => new ViewListEventHistoric()
+        return Task.FromResult(detail.Select(p => new ViewListEventHistoric()
         {
           _id = p._id,
           Name = p.Name,
           _idPerson = p.Person._id,
           NamePerson = p.Person.User.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -775,22 +775,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListEventHistoric>> ListEventHistoricPerson(string id,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEventHistoric>> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
 
         int skip = (count * (page - 1));
         var detail = serviceEventHistoric.GetAll(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = serviceEventHistoric.CountNewVersion(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceEventHistoric.CountNewVersion(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListEventHistoric()
+        return Task.FromResult(detail.Select(p => new ViewListEventHistoric()
         {
           _id = p._id,
           Name = p.Course.Name,
           _idPerson = p.Person._id,
           NamePerson = p.Person.User.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -798,7 +798,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListCourse>> ListCourse( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListCourse>> ListCourse(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -806,13 +806,13 @@ namespace Manager.Services.Specific
 
         int skip = (count * (page - 1));
         var detail = serviceCourse.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = serviceCourse.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceCourse.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListCourse()
+        return Task.FromResult(detail.Select(p => new ViewListCourse()
         {
           _id = p._id,
           Name = p.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -820,20 +820,20 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewCrudCourseESocial>> ListCourseESocial( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudCourseESocial>> ListCourseESocial(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceCourseESocial.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        var total = serviceCourseESocial.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceCourseESocial.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewCrudCourseESocial()
+        return Task.FromResult(detail.Select(p => new ViewCrudCourseESocial()
         {
           _id = p._id,
           Name = p.Name,
           Code = p.Code
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -982,7 +982,7 @@ namespace Manager.Services.Specific
           Approved = true
         };
 
-        
+
 
         foreach (var days in events.Days)
         {
@@ -1014,7 +1014,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewCrudParticipant>> ListParticipants(string idevent,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudParticipant>> ListParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1022,7 +1022,7 @@ namespace Manager.Services.Specific
         var detail = serviceEvent.GetAll(p => p._id == idevent).FirstOrDefault().Participants.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         //var total = serviceEvent.CountNewVersion(p => p._id == idevent).Result.FirstOrDefault().Participants.Where(p => p.Name.ToUpper().Contains(filter.ToUpper()));
 
-        return detail.Select(p => new ViewCrudParticipant()
+        return Task.FromResult(detail.Select(p => new ViewCrudParticipant()
         {
           _id = p._id,
           Person = p.Person,
@@ -1037,7 +1037,7 @@ namespace Manager.Services.Specific
           Grade = p.Grade,
           Name = p.Name,
           TypeParticipant = p.TypeParticipant
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -1254,7 +1254,7 @@ namespace Manager.Services.Specific
         eventHistoric.Begin = view.Begin;
         eventHistoric.End = view.End;
         eventHistoric.Attachments = view.Attachments;
-        
+
 
         eventHistoric.Entity = AddEntity(view.Entity.Name);
         serviceEventHistoric.Update(eventHistoric, null);
@@ -1270,7 +1270,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        
+
 
         if (view.Workload.ToString().Contains(","))
           view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
@@ -1307,7 +1307,7 @@ namespace Manager.Services.Specific
           Name = p.Name
         }).ToList();
 
-        
+
 
         serviceCourse.Update(course, null);
 

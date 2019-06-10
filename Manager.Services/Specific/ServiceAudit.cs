@@ -18,6 +18,7 @@ namespace Manager.Services.Specific
 
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<User> serviceUser;
+    private readonly ServiceGeneric<Occupation> serviceOccupation;
 
     #region Constructor
     public ServiceAudit(DataContext context)
@@ -26,6 +27,7 @@ namespace Manager.Services.Specific
       {
         servicePerson = new ServiceGeneric<Person>(context);
         serviceUser = new ServiceGeneric<User>(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
       }
       catch (Exception e)
       {
@@ -36,12 +38,14 @@ namespace Manager.Services.Specific
     {
       servicePerson.User(contextAccessor);
       serviceUser._user = servicePerson._user;
+      serviceOccupation._user = servicePerson._user;
     }
     public void SetUser(BaseUser user)
     {
       //_user = user;
       servicePerson._user = user;
       serviceUser._user = user;
+      serviceOccupation._user = user;
     }
     #endregion
 
@@ -108,6 +112,37 @@ namespace Manager.Services.Specific
           default:
             throw new Exception("Not available!");
         }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewAuditOccupationSkills> ListOccupationSkills()
+    {
+      try
+      {
+        var occupations = serviceOccupation.GetAllFreeNewVersion().Result.ToList();
+
+        List<ViewAuditOccupationSkills> result = new List<ViewAuditOccupationSkills>();
+        foreach (var occupation in occupations)
+        {
+          if (occupation.Skills != null)
+            foreach (var item in occupation.Skills)
+            {
+              if (item != null)
+                result.Add(new ViewAuditOccupationSkills()
+                {
+                  OccupationName = occupation.Name,
+                  SkillsName = item.Name
+                });
+            }
+
+        }
+
+
+        return result;
       }
       catch (Exception e)
       {

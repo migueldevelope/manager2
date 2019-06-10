@@ -24,6 +24,6 @@ namespace Manager.Core.Interfaces
     Task<string> AlterPassword(ViewAlterPass resetPass, string idUser);
     Task<string> AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
     Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid);
-    Task<List<ViewListPersonInfo>> ListPerson(string iduser,  string filter, int count, int page);
+    Task<List<ViewListPersonInfo>> ListPerson(string iduser, ref  long total,  string filter, int count, int page);
   }
 }

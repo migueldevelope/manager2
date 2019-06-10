@@ -884,7 +884,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewPlanActivity>> ListPlanActivity( string filter, int count, int page)
+    public Task<List<ViewPlanActivity>> ListPlanActivity(ref long total, string filter, int count, int page)
     {
       try
       {
@@ -892,13 +892,13 @@ namespace Manager.Services.Specific
         List<ViewPlan> result = new List<ViewPlan>();
 
         var detail = servicePlanActivity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        var total = servicePlanActivity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = servicePlanActivity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewPlanActivity()
+        return Task.FromResult(detail.Select(p => new ViewPlanActivity()
         {
           _id = p._id,
           Name = p.Name
-        }).ToList();
+        }).ToList());
       }
       catch (Exception e)
       {
@@ -955,7 +955,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListPlanStruct>> ListPlansStruct( string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
+    public Task<List<ViewListPlanStruct>> ListPlansStruct(ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
     {
       try
       {
@@ -1042,9 +1042,9 @@ namespace Manager.Services.Specific
 
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
-        var total = result.Count();
+        total = result.Count();
 
-        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        return Task.FromResult(result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList());
       }
       catch (Exception e)
       {
@@ -1053,7 +1053,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<List<ViewGetPlan>> ListPlans( string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
+    public Task<List<ViewGetPlan>> ListPlans(string id, ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -1096,7 +1096,7 @@ namespace Manager.Services.Specific
                 _idPerson = res.Person._id,
                 NamePerson = res.Person.User.Name,
                 SourcePlan = res.SourcePlan,
-                IdMonitoring = res._id,
+                IdMonitoring = res._idMonitoring,
                 Evaluation = res.Evaluation,
                 StatusPlan = res.StatusPlan,
                 TypeAction = res.TypeAction,
@@ -1127,9 +1127,9 @@ namespace Manager.Services.Specific
           result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Wait).ToList();
 
 
-        var total = result.Count();
+        total = result.Count();
 
-        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        return Task.FromResult(result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList());
       }
       catch (Exception e)
       {
@@ -1137,7 +1137,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewGetPlan>> ListPlansPerson( string id, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
+    public Task<List<ViewGetPlan>> ListPlansPerson(string id, ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -1158,38 +1158,42 @@ namespace Manager.Services.Specific
         foreach (var res in plan)
         {
           var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == res._idMonitoring).Result.FirstOrDefault();
-          if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
-            result.Add(new ViewGetPlan()
-            {
-              _id = res._id,
-              Name = res.Name,
-              DateInclude = res.DateInclude,
-              Deadline = res.Deadline,
-              Description = res.Description,
-              Skills = res.Skills?.Select(p => new ViewListSkill()
+          if (monitoring != null)
+          {
+            if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
+              result.Add(new ViewGetPlan()
               {
-                _id = p._id,
-                TypeSkill = p.TypeSkill,
-                Concept = p.Concept,
-                Name = p.Name
-              }).ToList(),
-              UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
-              TypePlan = res.TypePlan,
-              _idPerson = res.Person._id,
-              NamePerson = res.Person.User.Name,
-              SourcePlan = res.SourcePlan,
-              IdMonitoring = res._id,
-              Evaluation = res.Evaluation,
-              StatusPlan = res.StatusPlan,
-              TypeAction = res.TypeAction,
-              StatusPlanApproved = res.StatusPlanApproved,
-              TextEnd = res.TextEnd,
-              TextEndManager = res.TextEndManager,
-              Status = res.Status,
-              DateEnd = res.DateEnd,
-              NewAction = res.NewAction,
-              Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
-            });
+                _id = res._id,
+                Name = res.Name,
+                DateInclude = res.DateInclude,
+                Deadline = res.Deadline,
+                Description = res.Description,
+                Skills = res.Skills?.Select(p => new ViewListSkill()
+                {
+                  _id = p._id,
+                  TypeSkill = p.TypeSkill,
+                  Concept = p.Concept,
+                  Name = p.Name
+                }).ToList(),
+                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
+                TypePlan = res.TypePlan,
+                _idPerson = res.Person._id,
+                NamePerson = res.Person.User.Name,
+                SourcePlan = res.SourcePlan,
+                IdMonitoring = res._idMonitoring,
+                Evaluation = res.Evaluation,
+                StatusPlan = res.StatusPlan,
+                TypeAction = res.TypeAction,
+                StatusPlanApproved = res.StatusPlanApproved,
+                TextEnd = res.TextEnd,
+                TextEndManager = res.TextEndManager,
+                Status = res.Status,
+                DateEnd = res.DateEnd,
+                NewAction = res.NewAction,
+                Bomb = GetBomb((DateTime.Parse(res.Deadline.ToString()) - DateTime.Now).Days)
+              });
+          }
+
         }
 
 
@@ -1209,9 +1213,9 @@ namespace Manager.Services.Specific
           result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Wait).ToList();
 
 
-        var total = result.Count();
+        total = result.Count();
 
-        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        return Task.FromResult(result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList());
       }
       catch (Exception e)
       {
@@ -1327,7 +1331,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<List<ViewPlanShort>> ListPlansPerson( string id, string filter, int count, int page)
+    public Task<List<ViewPlanShort>> ListPlansPerson(string id, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1357,7 +1361,7 @@ namespace Manager.Services.Specific
             _idPerson = res.Person._id,
             NamePerson = res.Person.User.Name,
             SourcePlan = res.SourcePlan,
-            IdMonitoring = res._id,
+            IdMonitoring = res._idMonitoring,
             Evaluation = res.Evaluation,
             StatusPlan = res.StatusPlan,
             TypeAction = res.TypeAction,
@@ -1374,7 +1378,7 @@ namespace Manager.Services.Specific
 
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
-        var total = result.Count();
+        total = result.Count();
 
         result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
 
@@ -1385,7 +1389,7 @@ namespace Manager.Services.Specific
           LastAction = g.Max(row => row.Deadline)
         }).ToList();
 
-        return viewReturn;
+        return Task.FromResult(viewReturn);
       }
       catch (Exception e)
       {
@@ -1393,7 +1397,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewPlanShort>> ListPlans( string id, string filter, int count, int page)
+    public Task<List<ViewPlanShort>> ListPlans(string id, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1423,7 +1427,7 @@ namespace Manager.Services.Specific
             _idPerson = res.Person._id,
             NamePerson = res.Person.User.Name,
             SourcePlan = res.SourcePlan,
-            IdMonitoring = res._id,
+            IdMonitoring = res._idMonitoring,
             Evaluation = res.Evaluation,
             StatusPlan = res.StatusPlan,
             TypeAction = res.TypeAction,
@@ -1439,7 +1443,7 @@ namespace Manager.Services.Specific
 
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
-        var total = result.Count();
+        total = result.Count();
         result = result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
         var viewReturn = result.GroupBy(i => i.Name).Select(g => new ViewPlanShort
         {
@@ -1447,7 +1451,7 @@ namespace Manager.Services.Specific
           LastAction = g.Max(row => row.Deadline)
         }).ToList();
 
-        return viewReturn;
+        return Task.FromResult(viewReturn);
       }
       catch (Exception e)
       {

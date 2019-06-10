@@ -26,6 +26,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<SalaryScaleScore> serviceSalaryScaleScore;
     private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
     private readonly ServiceGeneric<Maturity> serviceMaturity;
+    private readonly ServiceGeneric<Schooling> serviceSchooling;
     private readonly ServiceLog serviceLog;
     private readonly ServiceLogMessages serviceLogMessages;
     private readonly ServiceGeneric<MailLog> serviceMail;
@@ -48,6 +49,7 @@ namespace Manager.Services.Specific
         serviceLogMessages = new ServiceLogMessages(context);
         serviceMail = new ServiceGeneric<MailLog>(context);
         serviceMailModel = new ServiceMailModel(context);
+        serviceSchooling = new ServiceGeneric<Schooling>(context);
       }
       catch (Exception e)
       {
@@ -68,6 +70,7 @@ namespace Manager.Services.Specific
       serviceLog.SetUser(_user);
       serviceLogMessages.SetUser(_user);
       serviceMail._user = _user;
+      serviceSchooling._user = _user;
       serviceMailModel.SetUser(_user);
     }
     public void SetUser(BaseUser user)
@@ -83,7 +86,8 @@ namespace Manager.Services.Specific
       serviceMaturity._user = user;
       serviceLog.SetUser(_user);
       serviceLogMessages.SetUser(_user);
-      serviceMail._user = _user;
+      serviceMail._user = user;
+      serviceSchooling._user = _user;
       serviceMailModel.SetUser(_user);
     }
 
@@ -150,6 +154,37 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async Task GradeScale(Meritocracy meritocracy)
+    {
+      try
+      {
+        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
+        if ((occupation.SalaryScales != null) && (person.SalaryScales != null))
+        {
+          var grades = occupation.SalaryScales.Where(p => p._idSalaryScale == person.SalaryScales._idSalaryScale).FirstOrDefault();
+          var salaryscale = serviceSalaryScale.GetAllNewVersion(p => p._id == person.SalaryScales._idSalaryScale).Result.FirstOrDefault();
+          var grade = salaryscale.Grades.Where(p => p._id == grades._idGrade).FirstOrDefault();
+          meritocracy.GradeScale = grade;
+          foreach (var item in grade.ListSteps.OrderBy(p => p.Step))
+          {
+            if (person.Salary <= item.Salary)
+            {
+              meritocracy.ResultStepScale = item.Step;
+              serviceMeritocracy.Update(meritocracy, null);
+              return;
+            }
+          }
+
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private bool ValidOccupationDate(Meritocracy meritocracy, bool enabled)
     {
       try
@@ -168,6 +203,10 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
+        if (meritocracy.Person.CurrentSchooling == null)
+          meritocracy.Person.CurrentSchooling = person.User.Schooling?.Name;
+
         if ((enabled) && meritocracy.Person.CurrentSchooling == null)
           return false;
         return true;
@@ -184,6 +223,9 @@ namespace Manager.Services.Specific
       {
         if (enabled)
         {
+          if (meritocracy.MeritocracyActivities.Count == 0)
+            return false;
+
           foreach (var item in meritocracy.MeritocracyActivities)
           {
             if (item.Mark == 0)
@@ -195,7 +237,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        return false;
       }
     }
 
@@ -223,6 +265,16 @@ namespace Manager.Services.Specific
       try
       {
         var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
+        if ((person.User.DateAdm == null) && (meritocracy.Person.CompanyDate != null))
+        {
+          person.User.DateAdm = meritocracy.Person.CompanyDate;
+          servicePerson.Update(person, null);
+        }
+        if ((person.DateLastOccupation == null) && (meritocracy.Person.OccupationDate != null))
+        {
+          person.DateLastOccupation = meritocracy.Person.OccupationDate;
+          servicePerson.Update(person, null);
+        }
 
         byte schoolingWeight = 0;
         byte companyDateWeight = 0;
@@ -232,8 +284,12 @@ namespace Manager.Services.Specific
 
         if (person.User.Schooling != null)
         {
+          var schoolingPerson = serviceSchooling.GetAllNewVersion(p => p._id == person.User.Schooling._id).Result.FirstOrDefault();
+          var idschooling = person.Occupation.Schooling.Where(x => x.Type == EnumTypeSchooling.Basic).FirstOrDefault()._id;
+          var schoolingOccupation = serviceSchooling.GetAllNewVersion(p => p._id == idschooling).Result.FirstOrDefault();
+
           //schooling
-          var schoolingResult = person.User.Schooling.Order - person.Occupation.Schooling.Where(p => p.Type == EnumTypeSchooling.Basic).FirstOrDefault().Order;
+          var schoolingResult = schoolingPerson.Order - schoolingOccupation.Order;
           if (schoolingResult <= -2)
             schoolingWeight = 1;
           else if (schoolingResult == -1)
@@ -387,6 +443,7 @@ namespace Manager.Services.Specific
         var resultEnd = meritocracy.ResultEnd;
         EnumSteps resultStep = EnumSteps.A;
         Grade grade = null;
+        decimal salarynew = 0;
 
         var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
         var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
@@ -397,16 +454,23 @@ namespace Manager.Services.Specific
             Grades.Where(p => p._id == scales._idGrade).FirstOrDefault();
           var steps = grade.ListSteps;
           var count = steps.Count();
-          var scores = serviceSalaryScaleScore.GetAllNewVersion(p => p.CountSteps == count).Result;
+          var scores = serviceSalaryScaleScore.GetAllFreeNewVersion(p => p.CountSteps == count).Result.ToList();
+
+          meritocracy.Grade = grade;
 
           if (count == 2)
           {
             var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
             var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
             if (resultEnd <= a)
+            {
               resultStep = EnumSteps.A;
+            }
             else
+            {
               resultStep = EnumSteps.B;
+            }
+              
           }
 
           else if (count == 3)
@@ -416,11 +480,18 @@ namespace Manager.Services.Specific
             var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
 
             if (resultEnd <= a)
+            {
               resultStep = EnumSteps.A;
+            }
             else if ((resultEnd > a) && (resultEnd <= b))
+            {
               resultStep = EnumSteps.B;
+            }
             else if (resultEnd > b)
+            {
               resultStep = EnumSteps.C;
+            }
+              
           }
 
           else if (count == 4)
@@ -431,13 +502,22 @@ namespace Manager.Services.Specific
             var d = scores.Where(p => p.Step == EnumSteps.D).FirstOrDefault().Value;
 
             if (resultEnd <= a)
+            {
               resultStep = EnumSteps.A;
+            }
             else if ((resultEnd > a) && (resultEnd <= b))
+            {
               resultStep = EnumSteps.B;
+            }
             else if ((resultEnd > b) && (resultEnd <= c))
+            {
               resultStep = EnumSteps.C;
+            }
             else if (resultEnd > c)
+            {
               resultStep = EnumSteps.D;
+            }
+            
           }
 
           else if (count == 5)
@@ -449,15 +529,26 @@ namespace Manager.Services.Specific
             var e = scores.Where(p => p.Step == EnumSteps.E).FirstOrDefault().Value;
 
             if (resultEnd <= a)
+            {
               resultStep = EnumSteps.A;
+            }
             else if ((resultEnd > a) && (resultEnd <= b))
+            {
               resultStep = EnumSteps.B;
+            }
             else if ((resultEnd > b) && (resultEnd <= c))
+            {
               resultStep = EnumSteps.C;
+            }
             else if ((resultEnd > c) && (resultEnd <= d))
+            {
               resultStep = EnumSteps.D;
+            }
             else if (resultEnd > d)
+            {
               resultStep = EnumSteps.E;
+            }
+              
           }
 
           else if (count == 6)
@@ -470,17 +561,30 @@ namespace Manager.Services.Specific
             var f = scores.Where(p => p.Step == EnumSteps.F).FirstOrDefault().Value;
 
             if (resultEnd <= a)
+            {
               resultStep = EnumSteps.A;
+            }
             else if ((resultEnd > a) && (resultEnd <= b))
+            {
               resultStep = EnumSteps.B;
+            }
             else if ((resultEnd > b) && (resultEnd <= c))
+            {
               resultStep = EnumSteps.C;
+            }
             else if ((resultEnd > c) && (resultEnd <= d))
+            {
               resultStep = EnumSteps.D;
+            }
             else if ((resultEnd > d) && (resultEnd <= e))
+            {
               resultStep = EnumSteps.E;
+            }
             else if (resultEnd > e)
+            {
               resultStep = EnumSteps.F;
+            }
+              
           }
 
 
@@ -495,19 +599,34 @@ namespace Manager.Services.Specific
             var g = scores.Where(p => p.Step == EnumSteps.G).FirstOrDefault().Value;
 
             if (resultEnd <= a)
+            {
               resultStep = EnumSteps.A;
+            }
             else if ((resultEnd > a) && (resultEnd <= b))
+            {
               resultStep = EnumSteps.B;
+            }
             else if ((resultEnd > b) && (resultEnd <= c))
+            {
               resultStep = EnumSteps.C;
+            }
             else if ((resultEnd > c) && (resultEnd <= d))
+            {
               resultStep = EnumSteps.D;
+            }
             else if ((resultEnd > d) && (resultEnd <= e))
+            {
               resultStep = EnumSteps.E;
+            }
             else if ((resultEnd > e) && (resultEnd <= f))
+            {
               resultStep = EnumSteps.F;
+            }
             else if (resultEnd > f)
+            {
               resultStep = EnumSteps.G;
+            }
+              
           }
 
           else if (count == 8)
@@ -522,24 +641,48 @@ namespace Manager.Services.Specific
             var h = scores.Where(p => p.Step == EnumSteps.H).FirstOrDefault().Value;
 
             if (resultEnd <= a)
+            {
               resultStep = EnumSteps.A;
+            }
             else if ((resultEnd > a) && (resultEnd <= b))
+            {
               resultStep = EnumSteps.B;
+            }
             else if ((resultEnd > b) && (resultEnd <= c))
+            {
               resultStep = EnumSteps.C;
+            }
             else if ((resultEnd > c) && (resultEnd <= d))
+            {
               resultStep = EnumSteps.D;
+            }
             else if ((resultEnd > d) && (resultEnd <= e))
+            {
               resultStep = EnumSteps.E;
+            }
             else if ((resultEnd > e) && (resultEnd <= f))
+            {
               resultStep = EnumSteps.F;
+            }
             else if ((resultEnd > f) && (resultEnd <= g))
+            {
               resultStep = EnumSteps.G;
+            }
             else if (resultEnd > g)
+            {
               resultStep = EnumSteps.H;
+            }
+              
           }
 
         }
+        if(meritocracy.Grade != null)
+        {
+          salarynew = meritocracy.Grade.ListSteps.Where(p => p.Step == resultStep).FirstOrDefault().Salary;
+        }
+        meritocracy.SalaryNew = salarynew;
+        meritocracy.SalaryDifference = salarynew - meritocracy.Person.Salary;
+        meritocracy.PercentSalary = decimal.Parse(((double.Parse(meritocracy.SalaryDifference.ToString()) * 100.0) / double.Parse((meritocracy.Person.Salary == 0? 1: meritocracy.Person.Salary).ToString())).ToString());
         meritocracy.ResultStep = resultStep;
 
         serviceMeritocracy.Update(meritocracy, null);
@@ -619,8 +762,31 @@ namespace Manager.Services.Specific
         }
 
         Task.Run(() => MathMeritocracy(meritocracy));
+        Task.Run(() => GradeScale(meritocracy));
 
         return meritocracy._id;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public async Task<string> End(string id)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+
+        Task.Run(() => LogSave(_user._idPerson, string.Format("End process | {0}", meritocracy._id)));
+
+        meritocracy.StatusMeritocracy = EnumStatusMeritocracy.End;
+        meritocracy.DateEnd = DateTime.Now;
+
+        serviceMeritocracy.Update(meritocracy, null);
+        Task.Run(() => MathMeritocracy(meritocracy));
+
+        return "Meritocracy altered!";
       }
       catch (Exception e)
       {
@@ -724,15 +890,28 @@ namespace Manager.Services.Specific
       try
       {
         MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         MathMeritocracy(meritocracy);
+        GradeScale(meritocracy);
+        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
         meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMeritocracy()
         {
           _id = meritocracy._id,
           ActivitiesExcellence = meritocracy.ActivitiesExcellence,
           Maturity = meritocracy.Maturity,
-          Person = meritocracy.Person,
+          Person = new ViewListPersonMeritocracy()
+          {
+            _id = person._id,
+            CompanyDate = person.User.DateAdm ?? meritocracy.Person.CompanyDate,
+            OccupationDate = person.DateLastOccupation ?? meritocracy.Person.OccupationDate,
+            OccupationName = person.Occupation?.Name,
+            Name = person.User.Name,
+            CurrentSchooling = person.User.Schooling?.Name,
+            Salary = person.Salary,
+            OccupationSchooling = person.Occupation?.Schooling.FirstOrDefault()?.Name
+          },
           WeightCompanyDate = meritocracy.WeightCompanyDate,
           WeightOccupationDate = meritocracy.WeightOccupationDate,
           WeightSchooling = meritocracy.WeightSchooling,
@@ -750,7 +929,30 @@ namespace Manager.Services.Specific
           ValidOccupationDate = ValidOccupationDate(meritocracy, meritocracyScore.EnabledOccupationDate),
           ValidActivitiesExcellence = ValidActivitiesExcellence(meritocracy, meritocracyScore.EnabledActivitiesExcellence),
           ValidSchooling = ValidSchooling(meritocracy, meritocracyScore.EnabledSchooling),
-          ResultEnd = meritocracy.ResultEnd
+          ResultEnd = meritocracy.ResultEnd,
+          ResultStep = meritocracy.ResultStep,
+          ResultStepScale = meritocracy.ResultStepScale,
+          PercentSalary = meritocracy.PercentSalary,
+          SalaryDifference = meritocracy.SalaryDifference,
+          SalaryNew = meritocracy.SalaryNew,
+          Grade = meritocracy.Grade == null ? null : new ViewListGrade()
+          {
+            _id = meritocracy.Grade._id,
+            Name = meritocracy.Grade.Name,
+            Order = meritocracy.Grade.Order,
+            StepMedium = meritocracy.Grade.StepMedium,
+            Steps = meritocracy.Grade.ListSteps.Select
+          (x => new ViewListStep() { Step = x.Step, Salary = x.Salary }).ToList()
+          },
+          GradeScale = meritocracy.GradeScale == null ? null : new ViewListGrade()
+          {
+            _id = meritocracy.GradeScale._id,
+            Name = meritocracy.GradeScale.Name,
+            Order = meritocracy.GradeScale.Order,
+            StepMedium = meritocracy.GradeScale.StepMedium,
+            Steps = meritocracy.GradeScale.ListSteps.Select
+          (x => new ViewListStep() { Step = x.Step, Salary = x.Salary }).ToList()
+          }
         };
 
       }
@@ -760,7 +962,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListMeritocracy>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListMeritocracy>> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -770,14 +972,15 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Person.Name
           }).ToList();
-        var total = serviceMeritocracy.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceMeritocracy.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+
 
     public async Task<List<ViewListMeritocracyActivitie>> ListMeritocracyActivitie(string idmeritocracy)
     {
@@ -799,7 +1002,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager,  string filter, int count, int page)
+    public Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -836,11 +1039,11 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        var total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
                                 p.TypeUser != EnumTypeUser.Administrator &&
                                 p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -1054,7 +1257,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1069,8 +1272,8 @@ namespace Manager.Services.Specific
             Step = p.Step,
             Value = p.Value,
           }).ToList();
-        var total = serviceSalaryScaleScore.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        return detail;
+        total = serviceSalaryScaleScore.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

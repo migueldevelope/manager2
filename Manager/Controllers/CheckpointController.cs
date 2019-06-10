@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("checkpoint")]
-  public class CheckpointController : Controller
+  public class CheckpointController : DefaultController
   {
     private readonly IServiceCheckpoint service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Servico do checkpoint</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public CheckpointController(IServiceCheckpoint _service, IHttpContextAccessor contextAccessor)
+    public CheckpointController(IServiceCheckpoint _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -43,10 +43,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listwaitmanager/{idmanager}")]
-    public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListWaitManager(idmanager, filter, count, page);
+      var result = service.ListWaitManager(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }
@@ -132,10 +132,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listended")]
-    public async Task<List<ViewListCheckpoint>> ListEnded(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCheckpoint>> ListEnded( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListEnded(filter, count, page);
+      var result = service.ListEnded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await result;
     }

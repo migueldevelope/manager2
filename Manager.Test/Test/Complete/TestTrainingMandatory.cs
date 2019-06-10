@@ -41,8 +41,8 @@ namespace Manager.Test.Test.Complete
         var person = servicePerson.GetAll(p => p.User.Name.Contains("Analisa")).FirstOrDefault();
 
         
-        var course = serviceEvent.ListCourse(1, 1, "").Result.FirstOrDefault();
-        var listperson = serviceMandatoryTraining.ListPerson(course._id, person.Company._id, 10, 1, "");
+        //var course = serviceEvent.ListCourse(1, 1, "").Result.FirstOrDefault();
+        //var listperson = serviceMandatoryTraining.ListPerson(course._id, person.Company._id, 10, 1, "");
 
         //var view = new ViewAddPersonMandatory()
         //{
@@ -53,9 +53,9 @@ namespace Manager.Test.Test.Complete
         //};
 
         //serviceMandatoryTraining.AddPerson(view);
-        var list = serviceMandatoryTraining.List(1, 1, "");
+        //var list = serviceMandatoryTraining.List(1, 1, "");
 
-        var listPlan = serviceMandatoryTraining.ListTrainingPlan(person.Company._id, 1, 1, "");
+        //var listPlan = serviceMandatoryTraining.ListTrainingPlan(person.Company._id, 1, 1, "");
         
 
       }

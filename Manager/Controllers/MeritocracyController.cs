@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("meritocracy")]
-  public class MeritocracyController : Controller
+  public class MeritocracyController : DefaultController
   {
     private readonly IServiceMeritocracy service;
 
@@ -24,7 +24,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="_service">Serviço da meritocracia</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public MeritocracyController(IServiceMeritocracy _service, IHttpContextAccessor contextAccessor)
+    public MeritocracyController(IServiceMeritocracy _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
@@ -42,10 +42,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListMeritocracy>> List(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMeritocracy>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListMeritocracy> result = await service.List(count, page, filter);
+      List<ViewListMeritocracy> result = await service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -78,10 +78,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listwaitmanager/{idmanager}")]
-    public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListMeritocracy> result = await service.ListWaitManager(idmanager, filter, count, page);
+      List<ViewListMeritocracy> result = await service.ListWaitManager(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -137,6 +137,19 @@ namespace Manager.Controllers
     public async Task<IActionResult> Update([FromBody]ViewCrudMeritocracy view)
     {
       return Ok(await  service.Update(view));
+    }
+
+    /// <summary>
+    /// Alterar a meritocracia
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da meritocracia</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("end/{id}")]
+    public async Task<IActionResult> Update(string id)
+    {
+      return Ok(await service.End(id));
     }
 
     /// <summary>
@@ -259,10 +272,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listsalaryscalescore")]
-    public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewCrudSalaryScaleScore> result = await service.ListSalaryScaleScore(count, page, filter);
+      List<ViewCrudSalaryScaleScore> result = await service.ListSalaryScaleScore(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }

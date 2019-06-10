@@ -168,7 +168,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListCompany>> List( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListCompany>> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -178,8 +178,8 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Name            
           }).ToList();
-        var total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
@@ -277,7 +277,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewListEstablishment>> ListEstablishment(string idcompany,  int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEstablishment>> ListEstablishment(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -287,15 +287,15 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name
           }).ToList();
-        var total = serviceEstablishment.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceEstablishment.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewListEstablishment>> ListEstablishment( int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListEstablishment>> ListEstablishment( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -305,8 +305,8 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name
           }).ToList();
-        var total = serviceEstablishment.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        total = serviceEstablishment.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return Task.FromResult(detail);
       }
       catch (Exception e)
       {

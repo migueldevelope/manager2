@@ -344,7 +344,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public List<ViewListIntegrationEstablishment> EstablishmentList( int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationEstablishment> EstablishmentList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -353,12 +353,12 @@ namespace Manager.Services.Specific
         if (all)
         {
           detail = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
-          var total = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          total = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
         else
         {
           detail = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
-          var total = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").Count();
+          total = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").Count();
         }
         List<ViewListIntegrationEstablishment> result = new List<ViewListIntegrationEstablishment>();
         foreach (var item in detail)
@@ -465,7 +465,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public List<ViewListIntegrationOccupation> OccupationList( int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationOccupation> OccupationList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -474,12 +474,12 @@ namespace Manager.Services.Specific
         if (all)
         {
           detail = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
-          var total = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          total = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
         else
         {
           detail = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
-          var total = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").Count();
+          total = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").Count();
         }
         List<ViewListIntegrationOccupation> result = new List<ViewListIntegrationOccupation>();
         foreach (var item in detail)
@@ -585,7 +585,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public List<ViewListIntegrationSchooling> SchoolingList( int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationSchooling> SchoolingList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -594,12 +594,12 @@ namespace Manager.Services.Specific
         if (all)
         {
           detail = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
-          var total = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          total = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
         else
         {
           detail = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
-          var total = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").Count();
+          total = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").Count();
         }
         List<ViewListIntegrationSchooling> result = new List<ViewListIntegrationSchooling>();
         foreach (var item in detail)
