@@ -2,6 +2,7 @@
 using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;
+using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Manager.Test.Test.Complete
     public TestCheckpoint()
     {
       base.Init();
-      serviceCheckpoint = new ServiceCheckpoint(context, context, "");
+      serviceCheckpoint = new ServiceCheckpoint(context, context, "http://10.0.0.14/");
       serviceCheckpoint.SetUser(base.baseUser);
 
       servicePerson = new ServiceGeneric<Person>(base.context)
@@ -31,13 +32,22 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        //long total = 0;
-        //var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
+        long total = 0;
+        var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("Ariel")).Result.FirstOrDefault();
 
-        //var list = serviceCheckpoint.ListCheckpointsWaitOld(person.Manager._id, "Ariel", 10, 1).FirstOrDefault();
-        //var newOn = serviceCheckpoint.NewCheckpointOld(list, person.Manager._id);
+        var list = serviceCheckpoint.ListWaitManager(person.Manager._id, ref total, "Ariel", 10, 1).Result.FirstOrDefault();
+        var newChecklist = serviceCheckpoint.NewCheckpoint(list._idPerson).Result;
+        var getChecklist = serviceCheckpoint.GetCheckpoint(newChecklist._id).Result;
 
+        getChecklist.Comments = "test comments";
+        foreach(var item in getChecklist.Questions)
+        {
+          item.Mark = 2;
+        }
 
+        getChecklist.StatusCheckpoint = EnumStatusCheckpoint.End;
+
+        var result = serviceCheckpoint.UpdateCheckpoint(getChecklist).Result;
 
       }
       catch (Exception e)
@@ -53,8 +63,8 @@ namespace Manager.Test.Test.Complete
       try
       {
 
-        //var person = "5b8e9a6adc2492055f5fb68b";
-        //serviceCheckpoint.RemoveCheckpointOld(person);
+        var person = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.Checkpoint).Result.FirstOrDefault();
+        serviceCheckpoint.DeleteCheckpoint(person._id);
 
       }
       catch (Exception e)
