@@ -210,7 +210,8 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public List<ViewListIntegrationCompany> CompanyList( int count = 10, int page = 1, string filter = "", bool all = false)
+
+    public List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -219,12 +220,12 @@ namespace Manager.Services.Specific
         if (all)
         {
           detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
-          var total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
         }
         else
         {
           detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
-          var total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").Count();
+          total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").Count();
         }
         List<ViewListIntegrationCompany> result = new List<ViewListIntegrationCompany>();
         foreach (var item in detail)
