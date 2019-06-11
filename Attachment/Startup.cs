@@ -29,7 +29,7 @@ namespace Attachment
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
-      var conn = XmlConnection.ReadConfig();
+      var conn = XmlConnection.ReadVariablesSystem();
       _context = new DataContext(conn.Server, conn.DataBase);
 
       DataContext _contextLog;

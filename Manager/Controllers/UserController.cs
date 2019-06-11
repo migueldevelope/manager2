@@ -187,7 +187,7 @@ namespace Manager.Controllers
     [Route("forgotpassword/{mail}")]
     public async Task<string> ForgotPassword([FromBody]ViewForgotPassword view, string mail)
     {
-      Config conn = XmlConnection.ReadConfig();
+      Config conn = XmlConnection.ReadVariablesSystem();
       return await service.ForgotPassword(mail, view, conn.SendGridKey);
     }
     #endregion

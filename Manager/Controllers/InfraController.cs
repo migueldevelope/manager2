@@ -591,7 +591,7 @@ namespace Manager.Controllers
     [Route("getcsvcomparegroup/{idcompany}")]
     public async Task<string> GetCSVCompareGroup(string idcompany)
     {
-      return await service.GetCSVCompareGroup(idcompany, XmlConnection.ReadConfig().BlobKey);
+      return await service.GetCSVCompareGroup(idcompany, XmlConnection.ReadVariablesSystem().BlobKey);
     }
     #endregion
 
