@@ -33,6 +33,7 @@ namespace Manager
            .UseUrls("http://0.0.0.0:5200/")
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
+            .UseEnvironment("ANALISA_SERVER")
             .UseKestrel(opts => 
                           opts.AllowSynchronousIO = true
                       )
