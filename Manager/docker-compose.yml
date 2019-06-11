@@ -14,7 +14,7 @@ services:
     - ANALISA_TOKENSERVER=http://10.0.0.14/
     - ANALISA_SIGNALRSERVICE=http://10.0.0.14:5200/
     - ANALISA_BLOBKEY=DefaultEndpointsProtocol=https;AccountName=analisa;AccountKey=IbFD+bXx1SS9KQBK+7Fj+au3UIo16dvjLyp/0MFLne+0m3efK1/sKEeCJQLEYmbIImJpPRJC7LogsJ9zo6k9aQ==;EndpointSuffix=core.windows.net
-    - ANALISA_SENDGRIDKEY=SG.qBDR0LjvRYayTyo0cfU1CA.QhozMr0DsryEkZSYVTJGUnxUF5RR_0RUCkmd75qt$
+    - ANALISA_SENDGRIDKEY=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
     - ANALISA_SERVERLOG=mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations
     - ANALISA_DATABASELOG=evaluations
     - ANALISA_SERVERINTEGRATION=mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations
