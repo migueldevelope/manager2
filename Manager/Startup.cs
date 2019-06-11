@@ -158,8 +158,8 @@ namespace Manager
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials()
+          .WithExposedHeaders("x-total-count")
       ));
-
       services.AddMvc();
 
       services.AddSignalR();
