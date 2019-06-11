@@ -59,7 +59,7 @@ namespace Tools
             QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.Machine),
             ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Machine),
           };
-        else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Process) == null)
+        else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Process) != null)
           return new Config()
           {
             BlobKey = Environment.GetEnvironmentVariable("ANALISA_BLOBKEY", EnvironmentVariableTarget.Process),
