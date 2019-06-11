@@ -1,8 +1,10 @@
 ﻿using Manager.Core.Business;
 using Manager.Core.BusinessModel;
+using Manager.Core.Interfaces;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;
+using Manager.Views.BusinessCrud;
 using Manager.Views.Enumns;
 using MongoDB.Bson;
 using System;
@@ -20,264 +22,13 @@ namespace Manager.Test.Test.Complete
     public TestOnBoarding()
     {
       base.Init();
-      //serviceOnBoarding = new ServiceOnBoarding(context, context, "http://10.0.0.15/");
-      //serviceOnBoarding.SetUser(base.baseUser);
+      
+
+      serviceOnBoarding = new ServiceOnBoarding(context, context, "http://10.0.0.14/", base.serviceControlQueue);
+      serviceOnBoarding.SetUser(base.baseUser);
 
       servicePerson = new ServiceGeneric<Person>(base.context);
       servicePerson._user = base.baseUser;
-    }
-
-    [Fact]
-    public void ScriptComments()
-    {
-      try
-      {
-        var list = serviceOnBoarding.GetAuthentication(p => p.Status == EnumStatus.Enabled).ToList();
-
-        foreach (var item in list)
-        {
-
-          foreach (var row in item.Activities)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
-
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-          }
-
-          foreach (var row in item.Schoolings)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
-
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-          }
-
-          foreach (var row in item.Scopes)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
-
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-          }
-
-          foreach (var row in item.SkillsCompany)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
-
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-          }
-
-          foreach (var row in item.SkillsGroup)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
-
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-          }
-
-          foreach (var row in item.SkillsOccupation)
-          {
-            row.Comments = new List<ListComments>();
-            var commentPerson = new ListComments();
-            commentPerson._id = ObjectId.GenerateNewId().ToString();
-            commentPerson._idAccount = item._idAccount;
-            commentPerson.Comments = row.CommentsPerson;
-            commentPerson.StatusView = EnumStatusView.View;
-            commentPerson.Date = item.DateBeginPerson;
-            commentPerson.UserComment = EnumUserComment.Person;
-
-            var commentManager = new ListComments();
-            commentManager._id = ObjectId.GenerateNewId().ToString();
-            commentManager._idAccount = item._idAccount;
-            commentManager.Comments = row.CommentsManager;
-            commentManager.StatusView = EnumStatusView.View;
-            commentManager.Date = item.DateBeginManager;
-            commentManager.UserComment = EnumUserComment.Manager;
-
-            if (item.DateBeginPerson > item.DateBeginManager)
-            {
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-            }
-            else
-            {
-              if (commentManager.Comments != null)
-                row.Comments.Add(commentManager);
-
-              if (commentPerson.Comments != null)
-                row.Comments.Add(commentPerson);
-            }
-            row.StatusViewManager = EnumStatusView.View;
-            row.StatusViewPerson = EnumStatusView.View;
-          }
-
-          serviceOnBoarding.UpdateAccount(item, null);
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
     }
 
     [Fact]
@@ -285,18 +36,30 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        //long total = 0;
-        //var person = servicePerson.GetAll(p => p.User.Name.Contains("Ariel")).FirstOrDefault();
+        long total = 0;
+        var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("Ariel")).Result.FirstOrDefault();
 
-        //var list = serviceOnBoarding.ListOnBoardingsWaitOld(person.Manager._id, "Ariel", 10, 1).FirstOrDefault();
-        //var newOn = serviceOnBoarding.NewOnBoardingOld(list, person.Manager._id);
+        var list = serviceOnBoarding.ListOnBoardingsWait(person.Manager._id, ref total, "Ariel", 10, 1).Result.FirstOrDefault();
+        
+        var newOnboarding = serviceOnBoarding.New(list._id).Result;
+        var getOnboarding = serviceOnBoarding.Get(newOnboarding._id).Result;
 
-        //foreach(var item in newOn.SkillsCompany)
-        //{
-        //  item.CommentsManager = "teste 1";
-        //}
-        //newOn.StatusOnBoarding = EnumStatusOnBoarding.WaitPerson;
-        //serviceOnBoarding.UpdateOnBoarding(newOn, person.Manager._id);
+        foreach (var item in getOnboarding.SkillsCompany)
+        {
+          item.CommentsManager = "teste company 1";
+        }
+        foreach (var item in getOnboarding.SkillsGroup)
+        {
+          item.CommentsManager = "teste group 1";
+        }
+        foreach (var item in getOnboarding.SkillsOccupation)
+        {
+          item.CommentsManager = "teste occupation 1";
+        }
+        getOnboarding.CommentsManager = "test comment manager";
+        getOnboarding.StatusOnBoarding = EnumStatusOnBoarding.End;
+
+        var result = serviceOnBoarding.Update(getOnboarding).Result;
 
 
       }

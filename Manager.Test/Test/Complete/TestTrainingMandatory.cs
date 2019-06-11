@@ -21,7 +21,7 @@ namespace Manager.Test.Test.Complete
     {
       base.Init();
       serviceMandatoryTraining = new ServiceMandatoryTraining(base.context);
-      serviceEvent = new ServiceEvent(context, context, "http://10.0.0.15/");
+      serviceEvent = new ServiceEvent(context, context, "http://10.0.0.14/");
       serviceMandatoryTraining.SetUser(baseUser);
       serviceEvent.SetUser(base.baseUser);
 

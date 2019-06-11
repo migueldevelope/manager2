@@ -25,7 +25,7 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        //base.InitOffAccount();
+        base.InitOffAccount();
         serviceAccount = new ServiceAccount(context, context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
@@ -56,103 +56,104 @@ namespace Manager.Test.Test.Complete
       }
     }
 
-    [Fact]
-    public void IntegrationBigTest()
-    {
-      try
-      {
-        base.Init();
+    //[Fact]
+    //public void IntegrationBigTest()
+    //{
+    //  try
+    //  {
+    //    base.Init();
 
-        //var account = this.serviceAccount.GeAccount(p => p.Name == "TestBig")._id;
-        //var baseUser = new BaseUser()
-        //{
-        //  _idAccount = account
-        //};
-        //base.Init();
-        serviceIntegration = new ServiceIntegration(context, context, context);
-        serviceIntegration.SetUser(baseUser);
+    //    long total = 0;
+    //    var account = this.serviceAccount.GetAll(ref total).Result.Where(p => p.Name == "TestBig").FirstOrDefault()._id;
+    //    var baseUser = new BaseUser()
+    //    {
+    //      _idAccount = account
+    //    };
+    //    base.Init();
+    //    serviceIntegration = new ServiceIntegration(context, context, context);
+    //    serviceIntegration.SetUser(baseUser);
 
-        var list = new List<ViewPersonImport>();
+    //    var list = new List<ViewPersonImport>();
 
-        //Person 1
+    //    //Person 1
 
-        for (var row = 0; row < 100000; row++)
-        {
-          var view = new ViewPersonImport()
-          {
-            Mail = "func" + row + "@jmsoft.com.br",
-            Name = "func" + row,
-            NameCompany = "Test",
-            NameManager = "Test",
-            NameSchooling = "Posgraduate",
-            Password = "123",
-            Phone = "05432025412",
-            Registration = 1,
-            StatusUser = EnumStatusUser.Enabled,
-            DateAdm = DateTime.Parse("2012-01-01"),
-            DateBirth = DateTime.Parse("1993-05-11"),
-            Document = "a" + row,
-            DocumentManager = "a123",
-            TypeUser = EnumTypeUser.Employee
-          };
-          list.Add(view);
-        }
+    //    for (var row = 0; row < 100000; row++)
+    //    {
+    //      var view = new ViewPersonImport()
+    //      {
+    //        Mail = "func" + row + "@jmsoft.com.br",
+    //        Name = "func" + row,
+    //        NameCompany = "Test",
+    //        NameManager = "Test",
+    //        NameSchooling = "Posgraduate",
+    //        Password = "123",
+    //        Phone = "05432025412",
+    //        Registration = 1,
+    //        StatusUser = EnumStatusUser.Enabled,
+    //        DateAdm = DateTime.Parse("2012-01-01"),
+    //        DateBirth = DateTime.Parse("1993-05-11"),
+    //        Document = "a" + row,
+    //        DocumentManager = "a123",
+    //        TypeUser = EnumTypeUser.Employee
+    //      };
+    //      list.Add(view);
+    //    }
 
 
 
-        //var result = this.serviceIntegration.ImportPerson(list);
+    //    //var result = this.serviceIntegration.ImportPerson(list);
 
-        //this.serviceIntegration.UpdateManager();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    //    //this.serviceIntegration.UpdateManager();
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
 
-    [Fact]
-    public void SetManagerTest()
-    {
-      try
-      {
-        base.Init();
-        servicePerson._user = base.baseUser;
-        var manager = servicePerson.GetAll(p => p.User.Mail == "testbig@jmsoft.com.br").FirstOrDefault();
-        foreach (var item in servicePerson.GetAll().ToList())
-        {
-          //item.Manager = manager;
-          servicePerson.Update(item, null);
-        }
+    //[Fact]
+    //public void SetManagerTest()
+    //{
+    //  try
+    //  {
+    //    base.Init();
+    //    servicePerson._user = base.baseUser;
+    //    var manager = servicePerson.GetAll(p => p.User.Mail == "testbig@jmsoft.com.br").FirstOrDefault();
+    //    foreach (var item in servicePerson.GetAll().ToList())
+    //    {
+    //      //item.Manager = manager;
+    //      servicePerson.Update(item, null);
+    //    }
 
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
 
-    [Fact]
-    public void SetOccupation()
-    {
-      try
-      {
-        base.Init();
-        servicePerson._user = base.baseUser;
-        serviceOccupation._user = base.baseUser;
+    //[Fact]
+    //public void SetOccupation()
+    //{
+    //  try
+    //  {
+    //    base.Init();
+    //    servicePerson._user = base.baseUser;
+    //    serviceOccupation._user = base.baseUser;
 
-        var occ = serviceOccupation.GetAll().FirstOrDefault();
-        foreach (var item in servicePerson.GetAll().ToList())
-        {
-          item.Occupation = occ;
-          servicePerson.Update(item, null);
-        }
+    //    var occ = serviceOccupation.GetAll().FirstOrDefault();
+    //    foreach (var item in servicePerson.GetAll().ToList())
+    //    {
+    //      item.Occupation = occ;
+    //      servicePerson.Update(item, null);
+    //    }
 
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
 
     [Fact]
     public void IntegrationTest()
@@ -161,10 +162,11 @@ namespace Manager.Test.Test.Complete
       {
         base.Init();
 
-        //var account = this.serviceAccount.GeAccount(p => p.Name == "Support")._id;
+        long total = 0;
+        var account = this.serviceAccount.GetAll(ref total).Result.Where(p => p.Name == "Support").FirstOrDefault()._id;
         var baseUser = new BaseUser()
         {
-//          _idAccount = account
+          _idAccount = account
         };
         base.Init();
         serviceIntegration = new ServiceIntegration(context, context, context);
@@ -290,8 +292,9 @@ namespace Manager.Test.Test.Complete
         };
         list.Add(view);
 
-        // var result = this.serviceIntegration.ImportPerson(list);
-        
+        //var result = this.serviceIntegration.ImportPerson(list);
+        //var result = this.serviceIntegration.impo
+
 
         //      this.serviceIntegration.UpdateManager();
       }
@@ -301,23 +304,23 @@ namespace Manager.Test.Test.Complete
       }
     }
 
-    [Fact]
-    public void ManagerTest()
-    {
-      try
-      {
-        base.Init();
-        servicePerson._user = base.baseUser;
-        var user = servicePerson.GetAll(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
-        var manager = servicePerson.GetAll(p => p.User.Mail == "juremir@jmsoft.com.br").FirstOrDefault();
-        //user.Manager = manager;
-        servicePerson.Update(user, null);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    //[Fact]
+    //public void ManagerTest()
+    //{
+    //  try
+    //  {
+    //    base.Init();
+    //    servicePerson._user = base.baseUser;
+    //    var user = servicePerson.GetAll(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
+    //    var manager = servicePerson.GetAll(p => p.User.Mail == "juremir@jmsoft.com.br").FirstOrDefault();
+    //    //user.Manager = manager;
+    //    servicePerson.Update(user, null);
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
 
     [Fact]
     public void ListPersonsTest()

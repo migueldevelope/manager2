@@ -7,6 +7,7 @@ using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Test.Commons;
 using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
@@ -46,49 +47,64 @@ namespace Manager.Test.Test.Complete
 
 
 
-    //[Fact]
-    //public void TestCompany()
-    //{
-    //  try
-    //  {
-    //    foreach (var item in serviceCompany.GetAll().ToList())
-    //    {
-    //      item.Skills = new List<Skill>();
-    //      serviceCompany.Update(item, null);
-    //    }
+    [Fact]
+    public void TestCompany()
+    {
+      try
+      {
+        foreach (var item in serviceCompany.GetAllNewVersion().ToList())
+        {
+          item.Skills = new List<Skill>();
+          serviceCompany.Update(item, null);
+        }
 
-    //    var comp = new Company()
-    //    {
-    //      Name = "Outra ",
-    //      Skills = new List<Skill>(),
-    //      Status = EnumStatus.Enabled
-    //    };
+        var comp = new Company()
+        {
+          Name = "Test Infra",
+          Skills = new List<Skill>(),
+          Status = EnumStatus.Enabled
+        };
 
-    //    serviceCompany.InsertNewVersion(comp);
+        serviceCompany.InsertNewVersion(comp);
 
 
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw e;
-    //  }
-    //}
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     [Fact]
     public void TestBasicVersion0()
     {
       try
       {
-        //var ares = serviceInfra.GetAreas();
-        //var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
-        //serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
-        //long total = 0;
-        //var skill = serviceInfra.GetSkills("3", 100, 1).Result.FirstOrDefault();
-        ////serviceInfra.AddSphere(new Sphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
-        //var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
-        ////serviceInfra.AddAxis(new Axis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator });
-        //var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
-        ////serviceInfra.AddEssential(new ViewAddEssential() { Company = company, Skill = skill });
+        var ares = serviceInfra.GetAreas();
+        var company = serviceInfra.GetCompanies()
+          .Result.Select(p => new ViewListCompany()
+          {
+            _id = p._id,
+            Name = p.Name
+          }).FirstOrDefault();
+        var newskill = serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard }).Result;
+        long total = 0;
+        var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).Result.FirstOrDefault();
+        var newsphere = serviceInfra.AddSphere(new ViewCrudSphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company }).Result;
+        var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
+        var newaxis = serviceInfra.AddAxis(new ViewCrudAxis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator, Company = company }).Result;
+        var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
+        var newessential = serviceInfra.AddEssential(new ViewCrudEssential()
+        {
+          _idCompany = company._id,
+          Skill = new ViewCrudSkill()
+          {
+            _id = skill._id,
+            Name = skill.Name,
+            Concept = skill.Concept,
+            TypeSkill = skill.TypeSkill
+          }
+        }).Result;
 
       }
       catch (Exception e)
@@ -102,23 +118,21 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var schooling = new Schooling()
+        var schooling = new ViewCrudSchooling()
         {
           Name = "Teste1",
           Complement = "1",
-          Type = EnumTypeSchooling.Excellence,
-          Status = EnumStatus.Enabled
+          Type = EnumTypeSchooling.Excellence
         };
         var group = servicePerson.GetAll(p => p.User.Mail == "miguel@jmsoft.com.br").FirstOrDefault().Occupation.Group;
 
-        var view = new ViewAddMapGroupSchooling()
+        var view = new ViewCrudMapGroupSchooling()
         {
-          Group = group,
-          Schooling = schooling
+          Schooling = schooling,
+          _idGroup = group._id
         };
 
-        //var test = serviceInfra.AddMapGroupSchooling(view);
-
+        var newmapgroupschooling = serviceInfra.AddMapGroupSchooling(view).Result;
 
       }
       catch (Exception e)
@@ -154,118 +168,6 @@ namespace Manager.Test.Test.Complete
     }
 
 
-    [Fact]
-    public void ScriptArea()
-    {
-      try
-      {
-        var occupations = serviceOccupation.GetAll(p => p.Status == EnumStatus.Enabled).ToList();
-        foreach (var item in occupations)
-        {
-          //serviceInfra.UpdateOccupation(item);
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string[] Export(string[] rel, string message)
-    {
-      try
-      {
-        string[] text = rel;
-        string[] lines = null;
-        try
-        {
-          lines = new string[text.Count() + 1];
-          var count = 0;
-          foreach (var item in text)
-          {
-            lines.SetValue(item, count);
-            count += 1;
-          }
-          lines.SetValue(message, text.Count());
-        }
-        catch (Exception)
-        {
-          lines = new string[1];
-          lines.SetValue(message, 0);
-        }
-
-        return lines;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    [Fact]
-    public void TestComplement()
-    {
-      try
-      {
-        var occupations = serviceOccupation.GetAll(p => p.Status == EnumStatus.Enabled).ToList();
-        var list = new List<Occupation>();
-        string[] rel = new string[1];
-
-        foreach (var item in occupations)
-        {
-          if (item.Schooling.Where(p => p.Complement != null).Count() > 0)
-          {
-            foreach (var school in item.Schooling)
-            {
-              if (school.Complement != null)
-              {
-                string message = item._id + ";" + school._id + ";" + school.Complement;
-                rel = Export(rel, message);
-              }
-            }
-
-          }
-          //list.Add(item);
-        }
-        var filename = "reports/COMP" + DateTime.Now.ToString("yyyyMMddHHmmss") + "a" + ".csv";
-
-
-        File.WriteAllLines(filename, rel, Encoding.GetEncoding("iso-8859-1"));
-        //var test = list;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    [Fact]
-    public void TestOccupations()
-    {
-      try
-      {
-        //var list = new List<Occupation>();
-        string[] rel = new string[1];
-        foreach (var item in serviceOccupation.GetAll().ToList())
-        {
-          foreach (var item2 in serviceOccupation.GetAll().ToList())
-          {
-            if((item2._id != item._id)& (item2.Name == item.Name))
-            {
-              string message = item._id + ";" + item.Name;
-              rel = Export(rel, message);
-            }
-            
-          }
-        }
-        var filename = "reports/OCCU" + DateTime.Now.ToString("yyyyMMddHHmmss") + "a" + ".csv";
-        File.WriteAllLines(filename, rel, Encoding.GetEncoding("iso-8859-1"));
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
 
 
     //[Fact]
@@ -367,21 +269,20 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        //var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
-        //long total = 0;
-        //var groups = serviceInfra.GetGroups();
-        ////var skills = serviceInfra.GetSkills("", 100, 1);
-        //var skill = serviceInfra.GetSkills(company._id, "", 100, 1).Result.FirstOrDefault();
-        //var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
-        //var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
+        var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
+        long total = 0;
+        var groups = serviceInfra.GetGroups();
+        var skill = serviceInfra.GetSkills(ref total, "", 100, 1).Result.FirstOrDefault();
+        var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
+        var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
 
-        //sphere.Name = sphere.Name + " test";
-        //serviceInfra.UpdateSphere(sphere);
-
-        //var idcompany = "5b59d5bda49e0f344cd97fb6";
-        //var id = "5b5a23bd3ac6f1466cdd7d3d";
-
-
+        sphere.Name = sphere.Name + " test";
+        var result = serviceInfra.UpdateSphere(new ViewCrudSphere()
+        {
+          _id = sphere._id,
+          Name = sphere.Name,
+          TypeSphere = sphere.TypeSphere
+        }).Result;
 
       }
       catch (Exception e)
