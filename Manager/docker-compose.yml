@@ -9,16 +9,15 @@ services:
     ports:
       - "5200:5200"
     environment:
-    - ANALISA_SERVER="mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations"
-    - ANALISA_DATABASE="evaluations"
-    - ANALISA_TOKENSERVER="http://10.0.0.14/"
-    - ANALISA_SIGNALRSERVICE="http://10.0.0.14:5200/"
-    - ANALISA_BLOBKEY="DefaultEndpointsProtocol=https;AccountName=analisa;AccountKey=IbFD+bXx1SS9KQBK+7Fj+au3UIo16dvjLyp/0MFLne+0m3efK1/sKEeCJQLEYmbIImJpPRJC7LogsJ9zo6k9aQ==;EndpointSuffix=core.windows.net"
-    - ANALISA_SENDGRIDKEY="SG.qBDR0LjvRYayTyo0cfU1CA.QhozMr0DsryEkZSYVTJGUnxUF5RR_0RUCkmd75qt$"
-    - ANALISA_SERVERLOG="mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations"
-    - ANALISA_DATABASELOG="evaluations"
-    - ANALISA_SERVERINTEGRATION="mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations"
-    - ANALISA_DATABASEINTEGRATION="evaluations"
-    - ANALISA_SERVICEBUSCONNECTIONSTRING="Endpoint=sb://analisa.servicebus.windows.net/;SharedAccessKeyName=analisafluid;SharedAccessKey=xeWPv1DUB4P4Q+bCVbNaHI6q6QZvc9jNTSXcv0TcRLE=;"
-    - ANALISA_QUEUENAME="analisahomologacao"
-
+    - ANALISA_SERVER=mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations
+    - ANALISA_DATABASE=evaluations
+    - ANALISA_TOKENSERVER=http://10.0.0.14/
+    - ANALISA_SIGNALRSERVICE=http://10.0.0.14:5200/
+    - ANALISA_BLOBKEY=DefaultEndpointsProtocol=https;AccountName=analisa;AccountKey=IbFD+bXx1SS9KQBK+7Fj+au3UIo16dvjLyp/0MFLne+0m3efK1/sKEeCJQLEYmbIImJpPRJC7LogsJ9zo6k9aQ==;EndpointSuffix=core.windows.net
+    - ANALISA_SENDGRIDKEY=SG.qBDR0LjvRYayTyo0cfU1CA.QhozMr0DsryEkZSYVTJGUnxUF5RR_0RUCkmd75qt$
+    - ANALISA_SERVERLOG=mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations
+    - ANALISA_DATABASELOG=evaluations
+    - ANALISA_SERVERINTEGRATION=mongodb://jmsoft:x14r53p5!a@10.0.0.14:27017/evaluations
+    - ANALISA_DATABASEINTEGRATION=evaluations
+    - ANALISA_SERVICEBUSCONNECTIONSTRING=Endpoint=sb://analisa.servicebus.windows.net/;SharedAccessKeyName=analisafluid;SharedAccessKey=xeWPv1DUB4P4Q+bCVbNaHI6q6QZvc9jNTSXcv0TcRLE=;
+    - ANALISA_QUEUENAME=analisahomologacao
