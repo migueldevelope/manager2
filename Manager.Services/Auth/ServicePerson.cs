@@ -303,7 +303,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
+        var occupation = (await serviceOccupation.GetAllNewVersion(p => p._id == idoccupation)).FirstOrDefault();
         if (occupation.SalaryScales != null)
           return occupation.SalaryScales
             .Select(p => new ViewListSalaryScalePerson

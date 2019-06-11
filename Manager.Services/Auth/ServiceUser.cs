@@ -104,7 +104,7 @@ namespace Manager.Services.Auth
         var term = serviceTermsOfService.GetTerm().Result;
         user.UserTermOfServices.Add(new UserTermOfService() { _idTermOfService = term._id, Date = term.Date });
 
-        serviceUser.Update(user, null);
+        await serviceUser.Update(user, null);
       }
       catch (Exception e)
       {
@@ -121,7 +121,7 @@ namespace Manager.Services.Auth
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
             var total = serviceUser.CountNewVersion(p => p.Name.Contains(filter)).Result;
-            return serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)).Result
+            return (await serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)))
             .Select(x => new ViewListUser()
             {
               _id = x._id,
@@ -152,7 +152,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
+        User user = (await serviceUser.GetNewVersion(p => p._id == iduser));
         return new ViewCrudUser()
         {
           _id = user._id,
