@@ -102,16 +102,35 @@ namespace Manager.Services.Auth
           if (user == null)
             throw new Exception("User not authorized!");
         }
-        else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1)
+        //else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1)
+        //{
+        //  GetUnimedAsync(userLogin.Mail, userLogin.Password);
+        //  // Localizar pelo apelido
+        //  user = serviceUser.GetFreeNewVersion(p => p.Nickname == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
+        //  if (user == null)
+        //    // Localizar pelo e-mail
+        //    user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
+        //  if (user == null)
+        //    throw new Exception("User not authorized!");
+        //}
+        else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1 || userLogin.Mail.IndexOf("@") == -1)
         {
-          GetUnimedAsync(userLogin.Mail, userLogin.Password);
-          // Localizar pelo apelido
-          user = serviceUser.GetFreeNewVersion(p => p.Nickname == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
+          // Localizar usuário por e-mail
+          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail).Result;
           if (user == null)
-            // Localizar pelo e-mail
-            user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
-          if (user == null)
-            throw new Exception("User not authorized!");
+          {
+            // Localizar usuário por apelido
+            user = serviceUser.GetFreeNewVersion(p => p.Nickname == userLogin.Mail.Replace("@unimednordesters.com.br", string.Empty)).Result;
+            if (user == null)
+            {
+              throw new Exception("User not found!");
+            }
+          }
+          if (user.Status == EnumStatus.Disabled)
+          {
+            throw new Exception("User disabled!");
+          }
+          GetUnimedAsync(user.Nickname, userLogin.Password);
         }
         else
         {
