@@ -38,7 +38,7 @@ namespace Manager.Test.Test.Complete
       try
       {
         long total = 0;
-        var person = servicePerson.GetAll(p => p.User.Name.Contains("Analisa")).FirstOrDefault();
+        var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("Analisa")).Result.FirstOrDefault();
 
         
         //var course = serviceEvent.ListCourse(1, 1, "").Result.FirstOrDefault();

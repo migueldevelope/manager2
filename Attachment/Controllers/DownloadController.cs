@@ -62,7 +62,7 @@ namespace EdeskIntegration.Controllers
     [HttpGet("{id}/url")]
     public string GetUrl(string id)
     {
-      var attachment = service.GetAll(p => p._id == id).FirstOrDefault();
+      var attachment = service.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
       CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
       CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
       CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());

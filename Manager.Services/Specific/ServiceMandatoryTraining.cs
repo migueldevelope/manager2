@@ -92,7 +92,7 @@ namespace Manager.Services.Specific
         var on = serviceTrainingPlan.GetAuthentication(p => p.Status == EnumStatus.Disabled).Count();
         if (on == 0)
         {
-          var person = servicePerson.GetAll().FirstOrDefault();
+          var person = servicePerson.GetAllNewVersion().FirstOrDefault();
           var zero = serviceTrainingPlan.InsertNewVersion(new TrainingPlan() { Person = null, Status = EnumStatus.Disabled, Course = null });
         }
       }
@@ -109,10 +109,10 @@ namespace Manager.Services.Specific
           beginDate = DateTime.Now;
 
         NewOnZero(course);
-        var listPlans = serviceTrainingPlan.GetAll(p => p.Course._id == course._id & p.Person._id == person._id).ToList();
+        var listPlans = serviceTrainingPlan.GetAllNewVersion(p => p.Course._id == course._id & p.Person._id == person._id).Result.ToList();
 
         // VERITY DATE LAST COURSE REALIZED
-        var realized = serviceEventHistoric.GetAll(p => p.Course._id == course._id & p.Person._id == person._id).ToList();
+        var realized = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == course._id & p.Person._id == person._id).Result.ToList();
         var equivalents = Equivalents(course._id, person._id);
 
         DateTime? dateMax = null;
@@ -182,11 +182,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceEventHistoric.GetAll(p => p.Person._id == idperson).ToList();
+        var list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result.ToList();
         List<EventHistoric> result = new List<EventHistoric>();
         foreach (var item in list)
         {
-          var course = serviceCourse.GetAll(p => p._id == item._id).FirstOrDefault();
+          var course = serviceCourse.GetAllNewVersion(p => p._id == item._id).Result.FirstOrDefault();
           if (course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
             result.Add(item);
         }
@@ -202,7 +202,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in serviceCourse.GetAll().ToList())
+        foreach (var item in serviceCourse.GetAllNewVersion().ToList())
         {
           if (item.Prerequisites.Where(x => x._id == idcourse).Count() > 0)
             return true;
@@ -223,7 +223,7 @@ namespace Manager.Services.Specific
       {
         foreach (var item in course.Prerequisites)
         {
-          if (serviceEventHistoric.GetAll(p => p.Course._id == course._id & p.Person._id == idperson).Count() == 0)
+          if (serviceEventHistoric.CountNewVersion(p => p.Course._id == course._id & p.Person._id == idperson).Result == 0)
             return true;
         }
 
@@ -243,7 +243,7 @@ namespace Manager.Services.Specific
         if (beginDate == null)
           beginDate = DateTime.Now;
 
-        var list = servicePerson.GetAll(p => p.Occupation._id == occupation._id).ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.Occupation._id == occupation._id).Result.ToList();
         foreach (var item in list)
         {
           UpdateTrainingPlanPerson(course, item, beginDate, typeMandatoryTraining);
@@ -261,7 +261,7 @@ namespace Manager.Services.Specific
         if (beginDate == null)
           beginDate = DateTime.Now;
 
-        var list = servicePerson.GetAll(p => p.Company._id == company._id).ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList();
         foreach (var item in list)
         {
           UpdateTrainingPlanPerson(course, item, beginDate, typeMandatoryTraining);
@@ -360,10 +360,10 @@ namespace Manager.Services.Specific
             TypeMandatoryTraining = view.TypeMandatoryTraining
           })
         };
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == view.Course._id).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == view.Course._id).Result.FirstOrDefault();
         if (mandatory == null)
         {
-          serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
+          await serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
           {
             Course = course,
             Occupations = list,
@@ -375,7 +375,7 @@ namespace Manager.Services.Specific
         else
         {
           mandatory.Occupations.Add(list.FirstOrDefault());
-          serviceMandatoryTraining.Update(mandatory, null);
+          await serviceMandatoryTraining.Update(mandatory, null);
         }
         UpdateTrainingPlanOccupation(course, occupation, view.BeginDate, view.TypeMandatoryTraining);
         return "add occupation";
@@ -401,10 +401,10 @@ namespace Manager.Services.Specific
             TypeMandatoryTraining = view.TypeMandatoryTraining
           })
         };
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == view.Course._id).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == view.Course._id).Result.FirstOrDefault();
         if (mandatory == null)
         {
-          serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
+          await serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
           {
             Course = course,
             Occupations = new List<OccupationMandatory>(),
@@ -416,7 +416,7 @@ namespace Manager.Services.Specific
         else
         {
           mandatory.Persons.Add(list.FirstOrDefault());
-          serviceMandatoryTraining.Update(mandatory, null);
+          await serviceMandatoryTraining.Update(mandatory, null);
         }
         UpdateTrainingPlanPerson(course, person, view.BeginDate, view.TypeMandatoryTraining);
 
@@ -443,10 +443,10 @@ namespace Manager.Services.Specific
             TypeMandatoryTraining = view.TypeMandatoryTraining
           })
         };
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == view.Course._id).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == view.Course._id).Result.FirstOrDefault();
         if (mandatory == null)
         {
-          serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
+          await serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
           {
             Course = course,
             Occupations = new List<OccupationMandatory>(),
@@ -458,7 +458,7 @@ namespace Manager.Services.Specific
         else
         {
           mandatory.Companys.Add(list.FirstOrDefault());
-          serviceMandatoryTraining.Update(mandatory, null);
+          await serviceMandatoryTraining.Update(mandatory, null);
         }
         UpdateTrainingPlanCompany(course, company, view.BeginDate, view.TypeMandatoryTraining);
         return "add occupation";
@@ -472,14 +472,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == idcourse).Result.FirstOrDefault();
         foreach (var item in mandatory.Occupations)
         {
           if (item.Occupation._id == idoccupation)
           {
             mandatory.Occupations.Remove(item);
-            serviceMandatoryTraining.Update(mandatory, null);
-            RemoveOccupationPlan(idoccupation, idcourse);
+            await serviceMandatoryTraining.Update(mandatory, null);
+            await RemoveOccupationPlan(idoccupation, idcourse);
             return "deleted";
           }
         }
@@ -495,14 +495,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == idcourse).Result.FirstOrDefault();
         foreach (var item in mandatory.Persons)
         {
           if (item.Person._id == idperson)
           {
             mandatory.Persons.Remove(item);
-            serviceMandatoryTraining.Update(mandatory, null);
-            RemovePersonPlan(idperson, idcourse);
+            await serviceMandatoryTraining.Update(mandatory, null);
+            await RemovePersonPlan(idperson, idcourse);
             return "deleted";
           }
         }
@@ -518,10 +518,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Course._id == idcourse
-        & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).FirstOrDefault();
+        var plan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == idperson & p.Course._id == idcourse
+        & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).Result.FirstOrDefault();
         plan.Status = EnumStatus.Disabled;
-        serviceTrainingPlan.Update(plan, null);
+        await serviceTrainingPlan.Update(plan, null);
       }
       catch (Exception e)
       {
@@ -532,9 +532,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in servicePerson.GetAll(p => p.Occupation._id == idoccoupation).ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.Occupation._id == idoccoupation).Result.ToList())
         {
-          RemovePersonPlan(item._id, idcourse);
+          await RemovePersonPlan(item._id, idcourse);
         }
       }
       catch (Exception e)
@@ -546,9 +546,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in servicePerson.GetAll(p => p.Company._id == idcompany).ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.Company._id == idcompany).Result.ToList())
         {
-          RemovePersonPlan(item._id, idcourse);
+          await RemovePersonPlan(item._id, idcourse);
         }
       }
       catch (Exception e)
@@ -560,14 +560,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var mandatory = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == idcourse).Result.FirstOrDefault();
         foreach (var item in mandatory.Companys)
         {
           if (item.Company._id == idcompany)
           {
             mandatory.Companys.Remove(item);
-            serviceMandatoryTraining.Update(mandatory, null);
-            RemoveCompanyPlan(idcompany, idcourse);
+            await serviceMandatoryTraining.Update(mandatory, null);
+            await RemoveCompanyPlan(idcompany, idcourse);
             return "deleted";
           }
         }
@@ -584,9 +584,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceCompanyMandatory.GetAll(p => p._id == id).FirstOrDefault();
+        var model = serviceCompanyMandatory.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         model.Status = EnumStatus.Disabled;
-        serviceCompanyMandatory.Update(model, null);
+        await serviceCompanyMandatory.Update(model, null);
       }
       catch (Exception e)
       {
@@ -598,9 +598,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceOccupationMandatory.GetAll(p => p._id == id).FirstOrDefault();
+        var model = serviceOccupationMandatory.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         model.Status = EnumStatus.Disabled;
-        serviceOccupationMandatory.Update(model, null);
+        await serviceOccupationMandatory.Update(model, null);
       }
       catch (Exception e)
       {
@@ -612,9 +612,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = servicePersonMandatory.GetAll(p => p._id == id).FirstOrDefault();
+        var model = servicePersonMandatory.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         model.Status = EnumStatus.Disabled;
-        servicePersonMandatory.Update(model, null);
+        await servicePersonMandatory.Update(model, null);
       }
       catch (Exception e)
       {
@@ -670,7 +670,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        var detail = servicePerson.GetAll(p => p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
+        var detail = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
           .Where(x => !filters.Contains(x._id))
           .Select(x => new ViewListPerson()
           {
@@ -733,7 +733,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
         var list = new List<ViewTrainingPlan>();
         var countRealized = 0;
@@ -780,12 +780,12 @@ namespace Manager.Services.Specific
         {
           if (origin == EnumOrigin.Full)
           {
-            detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
           else
           {
-            detail = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
         }
@@ -793,12 +793,12 @@ namespace Manager.Services.Specific
         {
           if (origin == EnumOrigin.Full)
           {
-            detail = serviceTrainingPlan.GetAll(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
           else
           {
-            detail = serviceTrainingPlan.GetAll(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
         }
@@ -884,9 +884,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceTrainingPlan.GetAll(p => p._id == id).FirstOrDefault();
+        var item = serviceTrainingPlan.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-        serviceTrainingPlan.Update(item, null);
+        await serviceTrainingPlan.Update(item, null);
         return "deleted";
       }
       catch (Exception e)
@@ -902,7 +902,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceMandatoryTraining.GetAllNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
         total = serviceMandatoryTraining.CountNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewCrudMandatoryTraining()
@@ -974,7 +974,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).ToList();
+        var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == idcourse).Result.ToList();
 
         var model = list.Select(p => new MandatoryTraining()
         {
@@ -1065,12 +1065,12 @@ namespace Manager.Services.Specific
           Deadline = view.Deadline,
           Origin = view.Origin,
           StatusTrainingPlan = view.StatusTrainingPlan,
-          Person = (view.Person == null) ? null : servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault().GetViewListManager(),
+          Person = (view.Person == null) ? null : servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault().GetViewListManager(),
           Course = (view.Course == null) ? null : new ViewListCourse() { _id = view.Course._id, Name = view.Course.Name },
           Event = (view.Event == null) ? null : new ViewListEvent() { _id = view.Event._id, Name = view.Event.Name }
         };
 
-        serviceTrainingPlan.InsertNewVersion(trainingplan);
+        await serviceTrainingPlan.InsertNewVersion(trainingplan);
 
         return "add success";
       }
@@ -1084,17 +1084,17 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var trainingplan = serviceTrainingPlan.GetAll(p => p._id == view._id).FirstOrDefault();
+        var trainingplan = serviceTrainingPlan.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         trainingplan.Include = (view.Include == null) ? null : view.Include = DateTime.Now;
         trainingplan.Observartion = view.Observartion;
         trainingplan.Deadline = view.Deadline;
         trainingplan.Origin = view.Origin;
         trainingplan.StatusTrainingPlan = view.StatusTrainingPlan;
-        trainingplan.Person = (view.Person == null) ? null : servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault().GetViewListManager();
+        trainingplan.Person = (view.Person == null) ? null : servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault().GetViewListManager();
         trainingplan.Course = (view.Course == null) ? null : new ViewListCourse() { _id = view.Course._id, Name = view.Course.Name };
         trainingplan.Event = (view.Event == null) ? null : new ViewListEvent() { _id = view.Event._id, Name = view.Event.Name };
 
-        serviceTrainingPlan.Update(trainingplan, null);
+        await serviceTrainingPlan.Update(trainingplan, null);
         return "update";
       }
       catch (Exception e)
@@ -1107,7 +1107,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceTrainingPlan.GetAll(p => p._id == id)
+        return serviceTrainingPlan.GetAllNewVersion(p => p._id == id).Result
           .Select(p => new ViewCrudTrainingPlan()
           {
             _id = p._id,
@@ -1133,7 +1133,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceTrainingPlan.GetAllNewVersion(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceTrainingPlan.CountNewVersion(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewCrudTrainingPlan()
@@ -1160,7 +1160,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceTrainingPlan.CountNewVersion(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewCrudTrainingPlan()
@@ -1190,8 +1190,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
-        total = serviceMandatoryTraining.GetAll(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceMandatoryTraining.GetAllNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
+        total = serviceMandatoryTraining.CountNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.ToList();
 
@@ -1206,7 +1206,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceMandatoryTraining.GetAll(p => p.Course._id == idcourse).ToList();
+        var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == idcourse).Result.ToList();
 
         var model = list.Select(p => new MandatoryTraining()
         {
@@ -1263,7 +1263,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceTrainingPlan.GetAll(p => p._id == id).FirstOrDefault();
+        return serviceTrainingPlan.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -1276,8 +1276,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.GetAll(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceTrainingPlan.GetAllNewVersion(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceTrainingPlan.CountNewVersion(p => p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.ToList();
       }
@@ -1292,8 +1292,8 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceTrainingPlan.GetAll(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Count();
+        var detail = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        total = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == idperson & p.Person.Company._id == idcompany & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.Count();
 
         return detail.ToList();
       }

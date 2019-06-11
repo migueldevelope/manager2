@@ -88,7 +88,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var workflow = serviceWorkflow.GetAll(p => p._id == view._idWorkflow).FirstOrDefault();
+        var workflow = serviceWorkflow.GetAllNewVersion(p => p._id == view._idWorkflow).Result.FirstOrDefault();
         workflow.StatusWorkflow = EnumWorkflow.Approved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
@@ -104,11 +104,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var workflow = serviceWorkflow.GetAll(p => p._id == view._idWorkflow).FirstOrDefault();
+        var workflow = serviceWorkflow.GetAllNewVersion(p => p._id == view._idWorkflow).Result.FirstOrDefault();
         workflow.StatusWorkflow = EnumWorkflow.Disapproved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
-        serviceWorkflow.Update(workflow, null);
+        await serviceWorkflow.Update(workflow, null);
         return workflow;
       }
       catch (Exception e)

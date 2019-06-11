@@ -153,7 +153,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region List Account
-    public Task<List<ViewListAccount>> GetAll( ref long total, int count = 10, int page = 1, string filter = "")
+    public Task<List<ViewListAccount>> GetAllNewVersion( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {

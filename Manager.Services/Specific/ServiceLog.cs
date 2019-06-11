@@ -52,7 +52,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = servicePerson.GetAll(p => p._id == view._idPerson).FirstOrDefault();
+        var person = servicePerson.GetAllNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault();
         var log = new Log
         {
           Person = person.GetViewList(),

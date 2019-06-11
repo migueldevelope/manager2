@@ -152,7 +152,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         if (viewPlan.StatusPlanApproved == EnumStatusPlanApproved.Approved)
           serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento dentro do prazo do colaborador " + monitoring.Person.User.Name, monitoring.Person);
 
@@ -190,12 +190,12 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                var upPlan = servicePlan.GetAll(p => p._id == plan._id).FirstOrDefault();
+                var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
                 upPlan.Skills = new List<Skill>();
                 foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetAll(p => p._id == skill._id).FirstOrDefault());
+                  upPlan.Skills.Add(serviceSkill.GetAllNewVersion(p => p._id == skill._id).Result.FirstOrDefault());
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
@@ -256,12 +256,12 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                var upPlan = servicePlan.GetAll(p => p._id == plan._id).FirstOrDefault();
+                var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
                 upPlan.Skills = new List<Skill>();
                 foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetAll(p => p._id == skill._id).FirstOrDefault());
+                  upPlan.Skills.Add(serviceSkill.GetAllNewVersion(p => p._id == skill._id).Result.FirstOrDefault());
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
@@ -322,12 +322,12 @@ namespace Manager.Services.Specific
                 if (viewPlan.NewAction == EnumNewAction.Yes)
                   plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
 
-                var upPlan = servicePlan.GetAll(p => p._id == plan._id).FirstOrDefault();
+                var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
                 upPlan.Skills = new List<Skill>();
                 foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetAll(p => p._id == skill._id).FirstOrDefault());
+                  upPlan.Skills.Add(serviceSkill.GetAllNewVersion(p => p._id == skill._id).Result.FirstOrDefault());
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
@@ -369,7 +369,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
 
         //verify plan;
         if (viewPlan.SourcePlan == EnumSourcePlan.Activite)
@@ -665,14 +665,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var user = servicePerson.GetAllNewVersion(p => p._id == iduser).Result.FirstOrDefault();
         var log = new ViewLog()
         {
           Description = "Access Plan ",
           Local = local,
           _idPerson = user._id
         };
-        serviceLog.NewLog(log);
+        await serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
@@ -745,7 +745,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAll(p => p._id == viewPlan._id).FirstOrDefault();
+        var plan = servicePlan.GetAllNewVersion(p => p._id == viewPlan._id).Result.FirstOrDefault();
         plan.Deadline = viewPlan.Deadline;
         plan.Description = viewPlan.Description;
         plan.Name = viewPlan.Name;
@@ -787,14 +787,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAll(p => p._id == idplan).FirstOrDefault();
+        var plan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault();
 
         foreach (var structplan in plan.StructPlans)
         {
           if (structplan._id == idstructplan)
           {
             plan.StructPlans.Remove(structplan);
-            servicePlan.Update(plan, null);
+            await servicePlan.Update(plan, null);
             return "update";
           }
         }
@@ -810,9 +810,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = servicePlanActivity.GetAll(p => p._id == id).FirstOrDefault();
+        var model = servicePlanActivity.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         model.Status = EnumStatus.Disabled;
-        servicePlanActivity.Update(model, null);
+        await servicePlanActivity.Update(model, null);
         return "deleted";
       }
       catch (Exception e)
@@ -825,7 +825,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
 
         foreach (var plan in monitoring.Activities)
         {
@@ -891,7 +891,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewPlan> result = new List<ViewPlan>();
 
-        var detail = servicePlanActivity.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        var detail = servicePlanActivity.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
         total = servicePlanActivity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewPlanActivity()
@@ -910,8 +910,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return servicePlanActivity.GetAll(p => p._id == id)
-          .Select(p => new ViewPlanActivity()
+        return servicePlanActivity.GetAllNewVersion(p => p._id == id)
+          .Result.Select(p => new ViewPlanActivity()
           {
             _id = p._id,
             Name = p.Name
@@ -964,7 +964,7 @@ namespace Manager.Services.Specific
 
         List<ViewListPlanStruct> result = new List<ViewListPlanStruct>();
 
-        var plan = servicePlan.GetAll().ToList();
+        var plan = servicePlan.GetAllNewVersion().ToList();
 
         if (activities == 0)
           plan = plan.Where(p => p.SourcePlan != EnumSourcePlan.Activite).ToList();
@@ -993,7 +993,7 @@ namespace Manager.Services.Specific
             TypeSkill = p.TypeSkill
           })
           .ToList(),
-            UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
+            UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
             TypePlan = res.TypePlan,
             IdPerson = res.Person?._id,
             NamePerson = res.Person?.User.Name,
@@ -1060,7 +1060,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
-        var plan = servicePlan.GetAll(p => p.Person._idManager == id).ToList();
+        var plan = servicePlan.GetAllNewVersion(p => p.Person._idManager == id).Result.ToList();
 
         if (activities == 0)
           plan = plan.Where(p => p.SourcePlan != EnumSourcePlan.Activite).ToList();
@@ -1091,7 +1091,7 @@ namespace Manager.Services.Specific
                   Concept = p.Concept,
                   Name = p.Name
                 }).ToList(),
-                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
+                UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = res.Person._id,
                 NamePerson = res.Person.User.Name,
@@ -1144,7 +1144,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
-        var plan = servicePlan.GetAll(p => p.Person._id == id).ToList();
+        var plan = servicePlan.GetAllNewVersion(p => p.Person._id == id).Result.ToList();
 
         if (activities == 0)
           plan = plan.Where(p => p.SourcePlan != EnumSourcePlan.Activite).ToList();
@@ -1175,7 +1175,7 @@ namespace Manager.Services.Specific
                   Concept = p.Concept,
                   Name = p.Name
                 }).ToList(),
-                UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
+                UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = res.Person._id,
                 NamePerson = res.Person.User.Name,
@@ -1228,7 +1228,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAll(p => p._id == idplan).FirstOrDefault();
+        var plan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault();
 
         if (plan == null)
           return null;
@@ -1283,7 +1283,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Activities.Where(
+            view.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().Activities.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
           }
@@ -1297,7 +1297,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().SkillsCompany.Where(
+            view.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsCompany.Where(
            p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
            p._id != plan._id).FirstOrDefault();
           }
@@ -1312,7 +1312,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            view.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Schoolings.Where(
+            view.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().Schoolings.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
           }
@@ -1338,7 +1338,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
-        var plan = servicePlan.GetAll(p => p.Person._id == id).ToList();
+        var plan = servicePlan.GetAllNewVersion(p => p.Person._id == id).Result.ToList();
 
         foreach (var res in plan)
         {
@@ -1356,7 +1356,7 @@ namespace Manager.Services.Specific
               Concept = p.Concept,
               Name = p.Name
             }).ToList(),
-            UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
+            UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
             TypePlan = res.TypePlan,
             _idPerson = res.Person._id,
             NamePerson = res.Person.User.Name,
@@ -1404,7 +1404,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
-        var plan = servicePlan.GetAll(p => p.Person._idManager == id).ToList();
+        var plan = servicePlan.GetAllNewVersion(p => p.Person._idManager == id).Result.ToList();
 
         foreach (var res in plan)
         {
@@ -1422,7 +1422,7 @@ namespace Manager.Services.Specific
               Concept = p.Concept,
               Name = p.Name
             }).ToList(),
-            UserInclude = res.Person == null ? null : servicePerson.GetAll(p => p._id == res.Person._id).FirstOrDefault()?._id,
+            UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
             TypePlan = res.TypePlan,
             _idPerson = res.Person._id,
             NamePerson = res.Person.User.Name,
@@ -1463,7 +1463,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         var viewPlan = new Plan()
         {
           _id = view._id,
@@ -1601,13 +1601,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAll(p => p._id == idplan).FirstOrDefault();
+        var plan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault();
         DateTime? deadline = DateTime.Now;
 
         plan.StructPlans.Add(AddStructPlan(new StructPlan()
         {
           _id = structplan._id,
-          Course = (structplan.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplan.Course._id).FirstOrDefault(),
+          Course = (structplan.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == structplan.Course._id).Result.FirstOrDefault(),
           PlanActivity = (structplan.PlanActivity == null) ? null : new PlanActivity() { _id = structplan.PlanActivity._id, _idAccount = _user._idAccount, Status = EnumStatus.Enabled, Name = structplan.PlanActivity.Name },
           TypeAction = structplan.TypeAction,
           TypeResponsible = structplan.TypeResponsible
@@ -1617,22 +1617,22 @@ namespace Manager.Services.Specific
         {
           var trainingPlan = new TrainingPlan
           {
-            Course = (structplan.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplan.Course._id)
-            .Select(p => new ViewListCourse()
+            Course = (structplan.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == structplan.Course._id)
+            .Result.Select(p => new ViewListCourse()
             {
               _id = p._id,
               Name = p.Name
             }).FirstOrDefault(),
             Deadline = deadline,
             Origin = EnumOrigin.Monitoring,
-            Person = servicePerson.GetAll(p => p._id == plan.Person._id).FirstOrDefault().GetViewListManager(),
+            Person = servicePerson.GetAllNewVersion(p => p._id == plan.Person._id).Result.FirstOrDefault().GetViewListManager(),
             Include = DateTime.Now,
             StatusTrainingPlan = EnumStatusTrainingPlan.Open
           };
-          serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
+          await serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
         }
 
-        servicePlan.Update(plan, null);
+        await servicePlan.Update(plan, null);
         return "update";
       }
       catch (Exception e)
@@ -1645,7 +1645,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var structplan = servicePlan.GetAll(p => p._id == idplan).FirstOrDefault().StructPlans.Where(p => p._id == idstructplan).FirstOrDefault();
+        var structplan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault().StructPlans.Where(p => p._id == idstructplan).FirstOrDefault();
 
         if (structplan == null)
           return null;
@@ -1674,7 +1674,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAll(p => p._id == idplan).FirstOrDefault();
+        var plan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault();
 
         foreach (var structplan in plan.StructPlans)
         {
@@ -1692,14 +1692,14 @@ namespace Manager.Services.Specific
                 } ?? null,
                 Deadline = plan.Deadline,
                 Origin = EnumOrigin.Monitoring,
-                Person = servicePerson.GetAll(p => p._id == plan.Person._id).FirstOrDefault().GetViewListManager(),
+                Person = servicePerson.GetAllNewVersion(p => p._id == plan.Person._id).Result.FirstOrDefault().GetViewListManager(),
                 Include = DateTime.Now,
                 StatusTrainingPlan = EnumStatusTrainingPlan.Open
               };
-              if (serviceTrainingPlans.GetAll(p => p.Person == trainingPlan.Person
-               & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Count() == 0)
+              if (serviceTrainingPlans.GetAllNewVersion(p => p.Person == trainingPlan.Person
+               & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Result.Count() == 0)
               {
-                serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
+                await serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
               }
             }
 
@@ -1707,12 +1707,12 @@ namespace Manager.Services.Specific
             plan.StructPlans.Add(new StructPlan()
             {
               _id = structplanedit._id,
-              Course = (structplanedit.Course == null) ? null : serviceCourse.GetAll(p => p._id == structplanedit.Course._id).FirstOrDefault(),
+              Course = (structplanedit.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == structplanedit.Course._id).Result.FirstOrDefault(),
               PlanActivity = (structplanedit.PlanActivity == null) ? null : new PlanActivity() { _id = structplanedit.PlanActivity._id, Name = structplanedit.PlanActivity.Name },
               TypeAction = structplanedit.TypeAction,
               TypeResponsible = structplanedit.TypeResponsible
             });
-            servicePlan.Update(plan, null);
+            await servicePlan.Update(plan, null);
             return "update";
           }
         }
@@ -1733,7 +1733,7 @@ namespace Manager.Services.Specific
         Plan planNew = new Plan();
         Plan planUpdate = new Plan();
 
-        var person = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Person;
+        var person = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().Person;
 
         foreach (var item in viewPlan)
         {
@@ -1839,7 +1839,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAll(p => p._id == idplan).FirstOrDefault();
+        var plan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault();
         var resultPlan = new ViewGetPlan()
         {
           DateInclude = plan.DateInclude,
@@ -1882,7 +1882,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Activities.Where(
+            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().Activities.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
           }
@@ -1896,7 +1896,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().SkillsCompany.Where(
+            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsCompany.Where(
            p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
            p._id != plan._id).FirstOrDefault();
           }
@@ -1911,7 +1911,7 @@ namespace Manager.Services.Specific
         {
           try
           {
-            resultPlan.PlanNew = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().Schoolings.Where(
+            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().Schoolings.Where(
             p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
             p._id != plan._id).FirstOrDefault();
           }

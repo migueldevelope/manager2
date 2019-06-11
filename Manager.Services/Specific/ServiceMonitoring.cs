@@ -94,13 +94,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         foreach (var item in monitoring.Activities)
         {
           if (item._id == idactivitie)
           {
             item.Status = EnumStatus.Disabled;
-            serviceMonitoring.Update(monitoring, null);
+            await serviceMonitoring.Update(monitoring, null);
             return "Monitoring activitie deleted!";
           }
         }
@@ -117,11 +117,11 @@ namespace Manager.Services.Specific
       {
 
 
-        var monitorings = serviceMonitoring.GetAll(p => p.Person._id == idperson).ToList();
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson).Result.ToList();
         foreach (var monitoring in monitorings)
         {
           monitoring.Status = EnumStatus.Disabled;
-          serviceMonitoring.Update(monitoring, null);
+          await serviceMonitoring.Update(monitoring, null);
         }
         return "Monitorings deleted!";
       }
@@ -135,9 +135,9 @@ namespace Manager.Services.Specific
       try
       {
 
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         monitoring.Status = EnumStatus.Disabled;
-        serviceMonitoring.Update(monitoring, null);
+        await serviceMonitoring.Update(monitoring, null);
         return "Monitoring deleted!";
       }
       catch (Exception e)
@@ -150,9 +150,9 @@ namespace Manager.Services.Specific
       try
       {
 
-        var monitoring = serviceMonitoring.GetAll(p => p.Person._id == idperson).LastOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson).Result.LastOrDefault();
         monitoring.Status = EnumStatus.Disabled;
-        serviceMonitoring.Update(monitoring, null);
+        await serviceMonitoring.Update(monitoring, null);
         return "Monitoring deleted!";
       }
       catch (Exception e)
@@ -164,7 +164,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         foreach (var item in monitoring.Activities)
         {
           if (item._id == iditem)
@@ -174,7 +174,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceMonitoring.Update(monitoring, null);
+            await serviceMonitoring.Update(monitoring, null);
             return "Update comment altered!";
           }
         }
@@ -187,7 +187,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceMonitoring.Update(monitoring, null);
+            await serviceMonitoring.Update(monitoring, null);
             return "Update comment altered!";
           }
         }
@@ -200,7 +200,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceMonitoring.Update(monitoring, null);
+            await serviceMonitoring.Update(monitoring, null);
             return "Update comment altered!";
           }
         }
@@ -215,7 +215,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         foreach (var item in monitoring.Activities)
         {
           if (item._id == iditem)
@@ -272,7 +272,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == id).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         var count = monitoring.Activities.Where(p => p.StatusViewManager == EnumStatusView.None
         & p.Comments != null).Count()
           + monitoring.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None
@@ -295,8 +295,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var userInclude = servicePerson.GetAll(p => p.User._id == _user._idUser).FirstOrDefault();
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var userInclude = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
@@ -311,7 +311,7 @@ namespace Manager.Services.Specific
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
           }
         }
-        serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada para o colaborador " + monitoring.Person.User.Name, monitoring.Person);
+        await serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada para o colaborador " + monitoring.Person.User.Name, monitoring.Person);
         var newPlan = AddPlan(new Plan()
         {
           _id = plan._id,
@@ -354,7 +354,7 @@ namespace Manager.Services.Specific
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
-              serviceMonitoring.Update(monitoring, null);
+              await serviceMonitoring.Update(monitoring, null);
               return item.Plans;
             }
           }
@@ -385,7 +385,7 @@ namespace Manager.Services.Specific
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
-              serviceMonitoring.Update(monitoring, null);
+              await serviceMonitoring.Update(monitoring, null);
               return item.Plans;
             }
           }
@@ -416,7 +416,7 @@ namespace Manager.Services.Specific
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
-              serviceMonitoring.Update(monitoring, null);
+              await serviceMonitoring.Update(monitoring, null);
               return item.Plans.Select(p => new ViewCrudPlan()
               {
                 _id = p._id,
@@ -447,9 +447,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
-        serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
-        var plan = servicePlan.GetAll(p => p._id == view._id).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        await serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person);
+        var plan = servicePlan.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         plan.Description = view.Description;
         plan.Deadline = view.Deadline;
         plan.Name = view.Name;
@@ -483,7 +483,7 @@ namespace Manager.Services.Specific
                     TypePlan = plan.TypePlan
                   });
                   UpdatePlan(plan);
-                  serviceMonitoring.Update(monitoring, null);
+                  await serviceMonitoring.Update(monitoring, null);
                   return item.Plans;
                 }
               }
@@ -518,7 +518,7 @@ namespace Manager.Services.Specific
                     TypePlan = plan.TypePlan
                   });
                   UpdatePlan(plan);
-                  serviceMonitoring.Update(monitoring, null);
+                  await serviceMonitoring.Update(monitoring, null);
                   return item.Plans;
                 }
               }
@@ -554,14 +554,14 @@ namespace Manager.Services.Specific
                     TypePlan = plan.TypePlan
                   });
                   UpdatePlan(plan);
-                  serviceMonitoring.Update(monitoring, null);
+                  await serviceMonitoring.Update(monitoring, null);
                   return item.Plans;
                 }
               }
             }
           }
         }
-        serviceMonitoring.Update(monitoring, null);
+        await serviceMonitoring.Update(monitoring, null);
         return null;
       }
       catch (Exception e)
@@ -574,7 +574,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+        var detail = serviceMonitoring.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.Skip(skip).Take(count).ToList();
         total = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewListMonitoring()
@@ -595,9 +595,9 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
-        & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
+        & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
+        .ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).Result.FirstOrDefault() })
         .ToList();
 
         var detail = new List<Monitoring>();
@@ -640,7 +640,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceMonitoring.GetAll(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).OrderBy(p => p.Person.User.Name)
+        return serviceMonitoring.GetAllNewVersion(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.OrderBy(p => p.Person.User.Name)
           .Select(p => new ViewListMonitoring()
           {
             _id = p._id,
@@ -663,8 +663,8 @@ namespace Manager.Services.Specific
         if (!serviceMonitoring.Exists("Monitoring"))
           return null;
 
-        var item = servicePerson.GetAll(p => p.TypeJourney == EnumTypeJourney.Monitoring & p._id == idmanager)
-        .ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAll(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).FirstOrDefault() })
+        var item = (await servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.Monitoring & p._id == idmanager)
+        ).ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).Result.FirstOrDefault() })
         .FirstOrDefault();
 
 
@@ -701,7 +701,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == id).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
 
         var view = new ViewCrudMonitoring()
         {
@@ -858,7 +858,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var view = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault().
+        var view = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().
           Activities.Where(p => p._id == idactivitie).FirstOrDefault();
 
         return new ViewCrudMonitoringActivities()
@@ -891,7 +891,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
 
         foreach (var item in monitoring.Activities)
         {
@@ -949,7 +949,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
@@ -1018,19 +1018,19 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p.Person._id == idperson && p.StatusMonitoring != EnumStatusMonitoring.End).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson && p.StatusMonitoring != EnumStatusMonitoring.End).Result.FirstOrDefault();
 
         if (monitoring == null)
         {
           monitoring = new Monitoring()
           {
-            Person = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault()
+            Person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault()
           };
 
           LoadMap(monitoring);
 
           monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
-          serviceMonitoring.InsertNewVersion(monitoring);
+          await serviceMonitoring.InsertNewVersion(monitoring);
           Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
         }
         else
@@ -1042,7 +1042,7 @@ namespace Manager.Services.Specific
           {
             monitoring.DateBeginEnd = DateTime.Now;
           }
-          serviceMonitoring.Update(monitoring, null);
+          await serviceMonitoring.Update(monitoring, null);
         }
 
         return new ViewListMonitoring()
@@ -1064,7 +1064,7 @@ namespace Manager.Services.Specific
       {
         List<string> countpraise = new List<string>();
 
-        var monitoring = serviceMonitoring.GetAll(p => p._id == view._id).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         monitoring.StatusMonitoring = view.StatusMonitoring;
         monitoring.CommentsEnd = view.CommentsEnd;
         monitoring.CommentsPerson = view.CommentsPerson;
@@ -1109,7 +1109,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        var userInclude = servicePerson.GetAll(p => p.User._id == _user._idUser).FirstOrDefault();
+        var userInclude = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
 
         if (monitoring.Person.User._id != _user._idUser)
         {
@@ -1124,12 +1124,12 @@ namespace Manager.Services.Specific
         {
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
           {
-            serviceLogMessages.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + monitoring.Person.User.Name, monitoring.Person);
+            await serviceLogMessages.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + monitoring.Person.User.Name, monitoring.Person);
             if ((monitoring.Activities.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.SkillsCompany.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.Schoolings.Where(p => p.Praise != null).Count() > 0))
             {
-              serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.User.Name + " foi elogiado pelo gestor", monitoring.Person);
+              await serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.User.Name + " foi elogiado pelo gestor", monitoring.Person);
             }
             monitoring.DateEndEnd = DateTime.Now;
             Task.Run(() => SendQueue(monitoring._id, monitoring.Person._id, countpraise));
@@ -1148,7 +1148,7 @@ namespace Manager.Services.Specific
             Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
           }
         }
-        serviceMonitoring.Update(monitoring, null);
+        await serviceMonitoring.Update(monitoring, null);
         return "Monitoring altered!";
       }
       catch (Exception e)
@@ -1160,8 +1160,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var skills = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault().Occupation.Group.Skills;
-        var skillsgroup = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault().Occupation.Skills;
+        var skills = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault().Occupation.Group.Skills;
+        var skillsgroup = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault().Occupation.Skills;
         var list = skillsgroup;
         foreach (var item in skills)
         {
@@ -1187,7 +1187,7 @@ namespace Manager.Services.Specific
       {
 
         int skip = (count * (page - 1));
-        var detail = serviceMonitoring.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceMonitoring.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewListMonitoring()
@@ -1207,7 +1207,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
           if (monitoring.Person.User._id == _user._idUser)
@@ -1359,7 +1359,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         foreach (var item in monitoring.Activities)
         {
           if (item._id == iditem)
@@ -1372,7 +1372,7 @@ namespace Manager.Services.Specific
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
 
-                serviceMonitoring.Update(monitoring, null);
+                await serviceMonitoring.Update(monitoring, null);
                 return "Comment altered!";
               }
             }
@@ -1390,7 +1390,7 @@ namespace Manager.Services.Specific
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
 
-                serviceMonitoring.Update(monitoring, null);
+                await serviceMonitoring.Update(monitoring, null);
                 return "Comment altered!";
               }
             }
@@ -1410,7 +1410,7 @@ namespace Manager.Services.Specific
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
 
-                serviceMonitoring.Update(monitoring, null);
+                await serviceMonitoring.Update(monitoring, null);
                 return "Comment altered!";
               }
             }
@@ -1427,7 +1427,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAll(p => p._id == idmonitoring).FirstOrDefault();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         foreach (var item in monitoring.Activities)
         {
           if (item._id == iditem)
@@ -1528,14 +1528,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var user = servicePerson.GetAllNewVersion(p => p._id == iduser).Result.FirstOrDefault();
         var log = new ViewLog()
         {
           Description = "Access Monitoring",
           Local = local,
           _idPerson = user._id
         };
-        serviceLog.NewLog(log);
+        await serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
@@ -1589,7 +1589,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == monitoring.Person.Occupation._id).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == monitoring.Person.Occupation._id).Result.FirstOrDefault();
 
         monitoring.SkillsCompany = new List<MonitoringSkills>();
         foreach (var item in occupation.Group.Company.Skills)
@@ -1628,7 +1628,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1670,7 +1670,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1712,7 +1712,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {

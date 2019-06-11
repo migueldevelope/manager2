@@ -582,7 +582,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceCompany.GetAll(p => p._id == idcompany).FirstOrDefault()
+        return serviceCompany.GetAllNewVersion(p => p._id == idcompany).Result.FirstOrDefault()
           .Skills.Select(p => new ViewListSkill()
           {
             _id = p._id,
@@ -601,10 +601,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        if (serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == id).Count() > 0)
+        if (serviceProcessLevelTwo.CountNewVersion(p => p.ProcessLevelOne._id == id).Result > 0)
           return "error_leveltwo_exists";
 
-        var item = serviceProcessLevelOne.GetAll(p => p._id == id).FirstOrDefault();
+        var item = serviceProcessLevelOne.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         item.Status = EnumStatus.Disabled;
         serviceProcessLevelOne.Update(item, null);
         return "ok";
@@ -619,11 +619,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //if (occupationService.GetAll(p => p.ProcessLevelTwo._id == id).Count() > 0)
+        //if (occupationService.GetAllNewVersion(p => p.ProcessLevelTwo._id == id).Count() > 0)
         //return "error_occupation_exists";
-        var item = serviceProcessLevelTwo.GetAll(p => p._id == id).FirstOrDefault();
+        var item = serviceProcessLevelTwo.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
 
-        if (serviceOccupation.GetAll(p => p.Process.Contains(item)).Count() > 0)
+        if (serviceOccupation.CountNewVersion(p => p.Process.Contains(item)).Result > 0)
           return "error_occupation_exists";
 
 
@@ -642,7 +642,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p.Company._id == idcompany & p._id == idgroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p.Company._id == idcompany & p._id == idgroup).Result.FirstOrDefault();
         var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
         Scope scopeOld;
         if (sum)
@@ -684,7 +684,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p.Group.Company._id == idcompany & p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany & p._id == idoccupation).Result.FirstOrDefault();
         var activities = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
         Activitie activitiesOld;
         if (sum)
@@ -726,7 +726,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p.Company._id == idcompany & p._id == idgroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p.Company._id == idcompany & p._id == idgroup).Result.FirstOrDefault();
         var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
 
         foreach (var item in group.Scope)
@@ -749,7 +749,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p.Group.Company._id == idcompany & p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany & p._id == idoccupation).Result.FirstOrDefault();
         var activities = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
 
         foreach (var item in occupation.Activities)
@@ -772,7 +772,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var textDefault = serviceTextDefault.GetAll(p => p._id == id).FirstOrDefault();
+        var textDefault = serviceTextDefault.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         textDefault.Status = EnumStatus.Disabled;
         serviceTextDefault.Update(textDefault, null);
         return "delete";
@@ -786,8 +786,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var area = serviceArea.GetAll(p => p._id == idarea).FirstOrDefault();
-        var areas = serviceArea.GetAll(p => p.Company._id == idcompany).ToList();
+        var area = serviceArea.GetAllNewVersion(p => p._id == idarea).Result.FirstOrDefault();
+        var areas = serviceArea.GetAllNewVersion(p => p.Company._id == idcompany).Result.ToList();
 
         return "reorder";
       }
@@ -801,7 +801,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var groups = serviceGroup.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ThenBy(p => p.Line).ToList();
+        var groups = serviceGroup.GetAllNewVersion(p => p.Company._id == idcompany).Result.OrderBy(p => p.Sphere.TypeSphere).ThenBy(p => p.Axis.TypeAxis).ThenBy(p => p.Line).ToList();
 
         var head = string.Empty;
         var sphere = string.Empty;
@@ -1030,7 +1030,7 @@ namespace Manager.Services.Specific
         var stream = new StreamReader(File.OpenText(filename).BaseStream, Encoding.GetEncoding("iso-8859-1"));
 
 
-        var person = servicePerson.GetAll(p => p.User.Mail == _user.Mail).FirstOrDefault();
+        var person = servicePerson.GetAllNewVersion(p => p.User.Mail == _user.Mail).Result.FirstOrDefault();
 
         CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(link);
         CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
@@ -1131,7 +1131,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceSphere.GetAll().OrderBy(p => p.TypeSphere)
+        return serviceSphere.GetAllNewVersion().OrderBy(p => p.TypeSphere)
           .Select(p => new ViewListSphere()
           {
             _id = p._id,
@@ -1149,7 +1149,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceSphere.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.TypeSphere)
+        return serviceSphere.GetAllNewVersion(p => p.Company._id == idcompany).Result.OrderBy(p => p.TypeSphere)
            .Select(p => new ViewListSphere()
            {
              _id = p._id,
@@ -1167,15 +1167,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var areas = serviceArea.GetAll().OrderBy(p => p.Name).ToList();
+        var areas = serviceArea.GetAllNewVersion().OrderBy(p => p.Name).ToList();
         foreach (var item in areas)
         {
           item.ProcessLevelOnes = new List<ProcessLevelOne>();
-          var process = serviceProcessLevelOne.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
+          var process = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == item._id).Result.OrderBy(p => p.Order).ToList();
           foreach (var row in process)
           {
             row.Process = new List<ProcessLevelTwo>();
-            foreach (var leveltwo in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
+            foreach (var leveltwo in serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == row._id).Result.OrderBy(p => p.Order).ToList())
             {
               row.Process.Add(leveltwo);
             }
@@ -1200,7 +1200,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceSchooling.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+        var item = serviceSchooling.GetAllNewVersion(p => p._id == id).Result.OrderBy(p => p.Name).FirstOrDefault();
         return new ViewCrudSchooling()
         {
           _id = item._id,
@@ -1220,7 +1220,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceAxis.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+        var item = serviceAxis.GetAllNewVersion(p => p._id == id).Result.OrderBy(p => p.Name).FirstOrDefault();
         return new ViewCrudAxis()
         {
           _id = item._id,
@@ -1239,7 +1239,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceSphere.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+        var item = serviceSphere.GetAllNewVersion(p => p._id == id).Result.OrderBy(p => p.Name).FirstOrDefault();
         return new ViewCrudSphere()
         {
           _id = item._id,
@@ -1258,7 +1258,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceSkill.GetAll(p => p._id == id).OrderBy(p => p.Name).FirstOrDefault();
+        var item = serviceSkill.GetAllNewVersion(p => p._id == id).Result.OrderBy(p => p.Name).FirstOrDefault();
         return new ViewCrudSkill()
         {
           _id = item._id,
@@ -1277,15 +1277,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var areas = serviceArea.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var areas = serviceArea.GetAllNewVersion(p => p.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
         foreach (var item in areas)
         {
           item.ProcessLevelOnes = new List<ProcessLevelOne>();
-          var process = serviceProcessLevelOne.GetAll(p => p.Area._id == item._id).OrderBy(p => p.Order).ToList();
+          var process = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == item._id).Result.OrderBy(p => p.Order).ToList();
           foreach (var row in process)
           {
             row.Process = new List<ProcessLevelTwo>();
-            foreach (var leveltwo in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == row._id).OrderBy(p => p.Order).ToList())
+            foreach (var leveltwo in serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == row._id).Result.OrderBy(p => p.Order).ToList())
             {
               row.Process.Add(leveltwo);
             }
@@ -1310,7 +1310,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceAxis.GetAll().OrderBy(p => p.TypeAxis)
+        return serviceAxis.GetAllNewVersion().OrderBy(p => p.TypeAxis)
           .Select(p => new ViewListAxis()
           {
             _id = p._id,
@@ -1328,7 +1328,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceAxis.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.TypeAxis)
+        return serviceAxis.GetAllNewVersion(p => p.Company._id == idcompany).Result.OrderBy(p => p.TypeAxis)
           .Select(p => new ViewListAxis()
           {
             _id = p._id,
@@ -1346,7 +1346,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceQuestions.GetAll(p => p.Company._id == idcompany).OrderBy(p => p.Order)
+        return serviceQuestions.GetAllNewVersion(p => p.Company._id == idcompany).Result.OrderBy(p => p.Order)
           .Select(p => new ViewListQuestions()
           {
             _id = p._id,
@@ -1366,7 +1366,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceQuestions.GetAll(p => p._id == id).Select(p => new ViewCrudQuestions()
+        return serviceQuestions.GetAllNewVersion(p => p._id == id).Result.Select(p => new ViewCrudQuestions()
         {
           _id = p._id,
           Name = p.Name,
@@ -1387,7 +1387,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceSchooling.GetAll().OrderBy(p => p.Order)
+        return serviceSchooling.GetAllNewVersion().OrderBy(p => p.Order)
           .Select(p => new ViewListSchooling()
           {
             _id = p._id,
@@ -1408,7 +1408,7 @@ namespace Manager.Services.Specific
         long line = 0;
         try
         {
-          line = serviceGroup.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line);
+          line = serviceGroup.GetAllNewVersion(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Result.Max(p => p.Line);
           if (line == 0)
             line = 1;
           else
@@ -1454,9 +1454,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var company = serviceCompany.GetAll(p => p._id == view._idCompany).FirstOrDefault();
+        var company = serviceCompany.GetAllNewVersion(p => p._id == view._idCompany).Result.FirstOrDefault();
 
-        Skill skill = serviceSkill.GetAll(p => p._id == view.Skill._id).FirstOrDefault();
+        Skill skill = serviceSkill.GetAllNewVersion(p => p._id == view.Skill._id).Result.FirstOrDefault();
 
         if (view.Skill._id == null)
         {
@@ -1487,7 +1487,7 @@ namespace Manager.Services.Specific
         long line = 0;
         try
         {
-          line = serviceGroup.GetAll(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Max(p => p.Line);
+          line = serviceGroup.GetAllNewVersion(p => p.Sphere._id == view.Sphere._id & p.Axis._id == view.Axis._id).Result.Max(p => p.Line);
           if (line == 0)
             line = 1;
           else
@@ -1502,13 +1502,13 @@ namespace Manager.Services.Specific
         var group = new Group()
         {
           Name = view.Name,
-          Axis = serviceAxis.GetAll(p => p._id == view.Axis._id).FirstOrDefault(),
-          Sphere = serviceSphere.GetAll(p => p._id == view.Sphere._id).FirstOrDefault(),
+          Axis = serviceAxis.GetAllNewVersion(p => p._id == view.Axis._id).Result.FirstOrDefault(),
+          Sphere = serviceSphere.GetAllNewVersion(p => p._id == view.Sphere._id).Result.FirstOrDefault(),
           Status = EnumStatus.Enabled,
           Skills = new List<Skill>(),
           Schooling = new List<Schooling>(),
           Line = line,
-          Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
+          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
           Scope = new List<Scope>()
         };
         var result = serviceGroup.InsertNewVersion(group).Result;
@@ -1534,8 +1534,8 @@ namespace Manager.Services.Specific
       try
       {
 
-        var group = serviceGroup.GetAll(p => p._id == view._idGroup).FirstOrDefault();
-        var schooling = serviceSchooling.GetAll(p => p._id == view.Schooling._id).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == view._idGroup).Result.FirstOrDefault();
+        var schooling = serviceSchooling.GetAllNewVersion(p => p._id == view.Schooling._id).Result.FirstOrDefault();
 
         schooling.Complement = view.Schooling.Complement;
         schooling.Type = view.Schooling.Type;
@@ -1559,7 +1559,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == view._idGroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == view._idGroup).Result.FirstOrDefault();
 
         long order = 1;
         try
@@ -1602,8 +1602,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == view._idGroup).FirstOrDefault();
-        Skill skill = serviceSkill.GetAll(p => p._id == view.Skill._id).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == view._idGroup).Result.FirstOrDefault();
+        Skill skill = serviceSkill.GetAllNewVersion(p => p._id == view.Skill._id).Result.FirstOrDefault();
 
         if (view.Skill._id == null)
         {
@@ -1630,7 +1630,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == view.idOccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == view.idOccupation).Result.FirstOrDefault();
         long order = 1;
         try
         {
@@ -1671,7 +1671,7 @@ namespace Manager.Services.Specific
       try
       {
 
-        var occupation = serviceOccupation.GetAll(p => p._id == list.FirstOrDefault().idOccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == list.FirstOrDefault().idOccupation).Result.FirstOrDefault();
         long order = 1;
         try
         {
@@ -1717,7 +1717,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         occupation.SpecificRequirements = view.Name;
         serviceOccupation.Update(occupation, null);
         UpdateOccupationAll(occupation);
@@ -1734,8 +1734,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == view._idOccupation).FirstOrDefault();
-        var skill = serviceSkill.GetAll(p => p._id == view.Skill._id).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == view._idOccupation).Result.FirstOrDefault();
+        var skill = serviceSkill.GetAllNewVersion(p => p._id == view.Skill._id).Result.FirstOrDefault();
 
         if (skill == null)
         {
@@ -1789,7 +1789,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //var item = areaService.GetAll(p => p.Order == view.Order).Count();
+        //var item = areaService.GetAllNewVersion(p => p.Order == view.Order).Count();
         //if (item > 0)
         //  return "error_line";
 
@@ -1799,7 +1799,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Order = view.Order,
           Status = EnumStatus.Enabled,
-          Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
+          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
           ProcessLevelOnes = new List<ProcessLevelOne>()
         });
         return "ok";
@@ -1837,7 +1837,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           TypeAxis = view.TypeAxis,
           Status = EnumStatus.Enabled,
-          Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault()
+          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault()
         });
         return "ok";
       }
@@ -1851,7 +1851,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == view.Group._id).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == view.Group._id).Result.FirstOrDefault();
 
         var occupation = new Occupation()
         {
@@ -1860,7 +1860,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Group = group,
           Skills = new List<Skill>(),
-          CBO = (view.Cbo == null) ? null : serviceCbo.GetAll(p => p._id == view.Cbo._id).FirstOrDefault(),
+          CBO = (view.Cbo == null) ? null : serviceCbo.GetAllNewVersion(p => p._id == view.Cbo._id).Result.FirstOrDefault(),
           Activities = new List<Activitie>(),
           SalaryScales = new List<SalaryScaleGrade>(),
           Schooling = new List<Schooling>(),
@@ -1868,7 +1868,7 @@ namespace Manager.Services.Specific
         };
 
         foreach (var item in view.Process)
-          occupation.Process.Add(serviceProcessLevelTwo.GetAll(p => p._id == item._id).FirstOrDefault());
+          occupation.Process.Add(serviceProcessLevelTwo.GetAllNewVersion(p => p._id == item._id).Result.FirstOrDefault());
 
         if (view.SalaryScales != null)
           foreach (var item in view.SalaryScales)
@@ -1923,7 +1923,7 @@ namespace Manager.Services.Specific
         {
           Name = view.Name,
           TypeSphere = view.TypeSphere,
-          Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
+          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
           Status = EnumStatus.Enabled
         });
         return "ok";
@@ -1945,7 +1945,7 @@ namespace Manager.Services.Specific
           TypeQuestion = view.TypeQuestion,
           TypeRotine = view.TypeRotine,
           Status = EnumStatus.Enabled,
-          Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault(),
+          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
           Content = view.Content
         });
         return "ok";
@@ -1962,7 +1962,7 @@ namespace Manager.Services.Specific
       {
         try
         {
-          var order = serviceProcessLevelOne.GetAll(p => p.Area._id == model.Area._id).Max(p => p.Order) + 1;
+          var order = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == model.Area._id).Result.Max(p => p.Order) + 1;
           model.Order = order;
         }
         catch (Exception)
@@ -1974,7 +1974,7 @@ namespace Manager.Services.Specific
         serviceProcessLevelOne.InsertNewVersion(new ProcessLevelOne()
         {
           Name = model.Name,
-          Area = serviceArea.GetAll(p => p._id == model.Area._id).FirstOrDefault(),
+          Area = serviceArea.GetAllNewVersion(p => p._id == model.Area._id).Result.FirstOrDefault(),
           Process = new List<ProcessLevelTwo>(),
           Order = model.Order,
           Status = EnumStatus.Enabled
@@ -1994,7 +1994,7 @@ namespace Manager.Services.Specific
         serviceTextDefault.InsertNewVersion(new TextDefault()
         {
           Name = model.Name,
-          Company = serviceCompany.GetAll(p => p._id == model.Company._id).FirstOrDefault(),
+          Company = serviceCompany.GetAllNewVersion(p => p._id == model.Company._id).Result.FirstOrDefault(),
           Content = model.Content,
           TypeText = model.TypeText,
           Status = EnumStatus.Enabled
@@ -2013,7 +2013,7 @@ namespace Manager.Services.Specific
       {
         try
         {
-          var order = serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Max(p => p.Order) + 1;
+          var order = serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == model.ProcessLevelOne._id).Result.Max(p => p.Order) + 1;
           model.Order = order;
         }
         catch (Exception)
@@ -2026,7 +2026,7 @@ namespace Manager.Services.Specific
           Name = model.Name,
           Comments = model.Comments,
           Order = model.Order,
-          ProcessLevelOne = serviceProcessLevelOne.GetAll(p => p._id == model.ProcessLevelOne._id).FirstOrDefault(),
+          ProcessLevelOne = serviceProcessLevelOne.GetAllNewVersion(p => p._id == model.ProcessLevelOne._id).Result.FirstOrDefault(),
           Status = EnumStatus.Enabled
         });
         return "ok";
@@ -2041,13 +2041,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        if (serviceProcessLevelOne.GetAll(p => p.Area._id == idarea).Count() > 0)
+        if (serviceProcessLevelOne.CountFreeNewVersion(p => p.Area._id == idarea).Result > 0)
           return "erro_exists_nivelone";
 
-        var area = serviceArea.GetAll(p => p._id == idarea).FirstOrDefault();
+        var area = serviceArea.GetAllNewVersion(p => p._id == idarea).Result.FirstOrDefault();
 
 
-        foreach (var item in serviceOccupation.GetAll(p => p.Process.Exists(i => i.ProcessLevelOne.Area._id == area._id)).ToList())
+        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Process.Exists(i => i.ProcessLevelOne.Area._id == area._id)).Result.ToList())
         {
           return "error_exists_register";
         }
@@ -2067,10 +2067,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var axis = serviceAxis.GetAll(p => p._id == idaxis).FirstOrDefault();
+        var axis = serviceAxis.GetAllNewVersion(p => p._id == idaxis).Result.FirstOrDefault();
 
 
-        foreach (var item in serviceGroup.GetAll(p => p.Axis._id == axis._id).ToList())
+        foreach (var item in serviceGroup.GetAllNewVersion(p => p.Axis._id == axis._id).Result.ToList())
         {
           return "error_exists_register";
         }
@@ -2089,7 +2089,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var company = serviceCompany.GetAll(p => p._id == idcompany).FirstOrDefault();
+        var company = serviceCompany.GetAllNewVersion(p => p._id == idcompany).Result.FirstOrDefault();
         foreach (var item in company.Skills)
         {
           if (item._id == id)
@@ -2113,15 +2113,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
 
-        foreach (var item in servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).Result.ToList())
         {
           return "error_exists_register";
         }
 
 
-        foreach (var item in serviceOccupation.GetAll(p => p.Group._id == group._id).ToList())
+        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == group._id).Result.ToList())
         {
           return "error_exists_register";
         }
@@ -2140,7 +2140,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
         var schooling = group.Schooling.Where(p => p._id == id).FirstOrDefault();
         group.Schooling.Remove(schooling);
         serviceGroup.Update(group, null);
@@ -2158,7 +2158,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
         var skill = group.Skills.Where(p => p._id == id).FirstOrDefault();
         group.Skills.Remove(skill);
         serviceGroup.Update(group, null);
@@ -2176,7 +2176,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
         var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
         group.Scope.Remove(scope);
         serviceGroup.Update(group, null);
@@ -2194,9 +2194,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
 
-        foreach (var item in servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).Result.ToList())
         {
           return "error_exists_register";
         }
@@ -2215,7 +2215,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         var activitie = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
         occupation.Activities.Remove(activitie);
         serviceOccupation.Update(occupation, null);
@@ -2233,7 +2233,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         var skill = occupation.Skills.Where(p => p._id == id).FirstOrDefault();
         occupation.Skills.Remove(skill);
         serviceOccupation.Update(occupation, null);
@@ -2251,7 +2251,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var skill = serviceSkill.GetAll(p => p._id == idskill).FirstOrDefault();
+        var skill = serviceSkill.GetAllNewVersion(p => p._id == idskill).Result.FirstOrDefault();
         skill.Status = EnumStatus.Disabled;
         serviceSkill.Update(skill, null);
 
@@ -2268,14 +2268,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var sphere = serviceSphere.GetAll(p => p._id == idsphere).FirstOrDefault();
+        var sphere = serviceSphere.GetAllNewVersion(p => p._id == idsphere).Result.FirstOrDefault();
 
-        //foreach (var item in axisService.GetAll(p => p.Sphere._id == sphere._id).ToList())
+        //foreach (var item in axisService.GetAllNewVersion(p => p.Sphere._id == sphere._id).ToList())
         //{
         //  return "error_exists_register";
         //}
 
-        foreach (var item in serviceGroup.GetAll(p => p.Sphere._id == sphere._id).ToList())
+        foreach (var item in serviceGroup.GetAllNewVersion(p => p.Sphere._id == sphere._id).Result.ToList())
         {
           return "error_exists_register";
         }
@@ -2294,7 +2294,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var schooling = serviceSchooling.GetAll(p => p._id == idschooling).FirstOrDefault();
+        var schooling = serviceSchooling.GetAllNewVersion(p => p._id == idschooling).Result.FirstOrDefault();
         schooling.Status = EnumStatus.Disabled;
         serviceSchooling.Update(schooling, null);
         return "delete";
@@ -2308,7 +2308,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var questions = serviceQuestions.GetAll(p => p._id == idquestion).FirstOrDefault();
+        var questions = serviceQuestions.GetAllNewVersion(p => p._id == idquestion).Result.FirstOrDefault();
         questions.Status = EnumStatus.Disabled;
         serviceQuestions.Update(questions, null);
         return "update";
@@ -2338,7 +2338,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceCompany.GetAll().ToList().Select(p => new ViewListCompany()
+        return serviceCompany.GetAllNewVersion().ToList().Select(p => new ViewListCompany()
         {
           _id = p._id,
           Name = p.Name
@@ -2354,7 +2354,7 @@ namespace Manager.Services.Specific
       try
       {
         List<ViewGroupListLO> groups = new List<ViewGroupListLO>();
-        foreach (var item in serviceGroup.GetAll(p => p.Company._id == idcompany))
+        foreach (var item in serviceGroup.GetAllNewVersion(p => p.Company._id == idcompany).Result)
         {
           var view = new ViewGroupListLO
           {
@@ -2383,9 +2383,9 @@ namespace Manager.Services.Specific
       try
       {
         AdjustOccuptaions();
-        var area = serviceArea.GetAll(p => p._id == idarea).FirstOrDefault();
-        //return occupationService.GetAll(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
-        var itens = serviceOccupation.GetAll(p => p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var area = serviceArea.GetAllNewVersion(p => p._id == idarea).Result.FirstOrDefault();
+        //return occupationService.GetAllNewVersion(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
         List<ViewGetOccupation> list = new List<ViewGetOccupation>();
         foreach (var item in itens)
         {
@@ -2417,8 +2417,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var area = serviceArea.GetAll(p => p._id == idarea).FirstOrDefault();
-        var itens = serviceOccupation.GetAll(p => p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var area = serviceArea.GetAllNewVersion(p => p._id == idarea).Result.FirstOrDefault();
+        var itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
         List<Occupation> list = new List<Occupation>();
         foreach (var item in itens)
         {
@@ -2482,7 +2482,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var detail = serviceSkill.GetAll(p => p.Name.ToUpper() == filterName.ToUpper())
+        var detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper() == filterName.ToUpper()).Result
           .Select(p => new ViewCrudSkill()
           {
             _id = p._id,
@@ -2493,7 +2493,7 @@ namespace Manager.Services.Specific
           .ToList();
         if (detail.Count == 1)
           return detail[0];
-        detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filterName.ToUpper())).Select(p => new ViewCrudSkill()
+        detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filterName.ToUpper())).Result.Select(p => new ViewCrudSkill()
         {
           _id = p._id,
           Name = p.Name,
@@ -2517,7 +2517,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewListSkill()
@@ -2540,7 +2540,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
 
-        var skills = (List<string>)(from comp in serviceCompany.GetAll()
+        var skills = (List<string>)(from comp in serviceCompany.GetAllNewVersion()
                                     where comp._id == company
                                     select new
                                     {
@@ -2549,7 +2549,7 @@ namespace Manager.Services.Specific
                     ).FirstOrDefault().Name;
 
 
-        var detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()))
+        var detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result
                       .ToList().Select(p => new ViewSkills()
                       {
                         _id = p._id,
@@ -2577,7 +2577,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
 
-        var skills = (List<string>)(from comp in serviceCompany.GetAll()
+        var skills = (List<string>)(from comp in serviceCompany.GetAllNewVersion()
                                     where comp._id == idcompany
                                     select new
                                     {
@@ -2585,7 +2585,7 @@ namespace Manager.Services.Specific
                                     }
                     ).FirstOrDefault().Name;
 
-        var skillsGroup = (List<string>)(from groups in serviceGroup.GetAll()
+        var skillsGroup = (List<string>)(from groups in serviceGroup.GetAllNewVersion()
                                          where groups._id == idgroup
                                          select new
                                          {
@@ -2594,7 +2594,7 @@ namespace Manager.Services.Specific
                    ).FirstOrDefault().Name;
 
 
-        var detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()))
+        var detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result
                       .ToList().Select(p => new ViewSkills()
                       {
                         _id = p._id,
@@ -2623,7 +2623,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
 
-        var skills = (List<string>)(from comp in serviceCompany.GetAll()
+        var skills = (List<string>)(from comp in serviceCompany.GetAllNewVersion()
                                     where comp._id == idcompany
                                     select new
                                     {
@@ -2631,7 +2631,7 @@ namespace Manager.Services.Specific
                                     }
                     ).FirstOrDefault().Name;
 
-        var skillsGroup = (List<string>)(from groups in serviceGroup.GetAll()
+        var skillsGroup = (List<string>)(from groups in serviceGroup.GetAllNewVersion()
                                          where groups._id == idgroup
                                          select new
                                          {
@@ -2639,7 +2639,7 @@ namespace Manager.Services.Specific
                                          }
                    ).FirstOrDefault().Name;
 
-        var skillsOccupation = (List<string>)(from occupation in serviceOccupation.GetAll()
+        var skillsOccupation = (List<string>)(from occupation in serviceOccupation.GetAllNewVersion()
                                               where occupation._id == idoccupation
                                               select new
                                               {
@@ -2648,7 +2648,7 @@ namespace Manager.Services.Specific
                  ).FirstOrDefault().Name;
 
 
-        var detail = serviceSkill.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()))
+        var detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result
                       .ToList().Select(p => new ViewSkills()
                       {
                         _id = p._id,
@@ -2676,7 +2676,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var detail = serviceProcessLevelTwo.GetAll(p => p._id == id)
+        var detail = serviceProcessLevelTwo.GetAllNewVersion(p => p._id == id).Result
           .Select(p => new ViewCrudProcessLevelTwo()
           {
             _id = p._id,
@@ -2709,12 +2709,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
-        var result = serviceProcessLevelOne.GetAll(p => p.Area._id == idarea).OrderBy(p => p.Order).ToList();
+        //var result = processLevelOneService.GetAllNewVersion(p => p.Area._id == idarea);
+        var result = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == idarea).Result.OrderBy(p => p.Order).ToList();
         var list = new List<ViewListProcessLevelTwo>();
         foreach (var item in result)
         {
-          foreach (var row in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).OrderBy(p => p.Order).ToList())
+          foreach (var row in serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == item._id).Result.OrderBy(p => p.Order).ToList())
           {
             list.Add(new ViewListProcessLevelTwo()
             {
@@ -2747,12 +2747,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //var result = processLevelOneService.GetAll(p => p.Area._id == idarea);
-        var result = serviceProcessLevelOne.GetAll().OrderBy(p => p.Order).ToList();
+        //var result = processLevelOneService.GetAllNewVersion(p => p.Area._id == idarea);
+        var result = serviceProcessLevelOne.GetAllNewVersion().OrderBy(p => p.Order).ToList();
         var list = new List<ViewListProcessLevelTwo>();
         foreach (var item in result)
         {
-          foreach (var row in serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).OrderBy(p => p.Order).ToList())
+          foreach (var row in serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == item._id).Result.OrderBy(p => p.Order).ToList())
           {
             list.Add(new ViewListProcessLevelTwo()
             {
@@ -2809,7 +2809,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == id).ToList().Select(
+        var group = serviceGroup.GetAllNewVersion(p => p._id == id).Result.ToList().Select(
           p => new ViewCrudGroup()
           {
             _id = p._id,
@@ -2823,7 +2823,7 @@ namespace Manager.Services.Specific
             Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
             Line = p.Line
           }).FirstOrDefault();
-        //group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
+        //group.Occupations = occupationService.GetAllNewVersion(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
         return group;
       }
       catch (Exception e)
@@ -2836,7 +2836,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).ToList().Select(
+        var group = serviceGroup.GetAllNewVersion(p => p.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).Result.ToList().Select(
             p => new ViewCrudGroup()
             {
               _id = p._id,
@@ -2850,7 +2850,7 @@ namespace Manager.Services.Specific
               Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
               Line = p.Line
             }).FirstOrDefault();
-        //group.Occupations = occupationService.GetAll(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
+        //group.Occupations = occupationService.GetAllNewVersion(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
         return group;
       }
       catch (Exception e)
@@ -2865,15 +2865,15 @@ namespace Manager.Services.Specific
       {
 
         //var groups = new List<Group>();
-        //foreach (var item in groupService.GetAll())
+        //foreach (var item in groupService.GetAllNewVersion())
         //{
-        //  item.Occupations = occupationService.GetAll(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
+        //  item.Occupations = occupationService.GetAllNewVersion(p => p.Group._id == item._id).OrderBy(p => p.Name).ToList();
         //  groups.Add(item);
         //}
         //return groups.OrderBy(p => p.Name)
         //  .Select()
         //  .ToList();
-        return serviceGroup.GetAll().Select(p => new ViewListGroup()
+        return serviceGroup.GetAllNewVersion().Select(p => new ViewListGroup()
         {
           _id = p._id,
           Name = p.Name,
@@ -2893,9 +2893,9 @@ namespace Manager.Services.Specific
       try
       {
         List<Group> groups = new List<Group>();
-        foreach (var item in serviceGroup.GetAll(p => p.Company._id == idcompany))
+        foreach (var item in serviceGroup.GetAllNewVersion(p => p.Company._id == idcompany).Result)
         {
-          item.Occupations = serviceOccupation.GetAll(p => p.Group._id == item._id).ToList();
+          item.Occupations = serviceOccupation.GetAllNewVersion(p => p.Group._id == item._id).Result.ToList();
           groups.Add(item);
         }
         return groups.Select(p => new ViewListGroup()
@@ -2917,7 +2917,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == id).ToList().Select(p =>
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == id).Result.ToList().Select(p =>
           new ViewCrudOccupation()
           {
             _id = p._id,
@@ -2970,9 +2970,9 @@ namespace Manager.Services.Specific
       {
 
         var list = new List<ViewListCourse>();
-        var idcompany = serviceOccupation.GetAll(p => p._id == idoccuation).FirstOrDefault().Group.Company._id;
-        var occupations = serviceOccupationMandatory.GetAll(p => p.Occupation._id == idoccuation & p.TypeMandatoryTraining == type).ToList();
-        var company = serviceCompanyMandatory.GetAll(p => p.Company._id == idcompany & p.TypeMandatoryTraining == type).ToList();
+        var idcompany = serviceOccupation.GetAllNewVersion(p => p._id == idoccuation).Result.FirstOrDefault().Group.Company._id;
+        var occupations = serviceOccupationMandatory.GetAllNewVersion(p => p.Occupation._id == idoccuation & p.TypeMandatoryTraining == type).Result.ToList();
+        var company = serviceCompanyMandatory.GetAllNewVersion(p => p.Company._id == idcompany & p.TypeMandatoryTraining == type).Result.ToList();
 
         foreach (var item in occupations)
         {
@@ -3004,7 +3004,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceOccupation.GetAll(p => p.Group.Company._id == idCompany && p.Name.ToUpper() == filterName.ToUpper()).ToList().Select(p =>
+        return serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idCompany && p.Name.ToUpper() == filterName.ToUpper()).Result.ToList().Select(p =>
           new ViewCrudOccupation()
           {
             _id = p._id,
@@ -3046,7 +3046,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceOccupation.GetAll().OrderBy(p => p.Name).ToList();
+        var list = serviceOccupation.GetAllNewVersion().OrderBy(p => p.Name).ToList();
         List<ViewListOccupationView> result = new List<ViewListOccupationView>();
         foreach (var item in list)
         {
@@ -3074,7 +3074,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceTextDefault.GetAll(p => p.Company._id == idcompany & p.Name == name).FirstOrDefault();
+        var item = serviceTextDefault.GetAllNewVersion(p => p.Company._id == idcompany & p.Name == name).Result.FirstOrDefault();
         return new ViewCrudTextDefault()
         {
           Name = item.Name,
@@ -3094,7 +3094,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceTextDefault.GetAll(p => p._id == id).FirstOrDefault();
+        var item = serviceTextDefault.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         return new ViewCrudTextDefault()
         {
           Name = item.Name,
@@ -3114,7 +3114,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceTextDefault.GetAll(p => p.Company._id == idcompany)
+        return serviceTextDefault.GetAllNewVersion(p => p.Company._id == idcompany).Result
           .Select(p => new ViewListTextDefault()
           {
             _id = p._id,
@@ -3133,8 +3133,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
-        //var schooling = serviceSchooling.GetAll(p => p._id == view._id).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
+        //var schooling = serviceSchooling.GetAllNewVersion(p => p._id == view._id).FirstOrDefault();
 
         var schoolOld = occupation.Schooling.Where(p => p._id == view._id).FirstOrDefault();
         var schooling = schoolOld;
@@ -3158,7 +3158,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         var activitie = new Activitie()
         {
           Name = view.Name,
@@ -3188,7 +3188,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
         var scope = new Scope()
         {
           Name = view.Name,
@@ -3218,8 +3218,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
-        var schooling = serviceSchooling.GetAll(p => p._id == view._id).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
+        var schooling = serviceSchooling.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
 
         schooling.Complement = view.Complement;
         schooling.Type = view.Type;
@@ -3241,7 +3241,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //var groupOld = groupService.GetAll(p => p._id == group._id).FirstOrDefault();
+        //var groupOld = groupService.GetAllNewVersion(p => p._id == group._id).FirstOrDefault();
         groupOld.Status = EnumStatus.Disabled;
         serviceGroup.Update(groupOld, null);
 
@@ -3276,10 +3276,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceArea.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceArea.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
         model.Order = view.Order;
-        model.Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault();
+        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
 
         serviceArea.Update(model, null);
         UpdateAreaAll(model);
@@ -3296,9 +3296,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceAxis.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceAxis.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault();
+        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
         model.TypeAxis = view.TypeAxis;
 
         serviceAxis.Update(model, null);
@@ -3315,7 +3315,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceCbo.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceCbo.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
         model.Code = view.Code;
 
@@ -3332,14 +3332,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var groupOld = serviceGroup.GetAll(p => p._id == view._id).FirstOrDefault();
-        var group = serviceGroup.GetAll(p => p._id == view._id).FirstOrDefault();
+        var groupOld = serviceGroup.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
 
         group.Name = view.Name;
-        group.Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault();
+        group.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
         group.Line = view.Line;
-        group.Axis = serviceAxis.GetAll(p => p._id == view.Axis._id).FirstOrDefault();
-        group.Sphere = serviceSphere.GetAll(p => p._id == view.Sphere._id).FirstOrDefault();
+        group.Axis = serviceAxis.GetAllNewVersion(p => p._id == view.Axis._id).Result.FirstOrDefault();
+        group.Sphere = serviceSphere.GetAllNewVersion(p => p._id == view.Sphere._id).Result.FirstOrDefault();
 
         if ((groupOld.Sphere._id != view.Sphere._id) || (groupOld.Axis._id != view.Axis._id))
         {
@@ -3363,15 +3363,15 @@ namespace Manager.Services.Specific
       try
       {
         //var areas = new List<Area>();
-        var occupationOld = serviceOccupation.GetAll(p => p._id == view._id).FirstOrDefault();
-        var occupation = serviceOccupation.GetAll(p => p._id == view._id).FirstOrDefault();
+        var occupationOld = serviceOccupation.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
 
-        occupation.Group = serviceGroup.GetAll(p => p._id == view.Group._id).FirstOrDefault();
+        occupation.Group = serviceGroup.GetAllNewVersion(p => p._id == view.Group._id).Result.FirstOrDefault();
         occupation.Name = view.Name;
         occupation.Line = view.Line;
 
         if (view.Cbo != null)
-          occupation.CBO = serviceCbo.GetAll(p => p._id == view.Cbo._id).FirstOrDefault();
+          occupation.CBO = serviceCbo.GetAllNewVersion(p => p._id == view.Cbo._id).Result.FirstOrDefault();
 
         occupation.SalaryScales = new List<SalaryScaleGrade>();
         if (view.SalaryScales != null)
@@ -3396,7 +3396,7 @@ namespace Manager.Services.Specific
         if (view.Process != null)
         {
           foreach (var item in view.Process)
-            occupation.Process.Add(serviceProcessLevelTwo.GetAll(p => p._id == item._id).FirstOrDefault());
+            occupation.Process.Add(serviceProcessLevelTwo.GetAllNewVersion(p => p._id == item._id).Result.FirstOrDefault());
         }
 
 
@@ -3448,7 +3448,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceSkill.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceSkill.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
         model.Concept = view.Concept;
         model.TypeSkill = view.TypeSkill;
@@ -3467,10 +3467,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceQuestions.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceQuestions.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
         model.Content = view.Content;
-        model.Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault();
+        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
         model.TypeQuestion = view.TypeQuestion;
         model.TypeRotine = view.TypeRotine;
 
@@ -3487,9 +3487,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceSphere.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceSphere.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault();
+        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
         model.TypeSphere = view.TypeSphere;
 
 
@@ -3507,7 +3507,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceSchooling.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceSchooling.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
         model.Complement = view.Complement;
         model.Type = view.Type;
@@ -3526,9 +3526,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceProcessLevelOne.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceProcessLevelOne.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Area = serviceArea.GetAll(p => p._id == view.Area._id).FirstOrDefault();
+        model.Area = serviceArea.GetAllNewVersion(p => p._id == view.Area._id).Result.FirstOrDefault();
         model.Order = view.Order;
 
         serviceProcessLevelOne.Update(model, null);
@@ -3544,9 +3544,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceProcessLevelTwo.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceProcessLevelTwo.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.ProcessLevelOne = serviceProcessLevelOne.GetAll(p => p._id == view.ProcessLevelOne._id).FirstOrDefault();
+        model.ProcessLevelOne = serviceProcessLevelOne.GetAllNewVersion(p => p._id == view.ProcessLevelOne._id).Result.FirstOrDefault();
         model.Order = view.Order;
         model.Comments = view.Comments;
 
@@ -3566,9 +3566,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceTextDefault.GetAll(p => p._id == view._id).FirstOrDefault();
+        var model = serviceTextDefault.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Company = serviceCompany.GetAll(p => p._id == view.Company._id).FirstOrDefault();
+        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
         model.Content = view.Content;
         model.TypeText = view.TypeText;
 
@@ -3587,8 +3587,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == id).FirstOrDefault();
-        var company = serviceCompany.GetAll(p => p._id == group.Company._id).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+        var company = serviceCompany.GetAllNewVersion(p => p._id == group.Company._id).Result.FirstOrDefault();
 
         var view = new ViewMapGroup()
         {
@@ -3638,7 +3638,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAll(p => p._id == idgroup).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
 
 
         return group.Scope.Where(p => p._id == idscope)
@@ -3663,7 +3663,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceProcessLevelOne.GetAll(p => p.Area._id == idarea).ToList();
+        var list = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == idarea).Result.ToList();
 
         var result = new List<ViewListProcessLevelOneByArea>();
         foreach (var item in list)
@@ -3674,7 +3674,7 @@ namespace Manager.Services.Specific
             Name = item.Name,
             Area = new ViewListArea() { _id = item.Area._id, Name = item.Area.Name },
             Order = item.Order,
-            Process = serviceProcessLevelTwo.GetAll(p => p.ProcessLevelOne._id == item._id).Select(x => new ViewCrudProcessLevelTwo()
+            Process = serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == item._id).Result.Select(x => new ViewCrudProcessLevelTwo()
             {
               _id = x._id,
               Name = x.Name,
@@ -3700,7 +3700,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var area = serviceArea.GetAll(p => p._id == id).FirstOrDefault();
+        var area = serviceArea.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         return new ViewCrudArea()
         {
           _id = area._id,
@@ -3719,10 +3719,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == id).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
 
-        var group = serviceGroup.GetAll(p => p._id == occupation.Group._id).FirstOrDefault();
-        var company = serviceCompany.GetAll(p => p._id == group.Company._id).FirstOrDefault();
+        var group = serviceGroup.GetAllNewVersion(p => p._id == occupation.Group._id).Result.FirstOrDefault();
+        var company = serviceCompany.GetAllNewVersion(p => p._id == group.Company._id).Result.FirstOrDefault();
 
         var map = new ViewMapOccupation()
         {
@@ -3809,7 +3809,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceProcessLevelOne.GetAll(p => p._id == id).Select(p => new ViewCrudProcessLevelOne()
+        return serviceProcessLevelOne.GetAllNewVersion(p => p._id == id).Result.Select(p => new ViewCrudProcessLevelOne()
         {
           _id = p._id,
           Name = p.Name,
@@ -3832,7 +3832,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceProcessLevelTwo.GetAll(p => p._id == id).Select(p => new ViewCrudProcessLevelTwo()
+        return serviceProcessLevelTwo.GetAllNewVersion(p => p._id == id).Result.Select(p => new ViewCrudProcessLevelTwo()
         {
           _id = p._id,
           Name = p.Name,
@@ -3868,7 +3868,7 @@ namespace Manager.Services.Specific
       try
       {
         var group = AddGroup(view).Result;
-        return serviceGroup.GetAll(p => p._id == group._id).FirstOrDefault();
+        return serviceGroup.GetAllNewVersion(p => p._id == group._id).Result.FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -3880,7 +3880,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var company in serviceCompany.GetAll().ToList())
+        foreach (var company in serviceCompany.GetAllNewVersion().ToList())
         {
           foreach (var item in company.Skills)
           {
@@ -3897,7 +3897,7 @@ namespace Manager.Services.Specific
           serviceCompany.Update(company, null);
           UpdateCompanyAll(company);
 
-          foreach (var group in serviceGroup.GetAll(p => p.Company._id == company._id).ToList())
+          foreach (var group in serviceGroup.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
           {
             foreach (var item in group.Skills)
             {
@@ -3914,7 +3914,7 @@ namespace Manager.Services.Specific
             UpdateGroupAll(group);
           }
 
-          foreach (var occupation in serviceOccupation.GetAll(p => p.Group.Company._id == company._id).ToList())
+          foreach (var occupation in serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == company._id).Result.ToList())
           {
             foreach (var item in occupation.Skills)
             {
@@ -3994,37 +3994,37 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == company._id).ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == company._id).Result.ToList())
         {
           item.Company = company;
           servicePerson.Update(item, null);
         }
 
-        foreach (var item in serviceSphere.GetAll(p => p.Company._id == company._id).ToList())
+        foreach (var item in serviceSphere.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
         {
           item.Company = company;
           serviceSphere.Update(item, null);
         }
 
-        foreach (var item in serviceAxis.GetAll(p => p.Company._id == company._id).ToList())
+        foreach (var item in serviceAxis.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
         {
           item.Company = company;
           serviceAxis.Update(item, null);
         }
 
-        foreach (var item in serviceOccupation.GetAll(p => p.Group.Company._id == company._id).ToList())
+        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == company._id).Result.ToList())
         {
           item.Group.Company = company;
           serviceOccupation.Update(item, null);
         }
 
-        foreach (var item in serviceGroup.GetAll(p => p.Company._id == company._id).ToList())
+        foreach (var item in serviceGroup.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
         {
           item.Company = company;
           serviceGroup.Update(item, null);
         }
 
-        foreach (var item in serviceArea.GetAll(p => p.Company._id == company._id).ToList())
+        foreach (var item in serviceArea.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
         {
           item.Company = company;
           serviceArea.Update(item, null);
@@ -4042,7 +4042,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in serviceOccupation.GetAll(p => p.Group._id == group._id).ToList())
+        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == group._id).Result.ToList())
         {
           item.Group = new Group()
           {
@@ -4073,7 +4073,7 @@ namespace Manager.Services.Specific
         }
 
 
-        foreach (var item in servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).Result.ToList())
         {
           item.Occupation.Group = group;
           foreach (var school in group.Schooling)
@@ -4134,7 +4134,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //foreach (var item in personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
+        //foreach (var item in personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
         //{
         //  item.Occupation = occupation;
         //  personService.Update(item, null);
@@ -4151,7 +4151,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in serviceOccupation.GetAll(p => p.Group._id == groupold._id).ToList())
+        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == groupold._id).Result.ToList())
         {
           item.Group = groupnew;
           serviceOccupation.Update(item, null);
@@ -4167,7 +4167,7 @@ namespace Manager.Services.Specific
 
     private async Task UpdateSphereAll(Sphere sphere, bool remove)
     {
-      //foreach (var item in axisService.GetAll(p => p.Sphere._id == sphere._id).ToList())
+      //foreach (var item in axisService.GetAllNewVersion(p => p.Sphere._id == sphere._id).ToList())
       //{
       //  if (remove == true)
       //    item.Sphere = null;
@@ -4177,7 +4177,7 @@ namespace Manager.Services.Specific
       //  this.axisService.Update(item, null);
       //}
 
-      foreach (var item in serviceGroup.GetAll(p => p.Sphere._id == sphere._id).ToList())
+      foreach (var item in serviceGroup.GetAllNewVersion(p => p.Sphere._id == sphere._id).Result.ToList())
       {
         if (remove == true)
           item.Sphere = null;
@@ -4192,7 +4192,7 @@ namespace Manager.Services.Specific
 
     private async Task UpdateAxisAll(Axis axis, bool remove)
     {
-      foreach (var item in serviceGroup.GetAll(p => p.Axis._id == axis._id).ToList())
+      foreach (var item in serviceGroup.GetAllNewVersion(p => p.Axis._id == axis._id).Result.ToList())
       {
         if (remove == true)
           item.Axis = null;
@@ -4209,14 +4209,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //foreach (var item in occupationService.GetAll(p => p.Area._id == area._id).ToList())
+        //foreach (var item in occupationService.GetAllNewVersion(p => p.Area._id == area._id).ToList())
         //{
         //  item.Area = area;
         //  this.occupationService.Update(item, null);
         //  UpdateOccupationAll(item);
         //}
 
-        foreach (var item in serviceProcessLevelOne.GetAll().ToList())
+        foreach (var item in serviceProcessLevelOne.GetAllNewVersion().ToList())
         {
           if (item.Area._id == area._id)
           {
@@ -4225,7 +4225,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        foreach (var item in serviceProcessLevelTwo.GetAll().ToList())
+        foreach (var item in serviceProcessLevelTwo.GetAllNewVersion().ToList())
         {
           if (item.ProcessLevelOne.Area._id == area._id)
           {
@@ -4235,7 +4235,7 @@ namespace Manager.Services.Specific
         }
 
 
-        //foreach (var item in occupationService.GetAll().ToList())
+        //foreach (var item in occupationService.GetAllNewVersion().ToList())
         //{
         //  foreach (var ar in item.Areas)
         //  {
@@ -4268,7 +4268,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in serviceOccupation.GetAll().ToList())
+        foreach (var item in serviceOccupation.GetAllNewVersion().ToList())
         {
           foreach (var proc in item.Process)
           {
@@ -4298,9 +4298,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var processLevelTwo = serviceProcessLevelTwo.GetAll(p => p._id == id).FirstOrDefault();
+        var processLevelTwo = serviceProcessLevelTwo.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
 
-        var list = serviceOccupation.GetAll().ToList();
+        var list = serviceOccupation.GetAllNewVersion().ToList();
 
         foreach (var item in list)
         {
@@ -4331,7 +4331,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in serviceGroup.GetAll().ToList())
+        foreach (var item in serviceGroup.GetAllNewVersion().ToList())
         {
           foreach (var row in item.Schooling)
           {

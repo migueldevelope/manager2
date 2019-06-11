@@ -246,14 +246,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var user = servicePerson.GetAllNewVersion(p => p._id == iduser).Result.FirstOrDefault();
         var log = new ViewLog()
         {
           Description = "Access Meritocracy",
           Local = local,
           _idPerson = user._id
         };
-        serviceLog.NewLog(log);
+        await serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
@@ -350,7 +350,7 @@ namespace Manager.Services.Specific
         }
 
         //maturity
-        var maturity = serviceMaturity.GetAll(p => p._idPerson == person._id).FirstOrDefault();
+        var maturity = serviceMaturity.GetAllNewVersion(p => p._idPerson == person._id).Result.FirstOrDefault();
         if (maturity != null)
           maturityWeight = maturity.Value;
 

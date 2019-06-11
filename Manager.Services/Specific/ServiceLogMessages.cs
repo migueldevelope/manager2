@@ -200,9 +200,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceLogMessages.GetAll(p => p._id == id).FirstOrDefault();
+        var item = serviceLogMessages.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-        serviceLogMessages.Update(item, null);
+        await serviceLogMessages.Update(item, null);
         return "deleted";
       }
       catch (Exception e)

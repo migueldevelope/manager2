@@ -41,7 +41,7 @@ namespace Manager.Test.Test.Complete
     //{
     //  try
     //  {
-    //    var person = servicePerson.GetAll(p => p.User.Name.Contains("gestor")).FirstOrDefault();
+    //    var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("gestor")).FirstOrDefault();
     //    //long total = 0;
     //    //var plans = servicePlan.ListPlans(person._id, "", 100, 1, 1, 1, 1, 1, 1, 1);
     //    var idmonitoring = "5b912f42840add76dccd4801";

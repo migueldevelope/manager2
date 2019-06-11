@@ -124,7 +124,7 @@ namespace Manager.Test.Test.Complete
           Complement = "1",
           Type = EnumTypeSchooling.Excellence
         };
-        var group = servicePerson.GetAll(p => p.User.Mail == "miguel@jmsoft.com.br").FirstOrDefault().Occupation.Group;
+        var group = servicePerson.GetAllNewVersion(p => p.User.Mail == "miguel@jmsoft.com.br").Result.FirstOrDefault().Occupation.Group;
 
         var view = new ViewCrudMapGroupSchooling()
         {

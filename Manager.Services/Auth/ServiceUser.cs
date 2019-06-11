@@ -112,7 +112,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public async Task<List<ViewListUser>> List( int count, int page, string filter, EnumTypeUser type)
+    public async Task<List<ViewListUser>> List(int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
@@ -249,11 +249,11 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.PhotoUrl;
         user.Schooling = user.Schooling == null ? null : new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
         user.Sex = view.Sex;
-        serviceUser.Update(user, null);
-        foreach (var item in servicePerson.GetAll(p => p.User._id == view._id).ToList())
+        await serviceUser.Update(user, null);
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.User._id == view._id).Result.ToList())
         {
           item.User = user;
-          servicePerson.Update(item, null);
+          await servicePerson.Update(item, null);
         }
         return new ViewCrudUser()
         {
@@ -283,7 +283,8 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return serviceUser.GetAll(p => p._id == idUser).FirstOrDefault().PhotoUrl;
+        var photo = (await serviceUser.GetAllNewVersion(p => p._id == idUser)).FirstOrDefault().PhotoUrl;
+        return photo;
       }
       catch (Exception e)
       {
@@ -294,7 +295,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var person = serviceUser.GetAll(p => p._id == idUser).SingleOrDefault();
+        var person = serviceUser.GetAllNewVersion(p => p._id == idUser).Result.SingleOrDefault();
         person.PhotoUrl = url;
         serviceUser.Update(person, null);
       }
@@ -371,7 +372,7 @@ namespace Manager.Services.Auth
           _idAccount = user._idAccount,
           NamePerson = user.Name,
           Mail = user.Mail,
-          _idUser= user._id
+          _idUser = user._id
         };
         serviceMail._user = serviceUser._user;
 
@@ -403,7 +404,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Person
-    public Task<List<ViewListPersonInfo>> ListPerson(string iduser, ref  long total,  string filter, int count,int page)
+    public Task<List<ViewListPersonInfo>> ListPerson(string iduser, ref long total, string filter, int count, int page)
     {
       List<Person> detail = servicePerson.GetAllNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
       total = servicePerson.CountNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;

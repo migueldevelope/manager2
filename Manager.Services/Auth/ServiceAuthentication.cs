@@ -346,7 +346,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        serviceLog.NewLog(new ViewLog()
+        var log = serviceLog.NewLog(new ViewLog()
         {
           Description = "Login",
           Local = "Authentication",

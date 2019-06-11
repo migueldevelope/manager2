@@ -77,9 +77,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = configurationNotificationsService.GetAll(p => p._id == id).FirstOrDefault();
+        var item = configurationNotificationsService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-        configurationNotificationsService.Update(item, null);
+        await configurationNotificationsService.Update(item, null);
         return "deleted";
       }
       catch (Exception e)
@@ -92,7 +92,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return configurationNotificationsService.GetAll(p => p._id == id).FirstOrDefault();
+        return configurationNotificationsService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -103,7 +103,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return configurationNotificationsService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+        return configurationNotificationsService.GetAllNewVersion(p => p.Name.ToLower() == name.ToLower()).Result.FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -115,7 +115,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = configurationNotificationsService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        var detail = configurationNotificationsService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = configurationNotificationsService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.ToList());

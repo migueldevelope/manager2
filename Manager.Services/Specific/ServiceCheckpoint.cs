@@ -666,7 +666,7 @@ namespace Manager.Services.Specific
             _id = ObjectId.GenerateNewId().ToString()
           });
         }
-        foreach (var item in serviceQuestions.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Skill & p.TypeRotine == EnumTypeRotine.Checkpoint).ToList())
+        foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Skill & p.TypeRotine == EnumTypeRotine.Checkpoint).Result.ToList())
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
@@ -689,7 +689,7 @@ namespace Manager.Services.Specific
             Itens = itens
           });
         }
-        foreach (var item in serviceQuestions.GetAll(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Checkpoint).ToList())
+        foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Checkpoint).Result.ToList())
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
@@ -711,7 +711,7 @@ namespace Manager.Services.Specific
             _id = ObjectId.GenerateNewId().ToString()
           });
         }
-        var text = serviceTextDefault.GetAll(p => p.TypeText == EnumTypeText.Checkpoint).FirstOrDefault();
+        var text = serviceTextDefault.GetAllNewVersion(p => p.TypeText == EnumTypeText.Checkpoint).Result.FirstOrDefault();
         if (text != null)
           checkpoint.TextDefault = text.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name).Replace("{manager_name}", checkpoint.Person.Manager.Name);
         return checkpoint;
@@ -725,7 +725,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var parameter = serviceParameter.GetAll(p => p.Key == "DeadlineAdm").FirstOrDefault();
+        var parameter = serviceParameter.GetAllNewVersion(p => p.Key == "DeadlineAdm").Result.FirstOrDefault();
         if (parameter == null)
         {
           return int.Parse(serviceParameter.InsertNewVersion(new Parameter()
@@ -890,7 +890,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Parameter parameter = serviceParameter.GetAll(p => p.Key == "mailcheckpoint").FirstOrDefault();
+        Parameter parameter = serviceParameter.GetAllNewVersion(p => p.Key == "mailcheckpoint").Result.FirstOrDefault();
         if (parameter == null)
           return serviceParameter.InsertNewVersion(new Parameter()
           {

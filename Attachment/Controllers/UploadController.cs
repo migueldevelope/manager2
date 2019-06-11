@@ -503,7 +503,7 @@ namespace EdeskIntegration.Controllers
     //[HttpDelete("plan/{iddp}/delete/{id}")]
     //public async Task<ObjectResult> DeleteLogbbook(string id, string iddp)
     //{
-    //  var attachment = this.service.GetAll(p => p._id == id).FirstOrDefault();
+    //  var attachment = this.service.GetAllNewVersion(p => p._id == id).FirstOrDefault();
     //  CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
     //  CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
     //  CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
@@ -520,7 +520,7 @@ namespace EdeskIntegration.Controllers
     [HttpDelete("{id}")]
     public async Task<ObjectResult> Delete(string id)
     {
-      var attachment = this.service.GetAll(p => p._id == id).FirstOrDefault();
+      var attachment = this.service.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
       CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
       CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
       CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);

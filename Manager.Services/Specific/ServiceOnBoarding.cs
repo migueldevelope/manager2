@@ -429,7 +429,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == idonboarding).Result.FirstOrDefault();
         foreach (var item in onboarding.Activities)
         {
           if (item._id == iditem)
@@ -439,7 +439,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceOnboarding.Update(onboarding, null);
+            await serviceOnboarding.Update(onboarding, null);
             return "ok";
           }
         }
@@ -452,7 +452,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceOnboarding.Update(onboarding, null);
+            await serviceOnboarding.Update(onboarding, null);
             return "ok";
           }
         }
@@ -466,7 +466,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceOnboarding.Update(onboarding, null);
+            await serviceOnboarding.Update(onboarding, null);
             return "ok";
           }
         }
@@ -480,7 +480,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceOnboarding.Update(onboarding, null);
+            await serviceOnboarding.Update(onboarding, null);
             return "ok";
           }
         }
@@ -494,7 +494,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceOnboarding.Update(onboarding, null);
+            await serviceOnboarding.Update(onboarding, null);
             return "ok";
           }
         }
@@ -508,7 +508,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-            serviceOnboarding.Update(onboarding, null);
+            await serviceOnboarding.Update(onboarding, null);
             return "ok";
           }
         }
@@ -524,7 +524,7 @@ namespace Manager.Services.Specific
       try
       {
         
-        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == idonboarding).Result.FirstOrDefault();
         Task.Run(() => LogSave(_user._idPerson, string.Format("Delete comment | {0} item {1} comment {2}", idonboarding, iditem, idcomments)));
         foreach (var item in onboarding.Activities)
         {
@@ -535,7 +535,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                serviceOnboarding.Update(onboarding, null);
+                await serviceOnboarding.Update(onboarding, null);
                 return "Comment deleted!";
               }
             }
@@ -551,7 +551,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                serviceOnboarding.Update(onboarding, null);
+                await serviceOnboarding.Update(onboarding, null);
                 return "Comment deleted!";
               }
             }
@@ -567,7 +567,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                serviceOnboarding.Update(onboarding, null);
+                await serviceOnboarding.Update(onboarding, null);
                 return "Comment deleted!";
               }
             }
@@ -651,7 +651,7 @@ namespace Manager.Services.Specific
       {
         Task.Run(() => LogSave(_user._idPerson, "List ended"));
         int skip = (count * (page - 1));
-        var detail = serviceOnboarding.GetAll(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceOnboarding.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewListOnBoarding()
@@ -673,7 +673,7 @@ namespace Manager.Services.Specific
       try
       {
         
-        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == idonboarding).Result.FirstOrDefault();
         Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0} item {1}", idonboarding, iditem)));
         foreach (var item in onboarding.Activities)
         {
@@ -938,7 +938,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == idonboarding).Result.FirstOrDefault();
         foreach (var item in onboarding.Activities)
         {
           if (item._id == iditem)
@@ -1064,7 +1064,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var onboarding = serviceOnboarding.GetAll(p => p._id == idonboarding).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == idonboarding).Result.FirstOrDefault();
         foreach (var item in onboarding.Activities)
         {
           if (item._id == iditem)
@@ -1167,7 +1167,7 @@ namespace Manager.Services.Specific
       {
         Task.Run(() => LogSave(_user._idPerson, "List ended for person"));
         int skip = (count * (page - 1));
-        var detail = serviceOnboarding.GetAll(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceOnboarding.GetAllNewVersion(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceOnboarding.CountNewVersion(p => p.Person._id == idmanager & p.StatusOnBoarding == EnumStatusOnBoarding.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return Task.FromResult(detail.Select(p => new ViewListOnBoarding()
@@ -1189,7 +1189,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var onboarding = serviceOnboarding.GetAll(p => p._id == id).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
 
         var view = new ViewCrudOnboarding()
         {
@@ -1383,7 +1383,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var onboarding = serviceOnboarding.GetAll(p => p._id == view._id).FirstOrDefault();
+        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         onboarding.StatusOnBoarding = view.StatusOnBoarding;
         onboarding.CommentsEnd = view.CommentsEnd;
         onboarding.CommentsPerson = view.CommentsPerson;
@@ -1485,7 +1485,7 @@ namespace Manager.Services.Specific
 
         
         int skip = (count * (page - 1));
-        var detail = serviceOnboarding.GetAll(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceOnboarding.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceOnboarding.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         //Task.Run(() => LogSaves(detail.Person._id, "OnBoarding list for exclud"));
 
@@ -1509,9 +1509,9 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p.Manager._id == idmanager
-        & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAll(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).FirstOrDefault() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p.Manager._id == idmanager
+        & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
+        .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).Result.FirstOrDefault() })
         .ToList();
 
         var detail = new List<OnBoarding>();
@@ -1629,7 +1629,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == onBoarding.Person.Occupation._id).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == onBoarding.Person.Occupation._id).Result.FirstOrDefault();
 
         onBoarding.SkillsCompany = new List<OnBoardingSkills>();
         foreach (var item in occupation.Group.Company.Skills)
@@ -1678,14 +1678,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
+        var user = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
         var log = new ViewLog()
         {
           Description = "OnBoarding",
           Local = local,
           _idPerson = user._id
         };
-        serviceLog.NewLog(log);
+        await serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
@@ -1705,7 +1705,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1746,7 +1746,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1820,7 +1820,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1862,7 +1862,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -1904,7 +1904,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {

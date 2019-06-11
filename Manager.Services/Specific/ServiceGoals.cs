@@ -93,14 +93,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var user = servicePerson.GetAll(p => p._id == iduser).FirstOrDefault();
+        var user = servicePerson.GetAllNewVersion(p => p._id == iduser).Result.FirstOrDefault();
         var log = new ViewLog()
         {
           Description = "Access Monitoring",
           Local = local,
           _idPerson = user._id
         };
-        serviceLog.NewLog(log);
+        await serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
@@ -138,7 +138,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -180,7 +180,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -222,7 +222,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAll(p => p._id == person.Manager._id).FirstOrDefault().User.Name;
+          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -296,16 +296,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var count = serviceGoalsCompany.GetAll(p => p.GoalsCompanyList.Goals._id == id).Count()
-        + serviceGoalsManager.GetAll(p => p.GoalsManagerList.Goals._id == id).Count()
-        + serviceGoalsPerson.GetAll(p => p.GoalsPersonList.Goals._id == id).Count();
+        var count = serviceGoalsCompany.CountNewVersion(p => p.GoalsCompanyList.Goals._id == id).Result
+        + serviceGoalsManager.CountNewVersion(p => p.GoalsManagerList.Goals._id == id).Result
+        + serviceGoalsPerson.CountNewVersion(p => p.GoalsPersonList.Goals._id == id).Result;
 
         if (count > 0)
           return "exists";
 
         Goals item = serviceGoals.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceGoals.Update(item, null);
+        await serviceGoals.Update(item, null);
 
         return "Goal deleted!";
       }
@@ -362,7 +362,7 @@ namespace Manager.Services.Specific
             Name = p.Name
           }).ToList();
 
-        var goals = serviceGoalsCompany.GetAll(p => p.Company._id == id).Select(p => new ViewListGoal()
+        var goals = serviceGoalsCompany.GetAllNewVersion(p => p.Company._id == id).Result.Select(p => new ViewListGoal()
         {
           _id = p.GoalsCompanyList.Goals._id,
           Name = p.GoalsCompanyList.Goals.Name
@@ -396,7 +396,7 @@ namespace Manager.Services.Specific
             Name = p.Name
           }).ToList();
 
-        var goals = serviceGoalsManager.GetAll(p => p.Manager._id == id).Select(p => new ViewListGoal()
+        var goals = serviceGoalsManager.GetAllNewVersion(p => p.Manager._id == id).Result.Select(p => new ViewListGoal()
         {
           _id = p.GoalsManagerList.Goals._id,
           Name = p.GoalsManagerList.Goals.Name
@@ -466,16 +466,16 @@ namespace Manager.Services.Specific
         if (item == null)
           return "Company goal deleted!";
 
-        var count = serviceGoalsCompany.GetAll(p => p.GoalsPeriod._id == id).Count()
-        + serviceGoalsManager.GetAll(p => p.GoalsPeriod._id == id).Count()
-        + serviceGoalsPerson.GetAll(p => p.GoalsPeriod._id == id).Count();
+        var count = serviceGoalsCompany.CountNewVersion(p => p.GoalsPeriod._id == id).Result
+        + serviceGoalsManager.CountNewVersion(p => p.GoalsPeriod._id == id).Result
+        + serviceGoalsPerson.CountNewVersion(p => p.GoalsPeriod._id == id).Result;
 
         if (count > 0)
           return "exists";
 
 
         item.Status = EnumStatus.Disabled;
-        serviceGoalsPeriod.Update(item, null);
+        await serviceGoalsPeriod.Update(item, null);
         return "Period goals deleted!";
       }
       catch (Exception e)
@@ -646,7 +646,7 @@ namespace Manager.Services.Specific
             Weight = goalsCompany.GoalsCompanyList.Weight,
             Achievement = goalsCompany.GoalsCompanyList.Achievement,
             Deadline = goalsCompany.GoalsCompanyList.Deadline,
-            Goals = serviceGoals.GetAll(p => p._id == goalsCompany.GoalsCompanyList.Goals._id).Select(p => new ViewCrudGoal()
+            Goals = serviceGoals.GetAllNewVersion(p => p._id == goalsCompany.GoalsCompanyList.Goals._id).Result.Select(p => new ViewCrudGoal()
             {
               _id = p._id,
               Name = p.Name,
@@ -677,7 +677,7 @@ namespace Manager.Services.Specific
             Weight = p.GoalsCompanyList.Weight,
             Achievement = p.GoalsCompanyList.Achievement,
             Deadline = p.GoalsCompanyList.Deadline,
-            Goals = serviceGoals.GetAll(x => x._id == p.GoalsCompanyList.Goals._id).Select(x => new ViewCrudGoal()
+            Goals = serviceGoals.GetAllNewVersion(x => x._id == p.GoalsCompanyList.Goals._id).Result.Select(x => new ViewCrudGoal()
             {
               _id = x._id,
               Name = x.Name,
@@ -860,7 +860,7 @@ namespace Manager.Services.Specific
         GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == view._id).Result;
         goalsManager.GoalsManagerList.Achievement = view.Achievement;
 
-        serviceGoalsManager.Update(goalsManager, null);
+        await serviceGoalsManager.Update(goalsManager, null);
         return "Company goal altered!";
       }
       catch (Exception e)
@@ -902,7 +902,7 @@ namespace Manager.Services.Specific
             Weight = goalsManager.GoalsManagerList.Weight,
             Achievement = goalsManager.GoalsManagerList.Achievement,
             Deadline = goalsManager.GoalsManagerList.Deadline,
-            Goals = serviceGoals.GetAll(p => p._id == goalsManager.GoalsManagerList.Goals._id).Select(p => new ViewCrudGoal()
+            Goals = serviceGoals.GetAllNewVersion(p => p._id == goalsManager.GoalsManagerList.Goals._id).Result.Select(p => new ViewCrudGoal()
             {
               _id = p._id,
               Name = p.Name,
@@ -939,7 +939,7 @@ namespace Manager.Services.Specific
             Weight = goalsManager.GoalsManagerList.Weight,
             Achievement = goalsManager.GoalsManagerList.Achievement,
             Deadline = goalsManager.GoalsManagerList.Deadline,
-            Goals = serviceGoals.GetAll(p => p._id == goalsManager.GoalsManagerList.Goals._id).Select(p => new ViewCrudGoal()
+            Goals = serviceGoals.GetAllNewVersion(p => p._id == goalsManager.GoalsManagerList.Goals._id).Result.Select(p => new ViewCrudGoal()
             {
               _id = p._id,
               Name = p.Name,
@@ -973,7 +973,7 @@ namespace Manager.Services.Specific
                     Weight = p.GoalsCompanyList.Weight,
                     Achievement = p.GoalsCompanyList.Achievement,
                     Deadline = p.GoalsCompanyList.Deadline,
-                    Goals = serviceGoals.GetAll(x => x._id == p.GoalsCompanyList.Goals._id).Select(x => new ViewCrudGoal()
+                    Goals = serviceGoals.GetAllNewVersion(x => x._id == p.GoalsCompanyList.Goals._id).Result.Select(x => new ViewCrudGoal()
                     {
                       _id = x._id,
                       Name = x.Name,
@@ -994,7 +994,7 @@ namespace Manager.Services.Specific
             Weight = p.GoalsManagerList.Weight,
             Achievement = p.GoalsManagerList.Achievement,
             Deadline = p.GoalsManagerList.Deadline,
-            Goals = serviceGoals.GetAll(x => x._id == p.GoalsManagerList.Goals._id).Select(x => new ViewCrudGoal()
+            Goals = serviceGoals.GetAllNewVersion(x => x._id == p.GoalsManagerList.Goals._id).Result.Select(x => new ViewCrudGoal()
             {
               _id = x._id,
               Name = x.Name,
@@ -1223,7 +1223,7 @@ namespace Manager.Services.Specific
             Weight = goalsPerson.GoalsPersonList.Weight,
             Achievement = goalsPerson.GoalsPersonList.Achievement,
             Deadline = goalsPerson.GoalsPersonList.Deadline,
-            Goals = serviceGoals.GetAll(p => p._id == goalsPerson.GoalsPersonList.Goals._id).Select(p => new ViewCrudGoal()
+            Goals = serviceGoals.GetAllNewVersion(p => p._id == goalsPerson.GoalsPersonList.Goals._id).Result.Select(p => new ViewCrudGoal()
             {
               _id = p._id,
               Name = p.Name,
@@ -1256,7 +1256,7 @@ namespace Manager.Services.Specific
                     Weight = p.GoalsCompanyList.Weight,
                     Achievement = p.GoalsCompanyList.Achievement,
                     Deadline = p.GoalsCompanyList.Deadline,
-                    Goals = p.GoalsCompanyList == null ? null : serviceGoals.GetAll(x => x._id == p.GoalsCompanyList.Goals._id).Select(x => new ViewCrudGoal()
+                    Goals = p.GoalsCompanyList == null ? null : serviceGoals.GetAllNewVersion(x => x._id == p.GoalsCompanyList.Goals._id).Result.Select(x => new ViewCrudGoal()
                     {
                       _id = x._id,
                       Name = x.Name,
@@ -1272,8 +1272,8 @@ namespace Manager.Services.Specific
         List<ViewCrudGoalItem> detailManager = null;
         if (person.Manager != null)
         {
-          detailManager = serviceGoalsManager.GetAll(p => p.GoalsPeriod._id == idGoalsPeriod
-                    && p.Manager._id == person.Manager._id)
+          detailManager = serviceGoalsManager.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
+                    && p.Manager._id == person.Manager._id).Result
                     .Select(p => new ViewCrudGoalItem()
                     {
                       _id = p._id,
@@ -1293,21 +1293,21 @@ namespace Manager.Services.Specific
 
           foreach (var item in detailManager)
           {
-            var goal = serviceGoals.GetAll(p => p._id == item.Goals._id).FirstOrDefault();
+            var goal = serviceGoals.GetAllNewVersion(p => p._id == item.Goals._id).Result.FirstOrDefault();
             item.Goals.Concept = goal.Concept;
             item.Goals.TypeGoals = goal.TypeGoals;
           }
         }
 
-        List<ViewCrudGoalItem> detail = serviceGoalsPerson.GetAll(p => p.GoalsPeriod._id == idGoalsPeriod
-                  && p.Person._id == idPerson).ToList()
+        List<ViewCrudGoalItem> detail = serviceGoalsPerson.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
+                  && p.Person._id == idPerson).Result.ToList()
           .Select(p => new ViewCrudGoalItem()
           {
             _id = p._id,
             Weight = p.GoalsPersonList.Weight,
             Achievement = p.GoalsPersonList.Achievement,
             Deadline = p.GoalsPersonList.Deadline,
-            Goals = p.GoalsPersonList == null ? null : serviceGoals.GetAll(x => x._id == p.GoalsPersonList.Goals._id).Select(x => new ViewCrudGoal()
+            Goals = p.GoalsPersonList == null ? null : serviceGoals.GetAllNewVersion(x => x._id == p.GoalsPersonList.Goals._id).Result.Select(x => new ViewCrudGoal()
             {
               _id = x._id,
               Name = x.Name,
@@ -1384,13 +1384,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var period = serviceGoalsPeriod.GetAll(p => p._id == idperiod)
+        var period = serviceGoalsPeriod.GetAllNewVersion(p => p._id == idperiod).Result
           .Select(p => new ViewListGoalPeriod
           {
             _id = p._id,
             Name = p.Name
           }).FirstOrDefault();
-        var person = servicePerson.GetAll(p => p._id == idperson)
+        var person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result
           .Select(p => new ViewListPerson()
           {
             _id = p._id,
@@ -1400,7 +1400,7 @@ namespace Manager.Services.Specific
             User = new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
           }).FirstOrDefault();
 
-        GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetAll(p => p.Person._id == person._id & p.GoalsPeriod._id == period._id).FirstOrDefault();
+        GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == person._id & p.GoalsPeriod._id == period._id).Result.FirstOrDefault();
 
         if (goalsPerson == null)
         {
@@ -1439,7 +1439,7 @@ namespace Manager.Services.Specific
       try
       {
         GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetNewVersion(p => p.Person._id == view.Person._id & p.GoalsPeriod._id == view.GoalsPeriod._id).Result;
-        var person = servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault();
+        var person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault();
 
         goalsPerson.GoalsPeriod = view.GoalsPeriod;
         goalsPerson.Person = view.Person;
@@ -1526,7 +1526,7 @@ namespace Manager.Services.Specific
             goalsPerson.AchievementEnd = (avgPerson + avgCompany + avgManager) / 3;
         }
 
-        serviceGoalsPersonControl.Update(goalsPerson, null);
+        await serviceGoalsPersonControl.Update(goalsPerson, null);
         return "Person goal altered!";
       }
       catch (Exception e)
@@ -1577,7 +1577,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var period = serviceGoalsPeriod.GetAll(p => p.ChangeCheck == true)
+        var period = serviceGoalsPeriod.GetAllNewVersion(p => p.ChangeCheck == true).Result
           .Select(p => new ViewListGoalPeriod
           {
             _id = p._id,
@@ -1604,8 +1604,8 @@ namespace Manager.Services.Specific
         {
           try
           {
-            var goals = serviceGoalsPersonControl.GetAll(p => p.Person._id == item.Person._id
-          & p.GoalsPeriod._id == item.GoalsPeriod._id).FirstOrDefault();
+            var goals = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == item.Person._id
+          & p.GoalsPeriod._id == item.GoalsPeriod._id).Result.FirstOrDefault();
             if (goals != null)
             {
               item.StatusGoalsPerson = goals.StatusGoalsPerson;
@@ -1630,14 +1630,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var period = serviceGoalsPeriod.GetAll(p => p.ChangeCheck == true)
+        var period = serviceGoalsPeriod.GetAllNewVersion(p => p.ChangeCheck == true).Result
           .Select(p => new ViewListGoalPeriod
           {
             _id = p._id,
             Name = p.Name
           }).FirstOrDefault();
 
-        var detail = servicePerson.GetAll(p => p._id == idperson).FirstOrDefault();
+        var detail = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
 
         ViewListGoalPersonControl view = new ViewListGoalPersonControl()
         {
@@ -1656,8 +1656,8 @@ namespace Manager.Services.Specific
 
         try
         {
-          var goals = serviceGoalsPersonControl.GetAll(p => p.Person._id == view.Person._id
-        & p.GoalsPeriod._id == view.GoalsPeriod._id).FirstOrDefault();
+          var goals = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == view.Person._id
+        & p.GoalsPeriod._id == view.GoalsPeriod._id).Result.FirstOrDefault();
           if (goals != null)
           {
             view.StatusGoalsPerson = goals.StatusGoalsPerson;

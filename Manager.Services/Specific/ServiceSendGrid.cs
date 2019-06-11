@@ -47,7 +47,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return await Send(serviceMail.GetAll(p => p._id == idMail).FirstOrDefault(), apiKeySendGrid);
+        return await Send(serviceMail.GetAllNewVersion(p => p._id == idMail).Result.FirstOrDefault(), apiKeySendGrid);
       }
       catch (Exception)
       {
@@ -89,7 +89,7 @@ namespace Manager.Services.Specific
         {
           mailSend.StatusMail = EnumStatusMail.Error;
           mailSend.MessageError = response.Body.ToString();
-          serviceMail.Update(mailSend, null);
+          await serviceMail.Update(mailSend, null);
           throw new Exception(string.Format("e-mail send error: {0}", response.StatusCode));
         }
 
@@ -98,7 +98,7 @@ namespace Manager.Services.Specific
         foreach (var item in response.Headers.GetValues("X-Message-Id"))
           mailSend.KeySendGrid.Add(item);
 
-        serviceMail.Update(mailSend, null);
+        await serviceMail.Update(mailSend, null);
         return "e-mail send sucess!";
       }
       catch (Exception e)
