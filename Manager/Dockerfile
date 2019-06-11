@@ -21,4 +21,4 @@ RUN dotnet publish "Manager.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Manager.dll"]
+ENTRYPOINT [""]
