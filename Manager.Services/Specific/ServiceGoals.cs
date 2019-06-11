@@ -138,7 +138,7 @@ namespace Manager.Services.Specific
         string managername = "";
         try
         {
-          managername = servicePerson.GetAllNewVersion(p => p._id == person.Manager._id).Result.FirstOrDefault().User.Name;
+          managername = (await servicePerson.GetAllNewVersion(p => p._id == person.Manager._id)).FirstOrDefault().User.Name;
         }
         catch (Exception)
         {
@@ -202,7 +202,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
+        var mailObj = await serviceMail.InsertNewVersion(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -244,7 +244,7 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMail.InsertNewVersion(sendMail).Result;
+        var mailObj = await serviceMail.InsertNewVersion(sendMail);
         var token = SendMail(path, person, mailObj._id.ToString());
       }
       catch (Exception e)
@@ -266,7 +266,7 @@ namespace Manager.Services.Specific
           Concept = view.Concept,
           TypeGoals = view.TypeGoals
         };
-        goal = serviceGoals.InsertNewVersion(goal).Result;
+        goal = await serviceGoals.InsertNewVersion(goal);
         return goal._id;
       }
       catch (Exception e)
@@ -284,7 +284,7 @@ namespace Manager.Services.Specific
         goal.Name = view.Name;
         goal.Concept = view.Concept;
         goal.TypeGoals = view.TypeGoals;
-        serviceGoals.Update(goal, null);
+        await serviceGoals.Update(goal, null);
         return "Goal altered!";
       }
       catch (Exception e)
@@ -318,7 +318,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var goal = serviceGoals.GetNewVersion(p => p._id == id).Result;
+        var goal = await serviceGoals.GetNewVersion(p => p._id == id);
         return new ViewCrudGoal()
         {
           _id = goal._id,
@@ -432,7 +432,7 @@ namespace Manager.Services.Specific
           DateBegin = view.DateBegin,
           DateEnd = view.DateEnd
         };
-        goalsPeriod = serviceGoalsPeriod.InsertNewVersion(goalsPeriod).Result;
+        goalsPeriod = await serviceGoalsPeriod.InsertNewVersion(goalsPeriod);
         return "Period goals added!";
       }
       catch (Exception e)
@@ -450,7 +450,7 @@ namespace Manager.Services.Specific
         goalsPeriod.ChangeCheck = view.ChangeCheck;
         goalsPeriod.DateBegin = view.DateBegin;
         goalsPeriod.DateEnd = view.DateEnd;
-        serviceGoalsPeriod.Update(goalsPeriod, null);
+        await serviceGoalsPeriod.Update(goalsPeriod, null);
         return "Period goals altered!";
       }
       catch (Exception e)
@@ -487,7 +487,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsPeriod goalsPeriod = serviceGoalsPeriod.GetNewVersion(p => p._id == id).Result;
+        GoalsPeriod goalsPeriod = await serviceGoalsPeriod.GetNewVersion(p => p._id == id);
         return new ViewCrudGoalPeriod()
         {
           _id = goalsPeriod._id,
@@ -555,7 +555,7 @@ namespace Manager.Services.Specific
             Target = view.GoalsCompanyList.Target
           }
         };
-        goalsCompany = serviceGoalsCompany.InsertNewVersion(goalsCompany).Result;
+        goalsCompany = await serviceGoalsCompany.InsertNewVersion(goalsCompany);
         return "Company goal added!";
       }
       catch (Exception e)
@@ -587,7 +587,7 @@ namespace Manager.Services.Specific
           Result = view.GoalsCompanyList.Result,
           Target = view.GoalsCompanyList.Target
         };
-        serviceGoalsCompany.Update(goalsCompany, null);
+        await serviceGoalsCompany.Update(goalsCompany, null);
         return "Company goal altered!";
       }
       catch (Exception e)
@@ -603,7 +603,7 @@ namespace Manager.Services.Specific
         GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == view._id).Result;
         goalsCompany.GoalsCompanyList.Achievement = view.Achievement;
 
-        serviceGoalsCompany.Update(goalsCompany, null);
+        await serviceGoalsCompany.Update(goalsCompany, null);
         return "Company goal altered!";
       }
       catch (Exception e)
@@ -621,7 +621,7 @@ namespace Manager.Services.Specific
           return "Company goal deleted!";
 
         goalsCompany.Status = EnumStatus.Disabled;
-        serviceGoalsCompany.Update(goalsCompany, null);
+        await serviceGoalsCompany.Update(goalsCompany, null);
         return "Company goal deleted!";
       }
       catch (Exception e)
@@ -633,7 +633,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsCompany goalsCompany = serviceGoalsCompany.GetNewVersion(p => p._id == id).Result;
+        GoalsCompany goalsCompany = await serviceGoalsCompany.GetNewVersion(p => p._id == id);
         return new ViewCrudGoalCompany()
         {
 
@@ -746,7 +746,7 @@ namespace Manager.Services.Specific
             Target = view.GoalsManagerList.Target
           }
         };
-        goalsManager = serviceGoalsManager.InsertNewVersion(goalsManager).Result;
+        goalsManager = await serviceGoalsManager.InsertNewVersion(goalsManager);
         return "Manager goal added!";
       }
       catch (Exception e)
@@ -779,7 +779,7 @@ namespace Manager.Services.Specific
             Target = view.GoalsManagerList.Target
           }
         };
-        goalsManager = serviceGoalsManager.InsertNewVersion(goalsManager).Result;
+        goalsManager = await serviceGoalsManager.InsertNewVersion(goalsManager);
         return "Manager goal added!";
       }
       catch (Exception e)
@@ -795,7 +795,7 @@ namespace Manager.Services.Specific
         GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == view._id).Result;
         goalsManager.GoalsPeriod = view.GoalsPeriod;
         goalsManager.Manager = view.Manager;
-        Update(view.GoalsManagerList.Goals);
+        await Update(view.GoalsManagerList.Goals);
         var goal = Get(view.GoalsManagerList.Goals._id).Result;
 
         goalsManager.GoalsManagerList = view.GoalsManagerList == null ? null : new GoalsItem()
@@ -811,7 +811,7 @@ namespace Manager.Services.Specific
           Result = view.GoalsManagerList.Result,
           Target = view.GoalsManagerList.Target
         };
-        serviceGoalsManager.Update(goalsManager, null);
+        await serviceGoalsManager.Update(goalsManager, null);
         return "Manager goal altered!";
       }
       catch (Exception e)
@@ -844,7 +844,7 @@ namespace Manager.Services.Specific
           Result = view.GoalsManagerList.Result,
           Target = view.GoalsManagerList.Target
         };
-        serviceGoalsManager.Update(goalsManager, null);
+        await serviceGoalsManager.Update(goalsManager, null);
         return "Manager goal altered!";
       }
       catch (Exception e)
@@ -878,7 +878,7 @@ namespace Manager.Services.Specific
           return "Company goal deleted!";
 
         goalsManager.Status = EnumStatus.Disabled;
-        serviceGoalsManager.Update(goalsManager, null);
+        await serviceGoalsManager.Update(goalsManager, null);
         return "Manager goal deleted!";
       }
       catch (Exception e)
@@ -890,7 +890,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == id).Result;
+        GoalsManager goalsManager = await serviceGoalsManager.GetNewVersion(p => p._id == id);
         return new ViewCrudGoalManager()
         {
           _id = goalsManager._id,
@@ -927,7 +927,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsManager goalsManager = serviceGoalsManager.GetNewVersion(p => p._id == id).Result;
+        GoalsManager goalsManager = await serviceGoalsManager.GetNewVersion(p => p._id == id);
         return new ViewCrudGoalManagerPortal()
         {
           _id = goalsManager._id,
@@ -1068,7 +1068,7 @@ namespace Manager.Services.Specific
             Target = view.GoalsPersonList.Target
           }
         };
-        goalsPerson = serviceGoalsPerson.InsertNewVersion(goalsPerson).Result;
+        goalsPerson = await serviceGoalsPerson.InsertNewVersion(goalsPerson);
         return "Person goal added!";
       }
       catch (Exception e)
@@ -1150,7 +1150,7 @@ namespace Manager.Services.Specific
         GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == view._id).Result;
         goalsPerson.GoalsPeriod = view.GoalsPeriod;
         goalsPerson.Person = view.Person;
-        Update(view.GoalsPersonList.Goals);
+        await Update(view.GoalsPersonList.Goals);
         var goal = Get(view.GoalsPersonList.Goals._id).Result;
 
         goalsPerson.GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
@@ -1166,7 +1166,7 @@ namespace Manager.Services.Specific
           Result = view.GoalsPersonList.Result,
           Target = view.GoalsPersonList.Target
         };
-        serviceGoalsPerson.Update(goalsPerson, null);
+        await serviceGoalsPerson.Update(goalsPerson, null);
         return "Person goal altered!";
       }
       catch (Exception e)
@@ -1182,7 +1182,7 @@ namespace Manager.Services.Specific
         GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == view._id).Result;
         goalsPerson.GoalsPersonList.Achievement = view.Achievement;
 
-        serviceGoalsPerson.Update(goalsPerson, null);
+        await serviceGoalsPerson.Update(goalsPerson, null);
         return "Company goal altered!";
       }
       catch (Exception e)
@@ -1199,7 +1199,7 @@ namespace Manager.Services.Specific
           return "Company goal deleted!";
 
         goalsPerson.Status = EnumStatus.Disabled;
-        serviceGoalsPerson.Update(goalsPerson, null);
+        await serviceGoalsPerson.Update(goalsPerson, null);
         return "Person goal deleted!";
       }
       catch (Exception e)
@@ -1211,7 +1211,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsPerson goalsPerson = serviceGoalsPerson.GetNewVersion(p => p._id == id).Result;
+        GoalsPerson goalsPerson = await serviceGoalsPerson.GetNewVersion(p => p._id == id);
         return new ViewCrudGoalPerson()
         {
           _id = goalsPerson._id,
@@ -1422,7 +1422,7 @@ namespace Manager.Services.Specific
             goalsPerson.StatusGoalsPerson = EnumStatusGoalsPerson.InProgressManager;
           }
 
-          serviceGoalsPersonControl.Update(goalsPerson, null);
+          await serviceGoalsPersonControl.Update(goalsPerson, null);
         }
 
 
@@ -1450,27 +1450,27 @@ namespace Manager.Services.Specific
           if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.Wait)
           {
             goalsPerson.DateEndManager = DateTime.Now;
-            Task.Run(() => Mail(person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", goalsPerson._id)));
+            await Task.Run(() => Mail(person));
+            await Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", goalsPerson._id)));
           }
           else
           {
             if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.End)
             {
               goalsPerson.DateEndEnd = DateTime.Now;
-              Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", goalsPerson._id)));
+              await Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", goalsPerson._id)));
             }
             else if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.WaitManager)
             {
               goalsPerson.DateEndPerson = DateTime.Now;
-              Task.Run(() => MailManager(person));
-              Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", goalsPerson._id)));
+              await Task.Run(() => MailManager(person));
+              await Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", goalsPerson._id)));
 
             }
             else if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.Disapproved)
             {
-              Task.Run(() => MailDisapproval(person));
-              Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", goalsPerson._id)));
+              await Task.Run(() => MailDisapproval(person));
+              await Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", goalsPerson._id)));
             }
 
           }
@@ -1545,7 +1545,7 @@ namespace Manager.Services.Specific
           return "Company goal deleted!";
 
         goalsPerson.Status = EnumStatus.Disabled;
-        serviceGoalsPersonControl.Update(goalsPerson, null);
+        await serviceGoalsPersonControl.Update(goalsPerson, null);
         return "Person goal deleted!";
       }
       catch (Exception e)
@@ -1558,7 +1558,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetNewVersion(p => p._id == id).Result;
+        GoalsPersonControl goalsPerson = await serviceGoalsPersonControl.GetNewVersion(p => p._id == id);
         return new ViewCrudGoalPersonControl()
         {
           _id = goalsPerson._id,
@@ -1612,7 +1612,7 @@ namespace Manager.Services.Specific
               item._id = goals._id;
             }
           }
-          catch (Exception e)
+          catch (Exception)
           {
           }
         }
@@ -1630,7 +1630,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var period = serviceGoalsPeriod.GetAllNewVersion(p => p.ChangeCheck == true).Result
+        var period = (await serviceGoalsPeriod.GetAllNewVersion(p => p.ChangeCheck == true))
           .Select(p => new ViewListGoalPeriod
           {
             _id = p._id,
@@ -1664,7 +1664,7 @@ namespace Manager.Services.Specific
             view._id = goals._id;
           }
         }
-        catch (Exception e)
+        catch (Exception)
         {
 
         }

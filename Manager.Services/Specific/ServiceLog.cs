@@ -61,7 +61,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Local = view.Local
         };
-        log = serviceLog.InsertNewVersion(log).Result;
+        log = await serviceLog.InsertNewVersion(log);
       }
       catch (Exception e)
       {
@@ -80,7 +80,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Local = view.Local
         };
-        log = serviceLog.InsertNewVersion(log).Result;
+        log = await serviceLog.InsertNewVersion(log);
       }
       catch (Exception e)
       {

@@ -465,7 +465,7 @@ namespace Manager.Controllers
     [Route("addgroup")]
     public async Task<string> AddGroup([FromBody]ViewCrudGroup view)
     {
-      service.AddGroup(view);
+      await service.AddGroup(view);
       return "OK";
     }
     /// <summary>
@@ -856,7 +856,7 @@ namespace Manager.Controllers
     [Route("addprocesslevelone")]
     public async Task<string> AddProcessLevelOne([FromBody]ViewCrudProcessLevelOne processLevelOne)
     {
-      service.AddProcessLevelOne(processLevelOne);
+      await service.AddProcessLevelOne(processLevelOne);
       return "ok";
     }
     /// <summary>
@@ -946,7 +946,7 @@ namespace Manager.Controllers
     [Route("addprocessleveltwo")]
     public async Task<string> AddProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo processLevelTwo)
     {
-      service.AddProcessLevelTwo(processLevelTwo);
+      await service.AddProcessLevelTwo(processLevelTwo);
       return "ok";
     }
     /// <summary>
@@ -1010,7 +1010,7 @@ namespace Manager.Controllers
     [Route("addquestions")]
     public async Task<string> AddQuestions([FromBody]ViewCrudQuestions questions)
     {
-      service.AddQuestions(questions);
+      await service.AddQuestions(questions);
       return "ok";
     }
     /// <summary>
@@ -1073,7 +1073,7 @@ namespace Manager.Controllers
     [Route("addschooling")]
     public async Task<string> AddSchooling([FromBody]ViewCrudSchooling schooling)
     {
-      service.AddSchooling(schooling);
+      await service.AddSchooling(schooling);
       return "ok";
     }
     /// <summary>
@@ -1235,7 +1235,7 @@ namespace Manager.Controllers
     [Route("addskills")]
     public async Task<string> AddSkills([FromBody]List<ViewCrudSkill> view)
     {
-      service.AddSkills(view);
+      await service.AddSkills(view);
       return "ok";
     }
     #endregion
@@ -1362,7 +1362,7 @@ namespace Manager.Controllers
     [Route("addtextdefault")]
     public async Task<string> AddTextDefault([FromBody]ViewCrudTextDefault textDefault)
     {
-      service.AddTextDefault(textDefault);
+      await service.AddTextDefault(textDefault);
       return "ok";
     }
     /// <summary>

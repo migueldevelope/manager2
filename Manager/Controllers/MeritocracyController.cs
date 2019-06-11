@@ -53,9 +53,6 @@ namespace Manager.Controllers
     /// <summary>
     /// Listar as meritocracias
     /// </summary>
-    /// <param name="count">Quantidade de registros</param>
-    /// <param name="page">Página para mostrar</param>
-    /// <param name="filter">Filtro para o nome da meritocracia</param>
     /// <returns>Lista de meritocracias cadastradas</returns>
     [Authorize]
     [HttpGet]
@@ -142,7 +139,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Alterar a meritocracia
     /// </summary>
-    /// <param name="view">Objeto de manutenção da meritocracia</param>
+    /// <param name="id">Identificador da meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -156,6 +153,7 @@ namespace Manager.Controllers
     /// Alterar a meritocracia
     /// </summary>
     /// <param name="view">Objeto de manutenção da meritocracia</param>
+    /// <param name="id">Identificador da meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -169,6 +167,7 @@ namespace Manager.Controllers
     /// Alterar a meritocracia
     /// </summary>
     /// <param name="view">Objeto de manutenção da meritocracia</param>
+    /// <param name="id">Identificador da meritocracia</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -199,9 +198,6 @@ namespace Manager.Controllers
     /// <summary>
     /// Listar ponutação de meritocracias
     /// </summary>
-    /// <param name="count">Quantidade de registros</param>
-    /// <param name="page">Página para mostrar</param>
-    /// <param name="filter">Filtro para o nome do ponutação de meritocracia</param>
     /// <returns>Lista de ponutação de meritocracias</returns>
     [Authorize]
     [HttpGet]

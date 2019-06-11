@@ -73,7 +73,7 @@ namespace Manager.Controllers
     [Route("{idperson}/new")]
     public async Task<IActionResult> New([FromBody]ViewManager view, string idperson)
     {
-      service.SetManagerPerson(view, idperson, XmlConnection.ReadConfig().TokenServer);
+      await service.SetManagerPerson(view, idperson, XmlConnection.ReadConfig().TokenServer);
       return Ok("Auto manager added!");
     }
     /// <summary>
@@ -114,7 +114,7 @@ namespace Manager.Controllers
     [Route("{idperson}/delete")]
     public async Task<IActionResult> Delete(string idperson)
     {
-      service.DeleteManager(idperson);
+      await service.DeleteManager(idperson);
       return Ok("Person deleted!");
     }
     #endregion
@@ -130,7 +130,7 @@ namespace Manager.Controllers
     [Route("{idperson}/canceled/{idmanager}")]
     public async Task<IActionResult> PutCanceled(string idperson, string idmanager)
     {
-      service.Canceled(idperson, idmanager);
+      await service.Canceled(idperson, idmanager);
       return Ok("Auto manager canceled!");
     }
 

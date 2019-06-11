@@ -77,7 +77,7 @@ namespace Manager.Services.Specific
           StatusMail = view.StatusMail,
           Subject = view.Subject
         };
-        mailModel = serviceMailModel.InsertNewVersion(mailModel).Result;
+        mailModel = await serviceMailModel.InsertNewVersion(mailModel);
         return "Mail model added!";
       }
       catch (Exception e)
@@ -96,7 +96,7 @@ namespace Manager.Services.Specific
         mailModel.Message = view.Message;
         mailModel.StatusMail = view.StatusMail;
         mailModel.Subject = view.Subject;
-        serviceMailModel.Update(mailModel, null);
+        await serviceMailModel.Update(mailModel, null);
         return "Mail model altered!";
       }
       catch (Exception e)
@@ -110,7 +110,7 @@ namespace Manager.Services.Specific
       {
         MailModel item = serviceMailModel.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceMailModel.Update(item, null);
+        await serviceMailModel.Update(item, null);
         return "Mail model deleted!";
       }
       catch (Exception e)
@@ -122,7 +122,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var mailModel = serviceMailModel.GetNewVersion(p => p._id == id).Result;
+        var mailModel = await  serviceMailModel.GetNewVersion(p => p._id == id);
         return new ViewCrudMailModel()
         {
           _id = mailModel._id,

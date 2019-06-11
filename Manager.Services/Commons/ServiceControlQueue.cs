@@ -97,7 +97,7 @@ namespace Manager.Services.Commons
         _idAccount = view._idAccount
       });
 
-      serviceMaturity.NewMaturityRegister(view);
+      await serviceMaturity.NewMaturityRegister(view);
 
       await queueClient.CompleteAsync(message.SystemProperties.LockToken);
     }

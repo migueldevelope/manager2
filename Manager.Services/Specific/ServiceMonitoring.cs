@@ -225,7 +225,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                serviceMonitoring.Update(monitoring, null);
+                await serviceMonitoring.Update(monitoring, null);
                 return "Delete comment!";
               }
             }
@@ -240,7 +240,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                serviceMonitoring.Update(monitoring, null);
+                await serviceMonitoring.Update(monitoring, null);
                 return "Delete comment!";
               }
             }
@@ -255,7 +255,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                serviceMonitoring.Update(monitoring, null);
+                await serviceMonitoring.Update(monitoring, null);
                 return "Delete comment!";
               }
             }
@@ -482,7 +482,7 @@ namespace Manager.Services.Specific
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
-                  UpdatePlan(plan);
+                  await UpdatePlan(plan);
                   await serviceMonitoring.Update(monitoring, null);
                   return item.Plans;
                 }
@@ -517,7 +517,7 @@ namespace Manager.Services.Specific
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
-                  UpdatePlan(plan);
+                  await UpdatePlan(plan);
                   await serviceMonitoring.Update(monitoring, null);
                   return item.Plans;
                 }
@@ -553,7 +553,7 @@ namespace Manager.Services.Specific
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
-                  UpdatePlan(plan);
+                  await UpdatePlan(plan);
                   await serviceMonitoring.Update(monitoring, null);
                   return item.Plans;
                 }
@@ -932,7 +932,7 @@ namespace Manager.Services.Specific
                 });
 
             monitoring.Activities.Add(monitoringActivitie);
-            serviceMonitoring.Update(monitoring, null);
+            await serviceMonitoring.Update(monitoring, null);
             return "update";
           }
 
@@ -1005,7 +1005,7 @@ namespace Manager.Services.Specific
         monitoringActivitie.TypeAtivitie = EnumTypeAtivitie.Individual;
         monitoringActivitie.Plans = new List<ViewCrudPlan>();
         monitoring.Activities.Add(monitoringActivitie);
-        serviceMonitoring.Update(monitoring, null);
+        await serviceMonitoring.Update(monitoring, null);
         return "add sucess";
       }
       catch (Exception e)
@@ -1031,7 +1031,7 @@ namespace Manager.Services.Specific
 
           monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
           await serviceMonitoring.InsertNewVersion(monitoring);
-          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
+          await Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
         }
         else
         {
@@ -1116,8 +1116,8 @@ namespace Manager.Services.Specific
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.Wait)
           {
             monitoring.DateEndManager = DateTime.Now;
-            Task.Run(() => Mail(monitoring.Person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
+            await Task.Run(() => Mail(monitoring.Person));
+            await Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
           }
         }
         else
@@ -1132,20 +1132,20 @@ namespace Manager.Services.Specific
               await serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.User.Name + " foi elogiado pelo gestor", monitoring.Person);
             }
             monitoring.DateEndEnd = DateTime.Now;
-            Task.Run(() => SendQueue(monitoring._id, monitoring.Person._id, countpraise));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
+            await Task.Run(() => SendQueue(monitoring._id, monitoring.Person._id, countpraise));
+            await Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
-            Task.Run(() => MailManager(monitoring.Person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
+            await Task.Run(() => MailManager(monitoring.Person));
+            await Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
 
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
           {
-            Task.Run(() => MailDisApproval(monitoring.Person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
+            await Task.Run(() => MailDisApproval(monitoring.Person));
+            await Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
           }
         }
         await serviceMonitoring.Update(monitoring, null);
@@ -1249,8 +1249,8 @@ namespace Manager.Services.Specific
                 StatusView = comments.StatusView,
                 UserComment = comments.UserComment
               });
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
-            serviceMonitoring.Update(monitoring, null);
+            await Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            await serviceMonitoring.Update(monitoring, null);
 
             return item.Comments.Select(p => new ViewCrudComment()
             {
@@ -1292,8 +1292,8 @@ namespace Manager.Services.Specific
                UserComment = comments.UserComment
              });
 
-            serviceMonitoring.Update(monitoring, null);
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            await serviceMonitoring.Update(monitoring, null);
+            await Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
 
             return item.Comments.Select(p => new ViewCrudComment()
             {
@@ -1336,8 +1336,8 @@ namespace Manager.Services.Specific
                UserComment = comments.UserComment
              });
 
-            serviceMonitoring.Update(monitoring, null);
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            await serviceMonitoring.Update(monitoring, null);
+            await Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,
@@ -1500,7 +1500,7 @@ namespace Manager.Services.Specific
           _idAccount = _user._idAccount
         };
 
-        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+        await serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
 
 
         foreach(var item in countpraise)
@@ -1513,7 +1513,7 @@ namespace Manager.Services.Specific
             Date = DateTime.Now,
             _idAccount = _user._idAccount
           };
-          serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+          await serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
         }
 
 
@@ -1542,11 +1542,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private string UpdatePlan(Plan plan)
+    private async Task<string> UpdatePlan(Plan plan)
     {
       try
       {
-        servicePlan.Update(plan, null);
+        await servicePlan.Update(plan, null);
         return "Plan altered!";
       }
       catch (Exception e)

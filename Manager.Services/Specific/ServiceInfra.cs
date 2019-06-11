@@ -3552,7 +3552,7 @@ namespace Manager.Services.Specific
 
         serviceProcessLevelTwo.Update(model, null);
 
-        Task.Run(() => UpdateProcessLevelTwoAll(model._id));
+        await Task.Run(() => UpdateProcessLevelTwoAll(model._id));
         //UpdateProcessLevelTwoAll(model._id);
         return "update";
       }

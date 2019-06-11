@@ -59,7 +59,7 @@ namespace Manager.Services.Specific
       {
         Parameter item = serviceParameter.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceParameter.Update(item, null);
+        await serviceParameter.Update(item, null);
         return "Parameter deleted!";
       }
       catch (Exception e)
@@ -82,14 +82,14 @@ namespace Manager.Services.Specific
         if (parameter != null)
           throw new Exception("Parameter Key exists!");
 
-        parameter = serviceParameter.InsertNewVersion(new Parameter()
+        parameter = await serviceParameter.InsertNewVersion(new Parameter()
         {
           _id = view._id,
           Name = view.Name,
           Content = view.Content,
           Key = view.Key,
           Help = view.Help,
-        }).Result;
+        });
         serviceInfra.AddParameterAccounts(parameter);
         return "Parameter added!";
       }
@@ -107,7 +107,7 @@ namespace Manager.Services.Specific
         // Não deve ser alterada a propriedade key
         parameter.Content = view.Content;
         parameter.Help = view.Help;
-        serviceParameter.Update(parameter, null);
+        await serviceParameter.Update(parameter, null);
         return "Parameter update!";
       }
       catch (Exception e)
@@ -119,7 +119,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Parameter item = serviceParameter.GetNewVersion(p => p._id == id).Result;
+        Parameter item = await serviceParameter.GetNewVersion(p => p._id == id);
         return new ViewCrudParameter()
         {
           _id = item._id,
@@ -138,7 +138,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Parameter item = serviceParameter.GetNewVersion(p => p.Key == key).Result;
+        Parameter item = await serviceParameter.GetNewVersion(p => p.Key == key);
         return new ViewCrudParameter()
         {
           _id = item._id,

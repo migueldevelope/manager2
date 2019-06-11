@@ -56,7 +56,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Description = view.Description          
         };
-        dictionarySystem = serviceDictionarySystem.InsertNewVersion(dictionarySystem).Result;
+        dictionarySystem = await serviceDictionarySystem.InsertNewVersion(dictionarySystem);
         return "Dictionary system added!";
       }
       catch (Exception e)
@@ -76,7 +76,7 @@ namespace Manager.Services.Specific
             Name = view.Name,
             Description = view.Description
           };
-          dictionarySystem = serviceDictionarySystem.InsertNewVersion(dictionarySystem).Result;
+          dictionarySystem = await serviceDictionarySystem.InsertNewVersion(dictionarySystem);
         }
         return "List dictionary system added!";
       }
@@ -91,7 +91,7 @@ namespace Manager.Services.Specific
       {
         DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p._id == view._id).Result;
         dictionarySystem.Description = view.Description;
-        serviceDictionarySystem.Update(dictionarySystem, null);
+        await serviceDictionarySystem.Update(dictionarySystem, null);
         return "Dictionary system altered!";
       }
       catch (Exception e)
@@ -105,7 +105,7 @@ namespace Manager.Services.Specific
       {
         DictionarySystem item = serviceDictionarySystem.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceDictionarySystem.Update(item, null);
+        await serviceDictionarySystem.Update(item, null);
         return "Dictionary system deleted!";
       }
       catch (Exception e)
@@ -117,7 +117,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p._id == id).Result;
+        DictionarySystem dictionarySystem = await serviceDictionarySystem.GetNewVersion(p => p._id == id);
         return new ViewCrudDictionarySystem()
         {
           _id = dictionarySystem._id,
@@ -134,7 +134,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p.Name == name).Result;
+        DictionarySystem dictionarySystem = await serviceDictionarySystem.GetNewVersion(p => p.Name == name);
         return new ViewListDictionarySystem()
         {
           _id = dictionarySystem._id,

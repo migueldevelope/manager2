@@ -51,7 +51,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        configurationNotificationsService.InsertNewVersion(view);
+        await configurationNotificationsService.InsertNewVersion(view);
         return "add success";
       }
       catch (Exception e)
@@ -64,7 +64,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        configurationNotificationsService.Update(view, null);
+        await configurationNotificationsService.Update(view, null);
         return "update";
       }
       catch (Exception e)
@@ -92,7 +92,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return configurationNotificationsService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+        return (await configurationNotificationsService.GetAllNewVersion(p => p._id == id)).FirstOrDefault();
       }
       catch (Exception e)
       {
@@ -103,7 +103,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return configurationNotificationsService.GetAllNewVersion(p => p.Name.ToLower() == name.ToLower()).Result.FirstOrDefault();
+        return (await configurationNotificationsService.GetAllNewVersion(p => p.Name.ToLower() == name.ToLower())).FirstOrDefault();
       }
       catch (Exception e)
       {

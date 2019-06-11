@@ -38,16 +38,7 @@ namespace Manager.Core.Interfaces
     Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany, string idperson,  ref long total, int count = 10, int page = 1, string filter = "");
 
     #endregion
-
-    #region old
-    MandatoryTraining GetMandatoryTrainingOld(string idcourse);
-    List<MandatoryTraining> ListOld( ref long total, int count = 10, int page = 1, string filter = "");
-    string NewTrainingPlanOld(TrainingPlan view);
-    string UpdateTrainingPlanOld(TrainingPlan view);
-    TrainingPlan GetTrainingPlanOld(string id);
-    List<TrainingPlan> ListTrainingPlanOld(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
-    List<TrainingPlan> ListTrainingPlanOld(string idcompany, string idperson,  ref long total, int count = 10, int page = 1, string filter = "");
-    #endregion
+    
 
 
   }

@@ -115,7 +115,7 @@ namespace Manager.Services.Specific
           _idAccount = _user._idAccount
         };
 
-        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+        await serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
 
 
       }
@@ -504,9 +504,9 @@ namespace Manager.Services.Specific
 
               if (certification.StatusCertification == EnumStatusCertification.Approved)
               {
-                Task.Run(() => MailApproved(certification.Person, certification.CertificationItem.Name));
-                Task.Run(() => MailApprovedPerson(certification.Person, certification.CertificationItem.Name));
-                Task.Run(() => SendQueue(certification._id, certification.Person._id));
+                await Task.Run(() => MailApproved(certification.Person, certification.CertificationItem.Name));
+                await Task.Run(() => MailApprovedPerson(certification.Person, certification.CertificationItem.Name));
+                await Task.Run(() => SendQueue(certification._id, certification.Person._id));
               }
             }
 
@@ -805,7 +805,7 @@ namespace Manager.Services.Specific
         certification = LoadMap(certification);
 
         certification = serviceCertification.InsertNewVersion(certification).Result;
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", certification._id)));
+        await Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", certification._id)));
         return new ViewCrudCertification()
         {
           _id = certification._id,
@@ -910,9 +910,9 @@ namespace Manager.Services.Specific
             item.StatusCertificationPerson = view.StatusCertificationPerson;
             item.Comments = view.Comments;
           }
-          serviceCertificationPerson.Update(item, null);
-          serviceCertification.Update(certification, null);
-          Task.Run(() => LogSave(_user._idPerson, string.Format("Certification approved | {0}", certification._id)));
+          await serviceCertificationPerson.Update(item, null);
+          await serviceCertification.Update(certification, null);
+          await Task.Run(() => LogSave(_user._idPerson, string.Format("Certification approved | {0}", certification._id)));
           return "Certification approved!";
         }
         return "Certification not found!";
@@ -952,7 +952,7 @@ namespace Manager.Services.Specific
           {
             try
             {
-              Task.Run(() => Mail(certification.Person, new BaseFields() { Name = item.Person.User.Name, Mail = item.Person.User.Mail }));
+              await Task.Run(() => Mail(certification.Person, new BaseFields() { Name = item.Person.User.Name, Mail = item.Person.User.Mail }));
             }
             catch (Exception)
             {
@@ -962,7 +962,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        serviceCertification.Update(certification, null);
+        await serviceCertification.Update(certification, null);
         return "Certification altered!";
       }
       catch (Exception e)

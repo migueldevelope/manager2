@@ -48,14 +48,14 @@ namespace Manager.Test.Test.Complete
 
 
     [Fact]
-    public void TestCompany()
+    public async void TestCompany()
     {
       try
       {
         foreach (var item in serviceCompany.GetAllNewVersion().ToList())
         {
           item.Skills = new List<Skill>();
-          serviceCompany.Update(item, null);
+          var i = serviceCompany.Update(item, null);
         }
 
         var comp = new Company()
@@ -65,7 +65,7 @@ namespace Manager.Test.Test.Complete
           Status = EnumStatus.Enabled
         };
 
-        serviceCompany.InsertNewVersion(comp);
+        await serviceCompany.InsertNewVersion(comp);
 
 
       }
@@ -240,7 +240,7 @@ namespace Manager.Test.Test.Complete
         //item.Name = "test sub novo 2";
         //serviceInfra.UpdateProcessLevelTwo(item);
 
-        serviceInfra.GetCSVCompareGroup("5b6c4f54d9090156f08775ab", "");
+        var i = serviceInfra.GetCSVCompareGroup("5b6c4f54d9090156f08775ab", "");
       }
       catch (Exception e)
       {

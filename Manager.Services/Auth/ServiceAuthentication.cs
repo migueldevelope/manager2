@@ -52,11 +52,11 @@ namespace Manager.Services.Auth
 
     #region Authentication
 
-    public string AlterContract(string idperson)
+    public async Task<string> AlterContract(string idperson)
     {
       try
       {
-        var person = servicePerson.GetAllFreeNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        var person = (await servicePerson.GetAllFreeNewVersion(p => p._id == idperson)).FirstOrDefault();
         var account = serviceAccount.GetAllFreeNewVersion(p => p._id == person._idAccount).Result.FirstOrDefault();
 
         // Token
@@ -85,7 +85,7 @@ namespace Manager.Services.Auth
     }
 
 
-    public ViewPerson Authentication(ViewAuthentication userLogin)
+    public async Task<ViewPerson> Authentication(ViewAuthentication userLogin)
     {
       try
       {
@@ -134,7 +134,7 @@ namespace Manager.Services.Auth
         }
         else
         {
-          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
+          user = await serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password));
           if (user == null)
             throw new Exception("User/Password invalid!");
         }
@@ -361,11 +361,11 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    private void LogSave(string idPerson)
+    private async Task LogSave(string idPerson)
     {
       try
       {
-        var log = serviceLog.NewLog(new ViewLog()
+        await serviceLog.NewLog(new ViewLog()
         {
           Description = "Login",
           Local = "Authentication",

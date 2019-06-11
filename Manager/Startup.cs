@@ -203,7 +203,7 @@ namespace Manager
       app.UseMvc();
       app.UseSignalR(routes =>
       {
-        routes.MapHub<MessagesHub>("/messagesHub");
+        //routes.MapHub<MessagesHub>("/messagesHub");
       });
       // Ativando middlewares para uso do Swagger
       app.UseSwagger();

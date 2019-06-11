@@ -53,7 +53,7 @@ namespace Manager.Services.Specific
       try
       {
         if (view.Type == EnumTypeFlow.Manager)
-          return Manager(view).Result;
+          return await Manager(view);
         return null;
       }
       catch (Exception e)
@@ -75,7 +75,7 @@ namespace Manager.Services.Specific
           Requestor = manager,
           Sequence = 1
         };
-        serviceWorkflow.InsertNewVersion(workflow);
+        await serviceWorkflow.InsertNewVersion(workflow);
         result.Add(workflow);
         return result;
       }
@@ -92,7 +92,7 @@ namespace Manager.Services.Specific
         workflow.StatusWorkflow = EnumWorkflow.Approved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
-        serviceWorkflow.Update(workflow, null);
+        await serviceWorkflow.Update(workflow, null);
         return workflow;
       }
       catch (Exception e)

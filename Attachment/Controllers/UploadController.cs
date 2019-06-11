@@ -98,7 +98,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -118,7 +118,7 @@ namespace EdeskIntegration.Controllers
         catch (Exception)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw;
         }
         listAttachments.Add(attachment);
@@ -147,7 +147,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -162,13 +162,13 @@ namespace EdeskIntegration.Controllers
           }
           CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
           blockBlob.Properties.ContentType = file.ContentType;
-          blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
           return blockBlob.Uri.ToString();
         }
         catch (Exception)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw;
         }
         //listAttachments.Add(attachment);
@@ -199,7 +199,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -220,11 +220,11 @@ namespace EdeskIntegration.Controllers
         catch (Exception)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw;
         }
 
-        companyService.SetLogo(idcompany, url);
+        await companyService.SetLogo(idcompany, url);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -255,7 +255,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -276,11 +276,11 @@ namespace EdeskIntegration.Controllers
         catch (Exception e)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw e;
         }
 
-        eventService.SetAttachment(idevent, url, file.FileName, attachment._id);
+        await eventService.SetAttachment(idevent, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -308,7 +308,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -329,11 +329,11 @@ namespace EdeskIntegration.Controllers
         catch (Exception e)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw e;
         }
 
-        eventService.SetAttachmentHistoric(ideventhistoric, url, file.FileName, attachment._id);
+        await eventService.SetAttachmentHistoric(ideventhistoric, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -361,7 +361,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -382,11 +382,11 @@ namespace EdeskIntegration.Controllers
         catch (Exception e)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw e;
         }
 
-        planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
+        await planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -415,7 +415,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -436,11 +436,11 @@ namespace EdeskIntegration.Controllers
         catch (Exception e)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw e;
         }
 
-        certificationService.SetAttachment(idcertification, url, file.FileName, attachment._id);
+        await certificationService.SetAttachment(idcertification, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -527,7 +527,7 @@ namespace EdeskIntegration.Controllers
       CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}.{1}", attachment._id.ToString(), attachment.Extension));
       await blockBlob.DeleteIfExistsAsync();
       attachment.Status = EnumStatus.Disabled;
-      service.Update(attachment, null);
+      await service.Update(attachment, null);
       return Ok("Attachment deleted!");
     }
   }

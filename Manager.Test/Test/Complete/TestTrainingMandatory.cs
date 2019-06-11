@@ -37,7 +37,7 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        long total = 0;
+        //long total = 0;
         var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("Analisa")).Result.FirstOrDefault();
 
         

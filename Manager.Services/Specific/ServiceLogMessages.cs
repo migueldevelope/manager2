@@ -110,7 +110,7 @@ namespace Manager.Services.Specific
           Message = view.Message,
           Register = DateTime.Now
         };
-        logMessages = serviceLogMessages.InsertNewVersion(logMessages).Result;
+        logMessages = await serviceLogMessages.InsertNewVersion(logMessages);
         return "Messagery added!";
       }
       catch (Exception e)
@@ -122,7 +122,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        LogMessages logMessage = serviceLogMessages.GetNewVersion(p => p.Subject == view.Subject && p.Person._id == view.Person._id).Result;
+        LogMessages logMessage = await serviceLogMessages.GetNewVersion(p => p.Subject == view.Subject && p.Person._id == view.Person._id);
 
         // Se já existir a notificação de admissão, não enviar mais
         if (logMessage != null)
@@ -156,7 +156,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var logMessages = serviceLogMessages.GetNewVersion(p => p._id == id).Result;
+        var logMessages = await serviceLogMessages.GetNewVersion(p => p._id == id);
         return new ViewCrudLogMessages()
         {
           _id = logMessages._id,
@@ -188,7 +188,7 @@ namespace Manager.Services.Specific
         logMessages.Subject = view.Subject;
         logMessages.StatusMessage = view.StatusMessage;
         logMessages.Message = view.Message;
-        serviceLogMessages.Update(logMessages, null);
+        await serviceLogMessages.Update(logMessages, null);
         return "Messagery altered!";
       }
       catch (Exception e)
@@ -224,7 +224,7 @@ namespace Manager.Services.Specific
           StatusMessage = EnumStatusMessage.New,
           Person = person
         };
-        serviceLogMessages.InsertNewVersion(model);
+        await serviceLogMessages.InsertNewVersion(model);
       }
       catch (Exception e)
       {

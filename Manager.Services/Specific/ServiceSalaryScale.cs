@@ -80,7 +80,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale item = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
+        SalaryScale item = (await serviceSalaryScale.GetNewVersion(p => p._id == id));
         return new ViewCrudSalaryScale()
         {
           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
@@ -103,7 +103,7 @@ namespace Manager.Services.Specific
           Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result,
           Grades = new List<Grade>()
         };
-        salaryScale = serviceSalaryScale.InsertNewVersion(salaryScale).Result;
+        salaryScale = await serviceSalaryScale.InsertNewVersion(salaryScale);
         return "Salary scale added!";
       }
       catch (Exception e)
@@ -117,7 +117,7 @@ namespace Manager.Services.Specific
       {
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view._id).Result;
         salaryScale.Name = view.Name;
-        serviceSalaryScale.Update(salaryScale, null);
+        await serviceSalaryScale.Update(salaryScale, null);
         return "Salary scale altered!";
       }
       catch (Exception e)
@@ -131,7 +131,7 @@ namespace Manager.Services.Specific
       {
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
         salaryScale.Status = EnumStatus.Disabled;
-        serviceSalaryScale.Update(salaryScale, null);
+        await serviceSalaryScale.Update(salaryScale, null);
         return "Salary scale deleted";
       }
       catch (Exception e)
@@ -207,7 +207,7 @@ namespace Manager.Services.Specific
         }
         salaryScale.Grades.Add(grade);
         // TODO: problema de persistência para array vazio
-        serviceSalaryScale.Update(salaryScale, null);
+        await serviceSalaryScale.Update(salaryScale, null);
         return "Grade added!";
       }
       catch (Exception e)
@@ -232,7 +232,7 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale, null);
+        await serviceSalaryScale.Update(salaryScale, null);
         return "Grade altered!";
       }
       catch (Exception e)
@@ -255,7 +255,7 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale, null);
+        await serviceSalaryScale.Update(salaryScale, null);
         return "Grade altered!";
       }
       catch (Exception e)
@@ -274,7 +274,7 @@ namespace Manager.Services.Specific
           if (grade._id != id)
             list.Add(grade);
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale, null);
+        await serviceSalaryScale.Update(salaryScale, null);
         return "Grade deleted!";
       }
       catch (Exception e)
@@ -286,7 +286,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+        SalaryScale salaryScale = await serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale);
         if (salaryScale == null)
           throw new Exception("Salary scale not available!");
         var result = new ViewCrudGrade();
@@ -334,7 +334,7 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale, null);
+        await serviceSalaryScale.Update(salaryScale, null);
         return "Step altered!";
       }
       catch (Exception e)

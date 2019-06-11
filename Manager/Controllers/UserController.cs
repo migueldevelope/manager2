@@ -75,7 +75,7 @@ namespace Manager.Controllers
     [Route("checktermofservice/{iduser}")]
     public async Task<string> CheckTermOfService(string iduser)
     {
-      service.CheckTermOfService(iduser);
+      await service.CheckTermOfService(iduser);
       return "ok";
     }
 

@@ -63,7 +63,7 @@ namespace Manager.Services.Specific
       {
         TermsOfService item = serviceTermsOfService.GetFreeNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceTermsOfService.UpdateAccount(item, null);
+        await serviceTermsOfService.UpdateAccount(item, null);
         return "TermsOfService deleted!";
       }
       catch (Exception e)
@@ -76,12 +76,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        TermsOfService termsofservice = serviceTermsOfService.InsertFreeNewVersion(new TermsOfService()
+        TermsOfService termsofservice = (await serviceTermsOfService.InsertFreeNewVersion(new TermsOfService()
         {
           _id = view._id,
           Text = view.Text,
           Date = view.Date
-        }).Result;
+        }));
         return "TermsOfService added!";
       }
       catch (Exception e)
@@ -97,7 +97,7 @@ namespace Manager.Services.Specific
 
         termsofservice.Text = view.Text;
         termsofservice.Date = view.Date;
-        serviceTermsOfService.UpdateAccount(termsofservice, null);
+        await serviceTermsOfService.UpdateAccount(termsofservice, null);
 
         return "TermsOfService altered!";
       }
@@ -110,7 +110,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        TermsOfService termsofservice = serviceTermsOfService.GetFreeNewVersion(p => p._id == id).Result;
+        TermsOfService termsofservice = (await serviceTermsOfService.GetFreeNewVersion(p => p._id == id));
         return new ViewCrudTermsOfService()
         {
           _id = termsofservice._id,
@@ -135,7 +135,7 @@ namespace Manager.Services.Specific
         if (account.InfoClient == "")
           return null;
 
-        var date = serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.Max(p => p.Date);
+        var date = (await serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled)).Max(p => p.Date);
         TermsOfService termsofservice = serviceTermsOfService.GetAllFreeNewVersion(p => p.Date == date).Result.FirstOrDefault();
         return new ViewListTermsOfService()
         {
@@ -145,7 +145,7 @@ namespace Manager.Services.Specific
         };
 
       }
-      catch (Exception e)
+      catch (Exception)
       {
         return null;
       }

@@ -41,7 +41,7 @@ namespace EvaluationMail.Controllers
       try
       {
         Config conn = XmlConnection.ReadConfig();
-        return Ok(service.Send(idmail, conn.SendGridKey));
+        return Ok(await service.Send(idmail, conn.SendGridKey));
       }
       catch (Exception e)
       {

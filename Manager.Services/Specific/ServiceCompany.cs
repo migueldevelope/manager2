@@ -61,7 +61,7 @@ namespace Manager.Services.Specific
       {
         Company item = serviceCompany.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceCompany.Update(item, null);
+        await serviceCompany.Update(item, null);
         return "Company deleted!";
       }
       catch (Exception e)
@@ -75,7 +75,7 @@ namespace Manager.Services.Specific
       {
         Company company = serviceCompany.GetNewVersion(p => p._id == idCompany).Result;
         company.Logo = url;
-        serviceCompany.Update(company, null);
+        await serviceCompany.Update(company, null);
       }
       catch (Exception e)
       {
@@ -86,7 +86,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceCompany.GetNewVersion(p => p._id == idCompany).Result.Logo;
+        return (await serviceCompany.GetNewVersion(p => p._id == idCompany)).Logo;
       }
       catch (Exception)
       {
@@ -97,12 +97,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Company company = serviceCompany.InsertNewVersion(new Company()
+        Company company = await serviceCompany.InsertNewVersion(new Company()
           {
             _id = view._id,
             Name = view.Name,
             Logo = view.Logo
-          }).Result;
+          });
         return "Company added!";
       }
       catch (Exception e)
@@ -120,11 +120,11 @@ namespace Manager.Services.Specific
           propag = true;
         company.Name = view.Name;
         company.Logo = view.Logo;
-        serviceCompany.Update(company, null);
+        await serviceCompany.Update(company, null);
 
         if (propag)
         {
-          Task.Run(PropagInfoCompany);
+          //await Task.Run(PropagInfoCompany);
         }
 
         return "Company altered!";
@@ -138,7 +138,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Company company = serviceCompany.GetNewVersion(p => p._id == id).Result;
+        Company company = await serviceCompany.GetNewVersion(p => p._id == id);
         return new ViewCrudCompany()
         {
           _id = company._id,
@@ -155,7 +155,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Company company = serviceCompany.GetNewVersion(p => p.Name.ToLower() == name.ToLower()).Result;
+        Company company = await serviceCompany.GetNewVersion(p => p.Name.ToLower() == name.ToLower());
         return new ViewCrudCompany()
         {
           _id = company._id,
@@ -186,10 +186,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async Task PropagInfoCompany()
-    {
 
-    }
+    //private async Task PropagInfoCompany()
+    //{
+
+    //}
 
     #endregion
 
@@ -200,7 +201,7 @@ namespace Manager.Services.Specific
       {
         Establishment item = serviceEstablishment.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceEstablishment.Update(item, null);
+        await serviceEstablishment.Update(item, null);
         return "Establishment deleted!";
       }
       catch (Exception e)
@@ -212,7 +213,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Company company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
+        Company company = await serviceCompany.GetNewVersion(p => p._id == view.Company._id);
         Establishment establishment = serviceEstablishment.InsertNewVersion(
           new Establishment()
           {
@@ -235,7 +236,7 @@ namespace Manager.Services.Specific
         Establishment establishment = serviceEstablishment.GetNewVersion(p => p._id == view._id).Result;
         establishment.Name = view.Name;
         establishment.Company = company;
-        serviceEstablishment.Update(establishment, null);
+        await serviceEstablishment.Update(establishment, null);
         return "Establishment altered!";
       }
       catch (Exception e)
@@ -247,7 +248,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Establishment establishment = serviceEstablishment.GetNewVersion(p => p._id == id).Result;
+        Establishment establishment = await serviceEstablishment.GetNewVersion(p => p._id == id);
         return new ViewCrudEstablishment()
         {
           _id = establishment._id,
@@ -264,7 +265,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Establishment establishment = serviceEstablishment.GetNewVersion(p => p.Name.ToLower() == name.ToLower() && p.Company._id == idCompany).Result;
+        Establishment establishment = await serviceEstablishment.GetNewVersion(p => p.Name.ToLower() == name.ToLower() && p.Company._id == idCompany);
         return new ViewCrudEstablishment()
         {
           _id = establishment._id,

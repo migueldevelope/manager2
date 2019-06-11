@@ -242,7 +242,7 @@ namespace Manager.Services.Specific
         {
           client.BaseAddress = new Uri(link);
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
+          var resultMail = await client.PostAsync("mail/sendmail/" + idmail, null);
           return token;
         }
       }
@@ -310,18 +310,18 @@ namespace Manager.Services.Specific
       {
         var auto = serviceAutoManager.GetAllNewVersion(p => p.Person._id == idPerson & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).Result.FirstOrDefault();
         auto.StatusAutoManager = EnumStatusAutoManager.Canceled;
-        serviceAutoManager.Update(auto, null);
+        await serviceAutoManager.Update(auto, null);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewAutoManager>> ListApproved(string idManager)
+    public Task<List<ViewAutoManager>> ListApproved(string idManager)
     {
       try
       {
-        return (from auto in serviceAutoManager.GetAllNewVersion()
+        return Task.FromResult((from auto in serviceAutoManager.GetAllNewVersion()
                 select auto
                     ).ToList()
                     .Where(p => p.Workflow.Where(t => t.StatusWorkflow == EnumWorkflow.Open
@@ -333,7 +333,7 @@ namespace Manager.Services.Specific
                       NameRequestor = auto.Requestor.User.Name,
                       IdPerson = auto.Person._id.ToString(),
                       NamePerson = auto.Person.User.Name
-                    }).ToList();
+                    }).ToList());
       }
       catch (Exception e)
       {

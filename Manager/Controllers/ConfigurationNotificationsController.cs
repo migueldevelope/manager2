@@ -11,18 +11,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// 
+  /// </summary>
   [Produces("application/json")]
   [Route("configurationnotifications")]
   public class ConfigurationNotificationsController : DefaultController
   {
     private readonly IServiceConfigurationNotifications service;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_service"></param>
+    /// <param name="contextAccessor"></param>
     public ConfigurationNotificationsController(IServiceConfigurationNotifications _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("new")]
     public async Task<string> Post([FromBody]ConfigurationNotification view)
@@ -30,6 +43,13 @@ namespace Manager.Controllers
       return await service.New(view);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("list")]
@@ -41,6 +61,11 @@ namespace Manager.Controllers
       return await result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("get")]
@@ -49,6 +74,11 @@ namespace Manager.Controllers
       return await service.Get(id);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("update")]
@@ -57,6 +87,11 @@ namespace Manager.Controllers
       return await service.Update(view);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("delete/{id}")]

@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// 
+  /// </summary>
   [Produces("application/json")]
   [Route("mandatorytraining")]
   public class MandatoryTrainingController : DefaultController
@@ -24,6 +27,11 @@ namespace Manager.Controllers
 
 
     #region constructor
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_service"></param>
+    /// <param name="contextAccessor"></param>
     public MandatoryTrainingController(IServiceMandatoryTraining _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
@@ -33,6 +41,12 @@ namespace Manager.Controllers
 
 
     #region mandatorytraining
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addcompany")]
@@ -41,6 +55,11 @@ namespace Manager.Controllers
       return await service.AddCompany(view);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addoccuaption")]
@@ -49,6 +68,11 @@ namespace Manager.Controllers
       return await service.AddOccupation(view);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("addperson")]
@@ -57,7 +81,14 @@ namespace Manager.Controllers
       return await service.AddPerson(view);
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idcourse"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listcompany/{idcourse}")]
@@ -69,6 +100,15 @@ namespace Manager.Controllers
       return await result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idcourse"></param>
+    /// <param name="idcompany"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listoccupation/{idcourse}/{idcompany}")]
@@ -80,6 +120,16 @@ namespace Manager.Controllers
       return await result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="type"></param>
+    /// <param name="origin"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("trainingplanlist/{idmanager}/{type}/{origin}")]
@@ -91,6 +141,15 @@ namespace Manager.Controllers
       return await result;
     }
 
+    /// <summary>
+    /// Lista pessoas
+    /// </summary>
+    /// <param name="idcourse">Identificador curso</param>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="count">contador</param>
+    /// <param name="page">pagina</param>
+    /// <param name="filter">filtro</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listperson/{idcourse}/{idcompany}")]
@@ -103,6 +162,14 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// lista treinamento obrigatório 
+    /// </summary>
+    /// <param name="idperson">identificaodor pessoa</param>
+    /// <param name="count">contador</param>
+    /// <param name="page">pagina</param>
+    /// <param name="filter">filtro</param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listtrainingplanperson/{idperson}")]
@@ -114,7 +181,12 @@ namespace Manager.Controllers
       return await result;
     }
 
-
+    /// <summary>
+    /// remove empresa
+    /// </summary>
+    /// <param name="idcourse"></param>
+    /// <param name="idcompany"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removecompany/{idcourse}/{idcompany}")]
@@ -123,6 +195,12 @@ namespace Manager.Controllers
       return await service.RemoveCompany(idcourse, idcompany);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idcourse"></param>
+    /// <param name="idoccupation"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removeoccupation/{idcourse}/{idoccupation}")]
@@ -131,6 +209,12 @@ namespace Manager.Controllers
       return await service.RemoveOccupation(idcourse, idoccupation);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idcourse"></param>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removeperson/{idcourse}/{idperson}")]
@@ -139,6 +223,11 @@ namespace Manager.Controllers
       return await service.RemovePerson(idcourse, idperson);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removetrainingplan/{id}")]

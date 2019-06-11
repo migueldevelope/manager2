@@ -36,6 +36,14 @@ namespace Manager.Controllers
     #endregion
 
     #region Plan
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmonitoring"></param>
+    /// <param name="idplan"></param>
+    /// <param name="sourceplan"></param>
+    /// <param name="idstructplan"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removestructplan/{idmonitoring}/{idplan}/{sourceplan}/{idstructplan}")]
@@ -43,6 +51,12 @@ namespace Manager.Controllers
     {
       return await service.RemoveStructPlan(idmonitoring, idplan, sourceplan, idstructplan);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete]
     [Route("removeplanactivity/{id}")]

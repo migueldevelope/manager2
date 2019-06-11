@@ -40,7 +40,7 @@ namespace Manager.Controllers
     {
       try
       {
-        return Ok(service.Authentication(userLogin));
+        return Ok(await service.Authentication(userLogin));
         //test
         //return Ok(new { id = "1" });
       }
@@ -50,19 +50,17 @@ namespace Manager.Controllers
       }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("altercontract/{idperson}")]
     public async Task<string> AlterContract(string idperson)
     {
-      try
-      {
-        return service.AlterContract(idperson);
-      }
-      catch (Exception e)
-      {
-        return "";
-      }
+      return await service.AlterContract(idperson);
     }
 
     #endregion

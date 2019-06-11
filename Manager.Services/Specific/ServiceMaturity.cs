@@ -50,7 +50,7 @@ namespace Manager.Services.Specific
 
         maturity.Value = byte.Parse(Math.Round(decimal.Parse(((maturity.LevelMonitoring + maturity.LevelCertification + maturity.LevelPlan + maturity.LevelPraise) / 4).ToString()), 0).ToString());
 
-        serviceMaturity.Update(maturity, null);
+        await serviceMaturity.Update(maturity, null);
       }
       catch (Exception e)
       {
@@ -101,7 +101,7 @@ namespace Manager.Services.Specific
       {
         Maturity item = serviceMaturity.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceMaturity.Update(item, null);
+        await serviceMaturity.Update(item, null);
         return "Maturity deleted!";
       }
       catch (Exception e)
@@ -114,7 +114,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Maturity maturity = serviceMaturity.InsertNewVersion(new Maturity()
+        Maturity maturity = await serviceMaturity.InsertNewVersion(new Maturity()
         {
           _id = view._id,
           _idPerson = view._idPerson,
@@ -126,7 +126,7 @@ namespace Manager.Services.Specific
           LevelPlan = view.LevelPlan,
           LevelPraise = view.LevelPraise,
           LevelCertification = view.LevelCertification
-        }).Result;
+        });
         return "Maturity added!";
       }
       catch (Exception e)
@@ -150,7 +150,7 @@ namespace Manager.Services.Specific
         maturity.LevelPraise = view.LevelPraise;
         maturity.LevelCertification = view.LevelCertification;
 
-        serviceMaturity.Update(maturity, null);
+        await serviceMaturity.Update(maturity, null);
 
 
         return "Maturity altered!";
@@ -164,7 +164,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Maturity maturity = serviceMaturity.GetNewVersion(p => p._id == id).Result;
+        Maturity maturity = await serviceMaturity.GetNewVersion(p => p._id == id);
         return new ViewCrudMaturity()
         {
           _id = maturity._id,
@@ -222,7 +222,7 @@ namespace Manager.Services.Specific
       {
         MaturityRegister item = serviceMaturityRegister.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceMaturityRegister.Update(item, null);
+        await serviceMaturityRegister.Update(item, null);
         return "MaturityRegister deleted!";
       }
       catch (Exception e)
@@ -252,7 +252,7 @@ namespace Manager.Services.Specific
 
         var maturity = serviceMaturity.GetAllNewVersion(p => p._idPerson == view._idPerson).Result.FirstOrDefault();
         if (maturity == null)
-          New(new ViewCrudMaturity()
+          await New(new ViewCrudMaturity()
           {
             _idPerson = view._idPerson
           });
@@ -283,9 +283,9 @@ namespace Manager.Services.Specific
           maturity.CountPraise = praises;
         }
 
-        serviceMaturity.Update(maturity, null);
+        await serviceMaturity.Update(maturity, null);
 
-        MathMaturity(maturity);
+        await MathMaturity(maturity);
 
         return "MaturityRegister added!";
       }
@@ -303,7 +303,7 @@ namespace Manager.Services.Specific
         maturityregister.TypeMaturity = view.TypeMaturity;
         maturityregister.Date = view.Date;
         maturityregister._idRegister = view._idRegister;
-        serviceMaturityRegister.Update(maturityregister, null);
+        await serviceMaturityRegister.Update(maturityregister, null);
         return "MaturityRegister altered!";
       }
       catch (Exception e)
@@ -315,7 +315,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        MaturityRegister maturityregister = serviceMaturityRegister.GetNewVersion(p => p._id == id).Result;
+        MaturityRegister maturityregister = await serviceMaturityRegister.GetNewVersion(p => p._id == id);
         return new ViewCrudMaturityRegister()
         {
           _id = maturityregister._id,

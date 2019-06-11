@@ -43,7 +43,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        MailMessage message = serviceMailMessage.GetNewVersion(p => p._id == id).Result;
+        MailMessage message = await serviceMailMessage.GetNewVersion(p => p._id == id);
         return message == null ? null :
           new ViewMailMessage
           {

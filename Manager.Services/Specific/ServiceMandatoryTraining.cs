@@ -159,7 +159,7 @@ namespace Manager.Services.Specific
 
         if (listPlans.Where(p => p.Deadline == proxDate).Count() == 0)
         {
-          serviceTrainingPlan.InsertNewVersion(new TrainingPlan()
+          await serviceTrainingPlan.InsertNewVersion(new TrainingPlan()
           {
             Person = person.GetViewListManager(),
             Course = new ViewListCourse() { _id = course._id, Name = course.Name },
@@ -321,7 +321,7 @@ namespace Manager.Services.Specific
         if (view.Include == null)
           view.Include = DateTime.Now;
 
-        serviceTrainingPlan.InsertNewVersion(view);
+        await serviceTrainingPlan.InsertNewVersion(view);
 
         return "add success";
       }
@@ -335,7 +335,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceTrainingPlan.Update(view, null);
+        await serviceTrainingPlan.Update(view, null);
         return "update";
       }
       catch (Exception e)
@@ -1228,7 +1228,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewTrainingPlanOld(TrainingPlan view)
+    public async Task<string> NewTrainingPlanOld(TrainingPlan view)
     {
       try
       {
@@ -1236,7 +1236,7 @@ namespace Manager.Services.Specific
         if (view.Include == null)
           view.Include = DateTime.Now;
 
-        serviceTrainingPlan.InsertNewVersion(view);
+        await serviceTrainingPlan.InsertNewVersion(view);
 
         return "add success";
       }
@@ -1246,18 +1246,6 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateTrainingPlanOld(TrainingPlan view)
-    {
-      try
-      {
-        serviceTrainingPlan.Update(view, null);
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
 
     public TrainingPlan GetTrainingPlanOld(string id)
     {

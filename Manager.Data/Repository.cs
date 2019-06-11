@@ -133,7 +133,7 @@ namespace Manager.Data
       }
     }
 
-    public void UpdateAccount(T entity, FilterDefinition<T> filter)
+    public async Task UpdateAccount(T entity, FilterDefinition<T> filter)
     {
       try
       {
@@ -142,7 +142,7 @@ namespace Manager.Data
 
           filter = Builders<T>.Filter.Where(p => p._id == entity._id);
         }
-        _collection.ReplaceOneAsync(filter, entity);
+        await _collection.ReplaceOneAsync(filter, entity);
       }
       catch
       {
@@ -189,7 +189,7 @@ namespace Manager.Data
       }
     }
 
-    public virtual IQueryable<T> GetAllNewVersion()
+    public IQueryable<T> GetAllNewVersion()
     {
       try
       {

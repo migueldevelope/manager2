@@ -11,18 +11,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// 
+  /// </summary>
   [Produces("application/json")]
   [Route("indicators")]
   public class IndicatorsController : DefaultController
   {
     private readonly IServiceIndicators service;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_service"></param>
+    /// <param name="contextAccessor"></param>
     public IndicatorsController(IServiceIndicators _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
       service.SetUser(contextAccessor);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getnotes/{idperson}")]
@@ -31,6 +44,11 @@ namespace Manager.Controllers
       return await service.GetNotes(idperson);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getnotesperson/{idperson}")]
@@ -39,6 +57,11 @@ namespace Manager.Controllers
       return await service.GetNotesPerson(idperson);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listtagscloud/{idmanager}")]
@@ -47,6 +70,11 @@ namespace Manager.Controllers
       return await service.ListTagsCloud(idmanager);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listtagscloudperson/{idperson}")]
@@ -66,6 +94,10 @@ namespace Manager.Controllers
     //  return await  result;
     //}
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("exportonboarding")]
@@ -74,6 +106,10 @@ namespace Manager.Controllers
       return await service.ExportStatusOnboarding();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("exportstatuscertification")]
@@ -82,6 +118,11 @@ namespace Manager.Controllers
       return await service.ExportStatusCertification();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("exportstatuscertification/{idperson}")]
@@ -90,6 +131,10 @@ namespace Manager.Controllers
       return await service.ExportStatusCertification(idperson);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("exportmonitoring")]
@@ -98,6 +143,11 @@ namespace Manager.Controllers
       return await service.ExportStatusMonitoring();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("exportonboarding/{idperson}")]
     public async Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson)
@@ -105,6 +155,11 @@ namespace Manager.Controllers
       return await service.ExportStatusOnboarding(idperson);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("exportmonitoring/{idperson}")]
@@ -113,6 +168,10 @@ namespace Manager.Controllers
       return await service.ExportStatusMonitoring(idperson);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("exportcheckpoint")]
@@ -121,6 +180,11 @@ namespace Manager.Controllers
       return await service.ExportStatusCheckpoint();
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("exportplan")]
@@ -129,6 +193,10 @@ namespace Manager.Controllers
       return await service.ExportStatusPlan();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("chartonboarding")]
@@ -137,6 +205,10 @@ namespace Manager.Controllers
       return await service.ChartOnboarding();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("chartmonitoring")]
@@ -145,6 +217,10 @@ namespace Manager.Controllers
       return await service.ChartMonitoring();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("chartcheckpoint")]
@@ -153,6 +229,10 @@ namespace Manager.Controllers
       return await service.ChartCheckpoint();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("chartplan")]
@@ -161,6 +241,10 @@ namespace Manager.Controllers
       return await service.ChartPlan();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("chartmonitoringrealized")]
@@ -169,6 +253,10 @@ namespace Manager.Controllers
       return await service.ChartMonitoringRealized();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("chartcheckpointrealized")]
@@ -177,6 +265,10 @@ namespace Manager.Controllers
       return await service.ChartCheckpointRealized();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("chartplanrealized")]
@@ -185,6 +277,10 @@ namespace Manager.Controllers
       return await service.ChartPlanRealized();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("chartonboardingrealized")]
@@ -193,6 +289,11 @@ namespace Manager.Controllers
       return await service.ChartOnboardingRealized();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listtagscloudcompany/{idmanager}")]
@@ -202,6 +303,11 @@ namespace Manager.Controllers
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("listtagscloudcompanyperson/{idperson}")]

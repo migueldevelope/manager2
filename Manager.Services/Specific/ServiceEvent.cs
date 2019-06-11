@@ -88,7 +88,7 @@ namespace Manager.Services.Specific
 
 
         var events = serviceEvent.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
-        Task.Run(() => LogSave(_user._idPerson, "Remove Days Event: " + idevent + " | day: " + iddays));
+        await Task.Run(() => LogSave(_user._idPerson, "Remove Days Event: " + idevent + " | day: " + iddays));
 
         foreach (var item in events.Days)
         {
@@ -97,7 +97,7 @@ namespace Manager.Services.Specific
             events.Days.Remove(item);
             UpdateAddDaysParticipant(ref events, item);
             MathWorkload(ref events);
-            serviceEvent.Update(events, null);
+            await serviceEvent.Update(events, null);
             return "remove success";
           }
         }
@@ -119,7 +119,7 @@ namespace Manager.Services.Specific
           if (item._id == idperson)
           {
             events.Participants.Remove(item);
-            serviceEvent.Update(events, null);
+            await serviceEvent.Update(events, null);
             return "remove success";
           }
 
@@ -143,7 +143,7 @@ namespace Manager.Services.Specific
           if (item._id == id)
           {
             events.Instructors.Remove(item);
-            serviceEvent.Update(events, null);
+            await serviceEvent.Update(events, null);
             return "remove success";
           }
 
@@ -164,7 +164,7 @@ namespace Manager.Services.Specific
 
 
         var item = serviceEvent.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        Task.Run(() => LogSave(_user._idPerson, "Delete Event " + id));
+        await Task.Run(() => LogSave(_user._idPerson, "Delete Event " + id));
         item.Status = EnumStatus.Disabled;
         await serviceEvent.Update(item, null);
         return "deleted";
@@ -183,7 +183,7 @@ namespace Manager.Services.Specific
 
 
         var item = serviceEventHistoric.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        Task.Run(() => LogSave(_user._idPerson, "Delete Event Historic " + id));
+        await Task.Run(() => LogSave(_user._idPerson, "Delete Event Historic " + id));
         var obs = "Realized Event: " + item.Name + ", ID_Historic: " + item._id;
         var trainingplan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == item.Person._id
         & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
@@ -231,7 +231,7 @@ namespace Manager.Services.Specific
       {
         var item = serviceCourseESocial.GetAuthentication(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-        serviceCourseESocial.UpdateAccount(item, null);
+        await serviceCourseESocial.UpdateAccount(item, null);
         return "deleted";
       }
       catch (Exception e)
@@ -326,7 +326,7 @@ namespace Manager.Services.Specific
             else
               participant.ApprovedGrade = true;
 
-            serviceEvent.Update(events, null);
+            await serviceEvent.Update(events, null);
           }
         }
 
@@ -388,7 +388,7 @@ namespace Manager.Services.Specific
       {
 
         var events = serviceEvent.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        Task.Run(() => LogSave(_user._idPerson, "Get Event by ID"));
+        await Task.Run(() => LogSave(_user._idPerson, "Get Event by ID"));
 
         return new ViewCrudEvent()
         {
@@ -481,7 +481,7 @@ namespace Manager.Services.Specific
       {
 
         var eventhistoric = serviceEventHistoric.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
+        await Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
 
         return new ViewCrudEventHistoric()
         {
@@ -875,7 +875,7 @@ namespace Manager.Services.Specific
           Workload = view.Workload
         };
 
-        serviceEvent.InsertNewVersion(events);
+        await serviceEvent.InsertNewVersion(events);
 
         return new ViewListEvent()
         {
@@ -960,7 +960,7 @@ namespace Manager.Services.Specific
         };
 
         events.Instructors.Add(instructor);
-        serviceEvent.Update(events, null);
+        await serviceEvent.Update(events, null);
         return "add success";
       }
       catch (Exception e)
@@ -1005,7 +1005,7 @@ namespace Manager.Services.Specific
           participant.ApprovedGrade = true;
 
         events.Participants.Add(participant);
-        serviceEvent.Update(events, null);
+        await serviceEvent.Update(events, null);
         return "add success";
       }
       catch (Exception e)
@@ -1170,7 +1170,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceCourseESocial.InsertFreeNewVersion(new CourseESocial()
+        await serviceCourseESocial.InsertFreeNewVersion(new CourseESocial()
         {
           Name = view.Name,
           Code = view.Code,
@@ -1220,7 +1220,7 @@ namespace Manager.Services.Specific
           view.DateEnd = DateTime.Now;
           GenerateHistoric(events);
         }
-        serviceEvent.Update(events, null);
+        await serviceEvent.Update(events, null);
         return new ViewListEvent()
         {
           _id = view._id,
@@ -1278,7 +1278,7 @@ namespace Manager.Services.Specific
           view.Workload = view.Workload * 60;
 
         view.Entity = AddEntity(view.Entity.Name);
-        serviceEventHistoric.Update(view, null);
+        await serviceEventHistoric.Update(view, null);
         return "update";
       }
       catch (Exception e)
@@ -1309,7 +1309,7 @@ namespace Manager.Services.Specific
 
 
 
-        serviceCourse.Update(course, null);
+        await serviceCourse.Update(course, null);
 
         VerifyEquivalent(course);
         return "update";
@@ -1328,7 +1328,7 @@ namespace Manager.Services.Specific
         esocial.Name = view.Name;
         esocial.Code = view.Code;
 
-        serviceCourseESocial.UpdateAccount(esocial, null);
+        await serviceCourseESocial.UpdateAccount(esocial, null);
         return "update";
       }
       catch (Exception e)

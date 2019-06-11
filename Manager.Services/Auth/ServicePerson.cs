@@ -84,7 +84,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Company
-    public Task<List<ViewListCompany>> ListCompany(ref  long total,  string filter, int count,int page)
+    public Task<List<ViewListCompany>> ListCompany(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
       var detail = serviceCompany.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.Skip(skip).Take(count).ToList();
@@ -95,7 +95,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Manager
-    public Task<List<ViewListPerson>> ListManager(ref  long total,  string filter, int count,int page)
+    public Task<List<ViewListPerson>> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
       var detail = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
@@ -109,14 +109,14 @@ namespace Manager.Services.Auth
            User = new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
          }).ToList();
       //var detail = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-       total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+      total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
       return Task.FromResult(detail);
     }
     #endregion
 
     #region Occupation
-    public Task<List<ViewListOccupation>> ListOccupation(ref  long total,  string filter, int count,int page)
+    public Task<List<ViewListOccupation>> ListOccupation(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
       var detail = serviceOccupation.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name)
@@ -320,7 +320,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public Task<List<ViewListPersonTeam>> ListTeam(ref long total, string idPerson, string filter, int count,int page)
+    public Task<List<ViewListPersonTeam>> ListTeam(ref long total, string idPerson, string filter, int count, int page)
     {
       try
       {
@@ -397,7 +397,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        Person person = servicePerson.GetNewVersion(p => p._id == id).Result;
+        Person person = (await servicePerson.GetNewVersion(p => p._id == id));
         return new ViewCrudPerson()
         {
           _id = person._id,
@@ -511,7 +511,7 @@ namespace Manager.Services.Auth
           Phone = view.User.Phone,
           PhoneFixed = view.User.PhoneFixed,
           PhotoUrl = view.User.PhotoUrl,
-          Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result,
+          Schooling = view.User.Schooling == null ? null : (await serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id)),
           Sex = view.User.Sex,
           ChangePassword = EnumChangePassword.AccessFirst,
           UserAdmin = false
@@ -671,7 +671,7 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.User.PhotoUrl;
         user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result;
         user.Sex = view.User.Sex;
-        serviceUser.Update(user, null);
+        await serviceUser.Update(user, null);
 
         BaseFields manager = null;
         if (view.Manager != null)
@@ -708,7 +708,7 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user;
         person.SalaryScales = salaryScale;
-        servicePerson.Update(person, null);
+        await servicePerson.Update(person, null);
         return "Person altered!";
       }
       catch (Exception e)
@@ -721,7 +721,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
+        var occupation = (await serviceOccupation.GetAllNewVersion(p => p._id == idoccupation)).FirstOrDefault();
         if (occupation.SalaryScales != null)
           return occupation.SalaryScales
             .Select(p => new SalaryScalePerson
@@ -741,10 +741,10 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser
-        != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
-        & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
-         .Result.Select(item => new ViewListPerson()
+        return (await servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser
+       != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
+       & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+         ).Select(item => new ViewListPerson()
          {
            _id = item._id,
            Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
@@ -761,13 +761,13 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Private
-    private void DefaultTypeRegisterPerson()
+    private async void DefaultTypeRegisterPerson()
     {
       try
       {
         var parameter = serviceParameter.GetAllNewVersion(p => p.Key == "typeregisterperson").Result.FirstOrDefault();
         if (parameter == null)
-          serviceParameter.InsertNewVersion(new Parameter()
+          await serviceParameter.InsertNewVersion(new Parameter()
           {
             Name = "Tipo do cadastro da pessoa",
             Key = "typeregisterperson",

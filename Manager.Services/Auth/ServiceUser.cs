@@ -206,7 +206,7 @@ namespace Manager.Services.Auth
         if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
           user.ChangePassword = EnumChangePassword.No;
 
-        user = serviceUser.InsertNewVersion(user).Result;
+        user = (await serviceUser.InsertNewVersion(user));
         return new ViewCrudUser()
         {
           _id = user._id,
@@ -297,7 +297,7 @@ namespace Manager.Services.Auth
       {
         var person = serviceUser.GetAllNewVersion(p => p._id == idUser).Result.SingleOrDefault();
         person.PhotoUrl = url;
-        serviceUser.Update(person, null);
+        await serviceUser.Update(person, null);
       }
       catch (Exception e)
       {
@@ -319,7 +319,7 @@ namespace Manager.Services.Auth
         string newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
         user.Password = newPass;
         user.ChangePassword = EnumChangePassword.No;
-        serviceUser.Update(user, null);
+        await serviceUser.Update(user, null);
         return "Password changed!";
       }
       catch (Exception e)
@@ -345,7 +345,7 @@ namespace Manager.Services.Auth
         user.Password = newPass;
         user.ChangePassword = EnumChangePassword.No;
         user.ForeignForgotPassword = string.Empty;
-        serviceUser.Update(user, null);
+        await serviceUser.Update(user, null);
         return "Password changed!";
       }
       catch (Exception e)
@@ -392,7 +392,7 @@ namespace Manager.Services.Auth
         sendMail = serviceMail.InsertNewVersion(sendMail).Result;
         user.ChangePassword = EnumChangePassword.ForgotPassword;
         user.ForeignForgotPassword = guid;
-        serviceUser.Update(user, null);
+        await serviceUser.Update(user, null);
         await serviceMail.Send(sendMail, pathSendGrid);
         return "Email sent successfully!";
       }
