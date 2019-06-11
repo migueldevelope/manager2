@@ -45,19 +45,36 @@ namespace Tools
     {
       try
       {
-        return new Config()
-        {
-          BlobKey = Environment.GetEnvironmentVariable("ANALISA_BLOBKEY", EnvironmentVariableTarget.Machine),
-          DataBase = Environment.GetEnvironmentVariable("ANALISA_DATABASE", EnvironmentVariableTarget.Machine),
-          DataBaseLog = Environment.GetEnvironmentVariable("ANALISA_DATABASELOG", EnvironmentVariableTarget.Machine),
-          SendGridKey = Environment.GetEnvironmentVariable("ANALISA_SENDGRIDKEY", EnvironmentVariableTarget.Machine),
-          Server = Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Machine),
-          ServerLog = Environment.GetEnvironmentVariable("ANALISA_SERVERLOG", EnvironmentVariableTarget.Machine),
-          SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.Machine),
-          TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Machine),
-          QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.Machine),
-          ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Machine),
-        };
+        if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Machine) != null)
+          return new Config()
+          {
+            BlobKey = Environment.GetEnvironmentVariable("ANALISA_BLOBKEY", EnvironmentVariableTarget.Machine),
+            DataBase = Environment.GetEnvironmentVariable("ANALISA_DATABASE", EnvironmentVariableTarget.Machine),
+            DataBaseLog = Environment.GetEnvironmentVariable("ANALISA_DATABASELOG", EnvironmentVariableTarget.Machine),
+            SendGridKey = Environment.GetEnvironmentVariable("ANALISA_SENDGRIDKEY", EnvironmentVariableTarget.Machine),
+            Server = Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Machine),
+            ServerLog = Environment.GetEnvironmentVariable("ANALISA_SERVERLOG", EnvironmentVariableTarget.Machine),
+            SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.Machine),
+            TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Machine),
+            QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.Machine),
+            ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Machine),
+          };
+        else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Process) == null)
+          return new Config()
+          {
+            BlobKey = Environment.GetEnvironmentVariable("ANALISA_BLOBKEY", EnvironmentVariableTarget.Process),
+            DataBase = Environment.GetEnvironmentVariable("ANALISA_DATABASE", EnvironmentVariableTarget.Process),
+            DataBaseLog = Environment.GetEnvironmentVariable("ANALISA_DATABASELOG", EnvironmentVariableTarget.Process),
+            SendGridKey = Environment.GetEnvironmentVariable("ANALISA_SENDGRIDKEY", EnvironmentVariableTarget.Process),
+            Server = Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Process),
+            ServerLog = Environment.GetEnvironmentVariable("ANALISA_SERVERLOG", EnvironmentVariableTarget.Process),
+            SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.Process),
+            TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Process),
+            QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.Process),
+            ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Process),
+          };
+        else
+          return ReadConfig();
 
       }
       catch (Exception)
