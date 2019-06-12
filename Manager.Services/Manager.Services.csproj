@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Auth\ServicePerson.cs~RF1bc65a.TMP" />
     <None Remove="Specific\ServiceNotification.cs~RF243ca8e3.TMP" />
     <None Remove="Specific\ServicePlan.cs~RF23f4828d.TMP" />
     <None Remove="Specific\ServicePlan.cs~RF76bcba.TMP" />
