@@ -97,21 +97,30 @@ namespace Manager.Services.Auth
     #region Manager
     public List<ViewListPerson> ListManager(ref long total, string filter, int count, int page)
     {
-      int skip = (count * (page - 1));
-      var detail = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
-        .Result.OrderBy(p => p.User.Name)
-         .Select(item => new ViewListPerson()
-         {
-           _id = item._id,
-           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
-           Establishment = new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
-           Registration = item.Registration,
-           User = new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
-         }).ToList();
-      //var detail = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-      total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+      try
+      {
 
-      return detail;
+        int skip = (count * (page - 1));
+        var detail = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+          .Result.OrderBy(p => p.User.Name)
+           .Select(item => new ViewListPerson()
+           {
+             _id = item._id,
+             Company = item.Company == null ? null : new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+             Establishment = item.Establishment == null ? null : new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
+             Registration = item.Registration,
+             User = item.User == null ? null : new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
+           }).ToList();
+        //var detail = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail;
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
     #endregion
 
@@ -143,7 +152,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Person
-    public  string AddPersonUser(ViewCrudPersonUser view)
+    public string AddPersonUser(ViewCrudPersonUser view)
     {
       try
       {
@@ -225,7 +234,7 @@ namespace Manager.Services.Auth
         //person.User = user;
         person.User = serviceUser.InsertNewVersion(user).Result;
 
-         servicePerson.InsertNewVersion(person).Wait();
+        servicePerson.InsertNewVersion(person).Wait();
 
         return "ok";
       }
@@ -235,7 +244,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public  string UpdatePersonUser(ViewCrudPersonUser view)
+    public string UpdatePersonUser(ViewCrudPersonUser view)
     {
       try
       {
@@ -288,8 +297,8 @@ namespace Manager.Services.Auth
         person.Registration = view.Person.Registration;
         person.SalaryScales = salaryScale;
         person.User = user;
-         servicePerson.Update(person, null);
-         serviceUser.Update(user, null).Wait();
+        servicePerson.Update(person, null);
+        serviceUser.Update(user, null).Wait();
         return "Person altered!";
       }
       catch (Exception e)
@@ -299,7 +308,7 @@ namespace Manager.Services.Auth
     }
 
 
-    public  List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation)
+    public List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation)
     {
       try
       {
@@ -393,11 +402,11 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public  ViewCrudPerson Get(string id)
+    public ViewCrudPerson Get(string id)
     {
       try
       {
-        Person person =  servicePerson.GetNewVersion(p => p._id == id).Result;
+        Person person = servicePerson.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudPerson()
         {
           _id = person._id,
@@ -491,7 +500,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public  ViewCrudPerson New(ViewCrudPerson view)
+    public ViewCrudPerson New(ViewCrudPerson view)
     {
       try
       {
@@ -511,7 +520,7 @@ namespace Manager.Services.Auth
           Phone = view.User.Phone,
           PhoneFixed = view.User.PhoneFixed,
           PhotoUrl = view.User.PhotoUrl,
-          Schooling = view.User.Schooling == null ? null :  serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result,
+          Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result,
           Sex = view.User.Sex,
           ChangePassword = EnumChangePassword.AccessFirst,
           UserAdmin = false
@@ -653,7 +662,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public  string Update(ViewCrudPerson view)
+    public string Update(ViewCrudPerson view)
     {
       try
       {
@@ -671,7 +680,7 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.User.PhotoUrl;
         user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result;
         user.Sex = view.User.Sex;
-         serviceUser.Update(user, null).Wait();
+        serviceUser.Update(user, null).Wait();
 
         BaseFields manager = null;
         if (view.Manager != null)
@@ -708,7 +717,7 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user;
         person.SalaryScales = salaryScale;
-         servicePerson.Update(person, null).Wait();
+        servicePerson.Update(person, null).Wait();
         return "Person altered!";
       }
       catch (Exception e)
@@ -717,7 +726,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public  List<SalaryScalePerson> ListSalaryScaleOld(string idoccupation)
+    public List<SalaryScalePerson> ListSalaryScaleOld(string idoccupation)
     {
       try
       {
@@ -737,7 +746,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public  List<ViewListPerson> GetPersons(string idcompany, string filter)
+    public List<ViewListPerson> GetPersons(string idcompany, string filter)
     {
       try
       {
@@ -767,7 +776,7 @@ namespace Manager.Services.Auth
       {
         var parameter = serviceParameter.GetAllNewVersion(p => p.Key == "typeregisterperson").Result.FirstOrDefault();
         if (parameter == null)
-           serviceParameter.InsertNewVersion(new Parameter()
+          serviceParameter.InsertNewVersion(new Parameter()
           {
             Name = "Tipo do cadastro da pessoa",
             Key = "typeregisterperson",

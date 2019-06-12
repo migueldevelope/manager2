@@ -15,10 +15,10 @@ COPY . .
 WORKDIR "/src/Manager"
 RUN dotnet build "Manager.csproj" -c Release -o /app
 
-FROM build AS publish
+FROM microsoft/aspnetcore
 RUN dotnet publish "Manager.csproj" -c Release -o /app
 
-FROM base AS final
+FROM microsoft/aspnetcore
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Manager.dll"]
