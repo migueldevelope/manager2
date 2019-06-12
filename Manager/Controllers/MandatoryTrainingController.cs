@@ -52,7 +52,7 @@ namespace Manager.Controllers
     [Route("addcompany")]
     public async Task<string> AddCompany([FromBody] ViewCrudCompanyMandatory view)
     {
-      return await service.AddCompany(view);
+      return service.AddCompany(view);
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ namespace Manager.Controllers
     [Route("addoccuaption")]
     public async Task<string> AddOccuaption([FromBody]ViewCrudOccupationMandatory view)
     {
-      return await service.AddOccupation(view);
+      return service.AddOccupation(view);
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ namespace Manager.Controllers
     [Route("addperson")]
     public async Task<string> AddPerson([FromBody]ViewCrudPersonMandatory view)
     {
-      return await service.AddPerson(view);
+      return service.AddPerson(view);
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListCompany(idcourse, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListOccupation(idcourse, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
     /// <summary>
@@ -138,7 +138,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListTrainingPlanPersonList(idmanager, type, origin, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
     /// <summary>
@@ -158,7 +158,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListPerson(idcourse, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
 
@@ -178,7 +178,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListTrainingPlanPerson(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ namespace Manager.Controllers
     [Route("removecompany/{idcourse}/{idcompany}")]
     public async Task<string> RemoveCompany(string idcourse, string idcompany)
     {
-      return await service.RemoveCompany(idcourse, idcompany);
+      return service.RemoveCompany(idcourse, idcompany);
     }
 
     /// <summary>
@@ -206,7 +206,7 @@ namespace Manager.Controllers
     [Route("removeoccupation/{idcourse}/{idoccupation}")]
     public async Task<string> RemoveOccupation(string idcourse, string idoccupation)
     {
-      return await service.RemoveOccupation(idcourse, idoccupation);
+      return service.RemoveOccupation(idcourse, idoccupation);
     }
 
     /// <summary>
@@ -220,7 +220,7 @@ namespace Manager.Controllers
     [Route("removeperson/{idcourse}/{idperson}")]
     public async Task<string> RemovePerson(string idcourse, string idperson)
     {
-      return await service.RemovePerson(idcourse, idperson);
+      return service.RemovePerson(idcourse, idperson);
     }
 
     /// <summary>
@@ -233,7 +233,7 @@ namespace Manager.Controllers
     [Route("removetrainingplan/{id}")]
     public async Task<string> RemoveTrainingPlan(string id)
     {
-      return await service.RemoveTrainingPlan(id);
+      return service.RemoveTrainingPlan(id);
     }
 
 
@@ -247,7 +247,7 @@ namespace Manager.Controllers
     [Route("updatetrainingplan")]
     public async Task<string> UpdateTrainingPlan([FromBody]ViewCrudTrainingPlan view)
     {
-      return await service.UpdateTrainingPlan(view);
+      return service.UpdateTrainingPlan(view);
     }
 
     /// <summary>
@@ -266,7 +266,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListTrainingPlan(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
     /// <summary>
@@ -286,7 +286,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListTrainingPlan(idcompany, iduser, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
     /// <summary>
@@ -299,7 +299,7 @@ namespace Manager.Controllers
     [Route("newtrainingplan")]
     public async Task<string> NewTrainingPlan([FromBody]ViewCrudTrainingPlan view)
     {
-      return await service.NewTrainingPlan(view);
+      return service.NewTrainingPlan(view);
     }
 
     /// <summary>
@@ -312,7 +312,7 @@ namespace Manager.Controllers
     [Route("gettrainingplan/{id}")]
     public async Task<ViewCrudTrainingPlan> GetTrainingPlan(string id)
     {
-      return await service.GetTrainingPlan(id);
+      return service.GetTrainingPlan(id);
     }
 
     /// <summary>
@@ -325,7 +325,7 @@ namespace Manager.Controllers
     [Route("getmandatorytraining/{idcourse}")]
     public async Task<ViewCrudMandatoryTraining> GetMandatoryTraining(string idcourse)
     {
-      return await service.GetMandatoryTraining(idcourse);
+      return service.GetMandatoryTraining(idcourse);
     }
 
     /// <summary>
@@ -343,7 +343,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
     #endregion

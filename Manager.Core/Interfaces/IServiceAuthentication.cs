@@ -6,7 +6,7 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceAuthentication
   {
-    Task<ViewPerson> Authentication(ViewAuthentication userLogin);
-    Task<string> AlterContract(string idperson);
+     ViewPerson Authentication(ViewAuthentication userLogin);
+     string AlterContract(string idperson);
   }
 }

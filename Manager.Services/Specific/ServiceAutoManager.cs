@@ -69,7 +69,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region AutoManager
-    public Task<List<ViewAutoManagerPerson>> List(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewAutoManagerPerson> List(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -79,20 +79,20 @@ namespace Manager.Services.Specific
 
         if (filter != string.Empty)
         {
-          var listEnd = ListEnd(idManager, filter).Result;
+          var listEnd = ListEnd(idManager, filter);
           total = listEnd.Count();
 
-          return Task.FromResult(listEnd.Skip(skip).Take(count).ToList());
+          return listEnd.Skip(skip).Take(count).ToList();
         }
         else
-          return Task.FromResult(ListOpen(idManager, ref total, count, page, filter).Result);
+          return ListOpen(idManager, ref total, count, page, filter);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public Task<List<ViewAutoManagerPerson>> ListOpen(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewAutoManagerPerson> ListOpen(string idManager, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -109,19 +109,19 @@ namespace Manager.Services.Specific
         if (list.Count > 0)
           list.FirstOrDefault().total = total;
 
-        return Task.FromResult(list);
+        return list;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<List<ViewAutoManagerPerson>> ListEnd(string idManager, string filter)
+    public List<ViewAutoManagerPerson> ListEnd(string idManager, string filter)
     {
       try
       {
         var result = new List<ViewAutoManagerPerson>();
-        foreach (var item in (await servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Support && p.TypeUser != EnumTypeUser.Administrator && p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration && p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration && p._id != idManager && p.Manager._id != idManager)).ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Support && p.TypeUser != EnumTypeUser.Administrator && p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration && p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration && p._id != idManager && p.Manager._id != idManager).Result.ToList())
         {
           var view = new ViewAutoManagerPerson();
           var exists = serviceAutoManager.CountNewVersion(p => p.Person._id == item._id && p.Requestor._id == idManager && p.StatusAutoManager == EnumStatusAutoManager.Requested).Result;
@@ -143,7 +143,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task SetManagerPerson(ViewManager view, string idPerson, string path)
+    public void SetManagerPerson(ViewManager view, string idPerson, string path)
     {
       try
       {
@@ -156,9 +156,9 @@ namespace Manager.Services.Specific
           if (exists == 0 & manager.TypeUser == EnumTypeUser.Employee)
           {
             manager.TypeUser = EnumTypeUser.Manager;
-            await servicePerson.Update(manager, null);
+            servicePerson.Update(manager, null).Wait();
           }
-          await servicePerson.Update(person, null);
+          servicePerson.Update(person, null).Wait();
         }
         else
         {
@@ -174,9 +174,9 @@ namespace Manager.Services.Specific
             StatusAutoManager = EnumStatusAutoManager.Requested,
             Status = EnumStatus.Enabled,
             OpenDate = DateTime.Now,
-            Workflow = serviceWorkflow.NewFlow(viewFlow).Result
+            Workflow = serviceWorkflow.NewFlow(viewFlow)
           };
-          await serviceAutoManager.InsertNewVersion(auto);
+          serviceAutoManager.InsertNewVersion(auto).Wait();
           //searsh model mail database
           var model = serviceMailModel.AutoManager(path);
           if (model.StatusMail == EnumStatus.Disabled)
@@ -216,16 +216,16 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject,
           };
-          await serviceMailLog.InsertNewVersion(sendMail);
+          serviceMailLog.InsertNewVersion(sendMail).Wait();
           var messageApv = serviceMailMessage.GetAllNewVersion(p => p._id == idMessageApv).Result.FirstOrDefault();
           var messageDis = serviceMailMessage.GetAllNewVersion(p => p._id == idMessageDis).Result.FirstOrDefault();
-          var token = SendMail(path, person, sendMail._id.ToString()).Result;
+          var token = SendMail(path, person, sendMail._id.ToString());
           messageApv.Token = token;
           messageApv.Name = "automanagerapproved";
-          await serviceMailMessage.Update(messageApv, null);
+          serviceMailMessage.Update(messageApv, null).Wait();
           messageDis.Token = token;
           messageDis.Name = "automanagerdisapproved";
-          await serviceMailMessage.Update(messageDis, null);
+          serviceMailMessage.Update(messageDis, null).Wait();
         };
       }
       catch (Exception e)
@@ -233,7 +233,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> SendMail(string link, Person person, string idmail)
+    public string SendMail(string link, Person person, string idmail)
     {
       try
       {
@@ -242,7 +242,7 @@ namespace Manager.Services.Specific
         {
           client.BaseAddress = new Uri(link);
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-          var resultMail = await client.PostAsync("mail/sendmail/" + idmail, null);
+          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null);
           return token;
         }
       }
@@ -251,7 +251,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Disapproved(ViewWorkflow view, string idPerson, string idManager)
+    public string Disapproved(ViewWorkflow view, string idPerson, string idManager)
     {
       try
       {
@@ -261,10 +261,10 @@ namespace Manager.Services.Specific
 
         var list = new List<Workflow>();
         foreach (var item in auto.Workflow)
-          list.Add(serviceWorkflow.Disapproved(view).Result);
+          list.Add(serviceWorkflow.Disapproved(view));
         auto.Workflow = list;
         auto.StatusAutoManager = EnumStatusAutoManager.Disapproved;
-        await serviceAutoManager.Update(auto, null);
+        serviceAutoManager.Update(auto, null).Wait();
 
         return "disapproved";
       }
@@ -273,7 +273,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Approved(ViewWorkflow view, string idPerson, string idManager)
+    public string Approved(ViewWorkflow view, string idPerson, string idManager)
     {
       try
       {
@@ -283,19 +283,19 @@ namespace Manager.Services.Specific
 
         var list = new List<Workflow>();
         foreach (var item in auto.Workflow)
-          list.Add(serviceWorkflow.Approved(view).Result);
+          list.Add(serviceWorkflow.Approved(view));
         auto.Workflow = list;
         auto.StatusAutoManager = EnumStatusAutoManager.Approved;
         var manager = servicePerson.GetAllNewVersion(p => p._id == idManager).Result.FirstOrDefault();
         var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
         person.Manager = new BaseFields() { _id = manager._id, Mail = manager.User.Mail, Name = manager.User.Name };
-        await servicePerson.Update(person, null);
+        servicePerson.Update(person, null).Wait();
         if (manager.TypeUser == EnumTypeUser.Employee)
         {
           manager.TypeUser = EnumTypeUser.Manager;
-          await servicePerson.Update(manager, null);
+          servicePerson.Update(manager, null).Wait();
         }
-        await serviceAutoManager.Update(auto, null);
+        serviceAutoManager.Update(auto, null).Wait();
 
         return "approved";
       }
@@ -304,24 +304,24 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task Canceled(string idPerson, string idManager)
+    public void Canceled(string idPerson, string idManager)
     {
       try
       {
         var auto = serviceAutoManager.GetAllNewVersion(p => p.Person._id == idPerson & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).Result.FirstOrDefault();
         auto.StatusAutoManager = EnumStatusAutoManager.Canceled;
-        await serviceAutoManager.Update(auto, null);
+        serviceAutoManager.Update(auto, null).Wait();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public Task<List<ViewAutoManager>> ListApproved(string idManager)
+    public List<ViewAutoManager> ListApproved(string idManager)
     {
       try
       {
-        return Task.FromResult((from auto in serviceAutoManager.GetAllNewVersion()
+        return (from auto in serviceAutoManager.GetAllNewVersion()
                 select auto
                     ).ToList()
                     .Where(p => p.Workflow.Where(t => t.StatusWorkflow == EnumWorkflow.Open
@@ -333,20 +333,20 @@ namespace Manager.Services.Specific
                       NameRequestor = auto.Requestor.User.Name,
                       IdPerson = auto.Person._id.ToString(),
                       NamePerson = auto.Person.User.Name
-                    }).ToList());
+                    }).ToList();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task DeleteManager(string idPerson)
+    public void DeleteManager(string idPerson)
     {
       try
       {
         var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
         person.Manager = null;
-        await servicePerson.Update(person, null);
+        servicePerson.Update(person, null).Wait();
       }
       catch (Exception e)
       {

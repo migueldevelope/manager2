@@ -41,7 +41,7 @@ namespace Manager.Controllers
     [Route("getnotes/{idperson}")]
     public async Task<List<ViewIndicatorsNotes>> GetNotes(string idperson)
     {
-      return await service.GetNotes(idperson);
+      return service.GetNotes(idperson);
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ namespace Manager.Controllers
     [Route("getnotesperson/{idperson}")]
     public async Task<List<ViewIndicatorsNotes>> GetNotesPerson(string idperson)
     {
-      return await service.GetNotesPerson(idperson);
+      return service.GetNotesPerson(idperson);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ namespace Manager.Controllers
     [Route("listtagscloud/{idmanager}")]
     public async Task<List<ViewTagsCloud>> ListTagsCloud(string idmanager)
     {
-      return await service.ListTagsCloud(idmanager);
+      return service.ListTagsCloud(idmanager);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ namespace Manager.Controllers
     [Route("listtagscloudperson/{idperson}")]
     public async Task<List<ViewTagsCloud>> ListTagsCloudPerson(string idperson)
     {
-      return await service.ListTagsCloudPerson(idperson);
+      return service.ListTagsCloudPerson(idperson);
     }
 
     //[Authorize]
@@ -91,7 +91,7 @@ namespace Manager.Controllers
     //  long total = 0;
     //  var result = service.ExportStatusOnboarding(filter, count, page);
     //  Response.Headers.Add("x-total-count", total.ToString());
-    //  return await  result;
+    //  return  result;
     //}
 
     /// <summary>
@@ -103,7 +103,7 @@ namespace Manager.Controllers
     [Route("exportonboarding")]
     public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding()
     {
-      return await service.ExportStatusOnboarding();
+      return service.ExportStatusOnboarding();
     }
 
     /// <summary>
@@ -115,7 +115,7 @@ namespace Manager.Controllers
     [Route("exportstatuscertification")]
     public async Task<List<ViewExportStatusCertification>> ExportStatusCertification()
     {
-      return await service.ExportStatusCertification();
+      return service.ExportStatusCertification();
     }
 
     /// <summary>
@@ -128,7 +128,7 @@ namespace Manager.Controllers
     [Route("exportstatuscertification/{idperson}")]
     public async Task<List<ViewExportStatusCertificationPerson>> ExportStatusCertification(string idperson)
     {
-      return await service.ExportStatusCertification(idperson);
+      return service.ExportStatusCertification(idperson);
     }
 
     /// <summary>
@@ -140,7 +140,7 @@ namespace Manager.Controllers
     [Route("exportmonitoring")]
     public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring()
     {
-      return await service.ExportStatusMonitoring();
+      return service.ExportStatusMonitoring();
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ namespace Manager.Controllers
     [Route("exportonboarding/{idperson}")]
     public async Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson)
     {
-      return await service.ExportStatusOnboarding(idperson);
+      return service.ExportStatusOnboarding(idperson);
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ namespace Manager.Controllers
     [Route("exportmonitoring/{idperson}")]
     public async Task<List<ViewExportStatusMonitoring>> ExportStatusMonitoring(string idperson)
     {
-      return await service.ExportStatusMonitoring(idperson);
+      return service.ExportStatusMonitoring(idperson);
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ namespace Manager.Controllers
     [Route("exportcheckpoint")]
     public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint()
     {
-      return await service.ExportStatusCheckpoint();
+      return service.ExportStatusCheckpoint();
     }
 
 
@@ -190,7 +190,7 @@ namespace Manager.Controllers
     [Route("exportplan")]
     public async Task<List<ViewExportStatusPlan>> ExportStatusPlan()
     {
-      return await service.ExportStatusPlan();
+      return service.ExportStatusPlan();
     }
 
     /// <summary>
@@ -202,7 +202,7 @@ namespace Manager.Controllers
     [Route("chartonboarding")]
     public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
     {
-      return await service.ChartOnboarding();
+      return service.ChartOnboarding();
     }
 
     /// <summary>
@@ -214,7 +214,7 @@ namespace Manager.Controllers
     [Route("chartmonitoring")]
     public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring()
     {
-      return await service.ChartMonitoring();
+      return service.ChartMonitoring();
     }
 
     /// <summary>
@@ -226,7 +226,7 @@ namespace Manager.Controllers
     [Route("chartcheckpoint")]
     public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint()
     {
-      return await service.ChartCheckpoint();
+      return service.ChartCheckpoint();
     }
 
     /// <summary>
@@ -238,7 +238,7 @@ namespace Manager.Controllers
     [Route("chartplan")]
     public async Task<IEnumerable<ViewChartPlan>> ChartPlan()
     {
-      return await service.ChartPlan();
+      return service.ChartPlan();
     }
 
     /// <summary>
@@ -250,7 +250,7 @@ namespace Manager.Controllers
     [Route("chartmonitoringrealized")]
     public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized()
     {
-      return await service.ChartMonitoringRealized();
+      return service.ChartMonitoringRealized();
     }
 
     /// <summary>
@@ -262,7 +262,7 @@ namespace Manager.Controllers
     [Route("chartcheckpointrealized")]
     public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized()
     {
-      return await service.ChartCheckpointRealized();
+      return service.ChartCheckpointRealized();
     }
 
     /// <summary>
@@ -274,7 +274,7 @@ namespace Manager.Controllers
     [Route("chartplanrealized")]
     public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized()
     {
-      return await service.ChartPlanRealized();
+      return service.ChartPlanRealized();
     }
 
     /// <summary>
@@ -286,7 +286,7 @@ namespace Manager.Controllers
     [Route("chartonboardingrealized")]
     public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized()
     {
-      return await service.ChartOnboardingRealized();
+      return service.ChartOnboardingRealized();
     }
 
     /// <summary>
@@ -299,7 +299,7 @@ namespace Manager.Controllers
     [Route("listtagscloudcompany/{idmanager}")]
     public async Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager)
     {
-      return await service.ListTagsCloudCompany(idmanager);
+      return service.ListTagsCloudCompany(idmanager);
     }
 
 
@@ -313,7 +313,7 @@ namespace Manager.Controllers
     [Route("listtagscloudcompanyperson/{idperson}")]
     public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPerson(string idperson)
     {
-      return await service.ListTagsCloudCompanyPerson(idperson);
+      return service.ListTagsCloudCompanyPerson(idperson);
     }
 
   }

@@ -91,7 +91,7 @@ namespace Manager.Services.Specific
       serviceMailModel.SetUser(_user);
     }
 
-    private async Task<string> NewSalaryScaleScore()
+    private string NewSalaryScaleScore()
     {
       try
       {
@@ -99,12 +99,12 @@ namespace Manager.Services.Specific
         {
           for (byte countSteps = 1; countSteps <= 8; countSteps++)
           {
-            await serviceSalaryScaleScore.InsertFreeNewVersion(new SalaryScaleScore()
+            serviceSalaryScaleScore.InsertFreeNewVersion(new SalaryScaleScore()
             {
               CountSteps = countSteps,
               Step = (EnumSteps)step,
               Value = decimal.Parse("0")
-            });
+            }).Wait();
           }
         }
 
@@ -154,7 +154,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task GradeScale(Meritocracy meritocracy)
+    private void GradeScale(Meritocracy meritocracy)
     {
       try
       {
@@ -171,7 +171,7 @@ namespace Manager.Services.Specific
             if (person.Salary <= item.Salary)
             {
               meritocracy.ResultStepScale = item.Step;
-              await serviceMeritocracy.Update(meritocracy, null);
+              serviceMeritocracy.Update(meritocracy, null).Wait();
               return;
             }
           }
@@ -260,7 +260,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async Task MathMeritocracy(Meritocracy meritocracy)
+    private void MathMeritocracy(Meritocracy meritocracy)
     {
       try
       {
@@ -268,12 +268,12 @@ namespace Manager.Services.Specific
         if ((person.User.DateAdm == null) && (meritocracy.Person.CompanyDate != null))
         {
           person.User.DateAdm = meritocracy.Person.CompanyDate;
-          await servicePerson.Update(person, null);
+          servicePerson.Update(person, null).Wait();
         }
         if ((person.DateLastOccupation == null) && (meritocracy.Person.OccupationDate != null))
         {
           person.DateLastOccupation = meritocracy.Person.OccupationDate;
-          await servicePerson.Update(person, null);
+          servicePerson.Update(person, null).Wait();
         }
 
         byte schoolingWeight = 0;
@@ -362,9 +362,9 @@ namespace Manager.Services.Specific
         meritocracy.WeightMaturity = maturityWeight;
         meritocracy.WeightGoals = goalsWeight;
 
-        await serviceMeritocracy.Update(meritocracy, null);
+        serviceMeritocracy.Update(meritocracy, null).Wait();
 
-        await Task.Run(() => EndMath(meritocracy));
+        Task.Run(() => EndMath(meritocracy));
       }
       catch (Exception e)
       {
@@ -398,7 +398,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task EndMath(Meritocracy meritocracy)
+    private void EndMath(Meritocracy meritocracy)
     {
       try
       {
@@ -425,9 +425,9 @@ namespace Manager.Services.Specific
         meritocracy.ResultEnd = percCompanyDate + percOccupationDate + percSchooling
           + percMaturity + percGoals + percActivitie;
 
-        await serviceMeritocracy.Update(meritocracy, null);
+        serviceMeritocracy.Update(meritocracy, null).Wait();
 
-        await Task.Run(() => MathSalaryScale(meritocracy));
+        Task.Run(() => MathSalaryScale(meritocracy));
       }
       catch (Exception e)
       {
@@ -435,7 +435,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task MathSalaryScale(Meritocracy meritocracy)
+    private void MathSalaryScale(Meritocracy meritocracy)
     {
       try
       {
@@ -470,7 +470,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.B;
             }
-              
+
           }
 
           else if (count == 3)
@@ -491,7 +491,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.C;
             }
-              
+
           }
 
           else if (count == 4)
@@ -517,7 +517,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.D;
             }
-            
+
           }
 
           else if (count == 5)
@@ -548,7 +548,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.E;
             }
-              
+
           }
 
           else if (count == 6)
@@ -584,7 +584,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.F;
             }
-              
+
           }
 
 
@@ -626,7 +626,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.G;
             }
-              
+
           }
 
           else if (count == 8)
@@ -672,20 +672,20 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.H;
             }
-              
+
           }
 
         }
-        if(meritocracy.Grade != null)
+        if (meritocracy.Grade != null)
         {
           salarynew = meritocracy.Grade.ListSteps.Where(p => p.Step == resultStep).FirstOrDefault().Salary;
         }
         meritocracy.SalaryNew = salarynew;
         meritocracy.SalaryDifference = salarynew - meritocracy.Person.Salary;
-        meritocracy.PercentSalary = decimal.Parse(((double.Parse(meritocracy.SalaryDifference.ToString()) * 100.0) / double.Parse((meritocracy.Person.Salary == 0? 1: meritocracy.Person.Salary).ToString())).ToString());
+        meritocracy.PercentSalary = decimal.Parse(((double.Parse(meritocracy.SalaryDifference.ToString()) * 100.0) / double.Parse((meritocracy.Person.Salary == 0 ? 1 : meritocracy.Person.Salary).ToString())).ToString());
         meritocracy.ResultStep = resultStep;
 
-        await serviceMeritocracy.Update(meritocracy, null);
+        serviceMeritocracy.Update(meritocracy, null).Wait();
       }
       catch (Exception)
       {
@@ -696,15 +696,15 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Meritocracy
-    public async Task<string> Delete(string id)
+    public string Delete(string id)
     {
       try
       {
         Meritocracy item = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        await serviceMeritocracy.Update(item, null);
+        serviceMeritocracy.Update(item, null).Wait();
 
-        await Task.Run(() => LogSave(_user._idPerson, string.Format("Remove process | {0}", item._id)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Remove process | {0}", item._id)));
         return "Meritocracy deleted!";
       }
       catch (Exception e)
@@ -713,7 +713,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> New(string idperson)
+    public string New(string idperson)
     {
       try
       {
@@ -728,7 +728,7 @@ namespace Manager.Services.Specific
 
         if (meritocracy == null)
         {
-          await Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", meritocracy._id)));
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", meritocracy._id)));
 
           meritocracy = serviceMeritocracy.InsertNewVersion(new Meritocracy()
           {
@@ -758,11 +758,11 @@ namespace Manager.Services.Specific
               Mark = 0
             });
 
-          await serviceMeritocracy.Update(meritocracy, null);
+          serviceMeritocracy.Update(meritocracy, null).Wait();
         }
 
-        await Task.Run(() => MathMeritocracy(meritocracy));
-        await Task.Run(() => GradeScale(meritocracy));
+        Task.Run(() => MathMeritocracy(meritocracy));
+        Task.Run(() => GradeScale(meritocracy));
 
         return meritocracy._id;
       }
@@ -772,19 +772,19 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> End(string id)
+    public string End(string id)
     {
       try
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
 
-        await Task.Run(() => LogSave(_user._idPerson, string.Format("End process | {0}", meritocracy._id)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("End process | {0}", meritocracy._id)));
 
         meritocracy.StatusMeritocracy = EnumStatusMeritocracy.End;
         meritocracy.DateEnd = DateTime.Now;
 
-        await serviceMeritocracy.Update(meritocracy, null);
-        await Task.Run(() => MathMeritocracy(meritocracy));
+        serviceMeritocracy.Update(meritocracy, null).Wait();
+        Task.Run(() => MathMeritocracy(meritocracy));
 
         return "Meritocracy altered!";
       }
@@ -794,20 +794,20 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> Update(ViewCrudMeritocracy view)
+    public string Update(ViewCrudMeritocracy view)
     {
       try
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == view._id).Result;
 
-        await Task.Run(() => LogSave(_user._idPerson, string.Format("Update process | {0}", meritocracy._id)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Update process | {0}", meritocracy._id)));
 
         meritocracy.StatusMeritocracy = view.StatusMeritocracy;
         if (meritocracy.StatusMeritocracy == EnumStatusMeritocracy.End)
           meritocracy.DateEnd = DateTime.Now;
 
-        await serviceMeritocracy.Update(meritocracy, null);
-        await Task.Run(() => MathMeritocracy(meritocracy));
+        serviceMeritocracy.Update(meritocracy, null).Wait();
+        Task.Run(() => MathMeritocracy(meritocracy));
 
         return "Meritocracy altered!";
       }
@@ -817,14 +817,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateCompanyDate(ViewCrudMeritocracyDate view, string id)
+    public string UpdateCompanyDate(ViewCrudMeritocracyDate view, string id)
     {
       try
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         meritocracy.Person.CompanyDate = view.Date;
-        await serviceMeritocracy.Update(meritocracy, null);
-        await Task.Run(() => MathMeritocracy(meritocracy));
+        serviceMeritocracy.Update(meritocracy, null).Wait();
+        Task.Run(() => MathMeritocracy(meritocracy));
 
         return "Meritocracy altered!";
       }
@@ -834,14 +834,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateOccupationDate(ViewCrudMeritocracyDate view, string id)
+    public string UpdateOccupationDate(ViewCrudMeritocracyDate view, string id)
     {
       try
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         meritocracy.Person.OccupationDate = view.Date;
-        await serviceMeritocracy.Update(meritocracy, null);
-        await Task.Run(() => MathMeritocracy(meritocracy));
+        serviceMeritocracy.Update(meritocracy, null).Wait();
+        Task.Run(() => MathMeritocracy(meritocracy));
 
         return "Meritocracy altered!";
       }
@@ -851,15 +851,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateOccupationActivitiesExcellence(ViewCrudMeritocracyWeight view, string id)
+    public string UpdateOccupationActivitiesExcellence(ViewCrudMeritocracyWeight view, string id)
     {
       try
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         meritocracy.ActivitiesExcellence = view.Weight;
-        await serviceMeritocracy.Update(meritocracy, null);
+        serviceMeritocracy.Update(meritocracy, null).Wait();
 
-        await Task.Run(() => MathMeritocracy(meritocracy));
+        Task.Run(() => MathMeritocracy(meritocracy));
         return "Meritocracy altered!";
       }
       catch (Exception e)
@@ -868,14 +868,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateOccupationMaturity(ViewCrudMeritocracyWeight view, string id)
+    public string UpdateOccupationMaturity(ViewCrudMeritocracyWeight view, string id)
     {
       try
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         meritocracy.Maturity = view.Weight;
-        await serviceMeritocracy.Update(meritocracy, null);
-        await Task.Run(() => MathMeritocracy(meritocracy));
+        serviceMeritocracy.Update(meritocracy, null).Wait();
+        Task.Run(() => MathMeritocracy(meritocracy));
 
         return "Meritocracy altered!";
       }
@@ -885,15 +885,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudMeritocracy> Get(string id)
+    public ViewCrudMeritocracy Get(string id)
     {
       try
       {
         MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
-        await MathMeritocracy(meritocracy);
-        await GradeScale(meritocracy);
+        MathMeritocracy(meritocracy);
+        GradeScale(meritocracy);
         var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
         meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMeritocracy()
@@ -962,7 +962,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewListMeritocracy>> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListMeritocracy> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -973,7 +973,7 @@ namespace Manager.Services.Specific
             Name = x.Person.Name
           }).ToList();
         total = serviceMeritocracy.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
@@ -982,11 +982,11 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<List<ViewListMeritocracyActivitie>> ListMeritocracyActivitie(string idmeritocracy)
+    public List<ViewListMeritocracyActivitie> ListMeritocracyActivitie(string idmeritocracy)
     {
       try
       {
-        List<ViewListMeritocracyActivitie> detail = (await serviceMeritocracy.GetAllNewVersion(p => p._id == idmeritocracy)).
+        List<ViewListMeritocracyActivitie> detail = serviceMeritocracy.GetAllNewVersion(p => p._id == idmeritocracy).Result.
           FirstOrDefault().MeritocracyActivities
           .Select(x => new ViewListMeritocracyActivitie()
           {
@@ -1002,7 +1002,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewListMeritocracy>> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
+    public List<ViewListMeritocracy> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1043,7 +1043,7 @@ namespace Manager.Services.Specific
                                 p.TypeUser != EnumTypeUser.Administrator &&
                                 p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
@@ -1051,7 +1051,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark)
+    public string UpdateActivitieMark(string idmeritocracy, string idactivitie, byte mark)
     {
       try
       {
@@ -1069,7 +1069,7 @@ namespace Manager.Services.Specific
         meritocracy.ActivitiesExcellence = ((averageActivities) / (meritocracy.MeritocracyActivities.Count() == 0 ? 1 : meritocracy.MeritocracyActivities.Count()));
 
         meritocracy.WeightActivitiesExcellence = byte.Parse(Math.Truncate(meritocracy.ActivitiesExcellence).ToString());
-        await serviceMeritocracy.Update(meritocracy, null);
+        serviceMeritocracy.Update(meritocracy, null).Wait();
 
         return "Meritocracy altered!";
       }
@@ -1083,11 +1083,11 @@ namespace Manager.Services.Specific
 
     #region MeritocracyScore
 
-    public async Task<string> NewMeritocracyScore(ViewCrudMeritocracyScore view)
+    public string NewMeritocracyScore(ViewCrudMeritocracyScore view)
     {
       try
       {
-        MeritocracyScore meritocracyScore = await serviceMeritocracyScore.InsertNewVersion(
+        MeritocracyScore meritocracyScore = serviceMeritocracyScore.InsertNewVersion(
           new MeritocracyScore()
           {
             _id = view._id,
@@ -1103,7 +1103,7 @@ namespace Manager.Services.Specific
             WeightActivitiesExcellence = view.WeightActivitiesExcellence,
             WeightMaturity = view.WeightMaturity,
             WeightGoals = view.WeightGoals
-          });
+          }).Result;
         return "MeritocracyScore added!";
       }
       catch (Exception e)
@@ -1111,13 +1111,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> RemoveMeritocracyScore(string id)
+    public string RemoveMeritocracyScore(string id)
     {
       try
       {
         MeritocracyScore item = serviceMeritocracyScore.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        await serviceMeritocracyScore.Update(item, null);
+        serviceMeritocracyScore.Update(item, null).Wait();
         return "MeritocracyScore deleted!";
       }
       catch (Exception e)
@@ -1125,7 +1125,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> UpdateMeritocracyScore(ViewCrudMeritocracyScore view)
+    public string UpdateMeritocracyScore(ViewCrudMeritocracyScore view)
     {
       try
       {
@@ -1142,7 +1142,7 @@ namespace Manager.Services.Specific
         meritocracyScore.WeightActivitiesExcellence = view.WeightActivitiesExcellence;
         meritocracyScore.WeightMaturity = view.WeightMaturity;
         meritocracyScore.WeightGoals = view.WeightGoals;
-        await serviceMeritocracyScore.Update(meritocracyScore, null);
+        serviceMeritocracyScore.Update(meritocracyScore, null).Wait();
         return "MeritocracyScore altered!";
       }
       catch (Exception e)
@@ -1150,11 +1150,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudMeritocracyScore> GetMeritocracyScore(string id)
+    public ViewCrudMeritocracyScore GetMeritocracyScore(string id)
     {
       try
       {
-        MeritocracyScore meritocracyScore = await serviceMeritocracyScore.GetNewVersion(p => p._id == id);
+        MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p._id == id).Result;
 
         return new ViewCrudMeritocracyScore()
         {
@@ -1178,11 +1178,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewListMeritocracyScore> ListMeritocracyScore()
+    public ViewListMeritocracyScore ListMeritocracyScore()
     {
       try
       {
-        ViewListMeritocracyScore detail = (await serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled))
+        ViewListMeritocracyScore detail = serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
           .Select(p => new ViewListMeritocracyScore
           {
             _id = p._id,
@@ -1209,13 +1209,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region SalaryScaleScore
-    public async Task<string> DeleteSalaryScaleScore(string id)
+    public string DeleteSalaryScaleScore(string id)
     {
       try
       {
         SalaryScaleScore item = serviceSalaryScaleScore.GetFreeNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        await serviceSalaryScaleScore.UpdateAccount(item, null);
+        serviceSalaryScaleScore.UpdateAccount(item, null).Wait();
         return "SalaryScaleScore deleted!";
       }
       catch (Exception e)
@@ -1223,7 +1223,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> UpdateSalaryScaleScore(ViewCrudSalaryScaleScore view)
+    public string UpdateSalaryScaleScore(ViewCrudSalaryScaleScore view)
     {
       try
       {
@@ -1231,7 +1231,7 @@ namespace Manager.Services.Specific
         salaryScaleScore.CountSteps = view.CountSteps;
         salaryScaleScore.Step = view.Step;
         salaryScaleScore.Value = view.Value;
-        await serviceSalaryScaleScore.UpdateAccount(salaryScaleScore, null);
+        serviceSalaryScaleScore.UpdateAccount(salaryScaleScore, null).Wait();
         return "SalaryScaleScore altered!";
       }
       catch (Exception e)
@@ -1239,11 +1239,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudSalaryScaleScore> GetSalaryScaleScore(string id)
+    public ViewCrudSalaryScaleScore GetSalaryScaleScore(string id)
     {
       try
       {
-        SalaryScaleScore salaryScaleScore = await serviceSalaryScaleScore.GetFreeNewVersion(p => p._id == id);
+        SalaryScaleScore salaryScaleScore = serviceSalaryScaleScore.GetFreeNewVersion(p => p._id == id).Result;
         return new ViewCrudSalaryScaleScore()
         {
           _id = salaryScaleScore._id,
@@ -1257,12 +1257,12 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public Task<List<ViewCrudSalaryScaleScore>> ListSalaryScaleScore(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudSalaryScaleScore> ListSalaryScaleScore(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         if (!serviceSalaryScaleScore.Exists("SalaryScaleScore"))
-          Task.FromResult(NewSalaryScaleScore());
+          NewSalaryScaleScore();
 
         List<ViewCrudSalaryScaleScore> detail = serviceSalaryScaleScore.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled, count, count * (page - 1), "_id").Result
           .Select(p => new ViewCrudSalaryScaleScore
@@ -1273,7 +1273,7 @@ namespace Manager.Services.Specific
             Value = p.Value,
           }).ToList();
         total = serviceSalaryScaleScore.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {

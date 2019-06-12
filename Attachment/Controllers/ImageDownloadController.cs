@@ -74,7 +74,7 @@ namespace EdeskIntegration.Controllers
         blockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
       }
       //download    
-      //await blockBlob.DownloadToStreamAsync(memStream);
+      //blockBlob.DownloadToStreamAsync(memStream);
       HttpResponseMessage result = null;
       result = new HttpResponseMessage(HttpStatusCode.OK);
       result.Content = new StreamContent(await blockBlob.OpenReadAsync());

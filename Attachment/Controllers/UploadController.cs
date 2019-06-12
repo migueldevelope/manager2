@@ -224,7 +224,7 @@ namespace EdeskIntegration.Controllers
           throw;
         }
 
-        await companyService.SetLogo(idcompany, url);
+        companyService.SetLogo(idcompany, url);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -280,7 +280,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        await eventService.SetAttachment(idevent, url, file.FileName, attachment._id);
+        eventService.SetAttachment(idevent, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -333,7 +333,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        await eventService.SetAttachmentHistoric(ideventhistoric, url, file.FileName, attachment._id);
+        eventService.SetAttachmentHistoric(ideventhistoric, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -386,7 +386,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        await planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
+        planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -440,7 +440,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        await certificationService.SetAttachment(idcertification, url, file.FileName, attachment._id);
+        certificationService.SetAttachment(idcertification, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);

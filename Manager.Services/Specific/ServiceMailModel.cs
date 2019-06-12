@@ -44,7 +44,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MailModel
-    public Task<List<ViewListMailModel>> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListMailModel> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -58,14 +58,14 @@ namespace Manager.Services.Specific
           }).ToList();
 
         total = serviceMailModel.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<string> New(ViewCrudMailModel view)
+    public  string New(ViewCrudMailModel view)
     {
       try
       {
@@ -77,7 +77,7 @@ namespace Manager.Services.Specific
           StatusMail = view.StatusMail,
           Subject = view.Subject
         };
-        mailModel = await serviceMailModel.InsertNewVersion(mailModel);
+        serviceMailModel.InsertNewVersion(mailModel).Wait();
         return "Mail model added!";
       }
       catch (Exception e)
@@ -85,7 +85,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudMailModel view)
+    public  string Update(ViewCrudMailModel view)
     {
       try
       {
@@ -96,7 +96,7 @@ namespace Manager.Services.Specific
         mailModel.Message = view.Message;
         mailModel.StatusMail = view.StatusMail;
         mailModel.Subject = view.Subject;
-        await serviceMailModel.Update(mailModel, null);
+         serviceMailModel.Update(mailModel, null).Wait();
         return "Mail model altered!";
       }
       catch (Exception e)
@@ -104,13 +104,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Remove(string id)
+    public  string Remove(string id)
     {
       try
       {
         MailModel item = serviceMailModel.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        await serviceMailModel.Update(item, null);
+         serviceMailModel.Update(item, null).Wait();
         return "Mail model deleted!";
       }
       catch (Exception e)
@@ -118,11 +118,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudMailModel> Get(string id)
+    public  ViewCrudMailModel Get(string id)
     {
       try
       {
-        var mailModel = await  serviceMailModel.GetNewVersion(p => p._id == id);
+        var mailModel =   serviceMailModel.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMailModel()
         {
           _id = mailModel._id,

@@ -39,10 +39,10 @@ namespace Manager.Test.Test.Complete
         long total = 0;
         var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("Ariel")).Result.FirstOrDefault();
 
-        var list = serviceOnBoarding.ListOnBoardingsWait(person.Manager._id, ref total, "Ariel", 10, 1).Result.FirstOrDefault();
+        var list = serviceOnBoarding.ListOnBoardingsWait(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
         
-        var newOnboarding = serviceOnBoarding.New(list._id).Result;
-        var getOnboarding = serviceOnBoarding.Get(newOnboarding._id).Result;
+        var newOnboarding = serviceOnBoarding.New(list._id);
+        var getOnboarding = serviceOnBoarding.Get(newOnboarding._id);
 
         foreach (var item in getOnboarding.SkillsCompany)
         {
@@ -59,7 +59,7 @@ namespace Manager.Test.Test.Complete
         getOnboarding.CommentsManager = "test comment manager";
         getOnboarding.StatusOnBoarding = EnumStatusOnBoarding.End;
 
-        var result = serviceOnBoarding.Update(getOnboarding).Result;
+        var result = serviceOnBoarding.Update(getOnboarding);
 
 
       }

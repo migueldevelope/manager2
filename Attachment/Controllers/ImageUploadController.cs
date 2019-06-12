@@ -85,15 +85,15 @@ namespace EdeskIntegration.Controllers
         CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(container);
         if (await cloudBlobContainer.CreateIfNotExistsAsync())
         {
-          await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+          cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
           {
             PublicAccess = BlobContainerPublicAccessType.Blob
           });
         }
         CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
-        await blockBlob.DeleteIfExistsAsync();
+        blockBlob.DeleteIfExistsAsync();
         blockBlob.Properties.ContentType = HttpContext.Request.Form.Files[0].ContentType;
-        await blockBlob.UploadFromStreamAsync(HttpContext.Request.Form.Files[0].OpenReadStream());
+        blockBlob.UploadFromStreamAsync(HttpContext.Request.Form.Files[0].OpenReadStream());
       }
       catch (Exception)
       {

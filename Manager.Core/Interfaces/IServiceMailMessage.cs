@@ -8,6 +8,6 @@ namespace Manager.Core.Interfaces
   public interface IServiceMailMessage
   {
     void SetUser(IHttpContextAccessor contextAccessor);
-    Task<ViewMailMessage> GetMessage(string id);
+     ViewMailMessage GetMessage(string id);
   }
 }

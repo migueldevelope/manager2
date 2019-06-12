@@ -14,28 +14,28 @@ namespace Manager.Core.Interfaces
   {
     #region mandatorytrainning
     void SetUser(IHttpContextAccessor contextAccessor);
-    Task<string> RemoveTrainingPlan(string id);
+     string RemoveTrainingPlan(string id);
 
-    Task<string> AddOccupation(ViewCrudOccupationMandatory view);
-    Task<string> AddPerson(ViewCrudPersonMandatory view);
-    Task<string> AddCompany(ViewCrudCompanyMandatory view);
-    Task<string> RemoveOccupation(string idcourse, string idoccupation);
-    Task<string> RemovePerson(string idcourse, string idperson);
-    Task<string> RemoveCompany(string idcourse, string idcompany);
-    Task<List<ViewListOccupation>> ListOccupation(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
-    Task<List<ViewListPerson>> ListPerson(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
-    Task<List<ViewListCompany>> ListCompany(string idcourse,  ref long total, int count = 10, int page = 1, string filter = "");
-    Task<List<ViewTrainingPlan>> ListTrainingPlanPerson(string iduser,  ref long total, int count = 10, int page = 1, string filter = "");
-    Task<List<ViewTrainingPlanList>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  ref long total, int count = 10, int page = 1, string filter = "");
-    Task<ViewCrudMandatoryTraining> GetMandatoryTraining(string idcourse);
-    Task<List<ViewCrudMandatoryTraining>> List( ref long total, int count = 10, int page = 1, string filter = "");
-    Task<string> NewTrainingPlanInternal(TrainingPlan view);
-    Task<string> UpdateTrainingPlanInternal(TrainingPlan view);
-    Task<string> NewTrainingPlan(ViewCrudTrainingPlan view);
-    Task<string> UpdateTrainingPlan(ViewCrudTrainingPlan view);
-    Task<ViewCrudTrainingPlan> GetTrainingPlan(string id);
-    Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
-    Task<List<ViewCrudTrainingPlan>> ListTrainingPlan(string idcompany, string idperson,  ref long total, int count = 10, int page = 1, string filter = "");
+     string AddOccupation(ViewCrudOccupationMandatory view);
+     string AddPerson(ViewCrudPersonMandatory view);
+     string AddCompany(ViewCrudCompanyMandatory view);
+     string RemoveOccupation(string idcourse, string idoccupation);
+     string RemovePerson(string idcourse, string idperson);
+     string RemoveCompany(string idcourse, string idcompany);
+     List<ViewListOccupation> ListOccupation(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+     List<ViewListPerson> ListPerson(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+     List<ViewListCompany> ListCompany(string idcourse,  ref long total, int count = 10, int page = 1, string filter = "");
+     List<ViewTrainingPlan> ListTrainingPlanPerson(string iduser,  ref long total, int count = 10, int page = 1, string filter = "");
+     List<ViewTrainingPlanList> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  ref long total, int count = 10, int page = 1, string filter = "");
+     ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse);
+     List<ViewCrudMandatoryTraining> List( ref long total, int count = 10, int page = 1, string filter = "");
+     string NewTrainingPlanInternal(TrainingPlan view);
+     string UpdateTrainingPlanInternal(TrainingPlan view);
+     string NewTrainingPlan(ViewCrudTrainingPlan view);
+     string UpdateTrainingPlan(ViewCrudTrainingPlan view);
+     ViewCrudTrainingPlan GetTrainingPlan(string id);
+     List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+     List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, string idperson,  ref long total, int count = 10, int page = 1, string filter = "");
 
     #endregion
     

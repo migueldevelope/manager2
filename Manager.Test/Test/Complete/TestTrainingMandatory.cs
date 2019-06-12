@@ -41,7 +41,7 @@ namespace Manager.Test.Test.Complete
         var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("Analisa")).Result.FirstOrDefault();
 
         
-        //var course = serviceEvent.ListCourse(1, 1, "").Result.FirstOrDefault();
+        //var course = serviceEvent.ListCourse(1, 1, "").FirstOrDefault();
         //var listperson = serviceMandatoryTraining.ListPerson(course._id, person.Company._id, 10, 1, "");
 
         //var view = new ViewAddPersonMandatory()

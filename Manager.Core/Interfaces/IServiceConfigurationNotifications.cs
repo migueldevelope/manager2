@@ -11,10 +11,10 @@ namespace Manager.Core.Interfaces
     BaseUser user { get; set; }
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
-    Task<string> New(ConfigurationNotification view);
-    Task<string> Update(ConfigurationNotification view);
-    Task<string> Remove(string id);
-    Task<ConfigurationNotification> Get(string id);
-    Task<List<ConfigurationNotification>> List( ref long total, int count = 10, int page = 1, string filter = "");
+     string New(ConfigurationNotification view);
+     string Update(ConfigurationNotification view);
+     string Remove(string id);
+     ConfigurationNotification Get(string id);
+     List<ConfigurationNotification> List( ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

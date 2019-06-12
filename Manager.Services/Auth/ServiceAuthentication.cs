@@ -52,11 +52,11 @@ namespace Manager.Services.Auth
 
     #region Authentication
 
-    public async Task<string> AlterContract(string idperson)
+    public  string AlterContract(string idperson)
     {
       try
       {
-        var person = (await servicePerson.GetAllFreeNewVersion(p => p._id == idperson)).FirstOrDefault();
+        var person = servicePerson.GetAllFreeNewVersion(p => p._id == idperson).Result.FirstOrDefault();
         var account = serviceAccount.GetAllFreeNewVersion(p => p._id == person._idAccount).Result.FirstOrDefault();
 
         // Token
@@ -85,7 +85,7 @@ namespace Manager.Services.Auth
     }
 
 
-    public async Task<ViewPerson> Authentication(ViewAuthentication userLogin)
+    public  ViewPerson Authentication(ViewAuthentication userLogin)
     {
       try
       {
@@ -134,7 +134,7 @@ namespace Manager.Services.Auth
         }
         else
         {
-          user = await serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password));
+          user =  serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
           if (user == null)
             throw new Exception("User/Password invalid!");
         }
@@ -156,7 +156,7 @@ namespace Manager.Services.Auth
         serviceTermsOfService.SetUser(_user);
         serviceTermsOfService._user = _user;
 
-        var date = serviceTermsOfService.GetTerm().Result;
+        var date = serviceTermsOfService.GetTerm();
 
         UserTermOfService term = null;
         UserTermOfService viewDate = null;
@@ -311,7 +311,7 @@ namespace Manager.Services.Auth
           var content = new StringContent("login=" + login + "&senha=" + password);
           content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
           client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
-          HttpResponseMessage result = await client.PostAsync("wspucsede/WService.asmx/ValidateUser", content);
+          HttpResponseMessage result =  client.PostAsync("wspucsede/WService.asmx/ValidateUser", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
             throw new Exception("User/Password invalid!");
         }
@@ -349,7 +349,7 @@ namespace Manager.Services.Auth
           StringContent content = new StringContent(json);
           content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          HttpResponseMessage result = await client.PostAsync("/", content);
+          HttpResponseMessage result =  client.PostAsync("/", content).Result;
           //var resultContent = result.Content.ReadAsStringAsync().Result;
 
           if (result.StatusCode != System.Net.HttpStatusCode.OK)

@@ -47,7 +47,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Mensageria
-    public Task<List<ViewListLogMessages>> ListPerson(string idperson,  ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListLogMessages> ListPerson(string idperson,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -65,14 +65,14 @@ namespace Manager.Services.Specific
             }
           }).ToList();
         total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public Task<List<ViewListLogMessages>> ListManager(string idmanager,  ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListLogMessages> ListManager(string idmanager,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -98,7 +98,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> New(ViewCrudLogMessages view)
+    public  string New(ViewCrudLogMessages view)
     {
       try
       {
@@ -110,7 +110,7 @@ namespace Manager.Services.Specific
           Message = view.Message,
           Register = DateTime.Now
         };
-        logMessages = await serviceLogMessages.InsertNewVersion(logMessages);
+        serviceLogMessages.InsertNewVersion(logMessages).Wait();
         return "Messagery added!";
       }
       catch (Exception e)
@@ -118,11 +118,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudLogMessages> NewNotExist(ViewCrudLogMessages view)
+    public  ViewCrudLogMessages NewNotExist(ViewCrudLogMessages view)
     {
       try
       {
-        LogMessages logMessage = await serviceLogMessages.GetNewVersion(p => p.Subject == view.Subject && p.Person._id == view.Person._id);
+        LogMessages logMessage =  serviceLogMessages.GetNewVersion(p => p.Subject == view.Subject && p.Person._id == view.Person._id).Result;
 
         // Se já existir a notificação de admissão, não enviar mais
         if (logMessage != null)
@@ -152,11 +152,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudLogMessages> Get(string id)
+    public  ViewCrudLogMessages Get(string id)
     {
       try
       {
-        var logMessages = await serviceLogMessages.GetNewVersion(p => p._id == id);
+        var logMessages =  serviceLogMessages.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudLogMessages()
         {
           _id = logMessages._id,
@@ -179,7 +179,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudLogMessages view)
+    public  string Update(ViewCrudLogMessages view)
     {
       try
       {
@@ -188,7 +188,7 @@ namespace Manager.Services.Specific
         logMessages.Subject = view.Subject;
         logMessages.StatusMessage = view.StatusMessage;
         logMessages.Message = view.Message;
-        await serviceLogMessages.Update(logMessages, null);
+         serviceLogMessages.Update(logMessages, null).Wait();
         return "Messagery altered!";
       }
       catch (Exception e)
@@ -196,13 +196,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Delete(string id)
+    public  string Delete(string id)
     {
       try
       {
         var item = serviceLogMessages.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-        await serviceLogMessages.Update(item, null);
+         serviceLogMessages.Update(item, null).Wait();
         return "deleted";
       }
       catch (Exception e)
@@ -213,7 +213,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Internal Call
-    public async Task NewLogMessage(string subject, string message, Person person)
+    public void NewLogMessage(string subject, string message, Person person)
     {
       try
       {
@@ -224,7 +224,7 @@ namespace Manager.Services.Specific
           StatusMessage = EnumStatusMessage.New,
           Person = person
         };
-        await serviceLogMessages.InsertNewVersion(model);
+         serviceLogMessages.InsertNewVersion(model).Wait();
       }
       catch (Exception e)
       {

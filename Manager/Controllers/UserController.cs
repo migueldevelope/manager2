@@ -60,7 +60,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.List(count, page, filter, type);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
 
 
@@ -75,7 +75,7 @@ namespace Manager.Controllers
     [Route("checktermofservice/{iduser}")]
     public async Task<string> CheckTermOfService(string iduser)
     {
-      await service.CheckTermOfService(iduser);
+      service.CheckTermOfService(iduser);
       return "ok";
     }
 
@@ -90,7 +90,7 @@ namespace Manager.Controllers
     [Route("get/{iduser}")]
     public async Task<ViewCrudUser> Get(string iduser)
     {
-      return await service.Get(iduser);
+      return service.Get(iduser);
     }
     /// <summary>
     /// Inclusão de novo usuário
@@ -102,7 +102,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<ViewCrudUser> New([FromBody] ViewCrudUser view)
     {
-      return await service.New(view);
+      return service.New(view);
     }
     /// <summary>
     /// Alteração de usuário
@@ -114,7 +114,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<ViewCrudUser> Update([FromBody] ViewCrudUser view)
     {
-      return await service.Update(view);
+      return service.Update(view);
     }
     /// <summary>
     /// Foto do perfil do usuário
@@ -126,7 +126,7 @@ namespace Manager.Controllers
     [Route("photo/{iduser}")]
     public async Task<string> GetPhoto(string iduser)
     {
-      return await service.GetPhoto(iduser);
+      return service.GetPhoto(iduser);
     }
     #endregion
 
@@ -147,7 +147,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListPerson(iduser, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     #endregion
 
@@ -163,7 +163,7 @@ namespace Manager.Controllers
     [Route("alterpass/{idUser}")]
     public async Task<string> AlterPassword([FromBody]ViewAlterPass view, string idUser)
     {
-      return await service.AlterPassword(view, idUser);
+      return service.AlterPassword(view, idUser);
     }
     /// <summary>
     /// Alterar o password do usuário pelo esqueci minha senha
@@ -175,7 +175,7 @@ namespace Manager.Controllers
     [Route("forgotpassword/{foreign}/alter")]
     public async Task<string> AlterPasswordForgot([FromBody]ViewAlterPass view, string foreign)
     {
-      return await service.AlterPasswordForgot(view, foreign);
+      return service.AlterPasswordForgot(view, foreign);
     }
     /// <summary>
     /// Enviar e-mail de esqueci minha senha
@@ -188,7 +188,7 @@ namespace Manager.Controllers
     public async Task<string> ForgotPassword([FromBody]ViewForgotPassword view, string mail)
     {
       Config conn = XmlConnection.ReadVariablesSystem();
-      return await service.ForgotPassword(mail, view, conn.SendGridKey);
+      return service.ForgotPassword(mail, view, conn.SendGridKey);
     }
     #endregion
 

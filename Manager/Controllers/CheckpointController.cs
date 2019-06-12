@@ -48,7 +48,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListWaitManager(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     /// <summary>
     /// Listar status de checkpoint para colaborador
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("listwaitperson/{idperson}")]
     public async Task<ViewListCheckpoint> ListWaitPerson(string idperson)
     {
-      return await service.ListWaitPerson(idperson);
+      return service.ListWaitPerson(idperson);
     }
     /// <summary>
     /// Inclusão de novo checkpoint
@@ -72,7 +72,7 @@ namespace Manager.Controllers
     [Route("new/{idperson}")]
     public async Task<ViewListCheckpoint> NewCheckpoint(string idperson)
     {
-      return await service.NewCheckpoint(idperson);
+      return service.NewCheckpoint(idperson);
     }
     /// <summary>
     /// Buscar checkpoint para manutenção
@@ -84,7 +84,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudCheckpoint> GetCheckpoint(string id)
     {
-      return await service.GetCheckpoint(id);
+      return service.GetCheckpoint(id);
     }
     /// <summary>
     /// Alterar objeto de checkpoint
@@ -96,7 +96,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> UpdateCheckpoint([FromBody]ViewCrudCheckpoint view)
     {
-      return Ok(await  service.UpdateCheckpoint(view));
+      return Ok( service.UpdateCheckpoint(view));
     }
     /// <summary>
     /// Buscar checkpoint finalizado para mostrar no histórico
@@ -108,7 +108,7 @@ namespace Manager.Controllers
     [Route("personcheckpointend/{id}")]
     public async Task<ViewCrudCheckpoint> PersonCheckpointEnd(string id)
     {
-      return await service.PersonCheckpointEnd(id);
+      return service.PersonCheckpointEnd(id);
     }
     /// <summary>
     /// Remover um checkpoint
@@ -120,7 +120,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<string> DeleteCheckpoint(string id)
     {
-      return await service.DeleteCheckpoint(id);
+      return service.DeleteCheckpoint(id);
     }
     /// <summary>
     /// Listar checkpoints finalizados
@@ -137,7 +137,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEnded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     #endregion
 

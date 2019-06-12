@@ -40,7 +40,7 @@ namespace Manager.Controllers
     {
       try
       {
-        return Ok(await service.Authentication(userLogin));
+        return Ok(service.Authentication(userLogin));
         //test
         //return Ok(new { id = "1" });
       }
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("altercontract/{idperson}")]
     public async Task<string> AlterContract(string idperson)
     {
-      return await service.AlterContract(idperson);
+      return service.AlterContract(idperson);
     }
 
     #endregion

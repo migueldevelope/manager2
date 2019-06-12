@@ -39,11 +39,11 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MailMessage
-    public async Task<ViewMailMessage> GetMessage(string id)
+    public  ViewMailMessage GetMessage(string id)
     {
       try
       {
-        MailMessage message = await serviceMailMessage.GetNewVersion(p => p._id == id);
+        MailMessage message =  serviceMailMessage.GetNewVersion(p => p._id == id).Result;
         return message == null ? null :
           new ViewMailMessage
           {

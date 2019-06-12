@@ -57,7 +57,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.List(ref total, count, page, filter, type);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     /// <summary>
     /// Buscar informações da pessoa para alteração
@@ -69,7 +69,7 @@ namespace Manager.Controllers
     [Route("edit/{id}")]
     public async Task<ViewCrudPerson> Get(string id)
     {
-      return await service.Get(id);
+      return service.Get(id);
     }
     /// <summary>
     /// Incluir uma nova pessoa
@@ -81,7 +81,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<ViewCrudPerson> New([FromBody] ViewCrudPerson view)
     {
-      return await service.New(view);
+      return service.New(view);
     }
     /// <summary>
     /// Alterar uma pessoa
@@ -93,7 +93,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody] ViewCrudPerson view)
     {
-      return Ok(await  service.Update(view));
+      return Ok( service.Update(view));
     }
 
     /// <summary>
@@ -112,7 +112,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListTeam(ref total, idmanager, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     #endregion
 
@@ -127,7 +127,7 @@ namespace Manager.Controllers
     [Route("listsalaryscale/{idoccupation}")]
     public async Task<List<ViewListSalaryScalePerson>> ListSalaryScale(string idoccupation)
     {
-      return await service.ListSalaryScale(idoccupation);
+      return service.ListSalaryScale(idoccupation);
     }
     #endregion
 
@@ -147,7 +147,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListOccupation(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     /// <summary>
     /// Listar as empresas para manutenção da pessoa
@@ -164,7 +164,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListCompany(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     /// <summary>
     /// Listar os gestores para manutenção da pessoa
@@ -181,7 +181,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListManager(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     #endregion
 

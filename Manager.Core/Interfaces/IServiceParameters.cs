@@ -11,11 +11,11 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Task<string> Delete(string id);
-    Task<string> New(ViewCrudParameter view);
-    Task<string> Update(ViewCrudParameter view);
-    Task<ViewCrudParameter> Get(string id);
-    Task<ViewCrudParameter> GetKey(string key);
-    Task<List<ViewListParameter>> List( ref long total, int count = 10, int page = 1, string filter = "");
+     string Delete(string id);
+     string New(ViewCrudParameter view);
+     string Update(ViewCrudParameter view);
+     ViewCrudParameter Get(string id);
+     ViewCrudParameter GetKey(string key);
+     List<ViewListParameter> List( ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

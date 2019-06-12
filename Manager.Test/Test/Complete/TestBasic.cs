@@ -64,7 +64,7 @@ namespace Manager.Test.Test.Complete
     //    base.Init();
 
     //    long total = 0;
-    //    var account = this.serviceAccount.GetAllNewVersion(ref total).Result.Where(p => p.Name == "TestBig").FirstOrDefault()._id;
+    //    var account = this.serviceAccount.GetAllNewVersion(ref total).Where(p => p.Name == "TestBig").FirstOrDefault()._id;
     //    var baseUser = new BaseUser()
     //    {
     //      _idAccount = account
@@ -163,7 +163,7 @@ namespace Manager.Test.Test.Complete
         base.Init();
 
         long total = 0;
-        var account = this.serviceAccount.GetAllNewVersion(ref total).Result.Where(p => p.Name == "Support").FirstOrDefault()._id;
+        var account = this.serviceAccount.GetAllNewVersion(ref total).Where(p => p.Name == "Support").FirstOrDefault()._id;
         var baseUser = new BaseUser()
         {
           _idAccount = account

@@ -41,7 +41,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> New([FromBody]ViewCrudParameter view)
     {
-      return Ok(await  service.New(view));
+      return Ok( service.New(view));
     }
     /// <summary>
     /// Lista de parâmetros
@@ -56,7 +56,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListParameter>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListParameter> result = await service.List(ref total, count, page, filter);
+      List<ViewListParameter> result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -70,7 +70,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudParameter> Get(string id)
     {
-      return await service.Get(id);
+      return service.Get(id);
     }
     /// <summary>
     /// Buscar um parâmetro pela chave interna
@@ -82,7 +82,7 @@ namespace Manager.Controllers
     [Route("getkey/{key}")]
     public async Task<ViewCrudParameter> GetName(string key)
     {
-      return await service.GetKey(key);
+      return service.GetKey(key);
     }
     /// <summary>
     /// Alterar um parâmetro
@@ -94,7 +94,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudParameter view)
     {
-      return Ok(await  service.Update(view));
+      return Ok( service.Update(view));
     }
     /// <summary>
     /// Excluir um parâmetro
@@ -106,7 +106,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok(await  service.Delete(id));
+      return Ok( service.Delete(id));
     }
     #endregion
 

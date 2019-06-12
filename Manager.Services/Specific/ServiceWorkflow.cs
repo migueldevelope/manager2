@@ -48,12 +48,12 @@ namespace Manager.Services.Specific
     #endregion
 
     #region WorkFlow
-    public async Task<List<Workflow>> NewFlow(ViewFlow view)
+    public  List<Workflow> NewFlow(ViewFlow view)
     {
       try
       {
         if (view.Type == EnumTypeFlow.Manager)
-          return await Manager(view);
+          return  Manager(view);
         return null;
       }
       catch (Exception e)
@@ -61,7 +61,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<Workflow>> Manager(ViewFlow view)
+    public  List<Workflow> Manager(ViewFlow view)
     {
       try
       {
@@ -75,7 +75,7 @@ namespace Manager.Services.Specific
           Requestor = manager,
           Sequence = 1
         };
-        await serviceWorkflow.InsertNewVersion(workflow);
+         serviceWorkflow.InsertNewVersion(workflow).Wait();
         result.Add(workflow);
         return result;
       }
@@ -84,7 +84,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<Workflow> Approved(ViewWorkflow view)
+    public  Workflow Approved(ViewWorkflow view)
     {
       try
       {
@@ -92,7 +92,7 @@ namespace Manager.Services.Specific
         workflow.StatusWorkflow = EnumWorkflow.Approved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
-        await serviceWorkflow.Update(workflow, null);
+         serviceWorkflow.Update(workflow, null).Wait();
         return workflow;
       }
       catch (Exception e)
@@ -100,7 +100,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<Workflow> Disapproved(ViewWorkflow view)
+    public  Workflow Disapproved(ViewWorkflow view)
     {
       try
       {
@@ -108,7 +108,7 @@ namespace Manager.Services.Specific
         workflow.StatusWorkflow = EnumWorkflow.Disapproved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
-        await serviceWorkflow.Update(workflow, null);
+         serviceWorkflow.Update(workflow, null).Wait();
         return workflow;
       }
       catch (Exception e)

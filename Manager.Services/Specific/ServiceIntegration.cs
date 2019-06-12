@@ -743,7 +743,7 @@ namespace Manager.Services.Specific
         param.UploadNextLog = view.UploadNextLog;
         param.LinkLogExecution = view.LinkLogExecution;
         param.ApiIdentification = view.ApiIdentification;
-        parameterService.Update(param, null);
+        parameterService.Update(param, null).Wait();
         return new ViewCrudIntegrationParameter()
         {
           ConnectionString = param.ConnectionString,
@@ -794,7 +794,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        integrationPersonService.InsertNewVersion(integrationPerson);
+        integrationPersonService.InsertNewVersion(integrationPerson).Wait();
       }
       catch (Exception)
       {
@@ -805,7 +805,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        integrationPersonService.Update(integrationPerson, null);
+        integrationPersonService.Update(integrationPerson, null).Wait();
       }
       catch (Exception)
       {

@@ -84,18 +84,18 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Company
-    public Task<List<ViewListCompany>> ListCompany(ref long total, string filter, int count, int page)
+    public List<ViewListCompany> ListCompany(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
       var detail = serviceCompany.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.Skip(skip).Take(count).ToList();
       total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-      return Task.FromResult(detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name }).ToList());
+      return detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name }).ToList();
     }
     #endregion
 
     #region Manager
-    public Task<List<ViewListPerson>> ListManager(ref long total, string filter, int count, int page)
+    public List<ViewListPerson> ListManager(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
       var detail = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
@@ -111,12 +111,12 @@ namespace Manager.Services.Auth
       //var detail = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-      return Task.FromResult(detail);
+      return detail;
     }
     #endregion
 
     #region Occupation
-    public Task<List<ViewListOccupation>> ListOccupation(ref long total, string filter, int count, int page)
+    public List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
       var detail = serviceOccupation.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name)
@@ -124,7 +124,7 @@ namespace Manager.Services.Auth
         ;
       total = serviceOccupation.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-      return Task.FromResult(detail.Select(p => new ViewListOccupation()
+      return detail.Select(p => new ViewListOccupation()
       {
         _id = p._id,
         Name = p.Name,
@@ -137,13 +137,13 @@ namespace Manager.Services.Auth
           Line = p.Group.Line,
           Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, TypeSphere = p.Group.Sphere.TypeSphere, Name = p.Group.Sphere.Name },
         }
-      }).ToList());
+      }).ToList();
 
     }
     #endregion
 
     #region Person
-    public async Task<string> AddPersonUser(ViewCrudPersonUser view)
+    public  string AddPersonUser(ViewCrudPersonUser view)
     {
       try
       {
@@ -225,7 +225,7 @@ namespace Manager.Services.Auth
         //person.User = user;
         person.User = serviceUser.InsertNewVersion(user).Result;
 
-        await servicePerson.InsertNewVersion(person);
+         servicePerson.InsertNewVersion(person).Wait();
 
         return "ok";
       }
@@ -235,7 +235,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public async Task<string> UpdatePersonUser(ViewCrudPersonUser view)
+    public  string UpdatePersonUser(ViewCrudPersonUser view)
     {
       try
       {
@@ -288,8 +288,8 @@ namespace Manager.Services.Auth
         person.Registration = view.Person.Registration;
         person.SalaryScales = salaryScale;
         person.User = user;
-        await servicePerson.Update(person, null);
-        await serviceUser.Update(user, null);
+         servicePerson.Update(person, null);
+         serviceUser.Update(user, null).Wait();
         return "Person altered!";
       }
       catch (Exception e)
@@ -299,11 +299,11 @@ namespace Manager.Services.Auth
     }
 
 
-    public async Task<List<ViewListSalaryScalePerson>> ListSalaryScale(string idoccupation)
+    public  List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation)
     {
       try
       {
-        var occupation = (await serviceOccupation.GetAllNewVersion(p => p._id == idoccupation)).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         if (occupation.SalaryScales != null)
           return occupation.SalaryScales
             .Select(p => new ViewListSalaryScalePerson
@@ -320,7 +320,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public Task<List<ViewListPersonTeam>> ListTeam(ref long total, string idPerson, string filter, int count, int page)
+    public List<ViewListPersonTeam> ListTeam(ref long total, string idPerson, string filter, int count, int page)
     {
       try
       {
@@ -328,14 +328,14 @@ namespace Manager.Services.Auth
         var detail = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
         total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return Task.FromResult(detail
+        return detail
           .Select(item => new ViewListPersonTeam()
           {
             Name = item.User.Name,
             _idPerson = item._id,
             Occupation = item.Occupation?.Name,
             DataAdm = item.User.DateAdm
-          }).OrderBy(p => p.Name).ToList());
+          }).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -343,7 +343,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public Task<List<ViewListPersonCrud>> List(ref long total, int count, int page, string filter, EnumTypeUser type)
+    public List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
@@ -352,7 +352,7 @@ namespace Manager.Services.Auth
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
             total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-            return Task.FromResult(servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+            return servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
             .Select(x => new ViewListPersonCrud()
             {
               _id = x._id,
@@ -365,11 +365,11 @@ namespace Manager.Services.Auth
               TypeUser = x.TypeUser,
               Occupation = x.Occupation?.Name,
               Manager = x.Manager?.Name
-            }).OrderBy(p => p.User.Name).ToList());
+            }).OrderBy(p => p.User.Name).ToList();
           case EnumTypeUser.HR:
           case EnumTypeUser.ManagerHR:
             total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;
-            return Task.FromResult(servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
+            return servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
             .Select(x => new ViewListPersonCrud()
             {
               _id = x._id,
@@ -382,10 +382,10 @@ namespace Manager.Services.Auth
               TypeUser = x.TypeUser,
               Occupation = x.Occupation?.Name,
               Manager = x.Manager?.Name
-            }).ToList());
+            }).ToList();
           default:
             total = 0;
-            return Task.FromResult(new List<ViewListPersonCrud>());
+            return new List<ViewListPersonCrud>();
         }
       }
       catch (Exception e)
@@ -393,11 +393,11 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<ViewCrudPerson> Get(string id)
+    public  ViewCrudPerson Get(string id)
     {
       try
       {
-        Person person = (await servicePerson.GetNewVersion(p => p._id == id));
+        Person person =  servicePerson.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudPerson()
         {
           _id = person._id,
@@ -491,7 +491,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<ViewCrudPerson> New(ViewCrudPerson view)
+    public  ViewCrudPerson New(ViewCrudPerson view)
     {
       try
       {
@@ -511,7 +511,7 @@ namespace Manager.Services.Auth
           Phone = view.User.Phone,
           PhoneFixed = view.User.PhoneFixed,
           PhotoUrl = view.User.PhotoUrl,
-          Schooling = view.User.Schooling == null ? null : (await serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id)),
+          Schooling = view.User.Schooling == null ? null :  serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result,
           Sex = view.User.Sex,
           ChangePassword = EnumChangePassword.AccessFirst,
           UserAdmin = false
@@ -653,7 +653,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudPerson view)
+    public  string Update(ViewCrudPerson view)
     {
       try
       {
@@ -671,7 +671,7 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.User.PhotoUrl;
         user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result;
         user.Sex = view.User.Sex;
-        await serviceUser.Update(user, null);
+         serviceUser.Update(user, null).Wait();
 
         BaseFields manager = null;
         if (view.Manager != null)
@@ -708,7 +708,7 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user;
         person.SalaryScales = salaryScale;
-        await servicePerson.Update(person, null);
+         servicePerson.Update(person, null).Wait();
         return "Person altered!";
       }
       catch (Exception e)
@@ -717,11 +717,11 @@ namespace Manager.Services.Auth
       }
     }
 
-    public async Task<List<SalaryScalePerson>> ListSalaryScaleOld(string idoccupation)
+    public  List<SalaryScalePerson> ListSalaryScaleOld(string idoccupation)
     {
       try
       {
-        var occupation = (await serviceOccupation.GetAllNewVersion(p => p._id == idoccupation)).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         if (occupation.SalaryScales != null)
           return occupation.SalaryScales
             .Select(p => new SalaryScalePerson
@@ -737,14 +737,14 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<List<ViewListPerson>> GetPersons(string idcompany, string filter)
+    public  List<ViewListPerson> GetPersons(string idcompany, string filter)
     {
       try
       {
-        return (await servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser
+        return servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser
        != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
        & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
-         ).Select(item => new ViewListPerson()
+         .Result.Select(item => new ViewListPerson()
          {
            _id = item._id,
            Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
@@ -761,20 +761,20 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Private
-    private async void DefaultTypeRegisterPerson()
+    private void DefaultTypeRegisterPerson()
     {
       try
       {
         var parameter = serviceParameter.GetAllNewVersion(p => p.Key == "typeregisterperson").Result.FirstOrDefault();
         if (parameter == null)
-          await serviceParameter.InsertNewVersion(new Parameter()
+           serviceParameter.InsertNewVersion(new Parameter()
           {
             Name = "Tipo do cadastro da pessoa",
             Key = "typeregisterperson",
             Content = "0",
             Help = "Informe 0 para cadastro normal e 1 para cadastro de multicontratos.",
             Status = EnumStatus.Enabled
-          });
+          }).Wait();
       }
       catch (Exception e)
       {

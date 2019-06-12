@@ -32,11 +32,11 @@ namespace Manager.Web
     {
       try
       {
-        await _next(context);
+        _next(context);
       }
       catch (Exception ex)
       {
-        await HandleServiceExceptionAsync(context, ex);
+        HandleServiceExceptionAsync(context, ex);
       }
     }
     private static Task HandleServiceExceptionAsync(HttpContext context, Exception exception)

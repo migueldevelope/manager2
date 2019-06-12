@@ -125,7 +125,7 @@ namespace Manager.Services.Specific
 
     #region Private
 
-    private async Task SendQueue(string idplan, string idperson, byte evaluation)
+    private void SendQueue(string idplan, string idperson, byte evaluation)
     {
       try
       {
@@ -139,7 +139,7 @@ namespace Manager.Services.Specific
           Evaluation = evaluation,
           _idAccount = _user._idAccount
         };
-        await serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
 
       }
       catch (Exception e)
@@ -148,13 +148,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task<string> UpdatePlan(string idmonitoring, Plan viewPlan)
+    private void UpdatePlan(string idmonitoring, Plan viewPlan)
     {
       try
       {
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         if (viewPlan.StatusPlanApproved == EnumStatusPlanApproved.Approved)
-          await serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento dentro do prazo do colaborador " + monitoring.Person.User.Name, monitoring.Person);
+          Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento dentro do prazo do colaborador " + monitoring.Person.User.Name, monitoring.Person));
 
 
         //verify plan;
@@ -167,7 +167,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                await Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
                 listActivities.Add(new ViewCrudPlan()
                 {
                   _id = viewPlan._id,
@@ -215,7 +215,7 @@ namespace Manager.Services.Specific
                 upPlan.Evaluation = plan.Evaluation;
 
 
-                await Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
                 listActivities.Add(plan);
               }
               else
@@ -233,7 +233,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                await Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
                 listSchoolings.Add(new ViewCrudPlan()
                 {
                   _id = viewPlan._id,
@@ -280,7 +280,7 @@ namespace Manager.Services.Specific
                 upPlan.TextEndManager = plan.TextEndManager;
                 upPlan.Evaluation = plan.Evaluation;
 
-                await Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
                 listSchoolings.Add(plan);
               }
               else
@@ -299,7 +299,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                await Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
                 listSkillsCompany.Add(new ViewCrudPlan()
                 {
                   _id = viewPlan._id,
@@ -346,7 +346,7 @@ namespace Manager.Services.Specific
                 upPlan.TextEndManager = plan.TextEndManager;
                 upPlan.Evaluation = plan.Evaluation;
 
-                await Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
                 listSkillsCompany.Add(plan);
               }
               else
@@ -356,8 +356,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        await serviceMonitoring.Update(monitoring, null);
-        return "update";
+        serviceMonitoring.Update(monitoring, null).Wait();
       }
       catch (Exception e)
       {
@@ -365,7 +364,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task<string> NewPlanView(string idmonitoring, Plan planOld, Plan viewPlan)
+    private string NewPlanView(string idmonitoring, Plan planOld, Plan viewPlan)
     {
       try
       {
@@ -382,7 +381,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person, idmonitoring, item._id);
-                await Task.Run(() => UpdatePlan(planOld, monitoring.Person));
+                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listActivities.Add(new ViewCrudPlan()
                 {
                   _id = planOld._id,
@@ -447,7 +446,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person, monitoring._id, item._id);
-                await Task.Run(() => UpdatePlan(planOld, monitoring.Person));
+                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listSchooling.Add(new ViewCrudPlan()
                 {
                   _id = planOld._id,
@@ -511,7 +510,7 @@ namespace Manager.Services.Specific
               if (plan._id == planOld._id)
               {
                 AddPlan(viewPlan, monitoring.Person, idmonitoring, item._id);
-                await Task.Run(() => UpdatePlan(planOld, monitoring.Person));
+                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
                 listSkillsCompany.Add(new ViewCrudPlan()
                 {
                   _id = planOld._id,
@@ -566,7 +565,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        await serviceMonitoring.Update(monitoring, null);
+        serviceMonitoring.Update(monitoring, null).Wait();
         return "update";
       }
       catch (Exception e)
@@ -635,24 +634,24 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task UpdatePlan(Plan plan, Person person)
+    private void UpdatePlan(Plan plan, Person person)
     {
       try
       {
 
-        await Task.Run(() => SendQueue(plan._id, plan.Person._id, plan.Evaluation));
+        Task.Run(() => SendQueue(plan._id, plan.Person._id, plan.Evaluation));
 
-        await Task.Run(() => LogSave(_user._idPerson, "Plan Process Update"));
+        Task.Run(() => LogSave(_user._idPerson, "Plan Process Update"));
         if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
         {
           if (plan.Person._id == _user._idPerson)
-            await Task.Run(() => Mail(person, person.Manager.Name, person.Manager.Mail));
+            Task.Run(() => Mail(person, person.Manager.Name, person.Manager.Mail));
           else
-            await Task.Run(() => Mail(person, person.User.Name, person.User.Mail));
+            Task.Run(() => Mail(person, person.User.Name, person.User.Mail));
         }
 
 
-        await servicePlan.Update(plan, null);
+        servicePlan.Update(plan, null).Wait();
         //return "Plan altered!";
       }
       catch (Exception e)
@@ -680,7 +679,7 @@ namespace Manager.Services.Specific
       }
     }
     // send mail
-    private async Task Mail(Person person, string namereceived, string mailreceived)
+    private void Mail(Person person, string namereceived, string mailreceived)
     {
       try
       {
@@ -741,7 +740,7 @@ namespace Manager.Services.Specific
 
     #region Plan
 
-    public async Task<string> UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan)
+    public string UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan)
     {
       try
       {
@@ -774,7 +773,7 @@ namespace Manager.Services.Specific
         }).ToList();
         plan.TypePlan = viewPlan.TypePlan;
 
-        await Task.Run(() => UpdatePlan(idmonitoring, plan));
+        Task.Run(() => UpdatePlan(idmonitoring, plan));
         return "update";
       }
       catch (Exception e)
@@ -783,7 +782,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    public string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       try
       {
@@ -794,7 +793,7 @@ namespace Manager.Services.Specific
           if (structplan._id == idstructplan)
           {
             plan.StructPlans.Remove(structplan);
-            await servicePlan.Update(plan, null);
+            servicePlan.Update(plan, null).Wait();
             return "update";
           }
         }
@@ -806,13 +805,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> RemovePlanActivity(string id)
+    public string RemovePlanActivity(string id)
     {
       try
       {
         var model = servicePlanActivity.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         model.Status = EnumStatus.Disabled;
-        await servicePlanActivity.Update(model, null);
+        servicePlanActivity.Update(model, null).Wait();
         return "deleted";
       }
       catch (Exception e)
@@ -820,7 +819,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task SetAttachment(string idplan, string idmonitoring, string url, string fileName, string attachmentid)
+    public void SetAttachment(string idplan, string idmonitoring, string url, string fileName, string attachmentid)
     {
       try
       {
@@ -839,7 +838,7 @@ namespace Manager.Services.Specific
               }
               res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
 
-              await Task.Run(() => UpdatePlan(idmonitoring, res));
+              Task.Run(() => UpdatePlan(idmonitoring, res));
             }
           }
         }
@@ -855,7 +854,7 @@ namespace Manager.Services.Specific
                 res.Attachments = new List<ViewCrudAttachmentField>();
               }
               res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
-              await Task.Run(() => UpdatePlan(idmonitoring, res));
+              Task.Run(() => UpdatePlan(idmonitoring, res));
             }
           }
         }
@@ -871,12 +870,12 @@ namespace Manager.Services.Specific
                 res.Attachments = new List<ViewCrudAttachmentField>();
               }
               res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
-              await Task.Run(() => UpdatePlan(idmonitoring, res));
+              Task.Run(() => UpdatePlan(idmonitoring, res));
             }
           }
         }
 
-        await serviceMonitoring.Update(monitoring, null);
+        serviceMonitoring.Update(monitoring, null).Wait();
       }
       catch (Exception e)
       {
@@ -884,7 +883,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewPlanActivity>> ListPlanActivity(ref long total, string filter, int count, int page)
+    public List<ViewPlanActivity> ListPlanActivity(ref long total, string filter, int count, int page)
     {
       try
       {
@@ -894,11 +893,11 @@ namespace Manager.Services.Specific
         var detail = servicePlanActivity.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
         total = servicePlanActivity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return Task.FromResult(detail.Select(p => new ViewPlanActivity()
+        return detail.Select(p => new ViewPlanActivity()
         {
           _id = p._id,
           Name = p.Name
-        }).ToList());
+        }).ToList();
       }
       catch (Exception e)
       {
@@ -906,7 +905,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewPlanActivity> GetPlanActivity(string id)
+    public ViewPlanActivity GetPlanActivity(string id)
     {
       try
       {
@@ -923,11 +922,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> NewPlanActivity(ViewPlanActivity model)
+    public string NewPlanActivity(ViewPlanActivity model)
     {
       try
       {
-        await servicePlanActivity.InsertNewVersion(new PlanActivity() { Name = model.Name, Status = EnumStatus.Enabled });
+        servicePlanActivity.InsertNewVersion(new PlanActivity() { Name = model.Name, Status = EnumStatus.Enabled }).Wait();
         return "add plan activity";
       }
       catch (Exception e)
@@ -936,17 +935,17 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdatePlanActivity(ViewPlanActivity model)
+    public string UpdatePlanActivity(ViewPlanActivity model)
     {
       try
       {
-        await servicePlanActivity.Update(new PlanActivity()
+        servicePlanActivity.Update(new PlanActivity()
         {
           _id = model._id,
           Name = model.Name,
           Status = EnumStatus.Enabled,
           _idAccount = _user._idAccount
-        }, null);
+        }, null).Wait();
         return "update";
       }
       catch (Exception e)
@@ -955,7 +954,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewListPlanStruct>> ListPlansStruct(ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
+    public List<ViewListPlanStruct> ListPlansStruct(ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte structplan)
     {
       try
       {
@@ -1044,7 +1043,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return Task.FromResult(result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList());
+        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
       }
       catch (Exception e)
       {
@@ -1053,7 +1052,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public Task<List<ViewGetPlan>> ListPlans(string id, ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
+    public List<ViewGetPlan> ListPlans(string id, ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -1129,7 +1128,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return Task.FromResult(result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList());
+        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
       }
       catch (Exception e)
       {
@@ -1137,7 +1136,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewGetPlan>> ListPlansPerson(string id, ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
+    public List<ViewGetPlan> ListPlansPerson(string id, ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -1215,7 +1214,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return Task.FromResult(result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList());
+        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
       }
       catch (Exception e)
       {
@@ -1224,7 +1223,7 @@ namespace Manager.Services.Specific
 
     }
 
-    public async Task<ViewListPlanStruct> GetPlanStruct(string idmonitoring, string idplan)
+    public ViewListPlanStruct GetPlanStruct(string idmonitoring, string idplan)
     {
       try
       {
@@ -1331,7 +1330,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public Task<List<ViewPlanShort>> ListPlansPerson(string id, ref long total, string filter, int count, int page)
+    public List<ViewPlanShort> ListPlansPerson(string id, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1389,7 +1388,7 @@ namespace Manager.Services.Specific
           LastAction = g.Max(row => row.Deadline)
         }).ToList();
 
-        return Task.FromResult(viewReturn);
+        return viewReturn;
       }
       catch (Exception e)
       {
@@ -1397,7 +1396,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewPlanShort>> ListPlans(string id, ref long total, string filter, int count, int page)
+    public List<ViewPlanShort> ListPlans(string id, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -1451,7 +1450,7 @@ namespace Manager.Services.Specific
           LastAction = g.Max(row => row.Deadline)
         }).ToList();
 
-        return Task.FromResult(viewReturn);
+        return viewReturn;
       }
       catch (Exception e)
       {
@@ -1459,7 +1458,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> NewPlan(string idmonitoring, string idplanold, ViewCrudPlan view)
+    public string NewPlan(string idmonitoring, string idplanold, ViewCrudPlan view)
     {
       try
       {
@@ -1588,7 +1587,7 @@ namespace Manager.Services.Specific
         }
 
 
-        await serviceMonitoring.Update(monitoring, null);
+        serviceMonitoring.Update(monitoring, null).Wait();
         return "update";
       }
       catch (Exception e)
@@ -1597,7 +1596,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> NewStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplan)
+    public string NewStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplan)
     {
       try
       {
@@ -1629,10 +1628,10 @@ namespace Manager.Services.Specific
             Include = DateTime.Now,
             StatusTrainingPlan = EnumStatusTrainingPlan.Open
           };
-          await serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
+          serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
         }
 
-        await servicePlan.Update(plan, null);
+        servicePlan.Update(plan, null).Wait();
         return "update";
       }
       catch (Exception e)
@@ -1641,7 +1640,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudStructPlan> GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
+    public ViewCrudStructPlan GetStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       try
       {
@@ -1670,7 +1669,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplanedit)
+    public string UpdateStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, ViewCrudStructPlan structplanedit)
     {
       try
       {
@@ -1699,7 +1698,7 @@ namespace Manager.Services.Specific
               if (serviceTrainingPlans.GetAllNewVersion(p => p.Person == trainingPlan.Person
                & p.Course == trainingPlan.Course & p.Origin == EnumOrigin.Monitoring & p.Deadline == trainingPlan.Deadline).Result.Count() == 0)
               {
-                await serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
+                serviceMandatoryTraining.NewTrainingPlanInternal(trainingPlan);
               }
             }
 
@@ -1712,7 +1711,7 @@ namespace Manager.Services.Specific
               TypeAction = structplanedit.TypeAction,
               TypeResponsible = structplanedit.TypeResponsible
             });
-            await servicePlan.Update(plan, null);
+            servicePlan.Update(plan, null).Wait();
             return "update";
           }
         }
@@ -1725,7 +1724,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> NewUpdatePlan(string idmonitoring, List<ViewCrudNewPlanUp> viewPlan)
+    public string NewUpdatePlan(string idmonitoring, List<ViewCrudNewPlanUp> viewPlan)
     {
       try
       {
@@ -1816,16 +1815,16 @@ namespace Manager.Services.Specific
         if (_user._idUser == person.User._id)
         {
           planNew.StatusPlanApproved = EnumStatusPlanApproved.Invisible;
-          await NewPlanView(idmonitoring, planUpdate, planNew);
+          NewPlanView(idmonitoring, planUpdate, planNew);
         }
         else
         {
           if (planUpdate.NewAction == EnumNewAction.Yes)
           {
-            await NewPlanView(idmonitoring, planUpdate, planNew);
+            NewPlanView(idmonitoring, planUpdate, planNew);
           }
           else
-            await Task.Run(() => UpdatePlan(idmonitoring, planUpdate));
+            Task.Run(() => UpdatePlan(idmonitoring, planUpdate));
         }
         return "newupdate";
       }
@@ -1835,7 +1834,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewGetPlan> GetPlan(string idmonitoring, string idplan)
+    public ViewGetPlan GetPlan(string idmonitoring, string idplan)
     {
       try
       {

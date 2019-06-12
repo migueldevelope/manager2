@@ -25,7 +25,7 @@
 
 //    public async Task GetNotes(string idperson, string idaccount)
 //    {
-//      if (await service.VerifyAccount(idaccount) == false)
+//      if (service.VerifyAccount(idaccount) == false)
 //        throw new Exception();
 
 //      var baseUser = new BaseUser()
@@ -36,12 +36,12 @@
 //      //servicePerson._user;
 
 
-//      await Clients.All.SendAsync("ReceiveMessageNotes" + idperson + idaccount, service.GetNotes(idperson));
+//      Clients.All.SendAsync("ReceiveMessageNotes" + idperson + idaccount, service.GetNotes(idperson));
 //    }
 
 //    public async Task GetNotesPerson(string idperson, string idaccount)
 //    {
-//      if (await service.VerifyAccount(idaccount) == false)
+//      if (service.VerifyAccount(idaccount) == false)
 //        throw new Exception();
 
 //      var baseUser = new BaseUser()
@@ -52,7 +52,7 @@
 //      //servicePerson.SetUser(baseUser);
 
 
-//      await Clients.All.SendAsync("ReceiveMessageNotesPerson" + idperson + idaccount, service.GetNotesPerson(idperson));
+//      Clients.All.SendAsync("ReceiveMessageNotesPerson" + idperson + idaccount, service.GetNotesPerson(idperson));
 //    }
 
 //  }

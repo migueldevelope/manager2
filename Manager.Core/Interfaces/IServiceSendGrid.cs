@@ -8,6 +8,6 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Task<string> Send(string idMail, string apiKeySendGrid);
+     string Send(string idMail, string apiKeySendGrid);
   }
 }

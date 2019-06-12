@@ -91,7 +91,7 @@ namespace Manager.Services.Auth
     #region User
 
 
-    public async Task CheckTermOfService(string iduser)
+    public void CheckTermOfService(string iduser)
     {
       try
       {
@@ -101,10 +101,10 @@ namespace Manager.Services.Auth
 
         serviceTermsOfService.SetUser(_user);
         serviceTermsOfService._user = _user;
-        var term = serviceTermsOfService.GetTerm().Result;
+        var term = serviceTermsOfService.GetTerm();
         user.UserTermOfServices.Add(new UserTermOfService() { _idTermOfService = term._id, Date = term.Date });
 
-        await serviceUser.Update(user, null);
+        serviceUser.Update(user, null).Wait();
       }
       catch (Exception e)
       {
@@ -112,7 +112,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public async Task<List<ViewListUser>> List(int count, int page, string filter, EnumTypeUser type)
+    public List<ViewListUser> List(int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
@@ -121,7 +121,7 @@ namespace Manager.Services.Auth
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
             var total = serviceUser.CountNewVersion(p => p.Name.Contains(filter)).Result;
-            return (await serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)))
+            return serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)).Result
             .Select(x => new ViewListUser()
             {
               _id = x._id,
@@ -148,11 +148,11 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<ViewCrudUser> Get(string iduser)
+    public ViewCrudUser Get(string iduser)
     {
       try
       {
-        User user = (await serviceUser.GetNewVersion(p => p._id == iduser));
+        User user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
         return new ViewCrudUser()
         {
           _id = user._id,
@@ -177,7 +177,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<ViewCrudUser> New(ViewCrudUser view)
+    public ViewCrudUser New(ViewCrudUser view)
     {
       try
       {
@@ -206,7 +206,7 @@ namespace Manager.Services.Auth
         if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
           user.ChangePassword = EnumChangePassword.No;
 
-        user = (await serviceUser.InsertNewVersion(user));
+        user = serviceUser.InsertNewVersion(user).Result;
         return new ViewCrudUser()
         {
           _id = user._id,
@@ -231,7 +231,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<ViewCrudUser> Update(ViewCrudUser view)
+    public ViewCrudUser Update(ViewCrudUser view)
     {
       try
       {
@@ -249,11 +249,11 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.PhotoUrl;
         user.Schooling = user.Schooling == null ? null : new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
         user.Sex = view.Sex;
-        await serviceUser.Update(user, null);
+        serviceUser.Update(user, null).Wait();
         foreach (var item in servicePerson.GetAllNewVersion(p => p.User._id == view._id).Result.ToList())
         {
           item.User = user;
-          await servicePerson.Update(item, null);
+          servicePerson.Update(item, null).Wait();
         }
         return new ViewCrudUser()
         {
@@ -279,11 +279,11 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<string> GetPhoto(string idUser)
+    public string GetPhoto(string idUser)
     {
       try
       {
-        var photo = (await serviceUser.GetAllNewVersion(p => p._id == idUser)).FirstOrDefault().PhotoUrl;
+        var photo = serviceUser.GetAllNewVersion(p => p._id == idUser).Result.FirstOrDefault().PhotoUrl;
         return photo;
       }
       catch (Exception e)
@@ -291,13 +291,13 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task SetPhoto(string idUser, string url)
+    public void SetPhoto(string idUser, string url)
     {
       try
       {
         var person = serviceUser.GetAllNewVersion(p => p._id == idUser).Result.SingleOrDefault();
         person.PhotoUrl = url;
-        await serviceUser.Update(person, null);
+        serviceUser.Update(person, null).Wait();
       }
       catch (Exception e)
       {
@@ -308,7 +308,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Password
-    public async Task<string> AlterPassword(ViewAlterPass resetPass, string idUser)
+    public string AlterPassword(ViewAlterPass resetPass, string idUser)
     {
       try
       {
@@ -319,7 +319,7 @@ namespace Manager.Services.Auth
         string newPass = EncryptServices.GetMD5Hash(resetPass.NewPassword);
         user.Password = newPass;
         user.ChangePassword = EnumChangePassword.No;
-        await serviceUser.Update(user, null);
+        serviceUser.Update(user, null).Wait();
         return "Password changed!";
       }
       catch (Exception e)
@@ -327,7 +327,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<string> AlterPasswordForgot(ViewAlterPass resetPass, string foreign)
+    public string AlterPasswordForgot(ViewAlterPass resetPass, string foreign)
     {
       try
       {
@@ -345,7 +345,7 @@ namespace Manager.Services.Auth
         user.Password = newPass;
         user.ChangePassword = EnumChangePassword.No;
         user.ForeignForgotPassword = string.Empty;
-        await serviceUser.Update(user, null);
+        serviceUser.Update(user, null).Wait();
         return "Password changed!";
       }
       catch (Exception e)
@@ -353,7 +353,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<string> ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid)
+    public string ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid)
     {
       try
       {
@@ -392,8 +392,8 @@ namespace Manager.Services.Auth
         sendMail = serviceMail.InsertNewVersion(sendMail).Result;
         user.ChangePassword = EnumChangePassword.ForgotPassword;
         user.ForeignForgotPassword = guid;
-        await serviceUser.Update(user, null);
-        await serviceMail.Send(sendMail, pathSendGrid);
+        serviceUser.Update(user, null).Wait();
+        serviceMail.Send(sendMail, pathSendGrid);
         return "Email sent successfully!";
       }
       catch (Exception e)
@@ -404,11 +404,11 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Person
-    public Task<List<ViewListPersonInfo>> ListPerson(string iduser, ref long total, string filter, int count, int page)
+    public List<ViewListPersonInfo> ListPerson(string iduser, ref long total, string filter, int count, int page)
     {
       List<Person> detail = servicePerson.GetAllNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
       total = servicePerson.CountNewVersion(p => p.User._id == iduser & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-      return Task.FromResult(detail.Select(p => new ViewListPersonInfo
+      return detail.Select(p => new ViewListPersonInfo
       {
         _id = p._id,
         TypeJourney = p.TypeJourney,
@@ -426,7 +426,7 @@ namespace Manager.Services.Auth
           Phone = p.User.Phone,
           _id = p.User._id
         }
-      }).ToList());
+      }).ToList();
     }
     #endregion
 

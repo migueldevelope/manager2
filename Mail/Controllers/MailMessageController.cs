@@ -33,7 +33,7 @@ namespace EvaluationMail.Controllers
     [Route("{id}")]
     public async Task<ViewMailMessage> Get(string id)
     {
-      return await this.service.GetMessage(id);
+      return this.service.GetMessage(id);
     }
   }
 }

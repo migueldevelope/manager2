@@ -43,18 +43,18 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Send Grid
-    public async Task<string> Send(string idMail, string apiKeySendGrid)
+    public string Send(string idMail, string apiKeySendGrid)
     {
       try
       {
-        return await Send(serviceMail.GetAllNewVersion(p => p._id == idMail).Result.FirstOrDefault(), apiKeySendGrid);
+        return Send(serviceMail.GetAllNewVersion(p => p._id == idMail).Result.FirstOrDefault(), apiKeySendGrid);
       }
       catch (Exception)
       {
         throw;
       }
     }
-    public async Task<string> Send(MailLog mailSend, string apiKeySendGrid)
+    public string Send(MailLog mailSend, string apiKeySendGrid)
     {
       try
       {
@@ -83,13 +83,13 @@ namespace Manager.Services.Specific
         if (mailSend.Priority == EnumPriorityMail.High)
           msg.Headers.Add("Priority", "Urgent");
 
-        var response = await client.SendEmailAsync(msg);
+        var response = client.SendEmailAsync(msg).Result;
 
         if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
         {
           mailSend.StatusMail = EnumStatusMail.Error;
           mailSend.MessageError = response.Body.ToString();
-          await serviceMail.Update(mailSend, null);
+          serviceMail.Update(mailSend, null).Wait();
           throw new Exception(string.Format("e-mail send error: {0}", response.StatusCode));
         }
 
@@ -98,7 +98,7 @@ namespace Manager.Services.Specific
         foreach (var item in response.Headers.GetValues("X-Message-Id"))
           mailSend.KeySendGrid.Add(item);
 
-        await serviceMail.Update(mailSend, null);
+        serviceMail.Update(mailSend, null).Wait();
         return "e-mail send sucess!";
       }
       catch (Exception e)

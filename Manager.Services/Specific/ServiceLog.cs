@@ -68,7 +68,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task NewLogService(ViewLog view)
+    public void NewLogService(ViewLog view)
     {
       try
       {
@@ -80,27 +80,27 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Local = view.Local
         };
-        log = await serviceLog.InsertNewVersion(log);
+        serviceLog.InsertNewVersion(log).Wait();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public Task<List<ViewListLog>> ListLogs(string idaccount,  ref long total, int count, int page, string filter)
+    public List<ViewListLog> ListLogs(string idaccount,  ref long total, int count, int page, string filter)
     {
       try
       {
         int skip = (count * (page - 1));
         List<Log> detail = serviceLog.GetAllFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "DataLog DESC").Result;
         total = serviceLog.CountFreeNewVersion(p => p._idAccount == idaccount && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail.Select(p => new ViewListLog()
+        return detail.Select(p => new ViewListLog()
         {
           DataLog = p.DataLog,
           Description = p.Description,
           Local = p.Local,
           Person = (p.Person == null)? "Service" : p.Person.User.Name
-        }).ToList());
+        }).ToList();
       }
       catch (Exception e)
       {

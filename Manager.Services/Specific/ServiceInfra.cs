@@ -578,7 +578,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Infra
-    public async Task<List<ViewListSkill>> GetEssential(string idcompany)
+    public  List<ViewListSkill> GetEssential(string idcompany)
     {
       try
       {
@@ -597,7 +597,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteProcessLevelOne(string id)
+    public  string DeleteProcessLevelOne(string id)
     {
       try
       {
@@ -615,7 +615,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteProcessLevelTwo(string id)
+    public  string DeleteProcessLevelTwo(string id)
     {
       try
       {
@@ -638,7 +638,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
+    public  string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
     {
       try
       {
@@ -680,7 +680,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
+    public  string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
     {
       try
       {
@@ -722,7 +722,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
+    public  string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
     {
       try
       {
@@ -745,7 +745,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
+    public  string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
     {
       try
       {
@@ -768,7 +768,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteTextDefault(string id)
+    public  string DeleteTextDefault(string id)
     {
       try
       {
@@ -782,7 +782,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> AreaOrder(string idcompany, string idarea, long order, bool sum)
+    public  string AreaOrder(string idcompany, string idarea, long order, bool sum)
     {
       try
       {
@@ -797,7 +797,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> GetCSVCompareGroup(string idcompany, string link)
+    public  string GetCSVCompareGroup(string idcompany, string link)
     {
       try
       {
@@ -1087,7 +1087,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<List<ViewListCbo>> ListCBO()
+    public  List<ViewListCbo> ListCBO()
     {
       try
       {
@@ -1107,7 +1107,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudCbo> GetCBO(string id)
+    public  ViewCrudCbo GetCBO(string id)
     {
       try
       {
@@ -1127,7 +1127,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListSphere>> GetSpheres()
+    public  List<ViewListSphere> GetSpheres()
     {
       try
       {
@@ -1145,7 +1145,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListSphere>> GetSpheres(string idcompany)
+    public  List<ViewListSphere> GetSpheres(string idcompany)
     {
       try
       {
@@ -1163,7 +1163,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListArea>> GetAreas()
+    public  List<ViewListArea> GetAreas()
     {
       try
       {
@@ -1196,7 +1196,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudSchooling> GetSchoolingById(string id)
+    public  ViewCrudSchooling GetSchoolingById(string id)
     {
       try
       {
@@ -1216,7 +1216,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudAxis> GetAxisById(string id)
+    public  ViewCrudAxis GetAxisById(string id)
     {
       try
       {
@@ -1235,7 +1235,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudSphere> GetSphereById(string id)
+    public  ViewCrudSphere GetSphereById(string id)
     {
       try
       {
@@ -1254,7 +1254,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudSkill> GetSkillById(string id)
+    public  ViewCrudSkill GetSkillById(string id)
     {
       try
       {
@@ -1273,7 +1273,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListArea>> GetAreas(string idcompany)
+    public  List<ViewListArea> GetAreas(string idcompany)
     {
       try
       {
@@ -1306,7 +1306,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListAxis>> GetAxis()
+    public  List<ViewListAxis> GetAxis()
     {
       try
       {
@@ -1324,7 +1324,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListAxis>> GetAxis(string idcompany)
+    public  List<ViewListAxis> GetAxis(string idcompany)
     {
       try
       {
@@ -1342,7 +1342,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListQuestions>> ListQuestions(string idcompany)
+    public  List<ViewListQuestions> ListQuestions(string idcompany)
     {
       try
       {
@@ -1362,7 +1362,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudQuestions> GetQuestions(string id)
+    public  ViewCrudQuestions GetQuestions(string id)
     {
       try
       {
@@ -1383,7 +1383,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListSchooling>> GetSchooling()
+    public  List<ViewListSchooling> GetSchooling()
     {
       try
       {
@@ -1401,7 +1401,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudGroup> AddGroup(ViewAddGroup view)
+    public  ViewCrudGroup AddGroup(ViewAddGroup view)
     {
       try
       {
@@ -1450,7 +1450,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddEssential(ViewCrudEssential view)
+    public  string AddEssential(ViewCrudEssential view)
     {
       try
       {
@@ -1480,7 +1480,7 @@ namespace Manager.Services.Specific
       }
     }
     
-    public async Task<ViewCrudGroup> AddGroup(ViewCrudGroup view)
+    public  ViewCrudGroup AddGroup(ViewCrudGroup view)
     {
       try
       {
@@ -1529,7 +1529,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddMapGroupSchooling(ViewCrudMapGroupSchooling view)
+    public  string AddMapGroupSchooling(ViewCrudMapGroupSchooling view)
     {
       try
       {
@@ -1555,7 +1555,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddMapGroupScope(ViewCrudMapGroupScope view)
+    public  string AddMapGroupScope(ViewCrudMapGroupScope view)
     {
       try
       {
@@ -1598,7 +1598,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddMapGroupSkill(ViewCrudMapGroupSkill view)
+    public  string AddMapGroupSkill(ViewCrudMapGroupSkill view)
     {
       try
       {
@@ -1626,7 +1626,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddOccupationActivities(ViewCrudOccupationActivities view)
+    public  string AddOccupationActivities(ViewCrudOccupationActivities view)
     {
       try
       {
@@ -1666,7 +1666,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list)
+    public  string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list)
     {
       try
       {
@@ -1713,7 +1713,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddSpecificRequirements(string idoccupation, ViewCrudSpecificRequirements view)
+    public  string AddSpecificRequirements(string idoccupation, ViewCrudSpecificRequirements view)
     {
       try
       {
@@ -1730,7 +1730,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddOccupationSkill(ViewCrudOccupationSkill view)
+    public  string AddOccupationSkill(ViewCrudOccupationSkill view)
     {
       try
       {
@@ -1758,7 +1758,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudSkill> AddSkill(ViewCrudSkill view)
+    public  ViewCrudSkill AddSkill(ViewCrudSkill view)
     {
       try
       {
@@ -1785,7 +1785,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<string> AddArea(ViewCrudArea view)
+    public  string AddArea(ViewCrudArea view)
     {
       try
       {
@@ -1810,7 +1810,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddCBO(ViewCrudCbo view)
+    public  string AddCBO(ViewCrudCbo view)
     {
       try
       {
@@ -1828,7 +1828,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddAxis(ViewCrudAxis view)
+    public  string AddAxis(ViewCrudAxis view)
     {
       try
       {
@@ -1847,7 +1847,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddOccupation(ViewCrudOccupation view)
+    public  string AddOccupation(ViewCrudOccupation view)
     {
       try
       {
@@ -1895,7 +1895,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<Schooling> AddSchooling(ViewCrudSchooling schooling)
+    public  Schooling AddSchooling(ViewCrudSchooling schooling)
     {
       try
       {
@@ -1915,7 +1915,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddSphere(ViewCrudSphere view)
+    public  string AddSphere(ViewCrudSphere view)
     {
       try
       {
@@ -1934,7 +1934,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddQuestions(ViewCrudQuestions view)
+    public  string AddQuestions(ViewCrudQuestions view)
     {
       try
       {
@@ -1956,7 +1956,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddProcessLevelOne(ViewCrudProcessLevelOne model)
+    public  string AddProcessLevelOne(ViewCrudProcessLevelOne model)
     {
       try
       {
@@ -1987,7 +1987,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddTextDefault(ViewCrudTextDefault model)
+    public  string AddTextDefault(ViewCrudTextDefault model)
     {
       try
       {
@@ -2007,7 +2007,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddProcessLevelTwo(ViewCrudProcessLevelTwo model)
+    public  string AddProcessLevelTwo(ViewCrudProcessLevelTwo model)
     {
       try
       {
@@ -2037,7 +2037,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteArea(string idarea)
+    public  string DeleteArea(string idarea)
     {
       try
       {
@@ -2063,7 +2063,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteAxis(string idaxis)
+    public  string DeleteAxis(string idaxis)
     {
       try
       {
@@ -2085,7 +2085,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteEssential(string idcompany, string id)
+    public  string DeleteEssential(string idcompany, string id)
     {
       try
       {
@@ -2109,7 +2109,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteGroup(string idgroup)
+    public  string DeleteGroup(string idgroup)
     {
       try
       {
@@ -2136,7 +2136,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteMapGroupSchooling(string idgroup, string id)
+    public  string DeleteMapGroupSchooling(string idgroup, string id)
     {
       try
       {
@@ -2154,7 +2154,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteMapGroupSkill(string idgroup, string id)
+    public  string DeleteMapGroupSkill(string idgroup, string id)
     {
       try
       {
@@ -2172,7 +2172,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteMapGroupScope(string idgroup, string idscope)
+    public  string DeleteMapGroupScope(string idgroup, string idscope)
     {
       try
       {
@@ -2190,7 +2190,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteOccupation(string idoccupation)
+    public  string DeleteOccupation(string idoccupation)
     {
       try
       {
@@ -2211,7 +2211,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteOccupationActivities(string idoccupation, string idactivitie)
+    public  string DeleteOccupationActivities(string idoccupation, string idactivitie)
     {
       try
       {
@@ -2229,7 +2229,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteOccupationSkill(string idoccupation, string id)
+    public  string DeleteOccupationSkill(string idoccupation, string id)
     {
       try
       {
@@ -2247,7 +2247,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteSkill(string idskill)
+    public  string DeleteSkill(string idskill)
     {
       try
       {
@@ -2264,7 +2264,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteSphere(string idsphere)
+    public  string DeleteSphere(string idsphere)
     {
       try
       {
@@ -2290,7 +2290,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteSchooling(string idschooling)
+    public  string DeleteSchooling(string idschooling)
     {
       try
       {
@@ -2304,7 +2304,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> DeleteQuestion(string idquestion)
+    public  string DeleteQuestion(string idquestion)
     {
       try
       {
@@ -2319,7 +2319,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteCBO(string id)
+    public  string DeleteCBO(string id)
     {
       try
       {
@@ -2334,7 +2334,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListCompany>> GetCompanies()
+    public  List<ViewListCompany> GetCompanies()
     {
       try
       {
@@ -2349,7 +2349,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<List<ViewGroupListLO>> GetGroups(string idcompany)
+    public  List<ViewGroupListLO> GetGroups(string idcompany)
     {
       try
       {
@@ -2378,7 +2378,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewGetOccupation>> GetOccupations(string idcompany, string idarea)
+    public  List<ViewGetOccupation> GetOccupations(string idcompany, string idarea)
     {
       try
       {
@@ -2413,7 +2413,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewOccupationListEdit>> ListOccupationsEdit(string idcompany, string idarea, ref  long total,  string filter, int count,int page, string filterGroup)
+    public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref  long total,  string filter, int count,int page, string filterGroup)
     {
       try
       {
@@ -2470,7 +2470,7 @@ namespace Manager.Services.Specific
 
         total = list.Count();
 
-        return Task.FromResult(itensResult);
+        return itensResult;
       }
       catch (Exception e)
       {
@@ -2478,7 +2478,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudSkill> GetSkill(string filterName)
+    public  ViewCrudSkill GetSkill(string filterName)
     {
       try
       {
@@ -2512,7 +2512,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewListSkill>> GetSkills(ref  long total,  string filter, int count,int page)
+    public List<ViewListSkill> GetSkills(ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -2520,13 +2520,13 @@ namespace Manager.Services.Specific
         var detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return Task.FromResult(detail.Select(p => new ViewListSkill()
+        return detail.Select(p => new ViewListSkill()
         {
           _id = p._id,
           Name = p.Name,
           Concept = p.Concept,
           TypeSkill = p.TypeSkill
-        }).ToList());
+        }).ToList();
       }
       catch (Exception e)
       {
@@ -2534,7 +2534,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewSkills>> GetSkills(string company, ref  long total,  string filter, int count,int page)
+    public List<ViewSkills> GetSkills(string company, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -2563,7 +2563,7 @@ namespace Manager.Services.Specific
 
         total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
@@ -2571,7 +2571,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewSkills>> GetSkillsGroup(string idgroup, string idcompany, ref  long total,  string filter, int count,int page)
+    public List<ViewSkills> GetSkillsGroup(string idgroup, string idcompany, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -2609,7 +2609,7 @@ namespace Manager.Services.Specific
 
         total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
@@ -2617,7 +2617,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewSkills>> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref  long total,  string filter, int count,int page)
+    public List<ViewSkills> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref  long total,  string filter, int count,int page)
     {
       try
       {
@@ -2664,7 +2664,7 @@ namespace Manager.Services.Specific
 
         total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
@@ -2672,7 +2672,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudProcessLevelTwo> GetProcessLevelTwo(string id)
+    public  ViewCrudProcessLevelTwo GetProcessLevelTwo(string id)
     {
       try
       {
@@ -2705,7 +2705,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListProcessLevelTwo>> GetProcessLevelTwoFilter(string idarea)
+    public  List<ViewListProcessLevelTwo> GetProcessLevelTwoFilter(string idarea)
     {
       try
       {
@@ -2743,7 +2743,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListProcessLevelTwo>> GetProcessLevelTwo()
+    public  List<ViewListProcessLevelTwo> GetProcessLevelTwo()
     {
       try
       {
@@ -2781,7 +2781,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> AddSkills(List<ViewCrudSkill> view)
+    public  string AddSkills(List<ViewCrudSkill> view)
     {
       try
       {
@@ -2805,7 +2805,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudGroup> GetGroup(string id)
+    public  ViewCrudGroup GetGroup(string id)
     {
       try
       {
@@ -2832,7 +2832,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudGroup> GetGroup(string idCompany, string filterName)
+    public  ViewCrudGroup GetGroup(string idCompany, string filterName)
     {
       try
       {
@@ -2859,7 +2859,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListGroup>> GetGroups()
+    public  List<ViewListGroup> GetGroups()
     {
       try
       {
@@ -2888,7 +2888,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListGroup>> GetGroupsPrint(string idcompany)
+    public  List<ViewListGroup> GetGroupsPrint(string idcompany)
     {
       try
       {
@@ -2913,7 +2913,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudOccupation> GetOccupation(string id)
+    public  ViewCrudOccupation GetOccupation(string id)
     {
       try
       {
@@ -2964,7 +2964,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListCourse>> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type)
+    public  List<ViewListCourse> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type)
     {
       try
       {
@@ -3000,7 +3000,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudOccupation> GetOccupation(string idCompany, string filterName)
+    public  ViewCrudOccupation GetOccupation(string idCompany, string filterName)
     {
       try
       {
@@ -3042,7 +3042,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListOccupationView>> GetOccupations()
+    public  List<ViewListOccupationView> GetOccupations()
     {
       try
       {
@@ -3070,7 +3070,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudTextDefault> GetTextDefault(string idcompany, string name)
+    public  ViewCrudTextDefault GetTextDefault(string idcompany, string name)
     {
       try
       {
@@ -3090,7 +3090,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudTextDefault> GetTextDefault(string id)
+    public  ViewCrudTextDefault GetTextDefault(string id)
     {
       try
       {
@@ -3110,7 +3110,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListTextDefault>> ListTextDefault(string idcompany)
+    public  List<ViewListTextDefault> ListTextDefault(string idcompany)
     {
       try
       {
@@ -3129,7 +3129,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view)
+    public  string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view)
     {
       try
       {
@@ -3154,7 +3154,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view)
+    public  string UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view)
     {
       try
       {
@@ -3184,7 +3184,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateMapGroupScope(string idgroup, ViewCrudScope view)
+    public  string UpdateMapGroupScope(string idgroup, ViewCrudScope view)
     {
       try
       {
@@ -3214,7 +3214,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateMapGroupSchooling(string idgroup, ViewCrudSchooling view)
+    public  string UpdateMapGroupSchooling(string idgroup, ViewCrudSchooling view)
     {
       try
       {
@@ -3237,7 +3237,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> UpdateGroupSphereAxis(Group group, Group groupOld)
+    public  string UpdateGroupSphereAxis(Group group, Group groupOld)
     {
       try
       {
@@ -3272,7 +3272,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<string> UpdateArea(ViewCrudArea view)
+    public  string UpdateArea(ViewCrudArea view)
     {
       try
       {
@@ -3292,7 +3292,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateAxis(ViewCrudAxis view)
+    public  string UpdateAxis(ViewCrudAxis view)
     {
       try
       {
@@ -3311,7 +3311,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateCBO(ViewCrudCbo view)
+    public  string UpdateCBO(ViewCrudCbo view)
     {
       try
       {
@@ -3328,7 +3328,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateGroup(ViewCrudGroup view)
+    public  string UpdateGroup(ViewCrudGroup view)
     {
       try
       {
@@ -3358,7 +3358,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateOccupation(ViewCrudOccupation view)
+    public  string UpdateOccupation(ViewCrudOccupation view)
     {
       try
       {
@@ -3444,7 +3444,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateSkill(ViewCrudSkill view)
+    public  string UpdateSkill(ViewCrudSkill view)
     {
       try
       {
@@ -3463,7 +3463,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateQuestions(ViewCrudQuestions view)
+    public  string UpdateQuestions(ViewCrudQuestions view)
     {
       try
       {
@@ -3483,7 +3483,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateSphere(ViewCrudSphere view)
+    public  string UpdateSphere(ViewCrudSphere view)
     {
       try
       {
@@ -3503,7 +3503,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateSchooling(ViewCrudSchooling view)
+    public  string UpdateSchooling(ViewCrudSchooling view)
     {
       try
       {
@@ -3522,7 +3522,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateProcessLevelOne(ViewCrudProcessLevelOne view)
+    public  string UpdateProcessLevelOne(ViewCrudProcessLevelOne view)
     {
       try
       {
@@ -3540,7 +3540,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateProcessLevelTwo(ViewCrudProcessLevelTwo view)
+    public  string UpdateProcessLevelTwo(ViewCrudProcessLevelTwo view)
     {
       try
       {
@@ -3552,7 +3552,7 @@ namespace Manager.Services.Specific
 
         serviceProcessLevelTwo.Update(model, null);
 
-        await Task.Run(() => UpdateProcessLevelTwoAll(model._id));
+         Task.Run(() => UpdateProcessLevelTwoAll(model._id));
         //UpdateProcessLevelTwoAll(model._id);
         return "update";
       }
@@ -3562,7 +3562,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateTextDefault(ViewCrudTextDefault view)
+    public  string UpdateTextDefault(ViewCrudTextDefault view)
     {
       try
       {
@@ -3583,7 +3583,7 @@ namespace Manager.Services.Specific
 
 
 
-    public async Task<ViewMapGroup> GetMapGroup(string id)
+    public  ViewMapGroup GetMapGroup(string id)
     {
       try
       {
@@ -3634,7 +3634,7 @@ namespace Manager.Services.Specific
 
     }
 
-    public async Task<ViewCrudMapGroupScope> GetMapGroupScopeById(string idgroup, string idscope)
+    public  ViewCrudMapGroupScope GetMapGroupScopeById(string idgroup, string idscope)
     {
       try
       {
@@ -3659,7 +3659,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewListProcessLevelOneByArea>> GetListProcessLevelOneByArea(string idarea)
+    public  List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea)
     {
       try
       {
@@ -3696,7 +3696,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudArea> GetAreasById(string id)
+    public  ViewCrudArea GetAreasById(string id)
     {
       try
       {
@@ -3715,7 +3715,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewMapOccupation> GetMapOccupation(string id)
+    public  ViewMapOccupation GetMapOccupation(string id)
     {
       try
       {
@@ -3805,7 +3805,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudProcessLevelOne> GetListProcessLevelOneById(string id)
+    public  ViewCrudProcessLevelOne GetListProcessLevelOneById(string id)
     {
       try
       {
@@ -3828,7 +3828,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<ViewCrudProcessLevelTwo> GetListProcessLevelTwoById(string id)
+    public  ViewCrudProcessLevelTwo GetListProcessLevelTwoById(string id)
     {
       try
       {
@@ -3867,7 +3867,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = AddGroup(view).Result;
+        var group = AddGroup(view);
         return serviceGroup.GetAllNewVersion(p => p._id == group._id).Result.FirstOrDefault();
       }
       catch (Exception e)

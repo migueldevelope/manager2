@@ -13,9 +13,9 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
 
-    Task<List<ViewListMailModel>> List( ref long total, int count = 10, int page = 1, string filter = "");
-    Task<string> New(ViewCrudMailModel view);
-    Task<ViewCrudMailModel> Get(string id);
-    Task<string> Update(ViewCrudMailModel view);
+     List<ViewListMailModel> List( ref long total, int count = 10, int page = 1, string filter = "");
+     string New(ViewCrudMailModel view);
+     ViewCrudMailModel Get(string id);
+     string Update(ViewCrudMailModel view);
   }
 }

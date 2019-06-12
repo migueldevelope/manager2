@@ -47,7 +47,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListOnBoarding>> List(string idmanager,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListOnBoarding> result = await service.List(idmanager, ref total, filter, count, page);
+      List<ViewListOnBoarding> result = service.List(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return  result;
     }
@@ -61,7 +61,7 @@ namespace Manager.Controllers
     [Route("personwait/{idperson}")]
     public async Task<ViewListOnBoarding> PersonWait(string idperson)
     {
-      return await service.PersonWait(idperson);
+      return service.PersonWait(idperson);
     }
     /// <summary>
     /// Inclusão de novo OnBoarding
@@ -73,7 +73,7 @@ namespace Manager.Controllers
     [Route("new/{idperson}")]
     public async Task<ViewListOnBoarding> New(string idperson)
     {
-      return await service.New(idperson);
+      return service.New(idperson);
     }
     /// <summary>
     /// Iniciar o processo de onboarding do colaborador
@@ -85,7 +85,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudOnboarding> Get(string id)
     {
-      return await service.Get(id);
+      return service.Get(id);
     }
     /// <summary>
     /// Apagar comentários
@@ -99,7 +99,7 @@ namespace Manager.Controllers
     [Route("deletecomments/{idonboarding}/{iditem}/{idcomments}")]
     public async Task<IActionResult> DeleteComments(string idonboarding, string iditem, string idcomment)
     {
-      return  Ok(await service.DeleteComments(idonboarding, iditem, idcomment));
+      return  Ok(service.DeleteComments(idonboarding, iditem, idcomment));
     }
     /// <summary>
     /// Alteração de leitura de comentário
@@ -113,7 +113,7 @@ namespace Manager.Controllers
     [Route("updatecommentsview/{idonboarding}/{iditem}/{usercomment}")]
     public async Task<IActionResult> UpdateCommentsView(string idonboarding, string iditem, EnumUserComment usercomment)
     {
-      return Ok(await  service.UpdateCommentsView(idonboarding, iditem, usercomment));
+      return Ok( service.UpdateCommentsView(idonboarding, iditem, usercomment));
     }
     /// <summary>
     /// Apagar onboarding
@@ -125,7 +125,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok(await  service.Delete(id));
+      return Ok( service.Delete(id));
     }
     /// <summary>
     /// Atualiza informações do onboarding
@@ -137,7 +137,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudOnboarding onboarding)
     {
-      return Ok(await  service.Update(onboarding));
+      return Ok( service.Update(onboarding));
     }
     /// <summary>
     /// Lista onboarding finalizados
@@ -155,7 +155,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEnded(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     /// <summary>
     /// Lista onboarding finalizado
@@ -173,7 +173,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListPersonEnd(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     /// <summary>
     /// List onboarding para exclusão
@@ -190,7 +190,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListExcluded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return result;
     }
     /// <summary>
     /// Atualização informações de comentarios
@@ -204,7 +204,7 @@ namespace Manager.Controllers
     [Route("updatecomments/{idonboarding}/{iditem}")]
     public async Task<string> UpdateComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
     {
-      return await service.UpdateComments(idonboarding, iditem, comments);
+      return service.UpdateComments(idonboarding, iditem, comments);
     }
     /// <summary>
     /// Lista comentarios onboarding
@@ -217,7 +217,7 @@ namespace Manager.Controllers
     [Route("listcomments/{idonboarding}/{iditem}")]
     public async Task<List<ViewCrudComment>> ListComments(string idonboarding, string iditem)
     {
-      return await service.ListComments(idonboarding, iditem);
+      return service.ListComments(idonboarding, iditem);
     }
     /// <summary>
     /// Inclusão comentario no item do onboarding
@@ -231,7 +231,7 @@ namespace Manager.Controllers
     [Route("addcomments/{idonboarding}/{iditem}")]
     public async Task<List<ViewCrudComment>> AddComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
     {
-      return await service.AddComments(idonboarding, iditem, comments);
+      return service.AddComments(idonboarding, iditem, comments);
     }
     #endregion
   }
