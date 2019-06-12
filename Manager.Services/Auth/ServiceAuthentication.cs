@@ -301,7 +301,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region private
-    private async void GetMaristasAsync(string login, string password)
+    private void GetMaristasAsync(string login, string password)
     {
       try
       {
@@ -321,7 +321,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    private async void GetUnimedAsync(string login, string passwordClient)
+    private void GetUnimedAsync(string login, string passwordClient)
     {
       try
       {

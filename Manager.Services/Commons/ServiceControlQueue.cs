@@ -59,7 +59,7 @@ namespace Manager.Services.Commons
       }
     }
 
-    public async Task SendMessageAsync(dynamic view)
+    public void SendMessageAsync(dynamic view)
     {
       try
       {
