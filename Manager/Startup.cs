@@ -116,7 +116,7 @@ namespace Manager
       services.AddSingleton(_ => serviceEvent);
       services.AddSingleton(_ => serviceMandatoryTraining);
 
-      serviceIndicators.SendMessages(conn.SignalRService);
+      //serviceIndicators.SendMessages(conn.SignalRService);
     }
     // This method gets called by the runtime. Use this method to add services to the container.
     /// <summary>
@@ -201,10 +201,10 @@ namespace Manager
       app.UseMiddleware<ErrorHandlingMiddleware>();
       app.UseCors("AllowAll");
       app.UseMvc();
-      app.UseSignalR(routes =>
-      {
-        //routes.MapHub<MessagesHub>("/messagesHub");
-      });
+      //app.UseSignalR(routes =>
+      //{
+      //  routes.MapHub<MessagesHub>("/messagesHub");
+      //});
       // Ativando middlewares para uso do Swagger
       app.UseSwagger();
       app.UseSwaggerUI(c =>
