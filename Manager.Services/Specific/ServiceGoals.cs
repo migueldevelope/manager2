@@ -89,7 +89,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
-    private async Task LogSave(string iduser, string local)
+    private void LogSave(string iduser, string local)
     {
       try
       {
@@ -100,7 +100,7 @@ namespace Manager.Services.Specific
           Local = local,
           _idPerson = user._id
         };
-        await serviceLog.NewLog(log);
+        serviceLog.NewLog(log);
       }
       catch (Exception e)
       {

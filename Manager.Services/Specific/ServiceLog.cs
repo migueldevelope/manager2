@@ -48,11 +48,11 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Log
-    public async Task NewLog(ViewLog view)
+    public void NewLog(ViewLog view)
     {
       try
       {
-        var person = servicePerson.GetAllNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault();
+        var person = servicePerson.GetAllFreeNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault();
         var log = new Log
         {
           Person = person.GetViewList(),
@@ -61,7 +61,7 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           Local = view.Local
         };
-        log = await serviceLog.InsertNewVersion(log);
+        log = serviceLog.InsertNewVersion(log).Result;
       }
       catch (Exception e)
       {

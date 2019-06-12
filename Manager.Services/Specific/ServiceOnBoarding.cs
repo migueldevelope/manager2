@@ -1674,7 +1674,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async Task LogSave(string idperson, string local)
+    private void LogSave(string idperson, string local)
     {
       try
       {
@@ -1685,7 +1685,7 @@ namespace Manager.Services.Specific
           Local = local,
           _idPerson = user._id
         };
-        await serviceLog.NewLog(log);
+        serviceLog.NewLog(log);
       }
       catch (Exception e)
       {

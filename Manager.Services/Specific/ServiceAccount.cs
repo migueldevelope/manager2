@@ -199,8 +199,8 @@ namespace Manager.Services.Specific
         Person person = servicePerson.GetFreeNewVersion(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Administrator).Result;
         if (person == null)
           person = servicePerson.GetFreeNewVersion(p => p._idAccount == idaccount & p.TypeUser == EnumTypeUser.Support).Result;
-        User user = serviceUser.GetFreeNewVersion(p => p._id == person.User._id).Result;
-        await Task.Run(() => LogSave(person, "Authentication Change Account"));
+        User user = await serviceUser.GetFreeNewVersion(p => p._id == person.User._id);
+        Task.Run(() => LogSave(person, "Authentication Change Account"));
         return serviceAuthentication.Authentication(user, false);
       }
       catch (Exception e)
@@ -222,11 +222,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async void LogSave(Person person, string local)
+    public void LogSave(Person person, string local)
     {
       try
       {
-        await serviceLog.NewLog(
+        serviceLog.NewLog(
           new ViewLog()
           {
             Description = string.Format("Alter Account/User out: {0}/{1} - in: {2}/{3}", servicePerson._user.NameAccount, servicePerson._user.NamePerson, serviceAccount.GetFreeNewVersion(p => p._id == person._idAccount).Result.Name, person.User.Name),

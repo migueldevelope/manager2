@@ -135,15 +135,17 @@ namespace Manager.Services.Specific
         if (account.InfoClient == "")
           return null;
 
-        var date = (await serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled)).Max(p => p.Date);
+        var date = serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.Max(p => p.Date);
         TermsOfService termsofservice = serviceTermsOfService.GetAllFreeNewVersion(p => p.Date == date).Result.FirstOrDefault();
+
+        await new Task(null);
+
         return new ViewListTermsOfService()
         {
           Text = termsofservice.Text.Replace("{CUSTOMER}", account?.InfoClient),
           Date = termsofservice.Date,
           _id = termsofservice._id
         };
-
       }
       catch (Exception)
       {

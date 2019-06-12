@@ -361,11 +361,11 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    private async Task LogSave(string idPerson)
+    private void LogSave(string idPerson)
     {
       try
       {
-        await serviceLog.NewLog(new ViewLog()
+        serviceLog.NewLog(new ViewLog()
         {
           Description = "Login",
           Local = "Authentication",
