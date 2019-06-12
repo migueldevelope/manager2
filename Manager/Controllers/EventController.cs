@@ -42,7 +42,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<string> Delete(string id)
     {
-      return service.Remove(id);
+      return await Task.Run(() =>service.Remove(id));
     }
     /// <summary>
     /// Excluir um evento histórico
@@ -54,7 +54,7 @@ namespace Manager.Controllers
     [Route("deleteeventhistoric/{id}")]
     public async Task<string> DeleteEventHistoric(string id)
     {
-      return service.RemoveEventHistoric(id);
+      return await Task.Run(() =>service.RemoveEventHistoric(id));
     }
     /// <summary>
     /// Excluir um curso
@@ -66,7 +66,7 @@ namespace Manager.Controllers
     [Route("deletecourse/{id}")]
     public async Task<string> DeleteCourse(string id)
     {
-      return service.RemoveCourse(id);
+      return await Task.Run(() =>service.RemoveCourse(id));
     }
     /// <summary>
     /// Excluir um curso do e-Social
@@ -78,7 +78,7 @@ namespace Manager.Controllers
     [Route("deletecourseesocial/{id}")]
     public async Task<string> DeleteCourseESocial(string id)
     {
-      return service.RemoveCourseESocial(id);
+      return await Task.Run(() =>service.RemoveCourseESocial(id));
     }
     /// <summary>
     /// Excluir um participante do evento
@@ -91,7 +91,7 @@ namespace Manager.Controllers
     [Route("removeparticipant/{idevent}/{idperson}")]
     public async Task<string> RemoveParticipant(string idevent, string idperson)
     {
-      return service.RemoveParticipant(idevent, idperson);
+      return await Task.Run(() =>service.RemoveParticipant(idevent, idperson));
     }
     /// <summary>
     /// Excluir um dia do evento
@@ -106,7 +106,7 @@ namespace Manager.Controllers
     [Route("removedays/{idevent}/{idday}")]
     public async Task<string> RemoveDays(string idevent, string begin, string end, string idday)
     {
-      return service.RemoveDays(idevent, idday);
+      return await Task.Run(() =>service.RemoveDays(idevent, idday));
     }
     /// <summary>
     /// Excluir instrutor do evento
@@ -118,7 +118,7 @@ namespace Manager.Controllers
     [Route("removeinstructor/{idevent}/{id}")]
     public async Task<string> RemoveInstructor(string idevent, string id)
     {
-      return service.RemoveInstructor(idevent, id);
+      return await Task.Run(() =>service.RemoveInstructor(idevent, id));
     }
     /// <summary>
     /// Marcar a presença do aluno
@@ -133,7 +133,7 @@ namespace Manager.Controllers
     [Route("present/{idevent}/{idparticipant}/{idday}/{present}")]
     public async Task<string> Present(string idevent, string idparticipant, string idday, bool present)
     {
-      return service.Present(idevent, idparticipant, idday, present);
+      return await Task.Run(() =>service.Present(idevent, idparticipant, idday, present));
     }
     /// <summary>
     /// Setar a grade de participantes
@@ -147,7 +147,7 @@ namespace Manager.Controllers
     [Route("setgrade/{idevent}/{idparticipant}/{grade}")]
     public async Task<string> SetGrade(string idevent, string idparticipant, decimal grade)
     {
-      return service.SetGrade(idevent, idparticipant, grade);
+      return await Task.Run(() =>service.SetGrade(idevent, idparticipant, grade));
     }
     /// <summary>
     /// Reabrir evento
@@ -159,7 +159,7 @@ namespace Manager.Controllers
     [Route("reopeningevent/{idevent}")]
     public async Task<string> ReopeningEvent(string idevent)
     {
-      return service.ReopeningEvent(idevent);
+      return await Task.Run(() =>service.ReopeningEvent(idevent));
     }
     /// <summary>
     /// Inclusão de um evento
@@ -170,7 +170,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<ViewListEvent> New([FromBody]ViewCrudEvent view)
     {
-      return service.New(view);
+      return await Task.Run(() =>service.New(view));
     }
     /// <summary>
     /// Lista eventos
@@ -187,7 +187,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Lista eventos para inscrição
@@ -205,7 +205,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEventOpenSubscription(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Lista eventos inscritos
@@ -223,7 +223,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEventSubscription(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Lista eventos abertos
@@ -240,7 +240,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEventOpen(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Lista eventos encerrados
@@ -257,7 +257,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEventEnd(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Lista instrutores de um evento
@@ -276,7 +276,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListPersonInstructor(idevent, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Lista participante do evento
@@ -295,7 +295,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListPersonParticipants(idevent, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Lista entidades
@@ -312,7 +312,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEntity(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Busca informações de evento para editar 
@@ -324,7 +324,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudEvent> List(string id)
     {
-      return service.Get(id);
+      return await Task.Run(() =>service.Get(id));
     }
     /// <summary>
     /// Atualiza informações de um evento
@@ -336,7 +336,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<ViewListEvent> Update([FromBody]ViewCrudEvent view)
     {
-      return service.Update(view);
+      return await Task.Run(() =>service.Update(view));
     }
     /// <summary>
     /// Inclusão histórico de evento
@@ -347,7 +347,7 @@ namespace Manager.Controllers
     [Route("neweventhistoric")]
     public async Task<string> NewEventHistoricFrontEnd([FromBody]ViewCrudEventHistoric view)
     {
-      return service.NewEventHistoricFrontEnd(view);
+      return await Task.Run(() =>service.NewEventHistoricFrontEnd(view));
     }
     /// <summary>
     /// Lista histórico de eventos
@@ -364,7 +364,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEventHistoric(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Lista os histórico de evento de um contrato
@@ -381,7 +381,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListEventHistoricPerson(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Busca informações para editar um histórico de evento
@@ -393,7 +393,7 @@ namespace Manager.Controllers
     [Route("geteventhistoric/{id}")]
     public async Task<ViewCrudEventHistoric> GetEventHistoric(string id)
     {
-      return service.GetEventHistoric(id);
+      return await Task.Run(() =>service.GetEventHistoric(id));
     }
     /// <summary>
     /// Atualiza informações de um historico de eventos
@@ -405,7 +405,7 @@ namespace Manager.Controllers
     [Route("updateeventhistoric")]
     public async Task<string> UpdateEventHistoric([FromBody]ViewCrudEventHistoric view)
     {
-      return service.UpdateEventHistoricFrontEnd(view);
+      return await Task.Run(() =>service.UpdateEventHistoricFrontEnd(view));
     }
     /// <summary>
     /// Inclusão de um novo curso
@@ -416,7 +416,7 @@ namespace Manager.Controllers
     [Route("newcourse")]
     public async Task<string> NewCourse([FromBody]ViewCrudCourse view)
     {
-      return service.NewCourse(view);
+      return await Task.Run(() =>service.NewCourse(view));
     }
     /// <summary>
     /// Lista os cursos
@@ -433,7 +433,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListCourse(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Busca informações para editar um curso
@@ -445,7 +445,7 @@ namespace Manager.Controllers
     [Route("getcourse/{id}")]
     public async Task<ViewCrudCourse> GetCourse(string id)
     {
-      return service.GetCourse(id);
+      return await Task.Run(() =>service.GetCourse(id));
     }
     /// <summary>
     /// Atualizar informaçõe de um curso
@@ -457,7 +457,7 @@ namespace Manager.Controllers
     [Route("updatecourse")]
     public async Task<string> UpdateCourse([FromBody]ViewCrudCourse view)
     {
-      return service.UpdateCourse(view);
+      return await Task.Run(() =>service.UpdateCourse(view));
     }
     /// <summary>
     /// Inclusão curso esocial
@@ -468,7 +468,7 @@ namespace Manager.Controllers
     [Route("newcourseesocial")]
     public async Task<string> NewCourseESocial([FromBody]ViewCrudCourseESocial view)
     {
-      return service.NewCourseESocial(view);
+      return await Task.Run(() =>service.NewCourseESocial(view));
     }
     /// <summary>
     /// Lista cursos do esocial
@@ -485,7 +485,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListCourseESocial(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Busca informações de um curso do esocial para editar
@@ -497,7 +497,7 @@ namespace Manager.Controllers
     [Route("getcourseesocial/{id}")]
     public async Task<ViewCrudCourseESocial> GetCourseESocial(string id)
     {
-      return service.GetCourseESocial(id);
+      return await Task.Run(() =>service.GetCourseESocial(id));
     }
     /// <summary>
     /// Atualiza informações de um curso do esocial
@@ -509,7 +509,7 @@ namespace Manager.Controllers
     [Route("updatecourseesocial")]
     public async Task<string> UpdateCourseESocial([FromBody]ViewCrudCourseESocial view)
     {
-      return service.UpdateCourseESocial(view);
+      return await Task.Run(() =>service.UpdateCourseESocial(view));
     }
     /// <summary>
     /// Adiciona um participante a um evento
@@ -521,7 +521,7 @@ namespace Manager.Controllers
     [Route("addparticipant/{idevent}")]
     public async Task<string> AddParticipant([FromBody]ViewCrudParticipant participant, string idevent)
     {
-      return service.AddParticipant(idevent, participant);
+      return await Task.Run(() =>service.AddParticipant(idevent, participant));
     }
     /// <summary>
     /// Adicionar dias a um evento
@@ -533,7 +533,7 @@ namespace Manager.Controllers
     [Route("adddays/{idevent}")]
     public async Task<string> AddDays([FromBody]ViewCrudDaysEvent days, string idevent)
     {
-      return service.AddDays(idevent, days);
+      return await Task.Run(() =>service.AddDays(idevent, days));
     }
     /// <summary>
     /// Adiciona um instrutor em um evento
@@ -545,7 +545,7 @@ namespace Manager.Controllers
     [Route("addinstructor/{idevent}")]
     public async Task<string> AddDays([FromBody]ViewCrudInstructor view, string idevent)
     {
-      return service.AddInstructor(idevent, view);
+      return await Task.Run(() =>service.AddInstructor(idevent, view));
     }
     /// <summary>
     /// Lista os participante de um evento
@@ -563,7 +563,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListParticipants(idevent, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     #endregion
 

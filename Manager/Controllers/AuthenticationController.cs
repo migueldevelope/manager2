@@ -40,13 +40,13 @@ namespace Manager.Controllers
     {
       try
       {
-        return Ok(service.Authentication(userLogin));
+        return await Task.Run(() =>Ok(service.Authentication(userLogin)));
         //test
-        //return Ok(new { id = "1" });
+        //return await Task.Run(() =>Ok(new { id = "1" });
       }
       catch (Exception e)
       {
-        return BadRequest(e.Message);
+        return await Task.Run(() =>BadRequest(e.Message));
       }
     }
 
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("altercontract/{idperson}")]
     public async Task<string> AlterContract(string idperson)
     {
-      return service.AlterContract(idperson);
+      return await Task.Run(() =>service.AlterContract(idperson));
     }
 
     #endregion

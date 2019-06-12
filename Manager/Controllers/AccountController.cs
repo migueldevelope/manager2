@@ -47,7 +47,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> Post([FromBody]ViewNewAccount view)
     {
-      return Ok(service.NewAccount(view));
+      return await Task.Run(() => Ok(service.NewAccount(view)));
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("update/{id}")]
     public async Task<IActionResult> Put([FromBody]ViewCrudAccount view, string id)
     {
-      return Ok(service.UpdateAccount(view, id));
+      return await Task.Run(() => Ok(service.UpdateAccount(view, id)));
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudAccount> Get(string id)
     {
-      return service.GetAccount(id);
+      return await Task.Run(() => service.GetAccount(id));
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.GetAllNewVersion(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Trocar de conta de cliente (apenas usuário administrador)
@@ -102,7 +102,7 @@ namespace Manager.Controllers
     [Route("alteraccount/{idaccount}")]
     public async Task<ViewPerson> AlterAccount(string idaccount)
     {
-      return service.AlterAccount(idaccount);
+      return await Task.Run(() => service.AlterAccount(idaccount));
     }
     /// <summary>
     /// Trocar de pessoa conectada (apenas usuário administrador/suporte)
@@ -114,7 +114,7 @@ namespace Manager.Controllers
     [Route("alteraccountperson/{idperson}")]
     public async Task<ViewPerson> AlterAccountPerson(string idperson)
     {
-      return service.AlterAccountPerson(idperson);
+      return await Task.Run(() => service.AlterAccountPerson(idperson));
     }
     /// <summary>
     /// Trocar de pessoa conectada (apenas usuário administrador/suporte)
@@ -125,7 +125,7 @@ namespace Manager.Controllers
     [Route("synchronize")]
     public async Task<string> Synchronize()
     {
-      return service.SynchronizeParameters();
+      return await Task.Run(() => service.SynchronizeParameters());
     }
     #endregion
 
@@ -146,7 +146,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = serviceLog.ListLogs(idaccount, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() => result);
     }
     #endregion
 

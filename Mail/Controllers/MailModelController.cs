@@ -47,7 +47,7 @@ namespace Mail.Controllers
       long total = 0;
       var result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Adicionar um novo modelo de e-mail
@@ -59,7 +59,7 @@ namespace Mail.Controllers
     [Route("new")]
     public async Task<IActionResult> New([FromBody]ViewCrudMailModel view)
     {
-      return Ok( service.New(view));
+      return await Task.Run(() => Ok( service.New(view)));
     }
     /// <summary>
     /// Buscar modelo de e-mail para manutenção
@@ -71,7 +71,7 @@ namespace Mail.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudMailModel> Get(string id)
     {
-      return service.Get(id);
+      return await Task.Run(() => service.Get(id));
     }
     /// <summary>
     /// Alteração de modelo de e-mail
@@ -83,7 +83,7 @@ namespace Mail.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudMailModel view)
     {
-      return Ok( service.Update(view));
+      return await Task.Run(() => Ok( service.Update(view)));
     }
     #endregion
 

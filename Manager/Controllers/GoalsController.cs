@@ -42,7 +42,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<string> New([FromBody]ViewCrudGoal view)
     {
-      return service.New(view);
+      return await Task.Run(() =>service.New(view));
     }
     /// <summary>
     /// Listar os objetivos
@@ -59,7 +59,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListGoal> result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Listar os objetivos
@@ -77,7 +77,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListGoal> result = service.ListManager(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListGoal> result = service.ListCompany(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudGoal> Get(string id)
     {
-      return service.Get(id);
+      return await Task.Run(() =>service.Get(id));
     }
     /// <summary>
     /// Alterar o objetivo
@@ -121,7 +121,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<string> Update([FromBody]ViewCrudGoal view)
     {
-      return service.Update(view);
+      return await Task.Run(() =>service.Update(view));
     }
     /// <summary>
     /// Excluir um objetivo
@@ -133,7 +133,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<string> Delete(string id)
     {
-      return service.Delete(id);
+      return await Task.Run(() =>service.Delete(id));
     }
     #endregion
 
@@ -148,7 +148,7 @@ namespace Manager.Controllers
     [Route("newgoalsperiod")]
     public async Task<string> NewGoalsPeriod([FromBody]ViewCrudGoalPeriod view)
     {
-      return service.NewGoalsPeriod(view);
+      return await Task.Run(() =>service.NewGoalsPeriod(view));
     }
     /// <summary>
     /// Listar os períodos de objetivos
@@ -165,7 +165,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsPeriod(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Buscar um período de objetivo para manutenção
@@ -177,7 +177,7 @@ namespace Manager.Controllers
     [Route("getgoalsperiod/{id}")]
     public async Task<ViewCrudGoalPeriod> GetGoalsPeriod(string id)
     {
-      return service.GetGoalsPeriod(id);
+      return await Task.Run(() =>service.GetGoalsPeriod(id));
     }
     /// <summary>
     /// Alterar um período de objetivo
@@ -189,7 +189,7 @@ namespace Manager.Controllers
     [Route("updategoalsperiod")]
     public async Task<string> UpdateGoalsPeriod([FromBody]ViewCrudGoalPeriod view)
     {
-      return service.UpdateGoalsPeriod(view);
+      return await Task.Run(() =>service.UpdateGoalsPeriod(view));
     }
     /// <summary>
     /// Excluir um período de objetivos
@@ -201,7 +201,7 @@ namespace Manager.Controllers
     [Route("deletegoalsperiod/{id}")]
     public async Task<string> DeleteGoalsPeriod(string id)
     {
-      return service.DeleteGoalsPeriod(id);
+      return await Task.Run(() =>service.DeleteGoalsPeriod(id));
     }
     #endregion
 
@@ -216,7 +216,7 @@ namespace Manager.Controllers
     [Route("newgoalscompany")]
     public async Task<string> NewGoalsCompany([FromBody]ViewCrudGoalCompany view)
     {
-      return service.NewGoalsCompany(view);
+      return await Task.Run(() =>service.NewGoalsCompany(view));
     }
     /// <summary>
     /// Listar os objetivos da empresa e do período
@@ -235,7 +235,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsCompany(idgoalsperiod, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Listar os objetivos
@@ -252,7 +252,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsCompany(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Buscar um objetivo de empresa para um período
@@ -264,7 +264,7 @@ namespace Manager.Controllers
     [Route("getgoalscompany/{id}")]
     public async Task<ViewCrudGoalCompany> GetGoalsCompany(string id)
     {
-      return service.GetGoalsCompany(id);
+      return await Task.Run(() =>service.GetGoalsCompany(id));
     }
     /// <summary>
     /// Alterar um objetivo da empresa em um período
@@ -276,7 +276,7 @@ namespace Manager.Controllers
     [Route("updategoalscompany")]
     public async Task<string> UpdateGoalsCompany([FromBody]ViewCrudGoalCompany view)
     {
-      return service.UpdateGoalsCompany(view);
+      return await Task.Run(() =>service.UpdateGoalsCompany(view));
     }
     /// <summary>
     /// Alterar um objetivo da empresa em um período
@@ -288,7 +288,7 @@ namespace Manager.Controllers
     [Route("updategoalscompanyachievement")]
     public async Task<string> UpdateGoalsCompanyAchievement([FromBody]ViewCrudAchievement view)
     {
-      return service.UpdateGoalsCompanyAchievement(view);
+      return await Task.Run(() =>service.UpdateGoalsCompanyAchievement(view));
     }
 
     /// <summary>
@@ -301,7 +301,7 @@ namespace Manager.Controllers
     [Route("deletegoalscompany/{id}")]
     public async Task<string> DeleteGoalsCompany(string id)
     {
-      return service.DeleteGoalsCompany(id);
+      return await Task.Run(() =>service.DeleteGoalsCompany(id));
     }
     #endregion
 
@@ -317,7 +317,7 @@ namespace Manager.Controllers
     [Route("newgoalsmanagerportal")]
     public async Task<string> NewGoalsManagerPortal([FromBody]ViewCrudGoalManagerPortal view)
     {
-      return service.NewGoalsManagerPortal(view);
+      return await Task.Run(() =>service.NewGoalsManagerPortal(view));
     }
 
     /// <summary>
@@ -330,7 +330,7 @@ namespace Manager.Controllers
     [Route("newgoalsmanager")]
     public async Task<string> NewGoalsManager([FromBody]ViewCrudGoalManager view)
     {
-      return service.NewGoalsManager(view);
+      return await Task.Run(() =>service.NewGoalsManager(view));
     }
     /// <summary>
     /// Listar os objetivos da empresa e do período
@@ -349,7 +349,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsManager(idgoalsperiod, idmanager, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Listar os objetivos
@@ -366,7 +366,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsManager(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Buscar um objetivo de empresa para um período
@@ -378,7 +378,7 @@ namespace Manager.Controllers
     [Route("getgoalsmanager/{id}")]
     public async Task<ViewCrudGoalManager> GetGoalsManager(string id)
     {
-      return service.GetGoalsManager(id);
+      return await Task.Run(() =>service.GetGoalsManager(id));
     }
 
     /// <summary>
@@ -391,7 +391,7 @@ namespace Manager.Controllers
     [Route("getgoalsmanagerportal/{id}")]
     public async Task<ViewCrudGoalManagerPortal> GetGoalsManagerPortal(string id)
     {
-      return service.GetGoalsManagerPortal(id);
+      return await Task.Run(() =>service.GetGoalsManagerPortal(id));
     }
 
     /// <summary>
@@ -404,7 +404,7 @@ namespace Manager.Controllers
     [Route("updategoalsmanager")]
     public async Task<string> UpdateGoalsManager([FromBody]ViewCrudGoalManager view)
     {
-      return service.UpdateGoalsManager(view);
+      return await Task.Run(() =>service.UpdateGoalsManager(view));
     }
 
     /// <summary>
@@ -417,7 +417,7 @@ namespace Manager.Controllers
     [Route("updategoalsmanagerportal")]
     public async Task<string> UpdateGoalsManagerPortal([FromBody]ViewCrudGoalManagerPortal view)
     {
-      return service.UpdateGoalsManagerPortal(view);
+      return await Task.Run(() =>service.UpdateGoalsManagerPortal(view));
     }
 
 
@@ -431,7 +431,7 @@ namespace Manager.Controllers
     [Route("updategoalsmanagerachievement")]
     public async Task<string> UpdateGoalsManagerAchievement([FromBody]ViewCrudAchievement view)
     {
-      return service.UpdateGoalsManagerAchievement(view);
+      return await Task.Run(() =>service.UpdateGoalsManagerAchievement(view));
     }
 
     /// <summary>
@@ -444,7 +444,7 @@ namespace Manager.Controllers
     [Route("deletegoalsmanager/{id}")]
     public async Task<string> DeleteGoalsManager(string id)
     {
-      return service.DeleteGoalsManager(id);
+      return await Task.Run(() =>service.DeleteGoalsManager(id));
     }
     #endregion
 
@@ -459,7 +459,7 @@ namespace Manager.Controllers
     [Route("newgoalspersonportal")]
     public async Task<string> NewGoalsPersonPortal([FromBody]ViewCrudGoalPerson view)
     {
-      return service.NewGoalsPersonPortal(view);
+      return await Task.Run(() =>service.NewGoalsPersonPortal(view));
     }
 
     ///// <summary>
@@ -472,7 +472,7 @@ namespace Manager.Controllers
     //[Route("newgoalsperson")]
     //public async Task< string NewGoalsPerson([FromBody]ViewCrudGoalPerson view)
     //{
-    //  return service.NewGoalsPerson(view);
+    //  return await Task.Run(() =>service.NewGoalsPerson(view);
     //}
     /// <summary>
     /// Listar os objetivos da empresa e do período
@@ -491,7 +491,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsPerson(idgoalsperiod, idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Listar os objetivos
@@ -508,7 +508,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsPerson(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Buscar um objetivo de empresa para um período
@@ -520,7 +520,7 @@ namespace Manager.Controllers
     [Route("getgoalsperson/{id}")]
     public async Task<ViewCrudGoalPerson> GetGoalsPerson(string id)
     {
-      return service.GetGoalsPerson(id);
+      return await Task.Run(() =>service.GetGoalsPerson(id));
     }
     ///// <summary>
     ///// Alterar um objetivo da empresa em um período
@@ -532,7 +532,7 @@ namespace Manager.Controllers
     //[Route("updategoalsperson")]
     //public async Task< string UpdateGoalsPerson([FromBody]ViewCrudGoalPerson view)
     //{
-    //  return service.UpdateGoalsPerson(view);
+    //  return await Task.Run(() =>service.UpdateGoalsPerson(view);
     //}
 
     /// <summary>
@@ -545,7 +545,7 @@ namespace Manager.Controllers
     [Route("updategoalspersonportal")]
     public async Task<string> UpdateGoalsPersonPortal([FromBody]ViewCrudGoalPerson view)
     {
-      return service.UpdateGoalsPersonPortal(view);
+      return await Task.Run(() =>service.UpdateGoalsPersonPortal(view));
     }
 
     /// <summary>
@@ -558,7 +558,7 @@ namespace Manager.Controllers
     [Route("updategoalspersonachievement")]
     public async Task<string> UpdateGoalsPersonAchievement([FromBody]ViewCrudAchievement view)
     {
-      return service.UpdateGoalsPersonAchievement(view);
+      return await Task.Run(() =>service.UpdateGoalsPersonAchievement(view));
     }
 
     /// <summary>
@@ -571,7 +571,7 @@ namespace Manager.Controllers
     [Route("deletegoalsperson/{id}")]
     public async Task<string> DeleteGoalsPerson(string id)
     {
-      return service.DeleteGoalsPerson(id);
+      return await Task.Run(() =>service.DeleteGoalsPerson(id));
     }
     #endregion
 
@@ -588,7 +588,7 @@ namespace Manager.Controllers
     [Route("newgoalspersoncontrol/{idperson}/{idperiod}")]
     public async Task<string> NewGoalsPersonControl(string idperson, string idperiod)
     {
-      return service.NewGoalsPersonControl(idperson, idperiod);
+      return await Task.Run(() =>service.NewGoalsPersonControl(idperson, idperiod));
     }
 
     /// <summary>
@@ -604,7 +604,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsPersonControlMe(id);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
 
     /// <summary>
@@ -623,7 +623,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListGoalsPersonControl(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Buscar um objetivo de empresa para um período
@@ -635,7 +635,7 @@ namespace Manager.Controllers
     [Route("getgoalspersoncontrol/{id}")]
     public async Task<ViewCrudGoalPersonControl> GetGoalsPersonControl(string id)
     {
-      return service.GetGoalsPersonControl(id);
+      return await Task.Run(() =>service.GetGoalsPersonControl(id));
     }
     /// <summary>
     /// Alterar um objetivo da empresa em um período
@@ -647,7 +647,7 @@ namespace Manager.Controllers
     [Route("updategoalspersoncontrol")]
     public async Task<string> UpdateGoalsPersonControl([FromBody]ViewCrudGoalPersonControl view)
     {
-      return service.UpdateGoalsPersonControl(view);
+      return await Task.Run(() =>service.UpdateGoalsPersonControl(view));
     }
 
 
@@ -662,7 +662,7 @@ namespace Manager.Controllers
     [Route("deletegoalspersoncontrol/{idperson}/{idperiod}")]
     public async Task<string> DeleteGoalsPersonControl(string idperson, string idperiod)
     {
-      return service.DeleteGoalsPersonControl(idperson, idperiod);
+      return await Task.Run(() =>service.DeleteGoalsPersonControl(idperson, idperiod));
     }
     #endregion
   }

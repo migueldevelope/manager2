@@ -47,7 +47,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListCompany> result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Cadastrar uma nova empresa
@@ -58,7 +58,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> Post([FromBody]ViewCrudCompany view)
     {
-      return Ok( service.New(view));
+      return await Task.Run(() =>Ok( service.New(view)));
     }
     /// <summary>
     /// Retorar a empresa para manutenção
@@ -70,7 +70,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudCompany> Get(string id)
     {
-      return service.Get(id);
+      return await Task.Run(() =>service.Get(id));
     }
     /// <summary>
     /// Alterar a empresa
@@ -82,7 +82,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudCompany view)
     {
-      return Ok( service.Update(view));
+      return await Task.Run(() =>Ok( service.Update(view)));
     }
     /// <summary>
     /// Excluir uma empresa
@@ -94,7 +94,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok( service.Delete(id));
+      return await Task.Run(() =>Ok( service.Delete(id)));
     }
     #endregion
 
@@ -114,7 +114,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListEstablishment> result = service.ListEstablishment(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Listar estabelecimento de uma empresa
@@ -132,7 +132,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListEstablishment> result = service.ListEstablishment(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Novo estabelecimento
@@ -143,7 +143,7 @@ namespace Manager.Controllers
     [Route("newestablishment")]
     public async Task<IActionResult> PostEstablishment([FromBody]ViewCrudEstablishment view)
     {
-      return Ok( service.NewEstablishment(view));
+      return await Task.Run(() =>Ok( service.NewEstablishment(view)));
     }
     /// <summary>
     /// Buscar estabelecimento para manutenção
@@ -155,7 +155,7 @@ namespace Manager.Controllers
     [Route("getestablishment/{id}")]
     public async Task<ViewCrudEstablishment> ListEstablishment(string id)
     {
-      return service.GetEstablishment(id);
+      return await Task.Run(() =>service.GetEstablishment(id));
     }
     /// <summary>
     /// Alterar o estabelecimento
@@ -167,7 +167,7 @@ namespace Manager.Controllers
     [Route("updateestablishment")]
     public async Task<IActionResult> UpdateEstablishment([FromBody]ViewCrudEstablishment view)
     {
-      return Ok( service.UpdateEstablishment(view));
+      return await Task.Run(() =>Ok( service.UpdateEstablishment(view)));
     }
     /// <summary>
     /// Deletar um estabelecimento
@@ -179,7 +179,7 @@ namespace Manager.Controllers
     [Route("deleteestablishment/{id}")]
     public async Task<IActionResult> DeleteEstablishment(string id)
     {
-      return Ok( service.RemoveEstablishment(id));
+      return await Task.Run(() =>Ok( service.RemoveEstablishment(id)));
     }
     #endregion
 

@@ -42,7 +42,7 @@ namespace Manager.Controllers
     [Route("{idmanager}/listapproved")]
     public async Task<List<ViewAutoManager>> ListApproved(string idmanager)
     {
-      return service.ListApproved(idmanager);
+      return await Task.Run(() =>service.ListApproved(idmanager));
     }
     /// <summary>
     /// Listar colaboradores sem gestão
@@ -60,7 +60,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.List(idmanager, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() =>result);
     }
     /// <summary>
     /// Alterar o gestor do colaborador
@@ -74,7 +74,7 @@ namespace Manager.Controllers
     public async Task<IActionResult> New([FromBody]ViewManager view, string idperson)
     {
       service.SetManagerPerson(view, idperson, XmlConnection.ReadVariablesSystem().TokenServer);
-      return Ok("Auto manager added!");
+      return await Task.Run(() =>Ok("Auto manager added!"));
     }
     /// <summary>
     /// Aprovar o gestor do colaborador
@@ -88,7 +88,7 @@ namespace Manager.Controllers
     [Route("{idperson}/approved/{idmanager}")]
     public async Task<string> Approved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
-      return service.Approved(view, idperson, idmanager);
+      return await Task.Run(() =>service.Approved(view, idperson, idmanager));
     }
     /// <summary>
     /// Não aprovar o colaborador para o gestor
@@ -102,7 +102,7 @@ namespace Manager.Controllers
     [Route("{idperson}/disapproved/{idmanager}")]
     public async Task<string> Disapproved([FromBody]ViewWorkflow view, string idperson, string idmanager)
     {
-      return service.Disapproved(view, idperson, idmanager);
+      return await Task.Run(() =>service.Disapproved(view, idperson, idmanager));
     }
     /// <summary>
     /// Exclusão do colaborador da equipe
@@ -115,7 +115,7 @@ namespace Manager.Controllers
     public async Task<IActionResult> Delete(string idperson)
     {
       service.DeleteManager(idperson);
-      return Ok("Person deleted!");
+      return await Task.Run(() =>Ok("Person deleted!"));
     }
     #endregion
 
@@ -131,7 +131,7 @@ namespace Manager.Controllers
     public async Task<IActionResult> PutCanceled(string idperson, string idmanager)
     {
       service.Canceled(idperson, idmanager);
-      return Ok("Auto manager canceled!");
+      return await Task.Run(() =>Ok("Auto manager canceled!"));
     }
 
   }

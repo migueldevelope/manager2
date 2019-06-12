@@ -42,7 +42,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<string> New([FromBody]ViewCrudDictionarySystem view)
     {
-      return service.New(view);
+      return await Task.Run(() =>service.New(view));
     }
     /// <summary>
     /// Incluir vários discionários de dados ao mesmo tempo
@@ -54,7 +54,7 @@ namespace Manager.Controllers
     [Route("newlist")]
     public async Task<string> NewList([FromBody]List<ViewListDictionarySystem> list)
     {
-      return service.New(list);
+      return await Task.Run(() =>service.New(list));
     }
     /// <summary>
     /// Listar os dicionarios do sistema
@@ -71,7 +71,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListDictionarySystem> result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Buscar o dicionario para alteração
@@ -83,7 +83,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudDictionarySystem> Get(string id)
     {
-      return service.Get(id);
+      return await Task.Run(() =>service.Get(id));
     }
     /// <summary>
     /// Buscar o dicionário por nome
@@ -95,7 +95,7 @@ namespace Manager.Controllers
     [Route("getname/{name}")]
     public async Task<ViewListDictionarySystem> GetName(string name)
     {
-      return service.GetName(name);
+      return await Task.Run(() =>service.GetName(name));
     }
     /// <summary>
     /// Alteração de dicionário do sistema
@@ -107,7 +107,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudDictionarySystem view)
     {
-      return Ok( service.Update(view));
+      return await Task.Run(() =>Ok( service.Update(view)));
     }
     /// <summary>
     /// Apagar um dicionário de sistema
@@ -119,7 +119,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok( service.Delete(id));
+      return await Task.Run(() =>Ok( service.Delete(id)));
     }
     #endregion
 

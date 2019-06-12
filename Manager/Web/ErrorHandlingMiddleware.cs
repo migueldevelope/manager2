@@ -32,11 +32,11 @@ namespace Manager.Web
     {
       try
       {
-        _next(context);
+        await _next(context);
       }
       catch (Exception ex)
       {
-        HandleServiceExceptionAsync(context, ex);
+        await HandleServiceExceptionAsync(context, ex);
       }
     }
     private static Task HandleServiceExceptionAsync(HttpContext context, Exception exception)
@@ -45,7 +45,7 @@ namespace Manager.Web
       var result = JsonConvert.SerializeObject(new { error = exception.Message });
       context.Response.ContentType = "application/json";
       context.Response.StatusCode = (int)code;
-      return context.Response.WriteAsync(result);
+      return  context.Response.WriteAsync(result);
     }
   }
 }

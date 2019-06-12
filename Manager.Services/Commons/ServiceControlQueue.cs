@@ -99,7 +99,7 @@ namespace Manager.Services.Commons
 
        serviceMaturity.NewMaturityRegister(view);
 
-       queueClient.CompleteAsync(message.SystemProperties.LockToken);
+       await queueClient.CompleteAsync(message.SystemProperties.LockToken);
     }
 
     private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)

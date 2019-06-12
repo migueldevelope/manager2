@@ -48,7 +48,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListLogMessages> result = service.ListPerson(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Listar as mensagens da equipe do gestor
@@ -66,7 +66,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListLogMessages> result = service.ListManager(id, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return  result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Nova mensagem
@@ -77,7 +77,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> New([FromBody]ViewCrudLogMessages view)
     {
-      return Ok( service.New(view));
+      return await Task.Run(() =>Ok( service.New(view)));
     }
     /// <summary>
     /// Buscar objeto para manutenção
@@ -89,7 +89,7 @@ namespace Manager.Controllers
     [Route("get")]
     public async Task<ViewCrudLogMessages> Get(string id)
     {
-      return service.Get(id);
+      return await Task.Run(() =>service.Get(id));
     }
     /// <summary>
     /// Alterar uma mensagem do log de mensagerias
@@ -101,7 +101,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudLogMessages view)
     {
-      return Ok( service.Update(view));
+      return await Task.Run(() =>Ok( service.Update(view)));
     }
     /// <summary>
     /// Excluir uma mensagem
@@ -113,7 +113,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return Ok( service.Delete(id));
+      return await Task.Run(() =>Ok( service.Delete(id)));
     }
     #endregion
 
