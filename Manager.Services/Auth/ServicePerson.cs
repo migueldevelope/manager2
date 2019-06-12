@@ -297,7 +297,7 @@ namespace Manager.Services.Auth
         person.Registration = view.Person.Registration;
         person.SalaryScales = salaryScale;
         person.User = user;
-        servicePerson.Update(person, null);
+        servicePerson.Update(person, null).Wait();
         serviceUser.Update(user, null).Wait();
         return "Person altered!";
       }
