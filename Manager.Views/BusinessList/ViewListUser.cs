@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Manager.Views.BusinessList
+﻿namespace Manager.Views.BusinessList
 {
   public class ViewListUser : _ViewListBase
   {

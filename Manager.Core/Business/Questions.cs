@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 
 namespace Manager.Core.Business
@@ -15,5 +16,16 @@ namespace Manager.Core.Business
     public long Order { get; set; }
     public Questions Template { get; set; }
     public EnumTypeRotine TypeRotine { get; set; }
+    public ViewListQuestions GetViewList()
+    {
+      return new ViewListQuestions()
+      {
+        _id = _id,
+        Name = Name,
+        Content = Content,
+        TypeRotine = TypeRotine,
+        Order = Order
+      };
+    }
   }
 }
