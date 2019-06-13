@@ -821,12 +821,7 @@ namespace Manager.Services.Specific
             StatusViewPerson = p.StatusViewPerson,
             TypeAtivitie = p.TypeAtivitie,
             Praise = p.Praise,
-            Activities = new ViewListActivitie()
-            {
-              _id = p.Activities._id,
-              Name = p.Activities.Name,
-              Order = p.Activities.Order
-            },
+            Activities = p.Activities.GetViewList(),
             Plans = p.Plans?.Select(x => new ViewCrudPlan()
             {
               _id = x._id,
@@ -865,7 +860,7 @@ namespace Manager.Services.Specific
         {
           Status = view.Status,
           _id = view._id,
-          Activities = new ViewListActivitie() { _id = view.Activities._id, Name = view.Activities.Name, Order = view.Activities.Order },
+          Activities = view.Activities.GetViewList(),
           Comments = view.Comments.Select(p => new ViewCrudComment()
           {
             _id = p._id,

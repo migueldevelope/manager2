@@ -273,12 +273,7 @@ namespace Manager.Services.Specific
               _id = onBoarding.Person.Occupation.Group._id,
               Name = onBoarding.Person.Occupation.Group.Name,
               Line = onBoarding.Person.Occupation.Group.Line,
-              Axis = new ViewListAxis()
-              {
-                _id = onBoarding.Person.Occupation.Group.Axis._id,
-                Name = onBoarding.Person.Occupation.Group.Axis.Name,
-                TypeAxis = onBoarding.Person.Occupation.Group.Axis.TypeAxis
-              },
+              Axis = onBoarding.Person.Occupation.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere()
               {
                 _id = onBoarding.Person.Occupation.Group.Sphere._id,
@@ -296,11 +291,7 @@ namespace Manager.Services.Specific
                 _id = p.ProcessLevelOne._id,
                 Name = p.ProcessLevelOne.Name,
                 Order = p.ProcessLevelOne.Order,
-                Area = new ViewListArea()
-                {
-                  _id = p.ProcessLevelOne.Area._id,
-                  Name = p.ProcessLevelOne.Area.Name
-                }
+                Area = p.ProcessLevelOne.Area.GetViewList()
               }
             }).ToList()
           },
@@ -403,7 +394,7 @@ namespace Manager.Services.Specific
           Activities = onBoarding.Activities?.OrderBy(o => o.Activitie.Order).Select(p => new ViewCrudOnboardingActivitie()
           {
             _id = p._id,
-            Activitie = new ViewListActivitie() { _id = p.Activitie._id, Name = p.Activitie.Name, Order = p.Activitie.Order },
+            Activitie = p.Activitie.GetViewList(),
             CommentsManager = p.CommentsManager,
             CommentsPerson = p.CommentsPerson,
             StatusViewManager = p.StatusViewManager,
@@ -1236,7 +1227,7 @@ namespace Manager.Services.Specific
               _id = onboarding.Person.Occupation.Group._id,
               Name = onboarding.Person.Occupation.Group.Name,
               Line = onboarding.Person.Occupation.Group.Line,
-              Axis = new ViewListAxis() { _id = onboarding.Person.Occupation.Group.Axis._id, Name = onboarding.Person.Occupation.Group.Axis.Name, TypeAxis = onboarding.Person.Occupation.Group.Axis.TypeAxis },
+              Axis = onboarding.Person.Occupation.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere() { _id = onboarding.Person.Occupation.Group.Sphere._id, Name = onboarding.Person.Occupation.Group.Sphere.Name, TypeSphere = onboarding.Person.Occupation.Group.Sphere.TypeSphere }
             },
             Process = null,
@@ -1362,12 +1353,7 @@ namespace Manager.Services.Specific
             }).ToList(),
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
-            Activitie = new ViewListActivitie()
-            {
-              _id = p.Activitie._id,
-              Name = p.Activitie.Name,
-              Order = p.Activitie.Order
-            }
+            Activitie = p.Activitie.GetViewList()
           }).ToList(),
           StatusOnBoarding = onboarding.StatusOnBoarding,
         };

@@ -990,7 +990,7 @@ namespace Manager.Services.Specific
           FirstOrDefault().MeritocracyActivities
           .Select(x => new ViewListMeritocracyActivitie()
           {
-            Activitie = new ViewListActivitie() { _id = x.Activities._id, Name = x.Activities.Name, Order = x.Activities.Order },
+            Activitie = x.Activities.GetViewList(),
             Mark = x.Mark
           }).ToList();
 

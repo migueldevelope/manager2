@@ -142,7 +142,7 @@ namespace Manager.Services.Auth
         {
           _id = p.Group._id,
           Name = p.Group.Name,
-          Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
+          Axis = p.Group.Axis.GetViewList(),
           Line = p.Group.Line,
           Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, TypeSphere = p.Group.Sphere.TypeSphere, Name = p.Group.Sphere.Name },
         }
@@ -434,12 +434,7 @@ namespace Manager.Services.Auth
               _id = person.Occupation.Group._id,
               Name = person.Occupation.Group.Name,
               Line = person.Occupation.Group.Line,
-              Axis = new ViewListAxis()
-              {
-                _id = person.Occupation.Group.Axis._id,
-                Name = person.Occupation.Group.Axis.Name,
-                TypeAxis = person.Occupation.Group.Axis.TypeAxis
-              },
+              Axis = person.Occupation.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere()
               {
                 _id = person.Occupation.Group.Sphere._id,
@@ -457,11 +452,7 @@ namespace Manager.Services.Auth
                 _id = p.ProcessLevelOne._id,
                 Name = p.ProcessLevelOne.Name,
                 Order = p.ProcessLevelOne.Order,
-                Area = new ViewListArea()
-                {
-                  _id = p.ProcessLevelOne.Area._id,
-                  Name = p.ProcessLevelOne.Area.Name
-                }
+                Area = p.ProcessLevelOne.Area.GetViewList()
               }
             }).ToList()
           },
@@ -600,12 +591,7 @@ namespace Manager.Services.Auth
               _id = person.Occupation.Group._id,
               Name = person.Occupation.Group.Name,
               Line = person.Occupation.Group.Line,
-              Axis = new ViewListAxis()
-              {
-                _id = person.Occupation.Group.Axis._id,
-                Name = person.Occupation.Group.Axis.Name,
-                TypeAxis = person.Occupation.Group.Axis.TypeAxis
-              },
+              Axis = person.Occupation.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere()
               {
                 _id = person.Occupation.Group.Sphere._id,
@@ -623,11 +609,7 @@ namespace Manager.Services.Auth
                 _id = p.ProcessLevelOne._id,
                 Name = p.ProcessLevelOne.Name,
                 Order = p.ProcessLevelOne.Order,
-                Area = new ViewListArea()
-                {
-                  _id = p.ProcessLevelOne.Area._id,
-                  Name = p.ProcessLevelOne.Area.Name
-                }
+                Area = p.ProcessLevelOne.Area.GetViewList()
               }
             }).ToList()
           },

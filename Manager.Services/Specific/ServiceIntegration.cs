@@ -912,7 +912,7 @@ namespace Manager.Services.Specific
               _id = result.Group._id,
               Name = result.Group.Name,
               Line = result.Group.Line,
-              Axis = new ViewListAxis() { _id = result.Group.Axis._id, Name = result.Group.Axis.Name, TypeAxis = result.Group.Axis.TypeAxis },
+              Axis = result.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere() { _id = result.Group.Sphere._id, Name = result.Group.Sphere.Name, TypeSphere = result.Group.Sphere.TypeSphere }
             },
             Process = result.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
@@ -927,7 +927,7 @@ namespace Manager.Services.Specific
                 _id = x.ProcessLevelOne._id,
                 Name = x.ProcessLevelOne.Name,
                 Order = x.ProcessLevelOne.Order,
-                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+                Area = x.ProcessLevelOne.Area.GetViewList()
               }
             })
             .ToList()
@@ -1011,12 +1011,7 @@ namespace Manager.Services.Specific
                 _id = person.Occupation.Group._id,
                 Name = person.Occupation.Group.Name,
                 Line = person.Occupation.Group.Line,
-                Axis = new ViewListAxis()
-                {
-                  _id = person.Occupation.Group.Axis._id,
-                  Name = person.Occupation.Group.Axis.Name,
-                  TypeAxis = person.Occupation.Group.Axis.TypeAxis
-                },
+                Axis = person.Occupation.Group.Axis.GetViewList(),
                 Sphere = new ViewListSphere()
                 {
                   _id = person.Occupation.Group.Sphere._id,
@@ -1034,11 +1029,7 @@ namespace Manager.Services.Specific
                   _id = p.ProcessLevelOne._id,
                   Name = p.ProcessLevelOne.Name,
                   Order = p.ProcessLevelOne.Order,
-                  Area = new ViewListArea()
-                  {
-                    _id = p.ProcessLevelOne.Area._id,
-                    Name = p.ProcessLevelOne.Area.Name
-                  }
+                  Area = p.ProcessLevelOne.Area.GetViewList()
                 }
               }).ToList()
             },
@@ -1091,7 +1082,7 @@ namespace Manager.Services.Specific
               _id = x.ProcessLevelOne._id,
               Name = x.ProcessLevelOne.Name,
               Order = x.ProcessLevelOne.Order,
-              Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+              Area = x.ProcessLevelOne.Area.GetViewList()
             }
           }).ToList();
         total = processLevelTwoService.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;

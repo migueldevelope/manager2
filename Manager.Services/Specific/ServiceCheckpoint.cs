@@ -253,12 +253,7 @@ namespace Manager.Services.Specific
                 _id = person.Occupation.Group._id,
                 Name = person.Occupation.Group.Name,
                 Line = person.Occupation.Group.Line,
-                Axis = new ViewListAxis()
-                {
-                  _id = person.Occupation.Group.Axis._id,
-                  Name = person.Occupation.Group.Axis.Name,
-                  TypeAxis = person.Occupation.Group.Axis.TypeAxis
-                },
+                Axis = person.Occupation.Group.Axis.GetViewList(),
                 Sphere = new ViewListSphere()
                 {
                   _id = person.Occupation.Group.Sphere._id,
@@ -276,11 +271,7 @@ namespace Manager.Services.Specific
                   _id = p.ProcessLevelOne._id,
                   Name = p.ProcessLevelOne.Name,
                   Order = p.ProcessLevelOne.Order,
-                  Area = new ViewListArea()
-                  {
-                    _id = p.ProcessLevelOne.Area._id,
-                    Name = p.ProcessLevelOne.Area.Name
-                  }
+                  Area = p.ProcessLevelOne.Area.GetViewList()
                 }
               }).ToList()
             }
@@ -359,12 +350,7 @@ namespace Manager.Services.Specific
               _id = checkpoint.Person.Occupation.Group._id,
               Name = checkpoint.Person.Occupation.Group.Name,
               Line = checkpoint.Person.Occupation.Group.Line,
-              Axis = new ViewListAxis()
-              {
-                _id = checkpoint.Person.Occupation.Group.Axis._id,
-                Name = checkpoint.Person.Occupation.Group.Axis.Name,
-                TypeAxis = checkpoint.Person.Occupation.Group.Axis.TypeAxis
-              },
+              Axis = checkpoint.Person.Occupation.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere()
               {
                 _id = checkpoint.Person.Occupation.Group.Sphere._id,
@@ -382,11 +368,7 @@ namespace Manager.Services.Specific
                 _id = p.ProcessLevelOne._id,
                 Name = p.ProcessLevelOne.Name,
                 Order = p.ProcessLevelOne.Order,
-                Area = new ViewListArea()
-                {
-                  _id = p.ProcessLevelOne.Area._id,
-                  Name = p.ProcessLevelOne.Area.Name
-                }
+                Area = p.ProcessLevelOne.Area.GetViewList()
               }
             }).ToList()
           },
@@ -567,12 +549,7 @@ namespace Manager.Services.Specific
               _id = checkpoint.Person.Occupation.Group._id,
               Name = checkpoint.Person.Occupation.Group.Name,
               Line = checkpoint.Person.Occupation.Group.Line,
-              Axis = new ViewListAxis()
-              {
-                _id = checkpoint.Person.Occupation.Group.Axis._id,
-                Name = checkpoint.Person.Occupation.Group.Axis.Name,
-                TypeAxis = checkpoint.Person.Occupation.Group.Axis.TypeAxis
-              },
+              Axis = checkpoint.Person.Occupation.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere()
               {
                 _id = checkpoint.Person.Occupation.Group.Sphere._id,
@@ -590,11 +567,7 @@ namespace Manager.Services.Specific
                 _id = p.ProcessLevelOne._id,
                 Name = p.ProcessLevelOne.Name,
                 Order = p.ProcessLevelOne.Order,
-                Area = new ViewListArea()
-                {
-                  _id = p.ProcessLevelOne.Area._id,
-                  Name = p.ProcessLevelOne.Area.Name
-                }
+                Area = p.ProcessLevelOne.Area.GetViewList()
               }
             }).ToList()
           },

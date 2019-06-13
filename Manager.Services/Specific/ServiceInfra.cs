@@ -1184,11 +1184,7 @@ namespace Manager.Services.Specific
           }
         }
         return areas.OrderBy(p => p.Name)
-           .Select(p => new ViewListArea()
-           {
-             _id = p._id,
-             Name = p.Name
-           }).ToList();
+           .Select(p => p.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -1294,11 +1290,7 @@ namespace Manager.Services.Specific
           }
         }
         return areas.OrderBy(p => p.Name)
-           .Select(p => new ViewListArea()
-           {
-             _id = p._id,
-             Name = p.Name
-           }).ToList();
+           .Select(p => p.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -1311,12 +1303,7 @@ namespace Manager.Services.Specific
       try
       {
         return serviceAxis.GetAllNewVersion().OrderBy(p => p.TypeAxis)
-          .Select(p => new ViewListAxis()
-          {
-            _id = p._id,
-            Name = p.Name,
-            TypeAxis = p.TypeAxis
-          }).ToList();
+          .Select(p => p.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -1329,12 +1316,7 @@ namespace Manager.Services.Specific
       try
       {
         return serviceAxis.GetAllNewVersion(p => p.Company._id == idcompany).Result.OrderBy(p => p.TypeAxis)
-          .Select(p => new ViewListAxis()
-          {
-            _id = p._id,
-            Name = p.Name,
-            TypeAxis = p.TypeAxis
-          }).ToList();
+          .Select(p => p.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -1440,7 +1422,7 @@ namespace Manager.Services.Specific
           Name = result.Name,
           Line = result.Line,
           Company = new ViewListCompany() { _id = result.Company._id, Name = result.Company.Name },
-          Axis = new ViewListAxis() { _id = result.Axis._id, Name = result.Axis.Name },
+          Axis = result.Axis.GetViewList(),
           Sphere = new ViewListSphere() { _id = result.Sphere._id, Name = result.Sphere.Name }
         };
       }
@@ -1519,7 +1501,7 @@ namespace Manager.Services.Specific
           Name = result.Name,
           Line = result.Line,
           Company = new ViewListCompany() { _id = result.Company._id, Name = result.Company.Name },
-          Axis = new ViewListAxis() { _id = result.Axis._id, Name = result.Axis.Name },
+          Axis = result.Axis.GetViewList(),
           Sphere = new ViewListSphere() { _id = result.Sphere._id, Name = result.Sphere.Name }
         };
       }
@@ -2360,7 +2342,7 @@ namespace Manager.Services.Specific
           {
             _id = item._id,
             Name = item.Name,
-            Axis = new ViewListAxis() { _id = item.Axis._id, Name = item.Axis.Name, TypeAxis = item.Axis.TypeAxis },
+            Axis = item.Axis.GetViewList(),
             Sphere = new ViewListSphere() { _id = item.Sphere._id, Name = item.Sphere.Name, TypeSphere = item.Sphere.TypeSphere },
             Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
             Line = item.Line,
@@ -2687,11 +2669,7 @@ namespace Manager.Services.Specific
               _id = p.ProcessLevelOne._id,
               Name = p.ProcessLevelOne.Name,
               Order = p.Order,
-              Area = new ViewListArea()
-              {
-                _id = p.ProcessLevelOne.Area._id,
-                Name = p.ProcessLevelOne.Area.Name
-              }
+              Area = p.ProcessLevelOne.Area.GetViewList()
             }
           })
           .ToList();
@@ -2726,11 +2704,7 @@ namespace Manager.Services.Specific
                 _id = row.ProcessLevelOne._id,
                 Name = row.ProcessLevelOne.Name,
                 Order = row.Order,
-                Area = new ViewListArea()
-                {
-                  _id = row.ProcessLevelOne.Area._id,
-                  Name = row.ProcessLevelOne.Area.Name
-                }
+                Area = row.ProcessLevelOne.Area.GetViewList()
               }
             });
           }
@@ -2764,11 +2738,7 @@ namespace Manager.Services.Specific
                 _id = row.ProcessLevelOne._id,
                 Name = row.ProcessLevelOne.Name,
                 Order = row.Order,
-                Area = new ViewListArea()
-                {
-                  _id = row.ProcessLevelOne.Area._id,
-                  Name = row.ProcessLevelOne.Area.Name
-                }
+                Area = row.ProcessLevelOne.Area.GetViewList()
               }
             });
           }
@@ -2819,7 +2789,7 @@ namespace Manager.Services.Specific
               _id = p.Company._id,
               Name = p.Company.Name,
             },
-            Axis = new ViewListAxis() { _id = p.Axis._id, Name = p.Axis.Name, TypeAxis = p.Axis.TypeAxis },
+            Axis = p.Axis.GetViewList(),
             Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
             Line = p.Line
           }).FirstOrDefault();
@@ -2846,7 +2816,7 @@ namespace Manager.Services.Specific
                 _id = p.Company._id,
                 Name = p.Company.Name,
               },
-              Axis = new ViewListAxis() { _id = p.Axis._id, Name = p.Axis.Name, TypeAxis = p.Axis.TypeAxis },
+              Axis = p.Axis.GetViewList(),
               Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
               Line = p.Line
             }).FirstOrDefault();
@@ -2877,7 +2847,7 @@ namespace Manager.Services.Specific
         {
           _id = p._id,
           Name = p.Name,
-          Axis = new ViewListAxis() { _id = p.Axis._id, Name = p.Axis.Name, TypeAxis = p.Axis.TypeAxis },
+          Axis = p.Axis.GetViewList(),
           Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
           Line = p.Line
         }).ToList();
@@ -2902,7 +2872,7 @@ namespace Manager.Services.Specific
         {
           _id = p._id,
           Name = p.Name,
-          Axis = new ViewListAxis() { _id = p.Axis._id, Name = p.Axis.Name, TypeAxis = p.Axis.TypeAxis },
+          Axis = p.Axis.GetViewList(),
           Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
           Line = p.Line
         }).OrderByDescending(p => p.Sphere.TypeSphere).ThenByDescending(p => p.Axis.TypeAxis).ThenByDescending(p => p.Line).ToList();
@@ -2933,7 +2903,7 @@ namespace Manager.Services.Specific
             {
               _id = p.Group._id,
               Name = p.Group.Name,
-              Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
+              Axis = p.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, Name = p.Group.Sphere.Name, TypeSphere = p.Group.Sphere.TypeSphere },
               Line = p.Group.Line,
             },
@@ -2950,7 +2920,7 @@ namespace Manager.Services.Specific
                 _id = x.ProcessLevelOne._id,
                 Name = x.ProcessLevelOne.Name,
                 Order = x.ProcessLevelOne.Order,
-                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+                Area = x.ProcessLevelOne.Area.GetViewList()
               }
             })
             .ToList()
@@ -3013,7 +2983,7 @@ namespace Manager.Services.Specific
             {
               _id = p.Group._id,
               Name = p.Group.Name,
-              Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
+              Axis = p.Group.Axis.GetViewList(),
               Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, Name = p.Group.Sphere.Name, TypeSphere = p.Group.Sphere.TypeSphere },
               Line = p.Group.Line,
             },
@@ -3030,7 +3000,7 @@ namespace Manager.Services.Specific
                 _id = x.ProcessLevelOne._id,
                 Name = x.ProcessLevelOne.Name,
                 Order = x.ProcessLevelOne.Order,
-                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+                Area = x.ProcessLevelOne.Area.GetViewList()
               }
             })
             .ToList()
@@ -3596,7 +3566,7 @@ namespace Manager.Services.Specific
           Name = group.Name,
           Line = group.Line,
           Company = new ViewListCompany() { _id = group.Company._id, Name = group.Company.Name },
-          Axis = new ViewListAxis() { _id = group.Axis._id, Name = group.Axis.Name, TypeAxis = group.Axis.TypeAxis },
+          Axis = group.Axis.GetViewList(),
           Sphere = new ViewListSphere() { _id = group.Sphere._id, Name = group.Sphere.Name, TypeSphere = group.Sphere.TypeSphere },
           Schooling = group.Schooling?.OrderBy(o => o.Order).Select(p => new ViewListSchooling()
           {
@@ -3672,7 +3642,7 @@ namespace Manager.Services.Specific
           {
             _id = item._id,
             Name = item.Name,
-            Area = new ViewListArea() { _id = item.Area._id, Name = item.Area.Name },
+            Area = item.Area.GetViewList(),
             Order = item.Order,
             Process = serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == item._id).Result.Select(x => new ViewCrudProcessLevelTwo()
             {
@@ -3735,15 +3705,10 @@ namespace Manager.Services.Specific
             _id = group._id,
             Name = group.Name,
             Line = group.Line,
-            Axis = new ViewListAxis() { _id = group.Axis._id, Name = group.Axis.Name, TypeAxis = group.Axis.TypeAxis },
+            Axis = group.Axis.GetViewList(),
             Sphere = new ViewListSphere() { _id = group.Sphere._id, Name = group.Sphere.Name, TypeSphere = group.Sphere.TypeSphere }
           },
-          Activities = occupation.Activities?.OrderBy(o => o.Order).Select(x => new ViewListActivitie()
-          {
-            _id = x._id,
-            Name = x.Name,
-            Order = x.Order
-          }).ToList(),
+          Activities = occupation.Activities?.OrderBy(o => o.Order).Select(x => x.GetViewList()).ToList(),
           Process = occupation.Process.Select(x => new ViewListProcessLevelTwo()
           {
             _id = x._id,
@@ -3754,11 +3719,7 @@ namespace Manager.Services.Specific
               _id = x.ProcessLevelOne._id,
               Name = x.ProcessLevelOne.Name,
               Order = x.ProcessLevelOne.Order,
-              Area = new ViewListArea()
-              {
-                _id = x.ProcessLevelOne?.Area._id,
-                Name = x.ProcessLevelOne?.Area.Name
-              }
+              Area = x.ProcessLevelOne?.Area.GetViewList()
             }
           }).ToList(),
           Schooling = occupation.Schooling?.OrderBy(o => o.Order).Select(x => new ViewCrudSchooling()
@@ -3814,11 +3775,7 @@ namespace Manager.Services.Specific
           _id = p._id,
           Name = p.Name,
           Order = p.Order,
-          Area = new ViewListArea()
-          {
-            _id = p.Area._id,
-            Name = p.Area.Name
-          }
+          Area = p.Area.GetViewList()
         }).FirstOrDefault();
       }
       catch (Exception e)
@@ -3843,11 +3800,7 @@ namespace Manager.Services.Specific
             _id = p.ProcessLevelOne._id,
             Name = p.ProcessLevelOne.Name,
             Order = p.ProcessLevelOne.Order,
-            Area = new ViewListArea()
-            {
-              _id = p.ProcessLevelOne.Area._id,
-              Name = p.ProcessLevelOne.Area.Name
-            }
+            Area = p.ProcessLevelOne.Area.GetViewList()
           }
         }).FirstOrDefault();
       }
