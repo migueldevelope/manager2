@@ -18,6 +18,7 @@ using Manager.Views.Enumns;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Manager.Core.BusinessModel;
+using Manager.Views.CustomClient;
 
 namespace Manager.Services.Auth
 {
@@ -350,10 +351,15 @@ namespace Manager.Services.Auth
           content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
           HttpResponseMessage result =  client.PostAsync("/", content).Result;
-          //var resultContent = result.Content.ReadAsStringAsync().Result;
-
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
+          {
             throw new Exception("User/Password invalid!");
+          }
+          ViewUnimedStatusAuthentication status = JsonConvert.DeserializeObject<ViewUnimedStatusAuthentication>(result.Content.ReadAsStringAsync().Result);
+          if (status.Status == false)
+          {
+            throw new Exception("User/Password invalid!");
+          }
         }
       }
       catch (Exception e)
