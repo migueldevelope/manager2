@@ -153,18 +153,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region List Account
-    public List<ViewListAccount> GetAllNewVersion(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListAccount> GetAccountList(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        Task<List<Account>> detail = serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name");
         total = serviceAccount.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail.Result
-          .Select(x => new ViewListAccount()
-          {
-            _id = x._id,
-            Name = x.Name
-          }).ToList();
+        return serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name")
+          .Result.Select(x => x.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -176,13 +171,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var view = serviceAccount.GetFreeNewVersion(p => p._id == id).Result;
-        return new ViewCrudAccount()
-        {
-          _id = view._id,
-          Name = view.Name,
-          InfoClient = view.InfoClient
-        };
+        return serviceAccount.GetFreeNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {

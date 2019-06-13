@@ -163,7 +163,7 @@ namespace Manager.Test.Test.Complete
         base.Init();
 
         long total = 0;
-        var account = this.serviceAccount.GetAllNewVersion(ref total).Where(p => p.Name == "Support").FirstOrDefault()._id;
+        var account = this.serviceAccount.GetAccountList(ref total).Where(p => p.Name == "Support").FirstOrDefault()._id;
         var baseUser = new BaseUser()
         {
           _idAccount = account
