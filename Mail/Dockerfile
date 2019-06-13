@@ -5,7 +5,7 @@ EXPOSE 5201
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
 COPY ["Mail.csproj", "Mail/"]
-RUN cp "./Tools/Tools.csproj" "Tools/"
+COPY ["../../Tools/Tools.csproj","Tools/"]
 COPY ["/Manager.Data/Manager.Data.csproj", "Manager.Data/"]
 COPY ["/Manager.Core/Manager.Core.csproj", "Manager.Core/"]
 COPY ["/Manager.Views/Manager.Views.csproj", "Manager.Views/"]
