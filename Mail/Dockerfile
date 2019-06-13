@@ -10,7 +10,7 @@ COPY ["Manager.Data/Manager.Data.csproj", "Manager.Data/"]
 COPY ["Manager.Core/Manager.Core.csproj", "Manager.Core/"]
 COPY ["Manager.Views/Manager.Views.csproj", "Manager.Views/"]
 COPY ["Manager.Services/Manager.Services.csproj", "Manager.Services/"]
-RUN dotnet restore "../Mail/Mail.csproj"
+RUN dotnet restore "Mail/Mail.csproj"
 COPY . .
 WORKDIR "/src/Mail"
 RUN dotnet build "Mail.csproj" -c Release -o /app
