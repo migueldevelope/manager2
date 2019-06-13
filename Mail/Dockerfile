@@ -3,13 +3,13 @@ WORKDIR /app
 EXPOSE 5201
 
 FROM microsoft/aspnetcore-build:2.0 AS build
-WORKDIR ../src
-COPY ["Mail/Mail.csproj", "Mail/"]
-COPY ["Tools/Tools.csproj", "Tools/"]
-COPY ["Manager.Data/Manager.Data.csproj", "Manager.Data/"]
-COPY ["Manager.Core/Manager.Core.csproj", "Manager.Core/"]
-COPY ["Manager.Views/Manager.Views.csproj", "Manager.Views/"]
-COPY ["Manager.Services/Manager.Services.csproj", "Manager.Services/"]
+WORKDIR /src
+COPY ["/Manager/Mail/Mail.csproj", "Mail/"]
+COPY ["/Tools/Tools.csproj", "Tools/"]
+COPY ["/Manager.Data/Manager.Data.csproj", "Manager.Data/"]
+COPY ["/Manager.Core/Manager.Core.csproj", "Manager.Core/"]
+COPY ["/Manager.Views/Manager.Views.csproj", "Manager.Views/"]
+COPY ["/Manager.Services/Manager.Services.csproj", "Manager.Services/"]
 RUN dotnet restore "../Mail/Mail.csproj"
 COPY . .
 WORKDIR "/src/Mail"
