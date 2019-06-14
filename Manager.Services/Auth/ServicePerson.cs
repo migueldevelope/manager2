@@ -100,22 +100,11 @@ namespace Manager.Services.Auth
       try
       {
 
-        int skip = (count * (page - 1));
-        var detail = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
-          .Result.OrderBy(p => p.User.Name)
-           .Select(item => new ViewListPerson()
-           {
-             _id = item._id,
-             Company = item.Company == null ? null : new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
-             Establishment = item.Establishment == null ? null : new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
-             Registration = item.Registration,
-             User = item.User == null ? null : new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
-           }).ToList();
-        //var detail = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return detail;
-
+        int skip = (count * (page - 1));
+        return servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+          .Result.OrderBy(p => p.User.Name)
+           .Select(item => item.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -127,26 +116,10 @@ namespace Manager.Services.Auth
     #region Occupation
     public List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page)
     {
-      int skip = (count * (page - 1));
-      var detail = serviceOccupation.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name)
-        .Skip(skip).Take(count).ToList()
-        ;
       total = serviceOccupation.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-      return detail.Select(p => new ViewListOccupation()
-      {
-        _id = p._id,
-        Name = p.Name,
-        Company = new ViewListCompany() { _id = p.Group.Company._id, Name = p.Group.Company.Name },
-        Group = new ViewListGroup()
-        {
-          _id = p.Group._id,
-          Name = p.Group.Name,
-          Axis = p.Group.Axis.GetViewList(),
-          Line = p.Group.Line,
-          Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, TypeSphere = p.Group.Sphere.TypeSphere, Name = p.Group.Sphere.Name },
-        }
-      }).ToList();
+      int skip = count * (page - 1);
+      return serviceOccupation.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name)
+        .Skip(skip).Take(count).Select(p => p.GetViewList()).ToList();
 
     }
     #endregion
@@ -333,11 +306,9 @@ namespace Manager.Services.Auth
     {
       try
       {
-        int skip = (count * (page - 1));
-        var detail = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
         total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return detail
+        int skip = (count * (page - 1));
+        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count)
           .Select(item => new ViewListPersonTeam()
           {
             Name = item.User.Name,
@@ -423,39 +394,7 @@ namespace Manager.Services.Auth
             Mail = person.Manager.Mail
           },
           MotiveAside = person.MotiveAside,
-          Occupation = person.Occupation == null ? null : new ViewListOccupation()
-          {
-            _id = person.Occupation._id,
-            Name = person.Occupation.Name,
-            Line = person.Occupation.Line,
-            Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = person.Occupation.Group._id,
-              Name = person.Occupation.Group.Name,
-              Line = person.Occupation.Group.Line,
-              Axis = person.Occupation.Group.Axis.GetViewList(),
-              Sphere = new ViewListSphere()
-              {
-                _id = person.Occupation.Group.Sphere._id,
-                Name = person.Occupation.Group.Sphere.Name,
-                TypeSphere = person.Occupation.Group.Sphere.TypeSphere
-              }
-            },
-            Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Order = p.Order,
-              ProcessLevelOne = new ViewListProcessLevelOne()
-              {
-                _id = p.ProcessLevelOne._id,
-                Name = p.ProcessLevelOne.Name,
-                Order = p.ProcessLevelOne.Order,
-                Area = p.ProcessLevelOne.Area.GetViewList()
-              }
-            }).ToList()
-          },
+          Occupation = person.Occupation?.GetViewList(),
           Registration = person.Registration,
           Salary = person.Salary,
           StatusUser = person.StatusUser,
@@ -580,39 +519,7 @@ namespace Manager.Services.Auth
             Mail = person.Manager.Mail
           },
           MotiveAside = person.MotiveAside,
-          Occupation = person.Occupation == null ? null : new ViewListOccupation()
-          {
-            _id = person.Occupation._id,
-            Name = person.Occupation.Name,
-            Line = person.Occupation.Line,
-            Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = person.Occupation.Group._id,
-              Name = person.Occupation.Group.Name,
-              Line = person.Occupation.Group.Line,
-              Axis = person.Occupation.Group.Axis.GetViewList(),
-              Sphere = new ViewListSphere()
-              {
-                _id = person.Occupation.Group.Sphere._id,
-                Name = person.Occupation.Group.Sphere.Name,
-                TypeSphere = person.Occupation.Group.Sphere.TypeSphere
-              }
-            },
-            Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Order = p.Order,
-              ProcessLevelOne = new ViewListProcessLevelOne()
-              {
-                _id = p.ProcessLevelOne._id,
-                Name = p.ProcessLevelOne.Name,
-                Order = p.ProcessLevelOne.Order,
-                Area = p.ProcessLevelOne.Area.GetViewList()
-              }
-            }).ToList()
-          },
+          Occupation = person.Occupation?.GetViewList(),
           Registration = person.Registration,
           Salary = person.Salary,
           StatusUser = person.StatusUser,
@@ -735,14 +642,7 @@ namespace Manager.Services.Auth
         return servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser
        != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
        & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
-         .Result.Select(item => new ViewListPerson()
-         {
-           _id = item._id,
-           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
-           Establishment = new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
-           Registration = item.Registration,
-           User = new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
-         }).ToList();
+         .Result.Select(item => item.GetViewList()).ToList();
       }
       catch (Exception e)
       {

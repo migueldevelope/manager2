@@ -242,39 +242,7 @@ namespace Manager.Services.Specific
             DateBegin = DateTime.Now,
             DataAccess = person.User.DateAdm == null ? DateTime.Now : DateTime.Parse(person.User.DateAdm.ToString()).AddDays(Deadline()),
             TypeCheckpoint = EnumCheckpoint.None,
-            Occupation = new ViewListOccupation()
-            {
-              _id = person.Occupation._id,
-              Name = person.Occupation.Name,
-              Line = person.Occupation.Line,
-              Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
-              Group = new ViewListGroup()
-              {
-                _id = person.Occupation.Group._id,
-                Name = person.Occupation.Group.Name,
-                Line = person.Occupation.Group.Line,
-                Axis = person.Occupation.Group.Axis.GetViewList(),
-                Sphere = new ViewListSphere()
-                {
-                  _id = person.Occupation.Group.Sphere._id,
-                  Name = person.Occupation.Group.Sphere.Name,
-                  TypeSphere = person.Occupation.Group.Sphere.TypeSphere
-                }
-              },
-              Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-              {
-                _id = p._id,
-                Name = p.Name,
-                Order = p.Order,
-                ProcessLevelOne = new ViewListProcessLevelOne()
-                {
-                  _id = p.ProcessLevelOne._id,
-                  Name = p.ProcessLevelOne.Name,
-                  Order = p.ProcessLevelOne.Order,
-                  Area = p.ProcessLevelOne.Area.GetViewList()
-                }
-              }).ToList()
-            }
+            Occupation = person.Occupation?.GetViewList()
           };
           checkpoint = LoadMap(checkpoint);
           checkpoint = serviceCheckpoint.InsertNewVersion(checkpoint).Result;
@@ -339,39 +307,7 @@ namespace Manager.Services.Specific
               _id = checkpoint.Person.User._id
             }
           },
-          Occupation = new ViewListOccupation()
-          {
-            _id = checkpoint.Person.Occupation._id,
-            Name = checkpoint.Person.Occupation.Name,
-            Line = checkpoint.Person.Occupation.Line,
-            Company = new ViewListCompany() { _id = checkpoint.Person.Occupation.Group.Company._id, Name = checkpoint.Person.Occupation.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = checkpoint.Person.Occupation.Group._id,
-              Name = checkpoint.Person.Occupation.Group.Name,
-              Line = checkpoint.Person.Occupation.Group.Line,
-              Axis = checkpoint.Person.Occupation.Group.Axis.GetViewList(),
-              Sphere = new ViewListSphere()
-              {
-                _id = checkpoint.Person.Occupation.Group.Sphere._id,
-                Name = checkpoint.Person.Occupation.Group.Sphere.Name,
-                TypeSphere = checkpoint.Person.Occupation.Group.Sphere.TypeSphere
-              }
-            },
-            Process = checkpoint.Person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Order = p.Order,
-              ProcessLevelOne = new ViewListProcessLevelOne()
-              {
-                _id = p.ProcessLevelOne._id,
-                Name = p.ProcessLevelOne.Name,
-                Order = p.ProcessLevelOne.Order,
-                Area = p.ProcessLevelOne.Area.GetViewList()
-              }
-            }).ToList()
-          },
+          Occupation = checkpoint.Person.Occupation.GetViewList(),
           TextDefault = checkpoint.TextDefault,
           Questions = checkpoint.Questions?.OrderBy(o => o.Question.Order).Select(x => new ViewCrudCheckpointQuestion()
           {
@@ -538,39 +474,7 @@ namespace Manager.Services.Specific
               _id = checkpoint.Person.User._id
             }
           },
-          Occupation = new ViewListOccupation()
-          {
-            _id = checkpoint.Person.Occupation._id,
-            Name = checkpoint.Person.Occupation.Name,
-            Line = checkpoint.Person.Occupation.Line,
-            Company = new ViewListCompany() { _id = checkpoint.Person.Occupation.Group.Company._id, Name = checkpoint.Person.Occupation.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = checkpoint.Person.Occupation.Group._id,
-              Name = checkpoint.Person.Occupation.Group.Name,
-              Line = checkpoint.Person.Occupation.Group.Line,
-              Axis = checkpoint.Person.Occupation.Group.Axis.GetViewList(),
-              Sphere = new ViewListSphere()
-              {
-                _id = checkpoint.Person.Occupation.Group.Sphere._id,
-                Name = checkpoint.Person.Occupation.Group.Sphere.Name,
-                TypeSphere = checkpoint.Person.Occupation.Group.Sphere.TypeSphere
-              }
-            },
-            Process = checkpoint.Person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Order = p.Order,
-              ProcessLevelOne = new ViewListProcessLevelOne()
-              {
-                _id = p.ProcessLevelOne._id,
-                Name = p.ProcessLevelOne.Name,
-                Order = p.ProcessLevelOne.Order,
-                Area = p.ProcessLevelOne.Area.GetViewList()
-              }
-            }).ToList()
-          },
+          Occupation = checkpoint.Person.Occupation.GetViewList(),
           TextDefault = checkpoint.TextDefault,
           Questions = checkpoint.Questions?.OrderBy(o => o.Question.Order).Select(x => new ViewCrudCheckpointQuestion()
           {

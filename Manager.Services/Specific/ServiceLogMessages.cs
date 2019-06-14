@@ -55,14 +55,7 @@ namespace Manager.Services.Specific
           .Result.Select(x => new ViewListLogMessages()
           {
             _id = x._id,
-            Person = new ViewListPerson()
-            {
-              _id = x.Person._id,
-              Company = new ViewListCompany() { _id = x.Person.Company._id, Name = x.Person.Company.Name },
-              Establishment = new ViewListEstablishment() { _id = x.Person.Establishment._id , Name = x.Person.Establishment.Name },
-              Registration = x.Person.Registration,
-              User = new ViewListUser() { _id = x.Person.User._id, Name = x.Person.User.Name, Document = x.Person.User.Document, Mail = x.Person.User.Mail, Phone = x.Person.User.Phone }
-            }
+            Person = x.Person.GetViewList(),
           }).ToList();
         total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -77,21 +70,6 @@ namespace Manager.Services.Specific
       try
       {
         throw new Exception("Falta a seleção da equipe do gestor");
-        //List<ViewListLogMessages> detail = logMessagesService.GetAllNewVersion(p => p.Person._id == idmanager && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Register")
-        //  .Result.Select(x => new ViewListLogMessages()
-        //  {
-        //    _id = x._id,
-        //    Person = new ViewListPerson()
-        //    {
-        //      _id = x.Person._id,
-        //      Company = new ViewListCompany() { _id = x.Person.Company._id, Name = x.Person.Company.Name },
-        //      Establishment = new ViewListEstablishment() { _id = x.Person.Establishment._id, Name = x.Person.Establishment.Name },
-        //      Registration = x.Person.Registration,
-        //      User = new ViewListUser() { _id = x.Person.User._id, Name = x.Person.User.Name, Document = x.Person.User.Document, Mail = x.Person.User.Mail, Phone = x.Person.User.Phone }
-        //    }
-        //  }).ToList();
-        //var total = logMessagesService.CountNewVersion(p => p.Person._id == idmanager && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        //return detail;
       }
       catch (Exception e)
       {
@@ -164,14 +142,7 @@ namespace Manager.Services.Specific
           Register = logMessages.Register,
           StatusMessage = logMessages.StatusMessage,
           Subject = logMessages.Subject,
-          Person = new ViewListPerson()
-          {
-            _id = logMessages.Person._id,
-            Company = new ViewListCompany() { _id = logMessages.Person.Company._id, Name = logMessages.Person.Company.Name },
-            Establishment = new ViewListEstablishment() { _id = logMessages.Person.Establishment._id, Name = logMessages.Person.Establishment.Name },
-            Registration = logMessages.Person.Registration,
-            User = new ViewListUser() { _id = logMessages.Person.User._id, Name = logMessages.Person.User.Name, Document = logMessages.Person.User.Document, Mail = logMessages.Person.User.Mail, Phone = logMessages.Person.User.Phone }
-          }
+          Person = logMessages.Person?.GetViewList()
         };
       }
       catch (Exception e)

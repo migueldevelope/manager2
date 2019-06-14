@@ -638,32 +638,11 @@ namespace Manager.Services.Specific
         var outros = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Support & p.StatusUser != EnumStatusUser.Disabled
         & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator
         ).Result.ToList();
-        //var details = outros.Select(p => new ViewListPerson()
-        //{
-        //  _id = p._id,
-        //  Company = p.Company == null ? null : new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
-        //  Establishment = p.Establishment == null ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
-        //  Registration = p.Registration,
-        //  User = p.User == null ? null : new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
-        //}).ToList();
-
-        ViewListPerson view;
         List<ViewListPerson> details = new List<ViewListPerson>();
         foreach (var item in outros)
-        {
-          view = new ViewListPerson
-          {
-            _id = item._id,
-            Company = item.Company == null ? null : new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
-            Establishment = item.Establishment == null ? null : new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
-            Registration = item.Registration,
-            User = item.User == null ? null : new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
-          };
-          details.Add(view);
-        }
+          details.Add(item.GetViewList());
 
         var detail = details.Where(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(o => o.User.Name).ToList();
-
 
         var listExclud = serviceCertification.GetAllNewVersion(p => p._id == idcertification).Result.FirstOrDefault().ListPersons;
         foreach (var item in listExclud)

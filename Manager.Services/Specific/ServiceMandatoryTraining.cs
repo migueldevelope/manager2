@@ -640,11 +640,7 @@ namespace Manager.Services.Specific
 
         var detail = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result
           .Where(x => !filters.Contains(x._id))
-          .Select(x => new ViewListOccupation()
-          {
-            _id = x._id,
-            Name = x.Name
-          }).ToList();
+          .Select(x => x.GetViewList()).ToList();
         total = detail.Count();
         return detail.Skip(skip).Take(count).ToList();
       }
@@ -672,14 +668,7 @@ namespace Manager.Services.Specific
 
         var detail = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
           .Where(x => !filters.Contains(x._id))
-          .Select(x => new ViewListPerson()
-          {
-            _id = x._id,
-            Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
-            Establishment = new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
-            Registration = x.Registration,
-            User = new ViewListUser() { _id = x._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone }
-          }).ToList();
+          .Select(x => x.GetViewList()).ToList();
 
         total = detail.Count();
 
@@ -915,21 +904,7 @@ namespace Manager.Services.Specific
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Person = new ViewListPerson()
-            {
-              _id = x.Person._id,
-              Registration = x.Person.Registration,
-              Company = new ViewListCompany() { _id = x.Person.Company._id, Name = x.Person.Company.Name },
-              Establishment = new ViewListEstablishment() { _id = x.Person.Establishment._id, Name = x.Person.Establishment.Name },
-              User = new ViewListUser()
-              {
-                _id = x.Person.User._id,
-                Name = x.Person.User.Name,
-                Document = x.Person.User.Document,
-                Mail = x.Person.User.Mail,
-                Phone = x.Person.User.Phone
-              }
-            }
+            Person = x.Person.GetViewList()
           }).ToList(),
           Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
           Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
@@ -951,14 +926,7 @@ namespace Manager.Services.Specific
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Occupation = new ViewListOccupation()
-            {
-              _id = x.Occupation._id,
-              Name = x.Occupation.Name,
-              Line = x.Occupation.Line,
-              Company = new ViewListCompany() { _id = x.Occupation.Group.Company._id, Name = x.Occupation.Group.Company.Name },
-              Group = new ViewListGroup() { _id = x.Occupation.Group._id, Name = x.Occupation.Group.Name }
-            }
+            Occupation = x.Occupation.GetViewList()
           }).ToList()
 
         }).ToList();
@@ -998,21 +966,7 @@ namespace Manager.Services.Specific
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Person = new ViewListPerson()
-            {
-              _id = x.Person._id,
-              Registration = x.Person.Registration,
-              Company = new ViewListCompany() { _id = x.Person.Company._id, Name = x.Person.Company.Name },
-              Establishment = new ViewListEstablishment() { _id = x.Person.Establishment._id, Name = x.Person.Establishment.Name },
-              User = new ViewListUser()
-              {
-                _id = x.Person.User._id,
-                Name = x.Person.User.Name,
-                Document = x.Person.User.Document,
-                Mail = x.Person.User.Mail,
-                Phone = x.Person.User.Phone
-              }
-            }
+            Person = x.Person.GetViewList()
           }).ToList(),
           Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
           Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
@@ -1034,14 +988,7 @@ namespace Manager.Services.Specific
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Occupation = new ViewListOccupation()
-            {
-              _id = x.Occupation._id,
-              Name = x.Occupation.Name,
-              Line = x.Occupation.Line,
-              Company = new ViewListCompany() { _id = x.Occupation.Group.Company._id, Name = x.Occupation.Group.Company.Name },
-              Group = new ViewListGroup() { _id = x.Occupation.Group._id, Name = x.Occupation.Group.Name }
-            }
+            Occupation = x.Occupation.GetViewList()
           }).ToList()
 
         }).FirstOrDefault();

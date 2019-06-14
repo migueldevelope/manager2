@@ -2947,7 +2947,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListOccupationView> GetOccupations()
+    public List<ViewListOccupationView> GetOccupations()
     {
       try
       {

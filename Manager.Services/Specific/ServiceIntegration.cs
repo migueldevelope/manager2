@@ -899,40 +899,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var result = occupationService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        return result != null
-          ? new ViewListOccupation()
-          {
-            _id = result._id,
-            Name = result.Name,
-            Line = result.Line,
-            Company = new ViewListCompany() { _id = result.Group.Company._id, Name = result.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = result.Group._id,
-              Name = result.Group.Name,
-              Line = result.Group.Line,
-              Axis = result.Group.Axis.GetViewList(),
-              Sphere = new ViewListSphere() { _id = result.Group.Sphere._id, Name = result.Group.Sphere.Name, TypeSphere = result.Group.Sphere.TypeSphere }
-            },
-            Process = result.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
-            .Select(x => new ViewListProcessLevelTwo()
-            {
-              _id = x._id,
-              Name = x.Name,
-              Order = x.Order,
-              ProcessLevelOne = new
-            ViewListProcessLevelOne()
-              {
-                _id = x.ProcessLevelOne._id,
-                Name = x.ProcessLevelOne.Name,
-                Order = x.ProcessLevelOne.Order,
-                Area = x.ProcessLevelOne.Area.GetViewList()
-              }
-            })
-            .ToList()
-          }
-          : null;
+        return occupationService.GetNewVersion(p => p._id == id).Result?.GetViewList();
       }
       catch (Exception)
       {
@@ -1000,39 +967,7 @@ namespace Manager.Services.Specific
               Mail = person.Manager.Mail
             },
             MotiveAside = person.MotiveAside,
-            Occupation = person.Occupation == null ? null : new ViewListOccupation()
-            {
-              _id = person.Occupation._id,
-              Name = person.Occupation.Name,
-              Line = person.Occupation.Line,
-              Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
-              Group = new ViewListGroup()
-              {
-                _id = person.Occupation.Group._id,
-                Name = person.Occupation.Group.Name,
-                Line = person.Occupation.Group.Line,
-                Axis = person.Occupation.Group.Axis.GetViewList(),
-                Sphere = new ViewListSphere()
-                {
-                  _id = person.Occupation.Group.Sphere._id,
-                  Name = person.Occupation.Group.Sphere.Name,
-                  TypeSphere = person.Occupation.Group.Sphere.TypeSphere
-                }
-              },
-              Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-              {
-                _id = p._id,
-                Name = p.Name,
-                Order = p.Order,
-                ProcessLevelOne = new ViewListProcessLevelOne()
-                {
-                  _id = p.ProcessLevelOne._id,
-                  Name = p.ProcessLevelOne.Name,
-                  Order = p.ProcessLevelOne.Order,
-                  Area = p.ProcessLevelOne.Area.GetViewList()
-                }
-              }).ToList()
-            },
+            Occupation = person.Occupation?.GetViewList(),
             Registration = person.Registration,
             Salary = person.Salary,
             StatusUser = person.StatusUser,

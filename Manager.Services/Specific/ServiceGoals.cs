@@ -1391,14 +1391,7 @@ namespace Manager.Services.Specific
             Name = p.Name
           }).FirstOrDefault();
         var person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result
-          .Select(p => new ViewListPerson()
-          {
-            _id = p._id,
-            Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
-            Establishment = p.Establishment == null ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
-            Registration = p.Registration,
-            User = new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
-          }).FirstOrDefault();
+          .Select(p => p.GetViewList()).FirstOrDefault();
 
         GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == person._id & p.GoalsPeriod._id == period._id).Result.FirstOrDefault();
 
@@ -1588,14 +1581,7 @@ namespace Manager.Services.Specific
           .Select(p => new ViewListGoalPersonControl()
           {
             _id = null,
-            Person = new ViewListPerson()
-            {
-              _id = p._id,
-              Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
-              Establishment = p.Establishment == null ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
-              Registration = p.Registration,
-              User = new ViewListUser() { _id = p.User._id, Name = p.User.Name, Document = p.User.Document, Mail = p.User.Mail, Phone = p.User.Phone }
-            },
+            Person = p.GetViewList(),
             GoalsPeriod = period,
             StatusGoalsPerson = EnumStatusGoalsPerson.Open
           }).ToList();
@@ -1642,14 +1628,7 @@ namespace Manager.Services.Specific
         ViewListGoalPersonControl view = new ViewListGoalPersonControl()
         {
           _id = null,
-          Person = new ViewListPerson()
-          {
-            _id = detail._id,
-            Company = new ViewListCompany() { _id = detail.Company._id, Name = detail.Company.Name },
-            Establishment = detail.Establishment == null ? null : new ViewListEstablishment() { _id = detail.Establishment._id, Name = detail.Establishment.Name },
-            Registration = detail.Registration,
-            User = new ViewListUser() { _id = detail.User._id, Name = detail.User.Name, Document = detail.User.Document, Mail = detail.User.Mail, Phone = detail.User.Phone }
-          },
+          Person = detail.GetViewList(),
           GoalsPeriod = period,
           StatusGoalsPerson = EnumStatusGoalsPerson.Open
         };

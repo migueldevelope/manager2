@@ -262,39 +262,7 @@ namespace Manager.Services.Specific
               _id = onBoarding.Person.User._id
             }
           },
-          Occupation = new ViewListOccupation()
-          {
-            _id = onBoarding.Person.Occupation._id,
-            Name = onBoarding.Person.Occupation.Name,
-            Line = onBoarding.Person.Occupation.Line,
-            Company = new ViewListCompany() { _id = onBoarding.Person.Occupation.Group.Company._id, Name = onBoarding.Person.Occupation.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = onBoarding.Person.Occupation.Group._id,
-              Name = onBoarding.Person.Occupation.Group.Name,
-              Line = onBoarding.Person.Occupation.Group.Line,
-              Axis = onBoarding.Person.Occupation.Group.Axis.GetViewList(),
-              Sphere = new ViewListSphere()
-              {
-                _id = onBoarding.Person.Occupation.Group.Sphere._id,
-                Name = onBoarding.Person.Occupation.Group.Sphere.Name,
-                TypeSphere = onBoarding.Person.Occupation.Group.Sphere.TypeSphere
-              }
-            },
-            Process = onBoarding.Person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Order = p.Order,
-              ProcessLevelOne = new ViewListProcessLevelOne()
-              {
-                _id = p.ProcessLevelOne._id,
-                Name = p.ProcessLevelOne.Name,
-                Order = p.ProcessLevelOne.Order,
-                Area = p.ProcessLevelOne.Area.GetViewList()
-              }
-            }).ToList()
-          },
+          Occupation = onBoarding.Person.Occupation.GetViewList(),
           CommentsPerson = onBoarding.CommentsPerson,
           CommentsManager = onBoarding.CommentsManager,
           CommentsEnd = onBoarding.CommentsEnd,
@@ -1212,26 +1180,7 @@ namespace Manager.Services.Specific
               Name = onboarding.Person.Establishment.Name
             }
           },
-          Occupation = new ViewListOccupation()
-          {
-            _id = onboarding.Person.Occupation._id,
-            Name = onboarding.Person.Occupation.Name,
-            Line = onboarding.Person.Occupation.Line,
-            Company = new ViewListCompany()
-            {
-              _id = onboarding.Person.Occupation.Group.Company._id,
-              Name = onboarding.Person.Occupation.Group.Company.Name
-            },
-            Group = new ViewListGroup()
-            {
-              _id = onboarding.Person.Occupation.Group._id,
-              Name = onboarding.Person.Occupation.Group.Name,
-              Line = onboarding.Person.Occupation.Group.Line,
-              Axis = onboarding.Person.Occupation.Group.Axis.GetViewList(),
-              Sphere = new ViewListSphere() { _id = onboarding.Person.Occupation.Group.Sphere._id, Name = onboarding.Person.Occupation.Group.Sphere.Name, TypeSphere = onboarding.Person.Occupation.Group.Sphere.TypeSphere }
-            },
-            Process = null,
-          },
+          Occupation = onboarding.Person.Occupation.GetViewList(),
           CommentsPerson = onboarding.CommentsPerson,
           CommentsManager = onboarding.CommentsManager,
           CommentsEnd = onboarding.CommentsEnd,

@@ -31,13 +31,7 @@ namespace Manager.Core.Business
         Company = Group.Company.GetViewList(),
         Group = Group.GetViewList(),
         Line = Line,
-        Process = Process.Select(p => new ViewListProcessLevelTwo()
-        {
-          _id = p._id,
-          Name = p.Name,
-          Order = p.Order,
-          ProcessLevelOne = p.ProcessLevelOne.GetViewList()
-        }).ToList()
+        Process = Process.Select(p => p.GetViewList()).ToList()
       };
     }
   }
