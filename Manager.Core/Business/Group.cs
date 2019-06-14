@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
@@ -31,6 +32,18 @@ namespace Manager.Core.Business
         Axis = Axis.GetViewList(),
         Sphere = Sphere.GetViewList(),
         Line = Line
+      };
+    }
+    public ViewCrudGroup GetViewCrud()
+    {
+      return new ViewCrudGroup()
+      {
+        _id = _id,
+        Name = Name,
+        Axis = Axis.GetViewList(),
+        Sphere = Sphere.GetViewList(),
+        Line = Line,
+        Company = Company.GetViewList()
       };
     }
   }

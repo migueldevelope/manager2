@@ -956,7 +956,7 @@ namespace Manager.Services.Specific
           TypeInstructor = view.TypeInstructor,
           Schooling = view.Schooling,
           Person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault().GetViewList(),
-          Cbo = (view.Cbo == null) ? null : new ViewCrudCbo() { _id = view.Cbo._id, Name = view.Cbo.Name, Code = view.Cbo.Code },
+          Cbo = view.Cbo ?? null
         };
 
         events.Instructors.Add(instructor);

@@ -1111,15 +1111,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var cbo = serviceCbo.GetAuthentication(p => p._id == id)
-          .Select(p => new ViewCrudCbo()
-          {
-            _id = p._id,
-            Name = p.Name,
-            Code = p.Code
-          })
-          .FirstOrDefault();
-        return cbo;
+        return serviceCbo.GetAuthentication(p => p._id == id).FirstOrDefault().GetViewCrud();
       }
       catch (Exception e)
       {
@@ -1216,14 +1208,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceAxis.GetAllNewVersion(p => p._id == id).Result.OrderBy(p => p.Name).FirstOrDefault();
-        return new ViewCrudAxis()
-        {
-          _id = item._id,
-          Name = item.Name,
-          Company = new ViewListCompany() { _id = item._id, Name = item.Name },
-          TypeAxis = item.TypeAxis
-        };
+        return serviceAxis.GetAllNewVersion(p => p._id == id).Result.OrderBy(p => p.Name).FirstOrDefault().GetViewCrud();
       }
       catch (Exception e)
       {
@@ -1414,17 +1399,7 @@ namespace Manager.Services.Specific
           Company = view.Company,
           Scope = new List<Scope>()
         };
-        var result = serviceGroup.InsertNewVersion(group).Result;
-
-        return new ViewCrudGroup()
-        {
-          _id = result._id,
-          Name = result.Name,
-          Line = result.Line,
-          Company = new ViewListCompany() { _id = result.Company._id, Name = result.Company.Name },
-          Axis = result.Axis.GetViewList(),
-          Sphere = new ViewListSphere() { _id = result.Sphere._id, Name = result.Sphere.Name }
-        };
+        return serviceGroup.InsertNewVersion(group).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -1493,17 +1468,7 @@ namespace Manager.Services.Specific
           Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
           Scope = new List<Scope>()
         };
-        var result = serviceGroup.InsertNewVersion(group).Result;
-
-        return new ViewCrudGroup()
-        {
-          _id = result._id,
-          Name = result.Name,
-          Line = result.Line,
-          Company = new ViewListCompany() { _id = result.Company._id, Name = result.Company.Name },
-          Axis = result.Axis.GetViewList(),
-          Sphere = new ViewListSphere() { _id = result.Sphere._id, Name = result.Sphere.Name }
-        };
+        return serviceGroup.InsertNewVersion(group).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -2779,22 +2744,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAllNewVersion(p => p._id == id).Result.ToList().Select(
-          p => new ViewCrudGroup()
-          {
-            _id = p._id,
-            Name = p.Name,
-            Company = new ViewListCompany()
-            {
-              _id = p.Company._id,
-              Name = p.Company.Name,
-            },
-            Axis = p.Axis.GetViewList(),
-            Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
-            Line = p.Line
-          }).FirstOrDefault();
-        //group.Occupations = occupationService.GetAllNewVersion(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
-        return group;
+        return serviceGroup.GetNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -2806,22 +2756,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAllNewVersion(p => p.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).Result.ToList().Select(
-            p => new ViewCrudGroup()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Company = new ViewListCompany()
-              {
-                _id = p.Company._id,
-                Name = p.Company.Name,
-              },
-              Axis = p.Axis.GetViewList(),
-              Sphere = new ViewListSphere() { _id = p.Sphere._id, Name = p.Sphere.Name, TypeSphere = p.Sphere.TypeSphere },
-              Line = p.Line
-            }).FirstOrDefault();
-        //group.Occupations = occupationService.GetAllNewVersion(p => p.Group._id == group._id).OrderBy(p => p.Name).ToList();
-        return group;
+        return serviceGroup.GetNewVersion(p => p.Company._id == idCompany && p.Name.ToUpper().Contains(filterName.ToUpper())).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -3670,14 +3605,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var area = serviceArea.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        return new ViewCrudArea()
-        {
-          _id = area._id,
-          Name = area.Name,
-          Order = area.Order,
-          Company = new ViewListCompany() { _id = area.Company._id, Name = area.Company.Name }
-        };
+        return serviceArea.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault().GetViewCrud();
       }
       catch (Exception e)
       {

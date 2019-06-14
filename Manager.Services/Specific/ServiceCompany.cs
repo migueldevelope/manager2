@@ -138,13 +138,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Company company =  serviceCompany.GetNewVersion(p => p._id == id).Result;
-        return new ViewCrudCompany()
-        {
-          _id = company._id,
-          Name = company.Name,
-          Logo = company.Logo
-        };
+        return serviceCompany.GetNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -155,13 +149,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Company company =  serviceCompany.GetNewVersion(p => p.Name.ToLower() == name.ToLower()).Result;
-        return new ViewCrudCompany()
-        {
-          _id = company._id,
-          Name = company.Name,
-          Logo = company.Logo
-        };
+        return serviceCompany.GetNewVersion(p => p.Name.ToLower() == name.ToLower()).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -248,13 +236,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Establishment establishment =  serviceEstablishment.GetNewVersion(p => p._id == id).Result;
-        return new ViewCrudEstablishment()
-        {
-          _id = establishment._id,
-          Name = establishment.Name,
-          Company = new ViewListCompany() { _id = establishment.Company._id, Name = establishment.Company.Name }
-        };
+        return serviceEstablishment.GetNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -265,13 +247,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Establishment establishment =  serviceEstablishment.GetNewVersion(p => p.Name.ToLower() == name.ToLower() && p.Company._id == idCompany).Result;
-        return new ViewCrudEstablishment()
-        {
-          _id = establishment._id,
-          Name = establishment.Name,
-          Company = new ViewListCompany() { _id = establishment.Company._id, Name = establishment.Company.Name }
-        };
+        return serviceEstablishment.GetNewVersion(p => p.Name.ToLower() == name.ToLower() && p.Company._id == idCompany).Result.GetViewCrud();
       }
       catch (Exception e)
       {
