@@ -1,6 +1,7 @@
 FROM microsoft/aspnetcore:2.0 AS base
 WORKDIR /app
 EXPOSE 5200
+COPY ["Manager/Manager.xml", "Manager/"]
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
