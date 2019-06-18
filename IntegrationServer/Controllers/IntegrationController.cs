@@ -15,7 +15,7 @@ namespace IntegrationServer.InfraController
   /// Controlador para executar a integração de funcionários
   /// </summary>
   [Produces("application/json")]
-  [Route("integration")]
+  [Route("integrationserver/integration")]
   public class IntegrationController : Controller
   {
     private readonly IServiceIntegration service;

@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador da empresa
   /// </summary>
   [Produces("application/json")]
-  [Route("termsofservice")]
+  [Route("manager/termsofservice")]
   public class TermsOfServiceController : DefaultController
   {
     private readonly IServiceTermsOfService service;

@@ -14,7 +14,7 @@ namespace IntegrationServer.Controllers
   /// Controlador de Configuração da Integração
   /// </summary>
   [Produces("application/json")]
-  [Route("audit")]
+  [Route("integrationserver/audit")]
   public class AuditController : Controller
   {
     private readonly IServiceAudit service;

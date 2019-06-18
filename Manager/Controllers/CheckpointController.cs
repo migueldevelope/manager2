@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador do Checkpoint
   /// </summary>
   [Produces("application/json")]
-  [Route("checkpoint")]
+  [Route("manager/checkpoint")]
   public class CheckpointController : DefaultController
   {
     private readonly IServiceCheckpoint service;

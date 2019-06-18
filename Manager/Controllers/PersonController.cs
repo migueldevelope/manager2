@@ -15,7 +15,7 @@ namespace Manager.Controllers
   /// Controlador de Pessoas
   /// </summary>
   [Produces("application/json")]
-  [Route("person")]
+  [Route("manager/person")]
   public class PersonController : DefaultController
   {
     private readonly IServicePerson service;

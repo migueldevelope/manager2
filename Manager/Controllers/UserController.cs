@@ -18,7 +18,7 @@ namespace Manager.Controllers
   /// Controlador de Usuários 
   /// </summary>
   [Produces("application/json")]
-  [Route("user")]
+  [Route("manager/user")]
   public class UserController : DefaultController
   {
     private readonly IServiceUser service;

@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador de tabela salarial
   /// </summary>
   [Produces("application/json")]
-  [Route("salaryscale")]
+  [Route("manager/salaryscale")]
   public class SalaryScaleController : DefaultController
   {
     private readonly IServiceSalaryScale service;

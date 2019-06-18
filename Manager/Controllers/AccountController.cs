@@ -15,7 +15,7 @@ namespace Manager.Controllers
   /// Controlador de Contas de Clientes
   /// </summary>
   [Produces("application/json")]
-  [Route("account")]
+  [Route("manager/account")]
   public class AccountController : DefaultController
   {
     private readonly IServiceAccount service;

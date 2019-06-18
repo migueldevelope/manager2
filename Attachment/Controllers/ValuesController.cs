@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Attachment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("attachment/[controller]")]
     public class ValuesController : Controller
     {
         // GET api/values

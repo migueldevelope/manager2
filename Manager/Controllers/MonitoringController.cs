@@ -16,7 +16,7 @@ namespace Manager.Controllers
   /// Controlador para acompanhamento
   /// </summary>
   [Produces("application/json")]
-  [Route("monitoring")]
+  [Route("manager/monitoring")]
   public class MonitoringController : DefaultController
   {
     private readonly IServiceMonitoring service;

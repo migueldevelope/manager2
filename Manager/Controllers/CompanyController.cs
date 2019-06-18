@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador da empresa
   /// </summary>
   [Produces("application/json")]
-  [Route("company")]
+  [Route("manager/company")]
   public class CompanyController : DefaultController
   {
     private readonly IServiceCompany service;

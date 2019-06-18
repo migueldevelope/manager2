@@ -15,7 +15,7 @@ namespace Manager.Controllers
   /// 
   /// </summary>
   [Produces("application/json")]
-  [Route("configurationnotifications")]
+  [Route("manager/configurationnotifications")]
   public class ConfigurationNotificationsController : DefaultController
   {
     private readonly IServiceConfigurationNotifications service;

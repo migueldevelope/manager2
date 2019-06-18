@@ -20,7 +20,7 @@ using Tools.Data;
 
 namespace EdeskIntegration.Controllers
 {
-  [Route("upload")]
+  [Route("attachment/upload")]
   public class UploadController : Controller
   {
     private readonly ServiceGeneric<Attachments> service;

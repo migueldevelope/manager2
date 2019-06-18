@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador de objetivos
   /// </summary>
   [Produces("application/json")]
-  [Route("goals")]
+  [Route("manager/goals")]
   public class GoalsController : DefaultController
   {
     private readonly IServiceGoals service;

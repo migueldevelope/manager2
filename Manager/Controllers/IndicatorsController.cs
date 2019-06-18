@@ -15,7 +15,7 @@ namespace Manager.Controllers
   /// 
   /// </summary>
   [Produces("application/json")]
-  [Route("indicators")]
+  [Route("manager/indicators")]
   public class IndicatorsController : DefaultController
   {
     private readonly IServiceIndicators service;

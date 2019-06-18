@@ -11,7 +11,7 @@ namespace IntegrationServer.Controllers
   /// Controlador de Configuração da Integração
   /// </summary>
   [Produces("application/json")]
-  [Route("configuration")]
+  [Route("integrationserver/configuration")]
   public class ConfigurationController : Controller
   {
     private readonly IServiceIntegration service;

@@ -18,7 +18,7 @@ namespace Manager.Controllers
   /// Controle da Infra Estrutura
   /// </summary>
   [Produces("application/json")]
-  [Route("infra")]
+  [Route("manager/infra")]
   public class InfraController : DefaultController
   {
     private readonly IServiceInfra service;

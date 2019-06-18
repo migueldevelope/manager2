@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador para auto gestão de equipe
   /// </summary>
   [Produces("application/json")]
-  [Route("automanager")]
+  [Route("manager/automanager")]
   public class AutoManagerController : DefaultController
   {
     private readonly IServiceAutoManager service;

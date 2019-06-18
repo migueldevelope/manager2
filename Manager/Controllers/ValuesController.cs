@@ -6,7 +6,7 @@ namespace Manager.Controllers
   /// <summary>
   /// Controle para verficação de API ativa
   /// </summary>
-  [Route("api/[controller]")]
+  [Route("manager/[controller]")]
   public class ValuesController : Controller
   {
     /// <summary>

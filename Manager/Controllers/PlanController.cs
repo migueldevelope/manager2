@@ -17,7 +17,7 @@ namespace Manager.Controllers
   /// Controlador de plano de desenvolvimento
   /// </summary>
   [Produces("application/json")]
-  [Route("plan")]
+  [Route("manager/plan")]
   public class PlanController : DefaultController
   {
     private readonly IServicePlan service;

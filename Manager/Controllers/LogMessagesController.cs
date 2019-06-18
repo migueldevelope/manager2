@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador de Mensageria
   /// </summary>
   [Produces("application/json")]
-  [Route("logmessages")]
+  [Route("manager/logmessages")]
   public class LogMessagesController : DefaultController
   {
     private readonly IServiceLogMessages service;

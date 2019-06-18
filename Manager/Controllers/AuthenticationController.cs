@@ -11,7 +11,7 @@ namespace Manager.Controllers
   /// Controle de Autenticação
   /// </summary>
   [Produces("application/json")]
-  [Route("authentication")]
+  [Route("manager/authentication")]
   public class AuthenticationController : Controller
   {
     private readonly IServiceAuthentication service;

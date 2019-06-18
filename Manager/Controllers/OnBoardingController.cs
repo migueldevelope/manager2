@@ -14,7 +14,7 @@ namespace Manager.Controllers
   /// Controlador do Onboarding
   /// </summary>
   [Produces("application/json")]
-  [Route("onboarding")]
+  [Route("manager/onboarding")]
   public class OnBoardingController : DefaultController
   {
     private readonly IServiceOnBoarding service;
