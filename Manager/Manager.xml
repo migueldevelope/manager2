@@ -1,0 +1,3594 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Manager</name>
+    </assembly>
+    <members>
+        <member name="T:Manager.Controllers.AccountController">
+            <summary>
+            Controlador de Contas de Clientes
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.#ctor(Manager.Core.Interfaces.IServiceAccount,Manager.Core.Interfaces.IServiceLog,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador de contas do cliente
+            </summary>
+            <param name="_service">Serviço de contas do cliente</param>
+            <param name="_serviceLog">Serviço de Logs</param>
+            <param name="contextAccessor">Autorização</param>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.Post(Manager.Views.BusinessNew.ViewNewAccount)">
+            <summary>
+            Incluir uma nova conta de cliente
+            </summary>
+            <param name="view">Objeto para nova conta</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.Put(Manager.Views.BusinessCrud.ViewCrudAccount,System.String)">
+            <summary>
+            Atualiza uma nova de cliente
+            </summary>
+            <param name="view">Objeto para conta</param>
+            /// <param name="id">id para conta</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.Get(System.String)">
+            <summary>
+            Buscar todas a conta
+            </summary>
+            <returns>Lista de contas ativas</returns>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Buscar todas as contas ativas
+            </summary>
+            <param name="count">Quantidade de registros por página</param>
+            <param name="page">Número da página</param>
+            <param name="filter">Filtro para nome da conta</param>
+            <returns>Lista de contas ativas</returns>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.AlterAccount(System.String)">
+            <summary>
+            Trocar de conta de cliente (apenas usuário administrador)
+            </summary>
+            <param name="idaccount">Identificador da conta para conectar</param>
+            <returns>Autorização de conexão da conta</returns>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.AlterAccountPerson(System.String)">
+            <summary>
+            Trocar de pessoa conectada (apenas usuário administrador/suporte)
+            </summary>
+            <param name="idperson">Identificador da pessoa para conectar</param>
+            <returns>Autorização de conexão da pessoa</returns>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.Synchronize">
+            <summary>
+            Trocar de pessoa conectada (apenas usuário administrador/suporte)
+            </summary>
+            <returns>Autorização de conexão da pessoa</returns>
+        </member>
+        <member name="M:Manager.Controllers.AccountController.ListLogs(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os logs para consulta
+            </summary>
+            <param name="idaccount">Identificador da conta para consultar o Log</param>
+            <param name="count">Quantidade de registros por página</param>
+            <param name="page">Número da Página</param>
+            <param name="filter">Filtro de pesquisa</param>
+            <returns>Lista de informações do Log</returns>
+        </member>
+        <member name="T:Manager.Controllers.AuthenticationController">
+            <summary>
+            Controle de Autenticação
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.AuthenticationController.#ctor(Manager.Core.Interfaces.IServiceAuthentication)">
+            <summary>
+            Contrutor do controle
+            </summary>
+            <param name="_service">Serviço de autenticação</param>
+        </member>
+        <member name="M:Manager.Controllers.AuthenticationController.PostNewAuthentication(Manager.Core.Views.ViewAuthentication)">
+            <summary>
+            Autenticação de usuário
+            </summary>
+            <param name="userLogin">Objeto de autenticação de usuário</param>
+            <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
+        </member>
+        <member name="M:Manager.Controllers.AuthenticationController.AlterContract(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.AutoManagerController">
+            <summary>
+            Controlador para auto gestão de equipe
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.AutoManagerController.#ctor(Manager.Core.Interfaces.IServiceAutoManager,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Serviço de auto gestão de equipe</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.AutoManagerController.ListApproved(System.String)">
+            <summary>
+            Retornar lista de aprovações para o gestor
+            </summary>
+            <param name="idmanager">Identificador do gestor</param>
+            <returns>Lista de aprovações pendentes</returns>
+        </member>
+        <member name="M:Manager.Controllers.AutoManagerController.List(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar colaboradores sem gestão
+            </summary>
+            <param name="idmanager">Identificação do gestor</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do usuário</param>
+            <returns>Lista de colaboradores sem gestão</returns>
+        </member>
+        <member name="M:Manager.Controllers.AutoManagerController.New(Manager.Views.BusinessView.ViewManager,System.String)">
+            <summary>
+            Alterar o gestor do colaborador
+            </summary>
+            <param name="view">Informações do gestor</param>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.AutoManagerController.Approved(Manager.Views.BusinessView.ViewWorkflow,System.String,System.String)">
+            <summary>
+            Aprovar o gestor do colaborador
+            </summary>
+            <param name="view">Workflow para aprovação</param>
+            <param name="idperson">Identificador do colaborador</param>
+            <param name="idmanager">Identificador do gestor</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.AutoManagerController.Disapproved(Manager.Views.BusinessView.ViewWorkflow,System.String,System.String)">
+            <summary>
+            Não aprovar o colaborador para o gestor
+            </summary>
+            <param name="view">Workflow para negação</param>
+            <param name="idperson">Identificador do colaborador</param>
+            <param name="idmanager">Identificador do gestor</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.AutoManagerController.Delete(System.String)">
+            <summary>
+            Exclusão do colaborador da equipe
+            </summary>
+            <param name="idperson">Identificação do colaborador</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.AutoManagerController.PutCanceled(System.String,System.String)">
+            <summary>
+            NÃO UTILIZANDO: Cancelar a solicitação de equipe
+            </summary>
+            <param name="idperson">Identificador do colaborador</param>
+            <param name="idmanager">Identificador do gestor</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.CertificationController">
+            <summary>
+            Controlador para acreditação
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.#ctor(Manager.Core.Interfaces.IServiceCertification,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="_service">Serviço da acreditação</param>
+            <param name="contextAccessor">Token de autenticação</param>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.ListCertificationsWaitPerson(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Retornar a lista de certificações pendentes
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do usuário</param>
+            <returns>Retorna a lista de pendências da pessoa</returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.DeleteCertification(System.String)">
+            <summary>
+            Apaga uma acreditação
+            </summary>
+            <param name="idcertification">Identificador da acreditação</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.DeletePerson(System.String,System.String)">
+            <summary>
+            Retira uma pessoa da acreditãção
+            </summary>
+            <param name="idcertification">Identificador da acreditação</param>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.GetProfile(System.String)">
+            <summary>
+            Retornar as competências que podem ser acreditadas para uma pessoa
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.ListCertificationPerson(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Lista as acreditações pendentes para uma pessoa
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do usuário</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.UpdateStatusCertification(Manager.Views.BusinessCrud.ViewCrudCertificationPersonStatus,System.String)">
+            <summary>
+            Atualizar a situação 
+            </summary>
+            <param name="certification"></param>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.AddPerson(Manager.Views.BusinessList.ViewListPerson,System.String)">
+            <summary>
+            Inclusão pessoa para acreditação
+            </summary>
+            <param name="person">Objetivo Crud</param>
+            <param name="idcertification">Identificador acreditação</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.ApprovedCertification(Manager.Views.BusinessCrud.ViewCrudCertificationPerson,System.String)">
+            <summary>
+            Acreditação de contrato 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <param name="idcertificationperson">Identificador de contrato da acreditação</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.ListEnded(System.String,System.Int32,System.Int32)">
+            <summary>
+            Lista acreditação para excluir
+            </summary>
+            <param name="filter"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.CertificationsWaitPerson(System.String)">
+            <summary>
+            Busca informação de acreditção
+            </summary>
+            <param name="idcertification">Identificador Acreditação</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.ListPersons(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Lista contratos para adicionar na acreditçaão
+            </summary>
+            <param name="idcertification">Identificador da acreditação</param>
+            <param name="filter"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <returns>Lista de colaboradores</returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.NewCertification(Manager.Views.BusinessList.ViewListCertificationItem,System.String)">
+            <summary>
+            Inclusão de nova acreditação
+            </summary>
+            <param name="item">Objeto Crud</param>
+            <param name="idperson">Identificador do contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CertificationController.UpdateCertification(Manager.Views.BusinessCrud.ViewCrudCertification,System.String,System.String)">
+            <summary>
+            Atualiza informações da acreidtação
+            </summary>
+            <param name="certification">Objeto Crud</param>
+            <param name="idperson">Identificador contrato</param>
+            <param name="idcertification">Identificador acreditação</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.CheckpointController">
+            <summary>
+            Controlador do Checkpoint
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.#ctor(Manager.Core.Interfaces.IServiceCheckpoint,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Contrutor do controlador
+            </summary>
+            <param name="_service">Servico do checkpoint</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.ListWaitManager(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar pendências de checkpoint para gestor
+            </summary>
+            <param name="idmanager">Identificador do gestor</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do colaborador</param>
+            <returns>Lista de pendência de checkpoint</returns>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.ListWaitPerson(System.String)">
+            <summary>
+            Listar status de checkpoint para colaborador
+            </summary>
+            <param name="idperson">Identificação do colaborador</param>
+            <returns>Objeto de lista de checkpoint</returns>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.NewCheckpoint(System.String)">
+            <summary>
+            Inclusão de novo checkpoint
+            </summary>
+            <param name="idperson">Identificador do colaborador</param>
+            <returns>Objeto de visibilidade de checkpoint</returns>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.GetCheckpoint(System.String)">
+            <summary>
+            Buscar checkpoint para manutenção
+            </summary>
+            <param name="id">Identificador do checkpoint</param>
+            <returns>Objeto de manuten~ção do checkpoint</returns>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.UpdateCheckpoint(Manager.Views.BusinessCrud.ViewCrudCheckpoint)">
+            <summary>
+            Alterar objeto de checkpoint
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.PersonCheckpointEnd(System.String)">
+            <summary>
+            Buscar checkpoint finalizado para mostrar no histórico
+            </summary>
+            <param name="id">Identificador do checkpoint</param>
+            <returns>Objeto de manutenção do checkpoint</returns>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.DeleteCheckpoint(System.String)">
+            <summary>
+            Remover um checkpoint
+            </summary>
+            <param name="id">Identificador do checkpoint</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.CheckpointController.ListEnded(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar checkpoints finalizados
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do colaborador</param>
+            <returns>Lista de checkpoint finalizados</returns>
+        </member>
+        <member name="T:Manager.Controllers.CompanyController">
+            <summary>
+            Controlador da empresa
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.#ctor(Manager.Core.Interfaces.IServiceCompany,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="_service">Serviço da empresa</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as empresas
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da empresa</param>
+            <returns>Lista de empresas cadastradas</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.Post(Manager.Views.BusinessCrud.ViewCrudCompany)">
+            <summary>
+            Cadastrar uma nova empresa
+            </summary>
+            <param name="view">Objeto de cadastro da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.Get(System.String)">
+            <summary>
+            Retorar a empresa para manutenção
+            </summary>
+            <param name="id">Identificador da empresa</param>
+            <returns>Objeto de manutenção da empresa</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.Update(Manager.Views.BusinessCrud.ViewCrudCompany)">
+            <summary>
+            Alterar a empresa
+            </summary>
+            <param name="view">Objeto de manutenção da empresa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.Delete(System.String)">
+            <summary>
+            Excluir uma empresa
+            </summary>
+            <param name="id">Identificação da empresa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.ListEstablishment(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar estabelecimentos
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do estabelecimento</param>
+            <returns>Lista de estabelecimentos</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.ListEstablishment(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar estabelecimento de uma empresa
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do estabelecimento</param>
+            <returns>Lista de estabelecimentos da empresa</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.PostEstablishment(Manager.Views.BusinessCrud.ViewCrudEstablishment)">
+            <summary>
+            Novo estabelecimento
+            </summary>
+            <param name="view">Objeto de manutenção do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.ListEstablishment(System.String)">
+            <summary>
+            Buscar estabelecimento para manutenção
+            </summary>
+            <param name="id">Identificador do estabelecimento</param>
+            <returns>Objeto de manutenção do estabelecimento</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.UpdateEstablishment(Manager.Views.BusinessCrud.ViewCrudEstablishment)">
+            <summary>
+            Alterar o estabelecimento
+            </summary>
+            <param name="view">Objeto de manutenção do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.CompanyController.DeleteEstablishment(System.String)">
+            <summary>
+            Deletar um estabelecimento
+            </summary>
+            <param name="id">Identificador do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="T:Manager.Controllers.ConfigurationNotificationsController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.ConfigurationNotificationsController.#ctor(Manager.Core.Interfaces.IServiceConfigurationNotifications,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="_service"></param>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:Manager.Controllers.ConfigurationNotificationsController.Post(Manager.Core.Business.ConfigurationNotification)">
+            <summary>
+            
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ConfigurationNotificationsController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ConfigurationNotificationsController.List(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ConfigurationNotificationsController.Update(Manager.Core.Business.ConfigurationNotification)">
+            <summary>
+            
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ConfigurationNotificationsController.Delete(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.DefaultController">
+            <summary>
+            controller padrão
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.DefaultController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="T:Manager.Controllers.DictionarySystemController">
+            <summary>
+            Controlador do dicionário do sistema
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.DictionarySystemController.#ctor(Manager.Core.Interfaces.IServiceDictionarySystem,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Servio do dicionário do sistema</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.DictionarySystemController.New(Manager.Views.BusinessCrud.ViewCrudDictionarySystem)">
+            <summary>
+            Adicionar um novo dicionario de dados
+            </summary>
+            <param name="view">View do dicionario de dados</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.DictionarySystemController.NewList(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListDictionarySystem})">
+            <summary>
+            Incluir vários discionários de dados ao mesmo tempo
+            </summary>
+            <param name="list">Lista de objetos de discionário para incluir</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.DictionarySystemController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os dicionarios do sistema
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do dicionário</param>
+            <returns>Lista de dicionários</returns>
+        </member>
+        <member name="M:Manager.Controllers.DictionarySystemController.Get(System.String)">
+            <summary>
+            Buscar o dicionario para alteração
+            </summary>
+            <param name="id">Identificador do dicionário</param>
+            <returns>Objeto de manutenção do dicionário</returns>
+        </member>
+        <member name="M:Manager.Controllers.DictionarySystemController.GetName(System.String)">
+            <summary>
+            Buscar o dicionário por nome
+            </summary>
+            <param name="name">Nome para buscar</param>
+            <returns>Retorna o dicionário para utilização</returns>
+        </member>
+        <member name="M:Manager.Controllers.DictionarySystemController.Update(Manager.Views.BusinessCrud.ViewCrudDictionarySystem)">
+            <summary>
+            Alteração de dicionário do sistema
+            </summary>
+            <param name="view">Objeto de manutenção do dicionário</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.DictionarySystemController.Delete(System.String)">
+            <summary>
+            Apagar um dicionário de sistema
+            </summary>
+            <param name="id">Identificador do dicionário</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="T:Manager.Controllers.EventController">
+            <summary>
+            Controlador de Registro de Turmas de Treinamento
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.EventController.#ctor(Manager.Core.Interfaces.IServiceEvent,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="_service">Serviço específico</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.EventController.Delete(System.String)">
+            <summary>
+            Excluir um evento
+            </summary>
+            <param name="id">Identificador do evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.DeleteEventHistoric(System.String)">
+            <summary>
+            Excluir um evento histórico
+            </summary>
+            <param name="id">Identificador do evento histórico</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.DeleteCourse(System.String)">
+            <summary>
+            Excluir um curso
+            </summary>
+            <param name="id">Identificador do curso</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.DeleteCourseESocial(System.String)">
+            <summary>
+            Excluir um curso do e-Social
+            </summary>
+            <param name="id">Identificador do curso do e-Social</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.RemoveParticipant(System.String,System.String)">
+            <summary>
+            Excluir um participante do evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.RemoveDays(System.String,System.String,System.String,System.String)">
+            <summary>
+            Excluir um dia do evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="begin">Inicio</param>
+            <param name="end">Fim</param>
+            <param name="idday">Identificador do dia</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.RemoveInstructor(System.String,System.String)">
+            <summary>
+            Excluir instrutor do evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="id">Identificador do instrutor</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.Present(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Marcar a presença do aluno
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="idparticipant">Identificador do participante</param>
+            <param name="idday">Identificador do dia</param>
+            <param name="present">Marcar presença o retirar presença</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.SetGrade(System.String,System.String,System.Decimal)">
+            <summary>
+            Setar a grade de participantes
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="idparticipant">Identificador do perticipante</param>
+            <param name="grade"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ReopeningEvent(System.String)">
+            <summary>
+            Reabrir evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.New(Manager.Views.BusinessCrud.ViewCrudEvent)">
+            <summary>
+            Inclusão de um evento
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListEventOpenSubscription(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos para inscrição
+            </summary>
+            <param name="idperson">Identificador contrato</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListEventSubscription(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos inscritos
+            </summary>
+            <param name="idperson">Identificador contrato</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListEventOpen(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos abertos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListEventEnd(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos encerrados
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListPersonInstructor(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista instrutores de um evento
+            </summary>
+            <param name="idevent">Identificador evento</param>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListPersonParticipants(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista participante do evento
+            </summary>
+            <param name="idevent">Identificador evento</param>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListEntity(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista entidades
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.List(System.String)">
+            <summary>
+            Busca informações de evento para editar 
+            </summary>
+            <param name="id">Identificador evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.Update(Manager.Views.BusinessCrud.ViewCrudEvent)">
+            <summary>
+            Atualiza informações de um evento
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.NewEventHistoricFrontEnd(Manager.Views.BusinessCrud.ViewCrudEventHistoric)">
+            <summary>
+            Inclusão histórico de evento
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListEventHistoric(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista histórico de eventos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListEventHistoricPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os histórico de evento de um contrato
+            </summary>
+            <param name="id">Identificador usuário</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.GetEventHistoric(System.String)">
+            <summary>
+            Busca informações para editar um histórico de evento
+            </summary>
+            <param name="id">Identificador histórico de evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.UpdateEventHistoric(Manager.Views.BusinessCrud.ViewCrudEventHistoric)">
+            <summary>
+            Atualiza informações de um historico de eventos
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.NewCourse(Manager.Views.BusinessCrud.ViewCrudCourse)">
+            <summary>
+            Inclusão de um novo curso
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListCourse(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os cursos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.GetCourse(System.String)">
+            <summary>
+            Busca informações para editar um curso
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.UpdateCourse(Manager.Views.BusinessCrud.ViewCrudCourse)">
+            <summary>
+            Atualizar informaçõe de um curso
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.NewCourseESocial(Manager.Views.BusinessCrud.ViewCrudCourseESocial)">
+            <summary>
+            Inclusão curso esocial
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListCourseESocial(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista cursos do esocial
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.GetCourseESocial(System.String)">
+            <summary>
+            Busca informações de um curso do esocial para editar
+            </summary>
+            <param name="id">Identificador do curso esocial</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.UpdateCourseESocial(Manager.Views.BusinessCrud.ViewCrudCourseESocial)">
+            <summary>
+            Atualiza informações de um curso do esocial
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.AddParticipant(Manager.Views.BusinessCrud.ViewCrudParticipant,System.String)">
+            <summary>
+            Adiciona um participante a um evento
+            </summary>
+            <param name="participant">Objeto Crud</param>
+            <param name="idevent">Identificador evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.AddDays(Manager.Views.BusinessCrud.ViewCrudDaysEvent,System.String)">
+            <summary>
+            Adicionar dias a um evento
+            </summary>
+            <param name="days">Objeto Crud</param>
+            <param name="idevent">Identificador evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.AddDays(Manager.Views.BusinessCrud.ViewCrudInstructor,System.String)">
+            <summary>
+            Adiciona um instrutor em um evento
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <param name="idevent">Identificador evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.EventController.ListParticipants(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os participante de um evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.GoalsController">
+            <summary>
+            Controlador de objetivos
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.#ctor(Manager.Core.Interfaces.IServiceGoals,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="_service">serviço dos objetivos</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.New(Manager.Views.BusinessCrud.ViewCrudGoal)">
+            <summary>
+            Inserir novo objetivo
+            </summary>
+            <param name="view">Objeto de manutenção de objetivos</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListManager(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos
+            </summary>
+            <param name="id"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListCompany(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos
+            </summary>
+            <param name="id"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.Get(System.String)">
+            <summary>
+            Buscar um objetivo para manutenção
+            </summary>
+            <param name="id">Identificador do objetivo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.Update(Manager.Views.BusinessCrud.ViewCrudGoal)">
+            <summary>
+            Alterar o objetivo
+            </summary>
+            <param name="view">Objeto de manutenção do objetivo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.Delete(System.String)">
+            <summary>
+            Excluir um objetivo
+            </summary>
+            <param name="id">Identificador do objetivo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.NewGoalsPeriod(Manager.Views.BusinessCrud.ViewCrudGoalPeriod)">
+            <summary>
+            Cadastrar um novo período de objetivos
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsPeriod(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os períodos de objetivos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.GetGoalsPeriod(System.String)">
+            <summary>
+            Buscar um período de objetivo para manutenção
+            </summary>
+            <param name="id">Identificador do período de objetivos</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsPeriod(Manager.Views.BusinessCrud.ViewCrudGoalPeriod)">
+            <summary>
+            Alterar um período de objetivo
+            </summary>
+            <param name="view">Objetivo de manutenção do período de objetivo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.DeleteGoalsPeriod(System.String)">
+            <summary>
+            Excluir um período de objetivos
+            </summary>
+            <param name="id">Identificador do período de objetivo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.NewGoalsCompany(Manager.Views.BusinessCrud.ViewCrudGoalCompany)">
+            <summary>
+            Inclusão de novos objetivos do período e empresa
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsCompany(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos da empresa e do período
+            </summary>
+            <param name="idgoalsperiod"></param>
+            <param name="idcompany"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsCompany(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.GetGoalsCompany(System.String)">
+            <summary>
+            Buscar um objetivo de empresa para um período
+            </summary>
+            <param name="id">Identificador do objetivo no período e empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsCompany(Manager.Views.BusinessCrud.ViewCrudGoalCompany)">
+            <summary>
+            Alterar um objetivo da empresa em um período
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsCompanyAchievement(Manager.Views.BusinessCrud.ViewCrudAchievement)">
+            <summary>
+            Alterar um objetivo da empresa em um período
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.DeleteGoalsCompany(System.String)">
+            <summary>
+            Excluir um objetivo da empresa num período específico
+            </summary>
+            <param name="id">Identificador do objetivo da empresa no período</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.NewGoalsManagerPortal(Manager.Views.BusinessCrud.ViewCrudGoalManagerPortal)">
+            <summary>
+            Inclusão de novos objetivos do período e empresa
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.NewGoalsManager(Manager.Views.BusinessCrud.ViewCrudGoalManager)">
+            <summary>
+            Inclusão de novos objetivos do período e empresa
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsManager(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos da empresa e do período
+            </summary>
+            <param name="idgoalsperiod"></param>
+            <param name="idmanager"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsManager(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.GetGoalsManager(System.String)">
+            <summary>
+            Buscar um objetivo de empresa para um período
+            </summary>
+            <param name="id">Identificador do objetivo no período e empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.GetGoalsManagerPortal(System.String)">
+            <summary>
+            Buscar um objetivo de empresa para um período
+            </summary>
+            <param name="id">Identificador do objetivo no período e empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsManager(Manager.Views.BusinessCrud.ViewCrudGoalManager)">
+            <summary>
+            Alterar um objetivo da empresa em um período
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsManagerPortal(Manager.Views.BusinessCrud.ViewCrudGoalManagerPortal)">
+            <summary>
+            Alterar um objetivo da empresa em um período
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsManagerAchievement(Manager.Views.BusinessCrud.ViewCrudAchievement)">
+            <summary>
+            Alterar um objetivo da empresa em um período
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.DeleteGoalsManager(System.String)">
+            <summary>
+            Excluir um objetivo da empresa num período específico
+            </summary>
+            <param name="id">Identificador do objetivo da empresa no período</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.NewGoalsPersonPortal(Manager.Views.BusinessCrud.ViewCrudGoalPerson)">
+            <summary>
+            Inclusão de novos objetivos do período e empresa
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsPerson(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos da empresa e do período
+            </summary>
+            <param name="idgoalsperiod"></param>
+            <param name="idperson"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsPerson(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.GetGoalsPerson(System.String)">
+            <summary>
+            Buscar um objetivo de empresa para um período
+            </summary>
+            <param name="id">Identificador do objetivo no período e empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsPersonPortal(Manager.Views.BusinessCrud.ViewCrudGoalPerson)">
+            <summary>
+            Alterar um objetivo da empresa em um período
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsPersonAchievement(Manager.Views.BusinessCrud.ViewCrudAchievement)">
+            <summary>
+            Alterar um objetivo da empresa em um período
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.DeleteGoalsPerson(System.String)">
+            <summary>
+            Excluir um objetivo da empresa num período específico
+            </summary>
+            <param name="id">Identificador do objetivo da empresa no período</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.NewGoalsPersonControl(System.String,System.String)">
+            <summary>
+            Inclusão de novos objetivos do período e empresa
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <param name="idperiod">Identificador do período</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsPersonControlMe(System.String)">
+            <summary>
+            Listar os objetivos
+            </summary>
+            <param name="id">Identificador da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.ListGoalsPersonControl(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os objetivos
+            </summary>
+            <param name="id">Identificador do gestor</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.GetGoalsPersonControl(System.String)">
+            <summary>
+            Buscar um objetivo de empresa para um período
+            </summary>
+            <param name="id">Identificador do objetivo no período e empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.UpdateGoalsPersonControl(Manager.Views.BusinessCrud.ViewCrudGoalPersonControl)">
+            <summary>
+            Alterar um objetivo da empresa em um período
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.GoalsController.DeleteGoalsPersonControl(System.String,System.String)">
+            <summary>
+            Excluir um objetivo da empresa num período específico
+            </summary>
+            <param name="idperson">Identificador do objetivo da empresa no período</param>
+            <param name="idperiod">Identificador do objetivo da empresa no período</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.IndicatorsController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.#ctor(Manager.Core.Interfaces.IServiceIndicators,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="_service"></param>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.GetNotes(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.GetNotesPerson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ListTagsCloud(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ListTagsCloudPerson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ExportStatusOnboarding">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ExportStatusCertification">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ExportStatusCertification(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ExportStatusMonitoring">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ExportStatusOnboarding(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ExportStatusMonitoring(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ExportStatusCheckpoint">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ExportStatusPlan">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ChartOnboarding">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ChartMonitoring">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ChartCheckpoint">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ChartPlan">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ChartMonitoringRealized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ChartCheckpointRealized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ChartPlanRealized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ChartOnboardingRealized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ListTagsCloudCompany(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.IndicatorsController.ListTagsCloudCompanyPerson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.InfraController">
+            <summary>
+            Controle da Infra Estrutura
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.#ctor(Manager.Core.Interfaces.IServiceInfra,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor da infra estrutura
+            </summary>
+            <param name="_service">Servico associado</param>
+            <param name="contextAccessor">Token de autenticação</param>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetAreasById(System.String)">
+            <summary>
+            Busca informações da area para editar
+            </summary>
+            <param name="idarea">Indetificador da area</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetAreas">
+            <summary>
+            Lista areas
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetAreas(System.String)">
+            <summary>
+            Lista areas filtrando pela empresa
+            </summary>
+            <param name="idcompany">Indetificador da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddArea(Manager.Views.BusinessCrud.ViewCrudArea)">
+            <summary>
+            Inclusão area
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AreaOrder(System.String,System.String,System.Int64,System.Boolean)">
+            <summary>
+            Alterar a ordem da área
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="idarea">Identificador da Área</param>
+            <param name="order">Ordem da área</param>
+            <param name="sum">Sentido da ordem p/cima ou p/baixo</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteArea(System.String)">
+            <summary>
+            Exclusão da area
+            </summary>
+            <param name="id">Identificador da área</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateArea(Manager.Views.BusinessCrud.ViewCrudArea)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetAxis">
+            <summary>
+            Lista Eixos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetAxis(System.String)">
+            <summary>
+            Lista eixos filtrando pela empresa
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetAxisById(System.String)">
+            <summary>
+            Busca informações para editar Area
+            </summary>
+            <param name="id">Identificador da area</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddAxis(Manager.Views.BusinessCrud.ViewCrudAxis)">
+            <summary> eixo
+            Inclusão
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteAxis(System.String)">
+            <summary>
+            Exclusão de eixo
+            </summary>
+            <param name="idaxis">Identificador do eixo</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateAxis(Manager.Views.BusinessCrud.ViewCrudAxis)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.ListCBO">
+            <summary>
+            Lista CBO's
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetCBO(System.String)">
+            <summary>
+            Busca informações de CBO para editar
+            </summary>
+            <param name="id">Identificador do CBO</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddCbo(Manager.Views.BusinessCrud.ViewCrudCbo)">
+            <summary>
+            Inclusão cbo
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteCBO(System.String)">
+            <summary>
+            Exclusão de CBO
+            </summary>
+            <param name="id">Identificador do CBO</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateCBO(Manager.Views.BusinessCrud.ViewCrudCbo)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetCompanies">
+            <summary>
+            Lista as empresas
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetCourseOccupation(System.String,Manager.Views.Enumns.EnumTypeMandatoryTraining)">
+            <summary>
+            Lista cursos por cargos
+            </summary>
+            <param name="idoccupation">Identificador cargo</param>
+            <param name="type">Tipo de treinamento obrigatório</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetEssential(System.String)">
+            <summary>
+            Lista as skills da empresa
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddEssential(Manager.Views.BusinessCrud.ViewCrudEssential)">
+            <summary>
+            Inclusao skill essencial
+            </summary>
+            <param name="view">Objeto CRUD</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteEssential(System.String,System.String)">
+            <summary>
+            Exclusão de competência essencial
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="id">Identificador da competÊncia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetMapGroupScopeById(System.String,System.String)">
+            <summary>
+            Lista escopos do grupo
+            </summary>
+            <param name="idgroup">Identificador grupo</param>
+            /// <param name="idscope">Identificador escopo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetGroup(System.String)">
+            <summary>
+            Busca informações grupo para editar
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetGroups">
+            <summary>
+            Lista grupos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetMapGroup(System.String)">
+            <summary>
+            Busca informações para editar mapa do grupo
+            </summary>
+            <param name="id">Identificador grupo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetGroups(System.String)">
+            <summary>
+            Lista grupos filtrando pela empresa
+            </summary>
+            <param name="idcompany">Identificador empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetGroupsPrint(System.String)">
+            <summary>
+            Lista cargos para visualização impressão
+            </summary>
+            <param name="idcompany">Identificador empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.ReorderGroupScope(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Reordenar o Scopo do grupo
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="idgroup">Identificador do grupo</param>
+            <param name="idscope">Identificador do Scopo</param>
+            <param name="sum">Sentido da ordem p/cima ou p/baixo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.ReorderGroupScopeManual(System.String,System.String,System.String,System.Int64)">
+            <summary>
+            Reorganizar o escopo do grupo de maneira manual
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="idgroup">Identificador do grupo</param>
+            <param name="idscope">Identificador do escopo</param>
+            <param name="order">Ordem do escopo</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddMapGroupSchooling(Manager.Views.BusinessCrud.ViewCrudMapGroupSchooling)">
+            <summary>
+            Inclusão
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddGroup(Manager.Views.BusinessCrud.ViewCrudGroup)">
+            <summary>
+            Inclusao grupo
+            </summary>
+            <param name="view">Objeto CRUD</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddMapGroupScope(Manager.Views.BusinessCrud.ViewCrudMapGroupScope)">
+            <summary>
+            Incluir escopo no mapa do grupo
+            </summary>
+            <param name="view">Objeto de manutenção do grupo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddMapGroupSkill(Manager.Views.BusinessCrud.ViewCrudMapGroupSkill)">
+            <summary>
+            Inclusao skill no grupo
+            </summary>
+            <param name="view">Objeto CRUD</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteGroup(System.String)">
+            <summary>
+            Exclusão de grupo
+            </summary>
+            <param name="id">Identificador do grupo</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteMapGroupSchooling(System.String,System.String)">
+            <summary>
+            Exclusão de escolaridade do mapa do grupo
+            </summary>
+            <param name="idgroup">Identificador do grupo</param>
+            <param name="id">Identificador da escolaridade</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteMapGroupSkill(System.String,System.String)">
+            <summary>
+            Exclusão de competência do mapa do grupo
+            </summary>
+            <param name="idgroup">Identificador do grupo</param>
+            <param name="id">Identificador da competência</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteMapGroupScope(System.String,System.String)">
+            <summary>
+            Exclusão de escopo do mapa do grupo
+            </summary>
+            <param name="idgroup">Identificador do grupo</param>
+            <param name="scope">Identificador do escopo</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateMapGroupScope(Manager.Views.BusinessCrud.ViewCrudScope,System.String)">
+            <summary>
+            Atualiza informações do scopo no grupo
+            </summary>
+            <param name="scope">Objeto Crud</param>
+            <param name="idgroup">Identificador Grupo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateMapGroupSchooling(Manager.Views.BusinessCrud.ViewCrudSchooling,System.String)">
+            <summary>
+            Atualiza inforamções de escolaridade no grupo
+            </summary>
+            <param name="schooling">Objeto do Crud</param>
+            <param name="idgroup">Identificador do grupo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateGroup(Manager.Views.BusinessCrud.ViewCrudGroup)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetCSVCompareGroup(System.String)">
+            <summary>
+            Exportar o mapa de grupos de cargo em arquivo CSV
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetMapOccupation(System.String)">
+            <summary>
+            Retorna o mapa do cargo
+            </summary>
+            <param name="id">Identificador do mapa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetOccupation(System.String)">
+            <summary>
+            Busca informações de cargos para editar
+            </summary>
+            <param name="id">Identificador cargo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetOccupations">
+            <summary>
+            Lista cargos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.ListOccupationEdit(System.String,System.String,System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            Lista cargos com filtro de empresa e a area para editar
+            </summary>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="idarea">Identificador Area</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <param name="filterGroup"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetOccupations(System.String,System.String)">
+            <summary>
+            Lista cargos com filtro de empresa e area
+            </summary>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="idarea">Identificador Area</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.ReorderOccupationActivitie(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Reorganizar as atividades do cargo
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="idoccupation">Identificador do cargo</param>
+            <param name="idactivitie">Identificador da atividade</param>
+            <param name="sum">Sentido da ordem p/cima ou p/baixo</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.ReorderOccupationActivitieManual(System.String,System.String,System.String,System.Int64)">
+            <summary>
+            Reorganizar as atividades do cargo manualmente
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="idoccupation">Identificador do cargo</param>
+            <param name="idactivitie">Identificador da atividade</param>
+            <param name="order">Ordem da atividade</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddSpecificRequirements(Manager.Views.BusinessCrud.ViewCrudSpecificRequirements,System.String)">
+            <summary>
+            Inclui os requisitos no cargo
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <param name="idoccupation">Identificador do cargo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddOccupationActivities(Manager.Views.BusinessCrud.ViewCrudOccupationActivities)">
+            <summary>
+            Inclusão
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddOccupation(Manager.Views.BusinessCrud.ViewCrudOccupation)">
+            <summary>
+            Inclusao cargo
+            </summary>
+            <param name="view">Objeto CRUD</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddOccupationActivitiesList(System.Collections.Generic.List{Manager.Views.BusinessCrud.ViewCrudOccupationActivities})">
+            <summary>
+            Inclusão de entregas em lote
+            </summary>
+            <param name="list">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddOccupationSkill(Manager.Views.BusinessCrud.ViewCrudOccupationSkill)">
+            <summary>
+            Inclusão de skill no occupation
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteOccupation(System.String)">
+            <summary>
+            Exclusão de cargo
+            </summary>
+            <param name="id">Identificador do cargo</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteOccupationActivities(System.String,System.String)">
+            <summary>
+            Exclusão de atividade do mapa de cargo
+            </summary>
+            <param name="idoccupation">Identificador do cargo</param>
+            <param name="idactivitie">Identificador da atividade</param>
+            <returns>Mensagem de retorno</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteOccupationSkill(System.String,System.String)">
+            <summary>
+            Exclusão de competência do mapa do cargo
+            </summary>
+            <param name="idoccupation">Identificador do cargo</param>
+            <param name="id">Identificador da competência</param>
+            <returns>Mensagem de retorno</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateMapOccupationSchooling(Manager.Views.BusinessCrud.ViewCrudSchooling,System.String)">
+            <summary>
+            Alteração da escolaridade do mapa do cargo
+            </summary>
+            <param name="schooling">Objeto de manutenção da escolaridade</param>
+            <param name="idoccupation">Identificador do cargo</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateMapOccupationActivities(Manager.Views.BusinessCrud.ViewCrudActivities,System.String)">
+            <summary>
+            Atualizar informações de entragas no cargo
+            </summary>
+            <param name="activitie">Objeto CRUD</param>
+            <param name="idoccupation">Identificador do cargo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateOccupation(Manager.Views.BusinessCrud.ViewCrudOccupation)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetListProcessLevelOneByArea(System.String)">
+            <summary>
+            Lista os processos nivel 1 filtrando pela area
+            </summary>
+            <param name="idarea">Identificador da area</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddProcessLevelOne(Manager.Views.BusinessCrud.ViewCrudProcessLevelOne)">
+            <summary>
+            Inclusão processo nivel 1
+            </summary>
+            <param name="processLevelOne">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteProcessLevelOne(System.String)">
+            <summary>
+            Exclusão de processo nivel um
+            </summary>
+            <param name="id">Identificador do processo</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateProcessLevelOne(Manager.Views.BusinessCrud.ViewCrudProcessLevelOne)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetListProcessLevelOneById(System.String)">
+            <summary>
+            Retorna o processo nivel 2
+            </summary>
+            <param name="id">Identificador do processo nivel 1</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetListProcessLevelTwoById(System.String)">
+            <summary>
+            Retorna o processo nivel 2
+            </summary>
+            <param name="id">Identificador do processo nivel 2</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetProcessLevelTwo(System.String)">
+            <summary>
+            Listas os processos nivel 2 filtrando pela area
+            </summary>
+            <param name="idarea">Identificador da Area</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetProcessLevelTwo">
+            <summary>
+            Lista os processos nivel 2
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddProcessLevelTwo(Manager.Views.BusinessCrud.ViewCrudProcessLevelTwo)">
+            <summary>
+            Inclusão processo nivel 2
+            </summary>
+            <param name="processLevelTwo">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteProcessLevelTwo(System.String)">
+            <summary>
+            Exclusão de processo nivel dois
+            </summary>
+            <param name="id">Identificador do processo nivel dois</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateProcessLevelTwo(Manager.Views.BusinessCrud.ViewCrudProcessLevelTwo)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetQuestions(System.String)">
+            <summary>
+            Lista perguntas filtrando pela empresa
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetQuestionsId(System.String)">
+            <summary>
+            Busca informações da pergunta para editar
+            </summary>
+            <param name="id">Identificador da pergunta</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddQuestions(Manager.Views.BusinessCrud.ViewCrudQuestions)">
+            <summary>
+            Inclusão
+            </summary>
+            <param name="questions">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteQuestion(System.String)">
+            <summary>
+            Exclusão de pergunta
+            </summary>
+            <param name="id">Identificador da pergunta</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateQuestions(Manager.Views.BusinessCrud.ViewCrudQuestions)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSchooling">
+            <summary>
+            Lista escolaridades
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSchoolingById(System.String)">
+            <summary>
+            Busca informações para editar Escolaridade
+            </summary>
+            <param name="id">Identificador da escolaridade</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddSchooling(Manager.Views.BusinessCrud.ViewCrudSchooling)">
+            <summary>
+            Inclusão escolaridade
+            </summary>
+            <param name="schooling">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteSchooling(System.String)">
+            <summary>
+            Exclusão de escolaridade
+            </summary>
+            <param name="idschooling">Identificador da escolaridade</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateSchooling(Manager.Views.BusinessCrud.ViewCrudSchooling)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSkills(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista as skill's
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddSkill(Manager.Views.BusinessCrud.ViewCrudSkill)">
+            <summary>
+            Inclusao de nova skill
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSkillById(System.String)">
+            <summary>
+            Busca informações para editar Skill
+            </summary>
+            <param name="id">Identificador</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSkills(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as competências da empresa
+            </summary>
+            <param name="company">Identificador da empresa</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSkills(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as competências do grupo de cargo
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="idgroup">Identificador do grupo</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSkills(System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as competências por escolha de filtros
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="idgroup">Identificador do grupo</param>
+            <param name="idoccupation">Identificador do cargo</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteSkill(System.String)">
+            <summary>
+            Exclusão de competência
+            </summary>
+            <param name="idskill">Identificador da competência</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateSkill(Manager.Views.BusinessCrud.ViewCrudSkill)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddSkills(System.Collections.Generic.List{Manager.Views.BusinessCrud.ViewCrudSkill})">
+            <summary>
+            Adicionar uma competência
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSpheres">
+            <summary>
+            Lista de esferas
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSpheres(System.String)">
+            <summary>
+            Lista de esferas filtrando pela empresa
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetSphereById(System.String)">
+            <summary>
+            Busca informações para editar Sphere
+            </summary>
+            <param name="id">Identificador</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddSphere(Manager.Views.BusinessCrud.ViewCrudSphere)">
+            <summary>
+            Inclusão esfera
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteSphere(System.String)">
+            <summary>
+            Exclusão de esfera
+            </summary>
+            <param name="idsphere">Identificador da esfera</param>
+            <returns>Mensagem de retorno</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateSphere(Manager.Views.BusinessCrud.ViewCrudSphere)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetTextDefault(System.String,System.String)">
+            <summary>
+            Busca informações
+            </summary>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="name">Nome texto</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.GetTextDefault(System.String)">
+            <summary>
+            Busca informações para editar
+            </summary>
+            <param name="id">Identificador</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.ListTextDefault(System.String)">
+            <summary>
+            Lista textos
+            </summary>
+            <param name="idcompany">Identificador empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.AddTextDefault(Manager.Views.BusinessCrud.ViewCrudTextDefault)">
+            <summary>
+            Inclusao textos
+            </summary>
+            <param name="textDefault">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.DeleteTextDefault(System.String)">
+            <summary>
+            Exclusão de texto padrão
+            </summary>
+            <param name="id">Identificador do texto padrão</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.InfraController.UpdateTextDefault(Manager.Views.BusinessCrud.ViewCrudTextDefault)">
+            <summary>
+            Atualização de dados 
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.LogMessagesController">
+            <summary>
+            Controlador de Mensageria
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.LogMessagesController.#ctor(Manager.Core.Interfaces.IServiceLogMessages,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="_service">Serviço da Mensageria</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.LogMessagesController.ListPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar mensagens do colaborador
+            </summary>
+            <param name="id">Identificação do colaborador</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para mensagem</param>
+            <returns>Lista de mensagens para o colaborador</returns>
+        </member>
+        <member name="M:Manager.Controllers.LogMessagesController.ListManager(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as mensagens da equipe do gestor
+            </summary>
+            <param name="id">Identificador do gestor</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para mensagem</param>
+            <returns>Lista de mensagens para o gestor</returns>
+        </member>
+        <member name="M:Manager.Controllers.LogMessagesController.New(Manager.Views.BusinessCrud.ViewCrudLogMessages)">
+            <summary>
+            Nova mensagem
+            </summary>
+            <param name="view">Objeto de manteunção do log de mensagens</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.LogMessagesController.Get(System.String)">
+            <summary>
+            Buscar objeto para manutenção
+            </summary>
+            <param name="id">Identificador do log de mensageria</param>
+            <returns>Objeto de manutenção da mensageria</returns>
+        </member>
+        <member name="M:Manager.Controllers.LogMessagesController.Update(Manager.Views.BusinessCrud.ViewCrudLogMessages)">
+            <summary>
+            Alterar uma mensagem do log de mensagerias
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.LogMessagesController.Delete(System.String)">
+            <summary>
+            Excluir uma mensagem
+            </summary>
+            <param name="id">Identificador da mensagem</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="T:Manager.Controllers.MandatoryTrainingController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.#ctor(Manager.Core.Interfaces.IServiceMandatoryTraining,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="_service"></param>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.AddCompany(Manager.Views.BusinessCrud.ViewCrudCompanyMandatory)">
+            <summary>
+            
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.AddOccuaption(Manager.Views.BusinessCrud.ViewCrudOccupationMandatory)">
+            <summary>
+            
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.AddPerson(Manager.Views.BusinessCrud.ViewCrudPersonMandatory)">
+            <summary>
+            
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.ListCompany(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.ListOccupation(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idcompany"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.ListTrainingPlanPersonList(System.String,Manager.Views.Enumns.EnumTypeUser,Manager.Views.Enumns.EnumOrigin,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmanager"></param>
+            <param name="type"></param>
+            <param name="origin"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.ListPerson(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista pessoas
+            </summary>
+            <param name="idcourse">Identificador curso</param>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="count">contador</param>
+            <param name="page">pagina</param>
+            <param name="filter">filtro</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.ListTrainingPlanPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            lista treinamento obrigatório 
+            </summary>
+            <param name="idperson">identificaodor pessoa</param>
+            <param name="count">contador</param>
+            <param name="page">pagina</param>
+            <param name="filter">filtro</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.RemoveCompany(System.String,System.String)">
+            <summary>
+            remove empresa
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idcompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.RemoveOccupation(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idoccupation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.RemovePerson(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.RemoveTrainingPlan(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.UpdateTrainingPlan(Manager.Views.BusinessCrud.ViewCrudTrainingPlan)">
+            <summary>
+            Atualizar informações do plano
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.ListTrainingPlan(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista de plano de treinamento da empresa
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.ListTrainingPlan(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista planos de treinamento de um contrato
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="iduser">Identificador do usuario</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.NewTrainingPlan(Manager.Views.BusinessCrud.ViewCrudTrainingPlan)">
+            <summary>
+            Inclusão de novo plano de treinamento
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.GetTrainingPlan(System.String)">
+            <summary>
+            Busca informações para editar plano de treinamento
+            </summary>
+            <param name="id">Identificador do plano de treinamento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.GetMandatoryTraining(System.String)">
+            <summary>
+            Busca informações para editar treinamento obrigatório
+            </summary>
+            <param name="idcourse">Identificador do curso</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MandatoryTrainingController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista treinamentos obrigatórios
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.MeritocracyController">
+            <summary>
+            Controlador da meritocracia
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.#ctor(Manager.Core.Interfaces.IServiceMeritocracy,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="_service">Serviço da meritocracia</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as meritocracias
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da meritocracia</param>
+            <returns>Lista de meritocracias cadastradas</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.ListMeritocracyActivitie(System.String)">
+            <summary>
+            Listar as meritocracias
+            </summary>
+            <returns>Lista de meritocracias cadastradas</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.ListWaitManager(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar ponutação de meritocracias
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+             <param name="idmanager">Identificador gestor</param>
+            <param name="filter">Filtro para o nome do ponutação de meritocracia</param>
+            <returns>Lista de ponutação de meritocracias</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.UpdateActivitieMark(System.String,System.String,System.Byte)">
+            <summary>
+            Atualiza informações de avaliação das entregas
+            </summary>
+            <param name="idmeritocracy"></param>
+            <param name="idactivitie"></param>
+            <param name="mark"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.Post(System.String)">
+            <summary>
+            Cadastrar uma nova meritocracia
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.Get(System.String)">
+            <summary>
+            Retorar a meritocracia para manutenção
+            </summary>
+            <param name="id">Identificador da meritocracia</param>
+            <returns>Objeto de manutenção da meritocracia</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.Update(Manager.Views.BusinessCrud.ViewCrudMeritocracy)">
+            <summary>
+            Alterar a meritocracia
+            </summary>
+            <param name="view">Objeto de manutenção da meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.Update(System.String)">
+            <summary>
+            Alterar a meritocracia
+            </summary>
+            <param name="id">Identificador da meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.UpdateCompanyDate(Manager.Views.BusinessCrud.ViewCrudMeritocracyDate,System.String)">
+            <summary>
+            Alterar a meritocracia
+            </summary>
+            <param name="view">Objeto de manutenção da meritocracia</param>
+            <param name="id">Identificador da meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.UpdateOccupationDate(Manager.Views.BusinessCrud.ViewCrudMeritocracyDate,System.String)">
+            <summary>
+            Alterar a meritocracia
+            </summary>
+            <param name="view">Objeto de manutenção da meritocracia</param>
+            <param name="id">Identificador da meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.Delete(System.String)">
+            <summary>
+            Excluir uma meritocracia
+            </summary>
+            <param name="id">Identificação da meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.ListMeritocracyScore">
+            <summary>
+            Listar ponutação de meritocracias
+            </summary>
+            <returns>Lista de ponutação de meritocracias</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.PostMeritocracyScore(Manager.Views.BusinessCrud.ViewCrudMeritocracyScore)">
+            <summary>
+            Novo ponutação de meritocracia
+            </summary>
+            <param name="view">Objeto de manutenção do ponutação de meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.ListMeritocracyScore(System.String)">
+            <summary>
+            Buscar ponutação de meritocracia para manutenção
+            </summary>
+            <param name="id">Identificador do ponutação de meritocracia</param>
+            <returns>Objeto de manutenção do ponutação de meritocracia</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.UpdateMeritocracyScore(Manager.Views.BusinessCrud.ViewCrudMeritocracyScore)">
+            <summary>
+            Alterar o ponutação de meritocracia
+            </summary>
+            <param name="view">Objeto de manutenção do ponutação de meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.DeleteMeritocracyScore(System.String)">
+            <summary>
+            Deletar um ponutação de meritocracia
+            </summary>
+            <param name="id">Identificador do ponutação de meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.ListSalaryScaleScore(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar ponutação de meritocracias
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do ponutação de meritocracia</param>
+            <returns>Lista de ponutação de meritocracias</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.ListSalaryScaleScore(System.String)">
+            <summary>
+            Buscar ponutação de meritocracia para manutenção
+            </summary>
+            <param name="id">Identificador do ponutação de meritocracia</param>
+            <returns>Objeto de manutenção do ponutação de meritocracia</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.UpdateSalaryScaleScore(Manager.Views.BusinessCrud.ViewCrudSalaryScaleScore)">
+            <summary>
+            Alterar o ponutação de meritocracia
+            </summary>
+            <param name="view">Objeto de manutenção do ponutação de meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.MeritocracyController.DeleteSalaryScaleScore(System.String)">
+            <summary>
+            Deletar um ponutação de meritocracia
+            </summary>
+            <param name="id">Identificador do ponutação de meritocracia</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="T:Manager.Controllers.MonitoringController">
+            <summary>
+            Controlador para acompanhamento
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.#ctor(Manager.Core.Interfaces.IServiceMonitoring,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Serviço de acompanhamento</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.RemoveAllMonitoring(System.String)">
+            <summary>
+            Remover todos os monitoramentos de uma pessoa
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.RemoveOnBoarding(System.String)">
+            <summary>
+            Exclusão de um monitoramento
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.RemoveLastMonitoring(System.String)">
+            <summary>
+            Exclusão do último monitoramento
+            </summary>
+            <param name="idperson">Identificação da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.RemoveMonitoringActivities(System.String,System.String)">
+            <summary>
+            Exclusão de atividade do monitoramento
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <param name="idactivitie">Identificador da atividade</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.DeleteComments(System.String,System.String,System.String)">
+            <summary>
+            Exclusão de compentário
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <param name="iditem">Identificador do item</param>
+            <param name="idcomments">Identificador do comentário</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.UpdateCommentsView(System.String,System.String,Manager.Views.Enumns.EnumUserComment)">
+            <summary>
+            Alteração de comentário
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <param name="iditem">Identificador do item</param>
+            <param name="usercomment">Tipo de usuário do comentário</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.UpdateCommentsView(System.String)">
+            <summary>
+            Alteração do comentário
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.NewMonitoring(System.String)">
+            <summary>
+            Inclusão monitoring
+            </summary>
+            <param name="idperson">Identificador contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.UpdateMonitoring(Manager.Views.BusinessCrud.ViewCrudMonitoring)">
+            <summary>
+            Atualiza informações monitogin
+            </summary>
+            <param name="monitoring">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.ListMonitoringsEnd(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista monitoring finalizado para gestor
+            </summary>
+            <param name="idmanager">Identificador Gestor</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.GetListExclud(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista monitoring para exclusão
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.ListMonitoringsWait(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista monitoring em andamento para gestor
+            </summary>
+            <param name="idmanager"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.PersonMonitoringsEnd(System.String)">
+            <summary>
+            Lista monitoring para pessoa
+            </summary>
+            <param name="idmanager">Identificador contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.PersonMonitoringsWait(System.String)">
+            <summary>
+            Lista monitoring para pessoa
+            </summary>
+            <param name="idmanager">Identificador do contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.GetMonitoring(System.String)">
+            <summary>
+            Busca informação monitoring para editar
+            </summary>
+            <param name="id">Identificador monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.GetSkills(System.String)">
+            <summary>
+            Lista skills
+            </summary>
+            <param name="idperson">Identificador do contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.GetMonitoringActivities(System.String,System.String)">
+            <summary>
+            Busca informações para editar entrega
+            </summary>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="idactivitie">Identificador entrega</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.UpdateMonitoringActivities(Manager.Views.BusinessCrud.ViewCrudMonitoringActivities,System.String)">
+            <summary>
+            Atualiza entrega monitoring
+            </summary>
+            <param name="activitie">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.AddMonitoringActivities(Manager.Views.BusinessCrud.ViewCrudActivities,System.String)">
+            <summary>
+            Adiciona um entrega no monitoring
+            </summary>
+            <param name="activitie">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.GetListComments(System.String,System.String)">
+            <summary>
+            Lista comentarios de um item do monitoring
+            </summary>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="iditem">Identificador Item</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.AddComments(Manager.Views.BusinessCrud.ViewCrudComment,System.String,System.String)">
+            <summary>
+            Inclusão comentario
+            </summary>
+            <param name="comments">Objeto Crud</param>
+            <param name="idmonitoring">Identificador Monitoring</param>
+            <param name="iditem">Identificador item monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.UpdateComments(Manager.Views.BusinessCrud.ViewCrudComment,System.String,System.String)">
+            <summary>
+            Atualiza comentario item do monitoring
+            </summary>
+            <param name="comments">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="iditem">Identificador item do monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.AddPlan(Manager.Views.BusinessCrud.ViewCrudPlan,System.String,System.String)">
+            <summary>
+            Adiciona um plano
+            </summary>
+            <param name="plan">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="iditem">Identificador item</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.MonitoringController.UpdatePlan(Manager.Views.BusinessCrud.ViewCrudPlan,System.String,System.String)">
+            <summary>
+            Atualiza informações do plano dentro de um item do monitoring
+            </summary>
+            <param name="plan">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="iditem">Identificador item do monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.OnBoardingController">
+            <summary>
+            Controlador do Onboarding
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.#ctor(Manager.Core.Interfaces.IServiceOnBoarding,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Serviço de Onboarding</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.List(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as pendências de Onboarding para o gestor
+            </summary>
+            <param name="idmanager">Identificação do gestor</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do colaborador</param>
+            <returns>Lista com pendências de Onboarding</returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.PersonWait(System.String)">
+            <summary>
+            Consulta a situação do colaborador no Onboarding
+            </summary>
+            <param name="idperson">Identificador do colaborador</param>
+            <returns>Situação do Onboarding do cloaborador</returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.New(System.String)">
+            <summary>
+            Inclusão de novo OnBoarding
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns>Objeto de listagem do OnBoarding</returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.Get(System.String)">
+            <summary>
+            Iniciar o processo de onboarding do colaborador
+            </summary>
+            <param name="id">Identificador do colaborador</param>
+            <returns>Objeto de listagem do OnBoarding</returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.DeleteComments(System.String,System.String,System.String)">
+            <summary>
+            Apagar comentários
+            </summary>
+            <param name="idonboarding">Identificador do onboarding</param>
+            <param name="iditem">Identificador do item</param>
+            <param name="idcomment">Identificador do comentário</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.UpdateCommentsView(System.String,System.String,Manager.Views.Enumns.EnumUserComment)">
+            <summary>
+            Alteração de leitura de comentário
+            </summary>
+            <param name="idonboarding">Identificador do onboarding</param>
+            <param name="iditem">Identificador do item</param>
+            <param name="usercomment">Marcação de leitura</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.Delete(System.String)">
+            <summary>
+            Apagar onboarding
+            </summary>
+            <param name="id">Identificador do Onboarding</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.Update(Manager.Views.BusinessCrud.ViewCrudOnboarding)">
+            <summary>
+            Atualiza informações do onboarding
+            </summary>
+            <param name="onboarding">Objeto Crud</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.ListEnded(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista onboarding finalizados
+            </summary>
+            <param name="idmanager">Identificador contrato gestor</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.ListPersonEnd(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista onboarding finalizado
+            </summary>
+            <param name="idmanager">Identificador contrato</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.ListExcluded(System.Int32,System.Int32,System.String)">
+            <summary>
+            List onboarding para exclusão
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.UpdateComments(Manager.Views.BusinessCrud.ViewCrudComment,System.String,System.String)">
+            <summary>
+            Atualização informações de comentarios
+            </summary>
+            <param name="comments">Objeto Crud</param>
+            <param name="idonboarding">Identificador onboarding</param>
+            <param name="iditem">Indetificador item do onboarding</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.ListComments(System.String,System.String)">
+            <summary>
+            Lista comentarios onboarding
+            </summary>
+            <param name="idonboarding">Identificador onboarding</param>
+            <param name="iditem">Identificador item onboarding</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.OnBoardingController.AddComments(Manager.Views.BusinessCrud.ViewCrudComment,System.String,System.String)">
+            <summary>
+            Inclusão comentario no item do onboarding
+            </summary>
+            <param name="comments">Objeto Crud</param>
+            <param name="idonboarding">Identificador onboarding</param>
+            <param name="iditem">Identificador item do onboarding</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.ParametersController">
+            <summary>
+            Controlador de Parâmetros
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.ParametersController.#ctor(Manager.Core.Interfaces.IServiceParameters,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Contrutor de parâmetros
+            </summary>
+            <param name="_service">Serviço de parâmetros</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.ParametersController.New(Manager.Views.BusinessCrud.ViewCrudParameter)">
+            <summary>
+            Incluir um novo parâmetro
+            </summary>
+            <param name="view">Objeto de manutenção de parâmetros</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ParametersController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista de parâmetros
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do parâmetro</param>
+            <returns>Lista de parâmetros</returns>
+        </member>
+        <member name="M:Manager.Controllers.ParametersController.Get(System.String)">
+            <summary>
+            Buscar um parâmetro para alteração
+            </summary>
+            <param name="id">Identificador do parâmetro</param>
+            <returns>Objeto de manutenão do parâmetro</returns>
+        </member>
+        <member name="M:Manager.Controllers.ParametersController.GetName(System.String)">
+            <summary>
+            Buscar um parâmetro pela chave interna
+            </summary>
+            <param name="key">Chave para pesquisar</param>
+            <returns>Objeto de parâmetro para manutenção</returns>
+        </member>
+        <member name="M:Manager.Controllers.ParametersController.Update(Manager.Views.BusinessCrud.ViewCrudParameter)">
+            <summary>
+            Alterar um parâmetro
+            </summary>
+            <param name="view">Objeto de manutenção do parâmetro</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ParametersController.Delete(System.String)">
+            <summary>
+            Excluir um parâmetro
+            </summary>
+            <param name="id">Identificador do parâmetro</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="T:Manager.Controllers.PersonController">
+            <summary>
+            Controlador de Pessoas
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.#ctor(Manager.Core.Interfaces.IServicePerson,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Contrutor do controlador
+            </summary>
+            <param name="_service">Serviço da pessoa</param>
+            <param name="contextAccessor">Autorização</param>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.List(Manager.Views.Enumns.EnumTypeUser,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar pessoas da base de dados
+            </summary>
+            <param name="type">Tipo do usuário que está fazendo a consulta</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da pessoa</param>
+            <returns>Lista de pessoas da tela de manutenção</returns>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.Get(System.String)">
+            <summary>
+            Buscar informações da pessoa para alteração
+            </summary>
+            <param name="id">Identificador da pessoa</param>
+            <returns>Objeto de alteração da pessoa</returns>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.New(Manager.Views.BusinessCrud.ViewCrudPerson)">
+            <summary>
+            Incluir uma nova pessoa
+            </summary>
+            <param name="view">Objeto de manutenção da pessoa</param>
+            <returns>Objeto da pessoa incluída</returns>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.Update(Manager.Views.BusinessCrud.ViewCrudPerson)">
+            <summary>
+            Alterar uma pessoa
+            </summary>
+            <param name="view">Objeto de manutenção da pessoa</param>
+            <returns>Objeto da pessoa alterada</returns>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.ListTeam(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista time de gestor
+            </summary>
+            <param name="idmanager">Identificador gestor</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.ListSalaryScale(System.String)">
+            <summary>
+            Lista as tabelas salarias filtrando o cargo
+            </summary>
+            <param name="idoccupation">Identificador cargo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.ListOccupation(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os cargos para manutenção da pessoa
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do cargo</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.ListCompany(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as empresas para manutenção da pessoa
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PersonController.ListManager(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar os gestores para manutenção da pessoa
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.PlanController">
+            <summary>
+            Controlador de plano de desenvolvimento
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.#ctor(Manager.Core.Interfaces.IServicePlan,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Contrutor do plano de desenvolvimento
+            </summary>
+            <param name="_service">Serviço do plano de desenvolvimento</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.RemoveStructPlan(System.String,System.String,Manager.Views.Enumns.EnumSourcePlan,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmonitoring"></param>
+            <param name="idplan"></param>
+            <param name="sourceplan"></param>
+            <param name="idstructplan"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.RemovePlanActivity(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.ListPlans(System.String,System.Byte,System.Byte,System.Byte,System.Byte,System.Byte,System.Byte,System.Byte,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os planos para tela principal
+            </summary>
+            <param name="id"></param>
+            <param name="activities"></param>
+            <param name="skillcompany"></param>
+            <param name="schooling"></param>
+            <param name="open"></param>
+            <param name="expired"></param>
+            <param name="end"></param>
+            <param name="wait"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.ListPlans(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os planos filtrando pelo gestor
+            </summary>
+            <param name="id">Identificador do gestor</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.ListPlansPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os planos filtrando pelo contrato
+            </summary>
+            <param name="id">Identificador do contrato</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.ListPlansPerson(System.String,System.Byte,System.Byte,System.Byte,System.Byte,System.Byte,System.Byte,System.Byte,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista o monitoring para tela principal filtrando pelo contrato
+            </summary>
+            <param name="id">Identificador do contrato</param>
+            <param name="activities"></param>
+            <param name="skillcompany"></param>
+            <param name="schooling"></param>
+            <param name="open"></param>
+            <param name="expired"></param>
+            <param name="end"></param>
+            <param name="wait"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.GetPlan(System.String,System.String)">
+            <summary>
+            Busca informações de plano para editar
+            </summary>
+            <param name="idmonitoring">Identificador do monitoring</param>
+            <param name="idplan">Identificador do plano</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.UpdatePlan(Manager.Views.BusinessCrud.ViewCrudPlan,System.String)">
+            <summary>
+            Atualiza informações do plano
+            </summary>
+            <param name="plan">Objeto Crud</param>
+            <param name="idmonitoring">Identificador do monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.NewPlan(Manager.Views.BusinessCrud.ViewCrudPlan,System.String,System.String)">
+            <summary>
+            Inclusão de novo plano
+            </summary>
+            <param name="plan">Objeto Crud</param>
+            <param name="idmonitoring">Identificador Monitoring</param>
+            <param name="idplanold">Identificador do plano</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.NewUpdatePlan(System.Collections.Generic.List{Manager.Views.BusinessCrud.ViewCrudNewPlanUp},System.String)">
+            <summary>
+            Inclusão de novo plano quando reprovado (não concorda) o plano anterior
+            </summary>
+            <param name="plan">Objeto Crud</param>
+            <param name="idmonitoring">Identificador do monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.ListPlansStruct(System.Byte,System.Byte,System.Byte,System.Byte,System.Int32,System.Int32)">
+            <summary>
+            Lista planos para curadoria
+            </summary>
+            <param name="activities"></param>
+            <param name="skillcompany"></param>
+            <param name="schooling"></param>
+            <param name="structplan"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.NewStructPlan(Manager.Views.BusinessCrud.ViewCrudStructPlan,System.String,System.String,Manager.Views.Enumns.EnumSourcePlan)">
+            <summary>
+            Inclusão da Curadoria
+            </summary>
+            <param name="structplan">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="idplan">Identificador plano</param>
+            <param name="sourceplan">Tipo de plano</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.GetStructPlan(System.String,System.String,Manager.Views.Enumns.EnumSourcePlan,System.String)">
+            <summary>
+            Busca informações para editar curadoria
+            </summary>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="idplan">Identificador plano</param>
+            <param name="sourceplan">Tipo de plano</param>
+            <param name="idstructplan">Indetificador curadoria do plano</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.GetPlanStruct(System.String,System.String)">
+            <summary>
+            Busca informações para editar plano para curadoria
+            </summary>
+            <param name="idmonitoring">Identificador do monitoring</param>
+            <param name="idplan">Identificador do plano</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.UpdateStructPlan(Manager.Views.BusinessCrud.ViewCrudStructPlan,System.String,System.String,Manager.Views.Enumns.EnumSourcePlan)">
+            <summary>
+            Atualiza informações da curadoria
+            </summary>
+            <param name="structplanedit">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="idplan">Identificador do Plano</param>
+            <param name="sourceplan">Tipo do Plano</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.ListPlanActivity(System.String,System.Int32,System.Int32)">
+            <summary>
+            Lista planos de entregas
+            </summary>
+            <param name="filter"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.GetPlanActivity(System.String)">
+            <summary>
+            Busca informações para editar planos de entrega
+            </summary>
+            <param name="id">Identificador plano</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.NewPlanActivity(Manager.Views.BusinessCrud.ViewPlanActivity)">
+            <summary>
+            Adiciona entrega
+            </summary>
+            <param name="model">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.PlanController.UpdatePlanActivity(Manager.Views.BusinessCrud.ViewPlanActivity)">
+            <summary>
+            Atualiza informações de entrega
+            </summary>
+            <param name="model">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Controllers.SalaryScaleController">
+            <summary>
+            Controlador de tabela salarial
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.#ctor(Manager.Core.Interfaces.IServiceSalaryScale,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Serviço da tabela salarial</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.List(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar todas as tabelas salariais da empresa
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da tabela salarial</param>
+            <returns>Lista de tabelas salariais</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.Get(System.String)">
+            <summary>
+            Buscar objeto de manutenção da tabela salarial
+            </summary>
+            <param name="id">Identificador da tabela salarial</param>
+            <returns>Objeto de menutenção da tabela salarial</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.New(Manager.Views.BusinessCrud.ViewCrudSalaryScale)">
+            <summary>
+            Incluir nova tabela salarial
+            </summary>
+            <param name="view">Objeto de manutenção da tabela salarial</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.Update(Manager.Views.BusinessCrud.ViewCrudSalaryScale)">
+            <summary>
+            Atualizar uma tabela salarial
+            </summary>
+            <param name="view">Objeto de manutenção da tabela salarial</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.Delete(System.String)">
+            <summary>
+            Excluir uma tabela salarial
+            </summary>
+            <param name="id">Identificador da tabela salarial</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.ListGrade(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar todos os grades de uma tabela salarial
+            </summary>
+            <param name="idsalaryscale">Identificador da tabela salarial</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da tabela salarial</param>
+            <returns>Matriz de grades de uma tabela salarial</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.ListGrades(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista todos os grades para filtro
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.GetGrade(System.String,System.String)">
+            <summary>
+            Buscar grade para alteração
+            </summary>
+            <param name="idsalaryscale">Identificador da tabela salarial</param>
+            <param name="id">Identificador do Grade</param>
+            <returns>Objeto de manutenção do grade</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.AddGrade(Manager.Views.BusinessCrud.ViewCrudGrade)">
+            <summary>
+            Incluir um novo grade na tabela salarial
+            </summary>
+            <param name="view">Informações do novo grade</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.UpdateGrade(Manager.Views.BusinessCrud.ViewCrudGrade)">
+            <summary>
+            Alterar um grade da tabela salarial
+            </summary>
+            <param name="view">Grade para alterar</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.UpdateGradePosition(System.String,System.String,System.Int32)">
+            <summary>
+            Alterar a ordem do grade
+            </summary>
+            <param name="idsalaryscale">Identificador da tabela salarial</param>
+            <param name="idgrade">Identificador do Grade</param>
+            <param name="position">Nova posicao</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.DeleteGrade(System.String,System.String)">
+            <summary>
+            Remover um grade da tabela salarial
+            </summary>
+            <param name="idsalaryscale">Identificador da tabela salarial</param>
+            <param name="id">Identificador do grade</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.SalaryScaleController.UpdateStep(Manager.Views.BusinessCrud.ViewCrudStep)">
+            <summary>
+            Alterar o salário de um step do grade da tabela salarial
+            </summary>
+            <param name="view">Objeto de alteração de salário</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="T:Manager.Controllers.TermsOfServiceController">
+            <summary>
+            Controlador da empresa
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.TermsOfServiceController.#ctor(Manager.Core.Interfaces.IServiceTermsOfService,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="_service">Serviço da empresa</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.TermsOfServiceController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as empresas
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da empresa</param>
+            <returns>Lista de empresas cadastradas</returns>
+        </member>
+        <member name="M:Manager.Controllers.TermsOfServiceController.Post(Manager.Views.BusinessCrud.ViewCrudTermsOfService)">
+            <summary>
+            Cadastrar uma nova empresa
+            </summary>
+            <param name="view">Objeto de cadastro da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.TermsOfServiceController.Get(System.String)">
+            <summary>
+            Retorar a empresa para manutenção
+            </summary>
+            <param name="id">Identificador da empresa</param>
+            <returns>Objeto de manutenção da empresa</returns>
+        </member>
+        <member name="M:Manager.Controllers.TermsOfServiceController.GetTerm">
+            <summary>
+            Retorar a empresa para manutenção
+            </summary>
+            <returns>Objeto de manutenção da empresa</returns>
+        </member>
+        <member name="M:Manager.Controllers.TermsOfServiceController.Update(Manager.Views.BusinessCrud.ViewCrudTermsOfService)">
+            <summary>
+            Alterar a empresa
+            </summary>
+            <param name="view">Objeto de manutenção da empresa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.TermsOfServiceController.Delete(System.String)">
+            <summary>
+            Excluir uma empresa
+            </summary>
+            <param name="id">Identificação da empresa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="T:Manager.Controllers.UserController">
+            <summary>
+            Controlador de Usuários 
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.UserController.#ctor(Manager.Core.Interfaces.IServiceUser,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Serviço de usuário</param>
+            <param name="contextAccessor">Autorização</param>
+        </member>
+        <member name="M:Manager.Controllers.UserController.List(Manager.Views.Enumns.EnumTypeUser,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar usuários da base de dados
+            </summary>
+            <param name="type">Tipo do usuário que está fazendo a consulta</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do usuário</param>
+            <returns>Lista de usuários da conta</returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.CheckTermOfService(System.String)">
+            <summary>
+            Aceite do Termo de Serviço
+            </summary>
+            <param name="iduser">Identificador do usuário</param>
+            <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.Get(System.String)">
+            <summary>
+            Buscar informações para edição do usuário
+            </summary>
+            <param name="iduser">Identificador do usuário</param>
+            <returns>Objeto CRUD do usuário</returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.New(Manager.Views.BusinessCrud.ViewCrudUser)">
+            <summary>
+            Inclusão de novo usuário
+            </summary>
+            <param name="view">Objeto CRUD do usuário</param>
+            <returns>Objeto CRUD incluído do usuário</returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.Update(Manager.Views.BusinessCrud.ViewCrudUser)">
+            <summary>
+            Alteração de usuário
+            </summary>
+            <param name="view">Objeto CRUD do usuário para alterar</param>
+            <returns>Objeto CRUD atualizado do usuário</returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.GetPhoto(System.String)">
+            <summary>
+            Foto do perfil do usuário
+            </summary>
+            <param name="iduser">Identificador do usuário</param>
+            <returns>URL da imagem da foto do perfil</returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.ListPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as pessoas de um usuário
+            </summary>
+            <param name="iduser">Identificador do usuário</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do usuário</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.AlterPassword(Manager.Core.Views.ViewAlterPass,System.String)">
+            <summary>
+            Alterar o password do usuário
+            </summary>
+            <param name="view">Objeto com senhas novas</param>
+            <param name="idUser">Identificador do usuário</param>
+            <returns>Mensagem de sucesso, ou error_old_password</returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.AlterPasswordForgot(Manager.Core.Views.ViewAlterPass,System.String)">
+            <summary>
+            Alterar o password do usuário pelo esqueci minha senha
+            </summary>
+            <param name="view">Objeto com senhas novas</param>
+            <param name="foreign">Identificador do esquecer senha</param>
+            <returns>Mensagem de sucesso, ou error_valid</returns>
+        </member>
+        <member name="M:Manager.Controllers.UserController.ForgotPassword(Manager.Core.Views.ViewForgotPassword,System.String)">
+            <summary>
+            Enviar e-mail de esqueci minha senha
+            </summary>
+            <param name="view">Objeto com mensagens para o usuário</param>
+            <param name="mail">E-mail para onde enviar a mensagem</param>
+            <returns>Mensagem de sucesso!</returns>
+        </member>
+        <member name="T:Manager.Controllers.ValuesController">
+            <summary>
+            Controle para verficação de API ativa
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.ValuesController.Get">
+            <summary>
+            Método único para demonstração de API REST ativa
+            </summary>
+            <returns>String com a versão da API REST</returns>
+        </member>
+        <member name="T:Manager.Program">
+            <summary>
+            Configurador do programa
+            </summary>
+        </member>
+        <member name="M:Manager.Program.Main(System.String[])">
+            <summary>
+            Ponto de entrada
+            </summary>
+            <param name="args">Argumentos da linha de comando</param>
+        </member>
+        <member name="M:Manager.Program.BuildWebHost(System.String[])">
+            <summary>
+            Configurador do servidor Web
+            </summary>
+            <param name="args">Argumentos da linha de comando</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Startup">
+            <summary>
+            Controle de inicialização da API
+            </summary>
+        </member>
+        <member name="M:Manager.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:Manager.Startup.Configuration">
+            <summary>
+            Propriedade de configuração
+            </summary>
+        </member>
+        <member name="M:Manager.Startup.RegistreServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registrador de serviços
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Manager.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configurador de servicos
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Manager.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Configuração de aplicação
+            </summary>
+            <param name="app">Aplicação</param>
+            <param name="env">Ambiente de hospedagem</param>
+        </member>
+        <member name="T:Manager.Web.ErrorHandlingMiddleware">
+            <summary>
+            controller de erros
+            </summary>
+        </member>
+        <member name="M:Manager.Web.ErrorHandlingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            
+            </summary>
+            <param name="next"></param>
+        </member>
+        <member name="M:Manager.Web.ErrorHandlingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
