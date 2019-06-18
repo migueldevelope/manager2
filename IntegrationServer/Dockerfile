@@ -1,6 +1,7 @@
 FROM microsoft/aspnetcore:2.0 AS base
 WORKDIR /app
 EXPOSE 5203
+COPY ["IntegrationServer/IntegrationServer.xml", "IntegrationServer/"]
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src

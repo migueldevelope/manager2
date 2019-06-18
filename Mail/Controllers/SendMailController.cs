@@ -13,7 +13,7 @@ namespace EvaluationMail.Controllers
   /// Controlador de envio de e-mail
   /// </summary>
   [Produces("application/json")]
-  [Route("mail/sendmail")]
+  [Route("sendmail")]
   public class SendMailController : Controller
   {
     private readonly IServiceSendGrid service;

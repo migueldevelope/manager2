@@ -1,6 +1,7 @@
 FROM microsoft/aspnetcore:2.0 AS base
 WORKDIR /app
 EXPOSE 5201
+COPY ["Mail/Mail.xml", "Mail/"]
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src

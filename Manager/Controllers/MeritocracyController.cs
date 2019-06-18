@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador da meritocracia
   /// </summary>
   [Produces("application/json")]
-  [Route("manager/meritocracy")]
+  [Route("meritocracy")]
   public class MeritocracyController : DefaultController
   {
     private readonly IServiceMeritocracy service;

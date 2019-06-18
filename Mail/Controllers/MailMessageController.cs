@@ -10,7 +10,7 @@ namespace EvaluationMail.Controllers
   /// Controlador de Mensagem por E-mail
   /// </summary>
   [Produces("application/json")]
-  [Route("mail/mailmessage")]
+  [Route("mailmessage")]
   public class MailMessageController : Controller
   {
     private readonly IServiceMailMessage service;

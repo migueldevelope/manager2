@@ -6,7 +6,7 @@ namespace IntegrationServer.Controllers
   /// <summary>
   /// Controle para verficação de API ativa
   /// </summary>
-  [Route("integrationserver/[controller]")]
+  [Route("api/[controller]")]
   public class ValuesController : Controller
   {
     /// <summary>

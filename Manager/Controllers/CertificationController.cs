@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador para acreditação
   /// </summary>
   [Produces("application/json")]
-  [Route("manager/certification")]
+  [Route("certification")]
   public class CertificationController : DefaultController
   {
     private readonly IServiceCertification service;

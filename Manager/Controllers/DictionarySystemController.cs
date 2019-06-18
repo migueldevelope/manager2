@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador do dicionário do sistema
   /// </summary>
   [Produces("application/json")]
-  [Route("manager/dictionarysystem")]
+  [Route("dictionarysystem")]
   public class DictionarySystemController : DefaultController
   {
     private readonly IServiceDictionarySystem service;

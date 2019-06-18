@@ -20,7 +20,7 @@ namespace Manager.Controllers
   /// 
   /// </summary>
   [Produces("application/json")]
-  [Route("manager/mandatorytraining")]
+  [Route("mandatorytraining")]
   public class MandatoryTrainingController : DefaultController
   {
     private readonly IServiceMandatoryTraining service;

@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador de Parâmetros
   /// </summary>
   [Produces("application/json")]
-  [Route("manager/parameters")]
+  [Route("parameters")]
   public class ParametersController : DefaultController
   {
     private readonly IServiceParameters service;

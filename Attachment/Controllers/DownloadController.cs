@@ -14,7 +14,7 @@ using Tools.Data;
 
 namespace EdeskIntegration.Controllers
 {
-  [Route("attachment/download")]
+  [Route("download")]
   public class DownloadController : Controller
   {
     private readonly ServiceGeneric<Attachments> service;

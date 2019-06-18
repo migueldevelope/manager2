@@ -13,7 +13,7 @@ namespace Mail.Controllers
   /// Controlador do modelo de e-mail
   /// </summary>
   [Produces("application/json")]
-  [Route("mail/mailmodel")]
+  [Route("mailmodel")]
   public class MailModelController : Controller
   {
     private readonly IServiceMailModel service;

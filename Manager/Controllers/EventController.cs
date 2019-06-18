@@ -13,7 +13,7 @@ namespace Manager.Controllers
   /// Controlador de Registro de Turmas de Treinamento
   /// </summary>
   [Produces("application/json")]
-  [Route("manager/event")]
+  [Route("event")]
   public class EventController : DefaultController
   {
     private readonly IServiceEvent service;

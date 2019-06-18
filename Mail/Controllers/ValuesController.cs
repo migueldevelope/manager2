@@ -6,7 +6,7 @@ namespace Mail.Controllers
   /// <summary>
   /// Controle para verficação de API ativa
   /// </summary>
-  [Route("mail/[controller]")]
+  [Route("api/[controller]")]
   public class ValuesController : Controller
   {
     /// <summary>

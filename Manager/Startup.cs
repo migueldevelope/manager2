@@ -210,7 +210,7 @@ namespace Manager
       app.UseSwaggerUI(c =>
       {
         c.RoutePrefix = "help";
-        c.SwaggerEndpoint("../swagger/v1/swagger.json", "Manager");
+        c.SwaggerEndpoint("..swagger/v1/swagger.json", "Manager");
       });
     }
   }
