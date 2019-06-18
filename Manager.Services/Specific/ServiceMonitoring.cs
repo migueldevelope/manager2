@@ -344,13 +344,7 @@ namespace Manager.Services.Specific
                 Name = newPlan.Name,
                 Description = newPlan.Description,
                 Deadline = newPlan.Deadline,
-                Skills = newPlan.Skills?.Select(x => new ViewListSkill()
-                {
-                  _id = x._id,
-                  Name = x.Name,
-                  Concept = x.Concept,
-                  TypeSkill = x.TypeSkill
-                }).ToList(),
+                Skills = newPlan.Skills?.Select(x => x.GetViewList()).ToList(),
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
@@ -375,13 +369,7 @@ namespace Manager.Services.Specific
                 Name = newPlan.Name,
                 Description = newPlan.Description,
                 Deadline = newPlan.Deadline,
-                Skills = newPlan.Skills?.Select(x => new ViewListSkill()
-                {
-                  _id = x._id,
-                  Name = x.Name,
-                  Concept = x.Concept,
-                  TypeSkill = x.TypeSkill
-                }).ToList(),
+                Skills = newPlan.Skills?.Select(x => x.GetViewList()).ToList(),
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
@@ -406,13 +394,7 @@ namespace Manager.Services.Specific
                 Name = newPlan.Name,
                 Description = newPlan.Description,
                 Deadline = newPlan.Deadline,
-                Skills = newPlan.Skills?.Select(x => new ViewListSkill()
-                {
-                  _id = x._id,
-                  Name = x.Name,
-                  Concept = x.Concept,
-                  TypeSkill = x.TypeSkill
-                }).ToList(),
+                Skills = newPlan.Skills?.Select(x => x.GetViewList()).ToList(),
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
@@ -423,13 +405,7 @@ namespace Manager.Services.Specific
                 Name = p.Name,
                 Description = p.Description,
                 Deadline = p.Deadline,
-                Skills = p.Skills?.Select(x => new ViewListSkill()
-                {
-                  _id = x._id,
-                  Name = x.Name,
-                  Concept = x.Concept,
-                  TypeSkill = x.TypeSkill
-                }).ToList(),
+                Skills = p.Skills,
                 SourcePlan = p.SourcePlan,
                 TypePlan = p.TypePlan
               }).ToList();
@@ -472,13 +448,7 @@ namespace Manager.Services.Specific
                     Name = plan.Name,
                     Description = plan.Description,
                     Deadline = plan.Deadline,
-                    Skills = plan.Skills?.Select(x => new ViewListSkill()
-                    {
-                      _id = x._id,
-                      Name = x.Name,
-                      Concept = x.Concept,
-                      TypeSkill = x.TypeSkill
-                    }).ToList(),
+                    Skills = plan.Skills?.Select(x => x.GetViewList()).ToList(),
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
@@ -507,13 +477,7 @@ namespace Manager.Services.Specific
                     Name = plan.Name,
                     Description = plan.Description,
                     Deadline = plan.Deadline,
-                    Skills = plan.Skills?.Select(x => new ViewListSkill()
-                    {
-                      _id = x._id,
-                      Name = x.Name,
-                      Concept = x.Concept,
-                      TypeSkill = x.TypeSkill
-                    }).ToList(),
+                    Skills = plan.Skills?.Select(x => x.GetViewList()).ToList(),
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
@@ -543,13 +507,7 @@ namespace Manager.Services.Specific
                     Name = plan.Name,
                     Description = plan.Description,
                     Deadline = plan.Deadline,
-                    Skills = plan.Skills?.Select(x => new ViewListSkill()
-                    {
-                      _id = x._id,
-                      Name = x.Name,
-                      Concept = x.Concept,
-                      TypeSkill = x.TypeSkill
-                    }).ToList(),
+                    Skills = plan.Skills?.Select(x => x.GetViewList()).ToList(),
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
@@ -713,17 +671,10 @@ namespace Manager.Services.Specific
             Occupation = monitoring.Person.Occupation.Name,
             Name = monitoring.Person.User.Name,
             Manager = monitoring.Person.Manager.Name,
-            Company = new ViewListCompany() { _id = monitoring.Person.Company._id, Name = monitoring.Person.Company.Name },
-            Establishment = (monitoring.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = monitoring.Person.Establishment._id, Name = monitoring.Person.Establishment.Name },
+            Company = monitoring.Person.Company.GetViewList(),
+            Establishment = monitoring.Person.Establishment?.GetViewList(),
             Registration = monitoring.Person.Registration,
-            User = new ViewListUser()
-            {
-              Document = monitoring.Person.User.Document,
-              Mail = monitoring.Person.User.Mail,
-              Name = monitoring.Person.User.Name,
-              Phone = monitoring.Person.User.Phone,
-              _id = monitoring.Person.User._id
-            }
+            User = monitoring.Person.User.GetViewList(),
           },
           CommentsPerson = monitoring.CommentsPerson,
           CommentsEnd = monitoring.CommentsEnd,
@@ -741,13 +692,7 @@ namespace Manager.Services.Specific
             }).ToList(),
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
-            Skill = new ViewListSkill()
-            {
-              _id = p.Skill._id,
-              Name = p.Skill.Name,
-              Concept = p.Skill.Concept,
-              TypeSkill = p.Skill.TypeSkill
-            },
+            Skill = p.Skill.GetViewList(),
             Praise = p.Praise,
             Plans = p.Plans?.Select(x => new ViewCrudPlan()
             {
@@ -755,13 +700,7 @@ namespace Manager.Services.Specific
               Name = x.Name,
               Description = x.Description,
               Deadline = x.Deadline,
-              Skills = x.Skills?.Select(y => new ViewListSkill()
-              {
-                _id = y._id,
-                Name = y.Name,
-                Concept = y.Concept,
-                TypeSkill = y.TypeSkill
-              }).ToList(),
+              Skills = x.Skills,
               SourcePlan = x.SourcePlan,
               TypePlan = x.TypePlan
             }).ToList()
@@ -794,13 +733,7 @@ namespace Manager.Services.Specific
               Name = x.Name,
               Description = x.Description,
               Deadline = x.Deadline,
-              Skills = x.Skills?.Select(y => new ViewListSkill()
-              {
-                _id = y._id,
-                Name = y.Name,
-                Concept = y.Concept,
-                TypeSkill = y.TypeSkill
-              }).ToList(),
+              Skills = x.Skills,
               SourcePlan = x.SourcePlan,
               TypePlan = x.TypePlan
             }).ToList()
@@ -828,13 +761,7 @@ namespace Manager.Services.Specific
               Name = x.Name,
               Description = x.Description,
               Deadline = x.Deadline,
-              Skills = x.Skills?.Select(y => new ViewListSkill()
-              {
-                _id = y._id,
-                Name = y.Name,
-                Concept = y.Concept,
-                TypeSkill = y.TypeSkill
-              }).ToList(),
+              Skills = x.Skills,
               SourcePlan = x.SourcePlan,
               TypePlan = x.TypePlan
             }).ToList()
@@ -1163,13 +1090,7 @@ namespace Manager.Services.Specific
           list.Add(item);
         }
         return list.OrderBy(p => p.Name)
-          .Select(p => new ViewListSkill()
-          {
-            _id = p._id,
-            Name = p.Name,
-            Concept = p.Concept,
-            TypeSkill = p.TypeSkill
-          }).ToList();
+          .Select(p => p.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -1561,17 +1482,10 @@ namespace Manager.Services.Specific
           _id = person._id,
           _idManager = person.Manager._id,
           NameManager = person.Manager.Name,
-          User = new ViewListUser()
-          {
-            _id = person.User._id,
-            Name = person.User.Name,
-            Document = person.User.Document,
-            Mail = person.User.Mail,
-            Phone = person.User.Phone
-          },
-          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          User = person.User.GetViewList(),
+          Company = person.Company.GetViewList(),
           Registration = person.Registration,
-          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name }
+          Establishment = person.Establishment?.GetViewList()
         };
         return servicePlan.InsertNewVersion(plan).Result;
       }

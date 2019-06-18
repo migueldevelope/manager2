@@ -602,17 +602,10 @@ namespace Manager.Services.Specific
           _id = person._id,
           _idManager = person.Manager._id,
           NameManager = person.Manager.Name,
-          User = new ViewListUser()
-          {
-            _id = person.User._id,
-            Name = person.User.Name,
-            Document = person.User.Document,
-            Mail = person.User.Mail,
-            Phone = person.User.Phone
-          },
-          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          User = person.User.GetViewList(),
+          Company = person.Company.GetViewList(),
           Registration = person.Registration,
-          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name }
+          Establishment = person.Establishment?.GetViewList()
         };
         return servicePlan.InsertNewVersion(plan).Result;
       }

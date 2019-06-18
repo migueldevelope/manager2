@@ -295,17 +295,10 @@ namespace Manager.Services.Specific
             Occupation = checkpoint.Person.Occupation.Name,
             Name = checkpoint.Person.User.Name,
             Manager = checkpoint.Person.Manager.Name,
-            Company = new ViewListCompany() { _id = checkpoint.Person.Company._id, Name = checkpoint.Person.Company.Name },
-            Establishment = (checkpoint.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = checkpoint.Person.Establishment._id, Name = checkpoint.Person.Establishment.Name },
+            Company = checkpoint.Person.Company.GetViewList(),
+            Establishment = checkpoint.Person.Establishment?.GetViewList(),
             Registration = checkpoint.Person.Registration,
-            User = new ViewListUser()
-            {
-              Document = checkpoint.Person.User.Document,
-              Mail = checkpoint.Person.User.Mail,
-              Name = checkpoint.Person.User.Name,
-              Phone = checkpoint.Person.User.Phone,
-              _id = checkpoint.Person.User._id
-            }
+            User = checkpoint.Person.User.GetViewList()
           },
           Occupation = checkpoint.Person.Occupation.GetViewList(),
           TextDefault = checkpoint.TextDefault,
@@ -462,17 +455,10 @@ namespace Manager.Services.Specific
             Occupation = checkpoint.Person.Occupation.Name,
             Name = checkpoint.Person.User.Name,
             Manager = checkpoint.Person.Manager?.Name,
-            Company = new ViewListCompany() { _id = checkpoint.Person.Company._id, Name = checkpoint.Person.Company.Name },
-            Establishment = (checkpoint.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = checkpoint.Person.Establishment._id, Name = checkpoint.Person.Establishment.Name },
+            Company = checkpoint.Person.Company.GetViewList(),
+            Establishment = checkpoint.Person.Establishment?.GetViewList(),
             Registration = checkpoint.Person.Registration,
-            User = new ViewListUser()
-            {
-              Document = checkpoint.Person.User.Document,
-              Mail = checkpoint.Person.User.Mail,
-              Name = checkpoint.Person.User.Name,
-              Phone = checkpoint.Person.User.Phone,
-              _id = checkpoint.Person.User._id
-            }
+            User = checkpoint.Person.User.GetViewList(),
           },
           Occupation = checkpoint.Person.Occupation.GetViewList(),
           TextDefault = checkpoint.TextDefault,

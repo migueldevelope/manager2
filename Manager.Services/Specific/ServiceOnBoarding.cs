@@ -250,17 +250,10 @@ namespace Manager.Services.Specific
             Occupation = onBoarding.Person.Occupation.Name,
             Name = onBoarding.Person.User.Name,
             Manager = onBoarding.Person.Manager?.Name,
-            Company = new ViewListCompany() { _id = onBoarding.Person.Company._id, Name = onBoarding.Person.Company.Name },
-            Establishment = (onBoarding.Person.Establishment == null) ? null : new ViewListEstablishment() { _id = onBoarding.Person.Establishment._id, Name = onBoarding.Person.Establishment.Name },
+            Company = onBoarding.Person.Company.GetViewList(),
+            Establishment = onBoarding.Person.Establishment?.GetViewList(),
             Registration = onBoarding.Person.Registration,
-            User = new ViewListUser()
-            {
-              Document = onBoarding.Person.User.Document,
-              Mail = onBoarding.Person.User.Mail,
-              Name = onBoarding.Person.User.Name,
-              Phone = onBoarding.Person.User.Phone,
-              _id = onBoarding.Person.User._id
-            }
+            User = onBoarding.Person.User.GetViewList(),
           },
           Occupation = onBoarding.Person.Occupation.GetViewList(),
           CommentsPerson = onBoarding.CommentsPerson,
@@ -1161,24 +1154,9 @@ namespace Manager.Services.Specific
             Name = onboarding.Person.User.Name,
             Manager = onboarding.Person.Manager.Name,
             Registration = onboarding.Person.Registration,
-            User = new ViewListUser()
-            {
-              _id = onboarding.Person.User._id,
-              Name = onboarding.Person.User.Name,
-              Document = onboarding.Person.User.Document,
-              Mail = onboarding.Person.User.Mail,
-              Phone = onboarding.Person.User.Phone
-            },
-            Company = new ViewListCompany()
-            {
-              _id = onboarding.Person.Company._id,
-              Name = onboarding.Person.Company.Name
-            },
-            Establishment = new ViewListEstablishment()
-            {
-              _id = onboarding.Person.Establishment._id,
-              Name = onboarding.Person.Establishment.Name
-            }
+            User = onboarding.Person.User.GetViewList(),
+            Company = onboarding.Person.Company.GetViewList(),
+            Establishment = onboarding.Person.Establishment?.GetViewList()
           },
           Occupation = onboarding.Person.Occupation.GetViewList(),
           CommentsPerson = onboarding.CommentsPerson,

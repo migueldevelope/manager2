@@ -337,9 +337,9 @@ namespace Manager.Services.Auth
             {
               _id = x._id,
               Registration = x.Registration,
-              User = new ViewListUser() { _id = x.User._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone },
-              Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
-              Establishment = x.Establishment == null ? null : new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
+              User = x.User.GetViewList(),
+              Company = x.Company.GetViewList(),
+              Establishment = x.Establishment?.GetViewList(),
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser,
@@ -354,9 +354,9 @@ namespace Manager.Services.Auth
             {
               _id = x._id,
               Registration = x.Registration,
-              User = new ViewListUser() { _id = x.User._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone },
-              Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
-              Establishment = x.Establishment == null ? null : new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
+              User = x.User.GetViewList(),
+              Company = x.Company.GetViewList(),
+              Establishment = x.Establishment?.GetViewList(),
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser,
@@ -405,24 +405,7 @@ namespace Manager.Services.Auth
             _idSalaryScale = person.SalaryScales._idSalaryScale,
             NameSalaryScale = person.SalaryScales.NameSalaryScale
           },
-          User = new ViewCrudUser()
-          {
-            Name = person.User.Name,
-            Nickname = person.User.Nickname,
-            DateAdm = person.User.DateAdm,
-            DateBirth = person.User.DateBirth,
-            Document = person.User.Document,
-            DocumentCTPF = person.User.DocumentCTPF,
-            DocumentID = person.User.DocumentID,
-            Mail = person.User.Mail,
-            Password = string.Empty,
-            Phone = person.User.Phone,
-            PhoneFixed = person.User.PhoneFixed,
-            PhotoUrl = person.User.PhotoUrl,
-            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
-            Sex = person.User.Sex,
-            _id = person.User._id
-          }
+          User = person.User.GetViewCrud()
         };
       }
       catch (Exception e)
@@ -506,11 +489,11 @@ namespace Manager.Services.Auth
         return new ViewCrudPerson()
         {
           _id = person._id,
-          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          Company = person.Company.GetViewList(),
           DateLastOccupation = person.DateLastOccupation,
           DateLastReadjust = person.DateLastReadjust,
           DateResignation = person.DateResignation,
-          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
+          Establishment = person.Establishment?.GetViewList(),
           HolidayReturn = person.HolidayReturn,
           Manager = person.Manager == null ? null : new ViewBaseFields()
           {
@@ -525,24 +508,7 @@ namespace Manager.Services.Auth
           StatusUser = person.StatusUser,
           TypeJourney = person.TypeJourney,
           TypeUser = person.TypeUser,
-          User = new ViewCrudUser()
-          {
-            Name = person.User.Name,
-            Nickname = person.User.Nickname,
-            DateAdm = person.User.DateAdm,
-            DateBirth = person.User.DateBirth,
-            Document = person.User.Document,
-            DocumentCTPF = person.User.DocumentCTPF,
-            DocumentID = person.User.DocumentID,
-            Mail = person.User.Mail,
-            Password = string.Empty,
-            Phone = person.User.Phone,
-            PhoneFixed = person.User.PhoneFixed,
-            PhotoUrl = person.User.PhotoUrl,
-            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
-            Sex = person.User.Sex,
-            _id = person.User._id
-          }
+          User = person.User.GetViewCrud(),
         };
         // TODO: Manager
       }

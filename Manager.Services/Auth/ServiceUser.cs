@@ -122,25 +122,11 @@ namespace Manager.Services.Auth
           case EnumTypeUser.Administrator:
             var total = serviceUser.CountNewVersion(p => p.Name.Contains(filter)).Result;
             return serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)).Result
-            .Select(x => new ViewListUser()
-            {
-              _id = x._id,
-              Document = x.Document,
-              Mail = x.Mail,
-              Name = x.Name,
-              Phone = x.Phone
-            }).ToList();
+            .Select(x => x.GetViewList()).ToList();
           default:
             total = serviceUser.CountNewVersion(p => p.UserAdmin == false && p.Name.Contains(filter)).Result;
             return serviceUser.GetAllNewVersion(p => p.Name.Contains(filter)).Result
-            .Select(x => new ViewListUser()
-            {
-              _id = x._id,
-              Document = x.Document,
-              Mail = x.Mail,
-              Name = x.Name,
-              Phone = x.Phone
-            }).ToList();
+            .Select(x => x.GetViewList()).ToList();
         }
       }
       catch (Exception e)
@@ -152,25 +138,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
-        return new ViewCrudUser()
-        {
-          _id = user._id,
-          Document = user.Document,
-          Mail = user.Mail,
-          Name = user.Name,
-          Nickname = user.Nickname,
-          Phone = user.Phone,
-          DateAdm = user.DateAdm,
-          DateBirth = user.DateBirth,
-          DocumentCTPF = user.DocumentCTPF,
-          DocumentID = user.DocumentCTPF,
-          PhoneFixed = user.PhoneFixed,
-          Schooling = user.Schooling == null ? null : new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
-          Sex = user.Sex,
-          PhotoUrl = user.PhotoUrl,
-          Password = string.Empty
-        };
+        return serviceUser.GetNewVersion(p => p._id == iduser).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -207,24 +175,7 @@ namespace Manager.Services.Auth
           user.ChangePassword = EnumChangePassword.No;
 
         user = serviceUser.InsertNewVersion(user).Result;
-        return new ViewCrudUser()
-        {
-          _id = user._id,
-          Document = user.Document,
-          Mail = user.Mail,
-          Name = user.Name,
-          Nickname = user.Nickname,
-          Phone = user.Phone,
-          DateAdm = user.DateAdm,
-          DateBirth = user.DateBirth,
-          DocumentCTPF = user.DocumentCTPF,
-          DocumentID = user.DocumentCTPF,
-          PhoneFixed = user.PhoneFixed,
-          Schooling = (user.Schooling == null) ? null : new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
-          Sex = user.Sex,
-          PhotoUrl = user.PhotoUrl,
-          Password = string.Empty
-        };
+        return user.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -255,24 +206,7 @@ namespace Manager.Services.Auth
           item.User = user;
           servicePerson.Update(item, null).Wait();
         }
-        return new ViewCrudUser()
-        {
-          _id = user._id,
-          Document = user.Document,
-          Mail = user.Mail,
-          Name = user.Name,
-          Nickname = user.Nickname,
-          Phone = user.Phone,
-          DateAdm = user.DateAdm,
-          DateBirth = user.DateBirth,
-          DocumentCTPF = user.DocumentCTPF,
-          DocumentID = user.DocumentCTPF,
-          PhoneFixed = user.PhoneFixed,
-          Schooling = user.Schooling == null ? null : new ViewListSchooling { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
-          Sex = user.Sex,
-          PhotoUrl = user.PhotoUrl,
-          Password = string.Empty
-        };
+        return user.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -415,17 +349,10 @@ namespace Manager.Services.Auth
         Occupation = p.Occupation?.Name,
         Name = p.User.Name,
         Manager = p.Manager?.Name,
-        Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
-        Establishment = (p.Establishment == null) ? null : new ViewListEstablishment() { _id = p.Establishment._id, Name = p.Establishment.Name },
+        Company = p.Company.GetViewList(),
+        Establishment = p.Establishment?.GetViewList(),
         Registration = p.Registration,
-        User = new ViewListUser()
-        {
-          Document = p.User.Document,
-          Mail = p.User.Mail,
-          Name = p.User.Name,
-          Phone = p.User.Phone,
-          _id = p.User._id
-        }
+        User = p.User.GetViewList()
       }).ToList();
     }
     #endregion

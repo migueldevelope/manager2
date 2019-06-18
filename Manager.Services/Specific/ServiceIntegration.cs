@@ -914,27 +914,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        User user = userService.GetAllNewVersion(p => p.Document == document).Result.SingleOrDefault();
-        return user == null
-          ? null
-          : new ViewCrudUser()
-          {
-            DateAdm = user.DateAdm,
-            DateBirth = user.DateBirth,
-            Document = user.Document,
-            DocumentCTPF = user.DocumentCTPF,
-            DocumentID = user.DocumentID,
-            Mail = user.Mail,
-            Name = user.Mail,
-            Nickname = user.Nickname,
-            Password = string.Empty,
-            Phone = user.Phone,
-            PhoneFixed = user.PhoneFixed,
-            PhotoUrl = user.PhotoUrl,
-            Sex = user.Sex,
-            Schooling = user.Schooling == null ? null : new ViewListSchooling() { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
-            _id = user._id
-          };
+        return userService.GetNewVersion(p => p.Document == document).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -973,24 +953,7 @@ namespace Manager.Services.Specific
             StatusUser = person.StatusUser,
             TypeJourney = person.TypeJourney,
             TypeUser = person.TypeUser,
-            User = new ViewCrudUser()
-            {
-              Name = person.User.Name,
-              Nickname = person.User.Nickname,
-              DateAdm = person.User.DateAdm,
-              DateBirth = person.User.DateBirth,
-              Document = person.User.Document,
-              DocumentCTPF = person.User.DocumentCTPF,
-              DocumentID = person.User.DocumentID,
-              Mail = person.User.Mail,
-              Password = string.Empty,
-              Phone = person.User.Phone,
-              PhoneFixed = person.User.PhoneFixed,
-              PhotoUrl = person.User.PhotoUrl,
-              Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
-              Sex = person.User.Sex,
-              _id = person.User._id
-            }
+            User = person.User.GetViewCrud()
           };
       }
       catch (Exception e)

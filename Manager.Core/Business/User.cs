@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System;
@@ -40,6 +41,27 @@ namespace Manager.Core.Business
         Mail = Mail,
         Name = Name,
         Phone = Phone
+      };
+    }
+    public ViewCrudUser GetViewCrud()
+    {
+      return new ViewCrudUser()
+      {
+        _id = _id,
+        Document = Document,
+        Mail = Mail,
+        Name = Name,
+        Phone = Phone,
+        DateAdm = DateAdm,
+        DateBirth = DateBirth,
+        DocumentCTPF = DocumentCTPF,
+        DocumentID = DocumentID,
+        Nickname = Nickname,
+        Password = Password,
+        PhoneFixed = PhoneFixed,
+        PhotoUrl = PhotoUrl,
+        Schooling = Schooling?.GetViewList(),
+        Sex = Sex
       };
     }
   }
