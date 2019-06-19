@@ -80,7 +80,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Event
-    public  string RemoveDays(string idevent, string iddays)
+    public string RemoveDays(string idevent, string iddays)
     {
       try
       {
@@ -88,7 +88,7 @@ namespace Manager.Services.Specific
 
 
         var events = serviceEvent.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
-         Task.Run(() => LogSave(_user._idPerson, "Remove Days Event: " + idevent + " | day: " + iddays));
+        Task.Run(() => LogSave(_user._idPerson, "Remove Days Event: " + idevent + " | day: " + iddays));
 
         foreach (var item in events.Days)
         {
@@ -97,7 +97,7 @@ namespace Manager.Services.Specific
             events.Days.Remove(item);
             UpdateAddDaysParticipant(ref events, item);
             MathWorkload(ref events);
-             serviceEvent.Update(events, null).Wait();
+            serviceEvent.Update(events, null).Wait();
             return "remove success";
           }
         }
@@ -109,7 +109,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string RemoveParticipant(string idevent, string idperson)
+    public string RemoveParticipant(string idevent, string idperson)
     {
       try
       {
@@ -119,7 +119,7 @@ namespace Manager.Services.Specific
           if (item._id == idperson)
           {
             events.Participants.Remove(item);
-             serviceEvent.Update(events, null).Wait();
+            serviceEvent.Update(events, null).Wait();
             return "remove success";
           }
 
@@ -133,7 +133,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string RemoveInstructor(string idevent, string id)
+    public string RemoveInstructor(string idevent, string id)
     {
       try
       {
@@ -143,7 +143,7 @@ namespace Manager.Services.Specific
           if (item._id == id)
           {
             events.Instructors.Remove(item);
-             serviceEvent.Update(events, null).Wait();
+            serviceEvent.Update(events, null).Wait();
             return "remove success";
           }
 
@@ -157,16 +157,16 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string Remove(string id)
+    public string Remove(string id)
     {
       try
       {
 
 
         var item = serviceEvent.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-         Task.Run(() => LogSave(_user._idPerson, "Delete Event " + id));
+        Task.Run(() => LogSave(_user._idPerson, "Delete Event " + id));
         item.Status = EnumStatus.Disabled;
-         serviceEvent.Update(item, null).Wait();
+        serviceEvent.Update(item, null).Wait();
         return "deleted";
       }
       catch (Exception e)
@@ -175,7 +175,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string RemoveEventHistoric(string id)
+    public string RemoveEventHistoric(string id)
     {
       try
       {
@@ -183,7 +183,7 @@ namespace Manager.Services.Specific
 
 
         var item = serviceEventHistoric.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-         Task.Run(() => LogSave(_user._idPerson, "Delete Event Historic " + id));
+        Task.Run(() => LogSave(_user._idPerson, "Delete Event Historic " + id));
         var obs = "Realized Event: " + item.Name + ", ID_Historic: " + item._id;
         var trainingplan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == item.Person._id
         & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
@@ -191,10 +191,10 @@ namespace Manager.Services.Specific
         if (trainingplan != null)
         {
           trainingplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
-           serviceTrainingPlan.Update(trainingplan, null).Wait();
+          serviceTrainingPlan.Update(trainingplan, null).Wait();
         }
         item.Status = EnumStatus.Disabled;
-         serviceEventHistoric.Update(item, null).Wait();
+        serviceEventHistoric.Update(item, null).Wait();
         return "deleted";
       }
       catch (Exception e)
@@ -203,7 +203,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string RemoveCourse(string id)
+    public string RemoveCourse(string id)
     {
       try
       {
@@ -216,7 +216,7 @@ namespace Manager.Services.Specific
           return "error_exists";
 
         item.Status = EnumStatus.Disabled;
-         serviceCourse.Update(item, null).Wait();
+        serviceCourse.Update(item, null).Wait();
         return "deleted";
       }
       catch (Exception e)
@@ -225,13 +225,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string RemoveCourseESocial(string id)
+    public string RemoveCourseESocial(string id)
     {
       try
       {
         var item = serviceCourseESocial.GetAuthentication(p => p._id == id).FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-         serviceCourseESocial.UpdateAccount(item, null).Wait();
+        serviceCourseESocial.UpdateAccount(item, null).Wait();
         return "deleted";
       }
       catch (Exception e)
@@ -241,7 +241,7 @@ namespace Manager.Services.Specific
       throw new NotImplementedException();
     }
 
-    public  string ReopeningEvent(string idevent)
+    public string ReopeningEvent(string idevent)
     {
       try
       {
@@ -256,11 +256,11 @@ namespace Manager.Services.Specific
         foreach (var traningplan in plans)
         {
           traningplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
-           serviceTrainingPlan.Update(traningplan, null).Wait();
+          serviceTrainingPlan.Update(traningplan, null).Wait();
         }
 
         events.StatusEvent = EnumStatusEvent.Open;
-         serviceEvent.Update(events, null).Wait();
+        serviceEvent.Update(events, null).Wait();
 
         return "reopening";
       }
@@ -281,7 +281,7 @@ namespace Manager.Services.Specific
           events.Attachments = new List<ViewCrudAttachmentField>();
         }
         events.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
-         serviceEvent.Update(events, null).Wait();
+        serviceEvent.Update(events, null).Wait();
 
       }
       catch (Exception e)
@@ -301,7 +301,7 @@ namespace Manager.Services.Specific
           eventsHistoric.Attachments = new List<ViewCrudAttachmentField>();
         }
         eventsHistoric.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
-         serviceEventHistoric.Update(eventsHistoric, null).Wait();
+        serviceEventHistoric.Update(eventsHistoric, null).Wait();
 
       }
       catch (Exception e)
@@ -310,7 +310,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string SetGrade(string idevent, string idparticipant, decimal grade)
+    public string SetGrade(string idevent, string idparticipant, decimal grade)
     {
       try
       {
@@ -326,7 +326,7 @@ namespace Manager.Services.Specific
             else
               participant.ApprovedGrade = true;
 
-             serviceEvent.Update(events, null).Wait();
+            serviceEvent.Update(events, null).Wait();
           }
         }
 
@@ -338,7 +338,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string Present(string idevent, string idparticipant, string idday, bool present)
+    public string Present(string idevent, string idparticipant, string idday, bool present)
     {
       try
       {
@@ -367,7 +367,7 @@ namespace Manager.Services.Specific
             else
               participant.Approved = false;
 
-             serviceEvent.Update(events, null).Wait();
+            serviceEvent.Update(events, null).Wait();
           }
         }
 
@@ -382,13 +382,13 @@ namespace Manager.Services.Specific
 
 
 
-    public  ViewCrudEvent Get(string id)
+    public ViewCrudEvent Get(string id)
     {
       try
       {
 
         var events = serviceEvent.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-         Task.Run(() => LogSave(_user._idPerson, "Get Event by ID"));
+        Task.Run(() => LogSave(_user._idPerson, "Get Event by ID"));
 
         return new ViewCrudEvent()
         {
@@ -423,7 +423,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudCourse GetCourse(string id)
+    public ViewCrudCourse GetCourse(string id)
     {
       try
       {
@@ -457,7 +457,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudCourseESocial GetCourseESocial(string id)
+    public ViewCrudCourseESocial GetCourseESocial(string id)
     {
       try
       {
@@ -475,13 +475,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudEventHistoric GetEventHistoric(string id)
+    public ViewCrudEventHistoric GetEventHistoric(string id)
     {
       try
       {
 
         var eventhistoric = serviceEventHistoric.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-         Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
+        Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
 
         return new ViewCrudEventHistoric()
         {
@@ -535,7 +535,8 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = new List<ViewListPersonResume>();
-        var participants = serviceEvent.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault().Participants.Select(p => p.Person).ToList();
+        var events = serviceEvent.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
+        var participants = events.Participants.Select(p => p.Person).ToList();
         var list = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
         foreach (var item in list)
         {
@@ -546,7 +547,7 @@ namespace Manager.Services.Specific
                 _id = item._id,
                 Name = item.User.Name,
                 Document = item.User.Document,
-                Cbo = (item.Occupation.CBO == null) ? null : new ViewListCbo()
+                Cbo = item.Occupation == null ? null : (item.Occupation.CBO == null) ? null : new ViewListCbo()
                 {
                   _id = item.Occupation.CBO._id,
                   Name = item.Occupation.CBO.Name,
@@ -571,7 +572,8 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = new List<ViewListPersonResume>();
-        var instructors = serviceEvent.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault().Instructors.Select(p => p.Person).ToList();
+        var events = serviceEvent.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
+        var instructors = events.Instructors.Select(p => p.Person).ToList();
         var list = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
 
         foreach (var item in list)
@@ -582,7 +584,7 @@ namespace Manager.Services.Specific
               _id = item._id,
               Name = item.User.Name,
               Document = item.User.Document,
-              Cbo = (item.Occupation.CBO == null) ? null : new ViewListCbo()
+              Cbo = item.Occupation == null ? null : (item.Occupation.CBO == null) ? null : new ViewListCbo()
               {
                 _id = item.Occupation.CBO._id,
                 Name = item.Occupation.CBO.Name,
@@ -601,7 +603,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListEvent> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListEventDetail> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -610,12 +612,15 @@ namespace Manager.Services.Specific
         var detail = serviceEvent.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
         total = serviceEvent.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListEvent()
+        return detail.Select(p => new ViewListEventDetail()
         {
           _id = p._id,
           Name = p.Name,
           _idCourse = p.Course._id,
-          NameCourse = p.Course.Name
+          NameCourse = p.Course.Name,
+          Begin = p.Begin,
+          End = p.End,
+          StatusEvent = p.StatusEvent
         }).ToList();
       }
       catch (Exception e)
@@ -841,7 +846,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewListEvent New(ViewCrudEvent view)
+    public ViewListEvent New(ViewCrudEvent view)
     {
       try
       {
@@ -875,7 +880,7 @@ namespace Manager.Services.Specific
           Workload = view.Workload
         };
 
-         serviceEvent.InsertNewVersion(events).Wait();
+        serviceEvent.InsertNewVersion(events).Wait();
 
         return new ViewListEvent()
         {
@@ -891,7 +896,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddDays(string idevent, ViewCrudDaysEvent view)
+    public string AddDays(string idevent, ViewCrudDaysEvent view)
     {
       try
       {
@@ -910,7 +915,7 @@ namespace Manager.Services.Specific
         events.Days.Add(days);
         MathWorkload(ref events);
         UpdateAddDaysParticipant(ref events, days);
-         serviceEvent.Update(events, null).Wait();
+        serviceEvent.Update(events, null).Wait();
 
 
         return "add success";
@@ -931,7 +936,7 @@ namespace Manager.Services.Specific
         {
 
         }
-         serviceEvent.Update(events, null).Wait();
+        serviceEvent.Update(events, null).Wait();
 
       }
       catch (Exception e)
@@ -942,7 +947,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public  string AddInstructor(string idevent, ViewCrudInstructor view)
+    public string AddInstructor(string idevent, ViewCrudInstructor view)
     {
       try
       {
@@ -955,12 +960,12 @@ namespace Manager.Services.Specific
           Document = view.Document,
           TypeInstructor = view.TypeInstructor,
           Schooling = view.Schooling,
-          Person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault().GetViewList(),
+          Person = view.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault().GetViewList(),
           Cbo = view.Cbo ?? null
         };
 
         events.Instructors.Add(instructor);
-         serviceEvent.Update(events, null).Wait();
+        serviceEvent.Update(events, null).Wait();
         return "add success";
       }
       catch (Exception e)
@@ -969,7 +974,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddParticipant(string idevent, ViewCrudParticipant view)
+    public string AddParticipant(string idevent, ViewCrudParticipant view)
     {
       try
       {
@@ -979,7 +984,12 @@ namespace Manager.Services.Specific
         {
           _id = ObjectId.GenerateNewId().ToString(),
           FrequencyEvent = new List<ViewCrudFrequencyEvent>(),
-          Approved = true
+          Approved = true,
+          Name = view.Name,
+          Person = view.Person,
+          TypeParticipant = view.TypeParticipant,
+          ApprovedGrade = view.ApprovedGrade,
+          Grade = view.Grade
         };
 
 
@@ -1005,7 +1015,7 @@ namespace Manager.Services.Specific
           participant.ApprovedGrade = true;
 
         events.Participants.Add(participant);
-         serviceEvent.Update(events, null).Wait();
+        serviceEvent.Update(events, null).Wait();
         return "add success";
       }
       catch (Exception e)
@@ -1045,7 +1055,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string NewEventHistoricFrontEnd(ViewCrudEventHistoric view)
+    public string NewEventHistoricFrontEnd(ViewCrudEventHistoric view)
     {
       try
       {
@@ -1093,7 +1103,7 @@ namespace Manager.Services.Specific
         {
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
           plan.Observartion = "Realized Event: " + events.Name + ", ID_Historic: " + events._id;
-           serviceTrainingPlan.Update(plan, null).Wait();
+          serviceTrainingPlan.Update(plan, null).Wait();
         }
         return "add success";
       }
@@ -1103,7 +1113,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string NewEventHistoric(EventHistoric view)
+    public string NewEventHistoric(EventHistoric view)
     {
       try
       {
@@ -1116,7 +1126,7 @@ namespace Manager.Services.Specific
           plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
           plan.Observartion = "Realized Event: " + events.Name + ", ID_Historic: " + events._id;
           plan.Event = view.Event;
-           serviceTrainingPlan.Update(plan, null).Wait();
+          serviceTrainingPlan.Update(plan, null).Wait();
         }
         return "add success";
       }
@@ -1126,7 +1136,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string NewCourse(ViewCrudCourse view)
+    public string NewCourse(ViewCrudCourse view)
     {
       try
       {
@@ -1166,11 +1176,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string NewCourseESocial(ViewCrudCourseESocial view)
+    public string NewCourseESocial(ViewCrudCourseESocial view)
     {
       try
       {
-         serviceCourseESocial.InsertFreeNewVersion(new CourseESocial()
+        serviceCourseESocial.InsertFreeNewVersion(new CourseESocial()
         {
           Name = view.Name,
           Code = view.Code,
@@ -1184,7 +1194,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewListEvent Update(ViewCrudEvent view)
+    public ViewListEvent Update(ViewCrudEvent view)
     {
       try
       {
@@ -1220,7 +1230,7 @@ namespace Manager.Services.Specific
           view.DateEnd = DateTime.Now;
           GenerateHistoric(events);
         }
-         serviceEvent.Update(events, null).Wait();
+        serviceEvent.Update(events, null).Wait();
         return new ViewListEvent()
         {
           _id = view._id,
@@ -1233,7 +1243,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateEventHistoricFrontEnd(ViewCrudEventHistoric view)
+    public string UpdateEventHistoricFrontEnd(ViewCrudEventHistoric view)
     {
       try
       {
@@ -1257,7 +1267,7 @@ namespace Manager.Services.Specific
 
 
         eventHistoric.Entity = AddEntity(view.Entity.Name);
-         serviceEventHistoric.Update(eventHistoric, null).Wait();
+        serviceEventHistoric.Update(eventHistoric, null).Wait();
         return "update";
       }
       catch (Exception e)
@@ -1266,7 +1276,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateEventHistoric(EventHistoric view)
+    public string UpdateEventHistoric(EventHistoric view)
     {
       try
       {
@@ -1278,7 +1288,7 @@ namespace Manager.Services.Specific
           view.Workload = view.Workload * 60;
 
         view.Entity = AddEntity(view.Entity.Name);
-         serviceEventHistoric.Update(view, null).Wait();
+        serviceEventHistoric.Update(view, null).Wait();
         return "update";
       }
       catch (Exception e)
@@ -1286,7 +1296,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string UpdateCourse(ViewCrudCourse view)
+    public string UpdateCourse(ViewCrudCourse view)
     {
       try
       {
@@ -1309,7 +1319,7 @@ namespace Manager.Services.Specific
 
 
 
-         serviceCourse.Update(course, null).Wait();
+        serviceCourse.Update(course, null).Wait();
 
         VerifyEquivalent(course);
         return "update";
@@ -1320,7 +1330,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateCourseESocial(ViewCrudCourseESocial view)
+    public string UpdateCourseESocial(ViewCrudCourseESocial view)
     {
       try
       {
@@ -1328,7 +1338,7 @@ namespace Manager.Services.Specific
         esocial.Name = view.Name;
         esocial.Code = view.Code;
 
-         serviceCourseESocial.UpdateAccount(esocial, null).Wait();
+        serviceCourseESocial.UpdateAccount(esocial, null).Wait();
         return "update";
       }
       catch (Exception e)
@@ -1463,7 +1473,7 @@ namespace Manager.Services.Specific
               {
                 plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
                 plan.Observartion = "Realized Event: " + eventsHis.LastOrDefault().Name + ", ID_Historic: " + eventsHis.LastOrDefault()._id;
-                 serviceTrainingPlan.Update(plan, null).Wait();
+                serviceTrainingPlan.Update(plan, null).Wait();
               }
 
             }

@@ -182,7 +182,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list")]
-    public async Task<List<ViewListEvent>> List( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventDetail>> List( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(ref total, count, page, filter);
