@@ -547,6 +547,7 @@ namespace Manager.Services.Specific
                 _id = item._id,
                 Name = item.User.Name,
                 Document = item.User.Document,
+                Person = item.GetViewList(),
                 Cbo = item.Occupation == null ? null : (item.Occupation.CBO == null) ? null : new ViewListCbo()
                 {
                   _id = item.Occupation.CBO._id,
@@ -584,6 +585,7 @@ namespace Manager.Services.Specific
               _id = item._id,
               Name = item.User.Name,
               Document = item.User.Document,
+              Person = item.GetViewList(),
               Cbo = item.Occupation == null ? null : (item.Occupation.CBO == null) ? null : new ViewListCbo()
               {
                 _id = item.Occupation.CBO._id,
