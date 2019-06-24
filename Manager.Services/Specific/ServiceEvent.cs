@@ -540,14 +540,14 @@ namespace Manager.Services.Specific
         var list = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
         foreach (var item in list)
         {
-          if (!participants.Contains(item.GetViewList()))
+          if (!participants.Contains(item.GetViewListResume()))
             detail.Add(
               new ViewListPersonResume()
               {
                 _id = item._id,
                 Name = item.User.Name,
                 Document = item.User.Document,
-                Person = item.GetViewList(),
+                //Person = item.GetViewList(),
                 Cbo = item.Occupation == null ? null : (item.Occupation.CBO == null) ? null : new ViewListCbo()
                 {
                   _id = item.Occupation.CBO._id,
@@ -579,13 +579,13 @@ namespace Manager.Services.Specific
 
         foreach (var item in list)
         {
-          if (!instructors.Contains(item.GetViewList()))
+          if (!instructors.Contains(item.GetViewListResume()))
             detail.Add(new ViewListPersonResume()
             {
               _id = item._id,
               Name = item.User.Name,
               Document = item.User.Document,
-              Person = item.GetViewList(),
+              //Person = item.GetViewList(),
               Cbo = item.Occupation == null ? null : (item.Occupation.CBO == null) ? null : new ViewListCbo()
               {
                 _id = item.Occupation.CBO._id,
@@ -962,7 +962,7 @@ namespace Manager.Services.Specific
           Document = view.Document,
           TypeInstructor = view.TypeInstructor,
           Schooling = view.Schooling,
-          Person = view.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault().GetViewList(),
+          Person = view.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault().GetViewListResume(),
           Cbo = view.Cbo ?? null
         };
 

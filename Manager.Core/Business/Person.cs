@@ -39,6 +39,17 @@ namespace Manager.Core.Business
         User = User.GetViewList()
       };
     }
+    public ViewListPersonResume GetViewListResume()
+    {
+      return new ViewListPersonResume()
+      {
+        _id = _id,
+        Document = User.Document,
+        Name = User.Name,
+        Cbo = Occupation == null ? null : Occupation.CBO == null ? null : new ViewListCbo() { _id = Occupation.CBO._id, Name = Occupation.CBO.Name, Code = Occupation.CBO.Code }
+      };
+    }
+
     public ViewListPersonPlan GetViewListManager()
     {
       return new ViewListPersonPlan()

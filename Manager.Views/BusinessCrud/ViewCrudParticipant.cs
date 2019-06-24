@@ -8,7 +8,7 @@ namespace Manager.Views.BusinessCrud
 {
   public class ViewCrudParticipant: _ViewCrud
   {
-    public ViewListPerson Person { get; set; }
+    public ViewListPersonResume Person { get; set; }
     public List<ViewCrudFrequencyEvent> FrequencyEvent { get; set; }
     public bool Approved { get; set; }
     public bool ApprovedGrade { get; set; }
