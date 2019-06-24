@@ -618,8 +618,8 @@ namespace Manager.Services.Specific
         {
           _id = p._id,
           Name = p.Name,
-          _idCourse = p.Course._id,
-          NameCourse = p.Course.Name,
+          _idCourse = p.Course?._id,
+          NameCourse = p.Course?.Name,
           Begin = p.Begin,
           End = p.End,
           StatusEvent = p.StatusEvent
