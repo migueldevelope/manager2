@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Data;
+using Manager.Data.Infrastructure;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
@@ -49,11 +50,14 @@ namespace Manager
       DataContext _context;
       var conn = XmlConnection.ReadVariablesSystem();
       _context = new DataContext(conn.Server, conn.DataBase);
-
+      
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
+
+      new MigrationHandle(_context._db).Migrate();
+
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
