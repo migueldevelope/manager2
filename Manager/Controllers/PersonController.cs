@@ -106,7 +106,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("directteam/{idmanager}")]
+    [Route("listpersons/{idcompany}")]
     public async Task<List<ViewListPerson>> ListPersonsCompany(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
