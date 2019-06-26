@@ -112,6 +112,10 @@ namespace Manager.Services.Specific
           Select(p => new ViewListPerson()
           {
             _id = p._id,
+            Company = p.Company.GetViewList(),
+            Establishment = p.Establishment?.GetViewList(),
+            Registration = p.Registration,
+            User = p.User.GetViewList()
 
           }).FirstOrDefault();
 

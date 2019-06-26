@@ -323,6 +323,28 @@ namespace Manager.Services.Auth
       }
     }
 
+    public List<ViewListPerson> ListPersonsCompany(ref long total, string idcompany, string filter, int count, int page)
+    {
+      try
+      {
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        int skip = (count * (page - 1));
+        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count)
+          .Select(p => new ViewListPerson()
+          {
+            _id = p._id,
+            Company = p.Company.GetViewList(),
+            Establishment = p.Establishment?.GetViewList(),
+            Registration = p.Registration,
+            User = p.User.GetViewList()
+          }).OrderBy(p => p.User.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type)
     {
       try

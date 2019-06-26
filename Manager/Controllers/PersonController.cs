@@ -99,6 +99,26 @@ namespace Manager.Controllers
     /// <summary>
     /// Lista time de gestor
     /// </summary>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("directteam/{idmanager}")]
+    public async Task<List<ViewListPerson>> ListPersonsCompany(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListPersonsCompany(ref total, idcompany, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+
+    /// <summary>
+    /// Lista time de gestor
+    /// </summary>
     /// <param name="idmanager">Identificador gestor</param>
     /// <param name="count"></param>
     /// <param name="page"></param>
