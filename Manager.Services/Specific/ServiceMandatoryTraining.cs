@@ -396,8 +396,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Course course = serviceCourse.GetNewVersion(p => p._id == view._id).Result;
-        Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
+        Course course = serviceCourse.GetNewVersion(p => p._id == view.Course._id).Result;
+        Person person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
         var list = new List<PersonMandatory>
         {
           AddPersonMandatory(new PersonMandatory()
@@ -438,8 +438,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Course course = serviceCourse.GetNewVersion(p => p._id == view._id).Result;
-        Company company = serviceCompany.GetNewVersion(p => p._id == view._id).Result;
+        Course course = serviceCourse.GetNewVersion(p => p._id == view.Course._id).Result;
+        Company company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
         var list = new List<CompanyMandatory>
         {
           AddCompanyMandatory(new CompanyMandatory()
