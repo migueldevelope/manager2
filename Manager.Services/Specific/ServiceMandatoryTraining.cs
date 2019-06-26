@@ -355,8 +355,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Course course = serviceCourse.GetNewVersion(p => p._id == view._id).Result;
-        Occupation occupation = serviceOccupation.GetNewVersion(p => p._id == view._id).Result;
+        Course course = serviceCourse.GetNewVersion(p => p._id == view.Course._id).Result;
+        Occupation occupation = serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result;
         var list = new List<OccupationMandatory>
         {
           AddOccupationMandatory(new OccupationMandatory()
