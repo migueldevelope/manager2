@@ -112,7 +112,7 @@ namespace Manager.Services.Specific
           Select(p => new ViewListPerson()
           {
             _id = p._id,
-            
+
           }).FirstOrDefault();
 
         NewOnZero(course);
@@ -641,7 +641,7 @@ namespace Manager.Services.Specific
         {
           foreach (var item in mandatory.Occupations)
           {
-            filters.Add(item.Occupation._id);
+            filters.Add(item.Occupation?._id);
           }
         }
 
@@ -669,7 +669,7 @@ namespace Manager.Services.Specific
         {
           foreach (var item in mandatory.Persons)
           {
-            filters.Add(item.Person._id);
+            filters.Add(item.Person?._id);
           }
         }
 
@@ -700,7 +700,7 @@ namespace Manager.Services.Specific
         {
           foreach (var item in mandatory.Companys)
           {
-            filters.Add(item.Company._id);
+            filters.Add(item.Company?._id);
           }
         }
 
@@ -953,10 +953,10 @@ namespace Manager.Services.Specific
 
         var model = list.Select(p => new MandatoryTraining()
         {
-          Occupations = p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
-          Companys = p.Companys.OrderBy(x => x.Company).ToList(),
+          Occupations = p.Occupations ?? p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
+          Companys = p.Companys ?? p.Companys.OrderBy(x => x.Company).ToList(),
           Course = p.Course,
-          Persons = p.Persons.OrderBy(x => x.Person.User.Name).ToList(),
+          Persons = p.Persons ?? p.Persons.OrderBy(x => x.Person.User.Name).ToList(),
           Status = p.Status,
           _id = p._id,
           _idAccount = p._idAccount
@@ -969,33 +969,29 @@ namespace Manager.Services.Specific
           Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
           {
             _id = x._id,
-            Name = x.Person.User.Name,
+            Name = x.Person == null ? null : x.Person.User.Name,
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Person = x.Person.GetViewList()
+            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Person = x.Person == null ? null : x.Person.GetViewList()
           }).ToList(),
           Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
           Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
           {
             _id = x._id,
-            Name = x.Company.Name,
+            Name = x.Company == null ? null : x.Company.Name,
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Company = new ViewListCompany()
-            {
-              _id = x.Company._id,
-              Name = x.Company.Name,
-            }
+            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Company = x.Company == null ? null : new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name }
           }).ToList(),
           Occupations = (p.Occupations == null) ? null : p.Occupations.Select(x => new ViewCrudOccupationMandatory()
           {
             _id = x._id,
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Occupation = x.Occupation.GetViewList()
+            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Occupation = x.Occupation == null ? null : x.Occupation.GetViewList()
           }).ToList()
 
         }).FirstOrDefault();
