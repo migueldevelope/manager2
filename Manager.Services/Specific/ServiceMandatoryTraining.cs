@@ -243,7 +243,7 @@ namespace Manager.Services.Specific
         }
       }
     }
-    private async void UpdateTrainingPlanOccupation(Course course, Occupation occupation, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
+    private void UpdateTrainingPlanOccupation(Course course, Occupation occupation, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
@@ -261,7 +261,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async void UpdateTrainingPlanCompany(Course course, Company company, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
+    private void UpdateTrainingPlanCompany(Course course, Company company, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
@@ -587,7 +587,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task RemoveCompanyMandatory(string id)
+    public void RemoveCompanyMandatory(string id)
     {
       try
       {
@@ -601,7 +601,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task RemoveOccupationMandatory(string id)
+    public void RemoveOccupationMandatory(string id)
     {
       try
       {
@@ -615,7 +615,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task RemovePersonMandatory(string id)
+    public void RemovePersonMandatory(string id)
     {
       try
       {
