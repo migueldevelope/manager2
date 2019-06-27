@@ -23,3 +23,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Manager.dll"]
+HEALTHCHECK --interval=1m --timeout=1s \
+  CMD curl -f http://localhost:5200/api/values || exit 1
