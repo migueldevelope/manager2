@@ -172,7 +172,7 @@ namespace Manager.Services.Specific
         {
           serviceTrainingPlan.InsertNewVersion(new TrainingPlan()
           {
-            Person = person.GetViewListManager(),
+            Person = person.Manager == null ? null : person.GetViewListManager(),
             Course = new ViewListCourse() { _id = course._id, Name = course.Name },
             Include = DateTime.Now,
             Observartion = string.Empty,
@@ -531,8 +531,12 @@ namespace Manager.Services.Specific
       {
         var plan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == idperson & p.Course._id == idcourse
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).Result.FirstOrDefault();
-        plan.Status = EnumStatus.Disabled;
-        serviceTrainingPlan.Update(plan, null).Wait();
+        if(plan != null)
+        {
+          plan.Status = EnumStatus.Disabled;
+          serviceTrainingPlan.Update(plan, null).Wait();
+        }
+        
       }
       catch (Exception e)
       {
