@@ -88,7 +88,11 @@ namespace Tools
             ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.User),
           };
         else
-          return ReadConfig();
+          //return ReadConfig();
+          return new Config()
+          {
+            Server = "mongodb://analisa:bti9010@10.0.0.16:27017/analisatest",
+          };
 
       }
       catch (Exception)
