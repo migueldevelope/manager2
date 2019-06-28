@@ -578,7 +578,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Infra
-    public  List<ViewListSkill> GetEssential(string idcompany)
+    public List<ViewListSkill> GetEssential(string idcompany)
     {
       try
       {
@@ -591,7 +591,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteProcessLevelOne(string id)
+    public string DeleteProcessLevelOne(string id)
     {
       try
       {
@@ -609,7 +609,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteProcessLevelTwo(string id)
+    public string DeleteProcessLevelTwo(string id)
     {
       try
       {
@@ -632,7 +632,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
+    public string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
     {
       try
       {
@@ -674,7 +674,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
+    public string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
     {
       try
       {
@@ -716,7 +716,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
+    public string ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
     {
       try
       {
@@ -739,7 +739,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
+    public string ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
     {
       try
       {
@@ -762,7 +762,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteTextDefault(string id)
+    public string DeleteTextDefault(string id)
     {
       try
       {
@@ -776,7 +776,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string AreaOrder(string idcompany, string idarea, long order, bool sum)
+    public string AreaOrder(string idcompany, string idarea, long order, bool sum)
     {
       try
       {
@@ -791,7 +791,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string GetCSVCompareGroup(string idcompany, string link)
+    public string GetCSVCompareGroup(string idcompany, string link)
     {
       try
       {
@@ -1081,7 +1081,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public  List<ViewListCbo> ListCBO()
+    public List<ViewListCbo> ListCBO()
     {
       try
       {
@@ -1101,7 +1101,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudCbo GetCBO(string id)
+    public ViewCrudCbo GetCBO(string id)
     {
       try
       {
@@ -1113,7 +1113,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListSphere> GetSpheres()
+    public List<ViewListSphere> GetSpheres()
     {
       try
       {
@@ -1126,7 +1126,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListSphere> GetSpheres(string idcompany)
+    public List<ViewListSphere> GetSpheres(string idcompany)
     {
       try
       {
@@ -1139,7 +1139,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListArea> GetAreas()
+    public List<ViewListArea> GetAreas()
     {
       try
       {
@@ -1168,7 +1168,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudSchooling GetSchoolingById(string id)
+    public ViewCrudSchooling GetSchoolingById(string id)
     {
       try
       {
@@ -1188,7 +1188,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudAxis GetAxisById(string id)
+    public ViewCrudAxis GetAxisById(string id)
     {
       try
       {
@@ -1200,7 +1200,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudSphere GetSphereById(string id)
+    public ViewCrudSphere GetSphereById(string id)
     {
       try
       {
@@ -1219,7 +1219,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudSkill GetSkillById(string id)
+    public ViewCrudSkill GetSkillById(string id)
     {
       try
       {
@@ -1231,7 +1231,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListArea> GetAreas(string idcompany)
+    public List<ViewListArea> GetAreas(string idcompany)
     {
       try
       {
@@ -1260,7 +1260,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListAxis> GetAxis()
+    public List<ViewListAxis> GetAxis()
     {
       try
       {
@@ -1273,7 +1273,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListAxis> GetAxis(string idcompany)
+    public List<ViewListAxis> GetAxis(string idcompany)
     {
       try
       {
@@ -1286,7 +1286,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListQuestions> ListQuestions(string idcompany)
+    public List<ViewListQuestions> ListQuestions(string idcompany)
     {
       try
       {
@@ -1306,7 +1306,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudQuestions GetQuestions(string id)
+    public ViewCrudQuestions GetQuestions(string id)
     {
       try
       {
@@ -1327,7 +1327,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListSchooling> GetSchooling()
+    public List<ViewListSchooling> GetSchooling()
     {
       try
       {
@@ -1345,7 +1345,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudGroup AddGroup(ViewAddGroup view)
+    public ViewCrudGroup AddGroup(ViewAddGroup view)
     {
       try
       {
@@ -1384,7 +1384,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddEssential(ViewCrudEssential view)
+    public string AddEssential(ViewCrudEssential view)
     {
       try
       {
@@ -1413,8 +1413,8 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    
-    public  ViewCrudGroup AddGroup(ViewCrudGroup view)
+
+    public ViewCrudGroup AddGroup(ViewCrudGroup view)
     {
       try
       {
@@ -1453,7 +1453,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddMapGroupSchooling(ViewCrudMapGroupSchooling view)
+    public string AddMapGroupSchooling(ViewCrudMapGroupSchooling view)
     {
       try
       {
@@ -1479,7 +1479,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddMapGroupScope(ViewCrudMapGroupScope view)
+    public string AddMapGroupScope(ViewCrudMapGroupScope view)
     {
       try
       {
@@ -1522,7 +1522,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddMapGroupSkill(ViewCrudMapGroupSkill view)
+    public string AddMapGroupSkill(ViewCrudMapGroupSkill view)
     {
       try
       {
@@ -1550,7 +1550,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddOccupationActivities(ViewCrudOccupationActivities view)
+    public string AddOccupationActivities(ViewCrudOccupationActivities view)
     {
       try
       {
@@ -1590,7 +1590,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list)
+    public string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list)
     {
       try
       {
@@ -1637,7 +1637,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddSpecificRequirements(string idoccupation, ViewCrudSpecificRequirements view)
+    public string AddSpecificRequirements(string idoccupation, ViewCrudSpecificRequirements view)
     {
       try
       {
@@ -1654,7 +1654,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddOccupationSkill(ViewCrudOccupationSkill view)
+    public string AddOccupationSkill(ViewCrudOccupationSkill view)
     {
       try
       {
@@ -1682,7 +1682,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudSkill AddSkill(ViewCrudSkill view)
+    public ViewCrudSkill AddSkill(ViewCrudSkill view)
     {
       try
       {
@@ -1709,7 +1709,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public  string AddArea(ViewCrudArea view)
+    public string AddArea(ViewCrudArea view)
     {
       try
       {
@@ -1734,7 +1734,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddCBO(ViewCrudCbo view)
+    public string AddCBO(ViewCrudCbo view)
     {
       try
       {
@@ -1752,7 +1752,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddAxis(ViewCrudAxis view)
+    public string AddAxis(ViewCrudAxis view)
     {
       try
       {
@@ -1771,7 +1771,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddOccupation(ViewCrudOccupation view)
+    public string AddOccupation(ViewCrudOccupation view)
     {
       try
       {
@@ -1819,7 +1819,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  Schooling AddSchooling(ViewCrudSchooling schooling)
+    public Schooling AddSchooling(ViewCrudSchooling schooling)
     {
       try
       {
@@ -1839,7 +1839,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddSphere(ViewCrudSphere view)
+    public string AddSphere(ViewCrudSphere view)
     {
       try
       {
@@ -1858,7 +1858,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddQuestions(ViewCrudQuestions view)
+    public string AddQuestions(ViewCrudQuestions view)
     {
       try
       {
@@ -1880,7 +1880,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddProcessLevelOne(ViewCrudProcessLevelOne model)
+    public string AddProcessLevelOne(ViewCrudProcessLevelOne model)
     {
       try
       {
@@ -1911,7 +1911,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddTextDefault(ViewCrudTextDefault model)
+    public string AddTextDefault(ViewCrudTextDefault model)
     {
       try
       {
@@ -1931,7 +1931,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddProcessLevelTwo(ViewCrudProcessLevelTwo model)
+    public string AddProcessLevelTwo(ViewCrudProcessLevelTwo model)
     {
       try
       {
@@ -1961,7 +1961,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteArea(string idarea)
+    public string DeleteArea(string idarea)
     {
       try
       {
@@ -1987,7 +1987,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteAxis(string idaxis)
+    public string DeleteAxis(string idaxis)
     {
       try
       {
@@ -2009,7 +2009,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteEssential(string idcompany, string id)
+    public string DeleteEssential(string idcompany, string id)
     {
       try
       {
@@ -2033,7 +2033,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteGroup(string idgroup)
+    public string DeleteGroup(string idgroup)
     {
       try
       {
@@ -2060,7 +2060,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteMapGroupSchooling(string idgroup, string id)
+    public string DeleteMapGroupSchooling(string idgroup, string id)
     {
       try
       {
@@ -2078,7 +2078,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteMapGroupSkill(string idgroup, string id)
+    public string DeleteMapGroupSkill(string idgroup, string id)
     {
       try
       {
@@ -2096,7 +2096,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteMapGroupScope(string idgroup, string idscope)
+    public string DeleteMapGroupScope(string idgroup, string idscope)
     {
       try
       {
@@ -2114,7 +2114,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteOccupation(string idoccupation)
+    public string DeleteOccupation(string idoccupation)
     {
       try
       {
@@ -2135,7 +2135,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteOccupationActivities(string idoccupation, string idactivitie)
+    public string DeleteOccupationActivities(string idoccupation, string idactivitie)
     {
       try
       {
@@ -2153,7 +2153,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteOccupationSkill(string idoccupation, string id)
+    public string DeleteOccupationSkill(string idoccupation, string id)
     {
       try
       {
@@ -2171,10 +2171,29 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteSkill(string idskill)
+    public string DeleteSkill(string idskill)
     {
       try
       {
+        var companys = serviceCompany.GetAllNewVersion().ToList();
+        foreach (var company in companys)
+        {
+          if (company.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
+            return "error_exists_register";
+        }
+        var groups = serviceGroup.GetAllNewVersion().ToList();
+        foreach (var group in groups)
+        {
+          if (group.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
+            return "error_exists_register";
+        }
+        var occupations = serviceOccupation.GetAllNewVersion().ToList();
+        foreach (var occupation in occupations)
+        {
+          if (occupation.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
+            return "error_exists_register";
+        }
+
         var skill = serviceSkill.GetAllNewVersion(p => p._id == idskill).Result.FirstOrDefault();
         skill.Status = EnumStatus.Disabled;
         serviceSkill.Update(skill, null);
@@ -2188,7 +2207,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteSphere(string idsphere)
+    public string DeleteSphere(string idsphere)
     {
       try
       {
@@ -2214,7 +2233,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteSchooling(string idschooling)
+    public string DeleteSchooling(string idschooling)
     {
       try
       {
@@ -2228,7 +2247,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string DeleteQuestion(string idquestion)
+    public string DeleteQuestion(string idquestion)
     {
       try
       {
@@ -2243,7 +2262,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteCBO(string id)
+    public string DeleteCBO(string id)
     {
       try
       {
@@ -2258,7 +2277,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListCompany> GetCompanies()
+    public List<ViewListCompany> GetCompanies()
     {
       try
       {
@@ -2273,7 +2292,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  List<ViewGroupListLO> GetGroups(string idcompany)
+    public List<ViewGroupListLO> GetGroups(string idcompany)
     {
       try
       {
@@ -2302,7 +2321,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewGetOccupation> GetOccupations(string idcompany, string idarea)
+    public List<ViewGetOccupation> GetOccupations(string idcompany, string idarea)
     {
       try
       {
@@ -2337,7 +2356,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref  long total,  string filter, int count,int page, string filterGroup)
+    public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, string idarea, ref long total, string filter, int count, int page, string filterGroup)
     {
       try
       {
@@ -2402,7 +2421,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudSkill GetSkill(string filterName)
+    public ViewCrudSkill GetSkill(string filterName)
     {
       try
       {
@@ -2424,7 +2443,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListSkill> GetSkills(ref  long total,  string filter, int count,int page)
+    public List<ViewListSkill> GetSkills(ref long total, string filter, int count, int page)
     {
       try
       {
@@ -2438,7 +2457,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewSkills> GetSkills(string company, ref  long total,  string filter, int count,int page)
+    public List<ViewSkills> GetSkills(string company, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -2475,7 +2494,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewSkills> GetSkillsGroup(string idgroup, string idcompany, ref  long total,  string filter, int count,int page)
+    public List<ViewSkills> GetSkillsGroup(string idgroup, string idcompany, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -2521,7 +2540,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewSkills> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref  long total,  string filter, int count,int page)
+    public List<ViewSkills> GetSkillsOccupation(string idgroup, string idcompany, string idoccupation, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -2576,7 +2595,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudProcessLevelTwo GetProcessLevelTwo(string id)
+    public ViewCrudProcessLevelTwo GetProcessLevelTwo(string id)
     {
       try
       {
@@ -2605,7 +2624,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListProcessLevelTwo> GetProcessLevelTwoFilter(string idarea)
+    public List<ViewListProcessLevelTwo> GetProcessLevelTwoFilter(string idarea)
     {
       try
       {
@@ -2639,7 +2658,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListProcessLevelTwo> GetProcessLevelTwo()
+    public List<ViewListProcessLevelTwo> GetProcessLevelTwo()
     {
       try
       {
@@ -2673,7 +2692,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddSkills(List<ViewCrudSkill> view)
+    public string AddSkills(List<ViewCrudSkill> view)
     {
       try
       {
@@ -2697,7 +2716,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudGroup GetGroup(string id)
+    public ViewCrudGroup GetGroup(string id)
     {
       try
       {
@@ -2709,7 +2728,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudGroup GetGroup(string idCompany, string filterName)
+    public ViewCrudGroup GetGroup(string idCompany, string filterName)
     {
       try
       {
@@ -2721,7 +2740,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListGroup> GetGroups()
+    public List<ViewListGroup> GetGroups()
     {
       try
       {
@@ -2743,7 +2762,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListGroup> GetGroupsPrint(string idcompany)
+    public List<ViewListGroup> GetGroupsPrint(string idcompany)
     {
       try
       {
@@ -2761,7 +2780,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudOccupation GetOccupation(string id)
+    public ViewCrudOccupation GetOccupation(string id)
     {
       try
       {
@@ -2805,7 +2824,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListCourse> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type)
+    public List<ViewListCourse> GetCourseOccupation(string idoccuation, EnumTypeMandatoryTraining type)
     {
       try
       {
@@ -2841,7 +2860,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudOccupation GetOccupation(string idCompany, string filterName)
+    public ViewCrudOccupation GetOccupation(string idCompany, string filterName)
     {
       try
       {
@@ -2904,7 +2923,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudTextDefault GetTextDefault(string idcompany, string name)
+    public ViewCrudTextDefault GetTextDefault(string idcompany, string name)
     {
       try
       {
@@ -2924,7 +2943,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudTextDefault GetTextDefault(string id)
+    public ViewCrudTextDefault GetTextDefault(string id)
     {
       try
       {
@@ -2944,7 +2963,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListTextDefault> ListTextDefault(string idcompany)
+    public List<ViewListTextDefault> ListTextDefault(string idcompany)
     {
       try
       {
@@ -2963,7 +2982,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view)
+    public string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view)
     {
       try
       {
@@ -2988,7 +3007,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view)
+    public string UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view)
     {
       try
       {
@@ -3018,7 +3037,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateMapGroupScope(string idgroup, ViewCrudScope view)
+    public string UpdateMapGroupScope(string idgroup, ViewCrudScope view)
     {
       try
       {
@@ -3048,7 +3067,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateMapGroupSchooling(string idgroup, ViewCrudSchooling view)
+    public string UpdateMapGroupSchooling(string idgroup, ViewCrudSchooling view)
     {
       try
       {
@@ -3071,7 +3090,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string UpdateGroupSphereAxis(Group group, Group groupOld)
+    public string UpdateGroupSphereAxis(Group group, Group groupOld)
     {
       try
       {
@@ -3106,7 +3125,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public  string UpdateArea(ViewCrudArea view)
+    public string UpdateArea(ViewCrudArea view)
     {
       try
       {
@@ -3126,7 +3145,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateAxis(ViewCrudAxis view)
+    public string UpdateAxis(ViewCrudAxis view)
     {
       try
       {
@@ -3145,7 +3164,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateCBO(ViewCrudCbo view)
+    public string UpdateCBO(ViewCrudCbo view)
     {
       try
       {
@@ -3162,7 +3181,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateGroup(ViewCrudGroup view)
+    public string UpdateGroup(ViewCrudGroup view)
     {
       try
       {
@@ -3192,7 +3211,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateOccupation(ViewCrudOccupation view)
+    public string UpdateOccupation(ViewCrudOccupation view)
     {
       try
       {
@@ -3278,7 +3297,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateSkill(ViewCrudSkill view)
+    public string UpdateSkill(ViewCrudSkill view)
     {
       try
       {
@@ -3297,7 +3316,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateQuestions(ViewCrudQuestions view)
+    public string UpdateQuestions(ViewCrudQuestions view)
     {
       try
       {
@@ -3317,7 +3336,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateSphere(ViewCrudSphere view)
+    public string UpdateSphere(ViewCrudSphere view)
     {
       try
       {
@@ -3337,7 +3356,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateSchooling(ViewCrudSchooling view)
+    public string UpdateSchooling(ViewCrudSchooling view)
     {
       try
       {
@@ -3356,7 +3375,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateProcessLevelOne(ViewCrudProcessLevelOne view)
+    public string UpdateProcessLevelOne(ViewCrudProcessLevelOne view)
     {
       try
       {
@@ -3374,7 +3393,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateProcessLevelTwo(ViewCrudProcessLevelTwo view)
+    public string UpdateProcessLevelTwo(ViewCrudProcessLevelTwo view)
     {
       try
       {
@@ -3386,7 +3405,7 @@ namespace Manager.Services.Specific
 
         serviceProcessLevelTwo.Update(model, null);
 
-         Task.Run(() => UpdateProcessLevelTwoAll(model._id));
+        Task.Run(() => UpdateProcessLevelTwoAll(model._id));
         //UpdateProcessLevelTwoAll(model._id);
         return "update";
       }
@@ -3396,7 +3415,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateTextDefault(ViewCrudTextDefault view)
+    public string UpdateTextDefault(ViewCrudTextDefault view)
     {
       try
       {
@@ -3417,7 +3436,7 @@ namespace Manager.Services.Specific
 
 
 
-    public  ViewMapGroup GetMapGroup(string id)
+    public ViewMapGroup GetMapGroup(string id)
     {
       try
       {
@@ -3451,7 +3470,7 @@ namespace Manager.Services.Specific
 
     }
 
-    public  ViewCrudMapGroupScope GetMapGroupScopeById(string idgroup, string idscope)
+    public ViewCrudMapGroupScope GetMapGroupScopeById(string idgroup, string idscope)
     {
       try
       {
@@ -3476,7 +3495,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea)
+    public List<ViewListProcessLevelOneByArea> GetListProcessLevelOneByArea(string idarea)
     {
       try
       {
@@ -3513,7 +3532,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudArea GetAreasById(string id)
+    public ViewCrudArea GetAreasById(string id)
     {
       try
       {
@@ -3525,7 +3544,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewMapOccupation GetMapOccupation(string id)
+    public ViewMapOccupation GetMapOccupation(string id)
     {
       try
       {
@@ -3581,7 +3600,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudProcessLevelOne GetListProcessLevelOneById(string id)
+    public ViewCrudProcessLevelOne GetListProcessLevelOneById(string id)
     {
       try
       {
@@ -3600,7 +3619,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public  ViewCrudProcessLevelTwo GetListProcessLevelTwoById(string id)
+    public ViewCrudProcessLevelTwo GetListProcessLevelTwoById(string id)
     {
       try
       {
