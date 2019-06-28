@@ -49,7 +49,7 @@ namespace Manager
     {
       DataContext _context;
       var conn = XmlConnection.ReadVariablesSystem();
-      Console.Write(conn.Server);
+      Console.Write("log path server: " + conn.Server);
       _context = new DataContext(conn.Server, conn.DataBase);
       
       DataContext _contextLog;
