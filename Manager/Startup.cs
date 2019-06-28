@@ -49,6 +49,7 @@ namespace Manager
     {
       DataContext _context;
       var conn = XmlConnection.ReadVariablesSystem();
+      Console.Write(conn.Server);
       _context = new DataContext(conn.Server, conn.DataBase);
       
       DataContext _contextLog;
