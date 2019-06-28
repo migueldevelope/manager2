@@ -88,7 +88,20 @@ namespace Tools
             ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.User),
           };
         else
-          return ReadConfig();
+          return new Config()
+          {
+            BlobKey = Environment.GetEnvironmentVariable("ANALISA_BLOBKEY"),
+            DataBase = Environment.GetEnvironmentVariable("ANALISA_DATABASE"),
+            DataBaseLog = Environment.GetEnvironmentVariable("ANALISA_DATABASELOG"),
+            SendGridKey = Environment.GetEnvironmentVariable("ANALISA_SENDGRIDKEY"),
+            Server = Environment.GetEnvironmentVariable("ANALISA_SERVER"),
+            ServerLog = Environment.GetEnvironmentVariable("ANALISA_SERVERLOG"),
+            SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE"),
+            TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER"),
+            QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME"),
+            ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING"),
+          };
+        //return ReadConfig();
 
       }
       catch (Exception)
