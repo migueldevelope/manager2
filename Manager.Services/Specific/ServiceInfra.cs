@@ -2197,7 +2197,6 @@ namespace Manager.Services.Specific
         var skill = serviceSkill.GetAllNewVersion(p => p._id == idskill).Result.FirstOrDefault();
         skill.Status = EnumStatus.Disabled;
         serviceSkill.Update(skill, null);
-
         UpdateSkillAll(skill, true);
         return "delete";
       }
