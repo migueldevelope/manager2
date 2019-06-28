@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Data;
+using Manager.Data.Infrastructure;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
@@ -26,6 +27,7 @@ namespace Manager
   /// </summary>
   public class Startup
   {
+
     /// <summary>
     /// Construtor do controle
     /// </summary>
@@ -34,6 +36,7 @@ namespace Manager
     {
       Configuration = configuration;
     }
+
     /// <summary>
     /// Propriedade de configuração
     /// </summary>
@@ -46,78 +49,84 @@ namespace Manager
     /// <param name="services">Coleção de serviços</param>
     public void RegistreServices(IServiceCollection services)
     {
-      DataContext _context;
-      var conn = XmlConnection.ReadConfig();
-      _context = new DataContext(conn.Server, conn.DataBase);
+      //DataContext _context;
+      //var conn = XmlConnection.ReadVariablesSystem();
+      //_context = new DataContext(conn.Server, conn.DataBase);
 
-      DataContext _contextLog;
-      _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
-      string serviceBusConnectionString = conn.ServiceBusConnectionString;
-      string queueName = conn.QueueName;
 
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+      //DataContext _contextLog;
+      //_contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
+      //string serviceBusConnectionString = conn.ServiceBusConnectionString;
+      //string queueName = conn.QueueName;
 
-      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
+      ////new MigrationHandle(_context._db).Migrate();
 
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
-      IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
-      IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
-      IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
-      IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer);
-      IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
-      IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
-      IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
-      IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
-      IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
-      IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog);
-      IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer);
-      IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
-      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
 
-      serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
+      //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-      services.AddSingleton(_ => serviceMaturity);
-      services.AddSingleton(_ => serviceControlQueue);
-      services.AddSingleton(_ => serviceMeritocracy);
-      services.AddSingleton(_ => serviceTermsOfService);
-      services.AddSingleton(_ => serviceGoals);
-      services.AddSingleton(_ => serviceCertification);
-      services.AddSingleton(_ => serviceUser);
-      services.AddSingleton(_ => serviceDictionarySystem);
-      services.AddSingleton(_ => serviceSalaryScale);
-      services.AddSingleton(_ => serviceLogMessages);
-      services.AddSingleton(_ => serviceConfigurationNotifications);
-      services.AddSingleton(_ => serviceAccount);
-      services.AddSingleton(_ => serviceCompany);
-      services.AddSingleton(_ => serviceAuthentication);
-      services.AddSingleton(_ => servicePerson);
-      services.AddSingleton(_ => serviceWorkflow);
-      services.AddSingleton(_ => serviceAutoManager);
-      services.AddSingleton(_ => serviceLog);
-      services.AddSingleton(_ => serviceInfra);
-      services.AddSingleton(_ => serviceOnBoarding);
-      services.AddSingleton(_ => serviceMonitoring);
-      services.AddSingleton(_ => servicePlan);
-      services.AddSingleton(_ => serviceIndicators);
-      services.AddSingleton(_ => serviceCheckpoint);
-      services.AddSingleton(_ => serviceParameters);
-      services.AddSingleton(_ => serviceEvent);
-      services.AddSingleton(_ => serviceMandatoryTraining);
+      //IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
+      //IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
 
-      serviceIndicators.SendMessages(conn.SignalRService);
+      //IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
+      //IServiceCompany serviceCompany = new ServiceCompany(_context);
+      //IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
+      //IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
+      //IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
+      //IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
+      //IServiceInfra serviceInfra = new ServiceInfra(_context);
+      //IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
+      //IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
+      //IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
+      //IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
+      //IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
+      //IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer);
+      //IServiceParameters serviceParameters = new ServiceParameters(_context);
+      //IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
+      //IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
+      //IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
+      //IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
+      //IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
+      //IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
+      //IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog);
+      //IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
+      //IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer);
+      //IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
+      //IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
+
+      //serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
+
+      //services.AddSingleton(_ => serviceMaturity);
+      //services.AddSingleton(_ => serviceControlQueue);
+      //services.AddSingleton(_ => serviceMeritocracy);
+      //services.AddSingleton(_ => serviceTermsOfService);
+      //services.AddSingleton(_ => serviceGoals);
+      //services.AddSingleton(_ => serviceCertification);
+      //services.AddSingleton(_ => serviceUser);
+      //services.AddSingleton(_ => serviceDictionarySystem);
+      //services.AddSingleton(_ => serviceSalaryScale);
+      //services.AddSingleton(_ => serviceLogMessages);
+      //services.AddSingleton(_ => serviceConfigurationNotifications);
+      //services.AddSingleton(_ => serviceAccount);
+      //services.AddSingleton(_ => serviceCompany);
+      //services.AddSingleton(_ => serviceAuthentication);
+      //services.AddSingleton(_ => servicePerson);
+      //services.AddSingleton(_ => serviceWorkflow);
+      //services.AddSingleton(_ => serviceAutoManager);
+      //services.AddSingleton(_ => serviceLog);
+      //services.AddSingleton(_ => serviceInfra);
+      //services.AddSingleton(_ => serviceOnBoarding);
+      //services.AddSingleton(_ => serviceMonitoring);
+      //services.AddSingleton(_ => servicePlan);
+      //services.AddSingleton(_ => serviceIndicators);
+      //services.AddSingleton(_ => serviceCheckpoint);
+      //services.AddSingleton(_ => serviceParameters);
+      //services.AddSingleton(_ => serviceEvent);
+      //services.AddSingleton(_ => serviceMandatoryTraining);
+
+      //serviceIndicators.SendMessages(conn.SignalRService);
     }
+
+
     // This method gets called by the runtime. Use this method to add services to the container.
     /// <summary>
     /// Configurador de servicos
@@ -158,8 +167,8 @@ namespace Manager
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials()
+          .WithExposedHeaders("x-total-count")
       ));
-
       services.AddMvc();
 
       services.AddSignalR();
@@ -187,6 +196,8 @@ namespace Manager
 
       RegistreServices(services);
     }
+
+
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     /// <summary>
     /// Configuração de aplicação
@@ -201,16 +212,16 @@ namespace Manager
       app.UseMiddleware<ErrorHandlingMiddleware>();
       app.UseCors("AllowAll");
       app.UseMvc();
-      app.UseSignalR(routes =>
-      {
-        routes.MapHub<MessagesHub>("/messagesHub");
-      });
+      //app.UseSignalR(routes =>
+      //{
+      //  routes.MapHub<MessagesHub>("/messagesHub");
+      //});
       // Ativando middlewares para uso do Swagger
       app.UseSwagger();
       app.UseSwaggerUI(c =>
       {
         c.RoutePrefix = "help";
-        c.SwaggerEndpoint("../swagger/v1/swagger.json", "Manager");
+        c.SwaggerEndpoint("..swagger/v1/swagger.json", "Manager");
       });
     }
   }

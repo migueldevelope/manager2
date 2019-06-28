@@ -72,13 +72,13 @@ namespace Manager.Services.Specific
       serviceCheckpoint._user = _user;
     }
 
-    public async Task<List<ViewIndicatorsNotes>> GetNotes(string id)
+    public  List<ViewIndicatorsNotes> GetNotes(string id)
     {
       try
       {
         List<ViewIndicatorsNotes> result = new List<ViewIndicatorsNotes>();
         long totalqtd = 0;
-        var monitorings = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Result;
+        var monitorings =  serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Result;
         var onboardings = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.WaitPerson & p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
         var workflows = serviceWorkflow.CountNewVersion(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Result;
 
@@ -96,11 +96,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager)
+    public  List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
     {
       try
       {
-        var list = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+        var list = serviceMonitoring.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
@@ -128,15 +128,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewTagsCloud>> ListTagsCloud(string idmanager)
+    public  List<ViewTagsCloud> ListTagsCloud(string idmanager)
     {
       try
       {
-        /*var list = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
+        /*var list = serviceMonitoring.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
           Select(p => p.Activities.Where(u => u.Plans.Result > 0).Select(
             x => x.Plans.Select(u => u.Skills))).ToList();*/
 
-        var list = serviceMonitoring.GetAll(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+        var list = serviceMonitoring.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
@@ -169,12 +169,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewTagsCloud>> ListTagsCloudPerson(string idperson)
+    public  List<ViewTagsCloud> ListTagsCloudPerson(string idperson)
     {
       try
       {
 
-        var list = serviceMonitoring.GetAll(p => p.Person._id == idperson & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+        var list = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
@@ -207,11 +207,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPerson(string idperson)
+    public  List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson)
     {
       try
       {
-        var list = serviceMonitoring.GetAll(p => p.Person._id == idperson & p.StatusMonitoring == EnumStatusMonitoring.End).ToList();
+        var list = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
@@ -239,7 +239,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewIndicatorsNotes>> GetNotesPerson(string id)
+    public  List<ViewIndicatorsNotes> GetNotesPerson(string id)
     {
       try
       {
@@ -262,7 +262,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<bool> VerifyAccount(string id)
+    public bool VerifyAccount(string id)
     {
       try
       {
@@ -298,7 +298,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task SendMessages(string link)
+    public void SendMessages(string link)
     {
       try
       {
@@ -306,7 +306,7 @@ namespace Manager.Services.Specific
             .WithUrl(link + "messagesHub")
             .Build();
 
-        await hubConnection.StartAsync();
+         hubConnection.StartAsync();
 
         DoWork();
       }
@@ -317,7 +317,7 @@ namespace Manager.Services.Specific
     }
 
 
-    private async Task DoWork()
+    private void DoWork()
     {
       try
       {
@@ -325,10 +325,10 @@ namespace Manager.Services.Specific
         {
           foreach (var person in servicePerson.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration).ToList())
           {
-            await hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
-            await hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);
+             hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
+             hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);
           }
-          await Task.Delay(1000);
+           Task.Delay(1000);
         }
 
       }
@@ -338,12 +338,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewExportStatusMonitoring>> ExportStatusMonitoring(string idperson)
+    public  List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson)
     {
       try
       {
 
-        var list = serviceMonitoring.GetAll(p => p.Person._id == idperson).ToList();
+        var list = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson).Result.ToList();
         List<ViewExportStatusMonitoring> result = new List<ViewExportStatusMonitoring>();
 
         foreach (var item in list)
@@ -366,12 +366,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson)
+    public  List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
     {
       try
       {
 
-        var list = serviceOnboarding.GetAll(p => p.Person._id == idperson).ToList();
+        var list = serviceOnboarding.GetAllNewVersion(p => p.Person._id == idperson).Result.ToList();
         List<ViewExportStatusOnboarding> result = new List<ViewExportStatusOnboarding>();
 
         foreach (var item in list)
@@ -394,12 +394,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewExportStatusCertification>> ExportStatusCertification()
+    public  List<ViewExportStatusCertification> ExportStatusCertification()
     {
       try
       {
 
-        var list = serviceCertification.GetAll(p => p.StatusCertification != EnumStatusCertification.Open).ToList();
+        var list = serviceCertification.GetAllNewVersion(p => p.StatusCertification != EnumStatusCertification.Open).Result.ToList();
         List<ViewExportStatusCertification> result = new List<ViewExportStatusCertification>();
 
         foreach (var item in list)
@@ -425,12 +425,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewExportStatusCertificationPerson>> ExportStatusCertification(string idperson)
+    public  List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson)
     {
       try
       {
 
-        var list = serviceCertification.GetAll(p => p.Person._id == idperson & p.StatusCertification != EnumStatusCertification.Open).ToList();
+        var list = serviceCertification.GetAllNewVersion(p => p.Person._id == idperson & p.StatusCertification != EnumStatusCertification.Open).Result.ToList();
         List<ViewExportStatusCertificationPerson> result = new List<ViewExportStatusCertificationPerson>();
 
         foreach (var item in list)
@@ -453,13 +453,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding()
+    public  List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, OnBoardings = serviceOnboarding.GetAll(x => x.Person._id == p._id).ToList() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result.ToList().Select(p => new { Person = p, OnBoardings = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id).Result.ToList() })
         .ToList();
         List<ViewExportStatusOnboardingGeral> result = new List<ViewExportStatusOnboardingGeral>();
 
@@ -502,13 +502,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint()
+    public  List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result.ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
         .ToList();
         List<ViewExportStatusCheckpoint> result = new List<ViewExportStatusCheckpoint>();
 
@@ -538,13 +538,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring()
+    public  List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, Monitorings = serviceMonitoring.GetAll(x => x.Person._id == p._id).ToList() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result.ToList().Select(p => new { Person = p, Monitorings = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.ToList() })
         .ToList();
         List<ViewExportStatusMonitoringGeral> result = new List<ViewExportStatusMonitoringGeral>();
 
@@ -586,12 +586,12 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan()
+    public List<ViewExportStatusPlan> ExportStatusPlan()
     {
       try
       {
 
-        var list = servicePlan.GetAll().Select(p => new ViewExportStatusPlan()
+        var list = servicePlan.GetAllNewVersion().Select(p => new ViewExportStatusPlan()
         {
           NameManager = p.Person.NameManager == null ? "Sem Gestor" : p.Person.NameManager,
           NamePerson = p.Person.User.Name,
@@ -620,9 +620,9 @@ namespace Manager.Services.Specific
     //  {
     //    int skip = (count * (page - 1));
 
-    //    var list = servicePerson.GetAll(p => p.TypeJourney == EnumTypeJourney.OnBoarding
+    //    var list = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding
     //    & p.Name.ToUpper().Contains(filter.ToUpper()))
-    //    .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+    //    .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id).FirstOrDefault() })
     //    .ToList().Skip(skip).Take(count).ToList();
 
     //    string head = "Name;NameManager;Status;";
@@ -719,13 +719,13 @@ namespace Manager.Services.Specific
     }
 
 
-    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
+    public  IEnumerable<ViewChartOnboarding> ChartOnboarding()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result.ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
         .GroupBy(p => p.OnBoarding == null ? EnumStatusOnBoarding.WaitBegin : p.OnBoarding.StatusOnBoarding).Select(x => new ViewChartOnboarding
         {
           Status = x.Key,
@@ -740,13 +740,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized()
+    public  IEnumerable<ViewChartStatus> ChartOnboardingRealized()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-       .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        var list =  servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+       .Result.ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
        .GroupBy(p => p.OnBoarding == null ? "Não Realizado" : (p.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
        {
          Status = x.Key,
@@ -761,13 +761,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring()
+    public  IEnumerable<ViewChartMonitoring> ChartMonitoring()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
         .GroupBy(p => p.Monitoring == null ? EnumStatusMonitoring.Open : p.Monitoring.StatusMonitoring).Select(x => new ViewChartMonitoring
         {
           Status = x.Key,
@@ -782,13 +782,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized()
+    public  IEnumerable<ViewChartStatus> ChartMonitoringRealized()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-       .ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+       .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
        .GroupBy(p => p.Monitoring == null ? "Não Realizado" : (p.Monitoring.StatusMonitoring == EnumStatusMonitoring.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
        {
          Status = x.Key,
@@ -803,13 +803,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint()
+    public  IEnumerable<ViewChartCheckpoint> ChartCheckpoint()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result.ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
         .GroupBy(p => p.Checkpoint == null ? EnumStatusCheckpoint.Open : p.Checkpoint.StatusCheckpoint).Select(x => new ViewChartCheckpoint
         {
           Status = x.Key,
@@ -824,13 +824,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized()
+    public  IEnumerable<ViewChartStatus> ChartCheckpointRealized()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-       .ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAll(x => x.Person._id == p._id).FirstOrDefault() })
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+       .Result.ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
        .GroupBy(p => p.Checkpoint == null ? "Não Realizado" : (p.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
        {
          Status = x.Key,
@@ -845,13 +845,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<IEnumerable<ViewChartPlan>> ChartPlan()
+    public  IEnumerable<ViewChartPlan> ChartPlan()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAll(x => x.Person._id == p._id).FirstOrDefault() }).ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() }).ToList();
 
         List<dynamic> result = new List<dynamic>();
 
@@ -910,13 +910,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized()
+    public  IEnumerable<ViewChartStatus> ChartPlanRealized()
     {
       try
       {
 
-        var list = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAll(x => x.Person._id == p._id).FirstOrDefault() }).ToList();
+        var list =  servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() }).ToList();
 
         List<dynamic> result = new List<dynamic>();
 

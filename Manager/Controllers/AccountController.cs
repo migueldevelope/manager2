@@ -47,7 +47,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> Post([FromBody]ViewNewAccount view)
     {
-      return Ok(await service.NewAccount(view));
+      return await Task.Run(() => Ok(service.NewAccount(view)));
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("update/{id}")]
     public async Task<IActionResult> Put([FromBody]ViewCrudAccount view, string id)
     {
-      return Ok(await service.UpdateAccount(view, id));
+      return await Task.Run(() => Ok(service.UpdateAccount(view, id)));
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudAccount> Get(string id)
     {
-      return await service.GetAccount(id);
+      return await Task.Run(() => service.GetAccount(id));
     }
 
     /// <summary>
@@ -88,9 +88,9 @@ namespace Manager.Controllers
     public async Task<List<ViewListAccount>> List(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = await service.GetAll(ref total, count, page, filter);
+      var result = service.GetAccountList(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return result;
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Trocar de conta de cliente (apenas usuário administrador)
@@ -102,7 +102,7 @@ namespace Manager.Controllers
     [Route("alteraccount/{idaccount}")]
     public async Task<ViewPerson> AlterAccount(string idaccount)
     {
-      return await service.AlterAccount(idaccount);
+      return await Task.Run(() => service.AlterAccount(idaccount));
     }
     /// <summary>
     /// Trocar de pessoa conectada (apenas usuário administrador/suporte)
@@ -114,7 +114,7 @@ namespace Manager.Controllers
     [Route("alteraccountperson/{idperson}")]
     public async Task<ViewPerson> AlterAccountPerson(string idperson)
     {
-      return await service.AlterAccountPerson(idperson);
+      return await Task.Run(() => service.AlterAccountPerson(idperson));
     }
     /// <summary>
     /// Trocar de pessoa conectada (apenas usuário administrador/suporte)
@@ -125,7 +125,7 @@ namespace Manager.Controllers
     [Route("synchronize")]
     public async Task<string> Synchronize()
     {
-      return await service.SynchronizeParameters();
+      return await Task.Run(() => service.SynchronizeParameters());
     }
     #endregion
 
@@ -146,7 +146,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = serviceLog.ListLogs(idaccount, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await result;
+      return await Task.Run(() => result);
     }
     #endregion
 

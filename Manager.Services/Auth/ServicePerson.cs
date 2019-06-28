@@ -84,66 +84,48 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Company
-    public Task<List<ViewListCompany>> ListCompany(ref  long total,  string filter, int count,int page)
+    public List<ViewListCompany> ListCompany(ref long total, string filter, int count, int page)
     {
       int skip = (count * (page - 1));
-      var detail = serviceCompany.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).ToList();
+      var detail = serviceCompany.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.Skip(skip).Take(count).ToList();
       total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-      return Task.FromResult(detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name }).ToList());
+      return detail.Select(p => new ViewListCompany() { _id = p._id, Name = p.Name }).ToList();
     }
     #endregion
 
     #region Manager
-    public Task<List<ViewListPerson>> ListManager(ref  long total,  string filter, int count,int page)
+    public List<ViewListPerson> ListManager(ref long total, string filter, int count, int page)
     {
-      int skip = (count * (page - 1));
-      var detail = servicePerson.GetAll(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
-        .OrderBy(p => p.User.Name)
-         .Select(item => new ViewListPerson()
-         {
-           _id = item._id,
-           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
-           Establishment = new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
-           Registration = item.Registration,
-           User = new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
-         }).ToList();
-      //var detail = personService.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-       total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+      try
+      {
 
-      return Task.FromResult(detail);
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        int skip = (count * (page - 1));
+        return servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+          .Result.OrderBy(p => p.User.Name)
+           .Select(item => item.GetViewList()).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
     #endregion
 
     #region Occupation
-    public Task<List<ViewListOccupation>> ListOccupation(ref  long total,  string filter, int count,int page)
+    public List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page)
     {
-      int skip = (count * (page - 1));
-      var detail = serviceOccupation.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
-        .Skip(skip).Take(count).ToList()
-        ;
       total = serviceOccupation.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-      return Task.FromResult(detail.Select(p => new ViewListOccupation()
-      {
-        _id = p._id,
-        Name = p.Name,
-        Company = new ViewListCompany() { _id = p.Group.Company._id, Name = p.Group.Company.Name },
-        Group = new ViewListGroup()
-        {
-          _id = p.Group._id,
-          Name = p.Group.Name,
-          Axis = new ViewListAxis() { _id = p.Group.Axis._id, Name = p.Group.Axis.Name, TypeAxis = p.Group.Axis.TypeAxis },
-          Line = p.Group.Line,
-          Sphere = new ViewListSphere() { _id = p.Group.Sphere._id, TypeSphere = p.Group.Sphere.TypeSphere, Name = p.Group.Sphere.Name },
-        }
-      }).ToList());
+      int skip = count * (page - 1);
+      return serviceOccupation.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name)
+        .Skip(skip).Take(count).Select(p => p.GetViewList()).ToList();
 
     }
     #endregion
 
     #region Person
-    public async Task<string> AddPersonUser(ViewCrudPersonUser view)
+    public string AddPersonUser(ViewCrudPersonUser view)
     {
       try
       {
@@ -168,7 +150,7 @@ namespace Manager.Services.Auth
           Password = view.User.Password,
           DateBirth = view.User.DateBirth,
           DateAdm = view.User.DateAdm,
-          Schooling = (view.User.Schooling == null) ? null : serviceSchooling.GetAll(p => p._id == view.User.Schooling._id).FirstOrDefault(),
+          Schooling = (view.User.Schooling == null) ? null : serviceSchooling.GetAllNewVersion(p => p._id == view.User.Schooling._id).Result.FirstOrDefault(),
           PhotoUrl = view.User.PhotoUrl,
           PhoneFixed = view.User.PhoneFixed,
           DocumentID = view.User.DocumentID,
@@ -180,7 +162,7 @@ namespace Manager.Services.Auth
         BaseFields manager = null;
         if (view.Person.Manager != null)
         {
-          manager = servicePerson.GetAll(p => p._id == view.Person.Manager._id).
+          manager = servicePerson.GetAllNewVersion(p => p._id == view.Person.Manager._id).Result.
          Select(p => new BaseFields()
          {
            _id = p._id,
@@ -191,22 +173,22 @@ namespace Manager.Services.Auth
 
         SalaryScalePerson salaryScale = null;
         if (view.Person.SalaryScales != null)
-          salaryScale = serviceSalaryScale.GetAll(p => p._id == view.Person.SalaryScales._idSalaryScale)
+          salaryScale = serviceSalaryScale.GetAllNewVersion(p => p._id == view.Person.SalaryScales._idSalaryScale).Result
             .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
             .FirstOrDefault();
 
         var person = new Person()
         {
           StatusUser = view.Person.StatusUser,
-          Company = serviceCompany.GetAll(p => p._id == view.Person.Company._id).FirstOrDefault(),
-          Occupation = (view.Person.Occupation == null) ? null : serviceOccupation.GetAll(p => p._id == view.Person.Occupation._id).FirstOrDefault(),
+          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Person.Company._id).Result.FirstOrDefault(),
+          Occupation = (view.Person.Occupation == null) ? null : serviceOccupation.GetAllNewVersion(p => p._id == view.Person.Occupation._id).Result.FirstOrDefault(),
           Manager = manager,
           DateLastOccupation = view.Person.DateLastOccupation,
           Salary = view.Person.Salary,
           DateLastReadjust = view.Person.DateLastReadjust,
           DateResignation = view.Person.DateResignation,
           TypeJourney = view.Person.TypeJourney,
-          Establishment = (view.Person.Establishment == null) ? null : serviceEstablishment.GetAll(p => p._id == view.Person.Establishment._id).FirstOrDefault(),
+          Establishment = (view.Person.Establishment == null) ? null : serviceEstablishment.GetAllNewVersion(p => p._id == view.Person.Establishment._id).Result.FirstOrDefault(),
           HolidayReturn = view.Person.HolidayReturn,
           MotiveAside = view.Person.MotiveAside,
           TypeUser = view.Person.TypeUser,
@@ -220,12 +202,12 @@ namespace Manager.Services.Auth
         person.Status = EnumStatus.Enabled;
 
         if ((authMaristas) || (authPUC))
-          user.ChangePassword = Manager.Views.Enumns.EnumChangePassword.No;
+          user.ChangePassword = EnumChangePassword.No;
 
         //person.User = user;
         person.User = serviceUser.InsertNewVersion(user).Result;
 
-        servicePerson.InsertNewVersion(person);
+        servicePerson.InsertNewVersion(person).Wait();
 
         return "ok";
       }
@@ -235,11 +217,11 @@ namespace Manager.Services.Auth
       }
     }
 
-    public async Task<string> UpdatePersonUser(ViewCrudPersonUser view)
+    public string UpdatePersonUser(ViewCrudPersonUser view)
     {
       try
       {
-        User user = serviceUser.GetAll(p => p._id == view.User._id).SingleOrDefault();
+        User user = serviceUser.GetAllNewVersion(p => p._id == view.User._id).Result.SingleOrDefault();
         user.Name = view.User.Name;
         user.Nickname = view.User.Nickname;
         user.Document = view.User.Document;
@@ -247,7 +229,7 @@ namespace Manager.Services.Auth
         user.Phone = view.User.Phone;
         user.DateBirth = view.User.DateBirth;
         user.DateAdm = view.User.DateAdm;
-        user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetAll(p => p._id == view.User.Schooling._id).FirstOrDefault();
+        user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetAllNewVersion(p => p._id == view.User.Schooling._id).Result.FirstOrDefault();
         user.PhotoUrl = view.User.PhotoUrl;
         user.PhoneFixed = view.User.PhoneFixed;
         user.DocumentID = view.User.DocumentID;
@@ -257,8 +239,8 @@ namespace Manager.Services.Auth
         BaseFields manager = null;
         if (view.Person.Manager != null)
         {
-          manager = servicePerson.GetAll(p => p._id == view.Person.Manager._id).
-           Select(p => new BaseFields()
+          manager = servicePerson.GetAllNewVersion(p => p._id == view.Person.Manager._id).Result
+           .Select(p => new BaseFields()
            {
              _id = p._id,
              Name = p.User.Name,
@@ -267,29 +249,29 @@ namespace Manager.Services.Auth
         }
         SalaryScalePerson salaryScale = null;
         if (view.Person.SalaryScales != null)
-          salaryScale = serviceSalaryScale.GetAll(p => p._id == view.Person.SalaryScales._idSalaryScale)
+          salaryScale = serviceSalaryScale.GetAllNewVersion(p => p._id == view.Person.SalaryScales._idSalaryScale).Result
             .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
             .FirstOrDefault();
 
-        Person person = servicePerson.GetAll(p => p._id == view.Person._id).FirstOrDefault();
+        Person person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault();
         person.StatusUser = view.Person.StatusUser;
-        person.Company = serviceCompany.GetAll(p => p._id == view.Person.Company._id).FirstOrDefault();
-        person.Occupation = view.Person.Occupation == null ? null : serviceOccupation.GetAll(p => p._id == view.Person.Occupation._id).FirstOrDefault();
+        person.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Person.Company._id).Result.FirstOrDefault();
+        person.Occupation = view.Person.Occupation == null ? null : serviceOccupation.GetAllNewVersion(p => p._id == view.Person.Occupation._id).Result.FirstOrDefault();
         person.Manager = manager;
         person.DateLastOccupation = view.Person.DateLastOccupation;
         person.Salary = view.Person.Salary;
         person.DateLastReadjust = view.Person.DateLastReadjust;
         person.DateResignation = view.Person.DateResignation;
         person.TypeJourney = view.Person.TypeJourney;
-        person.Establishment = (view.Person.Establishment == null) ? null : serviceEstablishment.GetAll(p => p._id == view.Person.Establishment._id).FirstOrDefault();
+        person.Establishment = (view.Person.Establishment == null) ? null : serviceEstablishment.GetAllNewVersion(p => p._id == view.Person.Establishment._id).Result.FirstOrDefault();
         person.HolidayReturn = view.Person.HolidayReturn;
         person.MotiveAside = view.Person.MotiveAside;
         person.TypeUser = view.Person.TypeUser;
         person.Registration = view.Person.Registration;
         person.SalaryScales = salaryScale;
         person.User = user;
-        servicePerson.Update(person, null);
-        serviceUser.Update(user, null);
+        servicePerson.Update(person, null).Wait();
+        serviceUser.Update(user, null).Wait();
         return "Person altered!";
       }
       catch (Exception e)
@@ -299,11 +281,11 @@ namespace Manager.Services.Auth
     }
 
 
-    public async Task<List<ViewListSalaryScalePerson>> ListSalaryScale(string idoccupation)
+    public List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation)
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         if (occupation.SalaryScales != null)
           return occupation.SalaryScales
             .Select(p => new ViewListSalaryScalePerson
@@ -320,22 +302,20 @@ namespace Manager.Services.Auth
       }
     }
 
-    public Task<List<ViewListPersonTeam>> ListTeam(ref long total, string idPerson, string filter, int count,int page)
+    public List<ViewListPersonTeam> ListTeam(ref long total, string idPerson, string filter, int count, int page)
     {
       try
       {
-        int skip = (count * (page - 1));
-        var detail = servicePerson.GetAll(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.User.Name).Skip(skip).Take(count).ToList();
         total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return Task.FromResult(detail
+        int skip = (count * (page - 1));
+        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count)
           .Select(item => new ViewListPersonTeam()
           {
             Name = item.User.Name,
             _idPerson = item._id,
             Occupation = item.Occupation?.Name,
             DataAdm = item.User.DateAdm
-          }).OrderBy(p => p.Name).ToList());
+          }).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -343,7 +323,29 @@ namespace Manager.Services.Auth
       }
     }
 
-    public Task<List<ViewListPersonCrud>> List(ref long total, int count, int page, string filter, EnumTypeUser type)
+    public List<ViewListPerson> ListPersonsCompany(ref long total, string idcompany, string filter, int count, int page)
+    {
+      try
+      {
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        int skip = (count * (page - 1));
+        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count)
+          .Select(p => new ViewListPerson()
+          {
+            _id = p._id,
+            Company = p.Company.GetViewList(),
+            Establishment = p.Establishment?.GetViewList(),
+            Registration = p.Registration,
+            User = p.User.GetViewList()
+          }).OrderBy(p => p.User.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
@@ -352,40 +354,40 @@ namespace Manager.Services.Auth
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
             total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-            return Task.FromResult(servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+            return servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
             .Select(x => new ViewListPersonCrud()
             {
               _id = x._id,
               Registration = x.Registration,
-              User = new ViewListUser() { _id = x.User._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone },
-              Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
-              Establishment = x.Establishment == null ? null : new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
+              User = x.User.GetViewList(),
+              Company = x.Company.GetViewList(),
+              Establishment = x.Establishment?.GetViewList(),
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser,
               Occupation = x.Occupation?.Name,
               Manager = x.Manager?.Name
-            }).OrderBy(p => p.User.Name).ToList());
+            }).OrderBy(p => p.User.Name).ToList();
           case EnumTypeUser.HR:
           case EnumTypeUser.ManagerHR:
             total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;
-            return Task.FromResult(servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
+            return servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support, count, count * (page - 1), "User.Name").Result
             .Select(x => new ViewListPersonCrud()
             {
               _id = x._id,
               Registration = x.Registration,
-              User = new ViewListUser() { _id = x.User._id, Name = x.User.Name, Document = x.User.Document, Mail = x.User.Mail, Phone = x.User.Phone },
-              Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
-              Establishment = x.Establishment == null ? null : new ViewListEstablishment() { _id = x.Establishment._id, Name = x.Establishment.Name },
+              User = x.User.GetViewList(),
+              Company = x.Company.GetViewList(),
+              Establishment = x.Establishment?.GetViewList(),
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser,
               Occupation = x.Occupation?.Name,
               Manager = x.Manager?.Name
-            }).ToList());
+            }).ToList();
           default:
             total = 0;
-            return Task.FromResult(new List<ViewListPersonCrud>());
+            return new List<ViewListPersonCrud>();
         }
       }
       catch (Exception e)
@@ -393,7 +395,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<ViewCrudPerson> Get(string id)
+    public ViewCrudPerson Get(string id)
     {
       try
       {
@@ -414,48 +416,7 @@ namespace Manager.Services.Auth
             Mail = person.Manager.Mail
           },
           MotiveAside = person.MotiveAside,
-          Occupation = person.Occupation == null ? null : new ViewListOccupation()
-          {
-            _id = person.Occupation._id,
-            Name = person.Occupation.Name,
-            Line = person.Occupation.Line,
-            Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = person.Occupation.Group._id,
-              Name = person.Occupation.Group.Name,
-              Line = person.Occupation.Group.Line,
-              Axis = new ViewListAxis()
-              {
-                _id = person.Occupation.Group.Axis._id,
-                Name = person.Occupation.Group.Axis.Name,
-                TypeAxis = person.Occupation.Group.Axis.TypeAxis
-              },
-              Sphere = new ViewListSphere()
-              {
-                _id = person.Occupation.Group.Sphere._id,
-                Name = person.Occupation.Group.Sphere.Name,
-                TypeSphere = person.Occupation.Group.Sphere.TypeSphere
-              }
-            },
-            Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Order = p.Order,
-              ProcessLevelOne = new ViewListProcessLevelOne()
-              {
-                _id = p.ProcessLevelOne._id,
-                Name = p.ProcessLevelOne.Name,
-                Order = p.ProcessLevelOne.Order,
-                Area = new ViewListArea()
-                {
-                  _id = p.ProcessLevelOne.Area._id,
-                  Name = p.ProcessLevelOne.Area.Name
-                }
-              }
-            }).ToList()
-          },
+          Occupation = person.Occupation?.GetViewList(),
           Registration = person.Registration,
           Salary = person.Salary,
           StatusUser = person.StatusUser,
@@ -466,24 +427,7 @@ namespace Manager.Services.Auth
             _idSalaryScale = person.SalaryScales._idSalaryScale,
             NameSalaryScale = person.SalaryScales.NameSalaryScale
           },
-          User = new ViewCrudUser()
-          {
-            Name = person.User.Name,
-            Nickname = person.User.Nickname,
-            DateAdm = person.User.DateAdm,
-            DateBirth = person.User.DateBirth,
-            Document = person.User.Document,
-            DocumentCTPF = person.User.DocumentCTPF,
-            DocumentID = person.User.DocumentID,
-            Mail = person.User.Mail,
-            Password = string.Empty,
-            Phone = person.User.Phone,
-            PhoneFixed = person.User.PhoneFixed,
-            PhotoUrl = person.User.PhotoUrl,
-            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
-            Sex = person.User.Sex,
-            _id = person.User._id
-          }
+          User = person.User.GetViewCrud()
         };
       }
       catch (Exception e)
@@ -491,7 +435,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<ViewCrudPerson> New(ViewCrudPerson view)
+    public ViewCrudPerson New(ViewCrudPerson view)
     {
       try
       {
@@ -528,7 +472,7 @@ namespace Manager.Services.Auth
         BaseFields manager = null;
         if (view.Manager != null)
         {
-          manager = servicePerson.GetAll(p => p._id == view.Manager._id).
+          manager = servicePerson.GetAllNewVersion(p => p._id == view.Manager._id).Result.
            Select(p => new BaseFields()
            {
              _id = p._id,
@@ -538,7 +482,7 @@ namespace Manager.Services.Auth
         }
         SalaryScalePerson salaryScale = null;
         if (view.SalaryScales != null)
-          salaryScale = serviceSalaryScale.GetAll(p => p._id == view.SalaryScales._idSalaryScale)
+          salaryScale = serviceSalaryScale.GetAllNewVersion(p => p._id == view.SalaryScales._idSalaryScale).Result
             .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
             .FirstOrDefault();
 
@@ -567,11 +511,11 @@ namespace Manager.Services.Auth
         return new ViewCrudPerson()
         {
           _id = person._id,
-          Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
+          Company = person.Company.GetViewList(),
           DateLastOccupation = person.DateLastOccupation,
           DateLastReadjust = person.DateLastReadjust,
           DateResignation = person.DateResignation,
-          Establishment = person.Establishment == null ? null : new ViewListEstablishment() { _id = person.Establishment._id, Name = person.Establishment.Name },
+          Establishment = person.Establishment?.GetViewList(),
           HolidayReturn = person.HolidayReturn,
           Manager = person.Manager == null ? null : new ViewBaseFields()
           {
@@ -580,71 +524,13 @@ namespace Manager.Services.Auth
             Mail = person.Manager.Mail
           },
           MotiveAside = person.MotiveAside,
-          Occupation = person.Occupation == null ? null : new ViewListOccupation()
-          {
-            _id = person.Occupation._id,
-            Name = person.Occupation.Name,
-            Line = person.Occupation.Line,
-            Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = person.Occupation.Group._id,
-              Name = person.Occupation.Group.Name,
-              Line = person.Occupation.Group.Line,
-              Axis = new ViewListAxis()
-              {
-                _id = person.Occupation.Group.Axis._id,
-                Name = person.Occupation.Group.Axis.Name,
-                TypeAxis = person.Occupation.Group.Axis.TypeAxis
-              },
-              Sphere = new ViewListSphere()
-              {
-                _id = person.Occupation.Group.Sphere._id,
-                Name = person.Occupation.Group.Sphere.Name,
-                TypeSphere = person.Occupation.Group.Sphere.TypeSphere
-              }
-            },
-            Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-            {
-              _id = p._id,
-              Name = p.Name,
-              Order = p.Order,
-              ProcessLevelOne = new ViewListProcessLevelOne()
-              {
-                _id = p.ProcessLevelOne._id,
-                Name = p.ProcessLevelOne.Name,
-                Order = p.ProcessLevelOne.Order,
-                Area = new ViewListArea()
-                {
-                  _id = p.ProcessLevelOne.Area._id,
-                  Name = p.ProcessLevelOne.Area.Name
-                }
-              }
-            }).ToList()
-          },
+          Occupation = person.Occupation?.GetViewList(),
           Registration = person.Registration,
           Salary = person.Salary,
           StatusUser = person.StatusUser,
           TypeJourney = person.TypeJourney,
           TypeUser = person.TypeUser,
-          User = new ViewCrudUser()
-          {
-            Name = person.User.Name,
-            Nickname = person.User.Nickname,
-            DateAdm = person.User.DateAdm,
-            DateBirth = person.User.DateBirth,
-            Document = person.User.Document,
-            DocumentCTPF = person.User.DocumentCTPF,
-            DocumentID = person.User.DocumentID,
-            Mail = person.User.Mail,
-            Password = string.Empty,
-            Phone = person.User.Phone,
-            PhoneFixed = person.User.PhoneFixed,
-            PhotoUrl = person.User.PhotoUrl,
-            Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
-            Sex = person.User.Sex,
-            _id = person.User._id
-          }
+          User = person.User.GetViewCrud(),
         };
         // TODO: Manager
       }
@@ -653,7 +539,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudPerson view)
+    public string Update(ViewCrudPerson view)
     {
       try
       {
@@ -671,12 +557,12 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.User.PhotoUrl;
         user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result;
         user.Sex = view.User.Sex;
-        serviceUser.Update(user, null);
+        serviceUser.Update(user, null).Wait();
 
         BaseFields manager = null;
         if (view.Manager != null)
         {
-          manager = servicePerson.GetAll(p => p._id == view.Manager._id).
+          manager = servicePerson.GetAllNewVersion(p => p._id == view.Manager._id).Result.
            Select(p => new BaseFields()
            {
              _id = p._id,
@@ -708,7 +594,7 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user;
         person.SalaryScales = salaryScale;
-        servicePerson.Update(person, null);
+        servicePerson.Update(person, null).Wait();
         return "Person altered!";
       }
       catch (Exception e)
@@ -717,11 +603,11 @@ namespace Manager.Services.Auth
       }
     }
 
-    public async Task<List<SalaryScalePerson>> ListSalaryScaleOld(string idoccupation)
+    public List<SalaryScalePerson> ListSalaryScaleOld(string idoccupation)
     {
       try
       {
-        var occupation = serviceOccupation.GetAll(p => p._id == idoccupation).FirstOrDefault();
+        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         if (occupation.SalaryScales != null)
           return occupation.SalaryScales
             .Select(p => new SalaryScalePerson
@@ -737,21 +623,14 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public async Task<List<ViewListPerson>> GetPersons(string idcompany, string filter)
+    public List<ViewListPerson> GetPersons(string idcompany, string filter)
     {
       try
       {
-        return servicePerson.GetAll(p => p.Company._id == idcompany & p.StatusUser
-        != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
-        & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
-         .Select(item => new ViewListPerson()
-         {
-           _id = item._id,
-           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
-           Establishment = new ViewListEstablishment() { _id = item.Establishment._id, Name = item.Establishment.Name },
-           Registration = item.Registration,
-           User = new ViewListUser() { _id = item.User._id, Name = item.User.Name, Document = item.User.Document, Mail = item.User.Mail, Phone = item.User.Phone }
-         }).ToList();
+        return servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser
+       != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
+       & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+         .Result.Select(item => item.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -765,7 +644,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var parameter = serviceParameter.GetAll(p => p.Key == "typeregisterperson").FirstOrDefault();
+        var parameter = serviceParameter.GetAllNewVersion(p => p.Key == "typeregisterperson").Result.FirstOrDefault();
         if (parameter == null)
           serviceParameter.InsertNewVersion(new Parameter()
           {
@@ -774,7 +653,7 @@ namespace Manager.Services.Auth
             Content = "0",
             Help = "Informe 0 para cadastro normal e 1 para cadastro de multicontratos.",
             Status = EnumStatus.Enabled
-          });
+          }).Wait();
       }
       catch (Exception e)
       {

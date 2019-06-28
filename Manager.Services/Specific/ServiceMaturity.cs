@@ -24,14 +24,14 @@ namespace Manager.Services.Specific
     #region private
 
 
-    public async Task MathMonth()
+    public void MathMonth()
     {
       try
       {
         var list = serviceMaturity.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.ToList();
 
         foreach (var item in list)
-          await MathMaturity(item);
+           MathMaturity(item);
 
       }
       catch (Exception e)
@@ -39,7 +39,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private async Task MathMaturity(Maturity maturity)
+    private void MathMaturity(Maturity maturity)
     {
       try
       {
@@ -50,7 +50,7 @@ namespace Manager.Services.Specific
 
         maturity.Value = byte.Parse(Math.Round(decimal.Parse(((maturity.LevelMonitoring + maturity.LevelCertification + maturity.LevelPlan + maturity.LevelPraise) / 4).ToString()), 0).ToString());
 
-        serviceMaturity.Update(maturity, null);
+         serviceMaturity.Update(maturity, null).Wait();
       }
       catch (Exception e)
       {
@@ -95,13 +95,13 @@ namespace Manager.Services.Specific
 
     #region Maturity
 
-    public async Task<string> Delete(string id)
+    public  string Delete(string id)
     {
       try
       {
         Maturity item = serviceMaturity.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceMaturity.Update(item, null);
+         serviceMaturity.Update(item, null).Wait();
         return "Maturity deleted!";
       }
       catch (Exception e)
@@ -110,11 +110,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> New(ViewCrudMaturity view)
+    public  string New(ViewCrudMaturity view)
     {
       try
       {
-        Maturity maturity = serviceMaturity.InsertNewVersion(new Maturity()
+        Maturity maturity =  serviceMaturity.InsertNewVersion(new Maturity()
         {
           _id = view._id,
           _idPerson = view._idPerson,
@@ -134,7 +134,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudMaturity view)
+    public  string Update(ViewCrudMaturity view)
     {
       try
       {
@@ -150,7 +150,7 @@ namespace Manager.Services.Specific
         maturity.LevelPraise = view.LevelPraise;
         maturity.LevelCertification = view.LevelCertification;
 
-        serviceMaturity.Update(maturity, null);
+         serviceMaturity.Update(maturity, null).Wait();
 
 
         return "Maturity altered!";
@@ -160,11 +160,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudMaturity> Get(string id)
+    public  ViewCrudMaturity Get(string id)
     {
       try
       {
-        Maturity maturity = serviceMaturity.GetNewVersion(p => p._id == id).Result;
+        Maturity maturity =  serviceMaturity.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMaturity()
         {
           _id = maturity._id,
@@ -186,7 +186,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewCrudMaturity>> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudMaturity> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -205,7 +205,7 @@ namespace Manager.Services.Specific
             LevelCertification = x.LevelCertification
           }).ToList();
         total = serviceMaturity.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
@@ -216,13 +216,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MaturityRegister
-    public async Task<string> DeleteMaturityRegister(string id)
+    public  string DeleteMaturityRegister(string id)
     {
       try
       {
         MaturityRegister item = serviceMaturityRegister.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceMaturityRegister.Update(item, null);
+         serviceMaturityRegister.Update(item, null).Wait();
         return "MaturityRegister deleted!";
       }
       catch (Exception e)
@@ -230,7 +230,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> NewMaturityRegister(ViewCrudMaturityRegister view)
+    public  string NewMaturityRegister(ViewCrudMaturityRegister view)
     {
       try
       {
@@ -252,7 +252,7 @@ namespace Manager.Services.Specific
 
         var maturity = serviceMaturity.GetAllNewVersion(p => p._idPerson == view._idPerson).Result.FirstOrDefault();
         if (maturity == null)
-          New(new ViewCrudMaturity()
+           New(new ViewCrudMaturity()
           {
             _idPerson = view._idPerson
           });
@@ -283,9 +283,9 @@ namespace Manager.Services.Specific
           maturity.CountPraise = praises;
         }
 
-        serviceMaturity.Update(maturity, null);
+         serviceMaturity.Update(maturity, null).Wait();
 
-        MathMaturity(maturity);
+         MathMaturity(maturity);
 
         return "MaturityRegister added!";
       }
@@ -294,7 +294,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> UpdateMaturityRegister(ViewCrudMaturityRegister view)
+    public  string UpdateMaturityRegister(ViewCrudMaturityRegister view)
     {
       try
       {
@@ -303,7 +303,7 @@ namespace Manager.Services.Specific
         maturityregister.TypeMaturity = view.TypeMaturity;
         maturityregister.Date = view.Date;
         maturityregister._idRegister = view._idRegister;
-        serviceMaturityRegister.Update(maturityregister, null);
+         serviceMaturityRegister.Update(maturityregister, null).Wait();
         return "MaturityRegister altered!";
       }
       catch (Exception e)
@@ -311,11 +311,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudMaturityRegister> GetMaturityRegister(string id)
+    public  ViewCrudMaturityRegister GetMaturityRegister(string id)
     {
       try
       {
-        MaturityRegister maturityregister = serviceMaturityRegister.GetNewVersion(p => p._id == id).Result;
+        MaturityRegister maturityregister =  serviceMaturityRegister.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMaturityRegister()
         {
           _id = maturityregister._id,
@@ -330,7 +330,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public Task<List<ViewCrudMaturityRegister>> ListMaturityRegister( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudMaturityRegister> ListMaturityRegister( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -344,7 +344,7 @@ namespace Manager.Services.Specific
             _idRegister = p._idRegister
           }).ToList();
         total = serviceMaturityRegister.CountNewVersion(p => p._idPerson.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {

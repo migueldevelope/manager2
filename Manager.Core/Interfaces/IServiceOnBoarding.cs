@@ -12,21 +12,21 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Task<List<ViewListOnBoarding>> List(string idmanager, ref  long total,  string filter, int count, int page);
-    Task<ViewListOnBoarding> PersonWait(string idperson);
-    Task<ViewListOnBoarding> New(string idperson);
-    Task<ViewCrudOnboarding> Get(string id);
-    Task<string> Delete(string idperson);
-    Task<string> DeleteComments(string idonboarding, string iditem, string idcomments);
-    Task<string> UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment);
-    Task<List<ViewListOnBoarding>> ListEnded(string idmanager, ref  long total,  string filter, int count, int page);
-    Task<ViewCrudOnboarding> GetOnBoardings(string id);
-    Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager, ref  long total,  string filter, int count, int page);
-    Task<string> Update(ViewCrudOnboarding onboarding);
-    Task<List<ViewListOnBoarding>> ListExcluded(ref  long total,  string filter, int count, int page);
-    Task<List<ViewCrudComment>> AddComments(string idonboarding, string iditem, ViewCrudComment comments);
-    Task<string> UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
-    Task<List<ViewCrudComment>> ListComments(string idonboarding, string iditem);
-    Task<List<ViewListOnBoarding>> ListOnBoardingsWait(string idmanager, ref  long total,  string filter, int count, int page);
+     List<ViewListOnBoarding> List(string idmanager, ref  long total,  string filter, int count, int page);
+     ViewListOnBoarding PersonWait(string idperson);
+     ViewListOnBoarding New(string idperson);
+     ViewCrudOnboarding Get(string id);
+     string Delete(string idperson);
+     string DeleteComments(string idonboarding, string iditem, string idcomments);
+     string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment);
+     List<ViewListOnBoarding> ListEnded(string idmanager, ref  long total,  string filter, int count, int page);
+     ViewCrudOnboarding GetOnBoardings(string id);
+     List<ViewListOnBoarding> ListPersonEnd(string idmanager, ref  long total,  string filter, int count, int page);
+     string Update(ViewCrudOnboarding onboarding);
+     List<ViewListOnBoarding> ListExcluded(ref  long total,  string filter, int count, int page);
+     List<ViewCrudComment> AddComments(string idonboarding, string iditem, ViewCrudComment comments);
+     string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
+     List<ViewCrudComment> ListComments(string idonboarding, string iditem);
+     List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref  long total,  string filter, int count, int page);
   }
 }

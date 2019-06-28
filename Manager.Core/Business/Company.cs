@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using System.Collections.Generic;
 
@@ -19,6 +20,15 @@ namespace Manager.Core.Business
       {
         _id = _id,
         Name = Name
+      };
+    }
+    public ViewCrudCompany GetViewCrud()
+    {
+      return new ViewCrudCompany()
+      {
+        _id = _id,
+        Name = Name,
+        Logo = Logo
       };
     }
   }

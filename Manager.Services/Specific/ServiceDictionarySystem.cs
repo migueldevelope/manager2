@@ -47,7 +47,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Dictonary System
-    public async Task<string> New(ViewCrudDictionarySystem view)
+    public  string New(ViewCrudDictionarySystem view)
     {
       try
       {
@@ -56,7 +56,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Description = view.Description          
         };
-        dictionarySystem = serviceDictionarySystem.InsertNewVersion(dictionarySystem).Result;
+        serviceDictionarySystem.InsertNewVersion(dictionarySystem).Wait();
         return "Dictionary system added!";
       }
       catch (Exception e)
@@ -64,7 +64,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> New(List<ViewListDictionarySystem> list)
+    public  string New(List<ViewListDictionarySystem> list)
     {
       try
       {
@@ -76,7 +76,7 @@ namespace Manager.Services.Specific
             Name = view.Name,
             Description = view.Description
           };
-          dictionarySystem = serviceDictionarySystem.InsertNewVersion(dictionarySystem).Result;
+          serviceDictionarySystem.InsertNewVersion(dictionarySystem).Wait();
         }
         return "List dictionary system added!";
       }
@@ -85,13 +85,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudDictionarySystem view)
+    public  string Update(ViewCrudDictionarySystem view)
     {
       try
       {
         DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p._id == view._id).Result;
         dictionarySystem.Description = view.Description;
-        serviceDictionarySystem.Update(dictionarySystem, null);
+         serviceDictionarySystem.Update(dictionarySystem, null).Wait();
         return "Dictionary system altered!";
       }
       catch (Exception e)
@@ -99,13 +99,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Delete(string id)
+    public  string Delete(string id)
     {
       try
       {
         DictionarySystem item = serviceDictionarySystem.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceDictionarySystem.Update(item, null);
+         serviceDictionarySystem.Update(item, null).Wait();
         return "Dictionary system deleted!";
       }
       catch (Exception e)
@@ -113,11 +113,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudDictionarySystem> Get(string id)
+    public  ViewCrudDictionarySystem Get(string id)
     {
       try
       {
-        DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p._id == id).Result;
+        DictionarySystem dictionarySystem =  serviceDictionarySystem.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudDictionarySystem()
         {
           _id = dictionarySystem._id,
@@ -130,11 +130,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewListDictionarySystem> GetName(string name)
+    public  ViewListDictionarySystem GetName(string name)
     {
       try
       {
-        DictionarySystem dictionarySystem = serviceDictionarySystem.GetNewVersion(p => p.Name == name).Result;
+        DictionarySystem dictionarySystem =  serviceDictionarySystem.GetNewVersion(p => p.Name == name).Result;
         return new ViewListDictionarySystem()
         {
           _id = dictionarySystem._id,
@@ -147,7 +147,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public Task<List<ViewListDictionarySystem>> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListDictionarySystem> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -160,7 +160,7 @@ namespace Manager.Services.Specific
               Description = x.Description
             }).ToList();
         total = serviceDictionarySystem.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {

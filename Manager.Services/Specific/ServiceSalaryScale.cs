@@ -57,7 +57,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Salary Scale
-    public Task<List<ViewListSalaryScale>> List(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListSalaryScale> List(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -69,14 +69,14 @@ namespace Manager.Services.Specific
             Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name }
           }).ToList();
         total = serviceSalaryScale.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<ViewCrudSalaryScale> Get(string id)
+    public ViewCrudSalaryScale Get(string id)
     {
       try
       {
@@ -93,7 +93,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> New(ViewCrudSalaryScale view)
+    public string New(ViewCrudSalaryScale view)
     {
       try
       {
@@ -103,7 +103,7 @@ namespace Manager.Services.Specific
           Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result,
           Grades = new List<Grade>()
         };
-        salaryScale = serviceSalaryScale.InsertNewVersion(salaryScale).Result;
+        serviceSalaryScale.InsertNewVersion(salaryScale).Wait();
         return "Salary scale added!";
       }
       catch (Exception e)
@@ -111,13 +111,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudSalaryScale view)
+    public string Update(ViewCrudSalaryScale view)
     {
       try
       {
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view._id).Result;
         salaryScale.Name = view.Name;
-        serviceSalaryScale.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Salary scale altered!";
       }
       catch (Exception e)
@@ -125,13 +125,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Delete(string id)
+    public string Delete(string id)
     {
       try
       {
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
         salaryScale.Status = EnumStatus.Disabled;
-        serviceSalaryScale.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Salary scale deleted";
       }
       catch (Exception e)
@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Grades
-    public Task<List<ViewListGrade>> ListGrade(string idsalaryscale,  ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListGrade> ListGrade(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -173,14 +173,14 @@ namespace Manager.Services.Specific
           detail.Add(view);
         }
         total = detail.Count();
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<string> AddGrade(ViewCrudGrade view)
+    public string AddGrade(ViewCrudGrade view)
     {
       try
       {
@@ -207,7 +207,7 @@ namespace Manager.Services.Specific
         }
         salaryScale.Grades.Add(grade);
         // TODO: problema de persistência para array vazio
-        serviceSalaryScale.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Grade added!";
       }
       catch (Exception e)
@@ -215,7 +215,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> UpdateGrade(ViewCrudGrade view)
+    public string UpdateGrade(ViewCrudGrade view)
     {
       try
       {
@@ -232,7 +232,7 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Grade altered!";
       }
       catch (Exception e)
@@ -240,7 +240,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> UpdateGradePosition(string idsalaryscale, string idgrade, int position)
+    public string UpdateGradePosition(string idsalaryscale, string idgrade, int position)
     {
       try
       {
@@ -255,7 +255,7 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Grade altered!";
       }
       catch (Exception e)
@@ -264,7 +264,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> DeleteGrade(string idsalaryscale, string id)
+    public string DeleteGrade(string idsalaryscale, string id)
     {
       try
       {
@@ -274,7 +274,7 @@ namespace Manager.Services.Specific
           if (grade._id != id)
             list.Add(grade);
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Grade deleted!";
       }
       catch (Exception e)
@@ -282,7 +282,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudGrade> GetGrade(string idsalaryscale, string id)
+    public ViewCrudGrade GetGrade(string idsalaryscale, string id)
     {
       try
       {
@@ -310,7 +310,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> UpdateStep(ViewCrudStep view)
+    public string UpdateStep(ViewCrudStep view)
     {
       try
       {
@@ -334,7 +334,7 @@ namespace Manager.Services.Specific
           list.Add(grade);
         }
         salaryScale.Grades = list;
-        serviceSalaryScale.Update(salaryScale, null);
+        serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Step altered!";
       }
       catch (Exception e)
@@ -343,27 +343,27 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Task<List<ViewListGradeFilter>> ListGrades(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListGradeFilter> ListGrades(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         var salaryScale = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany).Result.FirstOrDefault();
-        
-        if (salaryScale == null )
-          return Task.FromResult(new List<ViewListGradeFilter>());
+
+        if (salaryScale == null)
+          return new List<ViewListGradeFilter>();
 
         if (salaryScale.Grades == null)
-          return Task.FromResult(new List<ViewListGradeFilter>());
+          return new List<ViewListGradeFilter>();
 
         total = salaryScale.Grades.Count();
 
-        return Task.FromResult(salaryScale.Grades.Select(p => new ViewListGradeFilter()
+        return salaryScale.Grades.Select(p => new ViewListGradeFilter()
         {
           idGrade = p._id,
           NameGrade = p.Name,
           idSalaryScale = salaryScale._id,
           NameSalaryScale = salaryScale.Name
-        }).ToList());
+        }).ToList();
       }
       catch (Exception e)
       {

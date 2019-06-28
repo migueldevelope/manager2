@@ -12,13 +12,13 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Task<List<ViewListCheckpoint>> ListWaitManager(string idmanager, ref  long total,  string filter, int count, int page);
-    Task<ViewListCheckpoint> ListWaitPerson(string idperson);
-    Task<ViewListCheckpoint> NewCheckpoint(string idperson);
-    Task<ViewCrudCheckpoint> GetCheckpoint(string id);
-    Task<string> UpdateCheckpoint(ViewCrudCheckpoint view);
-    Task<ViewCrudCheckpoint> PersonCheckpointEnd(string idperson);
-    Task<List<ViewListCheckpoint>> ListEnded(ref  long total,  string filter, int count, int page);
-    Task<string> DeleteCheckpoint(string idcheckpoint);
+     List<ViewListCheckpoint> ListWaitManager(string idmanager, ref  long total,  string filter, int count, int page);
+     ViewListCheckpoint ListWaitPerson(string idperson);
+     ViewListCheckpoint NewCheckpoint(string idperson);
+     ViewCrudCheckpoint GetCheckpoint(string id);
+     string UpdateCheckpoint(ViewCrudCheckpoint view);
+     ViewCrudCheckpoint PersonCheckpointEnd(string idperson);
+     List<ViewListCheckpoint> ListEnded(ref  long total,  string filter, int count, int page);
+     string DeleteCheckpoint(string idcheckpoint);
   }
 }

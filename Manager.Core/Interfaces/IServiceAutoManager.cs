@@ -12,15 +12,15 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Task<List<ViewAutoManagerPerson>> List(string idManager,  ref long total, int count = 10, int page = 1, string filter = "");
-    Task<List<ViewAutoManagerPerson>> ListOpen(string idManager,  ref long total, int count = 10, int page = 1, string filter = "");
-    Task<List<ViewAutoManagerPerson>> ListEnd(string idManager, string filter);
-    Task SetManagerPerson(ViewManager view, string idPerson, string path);
-    Task<string> SendMail(string link, Person person, string idmail);
-    Task<string> Disapproved(ViewWorkflow view, string idPerson, string idManager);
-    Task<string> Approved(ViewWorkflow view, string idPerson, string idManager);
-    Task Canceled(string idPerson, string idManager);
-    Task<List<ViewAutoManager>> ListApproved(string idManager);
-    Task DeleteManager(string idPerson);
+    List<ViewAutoManagerPerson> List(string idManager, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewAutoManagerPerson> ListOpen(string idManager, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewAutoManagerPerson> ListEnd(string idManager, string filter);
+    void SetManagerPerson(ViewManager view, string idPerson, string path);
+    string SendMail(string link, Person person, string idmail);
+    string Disapproved(ViewWorkflow view, string idPerson, string idManager);
+    string Approved(ViewWorkflow view, string idPerson, string idManager);
+    void Canceled(string idPerson, string idManager);
+    List<ViewAutoManager> ListApproved(string idManager);
+    void DeleteManager(string idPerson);
   }
 }

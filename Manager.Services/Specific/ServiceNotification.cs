@@ -424,7 +424,7 @@ namespace Manager.Services.Specific
           if (personManager != null)
           {
             sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-            string token = SendMailApi(path, personManager, sendMail._id).Result;
+            string token = SendMailApi(path, personManager, sendMail._id);
           }
           else
           {
@@ -576,7 +576,7 @@ namespace Manager.Services.Specific
           if (personManager != null)
           {
             sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-            string token = SendMailApi(path, personManager, sendMail._id).Result;
+            string token = SendMailApi(path, personManager, sendMail._id);
           }
           else
           {
@@ -626,7 +626,7 @@ namespace Manager.Services.Specific
           };
           MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
           sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-          string token = SendMailApi(path, item, sendMail._id).Result;
+          string token = SendMailApi(path, item, sendMail._id);
         }
       }
       catch (Exception e)
@@ -651,7 +651,7 @@ namespace Manager.Services.Specific
             Person = item.GetViewList(),
             StatusMessage = EnumStatusMessage.New
           };
-          view = serviceLogMessages.NewNotExist(view).Result;
+          view = serviceLogMessages.NewNotExist(view);
           if (view != null)
             if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
               MailOnboardingAdmission(item, sendTest);
@@ -698,7 +698,7 @@ namespace Manager.Services.Specific
           Subject = model.Subject
         };
         sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-        string token = SendMailApi(path, person, sendMail._id).Result;
+        string token = SendMailApi(path, person, sendMail._id);
       }
       catch (Exception e)
       {
@@ -919,7 +919,7 @@ namespace Manager.Services.Specific
           if (personManager != null)
           {
             sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-            string token = SendMailApi(path, personManager, sendMail._id).Result;
+            string token = SendMailApi(path, personManager, sendMail._id);
           }
           else
           {
@@ -1227,7 +1227,7 @@ namespace Manager.Services.Specific
           if (personManager != null)
           {
             sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-            string token = SendMailApi(path, personManager, sendMail._id).Result;
+            string token = SendMailApi(path, personManager, sendMail._id);
           }
           else
           {
@@ -1326,7 +1326,7 @@ namespace Manager.Services.Specific
             Subject = model.Subject
           };
           sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-          string token = SendMailApi(path, item.Person, sendMail._id).Result;
+          string token = SendMailApi(path, item.Person, sendMail._id);
         }
       }
       catch (Exception e)
@@ -1337,7 +1337,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region SendMail Api
-    private async Task<string> SendMailApi(string link, Person person, string idmail)
+    private  string SendMailApi(string link, Person person, string idmail)
     {
       try
       {
@@ -1346,7 +1346,7 @@ namespace Manager.Services.Specific
         {
           client.BaseAddress = new Uri(link);
           client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
-          HttpResponseMessage resultMail = await client.PostAsync(string.Format("mail/sendmail/{0}", idmail), null);
+          HttpResponseMessage resultMail =  client.PostAsync(string.Format("mail/sendmail/{0}", idmail), null).Result;
           return "Ok!";
         }
       }

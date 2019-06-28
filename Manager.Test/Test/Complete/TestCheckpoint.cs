@@ -35,9 +35,9 @@ namespace Manager.Test.Test.Complete
         long total = 0;
         var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("Ariel")).Result.FirstOrDefault();
 
-        var list = serviceCheckpoint.ListWaitManager(person.Manager._id, ref total, "Ariel", 10, 1).Result.FirstOrDefault();
-        var newChecklist = serviceCheckpoint.NewCheckpoint(list._idPerson).Result;
-        var getChecklist = serviceCheckpoint.GetCheckpoint(newChecklist._id).Result;
+        var list = serviceCheckpoint.ListWaitManager(person.Manager._id, ref total, "Ariel", 10, 1).FirstOrDefault();
+        var newChecklist = serviceCheckpoint.NewCheckpoint(list._idPerson);
+        var getChecklist = serviceCheckpoint.GetCheckpoint(newChecklist._id);
 
         getChecklist.Comments = "test comments";
         foreach(var item in getChecklist.Questions)
@@ -47,7 +47,7 @@ namespace Manager.Test.Test.Complete
 
         getChecklist.StatusCheckpoint = EnumStatusCheckpoint.End;
 
-        var result = serviceCheckpoint.UpdateCheckpoint(getChecklist).Result;
+        var result = serviceCheckpoint.UpdateCheckpoint(getChecklist);
 
       }
       catch (Exception e)

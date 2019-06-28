@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  mail:
+    image: mail
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5201:5201"
+    environment:
+    - ANALISA_SERVER=mongodb://analisa:bti9010@10.0.0.14:27017/analisatest
+    - ANALISA_DATABASE=analisatest
+    - ANALISA_TOKENSERVER=http://10.0.0.14/
+    - ANALISA_SIGNALRSERVICE=http://10.0.0.14:5200/
+    - ANALISA_BLOBKEY=DefaultEndpointsProtocol=https;AccountName=analisa;AccountKey=IbFD+bXx1SS9KQBK+7Fj+au3UIo16dvjLyp/0MFLne+0m3efK1/sKEeCJQLEYmbIImJpPRJC7LogsJ9zo6k9aQ==;EndpointSuffix=core.windows.net
+    - ANALISA_SENDGRIDKEY=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
+    - ANALISA_SERVERLOG=mongodb://analisa:bti9010@10.0.0.14:27017/analisatest
+    - ANALISA_DATABASELOG=analisatest
+    - ANALISA_SERVERINTEGRATION=mongodb://analisa:bti9010@10.0.0.14:27017/analisatest
+    - ANALISA_DATABASEINTEGRATION=analisatest
+    - ANALISA_SERVICEBUSCONNECTIONSTRING=Endpoint=sb://analisa.servicebus.windows.net/;SharedAccessKeyName=analisahomologacao;SharedAccessKey=MS943jYNc9KmGP3HoIcL/eGhxhgIEAscB5R5as48Xik=;
+    - ANALISA_QUEUENAME=analisahomologacao

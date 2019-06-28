@@ -64,7 +64,7 @@ namespace Manager.Test.Test.Complete
     //    base.Init();
 
     //    long total = 0;
-    //    var account = this.serviceAccount.GetAll(ref total).Result.Where(p => p.Name == "TestBig").FirstOrDefault()._id;
+    //    var account = this.serviceAccount.GetAllNewVersion(ref total).Where(p => p.Name == "TestBig").FirstOrDefault()._id;
     //    var baseUser = new BaseUser()
     //    {
     //      _idAccount = account
@@ -118,8 +118,8 @@ namespace Manager.Test.Test.Complete
     //  {
     //    base.Init();
     //    servicePerson._user = base.baseUser;
-    //    var manager = servicePerson.GetAll(p => p.User.Mail == "testbig@jmsoft.com.br").FirstOrDefault();
-    //    foreach (var item in servicePerson.GetAll().ToList())
+    //    var manager = servicePerson.GetAllNewVersion(p => p.User.Mail == "testbig@jmsoft.com.br").FirstOrDefault();
+    //    foreach (var item in servicePerson.GetAllNewVersion().ToList())
     //    {
     //      //item.Manager = manager;
     //      servicePerson.Update(item, null);
@@ -141,8 +141,8 @@ namespace Manager.Test.Test.Complete
     //    servicePerson._user = base.baseUser;
     //    serviceOccupation._user = base.baseUser;
 
-    //    var occ = serviceOccupation.GetAll().FirstOrDefault();
-    //    foreach (var item in servicePerson.GetAll().ToList())
+    //    var occ = serviceOccupation.GetAllNewVersion().FirstOrDefault();
+    //    foreach (var item in servicePerson.GetAllNewVersion().ToList())
     //    {
     //      item.Occupation = occ;
     //      servicePerson.Update(item, null);
@@ -163,7 +163,7 @@ namespace Manager.Test.Test.Complete
         base.Init();
 
         long total = 0;
-        var account = this.serviceAccount.GetAll(ref total).Result.Where(p => p.Name == "Support").FirstOrDefault()._id;
+        var account = this.serviceAccount.GetAccountList(ref total).Where(p => p.Name == "Support").FirstOrDefault()._id;
         var baseUser = new BaseUser()
         {
           _idAccount = account
@@ -311,8 +311,8 @@ namespace Manager.Test.Test.Complete
     //  {
     //    base.Init();
     //    servicePerson._user = base.baseUser;
-    //    var user = servicePerson.GetAll(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
-    //    var manager = servicePerson.GetAll(p => p.User.Mail == "juremir@jmsoft.com.br").FirstOrDefault();
+    //    var user = servicePerson.GetAllNewVersion(p => p.User.Mail == "ariel@jmsoft.com.br").FirstOrDefault();
+    //    var manager = servicePerson.GetAllNewVersion(p => p.User.Mail == "juremir@jmsoft.com.br").FirstOrDefault();
     //    //user.Manager = manager;
     //    servicePerson.Update(user, null);
     //  }

@@ -115,7 +115,7 @@ namespace Manager.Data
     //  }
     //}
 
-    public void Update(T entity, FilterDefinition<T> filter)
+    public async Task Update(T entity, FilterDefinition<T> filter)
     {
       try
       {
@@ -125,7 +125,7 @@ namespace Manager.Data
 
           filter = Builders<T>.Filter.Where(p => p._id == entity._id & p._idAccount == _user._idAccount);
         }
-        _collection.ReplaceOneAsync(filter, entity);
+        await _collection.ReplaceOneAsync(filter, entity);
       }
       catch
       {
@@ -133,7 +133,7 @@ namespace Manager.Data
       }
     }
 
-    public void UpdateAccount(T entity, FilterDefinition<T> filter)
+    public async Task UpdateAccount(T entity, FilterDefinition<T> filter)
     {
       try
       {
@@ -142,7 +142,7 @@ namespace Manager.Data
 
           filter = Builders<T>.Filter.Where(p => p._id == entity._id);
         }
-        _collection.ReplaceOneAsync(filter, entity);
+        await _collection.ReplaceOneAsync(filter, entity);
       }
       catch
       {
@@ -157,7 +157,7 @@ namespace Manager.Data
         DeleteResult resultDelete;
         if (logical)
         {
-          var entity = GetAll(p => p._id == id).FirstOrDefault();
+          var entity = GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
           entity.Status = EnumStatus.Disabled;
           var filter = Builders<T>.Filter.Where(p => p._id == entity._id);
           var result = _collection.ReplaceOneAsync(filter, entity);
@@ -189,7 +189,7 @@ namespace Manager.Data
       }
     }
 
-    public virtual IQueryable<T> GetAll()
+    public IQueryable<T> GetAllNewVersion()
     {
       try
       {
@@ -202,18 +202,18 @@ namespace Manager.Data
       }
     }
 
-    public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> filter)
-    {
-      try
-      {
-        var result = _collection.AsQueryable<T>().Where(p => p.Status == EnumStatus.Enabled & p._idAccount == _user._idAccount).Where(filter);
-        return result;
-      }
-      catch
-      {
-        throw;
-      }
-    }
+    //public virtual IQueryable<T> GetAllNewVersion(Expression<Func<T, bool>> filter)
+    //{
+    //  try
+    //  {
+    //    var result = _collection.AsQueryable<T>().Where(p => p.Status == EnumStatus.Enabled & p._idAccount == _user._idAccount).Where(filter);
+    //    return result;
+    //  }
+    //  catch
+    //  {
+    //    throw;
+    //  }
+    //}
 
     public virtual IQueryable<T> GetAuthentication(Expression<Func<T, bool>> filter)
     {
@@ -469,8 +469,9 @@ namespace Manager.Data
         throw;
       }
     }
-    public List<T> GetAllNewVersion()
+    public List<T> GetAll()
     {
+
       try
       {
         return _collection.AsQueryable<T>().Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled).ToList();

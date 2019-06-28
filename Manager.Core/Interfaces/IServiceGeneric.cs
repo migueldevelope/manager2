@@ -27,9 +27,9 @@ namespace Manager.Core.Interfaces
 
     T Single(Expression<Func<T, bool>> predicate = null);
 
-    IEnumerable<T> GetAll();
+    IEnumerable<T> GetAllNewVersion();
 
-    IQueryable<T> GetAll(Expression<Func<T, bool>> filter);
+    IQueryable<T> GetAllNewVersion(Expression<Func<T, bool>> filter);
 
     IQueryable<T> GetAuthentication(Expression<Func<T, bool>> filter);
 

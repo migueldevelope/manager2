@@ -51,7 +51,7 @@ namespace EdeskIntegration.Controllers
         if (ci.Type == ClaimTypes.Hash)
           account = ci.Value;
       }
-      Config conn = XmlConnection.ReadConfig();
+      Config conn = XmlConnection.ReadVariablesSystem();
       context = new DataContext(conn.Server, conn.DataBase);
       blobKey = conn.BlobKey;
       service = new ServiceGeneric<Attachments>(context);
@@ -62,7 +62,7 @@ namespace EdeskIntegration.Controllers
     [HttpGet("{id}/url")]
     public string GetUrl(string id)
     {
-      var attachment = service.GetAll(p => p._id == id).FirstOrDefault();
+      var attachment = service.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
       CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
       CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
       CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());

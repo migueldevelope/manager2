@@ -48,14 +48,14 @@ namespace Manager.Test.Test.Complete
 
 
     [Fact]
-    public void TestCompany()
+    public async void TestCompany()
     {
       try
       {
         foreach (var item in serviceCompany.GetAllNewVersion().ToList())
         {
           item.Skills = new List<Skill>();
-          serviceCompany.Update(item, null);
+          var i = serviceCompany.Update(item, null);
         }
 
         var comp = new Company()
@@ -65,7 +65,7 @@ namespace Manager.Test.Test.Complete
           Status = EnumStatus.Enabled
         };
 
-        serviceCompany.InsertNewVersion(comp);
+        await serviceCompany.InsertNewVersion(comp);
 
 
       }
@@ -82,18 +82,18 @@ namespace Manager.Test.Test.Complete
       {
         var ares = serviceInfra.GetAreas();
         var company = serviceInfra.GetCompanies()
-          .Result.Select(p => new ViewListCompany()
+          .Select(p => new ViewListCompany()
           {
             _id = p._id,
             Name = p.Name
           }).FirstOrDefault();
-        var newskill = serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard }).Result;
+        var newskill = serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
         long total = 0;
-        var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).Result.FirstOrDefault();
-        var newsphere = serviceInfra.AddSphere(new ViewCrudSphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company }).Result;
-        var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
-        var newaxis = serviceInfra.AddAxis(new ViewCrudAxis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator, Company = company }).Result;
-        var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
+        var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).FirstOrDefault();
+        var newsphere = serviceInfra.AddSphere(new ViewCrudSphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
+        var sphere = serviceInfra.GetSpheres().FirstOrDefault();
+        var newaxis = serviceInfra.AddAxis(new ViewCrudAxis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator, Company = company });
+        var axis = serviceInfra.GetAxis().FirstOrDefault();
         var newessential = serviceInfra.AddEssential(new ViewCrudEssential()
         {
           _idCompany = company._id,
@@ -104,7 +104,7 @@ namespace Manager.Test.Test.Complete
             Concept = skill.Concept,
             TypeSkill = skill.TypeSkill
           }
-        }).Result;
+        });
 
       }
       catch (Exception e)
@@ -124,7 +124,7 @@ namespace Manager.Test.Test.Complete
           Complement = "1",
           Type = EnumTypeSchooling.Excellence
         };
-        var group = servicePerson.GetAll(p => p.User.Mail == "miguel@jmsoft.com.br").FirstOrDefault().Occupation.Group;
+        var group = servicePerson.GetAllNewVersion(p => p.User.Mail == "miguel@jmsoft.com.br").Result.FirstOrDefault().Occupation.Group;
 
         var view = new ViewCrudMapGroupSchooling()
         {
@@ -132,7 +132,7 @@ namespace Manager.Test.Test.Complete
           _idGroup = group._id
         };
 
-        var newmapgroupschooling = serviceInfra.AddMapGroupSchooling(view).Result;
+        var newmapgroupschooling = serviceInfra.AddMapGroupSchooling(view);
 
       }
       catch (Exception e)
@@ -152,11 +152,11 @@ namespace Manager.Test.Test.Complete
         //var id = "5b5a23bd3ac6f1466cdd7d3d";
         //serviceInfra.DeleteEssential(idcompany, id);
 
-        var schooling = serviceInfra.GetSchooling().Result.Where(p => p.Name.Contains("Teste")).FirstOrDefault();
+        var schooling = serviceInfra.GetSchooling().Where(p => p.Name.Contains("Teste")).FirstOrDefault();
         schooling.Name = schooling.Name + " Teste 1";
         //serviceInfra.UpdateSchooling(schooling);
-        var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
-        var area = serviceInfra.GetAreas().Result.FirstOrDefault();
+        var company = serviceInfra.GetCompanies().FirstOrDefault();
+        var area = serviceInfra.GetAreas().FirstOrDefault();
         var map = serviceInfra.GetOccupations(company._id, area._id);
 
         var group = serviceInfra.GetGroups(company._id);
@@ -240,7 +240,7 @@ namespace Manager.Test.Test.Complete
         //item.Name = "test sub novo 2";
         //serviceInfra.UpdateProcessLevelTwo(item);
 
-        serviceInfra.GetCSVCompareGroup("5b6c4f54d9090156f08775ab", "");
+        var i = serviceInfra.GetCSVCompareGroup("5b6c4f54d9090156f08775ab", "");
       }
       catch (Exception e)
       {
@@ -252,7 +252,7 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var item = serviceInfra.GetAreas().Result.Where(p => p._id == "5ba8d349ea4b69b2d3e2408d").FirstOrDefault();
+        var item = serviceInfra.GetAreas().Where(p => p._id == "5ba8d349ea4b69b2d3e2408d").FirstOrDefault();
         item.Name = "nv area 51 v5";
         //serviceInfra.UpdateArea(item);
 
@@ -269,12 +269,12 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var company = serviceInfra.GetCompanies().Result.FirstOrDefault();
+        var company = serviceInfra.GetCompanies().FirstOrDefault();
         long total = 0;
         var groups = serviceInfra.GetGroups();
-        var skill = serviceInfra.GetSkills(ref total, "", 100, 1).Result.FirstOrDefault();
-        var sphere = serviceInfra.GetSpheres().Result.FirstOrDefault();
-        var axis = serviceInfra.GetAxis().Result.FirstOrDefault();
+        var skill = serviceInfra.GetSkills(ref total, "", 100, 1).FirstOrDefault();
+        var sphere = serviceInfra.GetSpheres().FirstOrDefault();
+        var axis = serviceInfra.GetAxis().FirstOrDefault();
 
         sphere.Name = sphere.Name + " test";
         var result = serviceInfra.UpdateSphere(new ViewCrudSphere()
@@ -282,7 +282,7 @@ namespace Manager.Test.Test.Complete
           _id = sphere._id,
           Name = sphere.Name,
           TypeSphere = sphere.TypeSphere
-        }).Result;
+        });
 
       }
       catch (Exception e)

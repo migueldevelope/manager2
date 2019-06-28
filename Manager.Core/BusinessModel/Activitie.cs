@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessList;
 
 namespace Manager.Core.BusinessModel
 {
@@ -9,5 +10,14 @@ namespace Manager.Core.BusinessModel
   {
     public string Name { get; set; }
     public long Order { get; set; }
+    public ViewListActivitie GetViewList()
+    {
+      return new ViewListActivitie()
+      {
+        _id = _id,
+        Name = Name,
+        Order = Order
+      };
+    }
   }
 }

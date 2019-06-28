@@ -47,7 +47,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Mensageria
-    public Task<List<ViewListLogMessages>> ListPerson(string idperson,  ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListLogMessages> ListPerson(string idperson,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -55,50 +55,28 @@ namespace Manager.Services.Specific
           .Result.Select(x => new ViewListLogMessages()
           {
             _id = x._id,
-            Person = new ViewListPerson()
-            {
-              _id = x.Person._id,
-              Company = new ViewListCompany() { _id = x.Person.Company._id, Name = x.Person.Company.Name },
-              Establishment = new ViewListEstablishment() { _id = x.Person.Establishment._id , Name = x.Person.Establishment.Name },
-              Registration = x.Person.Registration,
-              User = new ViewListUser() { _id = x.Person.User._id, Name = x.Person.User.Name, Document = x.Person.User.Document, Mail = x.Person.User.Mail, Phone = x.Person.User.Phone }
-            }
+            Person = x.Person.GetViewList(),
           }).ToList();
         total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public Task<List<ViewListLogMessages>> ListManager(string idmanager,  ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListLogMessages> ListManager(string idmanager,  ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         throw new Exception("Falta a seleção da equipe do gestor");
-        //List<ViewListLogMessages> detail = logMessagesService.GetAllNewVersion(p => p.Person._id == idmanager && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Register")
-        //  .Result.Select(x => new ViewListLogMessages()
-        //  {
-        //    _id = x._id,
-        //    Person = new ViewListPerson()
-        //    {
-        //      _id = x.Person._id,
-        //      Company = new ViewListCompany() { _id = x.Person.Company._id, Name = x.Person.Company.Name },
-        //      Establishment = new ViewListEstablishment() { _id = x.Person.Establishment._id, Name = x.Person.Establishment.Name },
-        //      Registration = x.Person.Registration,
-        //      User = new ViewListUser() { _id = x.Person.User._id, Name = x.Person.User.Name, Document = x.Person.User.Document, Mail = x.Person.User.Mail, Phone = x.Person.User.Phone }
-        //    }
-        //  }).ToList();
-        //var total = logMessagesService.CountNewVersion(p => p.Person._id == idmanager && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        //return detail;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<string> New(ViewCrudLogMessages view)
+    public  string New(ViewCrudLogMessages view)
     {
       try
       {
@@ -110,7 +88,7 @@ namespace Manager.Services.Specific
           Message = view.Message,
           Register = DateTime.Now
         };
-        logMessages = serviceLogMessages.InsertNewVersion(logMessages).Result;
+        serviceLogMessages.InsertNewVersion(logMessages).Wait();
         return "Messagery added!";
       }
       catch (Exception e)
@@ -118,11 +96,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudLogMessages> NewNotExist(ViewCrudLogMessages view)
+    public  ViewCrudLogMessages NewNotExist(ViewCrudLogMessages view)
     {
       try
       {
-        LogMessages logMessage = serviceLogMessages.GetNewVersion(p => p.Subject == view.Subject && p.Person._id == view.Person._id).Result;
+        LogMessages logMessage =  serviceLogMessages.GetNewVersion(p => p.Subject == view.Subject && p.Person._id == view.Person._id).Result;
 
         // Se já existir a notificação de admissão, não enviar mais
         if (logMessage != null)
@@ -152,11 +130,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudLogMessages> Get(string id)
+    public  ViewCrudLogMessages Get(string id)
     {
       try
       {
-        var logMessages = serviceLogMessages.GetNewVersion(p => p._id == id).Result;
+        var logMessages =  serviceLogMessages.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudLogMessages()
         {
           _id = logMessages._id,
@@ -164,14 +142,7 @@ namespace Manager.Services.Specific
           Register = logMessages.Register,
           StatusMessage = logMessages.StatusMessage,
           Subject = logMessages.Subject,
-          Person = new ViewListPerson()
-          {
-            _id = logMessages.Person._id,
-            Company = new ViewListCompany() { _id = logMessages.Person.Company._id, Name = logMessages.Person.Company.Name },
-            Establishment = new ViewListEstablishment() { _id = logMessages.Person.Establishment._id, Name = logMessages.Person.Establishment.Name },
-            Registration = logMessages.Person.Registration,
-            User = new ViewListUser() { _id = logMessages.Person.User._id, Name = logMessages.Person.User.Name, Document = logMessages.Person.User.Document, Mail = logMessages.Person.User.Mail, Phone = logMessages.Person.User.Phone }
-          }
+          Person = logMessages.Person?.GetViewList()
         };
       }
       catch (Exception e)
@@ -179,7 +150,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudLogMessages view)
+    public  string Update(ViewCrudLogMessages view)
     {
       try
       {
@@ -188,7 +159,7 @@ namespace Manager.Services.Specific
         logMessages.Subject = view.Subject;
         logMessages.StatusMessage = view.StatusMessage;
         logMessages.Message = view.Message;
-        serviceLogMessages.Update(logMessages, null);
+         serviceLogMessages.Update(logMessages, null).Wait();
         return "Messagery altered!";
       }
       catch (Exception e)
@@ -196,13 +167,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Delete(string id)
+    public  string Delete(string id)
     {
       try
       {
-        var item = serviceLogMessages.GetAll(p => p._id == id).FirstOrDefault();
+        var item = serviceLogMessages.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-        serviceLogMessages.Update(item, null);
+         serviceLogMessages.Update(item, null).Wait();
         return "deleted";
       }
       catch (Exception e)
@@ -213,7 +184,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Internal Call
-    public async Task NewLogMessage(string subject, string message, Person person)
+    public void NewLogMessage(string subject, string message, Person person)
     {
       try
       {
@@ -224,7 +195,7 @@ namespace Manager.Services.Specific
           StatusMessage = EnumStatusMessage.New,
           Person = person
         };
-        serviceLogMessages.InsertNewVersion(model);
+         serviceLogMessages.InsertNewVersion(model).Wait();
       }
       catch (Exception e)
       {

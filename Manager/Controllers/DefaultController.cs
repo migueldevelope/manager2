@@ -10,9 +10,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
 {
+  /// <summary>
+  /// controller padrão
+  /// </summary>
   [Produces("application/json")]
   public class DefaultController : Controller
   {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contextAccessor"></param>
     public DefaultController(IHttpContextAccessor contextAccessor)
     {
       string idperson = "";

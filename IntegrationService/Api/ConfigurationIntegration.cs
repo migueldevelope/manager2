@@ -29,7 +29,7 @@ namespace IntegrationService.Api
         var result = clientSkill.GetAsync("configuration").Result;
         return JsonConvert.DeserializeObject<ViewCrudIntegrationParameter>(result.Content.ReadAsStringAsync().Result);
       }
-      catch (Exception e)
+      catch (Exception)
       {
         return null;
       }

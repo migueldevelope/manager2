@@ -51,7 +51,7 @@ namespace EdeskIntegration.Controllers
           baseUser._idPerson = ci.Value;
 
       }
-      Config conn = XmlConnection.ReadConfig();
+      Config conn = XmlConnection.ReadVariablesSystem();
       context = new DataContext(conn.Server, conn.DataBase);
       blobKey = conn.BlobKey;
       service = new ServiceGeneric<Attachments>(context);
@@ -74,7 +74,7 @@ namespace EdeskIntegration.Controllers
         blockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
       }
       //download    
-      //await blockBlob.DownloadToStreamAsync(memStream);
+      //blockBlob.DownloadToStreamAsync(memStream);
       HttpResponseMessage result = null;
       result = new HttpResponseMessage(HttpStatusCode.OK);
       result.Content = new StreamContent(await blockBlob.OpenReadAsync());

@@ -18,6 +18,7 @@ using Manager.Views.Enumns;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Manager.Core.BusinessModel;
+using Manager.Views.CustomClient;
 
 namespace Manager.Services.Auth
 {
@@ -52,7 +53,7 @@ namespace Manager.Services.Auth
 
     #region Authentication
 
-    public string AlterContract(string idperson)
+    public  string AlterContract(string idperson)
     {
       try
       {
@@ -85,7 +86,7 @@ namespace Manager.Services.Auth
     }
 
 
-    public ViewPerson Authentication(ViewAuthentication userLogin)
+    public  ViewPerson Authentication(ViewAuthentication userLogin)
     {
       try
       {
@@ -134,7 +135,7 @@ namespace Manager.Services.Auth
         }
         else
         {
-          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
+          user =  serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
           if (user == null)
             throw new Exception("User/Password invalid!");
         }
@@ -156,7 +157,7 @@ namespace Manager.Services.Auth
         serviceTermsOfService.SetUser(_user);
         serviceTermsOfService._user = _user;
 
-        var date = serviceTermsOfService.GetTerm().Result;
+        var date = serviceTermsOfService.GetTerm();
 
         UserTermOfService term = null;
         UserTermOfService viewDate = null;
@@ -301,7 +302,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region private
-    private async void GetMaristasAsync(string login, string password)
+    private void GetMaristasAsync(string login, string password)
     {
       try
       {
@@ -311,7 +312,7 @@ namespace Manager.Services.Auth
           var content = new StringContent("login=" + login + "&senha=" + password);
           content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
           client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
-          HttpResponseMessage result = await client.PostAsync("wspucsede/WService.asmx/ValidateUser", content);
+          HttpResponseMessage result =  client.PostAsync("wspucsede/WService.asmx/ValidateUser", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
             throw new Exception("User/Password invalid!");
         }
@@ -321,7 +322,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    private async void GetUnimedAsync(string login, string passwordClient)
+    private void GetUnimedAsync(string login, string passwordClient)
     {
       try
       {
@@ -349,11 +350,16 @@ namespace Manager.Services.Auth
           StringContent content = new StringContent(json);
           content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          HttpResponseMessage result = await client.PostAsync("/", content);
-          //var resultContent = result.Content.ReadAsStringAsync().Result;
-
+          HttpResponseMessage result =  client.PostAsync("/", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
+          {
             throw new Exception("User/Password invalid!");
+          }
+          ViewUnimedStatusAuthentication status = JsonConvert.DeserializeObject<ViewUnimedStatusAuthentication>(result.Content.ReadAsStringAsync().Result);
+          if (status.Status == false)
+          {
+            throw new Exception("User/Password invalid!");
+          }
         }
       }
       catch (Exception e)

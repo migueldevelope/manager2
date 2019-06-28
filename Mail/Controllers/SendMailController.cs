@@ -40,12 +40,12 @@ namespace EvaluationMail.Controllers
     {
       try
       {
-        Config conn = XmlConnection.ReadConfig();
-        return Ok(service.Send(idmail, conn.SendGridKey));
+        Config conn = XmlConnection.ReadVariablesSystem();
+        return await Task.Run(() => Ok(service.Send(idmail, conn.SendGridKey)));
       }
       catch (Exception e)
       {
-        return BadRequest(e.Message);
+        return await Task.Run(() => BadRequest(e.Message));
       }
     }
   }

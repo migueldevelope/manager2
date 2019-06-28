@@ -53,13 +53,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Parameter
-    public async Task<string> Delete(string id)
+    public  string Delete(string id)
     {
       try
       {
         Parameter item = serviceParameter.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceParameter.Update(item, null);
+         serviceParameter.Update(item, null).Wait();
         return "Parameter deleted!";
       }
       catch (Exception e)
@@ -67,7 +67,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> New(ViewCrudParameter view)
+    public  string New(ViewCrudParameter view)
     {
       try
       {
@@ -82,7 +82,7 @@ namespace Manager.Services.Specific
         if (parameter != null)
           throw new Exception("Parameter Key exists!");
 
-        parameter = serviceParameter.InsertNewVersion(new Parameter()
+        parameter =  serviceParameter.InsertNewVersion(new Parameter()
         {
           _id = view._id,
           Name = view.Name,
@@ -98,7 +98,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<string> Update(ViewCrudParameter view)
+    public  string Update(ViewCrudParameter view)
     {
       try
       {
@@ -107,7 +107,7 @@ namespace Manager.Services.Specific
         // Não deve ser alterada a propriedade key
         parameter.Content = view.Content;
         parameter.Help = view.Help;
-        serviceParameter.Update(parameter, null);
+         serviceParameter.Update(parameter, null).Wait();
         return "Parameter update!";
       }
       catch (Exception e)
@@ -115,11 +115,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudParameter> Get(string id)
+    public  ViewCrudParameter Get(string id)
     {
       try
       {
-        Parameter item = serviceParameter.GetNewVersion(p => p._id == id).Result;
+        Parameter item =  serviceParameter.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudParameter()
         {
           _id = item._id,
@@ -134,11 +134,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewCrudParameter> GetKey(string key)
+    public  ViewCrudParameter GetKey(string key)
     {
       try
       {
-        Parameter item = serviceParameter.GetNewVersion(p => p.Key == key).Result;
+        Parameter item =  serviceParameter.GetNewVersion(p => p.Key == key).Result;
         return new ViewCrudParameter()
         {
           _id = item._id,
@@ -152,7 +152,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public Task<List<ViewListParameter>> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListParameter> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -164,7 +164,7 @@ namespace Manager.Services.Specific
             Content = p.Content
           }).ToList();
         total = serviceParameter.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail);
+        return detail;
       }
       catch (Exception e)
       {

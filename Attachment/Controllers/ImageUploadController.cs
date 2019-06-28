@@ -49,7 +49,7 @@ namespace EdeskIntegration.Controllers
           baseUser._idPerson = ci.Value;
 
       }
-      Config conn = XmlConnection.ReadConfig();
+      Config conn = XmlConnection.ReadVariablesSystem();
       context = new DataContext(conn.Server, conn.DataBase);
       blobKey = conn.BlobKey;
       service = new ServiceGeneric<Attachments>(context);

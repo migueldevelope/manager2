@@ -74,7 +74,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region New account
-    public async Task<string> NewAccount(ViewNewAccount view)
+    public string NewAccount(ViewNewAccount view)
     {
       try
       {
@@ -124,7 +124,7 @@ namespace Manager.Services.Specific
         // Criar os parâmetros básicos
         serviceInfra._user = serviceAccount._user;
         //Task.Run(() => serviceInfra.CopyTemplateInfraAsync(company));
-        serviceInfra.CopyTemplateInfraAsync(company);
+        serviceInfra.CopyTemplateInfraAsync(company).Wait();
         return "Account created!";
       }
       catch (Exception e)
@@ -133,7 +133,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> UpdateAccount(ViewCrudAccount view, string id)
+    public string UpdateAccount(ViewCrudAccount view, string id)
     {
       try
       {
@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
         account.Name = view.Name;
         account.InfoClient = view.InfoClient;
 
-        serviceAccount.UpdateAccount(account, null);
+        serviceAccount.UpdateAccount(account, null).Wait();
         return "Account altered!";
       }
       catch (Exception e)
@@ -153,18 +153,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region List Account
-    public Task<List<ViewListAccount>> GetAll( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListAccount> GetAccountList(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        Task<List<Account>> detail = serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name");
         total = serviceAccount.CountFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return Task.FromResult(detail.Result
-          .Select(x => new ViewListAccount()
-          {
-            _id = x._id,
-            Name = x.Name
-          }).ToList());
+        return serviceAccount.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name")
+          .Result.Select(x => x.GetViewList()).ToList();
       }
       catch (Exception e)
       {
@@ -172,17 +167,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ViewCrudAccount> GetAccount(string id)
+    public ViewCrudAccount GetAccount(string id)
     {
       try
       {
-        var view = serviceAccount.GetFreeNewVersion(p => p._id == id).Result;
-        return new ViewCrudAccount()
-        {
-          _id = view._id,
-          Name = view.Name,
-          InfoClient = view.InfoClient
-        };
+        return serviceAccount.GetFreeNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -192,7 +181,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Change Account Authentication or Person Authentication
-    public async Task<ViewPerson> AlterAccount(string idaccount)
+    public ViewPerson AlterAccount(string idaccount)
     {
       try
       {
@@ -208,7 +197,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public async Task<ViewPerson> AlterAccountPerson(string idperson)
+    public ViewPerson AlterAccountPerson(string idperson)
     {
       try
       {
@@ -242,7 +231,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Syncronize Parameters
-    public async Task<string> SynchronizeParameters()
+    public string SynchronizeParameters()
     {
       Task.Run(() => serviceInfra.SynchronizeParametersAsync());
       return "Parameters synchonized!";

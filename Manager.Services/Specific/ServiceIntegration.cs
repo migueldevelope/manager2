@@ -124,10 +124,10 @@ namespace Manager.Services.Specific
         ViewCrudIntegrationParameter param = GetIntegrationParameter();
         ViewIntegrationDashboard view = new ViewIntegrationDashboard
         {
-          CompanyError = integrationCompanyService.GetAll(p => p.IdCompany == "000000000000000000000000").Count(),
-          EstablishmentError = integrationEstablishmentService.GetAll(p => p.IdEstablishment == "000000000000000000000000").Count(),
-          OccupationError = integrationOccupationService.GetAll(p => p.IdOccupation == "000000000000000000000000").Count(),
-          SchoolingError = integrationSchoolingService.GetAll(p => p.IdSchooling == "000000000000000000000000").Count(),
+          CompanyError = integrationCompanyService.GetAllNewVersion(p => p.IdCompany == "000000000000000000000000").Result.Count(),
+          EstablishmentError = integrationEstablishmentService.GetAllNewVersion(p => p.IdEstablishment == "000000000000000000000000").Result.Count(),
+          OccupationError = integrationOccupationService.GetAllNewVersion(p => p.IdOccupation == "000000000000000000000000").Result.Count(),
+          SchoolingError = integrationSchoolingService.GetAllNewVersion(p => p.IdSchooling == "000000000000000000000000").Result.Count(),
           CriticalError = param.CriticalError,
           ProgramVersionExecution = param.ProgramVersionExecution,
           StatusExecution = param.StatusExecution
@@ -147,19 +147,19 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationCompany integrationCompany = integrationCompanyService.GetAll(p => p.IdCompany == "000000000000000000000000").FirstOrDefault();
+        IntegrationCompany integrationCompany = integrationCompanyService.GetAllNewVersion(p => p.IdCompany == "000000000000000000000000").Result.FirstOrDefault();
         if (integrationCompany != null)
           throw new Exception("Verificar integração de empresas!");
 
-        IntegrationSchooling integrationSchooling = integrationSchoolingService.GetAll(p => p.IdSchooling == "000000000000000000000000").FirstOrDefault();
+        IntegrationSchooling integrationSchooling = integrationSchoolingService.GetAllNewVersion(p => p.IdSchooling == "000000000000000000000000").Result.FirstOrDefault();
         if (integrationSchooling != null)
           throw new Exception("Verificar integração de escolaridades!");
 
-        IntegrationEstablishment integrationEstablishment = integrationEstablishmentService.GetAll(p => p.IdEstablishment == "000000000000000000000000").FirstOrDefault();
+        IntegrationEstablishment integrationEstablishment = integrationEstablishmentService.GetAllNewVersion(p => p.IdEstablishment == "000000000000000000000000").Result.FirstOrDefault();
         if (integrationEstablishment != null)
           throw new Exception("Verificar integração de estabelecimentos!");
 
-        IntegrationOccupation integrationOccupation = integrationOccupationService.GetAll(p => p.IdOccupation == "000000000000000000000000").FirstOrDefault();
+        IntegrationOccupation integrationOccupation = integrationOccupationService.GetAllNewVersion(p => p.IdOccupation == "000000000000000000000000").Result.FirstOrDefault();
         if (integrationOccupation != null)
           throw new Exception("Verificar integração de cargos!");
 
@@ -178,7 +178,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationCompany item = integrationCompanyService.GetAll(p => p.Key == key).FirstOrDefault();
+        IntegrationCompany item = integrationCompanyService.GetAllNewVersion(p => p.Key == key).Result.FirstOrDefault();
         if (item == null)
         {
           item = new IntegrationCompany()
@@ -190,17 +190,17 @@ namespace Manager.Services.Specific
             NameCompany = string.Empty,
             Status = EnumStatus.Enabled
           };
-          integrationCompanyService.InsertNewVersion(item);
+          var i = integrationCompanyService.InsertNewVersion(item);
         }
         if (item.IdCompany.Equals("000000000000000000000000"))
         {
           item.Name = name;
-          List<Company> companies = companyService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList<Company>();
+          List<Company> companies = companyService.GetAllNewVersion(p => p.Name.ToLower() == name.ToLower()).Result.ToList<Company>();
           if (companies.Count == 1)
           {
             item.IdCompany = companies[0]._id;
             item.NameCompany = companies[0].Name;
-            integrationCompanyService.Update(item, null);
+            var i = integrationCompanyService.Update(item, null);
           }
         }
         return item;
@@ -219,13 +219,13 @@ namespace Manager.Services.Specific
         IQueryable<IntegrationCompany> detail;
         if (all)
         {
-          detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
-          total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = integrationCompanyService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).AsQueryable();
+          total = integrationCompanyService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         }
         else
         {
-          detail = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
-          total = integrationCompanyService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").Count();
+          detail = integrationCompanyService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").Result.OrderBy(p => p.Name).Skip(skip).Take(count).AsQueryable();
+          total = integrationCompanyService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdCompany == "000000000000000000000000").Result;
         }
         List<ViewListIntegrationCompany> result = new List<ViewListIntegrationCompany>();
         foreach (var item in detail)
@@ -250,12 +250,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationCompany item = integrationCompanyService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        IntegrationCompany item = integrationCompanyService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
         if (item == null)
           throw new Exception("Id integration not found!");
         item.IdCompany = idCompany;
-        item.NameCompany = companyService.GetAll(p => p._id == idCompany).FirstOrDefault().Name;
-        integrationCompanyService.Update(item, null);
+        item.NameCompany = companyService.GetAllNewVersion(p => p._id == idCompany).Result.FirstOrDefault().Name;
+        var i = integrationCompanyService.Update(item, null);
         return new ViewListIntegrationCompany()
         {
           _id = item._id,
@@ -274,7 +274,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationCompany item = integrationCompanyService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        IntegrationCompany item = integrationCompanyService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
         if (item == null)
           throw new Exception("Id integration not found!");
         integrationCompanyService.Delete(idIntegration, false);
@@ -311,7 +311,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p.Key == key).FirstOrDefault();
+        IntegrationEstablishment item = integrationEstablishmentService.GetAllNewVersion(p => p.Key == key).Result.FirstOrDefault();
         if (item == null)
         {
           item = new IntegrationEstablishment()
@@ -323,18 +323,18 @@ namespace Manager.Services.Specific
             NameEstablishment = string.Empty,
             Status = EnumStatus.Enabled
           };
-          integrationEstablishmentService.InsertNewVersion(item);
+          var i = integrationEstablishmentService.InsertNewVersion(item);
         }
         if (item.IdEstablishment.Equals("000000000000000000000000"))
         {
           item.Name = name;
           item._idCompany = idcompany;
-          List<Establishment> establishments = establishmentService.GetAll(p => p.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList<Establishment>();
+          List<Establishment> establishments = establishmentService.GetAllNewVersion(p => p.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).Result.ToList<Establishment>();
           if (establishments.Count == 1)
           {
             item.IdEstablishment = establishments[0]._id;
             item.NameEstablishment = establishments[0].Name;
-            integrationEstablishmentService.Update(item, null);
+            var i = integrationEstablishmentService.Update(item, null);
           }
         }
         return item;
@@ -344,7 +344,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public List<ViewListIntegrationEstablishment> EstablishmentList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationEstablishment> EstablishmentList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -352,13 +352,13 @@ namespace Manager.Services.Specific
         IQueryable<IntegrationEstablishment> detail;
         if (all)
         {
-          detail = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
-          total = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = integrationEstablishmentService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).AsQueryable();
+          total = integrationEstablishmentService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         }
         else
         {
-          detail = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
-          total = integrationEstablishmentService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").Count();
+          detail = integrationEstablishmentService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").Result.OrderBy(p => p.Name).Skip(skip).Take(count).AsQueryable();
+          total = integrationEstablishmentService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdEstablishment == "000000000000000000000000").Result;
         }
         List<ViewListIntegrationEstablishment> result = new List<ViewListIntegrationEstablishment>();
         foreach (var item in detail)
@@ -369,7 +369,7 @@ namespace Manager.Services.Specific
             Name = item.Name,
             Key = item.Key,
             IdCompany = item._idCompany,
-            NameCompany = companyService.GetAll(p => p._id == item._idCompany).FirstOrDefault().Name,
+            NameCompany = companyService.GetAllNewVersion(p => p._id == item._idCompany).Result.FirstOrDefault().Name,
             IdEstablishment = item.IdEstablishment.Equals("000000000000000000000000") ? string.Empty : item.IdEstablishment,
             NameEstablishment = item.NameEstablishment
           });
@@ -385,21 +385,21 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        IntegrationEstablishment item = integrationEstablishmentService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
         if (item == null)
           throw new Exception("Id integration not found!");
         item.IdEstablishment = idEstablishment;
-        Establishment establishment = establishmentService.GetAll(p => p._id == idEstablishment).FirstOrDefault();
+        Establishment establishment = establishmentService.GetAllNewVersion(p => p._id == idEstablishment).Result.FirstOrDefault();
         item.NameEstablishment = establishment.Name;
         item._idCompany = establishment.Company._id;
-        integrationEstablishmentService.Update(item, null);
+        var i = integrationEstablishmentService.Update(item, null);
         return new ViewListIntegrationEstablishment()
         {
           _id = item._id,
           Name = item.Name,
           Key = item.Key,
           IdCompany = item._idCompany,
-          NameCompany = companyService.GetAll(p => p._id == item._idCompany).FirstOrDefault().Name,
+          NameCompany = companyService.GetAllNewVersion(p => p._id == item._idCompany).Result.FirstOrDefault().Name,
           IdEstablishment = item.IdEstablishment.Equals("000000000000000000000000") ? string.Empty : item.IdEstablishment,
           NameEstablishment = item.NameEstablishment
         };
@@ -413,7 +413,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationEstablishment item = integrationEstablishmentService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        IntegrationEstablishment item = integrationEstablishmentService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
         if (item == null)
           throw new Exception("Id integration not found!");
         integrationEstablishmentService.Delete(idIntegration, false);
@@ -432,7 +432,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationOccupation item = integrationOccupationService.GetAll(p => p.Key == key).FirstOrDefault();
+        IntegrationOccupation item = integrationOccupationService.GetAllNewVersion(p => p.Key == key).Result.FirstOrDefault();
         if (item == null)
         {
           item = new IntegrationOccupation()
@@ -444,18 +444,18 @@ namespace Manager.Services.Specific
             NameOccupation = string.Empty,
             Status = EnumStatus.Enabled
           };
-          integrationOccupationService.InsertNewVersion(item);
+          var i = integrationOccupationService.InsertNewVersion(item);
         }
         if (item.IdOccupation.Equals("000000000000000000000000"))
         {
           item.Name = name;
           item._idCompany = idcompany;
-          List<Occupation> occupations = occupationService.GetAll(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).ToList<Occupation>();
+          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).Result.ToList<Occupation>();
           if (occupations.Count == 1)
           {
             item.IdOccupation = occupations[0]._id;
             item.NameOccupation = occupations[0].Name;
-            integrationOccupationService.Update(item, null);
+            var i = integrationOccupationService.Update(item, null);
           }
         }
         return item;
@@ -465,7 +465,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public List<ViewListIntegrationOccupation> OccupationList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationOccupation> OccupationList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -473,13 +473,13 @@ namespace Manager.Services.Specific
         IQueryable<IntegrationOccupation> detail;
         if (all)
         {
-          detail = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
-          total = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = integrationOccupationService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).AsQueryable();
+          total = integrationOccupationService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         }
         else
         {
-          detail = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
-          total = integrationOccupationService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").Count();
+          detail = integrationOccupationService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").Result.OrderBy(p => p.Name).Skip(skip).Take(count).AsQueryable();
+          total = integrationOccupationService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdOccupation == "000000000000000000000000").Result;
         }
         List<ViewListIntegrationOccupation> result = new List<ViewListIntegrationOccupation>();
         foreach (var item in detail)
@@ -490,7 +490,7 @@ namespace Manager.Services.Specific
             Name = item.Name,
             Key = item.Key,
             IdCompany = item._idCompany,
-            NameCompany = companyService.GetAll(p => p._id == item._idCompany).FirstOrDefault().Name,
+            NameCompany = companyService.GetAllNewVersion(p => p._id == item._idCompany).Result.FirstOrDefault().Name,
             IdOccupation = item.IdOccupation.Equals("000000000000000000000000") ? string.Empty : item.IdOccupation,
             NameOccupation = item.NameOccupation
           });
@@ -506,21 +506,21 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationOccupation item = integrationOccupationService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        IntegrationOccupation item = integrationOccupationService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
         if (item == null)
           throw new Exception("Id integration not found!");
         item.IdOccupation = idOccupation;
-        Occupation occupation = occupationService.GetAll(p => p._id == idOccupation).FirstOrDefault();
+        Occupation occupation = occupationService.GetAllNewVersion(p => p._id == idOccupation).Result.FirstOrDefault();
         item.NameOccupation = occupation.Name;
         item._idCompany = occupation.Group.Company._id;
-        integrationOccupationService.Update(item, null);
+        var i = integrationOccupationService.Update(item, null);
         return new ViewListIntegrationOccupation()
         {
           _id = item._id,
           Name = item.Name,
           Key = item.Key,
           IdCompany = item._idCompany,
-          NameCompany = companyService.GetAll(p => p._id == item._idCompany).FirstOrDefault().Name,
+          NameCompany = companyService.GetAllNewVersion(p => p._id == item._idCompany).Result.FirstOrDefault().Name,
           IdOccupation = item.IdOccupation.Equals("000000000000000000000000") ? string.Empty : item.IdOccupation,
           NameOccupation = item.NameOccupation
         };
@@ -534,7 +534,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationOccupation item = integrationOccupationService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        IntegrationOccupation item = integrationOccupationService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
         if (item == null)
           throw new Exception("Id integration not found!");
         integrationOccupationService.Delete(idIntegration, false);
@@ -553,7 +553,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p.Key == key).FirstOrDefault();
+        IntegrationSchooling item = integrationSchoolingService.GetAllNewVersion(p => p.Key == key).Result.FirstOrDefault();
         if (item == null)
         {
           item = new IntegrationSchooling()
@@ -565,17 +565,17 @@ namespace Manager.Services.Specific
             NameSchooling = string.Empty,
             Status = EnumStatus.Enabled
           };
-          integrationSchoolingService.InsertNewVersion(item);
+          var i = integrationSchoolingService.InsertNewVersion(item).Result;
         }
         if (item.IdSchooling.Equals("000000000000000000000000"))
         {
           item.Name = name;
-          List<Schooling> schoolings = schoolingService.GetAll(p => p.Name.ToLower() == name.ToLower()).ToList<Schooling>();
+          List<Schooling> schoolings = schoolingService.GetAllNewVersion(p => p.Name.ToLower() == name.ToLower()).Result.ToList<Schooling>();
           if (schoolings.Count == 1)
           {
             item.IdSchooling = schoolings[0]._id;
             item.NameSchooling = schoolings[0].Name;
-            integrationSchoolingService.Update(item, null);
+            var i = integrationSchoolingService.Update(item, null);
           }
         }
         return item;
@@ -585,7 +585,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public List<ViewListIntegrationSchooling> SchoolingList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
+    public List<ViewListIntegrationSchooling> SchoolingList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
       {
@@ -593,13 +593,13 @@ namespace Manager.Services.Specific
         IQueryable<IntegrationSchooling> detail;
         if (all)
         {
-          detail = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count);
-          total = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+          detail = integrationSchoolingService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).AsQueryable();
+          total = integrationSchoolingService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         }
         else
         {
-          detail = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").OrderBy(p => p.Name).Skip(skip).Take(count);
-          total = integrationSchoolingService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").Count();
+          detail = integrationSchoolingService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").Result.OrderBy(p => p.Name).Skip(skip).Take(count).AsQueryable();
+          total = integrationSchoolingService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()) && p.IdSchooling == "000000000000000000000000").Result;
         }
         List<ViewListIntegrationSchooling> result = new List<ViewListIntegrationSchooling>();
         foreach (var item in detail)
@@ -624,12 +624,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        IntegrationSchooling item = integrationSchoolingService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
         if (item == null)
           throw new Exception("Id integration not found!");
         item.IdSchooling = idSchooling;
-        item.NameSchooling = schoolingService.GetAll(p => p._id == idSchooling).FirstOrDefault().Name;
-        integrationSchoolingService.Update(item, null);
+        item.NameSchooling = schoolingService.GetAllNewVersion(p => p._id == idSchooling).Result.FirstOrDefault().Name;
+        var i = integrationSchoolingService.Update(item, null);
         return new ViewListIntegrationSchooling()
         {
           _id = item._id,
@@ -648,7 +648,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationSchooling item = integrationSchoolingService.GetAll(p => p._id == idIntegration).FirstOrDefault();
+        IntegrationSchooling item = integrationSchoolingService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
         if (item == null)
           throw new Exception("Id integration not found!");
         integrationSchoolingService.Delete(idIntegration, false);
@@ -671,7 +671,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
+        IntegrationParameter param = parameterService.GetAllNewVersion().FirstOrDefault();
         if (param == null)
         {
           param = parameterService.InsertNewVersion(new IntegrationParameter()
@@ -720,7 +720,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationParameter param = parameterService.GetAll().FirstOrDefault();
+        IntegrationParameter param = parameterService.GetAllNewVersion().FirstOrDefault();
         if (param == null)
           throw new Exception("Parameter Integration not found!");
         param.Mode = view.Mode;
@@ -743,7 +743,7 @@ namespace Manager.Services.Specific
         param.UploadNextLog = view.UploadNextLog;
         param.LinkLogExecution = view.LinkLogExecution;
         param.ApiIdentification = view.ApiIdentification;
-        parameterService.Update(param, null);
+        parameterService.Update(param, null).Wait();
         return new ViewCrudIntegrationParameter()
         {
           ConnectionString = param.ConnectionString,
@@ -782,7 +782,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return integrationPersonService.GetAll(p => p.Key == key).FirstOrDefault();
+        return integrationPersonService.GetAllNewVersion(p => p.Key == key).Result.FirstOrDefault();
       }
       catch (Exception)
       {
@@ -794,7 +794,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        integrationPersonService.InsertNewVersion(integrationPerson);
+        integrationPersonService.InsertNewVersion(integrationPerson).Wait();
       }
       catch (Exception)
       {
@@ -805,7 +805,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        integrationPersonService.Update(integrationPerson, null);
+        integrationPersonService.Update(integrationPerson, null).Wait();
       }
       catch (Exception)
       {
@@ -844,7 +844,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Schooling result = schoolingService.GetAll(p => p._id == id).FirstOrDefault();
+        Schooling result = schoolingService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         return result != null
           ? new ViewListSchooling()
           {
@@ -863,7 +863,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var result = companyService.GetAll(p => p._id == id).FirstOrDefault();
+        var result = companyService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         return result != null
           ? new ViewListCompany()
           {
@@ -881,7 +881,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var result = establishmentService.GetAll(p => p._id == id).FirstOrDefault();
+        var result = establishmentService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         return result != null
           ? new ViewListEstablishment()
           {
@@ -899,40 +899,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var result = occupationService.GetAll(p => p._id == id).FirstOrDefault();
-        return result != null
-          ? new ViewListOccupation()
-          {
-            _id = result._id,
-            Name = result.Name,
-            Line = result.Line,
-            Company = new ViewListCompany() { _id = result.Group.Company._id, Name = result.Group.Company.Name },
-            Group = new ViewListGroup()
-            {
-              _id = result.Group._id,
-              Name = result.Group.Name,
-              Line = result.Group.Line,
-              Axis = new ViewListAxis() { _id = result.Group.Axis._id, Name = result.Group.Axis.Name, TypeAxis = result.Group.Axis.TypeAxis },
-              Sphere = new ViewListSphere() { _id = result.Group.Sphere._id, Name = result.Group.Sphere.Name, TypeSphere = result.Group.Sphere.TypeSphere }
-            },
-            Process = result.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
-            .Select(x => new ViewListProcessLevelTwo()
-            {
-              _id = x._id,
-              Name = x.Name,
-              Order = x.Order,
-              ProcessLevelOne = new
-            ViewListProcessLevelOne()
-              {
-                _id = x.ProcessLevelOne._id,
-                Name = x.ProcessLevelOne.Name,
-                Order = x.ProcessLevelOne.Order,
-                Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
-              }
-            })
-            .ToList()
-          }
-          : null;
+        return occupationService.GetNewVersion(p => p._id == id).Result?.GetViewList();
       }
       catch (Exception)
       {
@@ -947,27 +914,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        User user = userService.GetAll(p => p.Document == document).SingleOrDefault();
-        return user == null
-          ? null
-          : new ViewCrudUser()
-          {
-            DateAdm = user.DateAdm,
-            DateBirth = user.DateBirth,
-            Document = user.Document,
-            DocumentCTPF = user.DocumentCTPF,
-            DocumentID = user.DocumentID,
-            Mail = user.Mail,
-            Name = user.Mail,
-            Nickname = user.Nickname,
-            Password = string.Empty,
-            Phone = user.Phone,
-            PhoneFixed = user.PhoneFixed,
-            PhotoUrl = user.PhotoUrl,
-            Sex = user.Sex,
-            Schooling = user.Schooling == null ? null : new ViewListSchooling() { _id = user.Schooling._id, Name = user.Schooling.Name, Order = user.Schooling.Order },
-            _id = user._id
-          };
+        return userService.GetNewVersion(p => p.Document == document).Result?.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -978,7 +925,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IQueryable<Person> personsDocument = personService.GetAll(p => p.User.Document == document);
+        IQueryable<Person> personsDocument = personService.GetAllNewVersion(p => p.User.Document == document).Result.AsQueryable();
         if (personsDocument.Count() == 0)
           return null;
         Person person = personsDocument.Where(p => p.Company._id == idcompany && p.Establishment._id == idestablishment && p.Registration == registration).FirstOrDefault();
@@ -1000,71 +947,13 @@ namespace Manager.Services.Specific
               Mail = person.Manager.Mail
             },
             MotiveAside = person.MotiveAside,
-            Occupation = person.Occupation == null ? null : new ViewListOccupation()
-            {
-              _id = person.Occupation._id,
-              Name = person.Occupation.Name,
-              Line = person.Occupation.Line,
-              Company = new ViewListCompany() { _id = person.Occupation.Group.Company._id, Name = person.Occupation.Group.Company.Name },
-              Group = new ViewListGroup()
-              {
-                _id = person.Occupation.Group._id,
-                Name = person.Occupation.Group.Name,
-                Line = person.Occupation.Group.Line,
-                Axis = new ViewListAxis()
-                {
-                  _id = person.Occupation.Group.Axis._id,
-                  Name = person.Occupation.Group.Axis.Name,
-                  TypeAxis = person.Occupation.Group.Axis.TypeAxis
-                },
-                Sphere = new ViewListSphere()
-                {
-                  _id = person.Occupation.Group.Sphere._id,
-                  Name = person.Occupation.Group.Sphere.Name,
-                  TypeSphere = person.Occupation.Group.Sphere.TypeSphere
-                }
-              },
-              Process = person.Occupation.Process.Select(p => new ViewListProcessLevelTwo()
-              {
-                _id = p._id,
-                Name = p.Name,
-                Order = p.Order,
-                ProcessLevelOne = new ViewListProcessLevelOne()
-                {
-                  _id = p.ProcessLevelOne._id,
-                  Name = p.ProcessLevelOne.Name,
-                  Order = p.ProcessLevelOne.Order,
-                  Area = new ViewListArea()
-                  {
-                    _id = p.ProcessLevelOne.Area._id,
-                    Name = p.ProcessLevelOne.Area.Name
-                  }
-                }
-              }).ToList()
-            },
+            Occupation = person.Occupation?.GetViewList(),
             Registration = person.Registration,
             Salary = person.Salary,
             StatusUser = person.StatusUser,
             TypeJourney = person.TypeJourney,
             TypeUser = person.TypeUser,
-            User = new ViewCrudUser()
-            {
-              Name = person.User.Name,
-              Nickname = person.User.Nickname,
-              DateAdm = person.User.DateAdm,
-              DateBirth = person.User.DateBirth,
-              Document = person.User.Document,
-              DocumentCTPF = person.User.DocumentCTPF,
-              DocumentID = person.User.DocumentID,
-              Mail = person.User.Mail,
-              Password = string.Empty,
-              Phone = person.User.Phone,
-              PhoneFixed = person.User.PhoneFixed,
-              PhotoUrl = person.User.PhotoUrl,
-              Schooling = person.User.Schooling == null ? null : new ViewListSchooling() { _id = person.User.Schooling._id, Name = person.User.Schooling.Name, Order = person.User.Schooling.Order },
-              Sex = person.User.Sex,
-              _id = person.User._id
-            }
+            User = person.User.GetViewCrud()
           };
       }
       catch (Exception e)
@@ -1091,7 +980,7 @@ namespace Manager.Services.Specific
               _id = x.ProcessLevelOne._id,
               Name = x.ProcessLevelOne.Name,
               Order = x.ProcessLevelOne.Order,
-              Area = new ViewListArea() { _id = x.ProcessLevelOne.Area._id, Name = x.ProcessLevelOne.Area.Name }
+              Area = x.ProcessLevelOne.Area.GetViewList()
             }
           }).ToList();
         total = processLevelTwoService.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;

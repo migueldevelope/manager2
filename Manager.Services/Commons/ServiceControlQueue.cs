@@ -59,12 +59,12 @@ namespace Manager.Services.Commons
       }
     }
 
-    public async Task SendMessageAsync(dynamic view)
+    public void SendMessageAsync(dynamic view)
     {
       try
       {
         var message = new Message(Encoding.UTF8.GetBytes(view));
-        await queueClient.SendAsync(message);
+         queueClient.SendAsync(message);
       }
       catch (Exception e)
       {
@@ -97,9 +97,9 @@ namespace Manager.Services.Commons
         _idAccount = view._idAccount
       });
 
-      serviceMaturity.NewMaturityRegister(view);
+       serviceMaturity.NewMaturityRegister(view);
 
-      await queueClient.CompleteAsync(message.SystemProperties.LockToken);
+       await queueClient.CompleteAsync(message.SystemProperties.LockToken);
     }
 
     private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)

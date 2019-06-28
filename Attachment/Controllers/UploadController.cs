@@ -57,7 +57,7 @@ namespace EdeskIntegration.Controllers
           baseUser._idPerson = ci.Value;
 
       }
-      Config conn = XmlConnection.ReadConfig();
+      Config conn = XmlConnection.ReadVariablesSystem();
       context = new DataContext(conn.Server, conn.DataBase);
       blobKey = conn.BlobKey;
       service = new ServiceGeneric<Attachments>(context);
@@ -98,7 +98,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -118,7 +118,7 @@ namespace EdeskIntegration.Controllers
         catch (Exception)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw;
         }
         listAttachments.Add(attachment);
@@ -147,7 +147,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -162,13 +162,13 @@ namespace EdeskIntegration.Controllers
           }
           CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
           blockBlob.Properties.ContentType = file.ContentType;
-          blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
           return blockBlob.Uri.ToString();
         }
         catch (Exception)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw;
         }
         //listAttachments.Add(attachment);
@@ -199,7 +199,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -220,7 +220,7 @@ namespace EdeskIntegration.Controllers
         catch (Exception)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw;
         }
 
@@ -255,7 +255,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -276,7 +276,7 @@ namespace EdeskIntegration.Controllers
         catch (Exception e)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw e;
         }
 
@@ -308,7 +308,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -329,7 +329,7 @@ namespace EdeskIntegration.Controllers
         catch (Exception e)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw e;
         }
 
@@ -361,7 +361,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -382,7 +382,7 @@ namespace EdeskIntegration.Controllers
         catch (Exception e)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw e;
         }
 
@@ -415,7 +415,7 @@ namespace EdeskIntegration.Controllers
           Status = EnumStatus.Enabled,
           Saved = true
         };
-        this.service.InsertNewVersion(attachment);
+        await this.service.InsertNewVersion(attachment);
         try
         {
           CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
@@ -436,7 +436,7 @@ namespace EdeskIntegration.Controllers
         catch (Exception e)
         {
           attachment.Saved = false;
-          service.Update(attachment, null);
+          await service.Update(attachment, null);
           throw e;
         }
 
@@ -503,7 +503,7 @@ namespace EdeskIntegration.Controllers
     //[HttpDelete("plan/{iddp}/delete/{id}")]
     //public async Task<ObjectResult> DeleteLogbbook(string id, string iddp)
     //{
-    //  var attachment = this.service.GetAll(p => p._id == id).FirstOrDefault();
+    //  var attachment = this.service.GetAllNewVersion(p => p._id == id).FirstOrDefault();
     //  CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
     //  CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
     //  CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
@@ -520,14 +520,14 @@ namespace EdeskIntegration.Controllers
     [HttpDelete("{id}")]
     public async Task<ObjectResult> Delete(string id)
     {
-      var attachment = this.service.GetAll(p => p._id == id).FirstOrDefault();
+      var attachment = this.service.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
       CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
       CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
       CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
       CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}.{1}", attachment._id.ToString(), attachment.Extension));
       await blockBlob.DeleteIfExistsAsync();
       attachment.Status = EnumStatus.Disabled;
-      service.Update(attachment, null);
+      await service.Update(attachment, null);
       return Ok("Attachment deleted!");
     }
   }

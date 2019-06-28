@@ -11,16 +11,16 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Task<string> Delete(string id);
-    Task<string> New(ViewCrudMaturity view);
-    Task<string> Update(ViewCrudMaturity view);
-    Task<ViewCrudMaturity> Get(string id);
-    Task<List<ViewCrudMaturity>> List( ref long total, int count = 10, int page = 1, string filter = "");
-    Task<string> NewMaturityRegister(ViewCrudMaturityRegister view);
-    Task<string> UpdateMaturityRegister(ViewCrudMaturityRegister view);
-    Task<ViewCrudMaturityRegister> GetMaturityRegister(string id);
-    Task<string> DeleteMaturityRegister(string id);
-    Task<List<ViewCrudMaturityRegister>> ListMaturityRegister( ref long total, int count = 10, int page = 1, string filter = "");
-    Task MathMonth();
+    string Delete(string id);
+    string New(ViewCrudMaturity view);
+    string Update(ViewCrudMaturity view);
+    ViewCrudMaturity Get(string id);
+    List<ViewCrudMaturity> List(ref long total, int count = 10, int page = 1, string filter = "");
+    string NewMaturityRegister(ViewCrudMaturityRegister view);
+    string UpdateMaturityRegister(ViewCrudMaturityRegister view);
+    ViewCrudMaturityRegister GetMaturityRegister(string id);
+    string DeleteMaturityRegister(string id);
+    List<ViewCrudMaturityRegister> ListMaturityRegister(ref long total, int count = 10, int page = 1, string filter = "");
+    void MathMonth();
   }
 }

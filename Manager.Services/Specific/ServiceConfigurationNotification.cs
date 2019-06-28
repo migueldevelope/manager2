@@ -47,11 +47,11 @@ namespace Manager.Services.Specific
       personService._user = baseUser;
     }
 
-    public async Task<string> New(ConfigurationNotification view)
+    public  string New(ConfigurationNotification view)
     {
       try
       {
-        configurationNotificationsService.InsertNewVersion(view);
+         configurationNotificationsService.InsertNewVersion(view).Wait();
         return "add success";
       }
       catch (Exception e)
@@ -60,11 +60,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> Update(ConfigurationNotification view)
+    public  string Update(ConfigurationNotification view)
     {
       try
       {
-        configurationNotificationsService.Update(view, null);
+         configurationNotificationsService.Update(view, null).Wait();
         return "update";
       }
       catch (Exception e)
@@ -73,13 +73,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<string> Remove(string id)
+    public  string Remove(string id)
     {
       try
       {
-        var item = configurationNotificationsService.GetAll(p => p._id == id).FirstOrDefault();
+        var item = configurationNotificationsService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
         item.Status = EnumStatus.Disabled;
-        configurationNotificationsService.Update(item, null);
+         configurationNotificationsService.Update(item, null).Wait();
         return "deleted";
       }
       catch (Exception e)
@@ -88,37 +88,37 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task<ConfigurationNotification> Get(string id)
+    public  ConfigurationNotification Get(string id)
     {
       try
       {
-        return configurationNotificationsService.GetAll(p => p._id == id).FirstOrDefault();
+        return configurationNotificationsService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public async Task<ConfigurationNotification> GetByName(string name)
+    public  ConfigurationNotification GetByName(string name)
     {
       try
       {
-        return configurationNotificationsService.GetAll(p => p.Name.ToLower() == name.ToLower()).FirstOrDefault();
+        return configurationNotificationsService.GetAllNewVersion(p => p.Name.ToLower() == name.ToLower()).Result.FirstOrDefault();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public Task<List<ConfigurationNotification>> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ConfigurationNotification> List( ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = configurationNotificationsService.GetAll(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        var detail = configurationNotificationsService.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = configurationNotificationsService.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return Task.FromResult(detail.ToList());
+        return detail.ToList();
 
       }
       catch (Exception e)

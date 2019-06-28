@@ -12,9 +12,9 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    Task<List<Workflow>> NewFlow(ViewFlow view);
-    Task<List<Workflow>> Manager(ViewFlow view);
-    Task<Workflow> Approved(ViewWorkflow view);
-    Task<Workflow> Disapproved(ViewWorkflow view);
+    List<Workflow> NewFlow(ViewFlow view);
+    List<Workflow> Manager(ViewFlow view);
+    Workflow Approved(ViewWorkflow view);
+    Workflow Disapproved(ViewWorkflow view);
   }
 }

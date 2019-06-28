@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 
@@ -16,6 +17,16 @@ namespace Manager.Core.Business
     public ViewListSkill GetViewList()
     {
       return new ViewListSkill()
+      {
+        _id = _id,
+        Concept = Concept,
+        Name = Name,
+        TypeSkill = TypeSkill
+      };
+    }
+    public ViewCrudSkill GetViewCrud()
+    {
+      return new ViewCrudSkill()
       {
         _id = _id,
         Concept = Concept,

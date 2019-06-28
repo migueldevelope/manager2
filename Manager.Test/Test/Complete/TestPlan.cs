@@ -14,7 +14,7 @@ namespace Manager.Test.Test.Complete
 {
   public class TestPlan : TestCommons<TestPlan>
   {
-    private readonly IServicePlan servicePlan;
+    //private readonly IServicePlan servicePlan;
     private readonly ServiceGeneric<Person> servicePerson;
 
     public TestPlan()
@@ -22,12 +22,12 @@ namespace Manager.Test.Test.Complete
       try
       {
         Init();
-        //servicePlan = new ServicePlan(context, context, "");
+        //servicePlan = new ServicePlan(context, context, "", base.serviceControlQueue);
         servicePerson = new ServiceGeneric<Person>(context)
         {
           _user = base.baseUser
         };
-        servicePlan.SetUser(baseUser);
+        //servicePlan.SetUser(baseUser);
         //servicePlan._user = base.baseUser;
       }
       catch (Exception e)
@@ -36,12 +36,18 @@ namespace Manager.Test.Test.Complete
       }
     }
 
+    private void Test()
+    {
+      //long total = 0;
+      //var i = servicePlan.ListPlans("", ref total, "", 1, 1);
+    }
+
     //[Fact]
     //public void ManagerTest()
     //{
     //  try
     //  {
-    //    var person = servicePerson.GetAll(p => p.User.Name.Contains("gestor")).FirstOrDefault();
+    //    var person = servicePerson.GetAllNewVersion(p => p.User.Name.Contains("gestor")).FirstOrDefault();
     //    //long total = 0;
     //    //var plans = servicePlan.ListPlans(person._id, "", 100, 1, 1, 1, 1, 1, 1, 1);
     //    var idmonitoring = "5b912f42840add76dccd4801";
