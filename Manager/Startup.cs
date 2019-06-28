@@ -49,7 +49,7 @@ namespace Manager
     {
       DataContext _context;
       var conn = XmlConnection.ReadVariablesSystem();
-      _context = new DataContext("mongodb://analisa:bti9010@10.0.0.16:27017/analisatest", conn.DataBase);
+      _context = new DataContext("mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra", conn.DataBase);
 
 
       DataContext _contextLog;
