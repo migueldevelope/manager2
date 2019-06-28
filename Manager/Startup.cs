@@ -49,11 +49,11 @@ namespace Manager
     {
       DataContext _context;
       var conn = XmlConnection.ReadVariablesSystem();
-      _context = new DataContext("mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra", conn.DataBase);
+      _context = new DataContext(conn.Server, conn.DataBase);
 
 
       DataContext _contextLog;
-      _contextLog = new DataContext("mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra", conn.DataBaseLog);
+      _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
 
