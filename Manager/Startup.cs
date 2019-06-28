@@ -53,11 +53,11 @@ namespace Manager
 
 
       DataContext _contextLog;
-      _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
+      _contextLog = new DataContext("mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra", conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
 
-      new MigrationHandle(_context._db).Migrate();
+      //new MigrationHandle(_context._db).Migrate();
 
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
