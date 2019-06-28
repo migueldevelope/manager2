@@ -49,7 +49,6 @@ namespace Manager
     {
       DataContext _context;
       var conn = XmlConnection.ReadVariablesSystem();
-      Console.Write("log path server: " + conn.Server);
       _context = new DataContext("mongodb://analisa:bti9010@10.0.0.16:27017/analisatest", conn.DataBase);
 
 
