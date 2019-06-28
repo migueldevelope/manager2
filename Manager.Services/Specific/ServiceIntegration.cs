@@ -914,7 +914,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return userService.GetNewVersion(p => p.Document == document).Result.GetViewCrud();
+        return userService.GetNewVersion(p => p.Document == document).Result?.GetViewCrud();
       }
       catch (Exception e)
       {
