@@ -22,17 +22,22 @@ namespace Manager.Controllers
     /// <param name="contextAccessor"></param>
     public DefaultController(IHttpContextAccessor contextAccessor)
     {
-      string idperson = "";
-      foreach (Claim ci in contextAccessor.HttpContext.User.Claims)
+      if (contextAccessor.HttpContext.Request.Path.Value.Substring(0, 20) != "/user/forgotpassword")
       {
-        if (ci.Type == ClaimTypes.Actor)
-          idperson = ci.Value;
-      }
+        string idperson = "";
 
-      if (idperson == "")
-      {
-        throw new HttpRequestException("token_invalid");
+        foreach (Claim ci in contextAccessor.HttpContext.User.Claims)
+        {
+          if (ci.Type == ClaimTypes.Actor)
+            idperson = ci.Value;
+        }
+
+        if (idperson == "")
+        {
+          throw new HttpRequestException("token_invalid");
+        }
       }
+      
 
     }
   }
