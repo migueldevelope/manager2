@@ -285,8 +285,9 @@ namespace Manager.Services.Specific
         if (person.User.Schooling != null)
         {
           var schoolingPerson = serviceSchooling.GetAllNewVersion(p => p._id == person.User.Schooling._id).Result.FirstOrDefault();
-          var idschooling = person.Occupation.Schooling.Where(x => x.Type == EnumTypeSchooling.Basic).FirstOrDefault()._id;
-          var schoolingOccupation = serviceSchooling.GetAllNewVersion(p => p._id == idschooling).Result.FirstOrDefault();
+          var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault().Schooling.Where(x => x.Type == EnumTypeSchooling.Basic).FirstOrDefault()._id;
+          //var idschooling = occupation.Schooling.Where(x => x.Type == EnumTypeSchooling.Basic).FirstOrDefault()._id;
+          var schoolingOccupation = serviceSchooling.GetAllFreeNewVersion(p => p._id == occupation).Result.FirstOrDefault();
 
           //schooling
           var schoolingResult = schoolingPerson.Order - schoolingOccupation.Order;
