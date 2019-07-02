@@ -289,6 +289,7 @@ namespace Manager.Services.Specific
           //var idschooling = occupation.Schooling.Where(x => x.Type == EnumTypeSchooling.Basic).FirstOrDefault()._id;
           var schoolingOccupation = serviceSchooling.GetAllFreeNewVersion(p => p._id == occupation).Result.FirstOrDefault();
 
+
           //schooling
           var schoolingResult = schoolingPerson.Order - schoolingOccupation.Order;
           if (schoolingResult <= -2)
