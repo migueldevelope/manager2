@@ -97,16 +97,16 @@ namespace Tools
             };
         }
 
-        //return ReadConfig();
-        return new Config()
-        {
-          Server = "mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra",
-          ServerLog = "mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra",
-          ServerIntegration = "mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra",
-          DataBase = "analisainfra",
-          DataBaseLog = "analisainfra",
-          DataBaseIntegration = "analisainfra",
-        };
+        return ReadConfig();
+        //return new Config()
+        //{
+        //  Server = "mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra",
+        //  ServerLog = "mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra",
+        //  ServerIntegration = "mongodb://analisa:x14r53p5!a@127.0.0.1:27017/analisainfra",
+        //  DataBase = "analisainfra",
+        //  DataBaseLog = "analisainfra",
+        //  DataBaseIntegration = "analisainfra",
+        //};
 
       }
       catch (Exception)
