@@ -23,7 +23,7 @@ namespace IntegrationService.Api
           client.Timeout = TimeSpan.FromMinutes(60);
           client.DefaultRequestHeaders.Add("Autorization", "Basic " + password);
           client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(new UTF8Encoding().GetBytes(username + ":" + password2)));
-          client.BaseAddress = new Uri("https://apip1.unimednordesters.com.br");
+          client.BaseAddress = new Uri("https://api.unimednordesters.com.br");
 
           var data = new
           {
