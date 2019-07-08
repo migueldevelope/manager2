@@ -24,7 +24,7 @@ namespace Manager.Controllers
     {
       if (contextAccessor.HttpContext.Request.Path.Value.Length > 20)
       {
-        if (contextAccessor.HttpContext.Request.Path.Value.Substring(0, 20) != "/user/forgotpassword")
+        if (contextAccessor.HttpContext.Request.Path.Value.Substring(0, 20) == "/user/forgotpassword")
         {
           return;
         }
