@@ -16,7 +16,7 @@ namespace Manager.Controllers
     [HttpGet]
     public IEnumerable<string> Get()
     {
-      return new string[] { "version", "0.000000030" };
+      return new string[] { "version", "0.000000035" };
     }
   }
 }

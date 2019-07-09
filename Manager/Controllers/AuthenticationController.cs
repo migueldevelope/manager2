@@ -50,6 +50,23 @@ namespace Manager.Controllers
       }
     }
 
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("unimed")]
+    public  string unimed()
+    {
+      try
+      {
+        service.GetUnimedAsync("testeinfra", "unimed");
+        return "";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     /// <summary>
     /// 
     /// </summary>
