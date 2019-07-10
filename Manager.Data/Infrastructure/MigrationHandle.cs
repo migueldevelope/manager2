@@ -14,14 +14,22 @@ namespace Manager.Data.Infrastructure
 
     public MigrationHandle(IMongoDatabase context)
     {
-      Context = context;
-      var versionCollection = context.GetCollection<Version>("Version");
-      var lastVersion = versionCollection.AsQueryable().ToList().LastOrDefault();
-
-      if (lastVersion != null)
+      try
       {
-        currentDatabaseVersion = lastVersion.Number;
+        Context = context;
+        var versionCollection = context.GetCollection<Version>("Version");
+        var lastVersion = versionCollection.AsQueryable().ToList().LastOrDefault();
+
+        if (lastVersion != null)
+        {
+          currentDatabaseVersion = lastVersion.Number;
+        }
       }
+      catch(Exception e)
+      {
+        throw e;
+      }
+      
     }
 
     public void Migrate()
@@ -64,7 +72,7 @@ namespace Manager.Data.Infrastructure
       {
         var attr = migration.GetType().GetCustomAttributes(typeof(MigrationVersionAttribute), false).First() as MigrationVersionAttribute;
 
-        if (attr != null && attr.Number < currentDatabaseVersion)
+        if (attr != null && attr.Number > currentDatabaseVersion)
         {
           yield return migration;
         }

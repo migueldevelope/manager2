@@ -8,7 +8,7 @@ namespace Manager.Core.Business
   /// </summary>
   public class Log : BaseEntity
   {
-    public ViewListPerson Person { get; set; }
+    public _ViewListBase Person { get; set; }
     public string Description { get; set; }
     public DateTime? DataLog { get; set; }
     public string Local { get; set; }

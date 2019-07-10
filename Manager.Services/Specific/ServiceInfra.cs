@@ -1146,7 +1146,7 @@ namespace Manager.Services.Specific
         var areas = serviceArea.GetAllNewVersion().OrderBy(p => p.Name).ToList();
         foreach (var item in areas)
         {
-          item.ProcessLevelOnes = new List<ProcessLevelOne>();
+          item.ProcessLevelOnes = new List<ViewListProcessLevelOne>();
           var process = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == item._id).Result.OrderBy(p => p.Order).ToList();
           foreach (var row in process)
           {
@@ -1156,7 +1156,7 @@ namespace Manager.Services.Specific
               row.Process.Add(leveltwo);
             }
 
-            item.ProcessLevelOnes.Add(row);
+            item.ProcessLevelOnes.Add(row.GetViewList());
           }
         }
         return areas.OrderBy(p => p.Name)
@@ -1238,7 +1238,7 @@ namespace Manager.Services.Specific
         var areas = serviceArea.GetAllNewVersion(p => p.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
         foreach (var item in areas)
         {
-          item.ProcessLevelOnes = new List<ProcessLevelOne>();
+          item.ProcessLevelOnes = new List<ViewListProcessLevelOne>();
           var process = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == item._id).Result.OrderBy(p => p.Order).ToList();
           foreach (var row in process)
           {
@@ -1248,7 +1248,7 @@ namespace Manager.Services.Specific
               row.Process.Add(leveltwo);
             }
 
-            item.ProcessLevelOnes.Add(row);
+            item.ProcessLevelOnes.Add(row.GetViewList());
           }
         }
         return areas.OrderBy(p => p.Name)
@@ -1723,8 +1723,8 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Order = view.Order,
           Status = EnumStatus.Enabled,
-          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
-          ProcessLevelOnes = new List<ProcessLevelOne>()
+          Company = view.Company,
+          ProcessLevelOnes = new List<ViewListProcessLevelOne>()
         });
         return "ok";
       }
@@ -3131,7 +3131,7 @@ namespace Manager.Services.Specific
         var model = serviceArea.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
         model.Order = view.Order;
-        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
+        model.Company = view.Company;
 
         serviceArea.Update(model, null);
         UpdateAreaAll(model);
@@ -3812,7 +3812,7 @@ namespace Manager.Services.Specific
 
         foreach (var item in serviceArea.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
         {
-          item.Company = company;
+          item.Company = company.GetViewList();
           serviceArea.Update(item, null);
         }
 

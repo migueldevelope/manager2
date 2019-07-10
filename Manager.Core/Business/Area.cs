@@ -12,11 +12,11 @@ namespace Manager.Core.Business
   public class Area : BaseEntity
   {
     public string Name { get; set; }
-    public Company Company { get; set; }
+    public ViewListCompany Company { get; set; }
     public long Order { get; set; }
-    public Area Template { get; set; }
+    public string Template { get; set; }
     [BsonIgnore]
-    public List<ProcessLevelOne> ProcessLevelOnes{get;set;}
+    public List<ViewListProcessLevelOne> ProcessLevelOnes { get; set; }
     public ViewListArea GetViewList()
     {
       return new ViewListArea()
@@ -31,7 +31,7 @@ namespace Manager.Core.Business
       {
         _id = _id,
         Name = Name,
-        Company = Company.GetViewList(),
+        Company = Company,
         Order = Order
       };
     }

@@ -59,7 +59,7 @@ namespace Manager
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
 
-      //new MigrationHandle(_context._db).Migrate();
+      new MigrationHandle(_context._db).Migrate();
 
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -221,7 +221,8 @@ namespace Manager
       app.UseSwaggerUI(c =>
       {
         c.RoutePrefix = "help";
-        c.SwaggerEndpoint("..swagger/v1/swagger.json", "Manager");
+        //c.SwaggerEndpoint("..swagger/v1/swagger.json", "Manager");
+        c.SwaggerEndpoint("../swagger/v1/swagger.json", "Manager");
       });
     }
   }
