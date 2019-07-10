@@ -322,7 +322,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-    public void GetUnimedAsync(string login, string passwordClient)
+    private void GetUnimedAsync(string login, string passwordClient)
     {
       try
       {

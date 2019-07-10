@@ -8,6 +8,6 @@ namespace Manager.Core.Interfaces
   {
     ViewPerson Authentication(ViewAuthentication userLogin);
     string AlterContract(string idperson);
-    void GetUnimedAsync(string login, string passwordClient);
+    //void GetUnimedAsync(string login, string passwordClient);
   }
 }
