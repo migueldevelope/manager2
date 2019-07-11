@@ -100,7 +100,7 @@ namespace Manager.Services.Specific
         SalaryScale salaryScale = new SalaryScale()
         {
           Name = view.Name,
-          Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result,
+          Company = view.Company,
           Grades = new List<Grade>()
         };
         serviceSalaryScale.InsertNewVersion(salaryScale).Wait();
