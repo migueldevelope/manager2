@@ -35,7 +35,6 @@ namespace Manager.Core.Business
         Cbo = Cbo
       };
     }
-
     public ViewListOccupationResume GetViewListResume()
     {
       return new ViewListOccupationResume()
@@ -44,7 +43,8 @@ namespace Manager.Core.Business
         Name = Name,
         Cbo = Cbo,
         _idGroup = Group._id,
-        NameGroup = Group.Name
+        NameGroup = Group.Name,
+        _idArea = Process.FirstOrDefault()?.ProcessLevelOne.Area._id
       };
     }
   }
