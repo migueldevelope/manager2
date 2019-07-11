@@ -112,10 +112,10 @@ namespace Manager.Services.Specific
           Select(p => new ViewListPerson()
           {
             _id = p._id,
-            Company = p.Company.GetViewList(),
-            Establishment = p.Establishment?.GetViewList(),
+            Company = p.Company,
+            Establishment = p.Establishment,
             Registration = p.Registration,
-            User = p.User.GetViewList()
+            User = p.User
 
           }).FirstOrDefault();
 
@@ -123,7 +123,7 @@ namespace Manager.Services.Specific
         var listPlans = serviceTrainingPlan.GetAllNewVersion(p => p.Course._id == course._id & p.Person == viewPerson).Result.ToList();
 
         // VERITY DATE LAST COURSE REALIZED
-        var realized = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == course._id & p.Person == viewPerson).Result.ToList();
+        var realized = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == course._id & p.Person == person.GetViewListBaseManager()).Result.ToList();
         var equivalents = Equivalents(course._id, person._id);
 
         DateTime? dateMax = null;
@@ -254,7 +254,7 @@ namespace Manager.Services.Specific
         if (beginDate == null)
           beginDate = DateTime.Now;
 
-        var list = servicePerson.GetAllNewVersion(p => p.Occupation == occupation).Result.ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.Occupation == occupation.GetViewList()).Result.ToList();
         foreach (var item in list)
         {
           UpdateTrainingPlanPerson(course, item, beginDate, typeMandatoryTraining);
@@ -284,11 +284,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    private CompanyMandatory AddCompanyMandatory(CompanyMandatory model)
+    private ViewCrudCompanyMandatory AddCompanyMandatory(CompanyMandatory model)
     {
       try
       {
-        return serviceCompanyMandatory.InsertNewVersion(model).Result;
+        return serviceCompanyMandatory.InsertNewVersion(model).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -296,11 +296,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    private OccupationMandatory AddOccupationMandatory(OccupationMandatory model)
+    private ViewCrudOccupationMandatory AddOccupationMandatory(OccupationMandatory model)
     {
       try
       {
-        return serviceOccupationMandatory.InsertNewVersion(model).Result;
+        return serviceOccupationMandatory.InsertNewVersion(model).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -308,11 +308,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    private PersonMandatory AddPersonMandatory(PersonMandatory model)
+    private ViewCrudPersonMandatory AddPersonMandatory(PersonMandatory model)
     {
       try
       {
-        return servicePersonMandatory.InsertNewVersion(model).Result;
+        return servicePersonMandatory.InsertNewVersion(model).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -361,12 +361,12 @@ namespace Manager.Services.Specific
       {
         Course course = serviceCourse.GetNewVersion(p => p._id == view.Course._id).Result;
         Occupation occupation = serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result;
-        var list = new List<OccupationMandatory>
+        var list = new List<ViewCrudOccupationMandatory>
         {
           AddOccupationMandatory(new OccupationMandatory()
           {
-            Course = course,
-            Occupation = occupation,
+            Course = course.GetViewList(),
+            Occupation = occupation.GetViewList(),
             BeginDate = view.BeginDate,
             TypeMandatoryTraining = view.TypeMandatoryTraining
           })
@@ -376,11 +376,11 @@ namespace Manager.Services.Specific
         {
           serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
           {
-            Course = course,
+            Course = course.GetViewList(),
             Occupations = list,
             Status = EnumStatus.Enabled,
-            Companys = new List<CompanyMandatory>(),
-            Persons = new List<PersonMandatory>()
+            Companys = new List<ViewCrudCompanyMandatory>(),
+            Persons = new List<ViewCrudPersonMandatory>()
           }).Wait();
         }
         else
@@ -402,12 +402,12 @@ namespace Manager.Services.Specific
       {
         Course course = serviceCourse.GetNewVersion(p => p._id == view.Course._id).Result;
         Person person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
-        var list = new List<PersonMandatory>
+        var list = new List<ViewCrudPersonMandatory>
         {
           AddPersonMandatory(new PersonMandatory()
           {
-            Course = course,
-            Person = person,
+            Course = course.GetViewList(),
+            Person = person.GetViewListBase(),
             BeginDate = view.BeginDate,
             TypeMandatoryTraining = view.TypeMandatoryTraining
           })
@@ -417,10 +417,10 @@ namespace Manager.Services.Specific
         {
           serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
           {
-            Course = course,
-            Occupations = new List<OccupationMandatory>(),
+            Course = course.GetViewList(),
+            Occupations = new List<ViewCrudOccupationMandatory>(),
             Status = EnumStatus.Enabled,
-            Companys = new List<CompanyMandatory>(),
+            Companys = new List<ViewCrudCompanyMandatory>(),
             Persons = list
           }).Wait();
         }
@@ -444,12 +444,12 @@ namespace Manager.Services.Specific
       {
         Course course = serviceCourse.GetNewVersion(p => p._id == view.Course._id).Result;
         Company company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
-        var list = new List<CompanyMandatory>
+        var list = new List<ViewCrudCompanyMandatory>
         {
           AddCompanyMandatory(new CompanyMandatory()
           {
-            Course = course,
-            Company = company,
+            Course = course.GetViewList(),
+            Company = company.GetViewList(),
             BeginDate = view.BeginDate,
             TypeMandatoryTraining = view.TypeMandatoryTraining
           })
@@ -459,11 +459,11 @@ namespace Manager.Services.Specific
         {
           serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
           {
-            Course = course,
-            Occupations = new List<OccupationMandatory>(),
+            Course = course.GetViewList(),
+            Occupations = new List<ViewCrudOccupationMandatory>(),
             Status = EnumStatus.Enabled,
             Companys = list,
-            Persons = new List<PersonMandatory>()
+            Persons = new List<ViewCrudPersonMandatory>()
           }).Wait();
         }
         else
@@ -915,11 +915,11 @@ namespace Manager.Services.Specific
           Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
           {
             _id = x._id,
-            Name = x.Person.User.Name,
+            Name = x.Person.Name,
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Person = x.Person.GetViewList()
+            Person = x.Person
           }).ToList(),
           Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
           Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
@@ -941,7 +941,7 @@ namespace Manager.Services.Specific
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Occupation = x.Occupation.GetViewList()
+            Occupation = x.Occupation
           }).ToList()
 
         }).ToList();
@@ -964,7 +964,7 @@ namespace Manager.Services.Specific
           Occupations = p.Occupations ?? p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
           Companys = p.Companys ?? p.Companys.OrderBy(x => x.Company).ToList(),
           Course = p.Course,
-          Persons = p.Persons ?? p.Persons.OrderBy(x => x.Person.User.Name).ToList(),
+          Persons = p.Persons ?? p.Persons.OrderBy(x => x.Person.Name).ToList(),
           Status = p.Status,
           _id = p._id,
           _idAccount = p._idAccount
@@ -977,11 +977,11 @@ namespace Manager.Services.Specific
           Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
           {
             _id = x._id,
-            Name = x.Person == null ? null : x.Person.User.Name,
+            Name = x.Person == null ? null : x.Person.Name,
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Person = x.Person == null ? null : x.Person.GetViewList()
+            Person = x.Person == null ? null : x.Person
           }).ToList(),
           Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
           Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
@@ -999,7 +999,7 @@ namespace Manager.Services.Specific
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Occupation = x.Occupation == null ? null : x.Occupation.GetViewList()
+            Occupation = x.Occupation == null ? null : x.Occupation
           }).ToList()
 
         }).FirstOrDefault();

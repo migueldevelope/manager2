@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Views.BusinessCrud;
 using System.Collections.Generic;
 
 namespace Manager.Core.BusinessModel
@@ -7,9 +8,9 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para perguntas do checkpoint
   /// </summary>
-  public class CheckpointQuestions : BaseEntity
+  public class CheckpointQuestions : BaseEntityId
   {
-    public Questions Question { get; set; }
+    public ViewCrudQuestions Question { get; set; }
     public byte Mark { get; set; }
     public List<CheckpointQuestions> Itens { get; set; }
   }

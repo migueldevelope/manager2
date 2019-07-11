@@ -7,7 +7,7 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para objetivos da empresa
   /// </summary>
-  public class GoalsItem: BaseEntity
+  public class GoalsItem: BaseEntityId
   {
     public ViewListGoal Goals { get; set; }
     public byte Weight { get; set; }

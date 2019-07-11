@@ -9,7 +9,7 @@ namespace Manager.Core.Business
   /// </summary>
   public class Establishment : BaseEntity
   {
-    public Company Company { get; set; }
+    public ViewListCompany Company { get; set; }
     public string Name { get; set; }
     public ViewListEstablishment GetViewList()
     {
@@ -25,7 +25,7 @@ namespace Manager.Core.Business
       {
         _id = _id,
         Name = Name,
-        Company = Company.GetViewList()
+        Company = Company
       };
     }
   }

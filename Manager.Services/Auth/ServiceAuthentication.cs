@@ -200,7 +200,6 @@ namespace Manager.Services.Auth
           .Select(x => new ViewContract()
           {
             IdPerson = x._id,
-            Logo = x.Company.Logo,
             TypeUser = x.TypeUser,
             Registration = x.Registration,
             Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name

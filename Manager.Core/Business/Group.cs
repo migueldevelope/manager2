@@ -13,25 +13,26 @@ namespace Manager.Core.Business
   public class Group : BaseEntity
   {
     public string Name { get; set; }
-    public Company Company { get; set; }
-    public Axis Axis { get; set; }
-    public Sphere Sphere { get; set; }
+    public ViewListCompany Company { get; set; }
+    public ViewListAxis Axis { get; set; }
+    public ViewListSphere Sphere { get; set; }
     public long Line { get; set; }
-    public List<Skill> Skills { get; set; }
-    public List<Schooling> Schooling { get; set; }
-    public List<Scope> Scope { get; set; }
-    public Group Template { get; set; }
+    public List<ViewListSkill> Skills { get; set; }
+    public List<ViewCrudSchooling> Schooling { get; set; }
+    public List<ViewListScope> Scope { get; set; }
+    public string Template { get; set; }
     [BsonIgnore]
-    public List<Occupation> Occupations { get; set; }
+    public List<ViewListOccupation> Occupations { get; set; }
     public ViewListGroup GetViewList()
     {
       return new ViewListGroup()
       {
         _id = _id,
         Name = Name,
-        Axis = Axis.GetViewList(),
-        Sphere = Sphere.GetViewList(),
-        Line = Line
+        Axis = Axis,
+        Sphere = Sphere,
+        Line = Line,
+        Company = Company
       };
     }
     public ViewCrudGroup GetViewCrud()
@@ -40,10 +41,10 @@ namespace Manager.Core.Business
       {
         _id = _id,
         Name = Name,
-        Axis = Axis.GetViewList(),
-        Sphere = Sphere.GetViewList(),
+        Axis = Axis,
+        Sphere = Sphere,
         Line = Line,
-        Company = Company.GetViewList()
+        Company = Company
       };
     }
   }

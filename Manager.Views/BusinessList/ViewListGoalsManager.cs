@@ -3,6 +3,6 @@
   public class ViewListGoalManager : _ViewList
   {
     public ViewListGoalPeriod GoalsPeriod { get; set; }
-    public ViewListPerson Manager { get; set; }
+    public ViewListPersonBase Manager { get; set; }
   }
 }

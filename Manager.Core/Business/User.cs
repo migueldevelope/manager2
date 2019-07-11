@@ -20,7 +20,7 @@ namespace Manager.Core.Business
     public string Password { get; set; }
     public DateTime? DateBirth { get; set; }
     public DateTime? DateAdm { get; set; }
-    public Schooling Schooling { get; set; }
+    public ViewListSchooling Schooling { get; set; }
     public string PhotoUrl { get; set; }
     public long Coins { get; set; }
     public EnumChangePassword ChangePassword { get; set; }
@@ -32,9 +32,9 @@ namespace Manager.Core.Business
     public string Nickname { get; set; }
     public bool UserAdmin { get; set; }
     public List<UserTermOfService> UserTermOfServices { get; set; }
-    public ViewListUser GetViewList()
+    public ViewCrudUser GetViewList()
     {
-      return new ViewListUser()
+      return new ViewCrudUser()
       {
         _id = _id,
         Document = Document,
@@ -60,7 +60,7 @@ namespace Manager.Core.Business
         Password = Password,
         PhoneFixed = PhoneFixed,
         PhotoUrl = PhotoUrl,
-        Schooling = Schooling?.GetViewList(),
+        Schooling = Schooling,
         Sex = Sex
       };
     }

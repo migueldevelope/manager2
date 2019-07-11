@@ -12,8 +12,8 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public EnumTypeAxis TypeAxis { get; set; }
-    public Axis Template { get; set; }
-    public Company Company { get; set; }
+    public string Template { get; set; }
+    public ViewListCompany Company { get; set; }
     public ViewListAxis GetViewList()
     {
       return new ViewListAxis()
@@ -30,7 +30,7 @@ namespace Manager.Core.Business
         _id = _id,
         Name = Name,
         TypeAxis = TypeAxis,
-        Company = Company.GetViewList()
+        Company = Company
       };
     }
   }

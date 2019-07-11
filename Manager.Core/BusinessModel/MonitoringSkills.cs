@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System.Collections.Generic;
 
@@ -9,9 +10,9 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para skills de monitoring
   /// </summary>
-  public class MonitoringSkills : BaseEntity
+  public class MonitoringSkills : BaseEntityId
   {
-    public Skill Skill { get; set; }
+    public ViewListSkill Skill { get; set; }
     public string CommentsPerson { get; set; }
     public string CommentsManager { get; set; }
     public string Praise { get; set; }

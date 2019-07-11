@@ -947,13 +947,13 @@ namespace Manager.Services.Specific
               Mail = person.Manager.Mail
             },
             MotiveAside = person.MotiveAside,
-            Occupation = person.Occupation?.GetViewList(),
+            Occupation = person.Occupation,
             Registration = person.Registration,
             Salary = person.Salary,
             StatusUser = person.StatusUser,
             TypeJourney = person.TypeJourney,
             TypeUser = person.TypeUser,
-            User = person.User.GetViewCrud()
+            User = person.User
           };
       }
       catch (Exception e)
@@ -980,7 +980,7 @@ namespace Manager.Services.Specific
               _id = x.ProcessLevelOne._id,
               Name = x.ProcessLevelOne.Name,
               Order = x.ProcessLevelOne.Order,
-              Area = x.ProcessLevelOne.Area.GetViewList()
+              Area = x.ProcessLevelOne.Area
             }
           }).ToList();
         total = processLevelTwoService.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
@@ -1022,42 +1022,42 @@ namespace Manager.Services.Specific
     public ViewIntegrationProfileOccupation IntegrationProfile(ViewIntegrationProfileOccupation view)
     {
       Occupation occupation = occupationService.GetNewVersion(p => p.Name == view.Name).Result;
+      Group group = groupService.GetNewVersion(p => p.Name == view.NameGroup).Result;
+
       if (occupation == null)
       {
         occupation = new Occupation()
         {
-          Group = groupService.GetNewVersion(p => p.Name == view.NameGroup).Result,
-          CBO = null,
+          Group = group.GetViewList(),
+          Cbo = null,
           Name = Capitalization(view.Name),
           SpecificRequirements = view.SpecificRequirements,
           SalaryScales = null,
-          Process = new List<ProcessLevelTwo>(),
-          Skills = new List<Skill>(),
-          Activities = new List<Activitie>(),
-          Schooling = new List<Schooling>(),
+          Process = new List<ViewListProcessLevelTwo>(),
+          Skills = new List<ViewListSkill>(),
+          Activities = new List<ViewListActivitie>(),
+          Schooling = new List<ViewCrudSchooling>(),
           Line = 0
         };
-        occupation.Process.Add(processLevelTwoService.GetNewVersion(p => p._id == view.IdProcessLevelTwo).Result);
+        occupation.Process.Add(processLevelTwoService.GetNewVersion(p => p._id == view.IdProcessLevelTwo).Result.GetViewList());
         Skill skill;
         foreach (string item in view.Skills)
         {
           skill = skillService.GetNewVersion(p => p.Name == item).Result;
-          occupation.Skills.Add(skill);
+          occupation.Skills.Add(skill.GetViewList());
         }
         int order = 0;
         foreach (string item in view.Activities)
         {
           order++;
-          occupation.Activities.Add(new Activitie()
+          occupation.Activities.Add(new ViewListActivitie()
           {
             _id = ObjectId.GenerateNewId().ToString(),
-            _idAccount = _user._idAccount,
             Name = item,
-            Order = order,
-            Status = EnumStatus.Enabled
+            Order = order
           });
         }
-        occupation.Schooling = occupation.Group.Schooling;
+        occupation.Schooling = group.Schooling;
         for (int i = 0; i < view.Schooling.Count; i++)
         {
           for (int lin = 0; lin < occupation.Schooling.Count; lin++)
@@ -1074,14 +1074,14 @@ namespace Manager.Services.Specific
       return new ViewIntegrationProfileOccupation()
       {
         _id = occupation._id,
-        IdCompany = occupation.Group.Company._id,
+        IdCompany = group.Company._id,
         IdProcessLevelTwo = occupation.Process[0]._id,
         Name = occupation.Name,
         NameGroup = occupation.Group.Name,
         Activities = occupation.Activities.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
         Skills = occupation.Skills.OrderBy(o => o.Name).Select(x => x.Name).ToList(),
         SpecificRequirements = occupation.SpecificRequirements,
-        Schooling = occupation.Group.Schooling.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
+        Schooling = group.Schooling.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
         SchoolingComplement = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Complement).ToList()
       };
     }

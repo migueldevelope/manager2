@@ -112,7 +112,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<ViewListUser> List(int count, int page, string filter, EnumTypeUser type)
+    public List<ViewCrudUser> List(int count, int page, string filter, EnumTypeUser type)
     {
       try
       {
@@ -165,7 +165,7 @@ namespace Manager.Services.Auth
           Phone = view.Phone,
           PhoneFixed = view.PhoneFixed,
           PhotoUrl = view.PhotoUrl,
-          Schooling = view.Schooling == null ? null : new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order },
+          Schooling = view.Schooling,
           Sex = view.Sex,
           ChangePassword = EnumChangePassword.AccessFirst,
           UserAdmin = false
@@ -198,12 +198,12 @@ namespace Manager.Services.Auth
         user.Phone = view.Phone;
         user.PhoneFixed = view.PhoneFixed;
         user.PhotoUrl = view.PhotoUrl;
-        user.Schooling = user.Schooling == null ? null : new Schooling() { _id = view.Schooling._id, Name = view.Name, Order = view.Schooling.Order };
+        user.Schooling = user.Schooling;
         user.Sex = view.Sex;
         serviceUser.Update(user, null).Wait();
         foreach (var item in servicePerson.GetAllNewVersion(p => p.User._id == view._id).Result.ToList())
         {
-          item.User = user;
+          item.User = user.GetViewCrud();
           servicePerson.Update(item, null).Wait();
         }
         return user.GetViewCrud();
@@ -349,10 +349,7 @@ namespace Manager.Services.Auth
         Occupation = p.Occupation?.Name,
         Name = p.User.Name,
         Manager = p.Manager?.Name,
-        Company = p.Company.GetViewList(),
-        Establishment = p.Establishment?.GetViewList(),
-        Registration = p.Registration,
-        User = p.User.GetViewList()
+        _idManager = p.Manager?._id
       }).ToList();
     }
     #endregion

@@ -7,7 +7,7 @@ namespace Manager.Core.Business
 {
   public class GoalsPersonControl : BaseEntity
   {
-    public ViewListPerson Person { get; set; }
+    public ViewListPersonBaseManager Person { get; set; }
     public ViewListGoalPeriod GoalsPeriod { get; set; }
     public EnumStatusGoalsPerson StatusGoalsPerson { get; set; }
     public DateTime? DateBeginPerson { get; set; }

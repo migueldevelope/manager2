@@ -72,14 +72,14 @@ namespace Manager.Services.Specific
       serviceCheckpoint._user = _user;
     }
 
-    public  List<ViewIndicatorsNotes> GetNotes(string id)
+    public List<ViewIndicatorsNotes> GetNotes(string id)
     {
       try
       {
         List<ViewIndicatorsNotes> result = new List<ViewIndicatorsNotes>();
         long totalqtd = 0;
-        var monitorings =  serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Result;
-        var onboardings = serviceOnboarding.CountNewVersion(p => p.Person.Manager._id == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.WaitPerson & p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+        var monitorings = serviceMonitoring.CountNewVersion(p => p.Person._idManager == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Result;
+        var onboardings = serviceOnboarding.CountNewVersion(p => p.Person._idManager == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.WaitPerson & p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
         var workflows = serviceWorkflow.CountNewVersion(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Result;
 
         totalqtd = monitorings + onboardings + workflows;
@@ -96,11 +96,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
+    public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
     {
       try
       {
-        var list = serviceMonitoring.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
+        var list = serviceMonitoring.GetAllNewVersion(p => p.Person._idManager == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
@@ -128,15 +128,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewTagsCloud> ListTagsCloud(string idmanager)
+    public List<ViewTagsCloud> ListTagsCloud(string idmanager)
     {
       try
       {
-        /*var list = serviceMonitoring.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
+        /*var list = serviceMonitoring.GetAllNewVersion(p => p.Person._idManager == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
           Select(p => p.Activities.Where(u => u.Plans.Result > 0).Select(
             x => x.Plans.Select(u => u.Skills))).ToList();*/
 
-        var list = serviceMonitoring.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
+        var list = serviceMonitoring.GetAllNewVersion(p => p.Person._idManager == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
@@ -169,7 +169,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewTagsCloud> ListTagsCloudPerson(string idperson)
+    public List<ViewTagsCloud> ListTagsCloudPerson(string idperson)
     {
       try
       {
@@ -207,7 +207,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson)
+    public List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson)
     {
       try
       {
@@ -239,7 +239,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewIndicatorsNotes> GetNotesPerson(string id)
+    public List<ViewIndicatorsNotes> GetNotesPerson(string id)
     {
       try
       {
@@ -306,7 +306,7 @@ namespace Manager.Services.Specific
             .WithUrl(link + "messagesHub")
             .Build();
 
-         hubConnection.StartAsync();
+        hubConnection.StartAsync();
 
         DoWork();
       }
@@ -325,10 +325,10 @@ namespace Manager.Services.Specific
         {
           foreach (var person in servicePerson.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration).ToList())
           {
-             hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
-             hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);
+            hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
+            hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);
           }
-           Task.Delay(1000);
+          Task.Delay(1000);
         }
 
       }
@@ -338,7 +338,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson)
+    public List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson)
     {
       try
       {
@@ -351,9 +351,9 @@ namespace Manager.Services.Specific
           result.Add(new ViewExportStatusMonitoring
           {
             IdMonitoring = item._id,
-            NamePerson = item.Person.User.Name,
+            NamePerson = item.Person.Name,
             Status = item.StatusMonitoring,
-            Occupation = item.Person.Occupation.Name,
+            Occupation = item.Person.Occupation,
             DataEnd = item.DateEndEnd
           });
         }
@@ -366,7 +366,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
+    public List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
     {
       try
       {
@@ -379,9 +379,9 @@ namespace Manager.Services.Specific
           result.Add(new ViewExportStatusOnboarding
           {
             IdOnboarding = item._id,
-            NamePerson = item.Person.User.Name,
+            NamePerson = item.Person.Name,
             Status = item.StatusOnBoarding,
-            Occupation = item.Person.Occupation.Name,
+            Occupation = item.Person.Occupation,
             DataEnd = item.DateEndEnd
           });
         }
@@ -394,7 +394,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewExportStatusCertification> ExportStatusCertification()
+    public List<ViewExportStatusCertification> ExportStatusCertification()
     {
       try
       {
@@ -406,8 +406,8 @@ namespace Manager.Services.Specific
         {
           result.Add(new ViewExportStatusCertification
           {
-            NameManager = item.Person.Manager.Name,
-            NamePerson = item.Person.User.Name,
+            NameManager = item.Person.NameManager,
+            NamePerson = item.Person.Name,
             NameItem = item.CertificationItem.Name,
             Status =
                 item.StatusCertification == EnumStatusCertification.Open ? "Aguardando Aprovação" :
@@ -425,7 +425,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson)
+    public List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson)
     {
       try
       {
@@ -438,7 +438,7 @@ namespace Manager.Services.Specific
           result.Add(new ViewExportStatusCertificationPerson
           {
             IdCertification = item._id,
-            NamePerson = item.Person.User.Name,
+            NamePerson = item.Person.Name,
             NameItem = item.CertificationItem.Name,
             Status = item.StatusCertification,
             DateEnd = item.DateEnd
@@ -453,7 +453,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
+    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
     {
       try
       {
@@ -471,11 +471,11 @@ namespace Manager.Services.Specific
             {
               result.Add(new ViewExportStatusOnboardingGeral
               {
-                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                NamePerson = item.Person.User.Name,
+                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
+                NamePerson = item.Person.Name,
                 Type = item == null ? "Admissão" :
                 item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
-                Occupation = item.Person.Occupation.Name,
+                Occupation = item.Person.Occupation,
                 Status =
                 item == null ? "Aguardando para iniciar" :
                   item.StatusOnBoarding == EnumStatusOnBoarding.WaitBegin ? "Aguardando para iniciar" :
@@ -502,7 +502,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
+    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
     {
       try
       {
@@ -538,7 +538,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
+    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
     {
       try
       {
@@ -556,9 +556,9 @@ namespace Manager.Services.Specific
             {
               result.Add(new ViewExportStatusMonitoringGeral
               {
-                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager.Name,
-                NamePerson = item.Person.User.Name,
-                Occupation = item.Person.Occupation.Name,
+                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
+                NamePerson = item.Person.Name,
+                Occupation = item.Person.Occupation,
                 Status =
               item == null ? "Aguardando para iniciar" :
                 item.StatusMonitoring == EnumStatusMonitoring.Open ? "Aguardando para iniciar" :
@@ -635,7 +635,7 @@ namespace Manager.Services.Specific
     //      if (item.Person.Manager == null)
     //        itemView += "Sem Gestor;";
     //      else
-    //        itemView += item.Person.Manager.Name + ";";
+    //        itemView += item.Person.Manager + ";";
     //      if (item.OnBoarding == null)
     //        itemView += EnumStatusOnBoarding.Open.ToString() + ";";
     //      else
@@ -719,7 +719,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public  IEnumerable<ViewChartOnboarding> ChartOnboarding()
+    public IEnumerable<ViewChartOnboarding> ChartOnboarding()
     {
       try
       {
@@ -740,12 +740,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  IEnumerable<ViewChartStatus> ChartOnboardingRealized()
+    public IEnumerable<ViewChartStatus> ChartOnboardingRealized()
     {
       try
       {
 
-        var list =  servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
        .Result.ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
        .GroupBy(p => p.OnBoarding == null ? "Não Realizado" : (p.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
        {
@@ -761,7 +761,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  IEnumerable<ViewChartMonitoring> ChartMonitoring()
+    public IEnumerable<ViewChartMonitoring> ChartMonitoring()
     {
       try
       {
@@ -782,7 +782,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  IEnumerable<ViewChartStatus> ChartMonitoringRealized()
+    public IEnumerable<ViewChartStatus> ChartMonitoringRealized()
     {
       try
       {
@@ -803,7 +803,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  IEnumerable<ViewChartCheckpoint> ChartCheckpoint()
+    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint()
     {
       try
       {
@@ -824,7 +824,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  IEnumerable<ViewChartStatus> ChartCheckpointRealized()
+    public IEnumerable<ViewChartStatus> ChartCheckpointRealized()
     {
       try
       {
@@ -845,7 +845,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  IEnumerable<ViewChartPlan> ChartPlan()
+    public IEnumerable<ViewChartPlan> ChartPlan()
     {
       try
       {
@@ -910,12 +910,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  IEnumerable<ViewChartStatus> ChartPlanRealized()
+    public IEnumerable<ViewChartStatus> ChartPlanRealized()
     {
       try
       {
 
-        var list =  servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() }).ToList();
 
         List<dynamic> result = new List<dynamic>();

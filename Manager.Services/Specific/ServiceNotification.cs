@@ -648,7 +648,7 @@ namespace Manager.Services.Specific
           {
             Subject = "Novo Colaborador",
             Message = string.Format("{0} admitido(a)!", item.User.Name),
-            Person = item.GetViewList(),
+            Person = item.GetViewListBase(),
             StatusMessage = EnumStatusMessage.New
           };
           view = serviceLogMessages.NewNotExist(view);

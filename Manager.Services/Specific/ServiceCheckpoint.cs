@@ -198,18 +198,18 @@ namespace Manager.Services.Specific
       {
         
         int skip = (count * (page - 1));
-        var detail = serviceCheckpoint.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Person.User.Name").Result
+        var detail = serviceCheckpoint.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Person.User.Name").Result
           .Select(p => new ViewListCheckpoint()
           {
             _id = p._id,
             _idPerson = p.Person._id,
-            Name = p.Person.User.Name,
+            Name = p.Person.Name,
             StatusCheckpoint = p.StatusCheckpoint,
             TypeCheckpoint = p.TypeCheckpoint,
             OccupationName = p.Occupation?.Name
           }).ToList();
 
-        total = serviceCheckpoint.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceCheckpoint.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail;
       }
@@ -237,12 +237,12 @@ namespace Manager.Services.Specific
         {
           checkpoint = new Checkpoint
           {
-            Person = person,
+            Person = person.GetViewListPersonInfo(),
             StatusCheckpoint = EnumStatusCheckpoint.Open,
             DateBegin = DateTime.Now,
             DataAccess = person.User.DateAdm == null ? DateTime.Now : DateTime.Parse(person.User.DateAdm.ToString()).AddDays(Deadline()),
             TypeCheckpoint = EnumCheckpoint.None,
-            Occupation = person.Occupation?.GetViewList()
+            Occupation = person.Occupation
           };
           checkpoint = LoadMap(checkpoint);
           checkpoint = serviceCheckpoint.InsertNewVersion(checkpoint).Result;
@@ -251,8 +251,8 @@ namespace Manager.Services.Specific
         return new ViewListCheckpoint()
         {
           _id = checkpoint._id,
-          Name = checkpoint.Person.User.Name,
-          OccupationName = checkpoint.Person.Occupation.Name,
+          Name = checkpoint.Person.Name,
+          OccupationName = checkpoint.Person.Occupation,
           StatusCheckpoint = checkpoint.StatusCheckpoint,
           TypeCheckpoint = checkpoint.TypeCheckpoint,
           _idPerson = checkpoint.Person._id
@@ -269,6 +269,8 @@ namespace Manager.Services.Specific
       try
       {
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p._id == id).Result;
+        Person person = servicePerson.GetFreeNewVersion(p => p._id == checkpoint.Person._id).Result;
+
         if (checkpoint == null)
           return null;
         //throw new Exception("Checkpoint not available!");
@@ -288,19 +290,8 @@ namespace Manager.Services.Specific
           StatusCheckpoint = checkpoint.StatusCheckpoint,
           TypeCheckpoint = checkpoint.TypeCheckpoint,
           Comments = checkpoint.Comments,
-          Person = new ViewListPersonInfo()
-          {
-            _id = checkpoint.Person._id,
-            TypeJourney = checkpoint.Person.TypeJourney,
-            Occupation = checkpoint.Person.Occupation.Name,
-            Name = checkpoint.Person.User.Name,
-            Manager = checkpoint.Person.Manager.Name,
-            Company = checkpoint.Person.Company.GetViewList(),
-            Establishment = checkpoint.Person.Establishment?.GetViewList(),
-            Registration = checkpoint.Person.Registration,
-            User = checkpoint.Person.User.GetViewList()
-          },
-          Occupation = checkpoint.Person.Occupation.GetViewList(),
+          Person = checkpoint.Person,
+          Occupation = person.Occupation,
           TextDefault = checkpoint.TextDefault,
           Questions = checkpoint.Questions?.OrderBy(o => o.Question.Order).Select(x => new ViewCrudCheckpointQuestion()
           {
@@ -313,8 +304,7 @@ namespace Manager.Services.Specific
               Content = x.Question.Content,
               Order = x.Question.Order,
               TypeRotine = x.Question.TypeRotine,
-              TypeQuestion = x.Question.TypeQuestion,
-              Company = new ViewListCompany() { _id = x.Question.Company._id, Name = x.Question.Company.Name }
+              TypeQuestion = x.Question.TypeQuestion
             },
             Itens = x.Itens?.OrderBy(o => o.Question.Name).Select(i => new ViewCrudCheckpointQuestion()
             {
@@ -326,8 +316,7 @@ namespace Manager.Services.Specific
                 Name = i.Question.Name,
                 Order = i.Question.Order,
                 TypeQuestion = i.Question.TypeQuestion,
-                TypeRotine = i.Question.TypeRotine,
-                Company = new ViewListCompany() { _id = i.Question.Company._id, Name = i.Question.Company.Name }
+                TypeRotine = i.Question.TypeRotine
               },
               Mark = i.Mark,
               Itens = null
@@ -363,6 +352,8 @@ namespace Manager.Services.Specific
       try
       {
         Checkpoint checkpoint = serviceCheckpoint.GetNewVersion(p => p._id == view._id && p.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+        Person person = servicePerson.GetNewVersion(p => p._id == checkpoint.Person._id).Result;
+
         checkpoint.Comments = view.Comments;
 
         if (checkpoint == null)
@@ -373,7 +364,6 @@ namespace Manager.Services.Specific
           checkpoint.DateEnd = DateTime.Now;
           checkpoint.StatusCheckpoint = view.StatusCheckpoint;
           checkpoint.TypeCheckpoint = view.TypeCheckpoint;
-          Person person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
           if (view.TypeCheckpoint == EnumCheckpoint.Approved)
           {
             person.TypeJourney = EnumTypeJourney.Monitoring;
@@ -395,30 +385,22 @@ namespace Manager.Services.Specific
         checkpoint.Questions = view.Questions?.Select(p => new CheckpointQuestions()
         {
           _id = p._id,
-          _idAccount = _user._idAccount,
-          Status = EnumStatus.Enabled,
           Mark = p.Mark,
-          Question = p.Question == null ? null : FindQuestion(p.Question._id, p.Question.Company.Name, view.Person.User.Name),
+          Question = p.Question,
           Itens = p.Itens?.Select(x => new CheckpointQuestions()
           {
             _id = x._id,
-            Status = EnumStatus.Enabled,
-            Question = new Questions()
+            Question = new ViewCrudQuestions()
             {
               _id = x.Question._id,
-              _idAccount = _user._idAccount,
-              Status = EnumStatus.Enabled,
-              Company = serviceCompany.GetNewVersion(c => c._id == x.Question.Company._id).Result,
               Content = x.Question.Content,
               Name = x.Question.Name,
               Order = x.Question.Order,
-              Template = null,
               TypeQuestion = x.Question.TypeQuestion,
               TypeRotine = x.Question.TypeRotine
             },
             Itens = null,
-            Mark = x.Mark,
-            _idAccount = _user._idAccount
+            Mark = x.Mark
           }).ToList()
         }).ToList();
          serviceCheckpoint.Update(checkpoint, null).Wait();
@@ -434,6 +416,8 @@ namespace Manager.Services.Specific
       try
       {
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p.Person._id == idperson && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
+        Person person = servicePerson.GetFreeNewVersion(p => p._id == checkpoint.Person._id).Result;
+
         if (checkpoint == null)
           return null;
         //throw new Exception("Checkpoint not available!");
@@ -448,19 +432,8 @@ namespace Manager.Services.Specific
           DateEnd = checkpoint.DateEnd,
           StatusCheckpoint = checkpoint.StatusCheckpoint,
           TypeCheckpoint = checkpoint.TypeCheckpoint,
-          Person = new ViewListPersonInfo()
-          {
-            _id = checkpoint.Person._id,
-            TypeJourney = checkpoint.Person.TypeJourney,
-            Occupation = checkpoint.Person.Occupation.Name,
-            Name = checkpoint.Person.User.Name,
-            Manager = checkpoint.Person.Manager?.Name,
-            Company = checkpoint.Person.Company.GetViewList(),
-            Establishment = checkpoint.Person.Establishment?.GetViewList(),
-            Registration = checkpoint.Person.Registration,
-            User = checkpoint.Person.User.GetViewList(),
-          },
-          Occupation = checkpoint.Person.Occupation.GetViewList(),
+          Person = checkpoint.Person,
+          Occupation = person.Occupation,
           TextDefault = checkpoint.TextDefault,
           Questions = checkpoint.Questions?.OrderBy(o => o.Question.Order).Select(x => new ViewCrudCheckpointQuestion()
           {
@@ -473,8 +446,7 @@ namespace Manager.Services.Specific
               Content = x.Question.Content,
               Order = x.Question.Order,
               TypeRotine = x.Question.TypeRotine,
-              TypeQuestion = x.Question.TypeQuestion,
-              Company = new ViewListCompany() { _id = x.Question.Company._id, Name = x.Question.Company.Name }
+              TypeQuestion = x.Question.TypeQuestion
             },
             Itens = x.Itens?.OrderBy(o => o.Question.Name).Select(i => new ViewCrudCheckpointQuestion()
             {
@@ -486,8 +458,7 @@ namespace Manager.Services.Specific
                 Name = i.Question.Name,
                 Order = i.Question.Order,
                 TypeQuestion = i.Question.TypeQuestion,
-                TypeRotine = i.Question.TypeRotine,
-                Company = new ViewListCompany() { _id = i.Question.Company._id, Name = i.Question.Company.Name }
+                TypeRotine = i.Question.TypeRotine
               },
               Mark = i.Mark,
               Itens = null
@@ -507,25 +478,24 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var person = servicePerson.GetNewVersion(p => p._id == checkpoint.Person._id).Result;
+        var company = serviceCompany.GetNewVersion(p => p._id == person.Company._id).Result;
+
         checkpoint.Questions = new List<CheckpointQuestions>();
         var itens = new List<CheckpointQuestions>();
-        foreach (var item in checkpoint.Person.Company.Skills)
+        foreach (var item in company.Skills)
         {
           itens.Add(new CheckpointQuestions()
           {
-            Question = new Questions()
+            Question = new ViewCrudQuestions()
             {
               Name = item.Name,
               Content = item.Concept,
               Order = 0,
-              Company = checkpoint.Person.Company,
-              Status = EnumStatus.Enabled,
               TypeQuestion = EnumTypeQuestion.Skill,
               _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = _user._idAccount
-            }
-            ,
-            _idAccount = item._idAccount,
+              TypeRotine = EnumTypeRotine.Checkpoint
+            },
             _id = ObjectId.GenerateNewId().ToString()
           });
         }
@@ -534,20 +504,15 @@ namespace Manager.Services.Specific
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
             Question =
-             new Questions()
+             new ViewCrudQuestions()
              {
                _id = item._id,
-               _idAccount = item._idAccount,
-               Company = item.Company,
-               Content = item.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name),
+               Content = item.Content.Replace("{company_name}", company.Name).Replace("{employee_name}", checkpoint.Person.Name),
                Name = item.Name,
                Order = item.Order,
-               Status = item.Status,
-               Template = item.Template,
                TypeQuestion = item.TypeQuestion,
                TypeRotine = item.TypeRotine
              },
-            _idAccount = item._idAccount,
             _id = ObjectId.GenerateNewId().ToString(),
             Itens = itens
           });
@@ -557,26 +522,21 @@ namespace Manager.Services.Specific
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
             Question =
-            new Questions()
+            new ViewCrudQuestions()
             {
               _id = item._id,
-              _idAccount = item._idAccount,
-              Company = item.Company,
-              Content = item.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name),
+              Content = item.Content.Replace("{company_name}", company.Name).Replace("{employee_name}", checkpoint.Person.Name),
               Name = item.Name,
               Order = item.Order,
-              Status = item.Status,
-              Template = item.Template,
               TypeQuestion = item.TypeQuestion,
               TypeRotine = item.TypeRotine
             },
-            _idAccount = item._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           });
         }
         var text = serviceTextDefault.GetAllNewVersion(p => p.TypeText == EnumTypeText.Checkpoint).Result.FirstOrDefault();
         if (text != null)
-          checkpoint.TextDefault = text.Content.Replace("{company_name}", checkpoint.Person.Company.Name).Replace("{employee_name}", checkpoint.Person.User.Name).Replace("{manager_name}", checkpoint.Person.Manager.Name);
+          checkpoint.TextDefault = text.Content.Replace("{company_name}", company.Name).Replace("{employee_name}", checkpoint.Person.Name).Replace("{manager_name}", checkpoint.Person.Manager);
         return checkpoint;
       }
       catch (Exception e)

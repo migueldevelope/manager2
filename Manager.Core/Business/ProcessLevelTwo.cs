@@ -9,7 +9,7 @@ namespace Manager.Core.Business
   public class ProcessLevelTwo : BaseEntity
   {
     public string Name { get; set; }
-    public ProcessLevelOne ProcessLevelOne { get; set; }
+    public ViewListProcessLevelOne ProcessLevelOne { get; set; }
     public string Comments { get; set; }
     public long Order { get; set; }
     public ViewListProcessLevelTwo GetViewList()
@@ -19,7 +19,7 @@ namespace Manager.Core.Business
         _id = _id,
         Name = Name,
         Order = Order,
-        ProcessLevelOne = ProcessLevelOne.GetViewList()
+        ProcessLevelOne = ProcessLevelOne
       };
     }
   }

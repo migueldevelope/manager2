@@ -154,7 +154,7 @@ namespace Manager.Services.Specific
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           };
-          Parameter result = serviceParameter.InsertFreeNewVersion(parameterLocal).Result;
+          var result = serviceParameter.InsertFreeNewVersion(parameterLocal).Result._id;
         }
 
         TextDefault textDefaultLocal;
@@ -163,18 +163,8 @@ namespace Manager.Services.Specific
         {
           textDefaultLocal = new TextDefault()
           {
-            Template = new TextDefault()
-            {
-              _id = textDefault._id,
-              _idAccount = textDefault._idAccount,
-              Company = textDefault.Company,
-              Name = textDefault.Name,
-              TypeText = textDefault.TypeText,
-              Content = textDefault.Content,
-              Status = textDefault.Status,
-              Template = null
-            },
-            Company = company,
+            Template = textDefault._id,
+            Company = company.GetViewList(),
             _idAccount = _user._idAccount,
             Content = textDefault.Content,
             Name = textDefault.Name,
@@ -182,7 +172,7 @@ namespace Manager.Services.Specific
             TypeText = textDefault.TypeText,
             _id = ObjectId.GenerateNewId().ToString()
           };
-          TextDefault result = serviceTextDefault.InsertFreeNewVersion(textDefaultLocal).Result;
+          var result = serviceTextDefault.InsertFreeNewVersion(textDefaultLocal).Result._id;
         }
 
         // MailModel
@@ -200,7 +190,7 @@ namespace Manager.Services.Specific
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           };
-          MailModel result = serviceMailModel.InsertFreeNewVersion(mailModelLocal).Result;
+          var id = serviceMailModel.InsertFreeNewVersion(mailModelLocal).Result._id;
         }
 
         // Questions
@@ -209,21 +199,9 @@ namespace Manager.Services.Specific
         {
           questionsLocal = new Questions()
           {
-            Template = new Questions()
-            {
-              Content = question.Content,
-              Company = question.Company,
-              Name = question.Name,
-              Order = question.Order,
-              Status = question.Status,
-              TypeQuestion = question.TypeQuestion,
-              TypeRotine = question.TypeRotine,
-              _idAccount = question._idAccount,
-              _id = question._id,
-              Template = null
-            },
+            Template = question._id,
             Content = question.Content,
-            Company = company,
+            Company = company.GetViewList(),
             Name = question.Name,
             Order = question.Order,
             Status = question.Status,
@@ -232,25 +210,16 @@ namespace Manager.Services.Specific
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           };
-          Questions result = serviceQuestions.InsertFreeNewVersion(questionsLocal).Result;
+          serviceQuestions.InsertFreeNewVersion(questionsLocal).Result.GetViewList();
         }
 
         // Skill
         Skill skillLocal;
         foreach (Skill item in serviceSkill.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
         {
-          skillLocal = new Skill()
+          skillLocal = new Skill
           {
-            Template = new Skill()
-            {
-              Concept = item.Concept,
-              Name = item.Name,
-              Status = item.Status,
-              TypeSkill = item.TypeSkill,
-              _id = item._id,
-              _idAccount = item._idAccount,
-              Template = null
-            },
+            Template = item._id,
             Concept = item.Concept,
             Name = item.Name,
             Status = item.Status,
@@ -267,17 +236,7 @@ namespace Manager.Services.Specific
         {
           schoolingLocal = new Schooling()
           {
-            Template = new Schooling()
-            {
-              Complement = item.Complement,
-              Name = item.Name,
-              Order = item.Order,
-              Status = item.Status,
-              Type = item.Type,
-              _id = item._id,
-              _idAccount = item._idAccount,
-              Template = null
-            },
+            Template = item._id,
             Complement = item.Complement,
             Name = item.Name,
             Order = item.Order,
@@ -295,17 +254,8 @@ namespace Manager.Services.Specific
         {
           sphereLocal = new Sphere()
           {
-            Template = new Sphere()
-            {
-              Company = item.Company,
-              Name = item.Name,
-              Status = item.Status,
-              TypeSphere = item.TypeSphere,
-              _id = item._id,
-              _idAccount = item._idAccount,
-              Template = null
-            },
-            Company = company,
+            Template = item._id,
+            Company = company.GetViewList(),
             Name = item.Name,
             Status = item.Status,
             TypeSphere = item.TypeSphere,
@@ -321,17 +271,8 @@ namespace Manager.Services.Specific
         {
           axisLocal = new Axis()
           {
-            Template = new Axis()
-            {
-              Name = item.Name,
-              Company = item.Company,
-              Status = item.Status,
-              TypeAxis = item.TypeAxis,
-              _id = item._id,
-              _idAccount = item._idAccount,
-              Template = null
-            },
-            Company = company,
+            Template = item._id,
+            Company = company.GetViewList(),
             Name = item.Name,
             Status = item.Status,
             TypeAxis = item.TypeAxis,
@@ -347,51 +288,36 @@ namespace Manager.Services.Specific
         {
           groupLocal = new Group()
           {
-            Template = new Group()
-            {
-              Name = item.Name,
-              Sphere = item.Sphere,
-              Status = item.Status,
-              _id = item._id,
-              _idAccount = item._idAccount,
-              Axis = item.Axis,
-              Company = item.Company,
-              Line = item.Line,
-              Schooling = item.Schooling,
-              Skills = item.Skills,
-              Scope = item.Scope,
-              Template = null
-            },
-            Company = company,
+            Template = item._id,
+            Company = company.GetViewList(),
             Name = item.Name,
             Status = item.Status,
             _id = item._id,
             _idAccount = _user._idAccount,
             Line = item.Line,
-            Schooling = new List<Schooling>(),
-            Skills = new List<Skill>(),
-            Scope = new List<Scope>()
+            Schooling = new List<ViewCrudSchooling>(),
+            Skills = new List<ViewListSkill>(),
+            Scope = new List<ViewListScope>()
           };
 
           if (item.Schooling != null)
-            foreach (Schooling schooling in item.Schooling)
-              groupLocal.Schooling.Add(serviceSchooling.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == schooling._id).Result);
+            foreach (var schooling in item.Schooling)
+              groupLocal.Schooling.Add(serviceSchooling.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template == schooling._id).Result.GetViewCrud());
 
           if (item.Skills != null)
-            foreach (Skill skill in item.Skills)
-              groupLocal.Skills.Add(serviceSkill.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == skill._id).Result);
+            foreach (var skill in item.Skills)
+              groupLocal.Skills.Add(serviceSkill.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template == skill._id).Result.GetViewList());
 
           if (item.Scope != null)
-            foreach (Scope scope in item.Scope)
+            foreach (var scope in item.Scope)
             {
-              scope._idAccount = _user._idAccount;
               scope._id = ObjectId.GenerateNewId().ToString();
               groupLocal.Scope.Add(scope);
             };
 
 
-          groupLocal.Sphere = serviceSphere.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Sphere._id).Result;
-          groupLocal.Axis = serviceAxis.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template._id == item.Axis._id).Result;
+          groupLocal.Sphere = serviceSphere.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template == item.Sphere._id).Result.GetViewList();
+          groupLocal.Axis = serviceAxis.GetFreeNewVersion(p => p._idAccount == _user._idAccount && p.Template == item.Axis._id).Result.GetViewList();
 
           groupLocal._idAccount = _user._idAccount;
           groupLocal._id = ObjectId.GenerateNewId().ToString();
@@ -477,24 +403,14 @@ namespace Manager.Services.Specific
           TextDefault local;
           foreach (Account accountTextDefault in accounts)
           {
-            company = serviceCompany.GetAllFreeNewVersion(p => p._idAccount == accountTextDefault._id).Result.FirstOrDefault();
-            local = serviceTextDefault.GetFreeNewVersion(p => p._idAccount == accountTextDefault._id && p.Template._id == textDefault._id).Result;
+            company = serviceCompany.GetFreeNewVersion(p => p._idAccount == accountTextDefault._id).Result;
+            local = serviceTextDefault.GetFreeNewVersion(p => p._idAccount == accountTextDefault._id && p.Template == textDefault._id).Result;
             if (local == null)
             {
               local = new TextDefault()
               {
-                Template = new TextDefault()
-                {
-                  _id = textDefault._id,
-                  _idAccount = textDefault._idAccount,
-                  Company = textDefault.Company,
-                  Name = textDefault.Name,
-                  TypeText = textDefault.TypeText,
-                  Content = textDefault.Content,
-                  Status = textDefault.Status,
-                  Template = null
-                },
-                Company = company,
+                Template =textDefault._id,
+                Company = company.GetViewList(),
                 _idAccount = accountTextDefault._id,
                 Content = textDefault.Content,
                 Name = textDefault.Name,
@@ -536,27 +452,15 @@ namespace Manager.Services.Specific
           Questions local;
           foreach (Account accountQuestion in accounts)
           {
-            company = serviceCompany.GetAllFreeNewVersion(p => p._idAccount == accountQuestion._id).Result.FirstOrDefault();
-            local = serviceQuestions.GetFreeNewVersion(p => p._idAccount == accountQuestion._idAccount && p.Template._id == question._id).Result;
+            company = serviceCompany.GetFreeNewVersion(p => p._idAccount == accountQuestion._id).Result;
+            local = serviceQuestions.GetFreeNewVersion(p => p._idAccount == accountQuestion._idAccount && p.Template == question._id).Result;
             if (local == null)
             {
               local = new Questions()
               {
-                Template = new Questions()
-                {
-                  Content = question.Content,
-                  Company = question.Company,
-                  Name = question.Name,
-                  Order = question.Order,
-                  Status = question.Status,
-                  TypeQuestion = question.TypeQuestion,
-                  TypeRotine = question.TypeRotine,
-                  _idAccount = question._idAccount,
-                  _id = question._id,
-                  Template = null
-                },
+                Template =question._id,
                 Content = question.Content,
-                Company = company,
+                Company = company.GetViewList(),
                 Name = question.Name,
                 Order = question.Order,
                 Status = question.Status,
@@ -582,8 +486,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceCompany.GetAllNewVersion(p => p._id == idcompany).Result.FirstOrDefault()
-          .Skills.Select(p => p.GetViewList()).ToList();
+        return serviceCompany.GetNewVersion(p => p._id == idcompany).Result.Skills;
       }
       catch (Exception e)
       {
@@ -617,7 +520,7 @@ namespace Manager.Services.Specific
         //return "error_occupation_exists";
         var item = serviceProcessLevelTwo.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
 
-        if (serviceOccupation.CountNewVersion(p => p.Process.Contains(item)).Result > 0)
+        if (serviceOccupation.CountNewVersion(p => p.Process.Contains(item.GetViewList())).Result > 0)
           return "error_occupation_exists";
 
 
@@ -638,7 +541,7 @@ namespace Manager.Services.Specific
       {
         var group = serviceGroup.GetAllNewVersion(p => p.Company._id == idcompany & p._id == idgroup).Result.FirstOrDefault();
         var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
-        Scope scopeOld;
+        ViewListScope scopeOld;
         if (sum)
         {
           var min = group.Scope.Where(p => p.Order > scope.Order).Min(p => p.Order);
@@ -680,7 +583,7 @@ namespace Manager.Services.Specific
       {
         var occupation = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany & p._id == idoccupation).Result.FirstOrDefault();
         var activities = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
-        Activitie activitiesOld;
+        ViewListActivitie activitiesOld;
         if (sum)
         {
           var min = occupation.Activities.Where(p => p.Order > activities.Order).Min(p => p.Order);
@@ -1081,11 +984,11 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewListCbo> ListCBO()
+    public List<ViewListCbo> ListCbo()
     {
       try
       {
-        var cbo = serviceCbo.GetAuthentication(p => p.Status == EnumStatus.Enabled)
+        var Cbo = serviceCbo.GetAuthentication(p => p.Status == EnumStatus.Enabled)
           .Select(p => new ViewListCbo()
           {
             _id = p._id,
@@ -1093,7 +996,7 @@ namespace Manager.Services.Specific
             Name = p.Name
           })
           .ToList();
-        return cbo;
+        return Cbo;
       }
       catch (Exception e)
       {
@@ -1101,7 +1004,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudCbo GetCBO(string id)
+    public ViewCrudCbo GetCbo(string id)
     {
       try
       {
@@ -1150,10 +1053,10 @@ namespace Manager.Services.Specific
           var process = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == item._id).Result.OrderBy(p => p.Order).ToList();
           foreach (var row in process)
           {
-            row.Process = new List<ProcessLevelTwo>();
+            row.Process = new List<ViewListProcessLevelTwo>();
             foreach (var leveltwo in serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == row._id).Result.OrderBy(p => p.Order).ToList())
             {
-              row.Process.Add(leveltwo);
+              row.Process.Add(leveltwo.GetViewList());
             }
 
             item.ProcessLevelOnes.Add(row.GetViewList());
@@ -1242,10 +1145,10 @@ namespace Manager.Services.Specific
           var process = serviceProcessLevelOne.GetAllNewVersion(p => p.Area._id == item._id).Result.OrderBy(p => p.Order).ToList();
           foreach (var row in process)
           {
-            row.Process = new List<ProcessLevelTwo>();
+            row.Process = new List<ViewListProcessLevelTwo>();
             foreach (var leveltwo in serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == row._id).Result.OrderBy(p => p.Order).ToList())
             {
-              row.Process.Add(leveltwo);
+              row.Process.Add(leveltwo.GetViewList());
             }
 
             item.ProcessLevelOnes.Add(row.GetViewList());
@@ -1315,7 +1218,6 @@ namespace Manager.Services.Specific
           _id = p._id,
           Name = p.Name,
           Content = p.Content,
-          Company = new ViewListCompany() { _id = p.Company._id, Name = p.Company.Name },
           Order = p.Order,
           TypeQuestion = p.TypeQuestion,
           TypeRotine = p.TypeRotine
@@ -1370,11 +1272,11 @@ namespace Manager.Services.Specific
           Axis = view.Axis,
           Sphere = view.Sphere,
           Status = EnumStatus.Enabled,
-          Skills = new List<Skill>(),
-          Schooling = new List<Schooling>(),
+          Skills = new List<ViewListSkill>(),
+          Schooling = new List<ViewCrudSchooling>(),
           Line = line,
           Company = view.Company,
-          Scope = new List<Scope>()
+          Scope = new List<ViewListScope>()
         };
         return serviceGroup.InsertNewVersion(group).Result.GetViewCrud();
       }
@@ -1402,7 +1304,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        company.Skills.Add(skill);
+        company.Skills.Add(skill.GetViewList());
         serviceCompany.Update(company, null);
 
         UpdateCompanyAll(company);
@@ -1436,14 +1338,14 @@ namespace Manager.Services.Specific
         var group = new Group()
         {
           Name = view.Name,
-          Axis = serviceAxis.GetAllNewVersion(p => p._id == view.Axis._id).Result.FirstOrDefault(),
-          Sphere = serviceSphere.GetAllNewVersion(p => p._id == view.Sphere._id).Result.FirstOrDefault(),
+          Axis = serviceAxis.GetNewVersion(p => p._id == view.Axis._id).Result.GetViewList(),
+          Sphere = serviceSphere.GetNewVersion(p => p._id == view.Sphere._id).Result.GetViewList(),
           Status = EnumStatus.Enabled,
-          Skills = new List<Skill>(),
-          Schooling = new List<Schooling>(),
+          Skills = new List<ViewListSkill>(),
+          Schooling = new List<ViewCrudSchooling>(),
           Line = line,
-          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
-          Scope = new List<Scope>()
+          Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result.GetViewList(),
+          Scope = new List<ViewListScope>()
         };
         return serviceGroup.InsertNewVersion(group).Result.GetViewCrud();
       }
@@ -1468,7 +1370,7 @@ namespace Manager.Services.Specific
         //  return "error_exists_schooling";
 
         //view.Group.Schooling.Add(AddSchooling(view.Schooling));
-        group.Schooling.Add(schooling);
+        group.Schooling.Add(schooling.GetViewCrud());
         serviceGroup.Update(group, null);
         UpdateGroupAll(group);
         return "ok";
@@ -1502,16 +1404,14 @@ namespace Manager.Services.Specific
         var scope = new Scope()
         {
           _id = view.Scope._id,
-          _idAccount = _user._idAccount,
           Order = order,
-          Name = view.Scope.Name,
-          Status = EnumStatus.Enabled
+          Name = view.Scope.Name
         };
 
         if (scope._id == null)
           scope._id = ObjectId.GenerateNewId().ToString();
 
-        group.Scope.Add(scope);
+        group.Scope.Add(scope.GetViewList());
         serviceGroup.Update(group, null);
         UpdateGroupAll(group);
         return "ok";
@@ -1539,7 +1439,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        group.Skills.Add(skill);
+        group.Skills.Add(skill.GetViewList());
         serviceGroup.Update(group, null);
         UpdateGroupAll(group);
         return "ok";
@@ -1573,13 +1473,11 @@ namespace Manager.Services.Specific
         {
           Order = order,
           _id = ObjectId.GenerateNewId().ToString(),
-          _idAccount = _user._idAccount,
-          Name = view.Activities.Name,
-          Status = EnumStatus.Enabled
+          Name = view.Activities.Name
         };
 
 
-        occupation.Activities.Add(activitie);
+        occupation.Activities.Add(activitie.GetViewList());
         serviceOccupation.Update(occupation, null);
         UpdateOccupationAll(occupation);
         return "ok";
@@ -1619,12 +1517,10 @@ namespace Manager.Services.Specific
             {
               Order = order,
               _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = _user._idAccount,
-              Name = view.Activities.Name,
-              Status = EnumStatus.Enabled
+              Name = view.Activities.Name
             };
 
-            occupation.Activities.Add(activitie);
+            occupation.Activities.Add(activitie.GetViewList());
           }
         }
 
@@ -1671,7 +1567,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        occupation.Skills.Add(skill);
+        occupation.Skills.Add(skill.GetViewList());
         serviceOccupation.Update(occupation, null);
         UpdateOccupationAll(occupation);
         return "ok";
@@ -1734,7 +1630,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddCBO(ViewCrudCbo view)
+    public string AddCbo(ViewCrudCbo view)
     {
       try
       {
@@ -1761,7 +1657,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           TypeAxis = view.TypeAxis,
           Status = EnumStatus.Enabled,
-          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault()
+          Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result.GetViewList()
         });
         return "ok";
       }
@@ -1782,25 +1678,23 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Line = view.Line,
           Status = EnumStatus.Enabled,
-          Group = group,
-          Skills = new List<Skill>(),
-          CBO = (view.Cbo == null) ? null : serviceCbo.GetAllNewVersion(p => p._id == view.Cbo._id).Result.FirstOrDefault(),
-          Activities = new List<Activitie>(),
+          Group = group.GetViewList(),
+          Skills = new List<ViewListSkill>(),
+          Cbo = view.Cbo,
+          Activities = new List<ViewListActivitie>(),
           SalaryScales = new List<SalaryScaleGrade>(),
-          Schooling = new List<Schooling>(),
-          Process = new List<ProcessLevelTwo>()
+          Schooling = new List<ViewCrudSchooling>(),
+          Process = new List<ViewListProcessLevelTwo>()
         };
 
         foreach (var item in view.Process)
-          occupation.Process.Add(serviceProcessLevelTwo.GetAllNewVersion(p => p._id == item._id).Result.FirstOrDefault());
+          occupation.Process.Add(serviceProcessLevelTwo.GetNewVersion(p => p._id == item._id).Result.GetViewList());
 
         if (view.SalaryScales != null)
           foreach (var item in view.SalaryScales)
             occupation.SalaryScales.Add(new SalaryScaleGrade()
             {
               _id = ObjectId.GenerateNewId().ToString(),
-              _idAccount = _user._idAccount,
-              Status = EnumStatus.Enabled,
               NameGrade = item.NameGrade,
               NameSalaryScale = item.Name,
               _idGrade = item._idGrade,
@@ -1847,7 +1741,7 @@ namespace Manager.Services.Specific
         {
           Name = view.Name,
           TypeSphere = view.TypeSphere,
-          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
+          Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result.GetViewList(),
           Status = EnumStatus.Enabled
         });
         return "ok";
@@ -1869,7 +1763,6 @@ namespace Manager.Services.Specific
           TypeQuestion = view.TypeQuestion,
           TypeRotine = view.TypeRotine,
           Status = EnumStatus.Enabled,
-          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault(),
           Content = view.Content
         });
         return "ok";
@@ -1898,8 +1791,8 @@ namespace Manager.Services.Specific
         serviceProcessLevelOne.InsertNewVersion(new ProcessLevelOne()
         {
           Name = model.Name,
-          Area = serviceArea.GetAllNewVersion(p => p._id == model.Area._id).Result.FirstOrDefault(),
-          Process = new List<ProcessLevelTwo>(),
+          Area = serviceArea.GetNewVersion(p => p._id == model.Area._id).Result.GetViewList(),
+          Process = new List<ViewListProcessLevelTwo>(),
           Order = model.Order,
           Status = EnumStatus.Enabled
         });
@@ -1918,7 +1811,7 @@ namespace Manager.Services.Specific
         serviceTextDefault.InsertNewVersion(new TextDefault()
         {
           Name = model.Name,
-          Company = serviceCompany.GetAllNewVersion(p => p._id == model.Company._id).Result.FirstOrDefault(),
+          Company = serviceCompany.GetNewVersion(p => p._id == model.Company._id).Result.GetViewList(),
           Content = model.Content,
           TypeText = model.TypeText,
           Status = EnumStatus.Enabled
@@ -1950,7 +1843,7 @@ namespace Manager.Services.Specific
           Name = model.Name,
           Comments = model.Comments,
           Order = model.Order,
-          ProcessLevelOne = serviceProcessLevelOne.GetAllNewVersion(p => p._id == model.ProcessLevelOne._id).Result.FirstOrDefault(),
+          ProcessLevelOne = serviceProcessLevelOne.GetNewVersion(p => p._id == model.ProcessLevelOne._id).Result.GetViewList(),
           Status = EnumStatus.Enabled
         });
         return "ok";
@@ -2261,13 +2154,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeleteCBO(string id)
+    public string DeleteCbo(string id)
     {
       try
       {
-        var cbo = serviceCbo.GetAuthentication(p => p._id == id).FirstOrDefault();
-        cbo.Status = EnumStatus.Disabled;
-        serviceCbo.UpdateAccount(cbo, null);
+        var Cbo = serviceCbo.GetAuthentication(p => p._id == id).FirstOrDefault();
+        Cbo.Status = EnumStatus.Disabled;
+        serviceCbo.UpdateAccount(Cbo, null);
         return "update";
       }
       catch (Exception e)
@@ -2302,9 +2195,9 @@ namespace Manager.Services.Specific
           {
             _id = item._id,
             Name = item.Name,
-            Axis = item.Axis.GetViewList(),
-            Sphere = item.Sphere.GetViewList(),
-            Company = item.Company.GetViewList(),
+            Axis = item.Axis,
+            Sphere = item.Sphere,
+            Company = item.Company,
             Line = item.Line,
             ScopeCount = item.Scope.Count(),
             SchollingCount = item.Schooling.Count(),
@@ -2325,8 +2218,8 @@ namespace Manager.Services.Specific
       try
       {
         AdjustOccuptaions();
-        var area = serviceArea.GetAllNewVersion(p => p._id == idarea).Result.FirstOrDefault();
-        //return occupationService.GetAllNewVersion(p => p.Area._id == idarea & p.Group.Company._id == idcompany).OrderBy(p => p.Name).ToList();
+        var area = serviceArea.GetNewVersion(p => p._id == idarea).Result;
+
         var itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
         List<ViewGetOccupation> list = new List<ViewGetOccupation>();
         foreach (var item in itens)
@@ -2379,7 +2272,7 @@ namespace Manager.Services.Specific
                   Schooling = item.Schooling,
                   Activities = item.Activities,
                   Template = item.Template,
-                  CBO = item.CBO,
+                  Cbo = item.Cbo,
                   SpecificRequirements = item.SpecificRequirements,
                   Process = item.Process,
                   _id = item._id,
@@ -2609,7 +2502,7 @@ namespace Manager.Services.Specific
               _id = p.ProcessLevelOne._id,
               Name = p.ProcessLevelOne.Name,
               Order = p.Order,
-              Area = p.ProcessLevelOne.Area.GetViewList()
+              Area = p.ProcessLevelOne.Area
             }
           })
           .ToList();
@@ -2644,7 +2537,7 @@ namespace Manager.Services.Specific
                 _id = row.ProcessLevelOne._id,
                 Name = row.ProcessLevelOne.Name,
                 Order = row.Order,
-                Area = row.ProcessLevelOne.Area.GetViewList()
+                Area = row.ProcessLevelOne.Area
               }
             });
           }
@@ -2678,8 +2571,7 @@ namespace Manager.Services.Specific
                 _id = row.ProcessLevelOne._id,
                 Name = row.ProcessLevelOne.Name,
                 Order = row.Order,
-                Area = row.ProcessLevelOne.Area.GetViewList()
-              }
+                Area = row.ProcessLevelOne.Area              }
             });
           }
         }
@@ -2768,7 +2660,7 @@ namespace Manager.Services.Specific
         List<Group> groups = new List<Group>();
         foreach (var item in serviceGroup.GetAllNewVersion(p => p.Company._id == idcompany).Result)
         {
-          item.Occupations = serviceOccupation.GetAllNewVersion(p => p.Group._id == item._id).Result.ToList();
+          item.Occupations = serviceOccupation.GetAllNewVersion(p => p.Group._id == item._id).Result.Select(p => p.GetViewList()).ToList();
           groups.Add(item);
         }
         return groups.Select(p => p.GetViewList()).OrderByDescending(p => p.Sphere.TypeSphere).ThenByDescending(p => p.Axis.TypeAxis).ThenByDescending(p => p.Line).ToList();
@@ -2795,7 +2687,7 @@ namespace Manager.Services.Specific
               NameGrade = s.NameGrade,
               _idGrade = s._idGrade
             }).ToList(),
-            Group = p.Group.GetViewList(),
+            Group = p.Group,
             Line = p.Line,
             Process = p.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
             .Select(x => new ViewListProcessLevelTwo()
@@ -2809,7 +2701,7 @@ namespace Manager.Services.Specific
                 _id = x.ProcessLevelOne._id,
                 Name = x.ProcessLevelOne.Name,
                 Order = x.ProcessLevelOne.Order,
-                Area = x.ProcessLevelOne.Area.GetViewList()
+                Area = x.ProcessLevelOne.Area
               }
             })
             .ToList()
@@ -2868,7 +2760,7 @@ namespace Manager.Services.Specific
           {
             _id = p._id,
             Name = p.Name,
-            Group = p.Group.GetViewList(),
+            Group = p.Group,
             Line = p.Line,
             Process = p.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
             .Select(x => new ViewListProcessLevelTwo()
@@ -2882,7 +2774,7 @@ namespace Manager.Services.Specific
                 _id = x.ProcessLevelOne._id,
                 Name = x.ProcessLevelOne.Name,
                 Order = x.ProcessLevelOne.Order,
-                Area = x.ProcessLevelOne.Area.GetViewList()
+                Area = x.ProcessLevelOne.Area
               }
             })
             .ToList()
@@ -3015,8 +2907,6 @@ namespace Manager.Services.Specific
         {
           Name = view.Name,
           Order = view.Order,
-          Status = EnumStatus.Enabled,
-          _idAccount = _user._idAccount,
           _id = view._id
         };
         if (activitie._id == null)
@@ -3024,7 +2914,7 @@ namespace Manager.Services.Specific
 
         var activitieOld = occupation.Activities.Where(p => p._id == activitie._id).FirstOrDefault();
         occupation.Activities.Remove(activitieOld);
-        occupation.Activities.Add(activitie);
+        occupation.Activities.Add(activitie.GetViewList());
 
         serviceOccupation.Update(occupation, null);
         UpdateOccupationAll(occupation);
@@ -3045,8 +2935,6 @@ namespace Manager.Services.Specific
         {
           Name = view.Name,
           Order = view.Order,
-          Status = EnumStatus.Enabled,
-          _idAccount = _user._idAccount,
           _id = view._id
         };
         if (scope._id == null)
@@ -3054,7 +2942,7 @@ namespace Manager.Services.Specific
 
         var scopeOld = group.Scope.Where(p => p._id == scope._id).FirstOrDefault();
         group.Scope.Remove(scopeOld);
-        group.Scope.Add(scope);
+        group.Scope.Add(scope.GetViewList());
 
         serviceGroup.Update(group, null);
         UpdateGroupAll(group);
@@ -3078,7 +2966,7 @@ namespace Manager.Services.Specific
 
         var schoolOld = group.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
         group.Schooling.Remove(schoolOld);
-        group.Schooling.Add(schooling);
+        group.Schooling.Add(schooling.GetViewCrud());
 
         serviceGroup.Update(group, null);
         UpdateGroupAll(group);
@@ -3150,7 +3038,7 @@ namespace Manager.Services.Specific
       {
         var model = serviceAxis.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
+        model.Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result.GetViewList();
         model.TypeAxis = view.TypeAxis;
 
         serviceAxis.Update(model, null);
@@ -3163,7 +3051,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateCBO(ViewCrudCbo view)
+    public string UpdateCbo(ViewCrudCbo view)
     {
       try
       {
@@ -3188,10 +3076,10 @@ namespace Manager.Services.Specific
         var group = serviceGroup.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
 
         group.Name = view.Name;
-        group.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
+        group.Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result.GetViewList();
         group.Line = view.Line;
-        group.Axis = serviceAxis.GetAllNewVersion(p => p._id == view.Axis._id).Result.FirstOrDefault();
-        group.Sphere = serviceSphere.GetAllNewVersion(p => p._id == view.Sphere._id).Result.FirstOrDefault();
+        group.Axis = serviceAxis.GetNewVersion(p => p._id == view.Axis._id).Result.GetViewList();
+        group.Sphere = serviceSphere.GetNewVersion(p => p._id == view.Sphere._id).Result.GetViewList();
 
         if ((groupOld.Sphere._id != view.Sphere._id) || (groupOld.Axis._id != view.Axis._id))
         {
@@ -3218,12 +3106,12 @@ namespace Manager.Services.Specific
         var occupationOld = serviceOccupation.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         var occupation = serviceOccupation.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
 
-        occupation.Group = serviceGroup.GetAllNewVersion(p => p._id == view.Group._id).Result.FirstOrDefault();
+        occupation.Group = serviceGroup.GetNewVersion(p => p._id == view.Group._id).Result.GetViewList();
         occupation.Name = view.Name;
         occupation.Line = view.Line;
 
         if (view.Cbo != null)
-          occupation.CBO = serviceCbo.GetAllNewVersion(p => p._id == view.Cbo._id).Result.FirstOrDefault();
+          occupation.Cbo = serviceCbo.GetNewVersion(p => p._id == view.Cbo._id).Result.GetViewList();
 
         occupation.SalaryScales = new List<SalaryScaleGrade>();
         if (view.SalaryScales != null)
@@ -3236,19 +3124,17 @@ namespace Manager.Services.Specific
               NameSalaryScale = item.Name,
               _idGrade = item._idGrade,
               NameGrade = item.NameGrade,
-              Status = EnumStatus.Enabled,
-              _idAccount = _user._idAccount,
               _id = ObjectId.GenerateNewId().ToString()
             });
           }
         }
 
 
-        occupation.Process = new List<ProcessLevelTwo>();
+        occupation.Process = new List<ViewListProcessLevelTwo>();
         if (view.Process != null)
         {
           foreach (var item in view.Process)
-            occupation.Process.Add(serviceProcessLevelTwo.GetAllNewVersion(p => p._id == item._id).Result.FirstOrDefault());
+            occupation.Process.Add(serviceProcessLevelTwo.GetNewVersion(p => p._id == item._id).Result.GetViewList());
         }
 
 
@@ -3257,7 +3143,8 @@ namespace Manager.Services.Specific
 
         if (occupationOld.Group != occupation.Group)
         {
-          foreach (var school in occupation.Group.Schooling)
+          var group = serviceGroup.GetNewVersion(p => p._id == occupation.Group._id).Result;
+          foreach (var school in group.Schooling)
           {
             foreach (var schoolOccupation in occupationOld.Schooling)
             {
@@ -3279,13 +3166,11 @@ namespace Manager.Services.Specific
             if (item._id == null)
               item._id = ObjectId.GenerateNewId().ToString();
 
-            item._idAccount = _user._idAccount;
             occupation.SalaryScales.Add(item);
           }
         }
 
         serviceOccupation.Update(occupation, null);
-
         UpdateOccupationAll(occupation);
         return "update";
       }
@@ -3322,7 +3207,6 @@ namespace Manager.Services.Specific
         var model = serviceQuestions.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
         model.Content = view.Content;
-        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
         model.TypeQuestion = view.TypeQuestion;
         model.TypeRotine = view.TypeRotine;
 
@@ -3341,7 +3225,7 @@ namespace Manager.Services.Specific
       {
         var model = serviceSphere.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
+        model.Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result.GetViewList();
         model.TypeSphere = view.TypeSphere;
 
 
@@ -3380,7 +3264,7 @@ namespace Manager.Services.Specific
       {
         var model = serviceProcessLevelOne.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Area = serviceArea.GetAllNewVersion(p => p._id == view.Area._id).Result.FirstOrDefault();
+        model.Area = serviceArea.GetNewVersion(p => p._id == view.Area._id).Result.GetViewList();
         model.Order = view.Order;
 
         serviceProcessLevelOne.Update(model, null);
@@ -3398,7 +3282,7 @@ namespace Manager.Services.Specific
       {
         var model = serviceProcessLevelTwo.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.ProcessLevelOne = serviceProcessLevelOne.GetAllNewVersion(p => p._id == view.ProcessLevelOne._id).Result.FirstOrDefault();
+        model.ProcessLevelOne = serviceProcessLevelOne.GetNewVersion(p => p._id == view.ProcessLevelOne._id).Result.GetViewList();
         model.Order = view.Order;
         model.Comments = view.Comments;
 
@@ -3420,7 +3304,7 @@ namespace Manager.Services.Specific
       {
         var model = serviceTextDefault.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Company._id).Result.FirstOrDefault();
+        model.Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result.GetViewList();
         model.Content = view.Content;
         model.TypeText = view.TypeText;
 
@@ -3439,26 +3323,26 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var group = serviceGroup.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        var company = serviceCompany.GetAllNewVersion(p => p._id == group.Company._id).Result.FirstOrDefault();
+        var group = serviceGroup.GetNewVersion(p => p._id == id).Result;
+        var company = serviceCompany.GetNewVersion(p => p._id == group.Company._id).Result;
 
         var view = new ViewMapGroup()
         {
           _id = group._id,
           Name = group.Name,
           Line = group.Line,
-          Company = group.Company.GetViewList(),
-          Axis = group.Axis.GetViewList(),
-          Sphere = group.Sphere.GetViewList(),
-          Schooling = group.Schooling?.OrderBy(o => o.Order).Select(p => p.GetViewList()).ToList(),
+          Company = group.Company,
+          Axis = group.Axis,
+          Sphere = group.Sphere,
+          Schooling = group.Schooling?.OrderBy(o => o.Order).ToList(),
           Scope = group.Scope?.OrderBy(o => o.Order).Select(p => new ViewListScope()
           {
             _id = p._id,
             Name = p.Name,
             Order = p.Order
           }).ToList(),
-          Skills = group.Skills?.OrderBy(o => o.Name).Select(p => p.GetViewList()).ToList(),
-          SkillsCompany = group.Company.Skills?.OrderBy(o => o.Name).Select(p => p.GetViewList()).ToList()
+          Skills = group.Skills?.OrderBy(o => o.Name).ToList(),
+          SkillsCompany = company.Skills?.OrderBy(o => o.Name).ToList()
         };
         return view;
       }
@@ -3507,7 +3391,7 @@ namespace Manager.Services.Specific
           {
             _id = item._id,
             Name = item.Name,
-            Area = item.Area.GetViewList(),
+            Area = item.Area,
             Order = item.Order,
             Process = serviceProcessLevelTwo.GetAllNewVersion(p => p.ProcessLevelOne._id == item._id).Result.Select(x => new ViewCrudProcessLevelTwo()
             {
@@ -3559,7 +3443,7 @@ namespace Manager.Services.Specific
           SpecificRequirements = occupation.SpecificRequirements,
           Company = new ViewListCompany() { _id = company._id, Name = company.Name },
           Group = group.GetViewList(),
-          Activities = occupation.Activities?.OrderBy(o => o.Order).Select(x => x.GetViewList()).ToList(),
+          Activities = occupation.Activities?.OrderBy(o => o.Order).ToList(),
           Process = occupation.Process.Select(x => new ViewListProcessLevelTwo()
           {
             _id = x._id,
@@ -3570,7 +3454,7 @@ namespace Manager.Services.Specific
               _id = x.ProcessLevelOne._id,
               Name = x.ProcessLevelOne.Name,
               Order = x.ProcessLevelOne.Order,
-              Area = x.ProcessLevelOne?.Area.GetViewList()
+              Area = x.ProcessLevelOne?.Area
             }
           }).ToList(),
           Schooling = occupation.Schooling?.OrderBy(o => o.Order).Select(x => new ViewCrudSchooling()
@@ -3581,9 +3465,9 @@ namespace Manager.Services.Specific
             Type = x.Type,
             Order = x.Order
           }).ToList(),
-          Skills = occupation.Skills?.OrderBy(o => o?.Name).Select(x => x?.GetViewList()).ToList(),
-          SkillsCompany = company.Skills?.OrderBy(o => o.Name).Select(x => x.GetViewList()).ToList(),
-          SkillsGroup = group.Skills?.OrderBy(o => o.Name).Select(x => x.GetViewList()).ToList(),
+          Skills = occupation.Skills?.OrderBy(o => o?.Name).ToList(),
+          SkillsCompany = company.Skills?.OrderBy(o => o.Name).ToList(),
+          SkillsGroup = group.Skills?.OrderBy(o => o.Name).ToList(),
           ScopeGroup = group.Scope?.OrderBy(o => o.Order).Select(x => new ViewListScope()
           {
             _id = x._id,
@@ -3608,7 +3492,7 @@ namespace Manager.Services.Specific
           _id = p._id,
           Name = p.Name,
           Order = p.Order,
-          Area = p.Area.GetViewList()
+          Area = p.Area
         }).FirstOrDefault();
       }
       catch (Exception e)
@@ -3633,7 +3517,7 @@ namespace Manager.Services.Specific
             _id = p.ProcessLevelOne._id,
             Name = p.ProcessLevelOne.Name,
             Order = p.ProcessLevelOne.Order,
-            Area = p.ProcessLevelOne.Area.GetViewList()
+            Area = p.ProcessLevelOne.Area
           }
         }).FirstOrDefault();
       }
@@ -3674,7 +3558,7 @@ namespace Manager.Services.Specific
             {
               company.Skills.Remove(item);
               if (remove == false)
-                company.Skills.Add(skill);
+                company.Skills.Add(skill.GetViewList());
 
               break;
             }
@@ -3691,7 +3575,7 @@ namespace Manager.Services.Specific
               {
                 group.Skills.Remove(item);
                 if (remove == false)
-                  group.Skills.Add(skill);
+                  group.Skills.Add(skill.GetViewList());
 
                 break;
               }
@@ -3708,7 +3592,7 @@ namespace Manager.Services.Specific
               {
                 occupation.Skills.Remove(item);
                 if (remove == false)
-                  occupation.Skills.Add(skill);
+                  occupation.Skills.Add(skill.GetViewList());
 
                 break;
               }
@@ -3782,31 +3666,31 @@ namespace Manager.Services.Specific
       {
         foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == company._id).Result.ToList())
         {
-          item.Company = company;
+          item.Company = company.GetViewList();
           servicePerson.Update(item, null);
         }
 
         foreach (var item in serviceSphere.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
         {
-          item.Company = company;
+          item.Company = company.GetViewList();
           serviceSphere.Update(item, null);
         }
 
         foreach (var item in serviceAxis.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
         {
-          item.Company = company;
+          item.Company = company.GetViewList();
           serviceAxis.Update(item, null);
         }
 
         foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == company._id).Result.ToList())
         {
-          item.Group.Company = company;
+          item.Group.Company = company.GetViewList();
           serviceOccupation.Update(item, null);
         }
 
         foreach (var item in serviceGroup.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
         {
-          item.Company = company;
+          item.Company = company.GetViewList();
           serviceGroup.Update(item, null);
         }
 
@@ -3830,21 +3714,7 @@ namespace Manager.Services.Specific
       {
         foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == group._id).Result.ToList())
         {
-          item.Group = new Group()
-          {
-            Name = group.Name,
-            Company = group.Company,
-            Axis = group.Axis,
-            Sphere = group.Sphere,
-            Line = group.Line,
-            Skills = group.Skills,
-            Schooling = group.Schooling,
-            Scope = group.Scope,
-            Template = group.Template,
-            _id = group._id,
-            _idAccount = group._idAccount,
-            Status = group.Status
-          };
+          item.Group = group.GetViewList();
           foreach (var school in group.Schooling)
           {
             foreach (var schoolOccupation in item.Schooling)
@@ -3861,16 +3731,17 @@ namespace Manager.Services.Specific
 
         foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).Result.ToList())
         {
-          item.Occupation.Group = group;
+          item.Occupation.Group = group.GetViewList();
           foreach (var school in group.Schooling)
           {
-            foreach (var schoolOccupation in item.Occupation.Schooling)
+            var occupation = serviceOccupation.GetNewVersion(p => p._id == item.Occupation._id).Result;
+            foreach (var schoolOccupation in occupation.Schooling)
             {
               if (school._id == schoolOccupation._id)
                 school.Complement = schoolOccupation.Complement;
             }
           }
-          item.Occupation.Schooling = group.Schooling;
+          //item.Occupation.Schooling = group.Schooling;
           servicePerson.Update(item, null);
         }
 
@@ -3881,15 +3752,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task UpdateCBOAll(Cbo cbo)
+    private async Task UpdateCboAll(Cbo Cbo)
     {
       try
       {
-        foreach (var item in serviceOccupation.GetAuthentication(p => p.CBO._id == cbo._id).ToList())
+        foreach (var item in serviceOccupation.GetAuthentication(p => p.Cbo._id == Cbo._id).ToList())
         {
-          item.CBO = cbo;
+          item.Cbo = Cbo.GetViewList();
           serviceOccupation.UpdateAccount(item, null);
-          UpdateOccupationAllCBO(item);
+          UpdateOccupationAllCbo(item);
         }
 
       }
@@ -3899,13 +3770,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    private async Task UpdateOccupationAllCBO(Occupation occupation)
+    private async Task UpdateOccupationAllCbo(Occupation occupation)
     {
       try
       {
         foreach (var item in servicePerson.GetAuthentication(p => p.Occupation._id == occupation._id).ToList())
         {
-          item.Occupation = occupation;
+          item.Occupation = occupation.GetViewList();
           servicePerson.UpdateAccount(item, null);
         }
 
@@ -3939,7 +3810,7 @@ namespace Manager.Services.Specific
       {
         foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == groupold._id).Result.ToList())
         {
-          item.Group = groupnew;
+          item.Group = groupnew.GetViewList();
           serviceOccupation.Update(item, null);
           UpdateOccupationAll(item);
         }
@@ -3968,7 +3839,7 @@ namespace Manager.Services.Specific
         if (remove == true)
           item.Sphere = null;
         else
-          item.Sphere = sphere;
+          item.Sphere = sphere.GetViewList();
 
         this.serviceGroup.Update(item, null);
         UpdateGroupAll(item);
@@ -3983,7 +3854,7 @@ namespace Manager.Services.Specific
         if (remove == true)
           item.Axis = null;
         else
-          item.Axis = axis;
+          item.Axis = axis.GetViewList();
 
         this.serviceGroup.Update(item, null);
         UpdateGroupAll(item);
@@ -4064,7 +3935,7 @@ namespace Manager.Services.Specific
               {
                 if (proc.ProcessLevelOne.Area._id == area._id)
                 {
-                  proc.ProcessLevelOne.Area = area;
+                  proc.ProcessLevelOne.Area = area.GetViewList();
                   this.serviceOccupation.Update(item, null);
                   UpdateOccupationAll(item);
                 }
@@ -4098,7 +3969,7 @@ namespace Manager.Services.Specific
               if (proc._id == processLevelTwo._id)
               {
                 item.Process.Remove(proc);
-                item.Process.Add(processLevelTwo);
+                item.Process.Add(processLevelTwo.GetViewList());
                 this.serviceOccupation.Update(item, null);
                 UpdateOccupationAll(item);
                 break;

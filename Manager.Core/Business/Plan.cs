@@ -17,7 +17,7 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Description { get; set; }
     public DateTime? Deadline { get; set; }
-    public List<Skill> Skills { get; set; }
+    public List<ViewListSkill> Skills { get; set; }
     public DateTime? DateInclude { get; set; }
     public EnumTypePlan TypePlan { get; set; }
     public EnumSourcePlan SourcePlan { get; set; }

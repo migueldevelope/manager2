@@ -169,12 +169,12 @@ namespace Manager.Services.Specific
           };
           var auto = new AutoManager
           {
-            Person = person,
-            Requestor = manager,
+            Person = person.GetViewListBase(),
+            Requestor = manager.GetViewListBase(),
             StatusAutoManager = EnumStatusAutoManager.Requested,
             Status = EnumStatus.Enabled,
             OpenDate = DateTime.Now,
-            Workflow = serviceWorkflow.NewFlow(viewFlow)
+            Workflow = serviceWorkflow.NewFlow(viewFlow).Select(p => p._id).ToList()
           };
           serviceAutoManager.InsertNewVersion(auto).Wait();
           //searsh model mail database
@@ -188,12 +188,12 @@ namespace Manager.Services.Specific
             Type = EnumTypeMailMessage.Put,
             Name = model.Name,
             Url = url,
-            Body = " { '_idWorkFlow': '" + auto.Workflow.FirstOrDefault()._id.ToString() + "' } "
+            Body = " { '_idWorkFlow': '" + auto.Workflow + "' } "
           };
           var idMessageApv = serviceMailMessage.InsertNewVersion(message).Result._id;
-          var requestor = servicePerson.GetAllNewVersion(p => p._id == auto.Workflow.FirstOrDefault().Requestor._id).Result.FirstOrDefault();
-          var body = model.Message.Replace("{Person}", auto.Workflow.FirstOrDefault().Requestor.User.Name).Replace("{Manager}", requestor.User.Name);
-          body = body.Replace("{Requestor}", auto.Requestor.User.Name);
+          var requestor = servicePerson.GetAllNewVersion(p => p._id == auto.Workflow.FirstOrDefault()).Result.FirstOrDefault();
+          var body = model.Message.Replace("{Person}", serviceWorkflow.GetNewVersion(p => p._id == auto.Workflow.FirstOrDefault()).Result.Requestor.Name).Replace("{Manager}", requestor.User.Name);
+          body = body.Replace("{Requestor}", auto.Requestor.Name);
           body = body.Replace("{Employee}", person.User.Name);
           // approved link
           body = body.Replace("{Approved}", model.Link + "genericmessage/" + idMessageApv.ToString());
@@ -255,13 +255,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var auto = serviceAutoManager.GetAllNewVersion(p => p.Person._id == idPerson & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).Result.FirstOrDefault();
+        var auto = serviceAutoManager.GetNewVersion(p => p.Person._id == idPerson & p.Requestor._id == idManager & p.StatusAutoManager == EnumStatusAutoManager.Requested).Result;
         if (auto == null)
           return "realized";
 
-        var list = new List<Workflow>();
+        var list = new List<string>();
         foreach (var item in auto.Workflow)
-          list.Add(serviceWorkflow.Disapproved(view));
+          list.Add(serviceWorkflow.Disapproved(view)._id);
+
         auto.Workflow = list;
         auto.StatusAutoManager = EnumStatusAutoManager.Disapproved;
         serviceAutoManager.Update(auto, null).Wait();
@@ -281,9 +282,10 @@ namespace Manager.Services.Specific
         if (auto == null)
           return "realized";
 
-        var list = new List<Workflow>();
+        var list = new List<string>();
         foreach (var item in auto.Workflow)
-          list.Add(serviceWorkflow.Approved(view));
+          list.Add(serviceWorkflow.Approved(view)._id);
+
         auto.Workflow = list;
         auto.StatusAutoManager = EnumStatusAutoManager.Approved;
         var manager = servicePerson.GetAllNewVersion(p => p._id == idManager).Result.FirstOrDefault();
@@ -321,19 +323,25 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return (from auto in serviceAutoManager.GetAllNewVersion()
-                select auto
-                    ).ToList()
-                    .Where(p => p.Workflow.Where(t => t.StatusWorkflow == EnumWorkflow.Open
-                    & t.Requestor._id == idManager).Count() > 0)
-                    .Select(auto => new ViewAutoManager()
-                    {
-                      IdWorkflow = auto.Workflow.FirstOrDefault()._id,
-                      IdRequestor = auto.Requestor._id,
-                      NameRequestor = auto.Requestor.User.Name,
-                      IdPerson = auto.Person._id.ToString(),
-                      NamePerson = auto.Person.User.Name
-                    }).ToList();
+        var listauto = serviceAutoManager.GetAllNewVersion();
+        List<ViewAutoManager> list = new List<ViewAutoManager>();
+        foreach (var auto in listauto)
+        {
+          var item = serviceWorkflow.GetNewVersion(p => auto.Workflow.Contains(p._id) & p.StatusWorkflow == EnumWorkflow.Open
+          & p.Requestor._id == idManager).Result;
+
+          if (item != null)
+            list.Add(new ViewAutoManager()
+            {
+              IdWorkflow = item._id,
+              IdRequestor = auto.Requestor._id,
+              NameRequestor = auto.Requestor.Name,
+              IdPerson = auto.Person._id.ToString(),
+              NamePerson = auto.Person.Name
+            });
+        }
+
+        return list;
       }
       catch (Exception e)
       {

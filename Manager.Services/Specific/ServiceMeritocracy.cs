@@ -722,7 +722,7 @@ namespace Manager.Services.Specific
         var person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
         var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
 
-        List<Activitie> activities = null;
+        List<ViewListActivitie> activities = null;
         if (occupation != null)
           activities = occupation.Activities;
 
@@ -748,7 +748,7 @@ namespace Manager.Services.Specific
               Name = person.User.Name,
               CurrentSchooling = person.User.Schooling?.Name,
               Salary = person.Salary,
-              OccupationSchooling = person.Occupation?.Schooling.FirstOrDefault()?.Name
+              OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name
             },
             MeritocracyActivities = new List<MeritocracyActivities>()
           }).Result;
@@ -894,9 +894,11 @@ namespace Manager.Services.Specific
         MeritocracyScore meritocracyScore = serviceMeritocracyScore.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+        Person person = servicePerson.GetNewVersion(p => p._id == meritocracy.Person._id).Result;
+        Occupation occupation = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result;
+
         MathMeritocracy(meritocracy);
         GradeScale(meritocracy);
-        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
         meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMeritocracy()
         {
@@ -912,7 +914,7 @@ namespace Manager.Services.Specific
             Name = person.User.Name,
             CurrentSchooling = person.User.Schooling?.Name,
             Salary = person.Salary,
-            OccupationSchooling = person.Occupation?.Schooling.FirstOrDefault()?.Name
+            OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name
           },
           WeightCompanyDate = meritocracy.WeightCompanyDate,
           WeightOccupationDate = meritocracy.WeightOccupationDate,
@@ -992,7 +994,7 @@ namespace Manager.Services.Specific
           FirstOrDefault().MeritocracyActivities
           .Select(x => new ViewListMeritocracyActivitie()
           {
-            Activitie = x.Activities.GetViewList(),
+            Activitie = x.Activities,
             Mark = x.Mark
           }).ToList();
 

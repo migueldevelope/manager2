@@ -28,13 +28,13 @@ namespace IntegrationClient
       if (File.Exists(string.Format("{0}/Connection.txt", Program.PersonLogin.IdAccount)))
       {
         Connection conn = FileClass.ReadFromBinaryFile<Connection>(string.Format("{0}/Connection.txt", Program.PersonLogin.IdAccount));
-        cboTipBd.Text = conn.BancoDados;
+        CboTipBd.Text = conn.BancoDados;
         txtCnxStr.Text = conn.ConnectionString;
         BtnValidCnx_Click(sender, e);
       }
       else
       {
-        cboTipBd.Text = "Nenhum";
+        CboTipBd.Text = "Nenhum";
       }
     }
 
@@ -44,7 +44,7 @@ namespace IntegrationClient
       {
         DataTable occupations;
         txtCnxStr.Text = txtCnxStr.Text.Replace(" ", string.Empty);
-        if (cboTipBd.Text.Equals("Oracle"))
+        if (CboTipBd.Text.Equals("Oracle"))
         {
           OracleConnectionTool cnn = new OracleConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2]);
           occupations = cnn.ExecuteQuery("SELECT * FROM JMSYSPAR WHERE ROWNUM<2");
@@ -61,7 +61,7 @@ namespace IntegrationClient
 
         Connection conn = new Connection
         {
-          BancoDados = cboTipBd.Text,
+          BancoDados = CboTipBd.Text,
           ConnectionString = txtCnxStr.Text
         };
         FileClass.WriteToBinaryFile(string.Format("{0}/Connection.txt", Program.PersonLogin.IdAccount), conn);
@@ -77,7 +77,7 @@ namespace IntegrationClient
 
     private void CboTipBd_SelectedIndexChanged(object sender, EventArgs e)
     {
-      switch (cboTipBd.Text)
+      switch (CboTipBd.Text)
       {
         case "Oracle":
           lblAjuCnx.Text = "Hostname ; User ; Password";
@@ -103,12 +103,12 @@ namespace IntegrationClient
 
       InfraIntegration infraService = new InfraIntegration(Program.PersonLogin);
       List<ViewListCompany> companys = infraService.GetCompanyList();
-      cboCompany.Items.Clear();
+      CboCompany.Items.Clear();
       foreach (var item in companys)
       {
-        cboCompany.Items.Add(string.Format("{0} - {1}", item.Name, item._id));
+        CboCompany.Items.Add(string.Format("{0} - {1}", item.Name, item._id));
         if (companyId.Equals(item._id))
-          cboCompany.SelectedIndex = cboCompany.Items.Count - 1;
+          CboCompany.SelectedIndex = CboCompany.Items.Count - 1;
       }
 
       string subPrcId = string.Empty;
@@ -116,12 +116,12 @@ namespace IntegrationClient
         subPrcId = FileClass.ReadFromBinaryFile<string>(string.Format("{0}/SubProcesso.txt", Program.PersonLogin.IdAccount));
 
       List<ViewListProcessLevelTwo> subProcessos = infraService.GetProcessLevelTwoList();
-      cboSubPro.Items.Clear();
+      CboSubPro.Items.Clear();
       foreach (var item in subProcessos)
       {
-        cboSubPro.Items.Add(string.Format("{0} - {1} - {2} - {3}", item.Name, item.ProcessLevelOne.Name, item.ProcessLevelOne.Area.Name, item._id));
+        CboSubPro.Items.Add(string.Format("{0} - {1} - {2} - {3}", item.Name, item.ProcessLevelOne.Name, item.ProcessLevelOne.Area.Name, item._id));
         if (subPrcId.Equals(item._id))
-          cboSubPro.SelectedIndex = cboSubPro.Items.Count - 1;
+          CboSubPro.SelectedIndex = CboSubPro.Items.Count - 1;
       }
 
       txtCmdCom.Text = "select * from (select 'Soft' tipo, descricao nome, conceito, compor codigo from jmgpecom where empresa = 100 union all select 'Hard' tipo, descricao nome, conceito, tecnica codigo from jmgpetec where empresa = 100) tab order by tab.tipo DESC, tab.nome";
@@ -135,7 +135,7 @@ namespace IntegrationClient
 
     private void CboSubPro_SelectedIndexChanged(object sender, EventArgs e)
     {
-      lblIdSubProc.Text = cboSubPro.Text.Substring(cboSubPro.Text.LastIndexOf(" ") + 1, 24);
+      lblIdSubProc.Text = CboSubPro.Text.Substring(CboSubPro.Text.LastIndexOf(" ") + 1, 24);
       if (File.Exists(string.Format("{0}/SubProcesso.txt", Program.PersonLogin.IdAccount)))
         File.Delete(string.Format("{0}/SubProcesso.txt", Program.PersonLogin.IdAccount));
       FileClass.WriteToBinaryFile(string.Format("{0}/SubProcesso.txt", Program.PersonLogin.IdAccount), lblIdSubProc.Text);
@@ -144,7 +144,7 @@ namespace IntegrationClient
     {
       try
       {
-        if (cboSubPro.Items.Count == 0)
+        if (CboSubPro.Items.Count == 0)
         {
           MessageBox.Show("Não tem nenhum sub-processo criado nesta conta!", "Erro de Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
           return;
@@ -164,7 +164,7 @@ namespace IntegrationClient
           File.Delete(string.Format("{0}/Cargo.log", Program.PersonLogin.IdAccount));
 
         DataTable skills;
-        if (cboTipBd.Text.Equals("Oracle"))
+        if (CboTipBd.Text.Equals("Oracle"))
         {
           OracleConnectionTool cnn = new OracleConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2]);
           skills = cnn.ExecuteQuery(txtCmdCom.Text);
@@ -212,7 +212,7 @@ namespace IntegrationClient
         prb.Value = 0;
         Refresh();
         DataTable occupations;
-        if (cboTipBd.Text.Equals("Oracle"))
+        if (CboTipBd.Text.Equals("Oracle"))
         {
           OracleConnectionTool cnn = new OracleConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2]);
           occupations = cnn.ExecuteQuery(txtCmdCar.Text);
@@ -310,7 +310,7 @@ namespace IntegrationClient
 
     private void CboCompany_SelectedIndexChanged(object sender, EventArgs e)
     {
-      lblIdCompany.Text = cboCompany.Text.Substring(cboCompany.Text.LastIndexOf(" ") + 1, 24);
+      lblIdCompany.Text = CboCompany.Text.Substring(CboCompany.Text.LastIndexOf(" ") + 1, 24);
       if (File.Exists(string.Format("{0}/Company.txt", Program.PersonLogin.IdAccount)))
         File.Delete(string.Format("{0}/Company.txt", Program.PersonLogin.IdAccount));
       FileClass.WriteToBinaryFile(string.Format("{0}/Company.txt", Program.PersonLogin.IdAccount), lblIdCompany.Text);

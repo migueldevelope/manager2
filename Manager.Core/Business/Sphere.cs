@@ -11,8 +11,8 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public EnumTypeSphere TypeSphere { get; set; }
-    public Company Company { get; set; }
-    public Sphere Template { get; set; }
+    public ViewListCompany Company { get; set; }
+    public string Template { get; set; }
     public ViewListSphere GetViewList()
     {
       return new ViewListSphere()

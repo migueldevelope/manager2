@@ -8,7 +8,7 @@ namespace Manager.Core.Business
   public class GoalsPerson : BaseEntity
   {
     public ViewListGoalPeriod GoalsPeriod { get; set; }
-    public ViewListPerson Person { get; set; }
+    public ViewListPersonBase Person { get; set; }
     public GoalsItem GoalsPersonList { get; set; }
   }
 }

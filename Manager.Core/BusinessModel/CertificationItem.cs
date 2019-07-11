@@ -9,7 +9,7 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para o item da acreditação
   /// </summary>
-  public class CertificationItem : BaseEntity
+  public class CertificationItem : BaseEntityId
   {
     public EnumItemCertification ItemCertification { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]

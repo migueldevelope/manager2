@@ -11,17 +11,17 @@ namespace Manager.Core.Business
   public class ProcessLevelOne : BaseEntity
   {
     public string Name { get; set; }
-    public Area Area { get; set; }
+    public ViewListArea Area { get; set; }
     public long Order { get; set; }
     [BsonIgnore]
-    public List<ProcessLevelTwo> Process { get; set; }
+    public List<ViewListProcessLevelTwo> Process { get; set; }
     public ViewListProcessLevelOne GetViewList()
     {
       return new ViewListProcessLevelOne()
       {
         _id = _id,
         Name = Name,
-        Area = Area.GetViewList(),
+        Area = Area,
         Order = Order
       };
     }

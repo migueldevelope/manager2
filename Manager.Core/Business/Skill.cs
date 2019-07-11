@@ -13,7 +13,7 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Concept { get; set; }
     public EnumTypeSkill TypeSkill { get; set; }
-    public Skill Template { get; set; }
+    public string Template { get; set; }
     public ViewListSkill GetViewList()
     {
       return new ViewListSkill()

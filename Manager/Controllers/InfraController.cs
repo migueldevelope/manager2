@@ -210,51 +210,51 @@ namespace Manager.Controllers
 
     #region Cbo
     /// <summary>
-    /// Lista CBO's
+    /// Lista Cbo's
     /// </summary>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("listcbo")]
-    public async Task<List<ViewListCbo>> ListCBO()
+    [Route("listCbo")]
+    public async Task<List<ViewListCbo>> ListCbo()
     {
-      return await Task.Run(() =>service.ListCBO());
+      return await Task.Run(() =>service.ListCbo());
     }
     /// <summary>
-    /// Busca informações de CBO para editar
+    /// Busca informações de Cbo para editar
     /// </summary>
-    /// <param name="id">Identificador do CBO</param>
+    /// <param name="id">Identificador do Cbo</param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("getcbo/{id}")]
-    public async Task<ViewCrudCbo> GetCBO(string id)
+    [Route("getCbo/{id}")]
+    public async Task<ViewCrudCbo> GetCbo(string id)
     {
-      return await Task.Run(() =>service.GetCBO(id));
+      return await Task.Run(() =>service.GetCbo(id));
     }
     /// <summary>
-    /// Inclusão cbo
+    /// Inclusão Cbo
     /// </summary>
     /// <param name="view">Objeto Crud</param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("addcbo")]
+    [Route("addCbo")]
     public async Task<string> AddCbo([FromBody]ViewCrudCbo view)
     {
-      return await Task.Run(() =>service.AddCBO(view));
+      return await Task.Run(() =>service.AddCbo(view));
     }
     /// <summary>
-    /// Exclusão de CBO
+    /// Exclusão de Cbo
     /// </summary>
-    /// <param name="id">Identificador do CBO</param>
+    /// <param name="id">Identificador do Cbo</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]
-    [Route("deletecbo/{id}")]
-    public async Task<string> DeleteCBO(string id)
+    [Route("deleteCbo/{id}")]
+    public async Task<string> DeleteCbo(string id)
     {
-      return await Task.Run(() =>service.DeleteCBO(id));
+      return await Task.Run(() =>service.DeleteCbo(id));
     }
     /// <summary>
     /// Atualização de dados 
@@ -263,10 +263,10 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [Route("updatecbo")]
-    public async Task<string> UpdateCBO([FromBody]ViewCrudCbo view)
+    [Route("updateCbo")]
+    public async Task<string> UpdateCbo([FromBody]ViewCrudCbo view)
     {
-      return await Task.Run(() =>service.UpdateCBO(view));
+      return await Task.Run(() =>service.UpdateCbo(view));
     }
     #endregion
 

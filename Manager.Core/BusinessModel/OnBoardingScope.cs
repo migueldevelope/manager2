@@ -1,5 +1,8 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace Manager.Core.BusinessModel
@@ -7,9 +10,13 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para escopo do onboarding
   /// </summary>
-  public class OnBoardingScope : BaseEntity
+  public class OnBoardingScope 
   {
-    public Scope Scope { get; set; }
+
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _id { get; set; }
+    public ViewListScope Scope { get; set; }
     public string CommentsManager { get; set; }
     public string CommentsPerson { get; set; }
     public List<ListComments> Comments { get; set; }

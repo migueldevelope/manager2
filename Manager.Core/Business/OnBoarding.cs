@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Manager.Core.Business
   /// </summary>
   public class OnBoarding : BaseEntity
   {
-    public Person Person { get; set; }
+    public ViewListPersonInfo Person { get; set; }
     public DateTime? DateBeginPerson { get; set; }
     public DateTime? DateBeginManager { get; set; }
     public DateTime? DateBeginEnd { get; set; }

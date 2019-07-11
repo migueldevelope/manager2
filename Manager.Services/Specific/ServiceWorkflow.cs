@@ -72,7 +72,7 @@ namespace Manager.Services.Specific
         {
           StatusWorkflow = EnumWorkflow.Open,
           Status = EnumStatus.Enabled,
-          Requestor = manager,
+          Requestor = manager.GetViewListBaseManager(),
           Sequence = 1
         };
          serviceWorkflow.InsertNewVersion(workflow).Wait();

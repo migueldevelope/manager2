@@ -1,4 +1,5 @@
-﻿using Manager.Views.Enumns;
+﻿using Manager.Views.BusinessCrud;
+using Manager.Views.Enumns;
 
 namespace Manager.Views.BusinessList
 {
@@ -7,6 +8,6 @@ namespace Manager.Views.BusinessList
     public ViewListCompany Company { get; set; }
     public ViewListEstablishment Establishment { get; set; }
     public string Registration { get; set; }
-    public ViewListUser User { get; set; }
+    public ViewCrudUser User { get; set; }
   }
 }

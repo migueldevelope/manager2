@@ -32,9 +32,9 @@ namespace Manager.Core.Business
     public string Observation { get; set; }
     public byte Evalution { get; set; }
     public List<ViewCrudAttachmentField> Attachments { get; set; }
-    public ViewListPerson UserInclude { get; set; }
+    public ViewListPersonBase UserInclude { get; set; }
     public DateTime? DateInclude { get; set; }
-    public ViewListPerson UserEdit { get; set; }
+    public ViewListPersonBase UserEdit { get; set; }
     public DateTime? DateEnd { get; set; }
     public EnumModalityESocial Modality { get; set; }
     public EnumTypeESocial TypeESocial { get; set; }

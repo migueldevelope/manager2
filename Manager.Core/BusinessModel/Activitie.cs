@@ -6,7 +6,7 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção utilizada paras entregas
   /// </summary>
-  public class Activitie : BaseEntity
+  public class Activitie : BaseEntityId
   {
     public string Name { get; set; }
     public long Order { get; set; }

@@ -7,5 +7,6 @@ namespace Manager.Views.BusinessList
     public string Content { get; set; }
     public EnumTypeRotine TypeRotine { get; set; }
     public long Order { get; set; }
+    public EnumTypeQuestion TypeQuestion { get; set; }
   }
 }

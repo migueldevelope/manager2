@@ -15,7 +15,7 @@ namespace Manager.Core.Interfaces
     void SetUser(BaseUser user);
 
     void CheckTermOfService(string iduser);
-    List<ViewListUser> List(int count, int page, string filter, EnumTypeUser type);
+    List<ViewCrudUser> List(int count, int page, string filter, EnumTypeUser type);
     ViewCrudUser Get(string iduser);
     ViewCrudUser New(ViewCrudUser view);
     ViewCrudUser Update(ViewCrudUser view);

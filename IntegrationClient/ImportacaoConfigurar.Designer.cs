@@ -28,16 +28,16 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.cboProc = new System.Windows.Forms.ComboBox();
+      this.CboProc = new System.Windows.Forms.ComboBox();
       this.label12 = new System.Windows.Forms.Label();
-      this.cboType = new System.Windows.Forms.ComboBox();
+      this.CboType = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.cboMode = new System.Windows.Forms.ComboBox();
+      this.CboMode = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.grpBD = new System.Windows.Forms.GroupBox();
       this.txtStr = new System.Windows.Forms.TextBox();
       this.lblStr = new System.Windows.Forms.Label();
-      this.cboDatabaseType = new System.Windows.Forms.ComboBox();
+      this.CboDatabaseType = new System.Windows.Forms.ComboBox();
       this.btSave = new System.Windows.Forms.Button();
       this.label9 = new System.Windows.Forms.Label();
       this.txtSql = new System.Windows.Forms.TextBox();
@@ -66,14 +66,14 @@
       this.grpApi.SuspendLayout();
       this.SuspendLayout();
       // 
-      // cboProc
+      // CboProc
       // 
-      this.cboProc.FormattingEnabled = true;
-      this.cboProc.Location = new System.Drawing.Point(147, 12);
-      this.cboProc.Name = "cboProc";
-      this.cboProc.Size = new System.Drawing.Size(254, 24);
-      this.cboProc.TabIndex = 41;
-      this.cboProc.SelectedIndexChanged += new System.EventHandler(this.CboProc_SelectedIndexChanged);
+      this.CboProc.FormattingEnabled = true;
+      this.CboProc.Location = new System.Drawing.Point(147, 12);
+      this.CboProc.Name = "CboProc";
+      this.CboProc.Size = new System.Drawing.Size(254, 24);
+      this.CboProc.TabIndex = 41;
+      this.CboProc.SelectedIndexChanged += new System.EventHandler(this.CboProc_SelectedIndexChanged);
       // 
       // label12
       // 
@@ -84,13 +84,13 @@
       this.label12.TabIndex = 40;
       this.label12.Text = "Tipo de Processo";
       // 
-      // cboType
+      // CboType
       // 
-      this.cboType.FormattingEnabled = true;
-      this.cboType.Location = new System.Drawing.Point(147, 42);
-      this.cboType.Name = "cboType";
-      this.cboType.Size = new System.Drawing.Size(254, 24);
-      this.cboType.TabIndex = 38;
+      this.CboType.FormattingEnabled = true;
+      this.CboType.Location = new System.Drawing.Point(147, 42);
+      this.CboType.Name = "CboType";
+      this.CboType.Size = new System.Drawing.Size(254, 24);
+      this.CboType.TabIndex = 38;
       // 
       // label3
       // 
@@ -101,14 +101,14 @@
       this.label3.TabIndex = 37;
       this.label3.Text = "Tipo de Integração";
       // 
-      // cboMode
+      // CboMode
       // 
-      this.cboMode.FormattingEnabled = true;
-      this.cboMode.Location = new System.Drawing.Point(547, 42);
-      this.cboMode.Name = "cboMode";
-      this.cboMode.Size = new System.Drawing.Size(265, 24);
-      this.cboMode.TabIndex = 36;
-      this.cboMode.SelectedIndexChanged += new System.EventHandler(this.CboMode_SelectedIndexChanged);
+      this.CboMode.FormattingEnabled = true;
+      this.CboMode.Location = new System.Drawing.Point(547, 42);
+      this.CboMode.Name = "CboMode";
+      this.CboMode.Size = new System.Drawing.Size(265, 24);
+      this.CboMode.TabIndex = 36;
+      this.CboMode.SelectedIndexChanged += new System.EventHandler(this.CboMode_SelectedIndexChanged);
       // 
       // label2
       // 
@@ -123,7 +123,7 @@
       // 
       this.grpBD.Controls.Add(this.txtStr);
       this.grpBD.Controls.Add(this.lblStr);
-      this.grpBD.Controls.Add(this.cboDatabaseType);
+      this.grpBD.Controls.Add(this.CboDatabaseType);
       this.grpBD.Controls.Add(this.btSave);
       this.grpBD.Controls.Add(this.label9);
       this.grpBD.Controls.Add(this.txtSql);
@@ -161,14 +161,14 @@
       this.lblStr.TabIndex = 60;
       this.lblStr.Text = "String de\r\nConexão";
       // 
-      // cboDatabaseType
+      // CboDatabaseType
       // 
-      this.cboDatabaseType.FormattingEnabled = true;
-      this.cboDatabaseType.Location = new System.Drawing.Point(106, 27);
-      this.cboDatabaseType.Name = "cboDatabaseType";
-      this.cboDatabaseType.Size = new System.Drawing.Size(254, 24);
-      this.cboDatabaseType.TabIndex = 59;
-      this.cboDatabaseType.SelectedIndexChanged += new System.EventHandler(this.CboDatabaseType_SelectedIndexChanged);
+      this.CboDatabaseType.FormattingEnabled = true;
+      this.CboDatabaseType.Location = new System.Drawing.Point(106, 27);
+      this.CboDatabaseType.Name = "CboDatabaseType";
+      this.CboDatabaseType.Size = new System.Drawing.Size(254, 24);
+      this.CboDatabaseType.TabIndex = 59;
+      this.CboDatabaseType.SelectedIndexChanged += new System.EventHandler(this.CboDatabaseType_SelectedIndexChanged);
       // 
       // btSave
       // 
@@ -385,11 +385,11 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(819, 505);
       this.Controls.Add(this.grpApi);
-      this.Controls.Add(this.cboProc);
+      this.Controls.Add(this.CboProc);
       this.Controls.Add(this.label12);
-      this.Controls.Add(this.cboType);
+      this.Controls.Add(this.CboType);
       this.Controls.Add(this.label3);
-      this.Controls.Add(this.cboMode);
+      this.Controls.Add(this.CboMode);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.grpArq);
       this.Controls.Add(this.grpBD);
@@ -411,14 +411,14 @@
     }
 
     #endregion
-    private System.Windows.Forms.ComboBox cboProc;
+    private System.Windows.Forms.ComboBox CboProc;
     private System.Windows.Forms.Label label12;
-    private System.Windows.Forms.ComboBox cboType;
+    private System.Windows.Forms.ComboBox CboType;
     private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.ComboBox cboMode;
+    private System.Windows.Forms.ComboBox CboMode;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.GroupBox grpBD;
-    private System.Windows.Forms.ComboBox cboDatabaseType;
+    private System.Windows.Forms.ComboBox CboDatabaseType;
     private System.Windows.Forms.Button btSave;
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.TextBox txtSql;

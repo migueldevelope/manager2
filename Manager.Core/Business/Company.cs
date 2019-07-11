@@ -12,8 +12,8 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public string Logo { get; set; }
-    public List<Skill> Skills { get; set; }
-    public Company Template  { get; set; }
+    public List<ViewListSkill> Skills { get; set; }
+    public string Template  { get; set; }
     public ViewListCompany GetViewList()
     {
       return new ViewListCompany()

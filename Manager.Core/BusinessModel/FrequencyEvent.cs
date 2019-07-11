@@ -5,7 +5,7 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para presenças de treinamento
   /// </summary>
-  public class FrequencyEvent : BaseEntity
+  public class FrequencyEvent : BaseEntityId
   {
     public DaysEvent DaysEvent { get; set; }
     public bool Present { get; set; }

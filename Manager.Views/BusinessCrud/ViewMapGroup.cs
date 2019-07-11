@@ -12,7 +12,7 @@ namespace Manager.Views.BusinessCrud
     public long Line { get; set; }
     public List<ViewListSkill> Skills { get; set; }
     public List<ViewListSkill> SkillsCompany { get; set; }
-    public List<ViewListSchooling> Schooling { get; set; }
+    public List<ViewCrudSchooling> Schooling { get; set; }
     public List<ViewListScope> Scope { get; set; }
   }
 }

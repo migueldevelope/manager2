@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System.Collections.Generic;
 
@@ -10,9 +11,9 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para escolaridade de monitoring
   /// </summary>
-  public class MonitoringSchooling : BaseEntity
+  public class MonitoringSchooling : BaseEntityId
   {
-    public Schooling Schooling { get; set; }
+    public ViewCrudSchooling Schooling { get; set; }
     public string CommentsPerson { get; set; }
     public string CommentsManager { get; set; }
     public string Praise { get; set; }

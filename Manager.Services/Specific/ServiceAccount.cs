@@ -107,7 +107,7 @@ namespace Manager.Services.Specific
         Company company = new Company()
         {
           Name = view.NameCompany,
-          Skills = new List<Skill>()
+          Skills = new List<ViewListSkill>()
         };
         company = serviceCompany.InsertNewVersion(company).Result;
         // Criar a pessoa para autenticação
@@ -116,8 +116,8 @@ namespace Manager.Services.Specific
         {
           TypeUser = EnumTypeUser.Administrator,
           StatusUser = EnumStatusUser.Enabled,
-          Company = company,
-          User = user
+          Company = company.GetViewList(),
+          User = user.GetViewCrud()
         };
         person = servicePerson.InsertNewVersion(person).Result;
         serviceAccount._user._idUser = person.User._id;

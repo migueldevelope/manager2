@@ -12,8 +12,8 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Content { get; set; }
     public EnumTypeText TypeText { get; set; }
-    public Company Company { get; set; }
-    public TextDefault Template { get; set; }
+    public ViewListCompany Company { get; set; }
+    public string Template { get; set; }
     public ViewListTextDefault GetViewList()
     {
       return new ViewListTextDefault()

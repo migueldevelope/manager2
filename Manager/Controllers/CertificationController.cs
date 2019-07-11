@@ -127,7 +127,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("addperson/{idcertification}")]
-    public async Task<string> AddPerson([FromBody]ViewListPerson person, string idcertification)
+    public async Task<string> AddPerson([FromBody]ViewListPersonBase person, string idcertification)
     {
       return await Task.Run(() =>service.AddPerson(idcertification, person));
     }

@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 
 namespace Manager.Core.Business
@@ -9,7 +10,7 @@ namespace Manager.Core.Business
   /// </summary>
   public class StructPlan : BaseEntity
   {
-    public Course Course { get; set; }
+    public ViewListCourse Course { get; set; }
     public EnumTypeAction TypeAction { get; set; }
     public EnumTypeResponsible TypeResponsible { get; set; }
     public PlanActivity PlanActivity { get; set; }

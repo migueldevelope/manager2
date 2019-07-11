@@ -11,10 +11,10 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public string Content { get; set; }
-    public Company Company { get; set; }
+    public ViewListCompany Company { get; set; }
     public EnumTypeQuestion TypeQuestion { get; set; }
     public long Order { get; set; }
-    public Questions Template { get; set; }
+    public string Template { get; set; }
     public EnumTypeRotine TypeRotine { get; set; }
     public ViewListQuestions GetViewList()
     {

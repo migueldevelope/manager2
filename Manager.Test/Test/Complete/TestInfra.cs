@@ -54,14 +54,14 @@ namespace Manager.Test.Test.Complete
       {
         foreach (var item in serviceCompany.GetAllNewVersion().ToList())
         {
-          item.Skills = new List<Skill>();
+          item.Skills = new List<ViewListSkill>();
           var i = serviceCompany.Update(item, null);
         }
 
         var comp = new Company()
         {
           Name = "Test Infra",
-          Skills = new List<Skill>(),
+          Skills = new List<ViewListSkill>(),
           Status = EnumStatus.Enabled
         };
 

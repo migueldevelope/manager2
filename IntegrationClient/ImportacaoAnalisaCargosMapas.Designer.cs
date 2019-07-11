@@ -33,11 +33,11 @@
       this.grpCnx = new System.Windows.Forms.GroupBox();
       this.lblAjuCnx = new System.Windows.Forms.Label();
       this.btnValidCnx = new System.Windows.Forms.Button();
-      this.cboTipBd = new System.Windows.Forms.ComboBox();
+      this.CboTipBd = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.grpCar = new System.Windows.Forms.GroupBox();
       this.lblIdCompany = new System.Windows.Forms.Label();
-      this.cboCompany = new System.Windows.Forms.ComboBox();
+      this.CboCompany = new System.Windows.Forms.ComboBox();
       this.lblCompany = new System.Windows.Forms.Label();
       this.txtCmdCar = new System.Windows.Forms.TextBox();
       this.lblCmdCar = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@
       this.lblIdSubProc = new System.Windows.Forms.Label();
       this.prb = new System.Windows.Forms.ProgressBar();
       this.lblPrc = new System.Windows.Forms.Label();
-      this.cboSubPro = new System.Windows.Forms.ComboBox();
+      this.CboSubPro = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.btnImp = new System.Windows.Forms.Button();
       this.grpCnx.SuspendLayout();
@@ -74,7 +74,7 @@
       // 
       this.grpCnx.Controls.Add(this.lblAjuCnx);
       this.grpCnx.Controls.Add(this.btnValidCnx);
-      this.grpCnx.Controls.Add(this.cboTipBd);
+      this.grpCnx.Controls.Add(this.CboTipBd);
       this.grpCnx.Controls.Add(this.txtCnxStr);
       this.grpCnx.Controls.Add(this.label1);
       this.grpCnx.Controls.Add(this.label8);
@@ -103,18 +103,18 @@
       this.btnValidCnx.UseVisualStyleBackColor = true;
       this.btnValidCnx.Click += new System.EventHandler(this.BtnValidCnx_Click);
       // 
-      // cboTipBd
+      // CboTipBd
       // 
-      this.cboTipBd.FormattingEnabled = true;
-      this.cboTipBd.Items.AddRange(new object[] {
+      this.CboTipBd.FormattingEnabled = true;
+      this.CboTipBd.Items.AddRange(new object[] {
             "Nenhum",
             "Oracle",
             "SqlServer"});
-      this.cboTipBd.Location = new System.Drawing.Point(177, 24);
-      this.cboTipBd.Name = "cboTipBd";
-      this.cboTipBd.Size = new System.Drawing.Size(179, 24);
-      this.cboTipBd.TabIndex = 2;
-      this.cboTipBd.SelectedIndexChanged += new System.EventHandler(this.CboTipBd_SelectedIndexChanged);
+      this.CboTipBd.Location = new System.Drawing.Point(177, 24);
+      this.CboTipBd.Name = "CboTipBd";
+      this.CboTipBd.Size = new System.Drawing.Size(179, 24);
+      this.CboTipBd.TabIndex = 2;
+      this.CboTipBd.SelectedIndexChanged += new System.EventHandler(this.CboTipBd_SelectedIndexChanged);
       // 
       // label1
       // 
@@ -128,7 +128,7 @@
       // grpCar
       // 
       this.grpCar.Controls.Add(this.lblIdCompany);
-      this.grpCar.Controls.Add(this.cboCompany);
+      this.grpCar.Controls.Add(this.CboCompany);
       this.grpCar.Controls.Add(this.lblCompany);
       this.grpCar.Controls.Add(this.txtCmdCar);
       this.grpCar.Controls.Add(this.lblCmdCar);
@@ -137,7 +137,7 @@
       this.grpCar.Controls.Add(this.lblIdSubProc);
       this.grpCar.Controls.Add(this.prb);
       this.grpCar.Controls.Add(this.lblPrc);
-      this.grpCar.Controls.Add(this.cboSubPro);
+      this.grpCar.Controls.Add(this.CboSubPro);
       this.grpCar.Controls.Add(this.label2);
       this.grpCar.Controls.Add(this.btnImp);
       this.grpCar.Enabled = false;
@@ -158,18 +158,18 @@
       this.lblIdCompany.Text = "IdCompany";
       this.lblIdCompany.Visible = false;
       // 
-      // cboCompany
+      // CboCompany
       // 
-      this.cboCompany.FormattingEnabled = true;
-      this.cboCompany.Items.AddRange(new object[] {
+      this.CboCompany.FormattingEnabled = true;
+      this.CboCompany.Items.AddRange(new object[] {
             "Nenhum",
             "Oracle",
             "SqlServer"});
-      this.cboCompany.Location = new System.Drawing.Point(177, 21);
-      this.cboCompany.Name = "cboCompany";
-      this.cboCompany.Size = new System.Drawing.Size(712, 24);
-      this.cboCompany.TabIndex = 9;
-      this.cboCompany.SelectedIndexChanged += new System.EventHandler(this.CboCompany_SelectedIndexChanged);
+      this.CboCompany.Location = new System.Drawing.Point(177, 21);
+      this.CboCompany.Name = "CboCompany";
+      this.CboCompany.Size = new System.Drawing.Size(712, 24);
+      this.CboCompany.TabIndex = 9;
+      this.CboCompany.SelectedIndexChanged += new System.EventHandler(this.CboCompany_SelectedIndexChanged);
       // 
       // lblCompany
       // 
@@ -240,18 +240,18 @@
       this.lblPrc.TabIndex = 17;
       this.lblPrc.Text = "Ajuda para conexão";
       // 
-      // cboSubPro
+      // CboSubPro
       // 
-      this.cboSubPro.FormattingEnabled = true;
-      this.cboSubPro.Items.AddRange(new object[] {
+      this.CboSubPro.FormattingEnabled = true;
+      this.CboSubPro.Items.AddRange(new object[] {
             "Nenhum",
             "Oracle",
             "SqlServer"});
-      this.cboSubPro.Location = new System.Drawing.Point(177, 51);
-      this.cboSubPro.Name = "cboSubPro";
-      this.cboSubPro.Size = new System.Drawing.Size(712, 24);
-      this.cboSubPro.TabIndex = 12;
-      this.cboSubPro.SelectedIndexChanged += new System.EventHandler(this.CboSubPro_SelectedIndexChanged);
+      this.CboSubPro.Location = new System.Drawing.Point(177, 51);
+      this.CboSubPro.Name = "CboSubPro";
+      this.CboSubPro.Size = new System.Drawing.Size(712, 24);
+      this.CboSubPro.TabIndex = 12;
+      this.CboSubPro.SelectedIndexChanged += new System.EventHandler(this.CboSubPro_SelectedIndexChanged);
       // 
       // label2
       // 
@@ -298,10 +298,10 @@
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.GroupBox grpCnx;
     private System.Windows.Forms.Button btnValidCnx;
-    private System.Windows.Forms.ComboBox cboTipBd;
+    private System.Windows.Forms.ComboBox CboTipBd;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.GroupBox grpCar;
-    private System.Windows.Forms.ComboBox cboSubPro;
+    private System.Windows.Forms.ComboBox CboSubPro;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Button btnImp;
     private System.Windows.Forms.Label lblAjuCnx;
@@ -313,7 +313,7 @@
     private System.Windows.Forms.TextBox txtCmdCar;
     private System.Windows.Forms.Label lblCmdCar;
     private System.Windows.Forms.Label lblIdCompany;
-    private System.Windows.Forms.ComboBox cboCompany;
+    private System.Windows.Forms.ComboBox CboCompany;
     private System.Windows.Forms.Label lblCompany;
   }
 }

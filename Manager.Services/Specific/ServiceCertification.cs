@@ -32,6 +32,8 @@ namespace Manager.Services.Specific
     private readonly ServiceMailModel serviceMailModel;
     private readonly ServiceGeneric<Monitoring> serviceMonitoring;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
+    private readonly ServiceGeneric<Group> serviceGroup;
+    private readonly ServiceGeneric<Company> serviceCompany;
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Questions> serviceQuestions;
@@ -54,6 +56,8 @@ namespace Manager.Services.Specific
         serviceMailModel = new ServiceMailModel(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceGroup = new ServiceGeneric<Group>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceQuestions = new ServiceGeneric<Questions>(context);
@@ -77,6 +81,8 @@ namespace Manager.Services.Specific
       serviceMailModel.SetUser(_user);
       serviceMonitoring._user = _user;
       serviceOccupation._user = _user;
+      serviceGroup._user = _user;
+      serviceCompany._user = _user;
       serviceParameter._user = _user;
       servicePerson._user = _user;
       serviceQuestions._user = _user;
@@ -93,6 +99,8 @@ namespace Manager.Services.Specific
       serviceMailModel.SetUser(user);
       serviceMonitoring._user = user;
       serviceOccupation._user = user;
+      serviceGroup._user = user;
+      serviceCompany._user = user;
       serviceParameter._user = user;
       servicePerson._user = user;
       serviceQuestions._user = user;
@@ -115,7 +123,7 @@ namespace Manager.Services.Specific
           _idAccount = _user._idAccount
         };
 
-         serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
 
 
       }
@@ -149,39 +157,35 @@ namespace Manager.Services.Specific
     {
       try
       {
-        certification.Questions = new List<CertificationQuestions>();
+        var companyname = servicePerson.GetNewVersion(p => p._id == certification.Person._id).Result.Company.Name;
+        certification.Questions = new List<ViewListCertificationQuestions>();
 
         var itens = new List<CertificationQuestions>();
 
 
         foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Text & p.TypeRotine == EnumTypeRotine.Certification).Result.ToList())
         {
-          certification.Questions.Add(new CertificationQuestions()
+          certification.Questions.Add(new ViewListCertificationQuestions()
           {
             Question =
-            new Questions()
+            new ViewCrudQuestions()
             {
               _id = item._id,
-              _idAccount = item._idAccount,
-              Company = item.Company,
-              Content = item.Content.Replace("{company_name}", certification.Person.Company.Name)
-              .Replace("{employee_name}", certification.Person.User.Name).Replace("{item_name}", certification.CertificationItem.Name),
+              Content = item.Content.Replace("{company_name}", item.Company.Name)
+              .Replace("{employee_name}", certification.Person.Name).Replace("{item_name}", certification.CertificationItem.Name),
               Name = item.Name,
               Order = item.Order,
-              Status = item.Status,
-              Template = item.Template,
               TypeQuestion = item.TypeQuestion,
               TypeRotine = item.TypeRotine
             },
-            _idAccount = item._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           });
         }
 
         var text = serviceTextDefault.GetAllNewVersion(p => p.TypeText == EnumTypeText.Certification).Result.FirstOrDefault();
         if (text != null)
-          certification.TextDefault = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
+          certification.TextDefault = text.Content.Replace("{company_name}", companyname).Replace("{employee_name}", certification.Person.Name)
+            .Replace("{manager_name}", certification.Person.NameManager).Replace("{item_name}", certification.CertificationItem.Name);
 
         return certification;
       }
@@ -195,39 +199,36 @@ namespace Manager.Services.Specific
     {
       try
       {
-        certification.Questions = new List<CertificationQuestions>();
+        var companyname = servicePerson.GetNewVersion(p => p._id == certification.Person._id).Result.Company.Name;
 
-        var itens = new List<CertificationQuestions>();
+        certification.Questions = new List<ViewListCertificationQuestions>();
+
+        var itens = new List<ViewListCertificationQuestions>();
 
 
         foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeRotine == EnumTypeRotine.Certification).Result.OrderBy(p => p.Order).ToList())
         {
-          certification.Questions.Add(new CertificationQuestions()
+          certification.Questions.Add(new ViewListCertificationQuestions()
           {
             Question =
-            new Questions()
+            new ViewCrudQuestions()
             {
               _id = item._id,
-              _idAccount = item._idAccount,
-              Company = item.Company,
-              Content = item.Content.Replace("{company_name}", certification.Person.Company.Name)
-              .Replace("{employee_name}", certification.Person.User.Name).Replace("{item_name}", certification.CertificationItem.Name),
+              Content = item.Content.Replace("{company_name}", companyname)
+              .Replace("{employee_name}", certification.Person.Name).Replace("{item_name}", certification.CertificationItem.Name),
               Name = item.Name,
               Order = item.Order,
-              Status = item.Status,
-              Template = item.Template,
               TypeQuestion = item.TypeQuestion,
               TypeRotine = item.TypeRotine
             },
-            _idAccount = item._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
           });
         }
 
         var text = serviceTextDefault.GetAllNewVersion(p => p.TypeText == EnumTypeText.Certification).Result.FirstOrDefault();
         if (text != null)
-          certification.TextDefault = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
+          certification.TextDefault = text.Content.Replace("{company_name}", companyname).Replace("{employee_name}", certification.Person.Name)
+            .Replace("{manager_name}", certification.Person.NameManager).Replace("{item_name}", certification.CertificationItem.Name);
 
         return certification;
       }
@@ -420,10 +421,10 @@ namespace Manager.Services.Specific
 
         if (certification.Attachments == null)
         {
-          certification.Attachments = new List<AttachmentField>();
+          certification.Attachments = new List<ViewCrudAttachmentField>();
         }
-        certification.Attachments.Add(new AttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
-         serviceCertification.Update(certification, null).Wait();
+        certification.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+        serviceCertification.Update(certification, null).Wait();
       }
       catch (Exception e)
       {
@@ -431,18 +432,18 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeleteCertification(string idcertification)
+    public string DeleteCertification(string idcertification)
     {
       try
       {
 
         var certification = serviceCertification.GetAllNewVersion(p => p.Person._id == idcertification).Result.FirstOrDefault();
-         Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | ", idcertification)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | ", idcertification)));
         if (certification == null)
           return "Certification deleted!";
 
         certification.Status = EnumStatus.Disabled;
-         serviceCertification.Update(certification, null).Wait();
+        serviceCertification.Update(certification, null).Wait();
         return "Certification deleted!";
       }
       catch (Exception e)
@@ -451,7 +452,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string DeletePerson(string idcertification, string idcertificationperson)
+    public string DeletePerson(string idcertification, string idcertificationperson)
     {
       try
       {
@@ -461,7 +462,7 @@ namespace Manager.Services.Specific
           if (item._id == idcertificationperson)
           {
             certification.ListPersons.Remove(item);
-             serviceCertification.Update(certification, null).Wait();
+            serviceCertification.Update(certification, null).Wait();
             return "remove";
           }
         }
@@ -474,21 +475,29 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson)
+    public string UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson)
     {
       try
       {
         var certification = serviceCertification.GetAllNewVersion(p => p._id == viewcertification._idCertification).Result.FirstOrDefault();
+      var person = servicePerson.GetNewVersion(p => p._id == certification.Person._id).Result;
 
         foreach (var item in certification.ListPersons)
         {
-          if (item.Person._id == idperson)
+          if (item._id == idperson)
           {
             item.StatusCertificationPerson = viewcertification.StatusCertificationPerson;
             item.Comments = viewcertification.Comments;
             item.DateApprovation = DateTime.Now;
-             serviceCertificationPerson.Update(item, null).Wait();
-             serviceCertification.Update(certification, null).Wait();
+
+            var certPerson = serviceCertificationPerson.GetNewVersion(p => p._id == item._id).Result;
+            certPerson.StatusCertificationPerson = item.StatusCertificationPerson;
+            certPerson.Comments = item.Comments;
+            certPerson.DateApprovation = item.DateApprovation;
+
+            serviceCertificationPerson.Update(certPerson, null).Wait();
+
+            serviceCertification.Update(certification, null).Wait();
             var open = certification.ListPersons.Where(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).Count();
             if (open == 0)
             {
@@ -500,13 +509,13 @@ namespace Manager.Services.Specific
 
               certification.DateEnd = DateTime.Now;
 
-               serviceCertification.Update(certification, null).Wait();
+              serviceCertification.Update(certification, null).Wait();
 
               if (certification.StatusCertification == EnumStatusCertification.Approved)
               {
-                 Task.Run(() => MailApproved(certification.Person, certification.CertificationItem.Name));
-                 Task.Run(() => MailApprovedPerson(certification.Person, certification.CertificationItem.Name));
-                 Task.Run(() => SendQueue(certification._id, certification.Person._id));
+                Task.Run(() => MailApproved(person, certification.CertificationItem.Name));
+                Task.Run(() => MailApprovedPerson(person, certification.CertificationItem.Name));
+                Task.Run(() => SendQueue(certification._id, certification.Person._id));
               }
             }
 
@@ -523,7 +532,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCertificationPerson> ListCertificationsWaitPerson(string idperson, ref  long total,  string filter, int count,int page)
+    public List<ViewListCertificationPerson> ListCertificationsWaitPerson(string idperson, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -536,13 +545,13 @@ namespace Manager.Services.Specific
         foreach (var item in serviceCertificationPerson.GetAllNewVersion(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait & p.Person._id == idperson).Result.ToList())
         {
           var certification = serviceCertification.GetAllNewVersion(
-          p => p.ListPersons.Contains(item)).Result.FirstOrDefault();
+          p => p.ListPersons.Contains(item.GetViewList())).Result.FirstOrDefault();
           if (certification != null)
           {
             list.Add(new ViewListCertificationPerson()
             {
               _id = certification._id,
-              Name = certification.Person.User.Name,
+              Name = certification.Person.Name,
               NameItem = certification.CertificationItem.Name,
               Manager = false
             });
@@ -551,12 +560,12 @@ namespace Manager.Services.Specific
         };
 
         //load certification manager
-        foreach (var item in serviceCertification.GetAllNewVersion(p => p.Person.Manager._id == idperson & p.StatusCertification == EnumStatusCertification.Wait).Result.ToList())
+        foreach (var item in serviceCertification.GetAllNewVersion(p => p.Person._idManager == idperson & p.StatusCertification == EnumStatusCertification.Wait).Result.ToList())
         {
           list.Add(new ViewListCertificationPerson()
           {
             _id = item._id,
-            Name = item.Person.User.Name,
+            Name = item.Person.Name,
             NameItem = item.CertificationItem.Name,
             Manager = true
           });
@@ -575,7 +584,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCertificationItem> ListCertificationPerson(string idperson, ref  long total,  string filter, int count,int page)
+    public List<ViewListCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -606,19 +615,19 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewListCertification> ListEnded(ref  long total,  string filter, int count,int page)
+    public List<ViewListCertification> ListEnded(ref long total, string filter, int count, int page)
     {
       try
       {
 
         int skip = (count * (page - 1));
-        var detail = serviceCertification.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceCertification.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var detail = serviceCertification.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = serviceCertification.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListCertification()
         {
           _id = p._id,
-          Name = p.Person.User.Name,
+          Name = p.Person.Name,
           _idPerson = p.Person._id,
           StatusCertification = p.StatusCertification
         }).ToList();
@@ -629,7 +638,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPerson> ListPersons(string idcertification, ref  long total,  string filter, int count,int page)
+    public List<ViewListPerson> ListPersons(string idcertification, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -647,7 +656,7 @@ namespace Manager.Services.Specific
         var listExclud = serviceCertification.GetAllNewVersion(p => p._id == idcertification).Result.FirstOrDefault().ListPersons;
         foreach (var item in listExclud)
         {
-          detail.RemoveAll(p => p._id == item.Person._id);
+          detail.RemoveAll(p => p._id == item._id);
         }
         detail.RemoveAll(p => p._id == certificaiton.Person._id);
 
@@ -661,12 +670,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewListCertificationProfile GetProfile(string idperson)
+    public ViewListCertificationProfile GetProfile(string idperson)
     {
       try
       {
-        var person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
-        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+        var occupation = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result;
+        var group = serviceGroup.GetNewVersion(p => p._id == occupation.Group._id).Result;
+        var company = serviceCompany.GetNewVersion(p => p._id == group.Company._id).Result;
+
         var remove = serviceCertification.GetAllNewVersion(p => p.Person._id == idperson
         & p.StatusCertification != EnumStatusCertification.Disaproved
         & p.StatusCertification != EnumStatusCertification.Open).Result.ToList();
@@ -677,7 +689,7 @@ namespace Manager.Services.Specific
           ItemSkill = new List<ViewListCertificationItem>()
         };
 
-        foreach (var item in occupation.Group.Company.Skills)
+        foreach (var item in company.Skills)
         {
           if (remove.Where(p => p.CertificationItem.IdItem == item._id).Count() == 0)
           {
@@ -692,7 +704,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        foreach (var item in occupation.Group.Skills)
+        foreach (var item in group.Skills)
         {
           if (remove.Where(p => p.CertificationItem.IdItem == item._id).Count() == 0)
           {
@@ -755,7 +767,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudCertification NewCertification(ViewListCertificationItem item, string idperson)
+    public ViewCrudCertification NewCertification(ViewListCertificationItem item, string idperson)
     {
       try
       {
@@ -764,67 +776,36 @@ namespace Manager.Services.Specific
 
         Certification certification = new Certification()
         {
-          CertificationItem = new CertificationItem()
+          CertificationItem = new ViewListCertificationItem()
           {
             _id = item._id,
             IdItem = item.IdItem,
             Concept = item.Concept,
             Name = item.Name,
-            Status = EnumStatus.Enabled,
-            ItemCertification = item.ItemCertification,
-            _idAccount = _user._idAccount
+            ItemCertification = item.ItemCertification
           },
-          Person = person,
+          Person = person.GetViewListBaseManager(),
           Status = EnumStatus.Enabled,
-          ListPersons = new List<CertificationPerson>(),
+          ListPersons = new List<ViewCrudCertificationPerson>(),
           StatusCertification = EnumStatusCertification.Open,
-          Attachments = new List<AttachmentField>()
+          Attachments = new List<ViewCrudAttachmentField>()
         };
 
         certification = LoadMap(certification);
 
         certification = serviceCertification.InsertNewVersion(certification).Result;
-         Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", certification._id)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", certification._id)));
         return new ViewCrudCertification()
         {
           _id = certification._id,
-          Name = certification.Person.User.Name,
+          Name = certification.Person.Name,
           _idPerson = certification.Person._id,
           TextDefault = certification.TextDefault,
           StatusCertification = certification.StatusCertification,
-          CertificationItem = new ViewListCertificationItem()
-          {
-            _id = certification.CertificationItem._id,
-            Name = certification.CertificationItem.Name,
-            ItemCertification = certification.CertificationItem.ItemCertification,
-            Concept = certification.CertificationItem.Concept,
-            IdItem = certification.CertificationItem.IdItem
-          },
-          Attachments = certification.Attachments.Select(p => new ViewCrudAttachmentField() { _idAttachment = p._idAttachment, Name = p.Name, Url = p.Url }).ToList(),
-          ListPersons = certification.ListPersons.Select(p => new ViewCrudCertificationPerson()
-          {
-            _id = p._id,
-            Name = p.Person.User.Name,
-            Mail = p.Person.User.Mail,
-            Comments = p.Comments,
-            StatusCertificationPerson = p.StatusCertificationPerson,
-            TextDefault = p.TextDefault,
-            TextDefaultEnd = p.TextDefaultEnd
-          }).ToList(),
-          Questions = certification.Questions.Select(p => new ViewListCertificationQuestions()
-          {
-            Answer = p.Answer,
-            Question = new ViewCrudQuestions()
-            {
-              _id = p.Question._id,
-              Name = p.Question.Name,
-              Content = p.Question.Content,
-              Order = p.Question.Order,
-              TypeQuestion = p.Question.TypeQuestion,
-              TypeRotine = p.Question.TypeRotine,
-              Company = new ViewListCompany() { _id = p.Question.Company._id, Name = p.Question.Company.Name }
-            }
-          }).ToList()
+          CertificationItem = certification.CertificationItem,
+          Attachments = certification.Attachments,
+          ListPersons = certification.ListPersons,
+          Questions = certification.Questions
         };
       }
       catch (Exception e)
@@ -833,21 +814,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string AddPerson(string idcertification, ViewListPerson person)
+    public string AddPerson(string idcertification, ViewListPersonBase person)
     {
       try
       {
-        var certification = serviceCertification.GetAllNewVersion(p => p._id == idcertification).Result.FirstOrDefault();
+        var certification = serviceCertification.GetFreeNewVersion(p => p._id == idcertification).Result;
+        var companyname = servicePerson.GetNewVersion(p => p._id == certification.Person._id).Result.Company.Name;
 
         var text = serviceTextDefault.GetAllNewVersion(p => p.TypeText == EnumTypeText.CertificationPerson).Result.FirstOrDefault();
         if (text != null)
-          text.Content = text.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
+          text.Content = text.Content.Replace("{company_name}", companyname).Replace("{employee_name}", certification.Person.Name)
+            .Replace("{manager_name}", certification.Person.NameManager).Replace("{item_name}", certification.CertificationItem.Name);
 
         var textEnd = serviceTextDefault.GetAllNewVersion(p => p.TypeText == EnumTypeText.CertificationPersonEnd).Result.FirstOrDefault();
         if (textEnd != null)
-          textEnd.Content = textEnd.Content.Replace("{company_name}", certification.Person.Company.Name).Replace("{employee_name}", certification.Person.User.Name)
-            .Replace("{manager_name}", certification.Person.Manager.Name).Replace("{item_name}", certification.CertificationItem.Name);
+          textEnd.Content = textEnd.Content.Replace("{company_name}", companyname).Replace("{employee_name}", certification.Person.Name)
+            .Replace("{manager_name}", certification.Person.NameManager).Replace("{item_name}", certification.CertificationItem.Name);
 
 
         var cerPerson = new CertificationPerson()
@@ -861,12 +843,8 @@ namespace Manager.Services.Specific
         };
 
         cerPerson = serviceCertificationPerson.InsertNewVersion(cerPerson).Result;
-
-        certification.ListPersons.Add(cerPerson);
-
-
-
-         serviceCertification.Update(certification, null).Wait();
+        certification.ListPersons.Add(cerPerson.GetViewList());
+        serviceCertification.Update(certification, null).Wait();
 
         return "ok";
       }
@@ -876,7 +854,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string ApprovedCertification(string idcertification, ViewCrudCertificationPerson view)
+    public string ApprovedCertification(string idcertification, ViewCrudCertificationPerson view)
     {
       try
       {
@@ -889,9 +867,12 @@ namespace Manager.Services.Specific
             item.StatusCertificationPerson = view.StatusCertificationPerson;
             item.Comments = view.Comments;
           }
-           serviceCertificationPerson.Update(item, null).Wait();
-           serviceCertification.Update(certification, null).Wait();
-           Task.Run(() => LogSave(_user._idPerson, string.Format("Certification approved | {0}", certification._id)));
+          var cerPerson = serviceCertificationPerson.GetNewVersion(p => p._id == item._id).Result;
+          cerPerson.StatusCertificationPerson = item.StatusCertificationPerson;
+          cerPerson.Comments = item.Comments;
+          serviceCertificationPerson.Update(cerPerson, null).Wait();
+          serviceCertification.Update(certification, null).Wait();
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Certification approved | {0}", certification._id)));
           return "Certification approved!";
         }
         return "Certification not found!";
@@ -902,11 +883,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string UpdateCertification(ViewCrudCertification view, string idperson, string idmonitoring)
+    public string UpdateCertification(ViewCrudCertification view, string idperson, string idmonitoring)
     {
       try
       {
-        var certification = serviceCertification.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        var certification = serviceCertification.GetNewVersion(p => p._id == view._id).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == certification.Person._id).Result;
+
         certification.StatusCertification = view.StatusCertification;
         certification.TextDefault = view.TextDefault;
         foreach (var question in certification.Questions)
@@ -931,7 +914,9 @@ namespace Manager.Services.Specific
           {
             try
             {
-               Task.Run(() => Mail(certification.Person, new BaseFields() { Name = item.Person.User.Name, Mail = item.Person.User.Mail }));
+              var personItem = servicePerson.GetNewVersion(p => p._id == item._id).Result;
+
+              Task.Run(() => Mail(person, new BaseFields() { Name = item.Name, Mail = personItem.User.Mail }));
             }
             catch (Exception)
             {
@@ -941,7 +926,7 @@ namespace Manager.Services.Specific
           }
         }
 
-         serviceCertification.Update(certification, null).Wait();
+        serviceCertification.Update(certification, null).Wait();
         return "Certification altered!";
       }
       catch (Exception e)
@@ -951,7 +936,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public  ViewCrudCertification CertificationsWaitPerson(string idcertification)
+    public ViewCrudCertification CertificationsWaitPerson(string idcertification)
     {
       try
       {
@@ -959,7 +944,7 @@ namespace Manager.Services.Specific
         return new ViewCrudCertification()
         {
           _id = certification._id,
-          Name = certification.Person.User.Name,
+          Name = certification.Person.Name,
           _idPerson = certification.Person._id,
           TextDefault = certification.TextDefault,
           StatusCertification = certification.StatusCertification,
@@ -975,8 +960,7 @@ namespace Manager.Services.Specific
           ListPersons = certification.ListPersons.Select(p => new ViewCrudCertificationPerson()
           {
             _id = p._id,
-            Name = p.Person.User.Name,
-            Mail = p.Person.User.Mail,
+            Name = p.Name,
             Comments = p.Comments,
             StatusCertificationPerson = p.StatusCertificationPerson,
             TextDefault = p.TextDefault,
@@ -992,8 +976,7 @@ namespace Manager.Services.Specific
               Content = p.Question.Content,
               Order = p.Question.Order,
               TypeQuestion = p.Question.TypeQuestion,
-              TypeRotine = p.Question.TypeRotine,
-              Company = new ViewListCompany() { _id = p.Question.Company._id, Name = p.Question.Company.Name }
+              TypeRotine = p.Question.TypeRotine
             }
           }).ToList()
         };

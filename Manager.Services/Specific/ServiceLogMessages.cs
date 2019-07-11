@@ -51,13 +51,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListLogMessages> detail = serviceLogMessages.GetAllNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "Register")
+        List<ViewListLogMessages> detail = serviceLogMessages.GetAllNewVersion(p => p.Person._id == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper()),count, count * (page - 1), "Register")
           .Result.Select(x => new ViewListLogMessages()
           {
             _id = x._id,
-            Person = x.Person.GetViewList(),
+            Person = x.Person,
           }).ToList();
-        total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceLogMessages.CountNewVersion(p => p.Person._id == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -82,7 +82,7 @@ namespace Manager.Services.Specific
       {
         LogMessages logMessages = new LogMessages()
         {
-          Person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result,
+          Person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result.GetViewListBase(),
           Subject = view.Subject,
           StatusMessage = view.StatusMessage,
           Message = view.Message,
@@ -108,7 +108,7 @@ namespace Manager.Services.Specific
 
         logMessage = new LogMessages()
         {
-          Person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result,
+          Person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result.GetViewListBase(),
           Subject = view.Subject,
           StatusMessage = view.StatusMessage,
           Message = view.Message,
@@ -121,7 +121,7 @@ namespace Manager.Services.Specific
           Message = logMessage.Message,
           Register = logMessage.Register,
           StatusMessage = logMessage.StatusMessage,
-          Person = logMessage.Person.GetViewList(),
+          Person = logMessage.Person,
           _id = logMessage._id
         };
       }
@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
           Register = logMessages.Register,
           StatusMessage = logMessages.StatusMessage,
           Subject = logMessages.Subject,
-          Person = logMessages.Person?.GetViewList()
+          Person = logMessages.Person
         };
       }
       catch (Exception e)
@@ -155,7 +155,7 @@ namespace Manager.Services.Specific
       try
       {
         LogMessages logMessages = serviceLogMessages.GetNewVersion(p => p._id == view._id).Result;
-        logMessages.Person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
+        logMessages.Person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result.GetViewListBase();
         logMessages.Subject = view.Subject;
         logMessages.StatusMessage = view.StatusMessage;
         logMessages.Message = view.Message;
@@ -193,7 +193,7 @@ namespace Manager.Services.Specific
           Message = message,
           Subject = subject,
           StatusMessage = EnumStatusMessage.New,
-          Person = person
+          Person = person.GetViewListBase()
         };
          serviceLogMessages.InsertNewVersion(model).Wait();
       }

@@ -207,7 +207,7 @@ namespace Manager.Services.Specific
           {
             _id = view._id,
             Name = view.Name,
-            Company = company
+            Company = company.GetViewList()
           }).Result;
         return "Establishment added!";
       }
@@ -223,7 +223,7 @@ namespace Manager.Services.Specific
         Company company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
         Establishment establishment = serviceEstablishment.GetNewVersion(p => p._id == view._id).Result;
         establishment.Name = view.Name;
-        establishment.Company = company;
+        establishment.Company = company.GetViewList();
          serviceEstablishment.Update(establishment, null).Wait();
         return "Establishment altered!";
       }

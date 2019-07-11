@@ -29,8 +29,9 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> serviceMail;
     private readonly ServiceMailModel serviceMailModel;
     private readonly ServiceGeneric<Monitoring> serviceMonitoring;
-    private readonly ServiceGeneric<MonitoringActivities> serviceMonitoringActivities;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
+    private readonly ServiceGeneric<Group> serviceGroup;
+    private readonly ServiceGeneric<Company> serviceCompany;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Plan> servicePlan;
     private readonly IServiceControlQueue serviceControlQueue;
@@ -48,10 +49,11 @@ namespace Manager.Services.Specific
         serviceMail = new ServiceGeneric<MailLog>(context);
         serviceMailModel = new ServiceMailModel(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
-        serviceMonitoringActivities = new ServiceGeneric<MonitoringActivities>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceGroup = new ServiceGeneric<Group>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         servicePlan = new ServiceGeneric<Plan>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
         serviceControlQueue = _serviceControlQueue;
         path = pathToken;
       }
@@ -69,8 +71,9 @@ namespace Manager.Services.Specific
       serviceMail._user = _user;
       serviceMailModel.SetUser(_user);
       serviceMonitoring._user = _user;
-      serviceMonitoringActivities._user = _user;
       serviceOccupation._user = _user;
+      serviceGroup._user = _user;
+      serviceCompany._user = _user;
       servicePerson._user = _user;
       servicePlan._user = _user;
     }
@@ -82,15 +85,16 @@ namespace Manager.Services.Specific
       serviceMail._user = user;
       serviceMailModel.SetUser(user);
       serviceMonitoring._user = user;
-      serviceMonitoringActivities._user = user;
       serviceOccupation._user = user;
+      serviceCompany._user = user;
+      serviceGroup._user = user;
       servicePerson._user = user;
       servicePlan._user = user;
     }
     #endregion
 
     #region Monitoring
-    public  string RemoveMonitoringActivities(string idmonitoring, string idactivitie)
+    public string RemoveMonitoringActivities(string idmonitoring, string idactivitie)
     {
       try
       {
@@ -100,7 +104,7 @@ namespace Manager.Services.Specific
           if (item._id == idactivitie)
           {
             item.Status = EnumStatus.Disabled;
-             serviceMonitoring.Update(monitoring, null).Wait();
+            serviceMonitoring.Update(monitoring, null).Wait();
             return "Monitoring activitie deleted!";
           }
         }
@@ -111,7 +115,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string RemoveAllMonitoring(string idperson)
+    public string RemoveAllMonitoring(string idperson)
     {
       try
       {
@@ -121,7 +125,7 @@ namespace Manager.Services.Specific
         foreach (var monitoring in monitorings)
         {
           monitoring.Status = EnumStatus.Disabled;
-           serviceMonitoring.Update(monitoring, null).Wait();
+          serviceMonitoring.Update(monitoring, null).Wait();
         }
         return "Monitorings deleted!";
       }
@@ -130,14 +134,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string RemoveMonitoring(string idmonitoring)
+    public string RemoveMonitoring(string idmonitoring)
     {
       try
       {
 
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         monitoring.Status = EnumStatus.Disabled;
-         serviceMonitoring.Update(monitoring, null).Wait();
+        serviceMonitoring.Update(monitoring, null).Wait();
         return "Monitoring deleted!";
       }
       catch (Exception e)
@@ -145,14 +149,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string RemoveLastMonitoring(string idperson)
+    public string RemoveLastMonitoring(string idperson)
     {
       try
       {
 
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson).Result.LastOrDefault();
         monitoring.Status = EnumStatus.Disabled;
-         serviceMonitoring.Update(monitoring, null).Wait();
+        serviceMonitoring.Update(monitoring, null).Wait();
         return "Monitoring deleted!";
       }
       catch (Exception e)
@@ -160,7 +164,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment)
+    public string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment)
     {
       try
       {
@@ -174,7 +178,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-             serviceMonitoring.Update(monitoring, null).Wait();
+            serviceMonitoring.Update(monitoring, null).Wait();
             return "Update comment altered!";
           }
         }
@@ -187,7 +191,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-             serviceMonitoring.Update(monitoring, null).Wait();
+            serviceMonitoring.Update(monitoring, null).Wait();
             return "Update comment altered!";
           }
         }
@@ -200,7 +204,7 @@ namespace Manager.Services.Specific
             else
               item.StatusViewPerson = EnumStatusView.View;
 
-             serviceMonitoring.Update(monitoring, null).Wait();
+            serviceMonitoring.Update(monitoring, null).Wait();
             return "Update comment altered!";
           }
         }
@@ -211,7 +215,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string DeleteComments(string idmonitoring, string iditem, string idcomments)
+    public string DeleteComments(string idmonitoring, string iditem, string idcomments)
     {
       try
       {
@@ -225,7 +229,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                 serviceMonitoring.Update(monitoring, null).Wait();
+                serviceMonitoring.Update(monitoring, null).Wait();
                 return "Delete comment!";
               }
             }
@@ -240,7 +244,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                 serviceMonitoring.Update(monitoring, null).Wait();
+                serviceMonitoring.Update(monitoring, null).Wait();
                 return "Delete comment!";
               }
             }
@@ -255,7 +259,7 @@ namespace Manager.Services.Specific
               if (comment._id == idcomments)
               {
                 item.Comments.Remove(comment);
-                 serviceMonitoring.Update(monitoring, null).Wait();
+                serviceMonitoring.Update(monitoring, null).Wait();
                 return "Delete comment!";
               }
             }
@@ -268,7 +272,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  bool ValidComments(string id)
+    public bool ValidComments(string id)
     {
       try
       {
@@ -291,16 +295,17 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan)
+    public List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan)
     {
       try
       {
-        var userInclude = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
+        var userInclude = servicePerson.GetNewVersion(p => p.User._id == _user._idUser).Result.GetViewListBase();
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
-          if (monitoring.Person.User._id == _user._idUser)
+          if (person._id == _user._idUser)
           {
             monitoring.DateBeginPerson = DateTime.Now;
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
@@ -311,23 +316,17 @@ namespace Manager.Services.Specific
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
           }
         }
-         Task.Run(()=>serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada para o colaborador " + monitoring.Person.User.Name, monitoring.Person));
+        Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada para o colaborador " + person.User.Name, person));
         var newPlan = AddPlan(new Plan()
         {
           _id = plan._id,
           Name = plan.Name,
           Description = plan.Description,
           Deadline = plan.Deadline,
-          Skills = plan.Skills?.Select(x => new Skill()
-          {
-            _id = x._id,
-            Name = x.Name,
-            Concept = x.Concept,
-            TypeSkill = x.TypeSkill
-          }).ToList(),
+          Skills = plan.Skills,
           SourcePlan = plan.SourcePlan,
           TypePlan = plan.TypePlan
-        }, monitoring.Person, idmonitoring, iditem);
+        }, person, idmonitoring, iditem);
 
         if (plan.SourcePlan == EnumSourcePlan.Activite)
         {
@@ -344,11 +343,11 @@ namespace Manager.Services.Specific
                 Name = newPlan.Name,
                 Description = newPlan.Description,
                 Deadline = newPlan.Deadline,
-                Skills = newPlan.Skills?.Select(x => x.GetViewList()).ToList(),
+                Skills = newPlan.Skills,
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
-               serviceMonitoring.Update(monitoring, null).Wait();
+              serviceMonitoring.Update(monitoring, null).Wait();
               return item.Plans;
             }
           }
@@ -369,11 +368,11 @@ namespace Manager.Services.Specific
                 Name = newPlan.Name,
                 Description = newPlan.Description,
                 Deadline = newPlan.Deadline,
-                Skills = newPlan.Skills?.Select(x => x.GetViewList()).ToList(),
+                Skills = newPlan.Skills,
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
-               serviceMonitoring.Update(monitoring, null).Wait();
+              serviceMonitoring.Update(monitoring, null).Wait();
               return item.Plans;
             }
           }
@@ -394,11 +393,11 @@ namespace Manager.Services.Specific
                 Name = newPlan.Name,
                 Description = newPlan.Description,
                 Deadline = newPlan.Deadline,
-                Skills = newPlan.Skills?.Select(x => x.GetViewList()).ToList(),
+                Skills = newPlan.Skills,
                 SourcePlan = newPlan.SourcePlan,
                 TypePlan = newPlan.TypePlan
               });
-               serviceMonitoring.Update(monitoring, null).Wait();
+              serviceMonitoring.Update(monitoring, null).Wait();
               return item.Plans.Select(p => new ViewCrudPlan()
               {
                 _id = p._id,
@@ -419,12 +418,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan view)
+    public List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan view)
     {
       try
       {
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
-         Task.Run(()=>serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.User.Name, monitoring.Person));
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
+        Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada do colaborador " + monitoring.Person.Name, person));
         var plan = servicePlan.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         plan.Description = view.Description;
         plan.Deadline = view.Deadline;
@@ -448,12 +449,12 @@ namespace Manager.Services.Specific
                     Name = plan.Name,
                     Description = plan.Description,
                     Deadline = plan.Deadline,
-                    Skills = plan.Skills?.Select(x => x.GetViewList()).ToList(),
+                    Skills = plan.Skills,
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
-                   UpdatePlan(plan);
-                   serviceMonitoring.Update(monitoring, null).Wait();
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
                   return item.Plans;
                 }
               }
@@ -477,12 +478,12 @@ namespace Manager.Services.Specific
                     Name = plan.Name,
                     Description = plan.Description,
                     Deadline = plan.Deadline,
-                    Skills = plan.Skills?.Select(x => x.GetViewList()).ToList(),
+                    Skills = plan.Skills,
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
-                   UpdatePlan(plan);
-                   serviceMonitoring.Update(monitoring, null).Wait();
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
                   return item.Plans;
                 }
               }
@@ -507,19 +508,19 @@ namespace Manager.Services.Specific
                     Name = plan.Name,
                     Description = plan.Description,
                     Deadline = plan.Deadline,
-                    Skills = plan.Skills?.Select(x => x.GetViewList()).ToList(),
+                    Skills = plan.Skills,
                     SourcePlan = plan.SourcePlan,
                     TypePlan = plan.TypePlan
                   });
-                   UpdatePlan(plan);
-                   serviceMonitoring.Update(monitoring, null).Wait();
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
                   return item.Plans;
                 }
               }
             }
           }
         }
-         serviceMonitoring.Update(monitoring, null).Wait();
+        serviceMonitoring.Update(monitoring, null).Wait();
         return null;
       }
       catch (Exception e)
@@ -527,18 +528,18 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, ref  long total,  string filter, int count,int page)
+    public List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceMonitoring.GetAllNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.Skip(skip).Take(count).ToList();
-        total = serviceMonitoring.CountNewVersion(p => p.Person.Manager._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var detail = serviceMonitoring.GetAllNewVersion(p => p.Person._idManager == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.Skip(skip).Take(count).ToList();
+        total = serviceMonitoring.CountNewVersion(p => p.Person._idManager == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListMonitoring()
         {
           _id = p._id,
-          Name = p.Person.User.Name,
+          Name = p.Person.Name,
           idPerson = p.Person._id,
           StatusMonitoring = p.StatusMonitoring
         }).ToList();
@@ -548,14 +549,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListMonitoring> ListMonitoringsWait(string idmanager, ref  long total,  string filter, int count,int page)
+    public List<ViewListMonitoring> ListMonitoringsWait(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
         int skip = (count * (page - 1));
         var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
         & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).Result.FirstOrDefault() })
         .ToList();
 
         var detail = new List<Monitoring>();
@@ -564,16 +564,18 @@ namespace Manager.Services.Specific
         {
           foreach (var item in list)
           {
-            if (item.Monitoring == null)
+            var monitoring = serviceMonitoring.GetNewVersion(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == item._id).Result;
+
+            if (monitoring == null)
               detail.Add(new Monitoring
               {
-                Person = item.Person,
+                Person = item.GetViewListPersonInfo(),
                 _id = null,
                 StatusMonitoring = EnumStatusMonitoring.Open
               });
             else
-              if (item.Monitoring.StatusMonitoring != EnumStatusMonitoring.End)
-              detail.Add(item.Monitoring);
+              if (monitoring.StatusMonitoring != EnumStatusMonitoring.End)
+              detail.Add(monitoring);
           }
 
         }
@@ -582,11 +584,12 @@ namespace Manager.Services.Specific
         return detail.Skip(skip).Take(count).Select(p => new ViewListMonitoring()
         {
           _id = p._id,
-          Name = p.Person.User.Name,
+          Name = p.Person.Name,
           idPerson = p.Person._id,
           StatusMonitoring = p.StatusMonitoring,
           DateEndEnd = p.DateEndEnd,
-          OccupationName = p.Person.Occupation.Name
+          OccupationName = p.Person.Occupation,
+
         }).ToList();
       }
       catch (Exception e)
@@ -594,18 +597,18 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager)
+    public List<ViewListMonitoring> PersonMonitoringsEnd(string idmanager)
     {
       try
       {
-        return serviceMonitoring.GetAllNewVersion(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.OrderBy(p => p.Person.User.Name)
+        return serviceMonitoring.GetAllNewVersion(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.OrderBy(p => p.Person.Name)
           .Select(p => new ViewListMonitoring()
           {
             _id = p._id,
-            Name = p.Person.User.Name,
+            Name = p.Person.Name,
             idPerson = p.Person._id,
             StatusMonitoring = p.StatusMonitoring,
-            OccupationName = p.Person.Occupation.Name,
+            OccupationName = p.Person.Occupation,
             DateEndEnd = p.DateEndEnd
           }).ToList();
       }
@@ -614,38 +617,36 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewListMonitoring PersonMonitoringsWait(string idmanager)
+    public ViewListMonitoring PersonMonitoringsWait(string idmanager)
     {
       try
       {
         if (!serviceMonitoring.Exists("Monitoring"))
           return null;
 
-        var item = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.Monitoring & p._id == idmanager)
-        .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == p._id).Result.FirstOrDefault() })
-        .FirstOrDefault();
-
+        var item = servicePerson.GetNewVersion(p => p.TypeJourney == EnumTypeJourney.Monitoring & p._id == idmanager).Result;
+        var monitoring = serviceMonitoring.GetNewVersion(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == idmanager).Result;
 
 
         if (item == null)
           return null;
 
-        if (item.Monitoring == null)
+        if (monitoring == null)
           return new ViewListMonitoring()
           {
             _id = null,
-            Name = item.Person.User.Name,
-            idPerson = item.Person._id,
+            Name = item.User.Name,
+            idPerson = item._id,
             StatusMonitoring = EnumStatusMonitoring.Open
           };
         else
-         if (item.Monitoring.StatusMonitoring != EnumStatusMonitoring.End)
+         if (monitoring.StatusMonitoring != EnumStatusMonitoring.End)
           return new ViewListMonitoring()
           {
-            _id = item.Monitoring._id,
-            Name = item.Person.User.Name,
-            idPerson = item.Person._id,
-            StatusMonitoring = item.Monitoring.StatusMonitoring
+            _id = monitoring._id,
+            Name = item.User.Name,
+            idPerson = item._id,
+            StatusMonitoring = monitoring.StatusMonitoring
           };
         else
           return null;
@@ -655,7 +656,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudMonitoring GetMonitorings(string id)
+    public ViewCrudMonitoring GetMonitorings(string id)
     {
       try
       {
@@ -664,18 +665,7 @@ namespace Manager.Services.Specific
         var view = new ViewCrudMonitoring()
         {
           _id = monitoring._id,
-          Person = new ViewListPersonInfo()
-          {
-            _id = monitoring.Person._id,
-            TypeJourney = monitoring.Person.TypeJourney,
-            Occupation = monitoring.Person.Occupation.Name,
-            Name = monitoring.Person.User.Name,
-            Manager = monitoring.Person.Manager.Name,
-            Company = monitoring.Person.Company.GetViewList(),
-            Establishment = monitoring.Person.Establishment?.GetViewList(),
-            Registration = monitoring.Person.Registration,
-            User = monitoring.Person.User.GetViewList(),
-          },
+          Person = monitoring.Person,
           CommentsPerson = monitoring.CommentsPerson,
           CommentsEnd = monitoring.CommentsEnd,
           CommentsManager = monitoring.CommentsManager,
@@ -692,18 +682,9 @@ namespace Manager.Services.Specific
             }).ToList(),
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
-            Skill = p.Skill.GetViewList(),
+            Skill = p.Skill,
             Praise = p.Praise,
-            Plans = p.Plans?.Select(x => new ViewCrudPlan()
-            {
-              _id = x._id,
-              Name = x.Name,
-              Description = x.Description,
-              Deadline = x.Deadline,
-              Skills = x.Skills,
-              SourcePlan = x.SourcePlan,
-              TypePlan = x.TypePlan
-            }).ToList()
+            Plans = p.Plans
           }).ToList(),
           Schoolings = monitoring.Schoolings?.Select(p => new ViewCrudMonitoringSchooling()
           {
@@ -719,28 +700,11 @@ namespace Manager.Services.Specific
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
             Praise = p.Praise,
-            Schooling = new ViewCrudSchooling()
-            {
-              _id = p.Schooling._id,
-              Name = p.Schooling.Name,
-              Complement = p.Schooling.Complement,
-              Order = p.Schooling.Order,
-              Type = p.Schooling.Type
-            },
-            Plans = p.Plans?.Select(x => new ViewCrudPlan()
-            {
-              _id = x._id,
-              Name = x.Name,
-              Description = x.Description,
-              Deadline = x.Deadline,
-              Skills = x.Skills,
-              SourcePlan = x.SourcePlan,
-              TypePlan = x.TypePlan
-            }).ToList()
+            Schooling = p.Schooling,
+            Plans = p.Plans
           }).ToList(),
           Activities = monitoring.Activities?.Select(p => new ViewCrudMonitoringActivities()
           {
-            Status = p.Status,
             _id = p._id,
             Comments = p.Comments?.Select(x => new ViewCrudComment()
             {
@@ -754,17 +718,8 @@ namespace Manager.Services.Specific
             StatusViewPerson = p.StatusViewPerson,
             TypeAtivitie = p.TypeAtivitie,
             Praise = p.Praise,
-            Activities = p.Activities.GetViewList(),
-            Plans = p.Plans?.Select(x => new ViewCrudPlan()
-            {
-              _id = x._id,
-              Name = x.Name,
-              Description = x.Description,
-              Deadline = x.Deadline,
-              Skills = x.Skills,
-              SourcePlan = x.SourcePlan,
-              TypePlan = x.TypePlan
-            }).ToList()
+            Activities = p.Activities,
+            Plans = p.Plans,
           }).ToList(),
           StatusMonitoring = monitoring.StatusMonitoring
         };
@@ -776,7 +731,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
+    public ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
     {
       try
       {
@@ -785,9 +740,8 @@ namespace Manager.Services.Specific
 
         return new ViewCrudMonitoringActivities()
         {
-          Status = view.Status,
           _id = view._id,
-          Activities = view.Activities.GetViewList(),
+          Activities = view.Activities,
           Comments = view.Comments.Select(p => new ViewCrudComment()
           {
             _id = p._id,
@@ -809,7 +763,7 @@ namespace Manager.Services.Specific
         //throw e;
       }
     }
-    public  string UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view)
+    public string UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view)
     {
       try
       {
@@ -823,19 +777,15 @@ namespace Manager.Services.Specific
             var monitoringActivitie = new MonitoringActivities()
             {
               _id = item._id,
-              _idAccount = item._idAccount,
-              Status = item.Status,
               TypeAtivitie = view.TypeAtivitie,
               StatusViewManager = view.StatusViewManager,
               StatusViewPerson = view.StatusViewPerson,
               Praise = view.Praise,
-              Activities = new Activitie()
+              Activities = new ViewListActivitie()
               {
                 _id = item._id,
-                _idAccount = item._idAccount,
                 Name = view.Activities.Name,
                 Order = view.Activities.Order,
-                Status = item.Status
               },
               Plans = item.Plans,
               Comments = new List<ListComments>()
@@ -847,14 +797,12 @@ namespace Manager.Services.Specific
                   _id = com._id ?? ObjectId.GenerateNewId().ToString(),
                   Date = com.Date,
                   Comments = com.Comments,
-                  Status = EnumStatus.Enabled,
                   StatusView = com.StatusView,
                   UserComment = com.UserComment,
-                  _idAccount = _user._idAccount
                 });
 
             monitoring.Activities.Add(monitoringActivitie);
-             serviceMonitoring.Update(monitoring, null).Wait();
+            serviceMonitoring.Update(monitoring, null).Wait();
             return "update";
           }
 
@@ -866,16 +814,16 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string AddMonitoringActivities(string idmonitoring, ViewCrudActivities view)
+    public string AddMonitoringActivities(string idmonitoring, ViewCrudActivities view)
     {
       try
       {
-
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
-          if (monitoring.Person.User._id == _user._idUser)
+          if (person.User._id == _user._idUser)
           {
             monitoring.DateBeginPerson = DateTime.Now;
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
@@ -889,7 +837,7 @@ namespace Manager.Services.Specific
 
         var monitoringActivitie = new MonitoringActivities();
 
-        var activities = new List<Activitie>();
+        var activities = new List<ViewListActivitie>();
 
         foreach (var item in monitoring.Activities)
         {
@@ -913,21 +861,17 @@ namespace Manager.Services.Specific
         var activitie = new Activitie()
         {
           Name = view.Name,
-          Status = EnumStatus.Enabled,
           _id = ObjectId.GenerateNewId().ToString(),
-          _idAccount = _user._idAccount,
           Order = order,
         };
 
 
-        monitoringActivitie.Activities = activitie;
-        monitoringActivitie.Status = EnumStatus.Enabled;
+        monitoringActivitie.Activities = activitie.GetViewList();
         monitoringActivitie._id = ObjectId.GenerateNewId().ToString();
-        monitoringActivitie._idAccount = _user._idAccount;
         monitoringActivitie.TypeAtivitie = EnumTypeAtivitie.Individual;
         monitoringActivitie.Plans = new List<ViewCrudPlan>();
         monitoring.Activities.Add(monitoringActivitie);
-         serviceMonitoring.Update(monitoring, null).Wait();
+        serviceMonitoring.Update(monitoring, null).Wait();
         return "add sucess";
       }
       catch (Exception e)
@@ -936,7 +880,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewListMonitoring NewMonitoring(string idperson)
+    public ViewListMonitoring NewMonitoring(string idperson)
     {
       try
       {
@@ -946,14 +890,14 @@ namespace Manager.Services.Specific
         {
           monitoring = new Monitoring()
           {
-            Person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault()
+            Person = servicePerson.GetNewVersion(p => p._id == idperson).Result.GetViewListPersonInfo()
           };
 
           LoadMap(monitoring);
 
           monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
-           serviceMonitoring.InsertNewVersion(monitoring).Wait();
-           Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
+          serviceMonitoring.InsertNewVersion(monitoring).Wait();
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
         }
         else
         {
@@ -964,13 +908,13 @@ namespace Manager.Services.Specific
           {
             monitoring.DateBeginEnd = DateTime.Now;
           }
-           serviceMonitoring.Update(monitoring, null).Wait();
+          serviceMonitoring.Update(monitoring, null).Wait();
         }
 
         return new ViewListMonitoring()
         {
           _id = monitoring._id,
-          Name = monitoring.Person.User.Name,
+          Name = monitoring.Person.Name,
           idPerson = monitoring.Person._id,
           StatusMonitoring = monitoring.StatusMonitoring
         };
@@ -980,13 +924,15 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string UpdateMonitoring(ViewCrudMonitoring view)
+    public string UpdateMonitoring(ViewCrudMonitoring view)
     {
       try
       {
         List<string> countpraise = new List<string>();
 
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == view._id).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
         monitoring.StatusMonitoring = view.StatusMonitoring;
         monitoring.CommentsEnd = view.CommentsEnd;
         monitoring.CommentsPerson = view.CommentsPerson;
@@ -1019,7 +965,7 @@ namespace Manager.Services.Specific
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
-          if (monitoring.Person.User._id == _user._idUser)
+          if (person.User._id == _user._idUser)
           {
             monitoring.DateBeginPerson = DateTime.Now;
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
@@ -1033,44 +979,44 @@ namespace Manager.Services.Specific
 
         var userInclude = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
 
-        if (monitoring.Person.User._id != _user._idUser)
+        if (person.User._id != _user._idUser)
         {
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.Wait)
           {
             monitoring.DateEndManager = DateTime.Now;
-             Task.Run(() => Mail(monitoring.Person));
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
+            Task.Run(() => Mail(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
           }
         }
         else
         {
           if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
           {
-             Task.Run(()=>serviceLogMessages.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + monitoring.Person.User.Name, monitoring.Person));
+            Task.Run(() => serviceLogMessages.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + person.User.Name, person));
             if ((monitoring.Activities.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.SkillsCompany.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.Schoolings.Where(p => p.Praise != null).Count() > 0))
             {
-               Task.Run(()=>serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + monitoring.Person.User.Name + " foi elogiado pelo gestor", monitoring.Person));
+              Task.Run(() => serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + person.User.Name + " foi elogiado pelo gestor", person));
             }
             monitoring.DateEndEnd = DateTime.Now;
-             Task.Run(() => SendQueue(monitoring._id, monitoring.Person._id, countpraise));
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
+            Task.Run(() => SendQueue(monitoring._id, person._id, countpraise));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
-             Task.Run(() => MailManager(monitoring.Person));
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
+            Task.Run(() => MailManager(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
 
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
           {
-             Task.Run(() => MailDisApproval(monitoring.Person));
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
+            Task.Run(() => MailDisApproval(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
           }
         }
-         serviceMonitoring.Update(monitoring, null).Wait();
+        serviceMonitoring.Update(monitoring, null).Wait();
         return "Monitoring altered!";
       }
       catch (Exception e)
@@ -1078,38 +1024,40 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  List<ViewListSkill> GetSkills(string idperson)
+    public List<ViewListSkill> GetSkills(string idperson)
     {
       try
       {
-        var skills = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault().Occupation.Group.Skills;
-        var skillsgroup = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault().Occupation.Skills;
+        var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+
+        var skills = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault().Skills;
+        var skillsgroup = serviceGroup.GetAllNewVersion(p => p._id == person.Occupation.Group._id).Result.FirstOrDefault().Skills;
         var list = skillsgroup;
         foreach (var item in skills)
         {
           list.Add(item);
         }
-        return list.OrderBy(p => p.Name)
-          .Select(p => p.GetViewList()).ToList();
+
+        return list.OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public List<ViewListMonitoring> GetListExclud(ref  long total,  string filter, int count,int page)
+    public List<ViewListMonitoring> GetListExclud(ref long total, string filter, int count, int page)
     {
       try
       {
 
         int skip = (count * (page - 1));
-        var detail = serviceMonitoring.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
-        total = serviceMonitoring.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var detail = serviceMonitoring.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        total = serviceMonitoring.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListMonitoring()
         {
           _id = p._id,
-          Name = p.Person.User.Name,
+          Name = p.Person.Name,
           idPerson = p.Person._id,
           StatusMonitoring = p.StatusMonitoring
         }).ToList();
@@ -1119,14 +1067,17 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments)
+    public List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments)
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
+
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
-          if (monitoring.Person.User._id == _user._idUser)
+          if (person.User._id == _user._idUser)
           {
             monitoring.DateBeginPerson = DateTime.Now;
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
@@ -1158,15 +1109,13 @@ namespace Manager.Services.Specific
               new ListComments()
               {
                 _id = comments._id = ObjectId.GenerateNewId().ToString(),
-                _idAccount = _user._idAccount,
                 Comments = comments.Comments,
                 Date = comments.Date,
-                Status = EnumStatus.Enabled,
                 StatusView = comments.StatusView,
                 UserComment = comments.UserComment
               });
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
-             serviceMonitoring.Update(monitoring, null).Wait();
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            serviceMonitoring.Update(monitoring, null).Wait();
 
             return item.Comments.Select(p => new ViewCrudComment()
             {
@@ -1200,16 +1149,14 @@ namespace Manager.Services.Specific
              new ListComments()
              {
                _id = comments._id = ObjectId.GenerateNewId().ToString(),
-               _idAccount = _user._idAccount,
                Comments = comments.Comments,
                Date = comments.Date,
-               Status = EnumStatus.Enabled,
                StatusView = comments.StatusView,
                UserComment = comments.UserComment
              });
 
-             serviceMonitoring.Update(monitoring, null).Wait();
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            serviceMonitoring.Update(monitoring, null).Wait();
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
 
             return item.Comments.Select(p => new ViewCrudComment()
             {
@@ -1244,16 +1191,14 @@ namespace Manager.Services.Specific
              new ListComments()
              {
                _id = comments._id = ObjectId.GenerateNewId().ToString(),
-               _idAccount = _user._idAccount,
                Comments = comments.Comments,
                Date = comments.Date,
-               Status = EnumStatus.Enabled,
                StatusView = comments.StatusView,
                UserComment = comments.UserComment
              });
 
-             serviceMonitoring.Update(monitoring, null).Wait();
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            serviceMonitoring.Update(monitoring, null).Wait();
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,
@@ -1271,7 +1216,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
+    public string UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
     {
       try
       {
@@ -1288,7 +1233,7 @@ namespace Manager.Services.Specific
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
 
-                 serviceMonitoring.Update(monitoring, null).Wait();
+                serviceMonitoring.Update(monitoring, null).Wait();
                 return "Comment altered!";
               }
             }
@@ -1306,7 +1251,7 @@ namespace Manager.Services.Specific
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
 
-                 serviceMonitoring.Update(monitoring, null).Wait();
+                serviceMonitoring.Update(monitoring, null).Wait();
                 return "Comment altered!";
               }
             }
@@ -1326,7 +1271,7 @@ namespace Manager.Services.Specific
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
 
-                 serviceMonitoring.Update(monitoring, null).Wait();
+                serviceMonitoring.Update(monitoring, null).Wait();
                 return "Comment altered!";
               }
             }
@@ -1339,7 +1284,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  List<ViewCrudComment> GetListComments(string idmonitoring, string iditem)
+    public List<ViewCrudComment> GetListComments(string idmonitoring, string iditem)
     {
       try
       {
@@ -1416,10 +1361,10 @@ namespace Manager.Services.Specific
           _idAccount = _user._idAccount
         };
 
-         serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
 
 
-        foreach(var item in countpraise)
+        foreach (var item in countpraise)
         {
           data = new ViewCrudMaturityRegister
           {
@@ -1429,7 +1374,7 @@ namespace Manager.Services.Specific
             Date = DateTime.Now,
             _idAccount = _user._idAccount
           };
-           serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+          serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
         }
 
 
@@ -1458,11 +1403,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private  string UpdatePlan(Plan plan)
+    private string UpdatePlan(Plan plan)
     {
       try
       {
-         servicePlan.Update(plan, null).Wait();
+        servicePlan.Update(plan, null).Wait();
         return "Plan altered!";
       }
       catch (Exception e)
@@ -1482,10 +1427,10 @@ namespace Manager.Services.Specific
           _id = person._id,
           _idManager = person.Manager._id,
           NameManager = person.Manager.Name,
-          User = person.User.GetViewList(),
-          Company = person.Company.GetViewList(),
+          User = person.User,
+          Company = person.Company,
           Registration = person.Registration,
-          Establishment = person.Establishment?.GetViewList()
+          Establishment = person.Establishment
         };
         return servicePlan.InsertNewVersion(plan).Result;
       }
@@ -1498,24 +1443,27 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == monitoring.Person.Occupation._id).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+        var occupation = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result;
+        var group = serviceGroup.GetNewVersion(p => p._id == occupation.Group._id).Result;
+        var company = serviceCompany.GetNewVersion(p => p._id == group.Company._id).Result;
 
         monitoring.SkillsCompany = new List<MonitoringSkills>();
-        foreach (var item in occupation.Group.Company.Skills)
+        foreach (var item in company.Skills)
         {
-          monitoring.SkillsCompany.Add(new MonitoringSkills() { Skill = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
+          monitoring.SkillsCompany.Add(new MonitoringSkills() { Skill = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
         }
 
         monitoring.Activities = new List<MonitoringActivities>();
         foreach (var item in occupation.Activities)
         {
-          monitoring.Activities.Add(new MonitoringActivities() { Activities = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
+          monitoring.Activities.Add(new MonitoringActivities() { Activities = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
         }
 
         monitoring.Schoolings = new List<MonitoringSchooling>();
         foreach (var item in occupation.Schooling)
         {
-          monitoring.Schoolings.Add(new MonitoringSchooling() { Schooling = item, _idAccount = item._idAccount, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
+          monitoring.Schoolings.Add(new MonitoringSchooling() { Schooling = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
         }
 
         return monitoring;

@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessCrud;
 
 namespace Manager.Core.Business
 {
@@ -7,6 +8,6 @@ namespace Manager.Core.Business
   /// </summary>
   public class EventESocial : BaseEntity
   {
-    public CourseESocial CourseESocial { get; set; }
+    public ViewCrudCourseESocial CourseESocial { get; set; }
   }
 }

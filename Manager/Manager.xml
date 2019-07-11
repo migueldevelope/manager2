@@ -1506,34 +1506,34 @@
             <param name="view">Objeto Crud</param>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.InfraController.ListCBO">
+        <member name="M:Manager.Controllers.InfraController.ListCbo">
             <summary>
-            Lista CBO's
+            Lista Cbo's
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.InfraController.GetCBO(System.String)">
+        <member name="M:Manager.Controllers.InfraController.GetCbo(System.String)">
             <summary>
-            Busca informações de CBO para editar
+            Busca informações de Cbo para editar
             </summary>
-            <param name="id">Identificador do CBO</param>
+            <param name="id">Identificador do Cbo</param>
             <returns></returns>
         </member>
         <member name="M:Manager.Controllers.InfraController.AddCbo(Manager.Views.BusinessCrud.ViewCrudCbo)">
             <summary>
-            Inclusão cbo
+            Inclusão Cbo
             </summary>
             <param name="view">Objeto Crud</param>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.InfraController.DeleteCBO(System.String)">
+        <member name="M:Manager.Controllers.InfraController.DeleteCbo(System.String)">
             <summary>
-            Exclusão de CBO
+            Exclusão de Cbo
             </summary>
-            <param name="id">Identificador do CBO</param>
+            <param name="id">Identificador do Cbo</param>
             <returns>Mensagem de sucesso</returns>
         </member>
-        <member name="M:Manager.Controllers.InfraController.UpdateCBO(Manager.Views.BusinessCrud.ViewCrudCbo)">
+        <member name="M:Manager.Controllers.InfraController.UpdateCbo(Manager.Views.BusinessCrud.ViewCrudCbo)">
             <summary>
             Atualização de dados 
             </summary>

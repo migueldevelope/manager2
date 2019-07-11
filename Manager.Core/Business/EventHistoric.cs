@@ -12,7 +12,7 @@ namespace Manager.Core.Business
   /// </summary>
   public class EventHistoric : BaseEntity
   {
-    public ViewListPerson Person { get; set; }
+    public ViewListPersonBase Person { get; set; }
     public ViewListCourse Course { get; set; }
     public ViewListEvent Event { get; set; }
     public decimal Workload { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,15 @@ namespace Manager.Core.Business
   public class Occupation : BaseEntity
   {
     public string Name { get; set; }
-    public Group Group { get; set; }
+    public ViewListGroup Group { get; set; }
     public long Line { get; set; }
-    public List<Skill> Skills { get; set; }
-    public List<Schooling> Schooling { get; set; }
-    public List<Activitie> Activities { get; set; }
+    public List<ViewListSkill> Skills { get; set; }
+    public List<ViewCrudSchooling> Schooling { get; set; }
+    public List<ViewListActivitie> Activities { get; set; }
     public Occupation Template { get; set; }
-    public Cbo CBO { get; set; }
+    public ViewListCbo Cbo { get; set; }
     public string SpecificRequirements { get; set; }
-    public List<ProcessLevelTwo> Process { get; set; }
+    public List<ViewListProcessLevelTwo> Process { get; set; }
     public List<SalaryScaleGrade> SalaryScales { get; set; }
     public ViewListOccupation GetViewList()
     {
@@ -28,10 +29,10 @@ namespace Manager.Core.Business
       {
         _id = _id,
         Name = Name,
-        Company = Group.Company.GetViewList(),
-        Group = Group.GetViewList(),
+        Group = Group,
         Line = Line,
-        Process = Process.Select(p => p.GetViewList()).ToList()
+        Process = Process,
+        Cbo = Cbo
       };
     }
   }

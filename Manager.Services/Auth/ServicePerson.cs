@@ -150,7 +150,7 @@ namespace Manager.Services.Auth
           Password = view.User.Password,
           DateBirth = view.User.DateBirth,
           DateAdm = view.User.DateAdm,
-          Schooling = (view.User.Schooling == null) ? null : serviceSchooling.GetAllNewVersion(p => p._id == view.User.Schooling._id).Result.FirstOrDefault(),
+          Schooling = view.User.Schooling,
           PhotoUrl = view.User.PhotoUrl,
           PhoneFixed = view.User.PhoneFixed,
           DocumentID = view.User.DocumentID,
@@ -180,15 +180,15 @@ namespace Manager.Services.Auth
         var person = new Person()
         {
           StatusUser = view.Person.StatusUser,
-          Company = serviceCompany.GetAllNewVersion(p => p._id == view.Person.Company._id).Result.FirstOrDefault(),
-          Occupation = (view.Person.Occupation == null) ? null : serviceOccupation.GetAllNewVersion(p => p._id == view.Person.Occupation._id).Result.FirstOrDefault(),
+          Company = view.Person.Company,
+          Occupation =view.Person.Occupation,
           Manager = manager,
           DateLastOccupation = view.Person.DateLastOccupation,
           Salary = view.Person.Salary,
           DateLastReadjust = view.Person.DateLastReadjust,
           DateResignation = view.Person.DateResignation,
           TypeJourney = view.Person.TypeJourney,
-          Establishment = (view.Person.Establishment == null) ? null : serviceEstablishment.GetAllNewVersion(p => p._id == view.Person.Establishment._id).Result.FirstOrDefault(),
+          Establishment = view.Person.Establishment,
           HolidayReturn = view.Person.HolidayReturn,
           MotiveAside = view.Person.MotiveAside,
           TypeUser = view.Person.TypeUser,
@@ -205,7 +205,7 @@ namespace Manager.Services.Auth
           user.ChangePassword = EnumChangePassword.No;
 
         //person.User = user;
-        person.User = serviceUser.InsertNewVersion(user).Result;
+        person.User = serviceUser.InsertNewVersion(user).Result.GetViewCrud();
 
         servicePerson.InsertNewVersion(person).Wait();
 
@@ -229,7 +229,7 @@ namespace Manager.Services.Auth
         user.Phone = view.User.Phone;
         user.DateBirth = view.User.DateBirth;
         user.DateAdm = view.User.DateAdm;
-        user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetAllNewVersion(p => p._id == view.User.Schooling._id).Result.FirstOrDefault();
+        user.Schooling = view.User.Schooling;
         user.PhotoUrl = view.User.PhotoUrl;
         user.PhoneFixed = view.User.PhoneFixed;
         user.DocumentID = view.User.DocumentID;
@@ -255,21 +255,21 @@ namespace Manager.Services.Auth
 
         Person person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault();
         person.StatusUser = view.Person.StatusUser;
-        person.Company = serviceCompany.GetAllNewVersion(p => p._id == view.Person.Company._id).Result.FirstOrDefault();
-        person.Occupation = view.Person.Occupation == null ? null : serviceOccupation.GetAllNewVersion(p => p._id == view.Person.Occupation._id).Result.FirstOrDefault();
+        person.Company = view.Person.Company;
+        person.Occupation = view.Person.Occupation;
         person.Manager = manager;
         person.DateLastOccupation = view.Person.DateLastOccupation;
         person.Salary = view.Person.Salary;
         person.DateLastReadjust = view.Person.DateLastReadjust;
         person.DateResignation = view.Person.DateResignation;
         person.TypeJourney = view.Person.TypeJourney;
-        person.Establishment = (view.Person.Establishment == null) ? null : serviceEstablishment.GetAllNewVersion(p => p._id == view.Person.Establishment._id).Result.FirstOrDefault();
+        person.Establishment = view.Person.Establishment;
         person.HolidayReturn = view.Person.HolidayReturn;
         person.MotiveAside = view.Person.MotiveAside;
         person.TypeUser = view.Person.TypeUser;
         person.Registration = view.Person.Registration;
         person.SalaryScales = salaryScale;
-        person.User = user;
+        person.User = user.GetViewCrud();
         servicePerson.Update(person, null).Wait();
         serviceUser.Update(user, null).Wait();
         return "Person altered!";
@@ -333,10 +333,10 @@ namespace Manager.Services.Auth
           .Select(p => new ViewListPerson()
           {
             _id = p._id,
-            Company = p.Company.GetViewList(),
-            Establishment = p.Establishment?.GetViewList(),
+            Company = p.Company,
+            Establishment = p.Establishment,
             Registration = p.Registration,
-            User = p.User.GetViewList()
+            User = p.User
           }).OrderBy(p => p.User.Name).ToList();
       }
       catch (Exception e)
@@ -359,9 +359,9 @@ namespace Manager.Services.Auth
             {
               _id = x._id,
               Registration = x.Registration,
-              User = x.User.GetViewList(),
-              Company = x.Company.GetViewList(),
-              Establishment = x.Establishment?.GetViewList(),
+              User = x.User,
+              Company = x.Company,
+              Establishment = x.Establishment,
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser,
@@ -376,9 +376,9 @@ namespace Manager.Services.Auth
             {
               _id = x._id,
               Registration = x.Registration,
-              User = x.User.GetViewList(),
-              Company = x.Company.GetViewList(),
-              Establishment = x.Establishment?.GetViewList(),
+              User = x.User,
+              Company = x.Company,
+              Establishment = x.Establishment,
               StatusUser = x.StatusUser,
               TypeJourney = x.TypeJourney,
               TypeUser = x.TypeUser,
@@ -416,7 +416,7 @@ namespace Manager.Services.Auth
             Mail = person.Manager.Mail
           },
           MotiveAside = person.MotiveAside,
-          Occupation = person.Occupation?.GetViewList(),
+          Occupation = person.Occupation,
           Registration = person.Registration,
           Salary = person.Salary,
           StatusUser = person.StatusUser,
@@ -427,7 +427,7 @@ namespace Manager.Services.Auth
             _idSalaryScale = person.SalaryScales._idSalaryScale,
             NameSalaryScale = person.SalaryScales.NameSalaryScale
           },
-          User = person.User.GetViewCrud()
+          User = person.User
         };
       }
       catch (Exception e)
@@ -455,7 +455,7 @@ namespace Manager.Services.Auth
           Phone = view.User.Phone,
           PhoneFixed = view.User.PhoneFixed,
           PhotoUrl = view.User.PhotoUrl,
-          Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result,
+          Schooling = view.User.Schooling,
           Sex = view.User.Sex,
           ChangePassword = EnumChangePassword.AccessFirst,
           UserAdmin = false
@@ -488,22 +488,22 @@ namespace Manager.Services.Auth
 
         Person person = new Person()
         {
-          Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result,
+          Company = view.Company,
           DateLastOccupation = view.DateLastOccupation,
           DateLastReadjust = view.DateLastReadjust,
           DateResignation = view.DateResignation,
-          Establishment = view.Establishment == null ? null : serviceEstablishment.GetNewVersion(p => p._id == view.Establishment._id).Result,
+          Establishment = view.Establishment,
           HolidayReturn = view.HolidayReturn,
           Manager = manager,
           MotiveAside = view.MotiveAside,
-          Occupation = view.Occupation == null ? null : serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result,
+          Occupation = view.Occupation,
           Registration = view.Registration,
           Salary = view.Salary,
           DocumentManager = null,
           StatusUser = view.StatusUser,
           TypeJourney = view.TypeJourney,
           TypeUser = view.TypeUser,
-          User = user,
+          User = user.GetViewCrud(),
           SalaryScales = salaryScale
         };
 
@@ -511,11 +511,11 @@ namespace Manager.Services.Auth
         return new ViewCrudPerson()
         {
           _id = person._id,
-          Company = person.Company.GetViewList(),
+          Company = person.Company,
           DateLastOccupation = person.DateLastOccupation,
           DateLastReadjust = person.DateLastReadjust,
           DateResignation = person.DateResignation,
-          Establishment = person.Establishment?.GetViewList(),
+          Establishment = person.Establishment,
           HolidayReturn = person.HolidayReturn,
           Manager = person.Manager == null ? null : new ViewBaseFields()
           {
@@ -524,13 +524,13 @@ namespace Manager.Services.Auth
             Mail = person.Manager.Mail
           },
           MotiveAside = person.MotiveAside,
-          Occupation = person.Occupation?.GetViewList(),
+          Occupation = person.Occupation,
           Registration = person.Registration,
           Salary = person.Salary,
           StatusUser = person.StatusUser,
           TypeJourney = person.TypeJourney,
           TypeUser = person.TypeUser,
-          User = person.User.GetViewCrud(),
+          User = person.User,
         };
         // TODO: Manager
       }
@@ -555,7 +555,7 @@ namespace Manager.Services.Auth
         user.Phone = view.User.Phone;
         user.PhoneFixed = view.User.PhoneFixed;
         user.PhotoUrl = view.User.PhotoUrl;
-        user.Schooling = view.User.Schooling == null ? null : serviceSchooling.GetNewVersion(p => p._id == view.User.Schooling._id).Result;
+        user.Schooling = view.User.Schooling;
         user.Sex = view.User.Sex;
         serviceUser.Update(user, null).Wait();
 
@@ -577,22 +577,22 @@ namespace Manager.Services.Auth
             .FirstOrDefault();
 
         Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
-        person.Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
+        person.Company = view.Company;
         person.DateLastOccupation = view.DateLastOccupation;
         person.DateLastReadjust = view.DateLastReadjust;
         person.DateResignation = view.DateResignation;
-        person.Establishment = view.Establishment == null ? null : serviceEstablishment.GetNewVersion(p => p._id == view.Establishment._id).Result;
+        person.Establishment = view.Establishment;
         person.HolidayReturn = view.HolidayReturn;
         person.Manager = manager;
         person.MotiveAside = view.MotiveAside;
-        person.Occupation = view.Occupation == null ? null : serviceOccupation.GetNewVersion(p => p._id == view.Occupation._id).Result;
+        person.Occupation = view.Occupation;
         person.Registration = view.Registration;
         person.Salary = view.Salary;
         person.DocumentManager = null;
         person.StatusUser = view.StatusUser;
         person.TypeJourney = view.TypeJourney;
         person.TypeUser = view.TypeUser;
-        person.User = user;
+        person.User = user.GetViewCrud();
         person.SalaryScales = salaryScale;
         servicePerson.Update(person, null).Wait();
         return "Person altered!";

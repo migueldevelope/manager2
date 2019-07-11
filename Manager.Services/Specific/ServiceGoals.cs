@@ -573,8 +573,6 @@ namespace Manager.Services.Specific
         goalsCompany.GoalsCompanyList = view.GoalsCompanyList == null ? null : new GoalsItem()
         {
           _id = view._id,
-          _idAccount = _user._idAccount,
-          Status = EnumStatus.Enabled,
           Weight = view.GoalsCompanyList.Weight,
           Achievement = view.GoalsCompanyList.Achievement,
           Deadline = view.GoalsCompanyList.Deadline,
@@ -801,8 +799,6 @@ namespace Manager.Services.Specific
         goalsManager.GoalsManagerList = view.GoalsManagerList == null ? null : new GoalsItem()
         {
           _id = view._id,
-          _idAccount = _user._idAccount,
-          Status = EnumStatus.Enabled,
           Weight = view.GoalsManagerList.Weight,
           Achievement = view.GoalsManagerList.Achievement,
           Deadline = view.GoalsManagerList.Deadline,
@@ -830,8 +826,6 @@ namespace Manager.Services.Specific
         goalsManager.GoalsManagerList = view.GoalsManagerList == null ? null : new GoalsItem()
         {
           _id = view._id,
-          _idAccount = _user._idAccount,
-          Status = EnumStatus.Enabled,
           Weight = view.GoalsManagerList.Weight,
           Achievement = view.GoalsManagerList.Achievement,
           Deadline = view.GoalsManagerList.Deadline,
@@ -1156,8 +1150,6 @@ namespace Manager.Services.Specific
         goalsPerson.GoalsPersonList = view.GoalsPersonList == null ? null : new GoalsItem()
         {
           _id = view._id,
-          _idAccount = _user._idAccount,
-          Status = EnumStatus.Enabled,
           Weight = view.GoalsPersonList.Weight,
           Achievement = view.GoalsPersonList.Achievement,
           Deadline = view.GoalsPersonList.Deadline,
@@ -1390,8 +1382,7 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name
           }).FirstOrDefault();
-        var person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result
-          .Select(p => p.GetViewList()).FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
 
         GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == person._id & p.GoalsPeriod._id == period._id).Result.FirstOrDefault();
 
@@ -1400,7 +1391,7 @@ namespace Manager.Services.Specific
           goalsPerson = serviceGoalsPersonControl.InsertNewVersion(goalsPerson = new GoalsPersonControl()
           {
             GoalsPeriod = period,
-            Person = person,
+            Person = person.GetViewListBaseManager(),
             StatusGoalsPerson = EnumStatusGoalsPerson.Open
           }).Result;
 
@@ -1432,10 +1423,10 @@ namespace Manager.Services.Specific
       try
       {
         GoalsPersonControl goalsPerson = serviceGoalsPersonControl.GetNewVersion(p => p.Person._id == view.Person._id & p.GoalsPeriod._id == view.GoalsPeriod._id).Result;
-        var person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault();
+        var person = servicePerson.GetFreeNewVersion(p => p._id == view.Person._id).Result;
 
         goalsPerson.GoalsPeriod = view.GoalsPeriod;
-        goalsPerson.Person = view.Person;
+        goalsPerson.Person = person.GetViewListBaseManager();
         goalsPerson.StatusGoalsPerson = view.StatusGoalsPerson;
 
         if (person.User._id != _user._idUser)
@@ -1473,7 +1464,9 @@ namespace Manager.Services.Specific
         if (goalsPerson.StatusGoalsPerson == EnumStatusGoalsPerson.End)
         {
           var goalsPersonAvg = serviceGoalsPerson.GetAllNewVersion(p => p.Person._id == goalsPerson.Person._id & p.GoalsPeriod._id == goalsPerson.GoalsPeriod._id).Result.ToList();
-          var goalsCompanyAvg = serviceGoalsCompany.GetAllNewVersion(p => p.Company._id == goalsPerson.Person.Company._id & p.GoalsPeriod._id == goalsPerson.GoalsPeriod._id).Result.ToList();
+          var personGoals = servicePerson.GetNewVersion(p => p._id == goalsPerson.Person._id).Result;
+
+          var goalsCompanyAvg = serviceGoalsCompany.GetAllNewVersion(p => p.Company._id == personGoals.Company._id & p.GoalsPeriod._id == goalsPerson.GoalsPeriod._id).Result.ToList();
           var goalsManager = serviceGoalsManager.GetAllNewVersion(p => p.Manager._id == person.Manager._id & p.GoalsPeriod._id == goalsPerson.GoalsPeriod._id).Result.ToList();
 
 

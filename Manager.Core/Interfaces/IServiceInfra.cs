@@ -44,8 +44,8 @@ namespace Manager.Core.Interfaces
      List<ViewListSphere> GetSpheres();
      List<ViewListSphere> GetSpheres(string idcompany);
      List<ViewListAxis> GetAxis();
-     List<ViewListCbo> ListCBO();
-     ViewCrudCbo GetCBO(string id);
+     List<ViewListCbo> ListCbo();
+     ViewCrudCbo GetCbo(string id);
      List<ViewListAxis> GetAxis(string idcompany);
      List<ViewListArea> GetAreas();
      List<ViewListArea> GetAreas(string idcompany);
@@ -78,7 +78,7 @@ namespace Manager.Core.Interfaces
      string DeleteProcessLevelOne(string id);
      string DeleteProcessLevelTwo(string id);
      string DeleteTextDefault(string id);
-     string DeleteCBO(string id);
+     string DeleteCbo(string id);
      string AreaOrder(string idcompany, string idarea, long order, bool sum);
      string ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum);
      string ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum);
@@ -101,7 +101,7 @@ namespace Manager.Core.Interfaces
      string UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view);
      string UpdateMapGroupScope(string idgroup, ViewCrudScope view);
      string AddTextDefault(ViewCrudTextDefault model);
-     string AddCBO(ViewCrudCbo model);
+     string AddCbo(ViewCrudCbo model);
      Schooling AddSchooling(ViewCrudSchooling schooling);
      string AddAxis(ViewCrudAxis view);
      string AddArea(ViewCrudArea view);
@@ -121,7 +121,7 @@ namespace Manager.Core.Interfaces
      string UpdateSchooling(ViewCrudSchooling view);
      string UpdateProcessLevelOne(ViewCrudProcessLevelOne view);
      string UpdateProcessLevelTwo(ViewCrudProcessLevelTwo view);
-     string UpdateCBO(ViewCrudCbo view);
+     string UpdateCbo(ViewCrudCbo view);
      ViewCrudProcessLevelOne GetListProcessLevelOneById(string id);
   }
 }

@@ -4,6 +4,7 @@
   {
     public ViewListAxis Axis { get; set; }
     public ViewListSphere Sphere { get; set; }
+    public ViewListCompany Company { get; set; }
     public long Line { get; set; }
   }
 }

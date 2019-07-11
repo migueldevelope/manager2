@@ -7,7 +7,7 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para comentarios onboarding/monitoring
   /// </summary>
-  public class ListComments : BaseEntity
+  public class ListComments : BaseEntityId
   {
     public string Comments { get; set; }
     public DateTime? Date { get; set; }

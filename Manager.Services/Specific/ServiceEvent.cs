@@ -492,7 +492,7 @@ namespace Manager.Services.Specific
           End = eventhistoric.End,
           Workload = eventhistoric.Workload,
           _idPerson = eventhistoric.Person._id,
-          NamePerson = eventhistoric.Person.User.Name,
+          NamePerson = eventhistoric.Person.Name,
           Entity = new ViewCrudEntity() { _id = eventhistoric.Entity._id, Name = eventhistoric.Entity.Name },
           Event = new ViewListEvent() { _id = eventhistoric.Event._id, Name = eventhistoric.Event.Name },
           Attachments = eventhistoric.Attachments?.Select(p => new ViewCrudAttachmentField()
@@ -548,11 +548,11 @@ namespace Manager.Services.Specific
                 Name = item.User.Name,
                 Document = item.User.Document,
                 //Person = item.GetViewList(),
-                Cbo = item.Occupation == null ? null : (item.Occupation.CBO == null) ? null : new ViewListCbo()
+                Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
                 {
-                  _id = item.Occupation.CBO._id,
-                  Name = item.Occupation.CBO.Name,
-                  Code = item.Occupation.CBO.Code
+                  _id = item.Occupation.Cbo._id,
+                  Name = item.Occupation.Cbo.Name,
+                  Code = item.Occupation.Cbo.Code
                 }
               });
         }
@@ -586,11 +586,11 @@ namespace Manager.Services.Specific
               Name = item.User.Name,
               Document = item.User.Document,
               //Person = item.GetViewList(),
-              Cbo = item.Occupation == null ? null : (item.Occupation.CBO == null) ? null : new ViewListCbo()
+              Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
               {
-                _id = item.Occupation.CBO._id,
-                Name = item.Occupation.CBO.Name,
-                Code = item.Occupation.CBO.Code
+                _id = item.Occupation.Cbo._id,
+                Name = item.Occupation.Cbo.Name,
+                Code = item.Occupation.Cbo.Code
               }
             });
         }
@@ -765,15 +765,15 @@ namespace Manager.Services.Specific
 
 
         int skip = (count * (page - 1));
-        var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEventHistoric.CountNewVersion(p => p.Person.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEventHistoric.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListEventHistoric()
         {
           _id = p._id,
           Name = p.Name,
           _idPerson = p.Person._id,
-          NamePerson = p.Person.User.Name
+          NamePerson = p.Person.Name
         }).ToList();
       }
       catch (Exception e)
@@ -788,15 +788,15 @@ namespace Manager.Services.Specific
       {
 
         int skip = (count * (page - 1));
-        var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEventHistoric.CountNewVersion(p => p.Person.User._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEventHistoric.CountNewVersion(p => p.Person._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListEventHistoric()
         {
           _id = p._id,
           Name = p.Course.Name,
           _idPerson = p.Person._id,
-          NamePerson = p.Person.User.Name
+          NamePerson = p.Person.Name
         }).ToList();
       }
       catch (Exception e)
@@ -858,7 +858,7 @@ namespace Manager.Services.Specific
           Participants = new List<ViewCrudParticipant>(),
           Instructors = new List<ViewCrudInstructor>(),
           Attachments = new List<ViewCrudAttachmentField>(),
-          UserInclude = person.GetViewList(),
+          UserInclude = person.GetViewListBase(),
           DateInclude = DateTime.Now,
           Days = new List<ViewCrudDaysEvent>(),
           Entity = AddEntity(view.Entity.Name),
@@ -1064,7 +1064,7 @@ namespace Manager.Services.Specific
         var eventhistoric = new EventHistoric()
         {
           Entity = AddEntity(view.Entity.Name),
-          Person = servicePerson.GetAllNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault().GetViewList(),
+          Person = servicePerson.GetAllNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault().GetViewListBase(),
           Course = (view.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == view.Course._id)
           .Result.Select(p => new ViewListCourse()
           {
@@ -1149,24 +1149,10 @@ namespace Manager.Services.Specific
           Content = view.Content,
           Deadline = view.Deadline,
           Periodicity = view.Periodicity,
-          CourseESocial = (view.CourseESocial == null) ? null :
-          serviceCourseESocial.GetAllNewVersion(p => p._id == view.CourseESocial._id).Result.FirstOrDefault(),
+          CourseESocial = view.CourseESocial,
           Status = EnumStatus.Enabled,
-          Prerequisites = view.Prerequisites?.Select(p => new Course()
-          {
-            _id = p._id,
-            Name = p.Name,
-            Status = EnumStatus.Enabled,
-            _idAccount = _user._idAccount
-          }).ToList(),
-          Equivalents = view.Equivalents.Select(p => new Course()
-          {
-            _id = p._id,
-            Name = p.Name,
-            Status = EnumStatus.Enabled,
-            _idAccount = _user._idAccount
-          }).ToList()
-
+          Prerequisites = view.Prerequisites,
+          Equivalents = view.Equivalents
         }).Result;
 
 
@@ -1225,7 +1211,7 @@ namespace Manager.Services.Specific
         events.Workload = view.Workload;
 
 
-        events.UserEdit = person.GetViewList();
+        events.UserEdit = person.GetViewListBase();
         events.Entity = AddEntity(view.Entity.Name);
         if (view.StatusEvent == EnumStatusEvent.Realized)
         {
@@ -1251,7 +1237,7 @@ namespace Manager.Services.Specific
       {
         var eventHistoric = serviceEventHistoric.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         eventHistoric.Name = view.Name;
-        eventHistoric.Person = servicePerson.GetAllNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault().GetViewList();
+        eventHistoric.Person = servicePerson.GetAllNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault().GetViewListBase();
         eventHistoric.Course = (view.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == view.Course._id).Result.Select(p => new ViewListCourse()
         {
           _id = p._id,
@@ -1307,19 +1293,9 @@ namespace Manager.Services.Specific
         course.Periodicity = view.Periodicity;
         course.Deadline = view.Deadline;
         course.Wordkload = view.Wordkload;
-        course.CourseESocial = (view.CourseESocial == null) ? null : new CourseESocial() { _id = view.CourseESocial._id, Name = view.CourseESocial.Name, Code = view.CourseESocial.Code };
-        course.Equivalents = view.Equivalents?.Select(p => new Course()
-        {
-          _id = p._id,
-          Name = p.Name
-        }).ToList();
-        course.Prerequisites = view.Prerequisites?.Select(p => new Course()
-        {
-          _id = p._id,
-          Name = p.Name
-        }).ToList();
-
-
+        course.CourseESocial = view.CourseESocial;
+        course.Equivalents = view.Equivalents;
+        course.Prerequisites = view.Prerequisites;
 
         serviceCourse.Update(course, null).Wait();
 

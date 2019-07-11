@@ -5,7 +5,7 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   ///  coleção
   /// </summary>
-  public class SalaryScaleGrade : BaseEntity
+  public class SalaryScaleGrade : BaseEntityId
   {
     public string _idGrade { get; set; }
     public string NameGrade { get; set; }

@@ -153,8 +153,10 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
         if (viewPlan.StatusPlanApproved == EnumStatusPlanApproved.Approved)
-          Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento dentro do prazo do colaborador " + monitoring.Person.User.Name, monitoring.Person));
+          Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento dentro do prazo do colaborador " + person.User.Name, person));
 
 
         //verify plan;
@@ -167,7 +169,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(viewPlan, person));
                 listActivities.Add(new ViewCrudPlan()
                 {
                   _id = viewPlan._id,
@@ -193,9 +195,9 @@ namespace Manager.Services.Specific
                 var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
-                upPlan.Skills = new List<Skill>();
+                upPlan.Skills = new List<ViewListSkill>();
                 foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetAllNewVersion(p => p._id == skill._id).Result.FirstOrDefault());
+                  upPlan.Skills.Add(serviceSkill.GetNewVersion(p => p._id == skill._id).Result.GetViewList());
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
@@ -215,7 +217,7 @@ namespace Manager.Services.Specific
                 upPlan.Evaluation = plan.Evaluation;
 
 
-                Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(upPlan, person));
                 listActivities.Add(plan);
               }
               else
@@ -233,7 +235,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(viewPlan, person));
                 listSchoolings.Add(new ViewCrudPlan()
                 {
                   _id = viewPlan._id,
@@ -259,9 +261,9 @@ namespace Manager.Services.Specific
                 var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
-                upPlan.Skills = new List<Skill>();
+                upPlan.Skills = new List<ViewListSkill>();
                 foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetAllNewVersion(p => p._id == skill._id).Result.FirstOrDefault());
+                  upPlan.Skills.Add(serviceSkill.GetNewVersion(p => p._id == skill._id).Result.GetViewList());
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
@@ -280,7 +282,7 @@ namespace Manager.Services.Specific
                 upPlan.TextEndManager = plan.TextEndManager;
                 upPlan.Evaluation = plan.Evaluation;
 
-                Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(upPlan, person));
                 listSchoolings.Add(plan);
               }
               else
@@ -299,7 +301,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == viewPlan._id)
               {
-                Task.Run(() => UpdatePlan(viewPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(viewPlan, person));
                 listSkillsCompany.Add(new ViewCrudPlan()
                 {
                   _id = viewPlan._id,
@@ -325,9 +327,9 @@ namespace Manager.Services.Specific
                 var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
-                upPlan.Skills = new List<Skill>();
+                upPlan.Skills = new List<ViewListSkill>();
                 foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetAllNewVersion(p => p._id == skill._id).Result.FirstOrDefault());
+                  upPlan.Skills.Add(serviceSkill.GetNewVersion(p => p._id == skill._id).Result.GetViewList());
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
@@ -346,7 +348,7 @@ namespace Manager.Services.Specific
                 upPlan.TextEndManager = plan.TextEndManager;
                 upPlan.Evaluation = plan.Evaluation;
 
-                Task.Run(() => UpdatePlan(upPlan, monitoring.Person));
+                Task.Run(() => UpdatePlan(upPlan, person));
                 listSkillsCompany.Add(plan);
               }
               else
@@ -369,6 +371,7 @@ namespace Manager.Services.Specific
       try
       {
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
 
         //verify plan;
         if (viewPlan.SourcePlan == EnumSourcePlan.Activite)
@@ -380,8 +383,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person, idmonitoring, item._id);
-                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
+                AddPlan(viewPlan, person, idmonitoring, item._id);
+                Task.Run(() => UpdatePlan(planOld, person));
                 listActivities.Add(new ViewCrudPlan()
                 {
                   _id = planOld._id,
@@ -445,8 +448,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person, monitoring._id, item._id);
-                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
+                AddPlan(viewPlan, person, monitoring._id, item._id);
+                Task.Run(() => UpdatePlan(planOld, person));
                 listSchooling.Add(new ViewCrudPlan()
                 {
                   _id = planOld._id,
@@ -509,8 +512,8 @@ namespace Manager.Services.Specific
             {
               if (plan._id == planOld._id)
               {
-                AddPlan(viewPlan, monitoring.Person, idmonitoring, item._id);
-                Task.Run(() => UpdatePlan(planOld, monitoring.Person));
+                AddPlan(viewPlan, person, idmonitoring, item._id);
+                Task.Run(() => UpdatePlan(planOld, person));
                 listSkillsCompany.Add(new ViewCrudPlan()
                 {
                   _id = planOld._id,
@@ -602,10 +605,10 @@ namespace Manager.Services.Specific
           _id = person._id,
           _idManager = person.Manager._id,
           NameManager = person.Manager.Name,
-          User = person.User.GetViewList(),
-          Company = person.Company.GetViewList(),
+          User = person.User,
+          Company = person.Company,
           Registration = person.Registration,
-          Establishment = person.Establishment?.GetViewList()
+          Establishment = person.Establishment
         };
         return servicePlan.InsertNewVersion(plan).Result;
       }
@@ -755,15 +758,7 @@ namespace Manager.Services.Specific
         plan.TextEndManager = viewPlan.TextEndManager;
         plan.Evaluation = viewPlan.Evaluation;
         plan.StatusPlanApproved = viewPlan.StatusPlanApproved;
-        plan.Skills = viewPlan.Skills?.Select(p => new Skill()
-        {
-          _id = p._id,
-          Name = p.Name,
-          Concept = p.Concept,
-          Status = EnumStatus.Enabled,
-          TypeSkill = p.TypeSkill,
-          _idAccount = _user._idAccount
-        }).ToList();
+        plan.Skills = viewPlan.Skills;
         plan.TypePlan = viewPlan.TypePlan;
 
         Task.Run(() => UpdatePlan(idmonitoring, plan));
@@ -1455,22 +1450,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == idmonitoring).Result;
+
         var viewPlan = new Plan()
         {
           _id = view._id,
           Name = view.Name,
           Description = view.Description,
           Deadline = view.Deadline,
-          Skills = view.Skills?.Select(p => new Skill()
-          {
-            _id = p._id,
-            Name = p.Name,
-            Concept = p.Concept,
-            Status = EnumStatus.Enabled,
-            TypeSkill = p.TypeSkill,
-            _idAccount = _user._idAccount
-          }).ToList(),
+          Skills = view.Skills,
           TypePlan = view.TypePlan,
           SourcePlan = view.SourcePlan
         };
@@ -1485,7 +1474,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person, monitoring._id, item._id);
+                AddPlan(viewPlan, person, monitoring._id, item._id);
                 listActivities.Add(plan);
                 listActivities.Add(new ViewCrudPlan()
                 {
@@ -1519,7 +1508,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person, monitoring._id, item._id);
+                AddPlan(viewPlan, person, monitoring._id, item._id);
                 listSchoolings.Add(plan);
                 listSchoolings.Add(new ViewCrudPlan()
                 {
@@ -1553,7 +1542,7 @@ namespace Manager.Services.Specific
             {
               if (plan._id == idplanold)
               {
-                AddPlan(viewPlan, monitoring.Person, monitoring._id, item._id);
+                AddPlan(viewPlan, person, monitoring._id, item._id);
                 listSkillsCompany.Add(plan);
                 listSkillsCompany.Add(new ViewCrudPlan()
                 {
@@ -1593,13 +1582,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault();
+        var plan = servicePlan.GetNewVersion(p => p._id == idplan).Result;
         DateTime? deadline = DateTime.Now;
 
         plan.StructPlans.Add(AddStructPlan(new StructPlan()
         {
           _id = structplan._id,
-          Course = (structplan.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == structplan.Course._id).Result.FirstOrDefault(),
+          Course = structplan.Course,
           PlanActivity = (structplan.PlanActivity == null) ? null : new PlanActivity() { _id = structplan.PlanActivity._id, _idAccount = _user._idAccount, Status = EnumStatus.Enabled, Name = structplan.PlanActivity.Name },
           TypeAction = structplan.TypeAction,
           TypeResponsible = structplan.TypeResponsible
@@ -1699,7 +1688,7 @@ namespace Manager.Services.Specific
             plan.StructPlans.Add(new StructPlan()
             {
               _id = structplanedit._id,
-              Course = (structplanedit.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == structplanedit.Course._id).Result.FirstOrDefault(),
+              Course = structplanedit.Course,
               PlanActivity = (structplanedit.PlanActivity == null) ? null : new PlanActivity() { _id = structplanedit.PlanActivity._id, Name = structplanedit.PlanActivity.Name },
               TypeAction = structplanedit.TypeAction,
               TypeResponsible = structplanedit.TypeResponsible
@@ -1725,7 +1714,8 @@ namespace Manager.Services.Specific
         Plan planNew = new Plan();
         Plan planUpdate = new Plan();
 
-        var person = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().Person;
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
 
         foreach (var item in viewPlan)
         {
@@ -1737,15 +1727,7 @@ namespace Manager.Services.Specific
               Name = item.Name,
               Description = item.Description,
               Deadline = item.Deadline,
-              Skills = item.Skills?.Select(p => new Skill()
-              {
-                _id = p._id,
-                Name = p.Name,
-                Concept = p.Name,
-                TypeSkill = p.TypeSkill,
-                _idAccount = _user._idAccount,
-                Status = EnumStatus.Enabled
-              }).ToList(),
+              Skills = item.Skills,
               DateInclude = item.DateInclude,
               TypePlan = item.TypePlan,
               SourcePlan = item.SourcePlan,
@@ -1774,15 +1756,7 @@ namespace Manager.Services.Specific
               Name = item.Name,
               Description = item.Description,
               Deadline = item.Deadline,
-              Skills = item.Skills?.Select(p => new Skill()
-              {
-                _id = p._id,
-                Name = p.Name,
-                Concept = p.Name,
-                TypeSkill = p.TypeSkill,
-                _idAccount = _user._idAccount,
-                Status = EnumStatus.Enabled
-              }).ToList(),
+              Skills = item.Skills,
               DateInclude = item.DateInclude,
               TypePlan = item.TypePlan,
               SourcePlan = item.SourcePlan,

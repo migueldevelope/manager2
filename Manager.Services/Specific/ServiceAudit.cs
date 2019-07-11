@@ -83,6 +83,7 @@ namespace Manager.Services.Specific
       try
       {
         Person person = servicePerson.GetFreeNewVersion(p => p.User._id == serviceUser._user._idUser).Result;
+
         switch (person.TypeUser)
         {
           case EnumTypeUser.Support:
@@ -94,7 +95,7 @@ namespace Manager.Services.Specific
                 Document = p.User.Document,
                 Mail = p.User.Mail,
                 NameUser = p.User.Name,
-                DisabledUser = p.User.Status.ToString(),
+                DisabledUser = p.Status.ToString(),
                 IdPerson = p._id,
                 DisabledPerson = p.Status.ToString(),
                 IdEstablishment = p.Establishment?._id,

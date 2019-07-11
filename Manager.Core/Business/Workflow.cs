@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System;
 
@@ -9,7 +10,7 @@ namespace Manager.Core.Business
   /// </summary>
   public class Workflow : BaseEntity
   {
-    public Person Requestor { get; set; }
+    public ViewListPersonBaseManager Requestor { get; set; }
     public EnumWorkflow StatusWorkflow { get; set; }
     public string Commetns { get; set; }
     public DateTime? Date { get; set; }

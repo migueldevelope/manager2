@@ -19,7 +19,7 @@ namespace Manager.Core.Interfaces
      List<ViewListPerson> ListPersons(string idcertification, ref  long total,  string filter, int count, int page);
      ViewListCertificationProfile GetProfile(string idperson);
      ViewCrudCertification NewCertification(ViewListCertificationItem item, string idperson);
-     string AddPerson(string idcertification, ViewListPerson person);
+     string AddPerson(string idcertification, ViewListPersonBase person);
      string ApprovedCertification(string idcertificationperson, ViewCrudCertificationPerson view);
      string UpdateCertification(ViewCrudCertification view, string idperson, string idcertification);
      List<ViewListCertification> ListEnded(ref  long total,  string filter, int count, int page);
