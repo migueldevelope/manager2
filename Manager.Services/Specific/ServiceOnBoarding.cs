@@ -1452,7 +1452,7 @@ namespace Manager.Services.Specific
             _id = ObjectId.GenerateNewId().ToString()
           });
 
-        Group group = serviceGroup.GetNewVersion(p => p._id == person.Occupation.Group._id).Result;
+        Group group = serviceGroup.GetNewVersion(p => p._id == person.Occupation._idGroup).Result;
         onBoarding.SkillsGroup = new List<OnBoardingSkills>();
         foreach (var item in group.Skills)
           onBoarding.SkillsGroup.Add(new OnBoardingSkills()

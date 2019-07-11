@@ -14,7 +14,7 @@ namespace Manager.Core.Business
   {
     public EnumStatusUser StatusUser { get; set; }
     public ViewListCompany Company { get; set; }
-    public ViewListOccupation Occupation { get; set; }
+    public ViewListOccupationResume Occupation { get; set; }
     public BaseFields Manager { get; set; }
     public string DocumentManager { get; set; }
     public DateTime? DateLastOccupation { get; set; }

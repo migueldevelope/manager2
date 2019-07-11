@@ -49,7 +49,7 @@ namespace Manager.Core.Interfaces
     ViewListSchooling GetSchooling(string id);
     ViewListCompany GetCompany(string id);
     ViewListEstablishment GetEstablishment(string id);
-    ViewListOccupation GetOccupation(string id);
+    ViewListOccupationResume GetOccupation(string id);
     IntegrationPerson GetIntegrationPerson(string key);
     void PostIntegrationPerson(IntegrationPerson integrationPerson);
     void PutIntegrationPerson(IntegrationPerson integrationPerson);

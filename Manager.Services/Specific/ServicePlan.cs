@@ -600,16 +600,7 @@ namespace Manager.Services.Specific
         plan.DateInclude = DateTime.Now;
         plan._idMonitoring = _idmonitoring;
         plan._idItem = _iditem;
-        plan.Person = new ViewListPersonPlan()
-        {
-          _id = person._id,
-          _idManager = person.Manager._id,
-          NameManager = person.Manager.Name,
-          User = person.User,
-          Company = person.Company,
-          Registration = person.Registration,
-          Establishment = person.Establishment
-        };
+        plan.Person = person.GetViewListBaseManager();
         return servicePlan.InsertNewVersion(plan).Result;
       }
       catch (Exception e)
@@ -983,7 +974,7 @@ namespace Manager.Services.Specific
             UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
             TypePlan = res.TypePlan,
             IdPerson = res.Person?._id,
-            NamePerson = res.Person?.User.Name,
+            NamePerson = res.Person?.Name,
             SourcePlan = res.SourcePlan,
             _idMonitoring = res._idMonitoring,
             Evaluation = res.Evaluation,
@@ -1081,7 +1072,7 @@ namespace Manager.Services.Specific
                 UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = res.Person._id,
-                NamePerson = res.Person.User.Name,
+                NamePerson = res.Person.Name,
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = res._idMonitoring,
                 Evaluation = res.Evaluation,
@@ -1165,7 +1156,7 @@ namespace Manager.Services.Specific
                 UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = res.Person._id,
-                NamePerson = res.Person.User.Name,
+                NamePerson = res.Person.Name,
                 SourcePlan = res.SourcePlan,
                 IdMonitoring = res._idMonitoring,
                 Evaluation = res.Evaluation,
@@ -1236,7 +1227,7 @@ namespace Manager.Services.Specific
           DateInclude = plan.DateInclude,
           TypePlan = plan.TypePlan,
           IdPerson = plan.Person?._id,
-          NamePerson = plan.Person?.User.Name,
+          NamePerson = plan.Person?.Name,
           SourcePlan = plan.SourcePlan,
           _idMonitoring = plan._idMonitoring,
           Evaluation = plan.Evaluation,
@@ -1346,7 +1337,7 @@ namespace Manager.Services.Specific
             UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
             TypePlan = res.TypePlan,
             _idPerson = res.Person._id,
-            NamePerson = res.Person.User.Name,
+            NamePerson = res.Person.Name,
             SourcePlan = res.SourcePlan,
             IdMonitoring = res._idMonitoring,
             Evaluation = res.Evaluation,
@@ -1412,7 +1403,7 @@ namespace Manager.Services.Specific
             UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
             TypePlan = res.TypePlan,
             _idPerson = res.Person._id,
-            NamePerson = res.Person.User.Name,
+            NamePerson = res.Person.Name,
             SourcePlan = res.SourcePlan,
             IdMonitoring = res._idMonitoring,
             Evaluation = res.Evaluation,
@@ -1841,7 +1832,7 @@ namespace Manager.Services.Specific
           }).ToList(),
           NewAction = plan.NewAction,
           _idPerson = plan.Person._id,
-          NamePerson = plan.Person.User.Name,
+          NamePerson = plan.Person.Name,
           Bomb = GetBomb((DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).Days)
         };
         if (plan.SourcePlan == EnumSourcePlan.Activite)

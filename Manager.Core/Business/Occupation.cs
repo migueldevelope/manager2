@@ -35,5 +35,17 @@ namespace Manager.Core.Business
         Cbo = Cbo
       };
     }
+
+    public ViewListOccupationResume GetViewListResume()
+    {
+      return new ViewListOccupationResume()
+      {
+        _id = _id,
+        Name = Name,
+        Cbo = Cbo,
+        _idGroup = Group._id,
+        NameGroup = Group.Name
+      };
+    }
   }
 }

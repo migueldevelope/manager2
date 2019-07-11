@@ -254,7 +254,7 @@ namespace Manager.Services.Specific
         if (beginDate == null)
           beginDate = DateTime.Now;
 
-        var list = servicePerson.GetAllNewVersion(p => p.Occupation == occupation.GetViewList()).Result.ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.Occupation == occupation.GetViewListResume()).Result.ToList();
         foreach (var item in list)
         {
           UpdateTrainingPlanPerson(course, item, beginDate, typeMandatoryTraining);

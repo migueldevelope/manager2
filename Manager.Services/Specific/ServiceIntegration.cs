@@ -895,11 +895,11 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public ViewListOccupation GetOccupation(string id)
+    public ViewListOccupationResume GetOccupation(string id)
     {
       try
       {
-        return occupationService.GetNewVersion(p => p._id == id).Result?.GetViewList();
+        return occupationService.GetNewVersion(p => p._id == id).Result?.GetViewListResume();
       }
       catch (Exception)
       {

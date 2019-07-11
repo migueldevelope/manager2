@@ -13,7 +13,7 @@ namespace Manager.Core.Business
   public class Checkpoint : BaseEntity
   {
     public ViewListPersonInfo Person { get; set; }
-    public ViewListOccupation Occupation { get; set; }
+    public ViewListOccupationResume Occupation { get; set; }
     public DateTime? DateBegin { get; set; }
     public DateTime? DateEnd { get; set; }
     public string Comments { get; set; }

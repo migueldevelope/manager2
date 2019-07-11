@@ -594,7 +594,7 @@ namespace Manager.Services.Specific
         var list = servicePlan.GetAllNewVersion().Select(p => new ViewExportStatusPlan()
         {
           NameManager = p.Person.NameManager == null ? "Sem Gestor" : p.Person.NameManager,
-          NamePerson = p.Person.User.Name,
+          NamePerson = p.Person.Name,
           What = p.Name,
           Description = p.Description,
           Deadline = p.Deadline,

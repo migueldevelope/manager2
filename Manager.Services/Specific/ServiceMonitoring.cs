@@ -1031,7 +1031,7 @@ namespace Manager.Services.Specific
         var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
 
         var skills = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault().Skills;
-        var skillsgroup = serviceGroup.GetAllNewVersion(p => p._id == person.Occupation.Group._id).Result.FirstOrDefault().Skills;
+        var skillsgroup = serviceGroup.GetAllNewVersion(p => p._id == person.Occupation._idGroup).Result.FirstOrDefault().Skills;
         var list = skillsgroup;
         foreach (var item in skills)
         {
@@ -1422,16 +1422,7 @@ namespace Manager.Services.Specific
         plan.DateInclude = DateTime.Now;
         plan._idMonitoring = _idMonitoring;
         plan._idItem = _idItem;
-        plan.Person = new ViewListPersonPlan()
-        {
-          _id = person._id,
-          _idManager = person.Manager._id,
-          NameManager = person.Manager.Name,
-          User = person.User,
-          Company = person.Company,
-          Registration = person.Registration,
-          Establishment = person.Establishment
-        };
+        plan.Person = person.GetViewListBaseManager();
         return servicePlan.InsertNewVersion(plan).Result;
       }
       catch (Exception e)

@@ -181,7 +181,7 @@ namespace Manager.Services.Auth
         {
           StatusUser = view.Person.StatusUser,
           Company = view.Person.Company,
-          Occupation =view.Person.Occupation,
+          Occupation = view.Person.Occupation,
           Manager = manager,
           DateLastOccupation = view.Person.DateLastOccupation,
           Salary = view.Person.Salary,

@@ -1932,7 +1932,7 @@ namespace Manager.Services.Specific
       {
         var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
 
-        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).Result.ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._idGroup == group._id).Result.ToList())
         {
           return "error_exists_register";
         }
@@ -3729,9 +3729,10 @@ namespace Manager.Services.Specific
         }
 
 
-        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation.Group._id == group._id).Result.ToList())
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._idGroup == group._id).Result.ToList())
         {
-          item.Occupation.Group = group.GetViewList();
+          item.Occupation._idGroup = group._id;
+          item.Occupation.NameGroup = group.Name;
           foreach (var school in group.Schooling)
           {
             var occupation = serviceOccupation.GetNewVersion(p => p._id == item.Occupation._id).Result;
@@ -3776,7 +3777,7 @@ namespace Manager.Services.Specific
       {
         foreach (var item in servicePerson.GetAuthentication(p => p.Occupation._id == occupation._id).ToList())
         {
-          item.Occupation = occupation.GetViewList();
+          item.Occupation = occupation.GetViewListResume();
           servicePerson.UpdateAccount(item, null);
         }
 

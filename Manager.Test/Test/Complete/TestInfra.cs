@@ -124,12 +124,12 @@ namespace Manager.Test.Test.Complete
           Complement = "1",
           Type = EnumTypeSchooling.Excellence
         };
-        var group = servicePerson.GetAllNewVersion(p => p.User.Mail == "miguel@jmsoft.com.br").Result.FirstOrDefault().Occupation.Group;
+        //var group = servicePerson.GetAllNewVersion(p => p.User.Mail == "miguel@jmsoft.com.br").Result.FirstOrDefault().Occupation.Group;
 
         var view = new ViewCrudMapGroupSchooling()
         {
           Schooling = schooling,
-          _idGroup = group._id
+          //_idGroup = group._id
         };
 
         var newmapgroupschooling = serviceInfra.AddMapGroupSchooling(view);

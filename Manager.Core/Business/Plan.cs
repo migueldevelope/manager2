@@ -36,6 +36,6 @@ namespace Manager.Core.Business
     public string _idMonitoring { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idItem { get; set; }
-    public ViewListPersonPlan Person { get; set; }
+    public ViewListPersonBaseManager Person { get; set; }
   }
 }
