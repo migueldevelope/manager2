@@ -18,7 +18,7 @@ namespace Manager.Core.Business
     public List<ViewListSkill> Skills { get; set; }
     public List<ViewCrudSchooling> Schooling { get; set; }
     public List<ViewListActivitie> Activities { get; set; }
-    public Occupation Template { get; set; }
+    public string Template { get; set; }
     public ViewListCbo Cbo { get; set; }
     public string SpecificRequirements { get; set; }
     public List<ViewListProcessLevelTwo> Process { get; set; }
