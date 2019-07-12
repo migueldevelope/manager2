@@ -480,7 +480,7 @@ namespace Manager.Services.Specific
       try
       {
         var certification = serviceCertification.GetAllNewVersion(p => p._id == viewcertification._idCertification).Result.FirstOrDefault();
-      var person = servicePerson.GetNewVersion(p => p._id == certification.Person._id).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == certification.Person._id).Result;
 
         foreach (var item in certification.ListPersons)
         {
@@ -490,7 +490,7 @@ namespace Manager.Services.Specific
             item.Comments = viewcertification.Comments;
             item.DateApprovation = DateTime.Now;
 
-            var certPerson = serviceCertificationPerson.GetNewVersion(p => p._id == item._id).Result;
+            var certPerson = serviceCertificationPerson.GetNewVersion(p => p.Person._id == item._id).Result;
             certPerson.StatusCertificationPerson = item.StatusCertificationPerson;
             certPerson.Comments = item.Comments;
             certPerson.DateApprovation = item.DateApprovation;
