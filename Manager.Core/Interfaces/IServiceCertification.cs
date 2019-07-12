@@ -16,7 +16,7 @@ namespace Manager.Core.Interfaces
      string DeleteCertification(string idcertification);
 
 
-     List<ViewListPerson> ListPersons(string idcertification, ref  long total,  string filter, int count, int page);
+     List<ViewListPersonBase> ListPersons(string idcertification, ref  long total,  string filter, int count, int page);
      ViewListCertificationProfile GetProfile(string idperson);
      ViewCrudCertification NewCertification(ViewListCertificationItem item, string idperson);
      string AddPerson(string idcertification, ViewListPersonBase person);

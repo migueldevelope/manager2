@@ -95,7 +95,7 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Manager
-    public List<ViewListPerson> ListManager(ref long total, string filter, int count, int page)
+    public List<ViewBaseFields> ListManager(ref long total, string filter, int count, int page)
     {
       try
       {
@@ -104,7 +104,7 @@ namespace Manager.Services.Auth
         int skip = (count * (page - 1));
         return servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
           .Result.OrderBy(p => p.User.Name)
-           .Select(item => item.GetViewList()).ToList();
+           .Select(item => item.GetViewBaseFields()).ToList();
       }
       catch (Exception e)
       {
@@ -114,12 +114,12 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Occupation
-    public List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page)
+    public List<ViewListOccupationResume> ListOccupation(ref long total, string filter, int count, int page)
     {
       total = serviceOccupation.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
       int skip = count * (page - 1);
       return serviceOccupation.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name)
-        .Skip(skip).Take(count).Select(p => p.GetViewList()).ToList();
+        .Skip(skip).Take(count).Select(p => p.GetViewListResume()).ToList();
 
     }
     #endregion

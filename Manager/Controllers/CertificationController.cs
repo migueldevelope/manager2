@@ -182,7 +182,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersons/{idcertification}")]
-    public async Task<List<ViewListPerson>> ListPersons(string idcertification, string filter = "", int count = 999999999, int page = 1)
+    public async Task<List<ViewListPersonBase>> ListPersons(string idcertification, string filter = "", int count = 999999999, int page = 1)
     {
       long total = 0;
       return await Task.Run(() =>service.ListPersons(idcertification, ref total, filter, count, page));

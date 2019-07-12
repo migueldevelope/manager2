@@ -162,7 +162,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupation")]
-    public async Task<List<ViewListOccupation>> ListOccupation( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOccupationResume>> ListOccupation( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListOccupation(ref total, filter, count, page);
@@ -196,7 +196,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager")]
-    public async Task<List<ViewListPerson>> ListManager( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewBaseFields>> ListManager( int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListManager(ref total, filter, count, page);

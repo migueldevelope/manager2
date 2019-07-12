@@ -1574,7 +1574,7 @@ namespace Manager.Services.Specific
           .Select(p => new ViewListGoalPersonControl()
           {
             _id = null,
-            Person = p.GetViewList(),
+            Person = p.GetViewListBase(),
             GoalsPeriod = period,
             StatusGoalsPerson = EnumStatusGoalsPerson.Open
           }).ToList();
@@ -1621,7 +1621,7 @@ namespace Manager.Services.Specific
         ViewListGoalPersonControl view = new ViewListGoalPersonControl()
         {
           _id = null,
-          Person = detail.GetViewList(),
+          Person = detail.GetViewListBase(),
           GoalsPeriod = period,
           StatusGoalsPerson = EnumStatusGoalsPerson.Open
         };

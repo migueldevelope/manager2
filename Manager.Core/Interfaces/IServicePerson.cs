@@ -16,8 +16,8 @@ namespace Manager.Core.Interfaces
     ViewCrudPerson Get(string id);
     ViewCrudPerson New(ViewCrudPerson view);
     string Update(ViewCrudPerson person);
-    List<ViewListOccupation> ListOccupation(ref long total, string filter, int count, int page);
-    List<ViewListPerson> ListManager(ref long total, string filter, int count, int page);
+    List<ViewListOccupationResume> ListOccupation(ref long total, string filter, int count, int page);
+    List<ViewBaseFields> ListManager(ref long total, string filter, int count, int page);
     List<ViewListCompany> ListCompany(ref long total, string filter, int count, int page);
     List<ViewListPerson> GetPersons(string idcompany, string filter);
     string AddPersonUser(ViewCrudPersonUser view);

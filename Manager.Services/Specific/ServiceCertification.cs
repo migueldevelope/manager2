@@ -638,7 +638,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPerson> ListPersons(string idcertification, ref long total, string filter, int count, int page)
+    public List<ViewListPersonBase> ListPersons(string idcertification, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -647,11 +647,11 @@ namespace Manager.Services.Specific
         var outros = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Support & p.StatusUser != EnumStatusUser.Disabled
         & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator
         ).Result.ToList();
-        List<ViewListPerson> details = new List<ViewListPerson>();
+        List<ViewListPersonBase> details = new List<ViewListPersonBase>();
         foreach (var item in outros)
-          details.Add(item.GetViewList());
+          details.Add(item.GetViewListBase());
 
-        var detail = details.Where(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(o => o.User.Name).ToList();
+        var detail = details.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(o => o.Name).ToList();
 
         var listExclud = serviceCertification.GetAllNewVersion(p => p._id == idcertification).Result.FirstOrDefault().ListPersons;
         foreach (var item in listExclud)

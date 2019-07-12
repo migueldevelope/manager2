@@ -40,6 +40,15 @@ namespace Manager.Core.Business
         User = User
       };
     }
+    public ViewBaseFields GetViewBaseFields()
+    {
+      return new ViewBaseFields()
+      {
+        _id = _id,
+        Name = User.Name,
+        Mail = User.Mail
+      };
+    }
     public ViewListPersonBase GetViewListBase()
     {
       return new ViewListPersonBase()
