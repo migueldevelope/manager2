@@ -962,6 +962,7 @@ namespace Manager.Services.Specific
             _id = p._id,
             Name = p.Name,
             Comments = p.Comments,
+            Mail = p.Mail,
             StatusCertificationPerson = p.StatusCertificationPerson,
             TextDefault = p.TextDefault,
             TextDefaultEnd = p.TextDefaultEnd
