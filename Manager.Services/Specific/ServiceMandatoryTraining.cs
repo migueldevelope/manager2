@@ -665,7 +665,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPerson> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListPersonBase> ListPerson(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -683,7 +683,7 @@ namespace Manager.Services.Specific
 
         var detail = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
           .Where(x => !filters.Contains(x._id))
-          .Select(x => x.GetViewList()).ToList();
+          .Select(x => x.GetViewListBase()).ToList();
 
         total = detail.Count();
 

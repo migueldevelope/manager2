@@ -23,7 +23,7 @@ namespace Manager.Core.Interfaces
      string RemovePerson(string idcourse, string idperson);
      string RemoveCompany(string idcourse, string idcompany);
      List<ViewListOccupation> ListOccupation(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
-     List<ViewListPerson> ListPerson(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
+     List<ViewListPersonBase> ListPerson(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
      List<ViewListCompany> ListCompany(string idcourse,  ref long total, int count = 10, int page = 1, string filter = "");
      List<ViewTrainingPlan> ListTrainingPlanPerson(string iduser,  ref long total, int count = 10, int page = 1, string filter = "");
      List<ViewTrainingPlanList> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  ref long total, int count = 10, int page = 1, string filter = "");

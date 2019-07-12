@@ -153,7 +153,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listperson/{idcourse}/{idcompany}")]
-    public async Task<List<ViewListPerson>> ListPerson(string idcourse, string idcompany,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonBase>> ListPerson(string idcourse, string idcompany,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPerson(idcourse, idcompany, ref total, count, page, filter);
