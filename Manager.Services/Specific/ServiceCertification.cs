@@ -843,7 +843,9 @@ namespace Manager.Services.Specific
         };
 
         cerPerson = serviceCertificationPerson.InsertNewVersion(cerPerson).Result;
-        certification.ListPersons.Add(cerPerson.GetViewList());
+        var view = cerPerson.GetViewList();
+        view.Mail = servicePerson.GetNewVersion(p => p._id == cerPerson._id).Result.User.Mail;
+        certification.ListPersons.Add(view);
         serviceCertification.Update(certification, null).Wait();
 
         return "ok";
