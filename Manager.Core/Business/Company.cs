@@ -1,6 +1,8 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace Manager.Core.Business
@@ -13,6 +15,8 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Logo { get; set; }
     public List<ViewListSkill> Skills { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string Template  { get; set; }
     public ViewListCompany GetViewList()
     {

@@ -2,6 +2,8 @@
 using Manager.Core.BusinessModel;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +20,8 @@ namespace Manager.Core.Business
     public List<ViewListSkill> Skills { get; set; }
     public List<ViewCrudSchooling> Schooling { get; set; }
     public List<ViewListActivitie> Activities { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
     public ViewListCbo Cbo { get; set; }
     public string SpecificRequirements { get; set; }

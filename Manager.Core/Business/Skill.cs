@@ -2,6 +2,8 @@
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Manager.Core.Business
 {
@@ -13,6 +15,8 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Concept { get; set; }
     public EnumTypeSkill TypeSkill { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
     public ViewListSkill GetViewList()
     {
