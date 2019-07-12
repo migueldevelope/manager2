@@ -15,7 +15,7 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public ViewListCompany Company { get; set; }
     public long Order { get; set; }
-    [BsonId]
+
     [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
     [BsonIgnore]

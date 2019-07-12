@@ -14,7 +14,7 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public EnumTypeAxis TypeAxis { get; set; }
-    [BsonId]
+
     [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
     public ViewListCompany Company { get; set; }

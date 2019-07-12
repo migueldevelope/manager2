@@ -20,7 +20,7 @@ namespace Manager.Core.Business
     public List<ViewListSkill> Skills { get; set; }
     public List<ViewCrudSchooling> Schooling { get; set; }
     public List<ViewListActivitie> Activities { get; set; }
-    [BsonId]
+
     [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
     public ViewListCbo Cbo { get; set; }

@@ -15,7 +15,7 @@ namespace Manager.Core.Business
     public string Content { get; set; }
     public EnumTypeText TypeText { get; set; }
     public ViewListCompany Company { get; set; }
-    [BsonId]
+
     [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
     public ViewListTextDefault GetViewList()

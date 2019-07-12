@@ -15,7 +15,7 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Logo { get; set; }
     public List<ViewListSkill> Skills { get; set; }
-    [BsonId]
+    
     [BsonRepresentation(BsonType.ObjectId)]
     public string Template  { get; set; }
     public ViewListCompany GetViewList()

@@ -16,7 +16,7 @@ namespace Manager.Core.Business
     public ViewListCompany Company { get; set; }
     public EnumTypeQuestion TypeQuestion { get; set; }
     public long Order { get; set; }
-    [BsonId]
+  
     [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
     public EnumTypeRotine TypeRotine { get; set; }
