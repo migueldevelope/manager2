@@ -94,6 +94,8 @@ namespace Manager.Core.Business
     {
       return new ViewListPersonInfo()
       {
+        _id = _id,
+        Name = User.Name,
         TypeJourney = TypeJourney,
         Occupation = Occupation.Name,
         _idManager = Manager._id,
