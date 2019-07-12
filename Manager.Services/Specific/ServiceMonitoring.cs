@@ -276,13 +276,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == id).Result;
         var count = monitoring.Activities.Where(p => p.StatusViewManager == EnumStatusView.None
-        & p.Comments != null).Count()
+        & p.Comments != null & p.Comments.Count() > 0).Count()
           + monitoring.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None
-          & p.Comments != null).Count()
+          & p.Comments != null & p.Comments.Count() > 0).Count()
           + monitoring.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None
-          & p.Comments != null).Count();
+          & p.Comments != null & p.Comments.Count() > 0).Count();
 
         if (count > 0)
           return true;
@@ -1442,19 +1442,19 @@ namespace Manager.Services.Specific
         monitoring.SkillsCompany = new List<MonitoringSkills>();
         foreach (var item in company.Skills)
         {
-          monitoring.SkillsCompany.Add(new MonitoringSkills() { Skill = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
+          monitoring.SkillsCompany.Add(new MonitoringSkills() { Skill = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
         }
 
         monitoring.Activities = new List<MonitoringActivities>();
         foreach (var item in occupation.Activities)
         {
-          monitoring.Activities.Add(new MonitoringActivities() { Activities = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
+          monitoring.Activities.Add(new MonitoringActivities() { Activities = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
         }
 
         monitoring.Schoolings = new List<MonitoringSchooling>();
         foreach (var item in occupation.Schooling)
         {
-          monitoring.Schoolings.Add(new MonitoringSchooling() { Schooling = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>() });
+          monitoring.Schoolings.Add(new MonitoringSchooling() { Schooling = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
         }
 
         return monitoring;

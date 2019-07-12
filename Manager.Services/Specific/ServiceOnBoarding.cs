@@ -1449,7 +1449,8 @@ namespace Manager.Services.Specific
           onBoarding.SkillsCompany.Add(new OnBoardingSkills()
           {
             Skill = item,
-            _id = ObjectId.GenerateNewId().ToString()
+            _id = ObjectId.GenerateNewId().ToString(),
+            Comments = new List<ListComments>()
           });
 
         Group group = serviceGroup.GetNewVersion(p => p._id == person.Occupation._idGroup).Result;
@@ -1458,7 +1459,8 @@ namespace Manager.Services.Specific
           onBoarding.SkillsGroup.Add(new OnBoardingSkills()
           {
             Skill = item,
-            _id = ObjectId.GenerateNewId().ToString()
+            _id = ObjectId.GenerateNewId().ToString(),
+            Comments = new List<ListComments>()
           });
 
         onBoarding.Scopes = new List<OnBoardingScope>();
@@ -1466,7 +1468,8 @@ namespace Manager.Services.Specific
           onBoarding.Scopes.Add(new OnBoardingScope()
           {
             Scope = item,
-            _id = ObjectId.GenerateNewId().ToString()
+            _id = ObjectId.GenerateNewId().ToString(),
+            Comments = new List<ListComments>()
           });
 
         Occupation occupation = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result;
@@ -1475,7 +1478,8 @@ namespace Manager.Services.Specific
           onBoarding.SkillsOccupation.Add(new OnBoardingSkills()
           {
             Skill = item,
-            _id = ObjectId.GenerateNewId().ToString()
+            _id = ObjectId.GenerateNewId().ToString(),
+            Comments = new List<ListComments>()
           });
 
         onBoarding.Activities = new List<OnBoardingActivities>();
@@ -1483,7 +1487,8 @@ namespace Manager.Services.Specific
           onBoarding.Activities.Add(new OnBoardingActivities()
           {
             Activitie = item,
-            _id = ObjectId.GenerateNewId().ToString()
+            _id = ObjectId.GenerateNewId().ToString(),
+            Comments = new List<ListComments>()
           });
 
         onBoarding.Schoolings = new List<OnBoardingSchooling>();
@@ -1491,7 +1496,8 @@ namespace Manager.Services.Specific
           onBoarding.Schoolings.Add(new OnBoardingSchooling()
           {
             Schooling = item,
-            _id = ObjectId.GenerateNewId().ToString()
+            _id = ObjectId.GenerateNewId().ToString(),
+            Comments = new List<ListComments>()
           });
 
         return onBoarding;
@@ -1783,12 +1789,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var count = onBoarding.Activities.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
-          + onBoarding.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
-          + onBoarding.Scopes.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
-          + onBoarding.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
-          + onBoarding.SkillsGroup.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count()
-          + onBoarding.SkillsOccupation.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null).Count();
+        var count = onBoarding.Activities.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null & p.Comments.Count() > 0).Count()
+          + onBoarding.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null & p.Comments.Count() > 0).Count()
+          + onBoarding.Scopes.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null & p.Comments.Count() > 0).Count()
+          + onBoarding.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null & p.Comments.Count() > 0).Count()
+          + onBoarding.SkillsGroup.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null & p.Comments.Count() > 0).Count()
+          + onBoarding.SkillsOccupation.Where(p => p.StatusViewManager == EnumStatusView.None & p.Comments != null & p.Comments.Count() > 0).Count();
 
         if (count > 0)
           return true;
