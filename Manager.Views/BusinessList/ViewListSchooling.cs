@@ -2,6 +2,6 @@
 {
   public class ViewListSchooling : _ViewListBase 
   {
-    public long Order { get; set; }
+    public long? Order { get; set; }
   }
 }

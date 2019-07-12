@@ -21,6 +21,8 @@ namespace Manager.Data.Infrastructure.Migrations
         };
         var command = new BsonDocumentCommand<BsonDocument>(doc);
         var response = context.RunCommand(command);
+
+
       }
       catch (Exception e)
       {
