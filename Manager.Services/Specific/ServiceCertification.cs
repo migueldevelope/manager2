@@ -544,8 +544,10 @@ namespace Manager.Services.Specific
         //load certification guest
         foreach (var item in serviceCertificationPerson.GetAllNewVersion(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait & p.Person._id == idperson).Result.ToList())
         {
+          var view = item.GetViewList();
+          view.Mail = person.User.Mail;
           var certification = serviceCertification.GetAllNewVersion(
-          p => p.ListPersons.Contains(item.GetViewList())).Result.FirstOrDefault();
+          p => p.ListPersons.Contains(view)).Result.FirstOrDefault();
           if (certification != null)
           {
             list.Add(new ViewListCertificationPerson()
