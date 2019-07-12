@@ -12,7 +12,7 @@ namespace Manager.Core.Business
   {
     public string Name { get; set; }
     public EnumTypeSphere Type { get; set; }
-    [BsonId]
+
     [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
   }

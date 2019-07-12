@@ -21,7 +21,7 @@ namespace Manager.Core.Business
     public List<ViewListSkill> Skills { get; set; }
     public List<ViewCrudSchooling> Schooling { get; set; }
     public List<ViewListScope> Scope { get; set; }
-    [BsonId]
+  
     [BsonRepresentation(BsonType.ObjectId)]
     public string Template { get; set; }
     [BsonIgnore]
