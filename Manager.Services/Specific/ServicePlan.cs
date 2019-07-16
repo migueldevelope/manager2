@@ -372,6 +372,14 @@ namespace Manager.Services.Specific
                     TypeSkill = x.TypeSkill
                   }).ToList(),
                   SourcePlan = planOld.SourcePlan,
+                  Attachments = planOld.Attachments,
+                  Evaluation = byte.Parse(planOld.Evaluation.ToString()),
+                  NewAction = planOld.NewAction,
+                  StatusPlanApproved = planOld.StatusPlanApproved,
+                  TextEnd = planOld.TextEnd,
+                  TextEndManager = planOld.TextEndManager,
+                  TypeAction = planOld.TypeAction,
+                  StatusPlan = planOld.StatusPlan,
                   TypePlan = planOld.TypePlan
                 });
                 listActivities.Add(new ViewCrudPlan()
@@ -388,6 +396,14 @@ namespace Manager.Services.Specific
                     TypeSkill = x.TypeSkill
                   }).ToList(),
                   SourcePlan = viewPlan.SourcePlan,
+                  Attachments = viewPlan.Attachments,
+                  Evaluation = byte.Parse(viewPlan.Evaluation.ToString()),
+                  NewAction = viewPlan.NewAction,
+                  StatusPlanApproved = viewPlan.StatusPlanApproved,
+                  TextEnd = viewPlan.TextEnd,
+                  TextEndManager = viewPlan.TextEndManager,
+                  TypeAction = viewPlan.TypeAction,
+                  StatusPlan = viewPlan.StatusPlan,
                   TypePlan = viewPlan.TypePlan
                 });
               }
@@ -437,6 +453,14 @@ namespace Manager.Services.Specific
                     TypeSkill = x.TypeSkill
                   }).ToList(),
                   SourcePlan = planOld.SourcePlan,
+                  Attachments = planOld.Attachments,
+                  Evaluation = byte.Parse(planOld.Evaluation.ToString()),
+                  NewAction = planOld.NewAction,
+                  StatusPlanApproved = planOld.StatusPlanApproved,
+                  TextEnd = planOld.TextEnd,
+                  TextEndManager = planOld.TextEndManager,
+                  TypeAction = planOld.TypeAction,
+                  StatusPlan = planOld.StatusPlan,
                   TypePlan = planOld.TypePlan
                 });
                 listSchooling.Add(new ViewCrudPlan()
@@ -453,6 +477,14 @@ namespace Manager.Services.Specific
                     TypeSkill = x.TypeSkill
                   }).ToList(),
                   SourcePlan = viewPlan.SourcePlan,
+                  Attachments = viewPlan.Attachments,
+                  Evaluation = byte.Parse(viewPlan.Evaluation.ToString()),
+                  NewAction = viewPlan.NewAction,
+                  StatusPlanApproved = viewPlan.StatusPlanApproved,
+                  TextEnd = viewPlan.TextEnd,
+                  TextEndManager = viewPlan.TextEndManager,
+                  TypeAction = viewPlan.TypeAction,
+                  StatusPlan = viewPlan.StatusPlan,
                   TypePlan = viewPlan.TypePlan
                 });
               }
@@ -501,6 +533,14 @@ namespace Manager.Services.Specific
                     TypeSkill = x.TypeSkill
                   }).ToList(),
                   SourcePlan = planOld.SourcePlan,
+                  Attachments = planOld.Attachments,
+                  Evaluation = byte.Parse(planOld.Evaluation.ToString()),
+                  NewAction = planOld.NewAction,
+                  StatusPlanApproved = planOld.StatusPlanApproved,
+                  TextEnd = planOld.TextEnd,
+                  TextEndManager = planOld.TextEndManager,
+                  TypeAction = planOld.TypeAction,
+                  StatusPlan = planOld.StatusPlan,
                   TypePlan = planOld.TypePlan
                 });
                 listSkillsCompany.Add(new ViewCrudPlan()
@@ -517,6 +557,14 @@ namespace Manager.Services.Specific
                     TypeSkill = x.TypeSkill
                   }).ToList(),
                   SourcePlan = viewPlan.SourcePlan,
+                  Attachments = viewPlan.Attachments,
+                  Evaluation = byte.Parse(viewPlan.Evaluation.ToString()),
+                  NewAction = viewPlan.NewAction,
+                  StatusPlanApproved = viewPlan.StatusPlanApproved,
+                  TextEnd = viewPlan.TextEnd,
+                  TextEndManager = viewPlan.TextEndManager,
+                  TypeAction = viewPlan.TypeAction,
+                  StatusPlan = viewPlan.StatusPlan,
                   TypePlan = viewPlan.TypePlan
                 });
               }
@@ -1006,7 +1054,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
-        var plan = servicePlan.GetAllNewVersion(p => p.Person._idManager == id).Result.ToList();
+        var plan = servicePlan.GetAllNewVersion(p => p.Person._idManager == id).Result;
 
         if (activities == 0)
           plan = plan.Where(p => p.SourcePlan != EnumSourcePlan.Activite).ToList();
@@ -1019,7 +1067,7 @@ namespace Manager.Services.Specific
 
         foreach (var res in plan)
         {
-          var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == res._idMonitoring).Result.FirstOrDefault();
+          var monitoring = serviceMonitoring.GetNewVersion(p => p._id == res._idMonitoring).Result;
           if (monitoring != null)
           {
             if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
