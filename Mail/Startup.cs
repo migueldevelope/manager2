@@ -102,6 +102,7 @@ namespace Mail
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials()
+          .WithExposedHeaders("x-total-count")
       ));
       services.AddMvc();
       RegistreServices(services);
