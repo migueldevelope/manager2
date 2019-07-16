@@ -1087,6 +1087,7 @@ namespace Manager.Services.Specific
           Workload = view.Workload,
           Begin = view.Begin,
           End = view.End,
+          Name = view.Name,
           Attachments = view.Attachments
         };
 
