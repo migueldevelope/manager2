@@ -193,13 +193,17 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result.ToList();
+        var list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result;
         List<EventHistoric> result = new List<EventHistoric>();
         foreach (var item in list)
         {
-          var course = serviceCourse.GetAllNewVersion(p => p._id == item._id).Result.FirstOrDefault();
-          if (course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
-            result.Add(item);
+          var course = serviceCourse.GetNewVersion(p => p._id == item.Course._id).Result;
+          if(course != null)
+          {
+            if (course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
+              result.Add(item);
+          }
+          
         }
 
         return result;
@@ -454,7 +458,7 @@ namespace Manager.Services.Specific
             TypeMandatoryTraining = view.TypeMandatoryTraining
           })
         };
-        var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == view.Course._id).Result.FirstOrDefault();
+        var mandatory = serviceMandatoryTraining.GetNewVersion(p => p.Course._id == view.Course._id).Result;
         if (mandatory == null)
         {
           serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()

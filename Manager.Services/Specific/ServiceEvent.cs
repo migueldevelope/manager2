@@ -782,7 +782,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListEventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudEventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -793,12 +793,19 @@ namespace Manager.Services.Specific
         {
           var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
           total = serviceEventHistoric.CountNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
-          return detail.Select(p => new ViewListEventHistoric()
+          return detail.Select(p => new ViewCrudEventHistoric()
           {
             _id = p._id,
             Name = p.Course.Name,
             _idPerson = p.Person._id,
-            NamePerson = p.Person.Name
+            NamePerson = p.Person.Name,
+            Begin = p.Begin,
+            End = p.End,
+            Course = p.Course,
+            Entity = p.Entity,
+            Event = p.Event,
+            Workload = p.Workload,
+            Attachments = p.Attachments
           }).ToList();
         }
         return null;
@@ -1419,7 +1426,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var entity = serviceEntity.GetAuthentication(p => p.Name.ToUpper().Contains(name.ToUpper())).FirstOrDefault();
+        var entity = serviceEntity.GetFreeNewVersion(p => p.Name.ToUpper().Contains(name.ToUpper())).Result;
         if (entity == null)
           entity = serviceEntity.InsertNewVersion(new Entity()
           {

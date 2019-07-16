@@ -18,7 +18,7 @@ namespace Manager.Views.BusinessList
     public string NamePerson { get; set; }
     public EnumSourcePlan SourcePlan { get; set; }
     public string IdMonitoring { get; set; }
-    public byte Evaluation { get; set; }
+    public int Evaluation { get; set; }
     public EnumStatusPlan StatusPlan { get; set; }
     public EnumTypeAction TypeAction { get; set; }
     public long Bomb { get; set; }

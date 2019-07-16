@@ -376,7 +376,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [HttpGet]
     [Route("listeventhistoricperson/{id}")]
-    public async Task<List<ViewListEventHistoric>> ListEventHistoricPerson(string id,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudEventHistoric>> ListEventHistoricPerson(string id,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventHistoricPerson(id, ref total, count, page, filter);

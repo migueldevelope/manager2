@@ -26,7 +26,7 @@ namespace Manager.Core.Business
     public string TextEnd { get; set; }
     public string TextEndManager { get; set; }
     public DateTime? DateEnd { get; set; }
-    public byte Evaluation { get; set; }
+    public int Evaluation { get; set; }
     public string Result { get; set; }
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
     public List<AttachmentField> Attachments { get; set; }

@@ -2071,19 +2071,22 @@ namespace Manager.Services.Specific
         var companys = serviceCompany.GetAllNewVersion().ToList();
         foreach (var company in companys)
         {
+          if(company.Skills != null)
           if (company.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
             return "error_exists_register";
         }
         var groups = serviceGroup.GetAllNewVersion().ToList();
         foreach (var group in groups)
         {
-          if (group.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
+          if (group.Skills != null)
+            if (group.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
             return "error_exists_register";
         }
         var occupations = serviceOccupation.GetAllNewVersion().ToList();
         foreach (var occupation in occupations)
         {
-          if (occupation.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
+          if (occupation.Skills != null)
+            if (occupation.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
             return "error_exists_register";
         }
 
@@ -3055,7 +3058,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceCbo.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        var model = serviceCbo.GetFreeNewVersion(p => p._id == view._id).Result;
         model.Name = view.Name;
         model.Code = view.Code;
 

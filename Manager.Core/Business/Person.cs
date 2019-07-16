@@ -59,13 +59,18 @@ namespace Manager.Core.Business
     }
     public ViewListPersonBaseManager GetViewListBaseManager()
     {
-      return new ViewListPersonBaseManager()
+      var view = new ViewListPersonBaseManager()
       {
         _id = _id,
-        Name = User.Name,
-        NameManager = Manager.Name,
-        _idManager = Manager._id
+        Name = User.Name
       };
+      if (Manager != null)
+      {
+        view.NameManager = Manager.Name;
+        view._idManager = Manager._id;
+      }
+      
+      return view;
     }
     public ViewListPersonResume GetViewListResume()
     {

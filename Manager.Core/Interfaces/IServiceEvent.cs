@@ -30,7 +30,7 @@ namespace Manager.Core.Interfaces
     ViewListEvent Update(ViewCrudEvent view);
     ViewCrudEvent Get(string id);
     List<ViewListEventDetail> List(ref long total, int count = 10, int page = 1, string filter = "");
-    List<ViewListEventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewCrudEventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "");
     string NewCourse(ViewCrudCourse view);
     string UpdateCourse(ViewCrudCourse view);
     ViewCrudCourse GetCourse(string id);

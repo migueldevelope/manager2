@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 
@@ -13,6 +14,6 @@ namespace Manager.Core.Business
     public ViewListCourse Course { get; set; }
     public EnumTypeAction TypeAction { get; set; }
     public EnumTypeResponsible TypeResponsible { get; set; }
-    public PlanActivity PlanActivity { get; set; }
+    public ViewPlanActivity PlanActivity { get; set; }
   }
 }

@@ -125,7 +125,7 @@ namespace Manager.Services.Specific
 
     #region Private
 
-    private void SendQueue(string idplan, string idperson, byte evaluation)
+    private void SendQueue(string idplan, string idperson, int evaluation)
     {
       try
       {
@@ -996,7 +996,7 @@ namespace Manager.Services.Specific
               {
                 _id = p._id,
                 TypeResponsible = p.TypeResponsible,
-                PlanActivity = (p.PlanActivity == null) ? null : new ViewPlanActivity() { Name = p.PlanActivity.Name, _id = p.PlanActivity._id },
+                PlanActivity = p.PlanActivity,
                 TypeAction = p.TypeAction,
                 Course = (p.Course == null) ? null : new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
 
@@ -1580,7 +1580,7 @@ namespace Manager.Services.Specific
         {
           _id = structplan._id,
           Course = structplan.Course,
-          PlanActivity = (structplan.PlanActivity == null) ? null : new PlanActivity() { _id = structplan.PlanActivity._id, _idAccount = _user._idAccount, Status = EnumStatus.Enabled, Name = structplan.PlanActivity.Name },
+          PlanActivity = (structplan.PlanActivity == null) ? null : new ViewPlanActivity() { _id = structplan.PlanActivity._id, Name = structplan.PlanActivity.Name },
           TypeAction = structplan.TypeAction,
           TypeResponsible = structplan.TypeResponsible
         }));
@@ -1680,7 +1680,7 @@ namespace Manager.Services.Specific
             {
               _id = structplanedit._id,
               Course = structplanedit.Course,
-              PlanActivity = (structplanedit.PlanActivity == null) ? null : new PlanActivity() { _id = structplanedit.PlanActivity._id, Name = structplanedit.PlanActivity.Name },
+              PlanActivity = structplanedit.PlanActivity,
               TypeAction = structplanedit.TypeAction,
               TypeResponsible = structplanedit.TypeResponsible
             });
