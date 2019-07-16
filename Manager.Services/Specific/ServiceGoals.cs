@@ -1563,12 +1563,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var period = serviceGoalsPeriod.GetAllNewVersion(p => p.ChangeCheck == true).Result
-          .Select(p => new ViewListGoalPeriod
-          {
-            _id = p._id,
-            Name = p.Name
-          }).FirstOrDefault();
+        var viewperiod = serviceGoalsPeriod.GetNewVersion(p => p.ChangeCheck == true).Result;
+        var period = new ViewListGoalPeriod
+        {
+          _id = viewperiod._id,
+          Name = viewperiod.Name
+        };
 
         List<ViewListGoalPersonControl> detail = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
           .Select(p => new ViewListGoalPersonControl()
@@ -1596,7 +1596,8 @@ namespace Manager.Services.Specific
           }
         }
 
-        total = detail.Count();
+        total = servicePerson.CountNewVersion(x=> x.Manager._id == idmanager).Result;
+
         return detail;
       }
       catch (Exception e)
@@ -1609,14 +1610,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var period = serviceGoalsPeriod.GetAllNewVersion(p => p.ChangeCheck == true).Result
-          .Select(p => new ViewListGoalPeriod
-          {
-            _id = p._id,
-            Name = p.Name
-          }).FirstOrDefault();
+        var viewperiod = serviceGoalsPeriod.GetNewVersion(p => p.ChangeCheck == true).Result;
+        var period = new ViewListGoalPeriod
+        {
+          _id = viewperiod._id,
+          Name = viewperiod.Name
+        };
 
-        var detail = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        var detail = servicePerson.GetNewVersion(p => p._id == idperson).Result;
 
         ViewListGoalPersonControl view = new ViewListGoalPersonControl()
         {
