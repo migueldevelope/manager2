@@ -359,6 +359,7 @@ namespace Manager.Services.Specific
                 AddPlan(viewPlan, person, idmonitoring, item._id);
                 planOld._idMonitoring = idmonitoring;
                 planOld._idItem = item._id;
+                planOld.Person = person.GetViewListBaseManager();
                 Task.Run(() => UpdatePlan(planOld, person));
                 listActivities.Add(new ViewCrudPlan()
                 {
@@ -442,6 +443,7 @@ namespace Manager.Services.Specific
                 AddPlan(viewPlan, person, monitoring._id, item._id);
                 planOld._idMonitoring = idmonitoring;
                 planOld._idItem = item._id;
+                planOld.Person = person.GetViewListBaseManager();
                 Task.Run(() => UpdatePlan(planOld, person));
                 listSchooling.Add(new ViewCrudPlan()
                 {
@@ -524,6 +526,7 @@ namespace Manager.Services.Specific
                 AddPlan(viewPlan, person, idmonitoring, item._id);
                 planOld._idMonitoring = idmonitoring;
                 planOld._idItem = item._id;
+                planOld.Person = person.GetViewListBaseManager();
                 Task.Run(() => UpdatePlan(planOld, person));
                 listSkillsCompany.Add(new ViewCrudPlan()
                 {
