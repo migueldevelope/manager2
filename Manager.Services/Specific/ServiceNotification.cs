@@ -1344,9 +1344,9 @@ namespace Manager.Services.Specific
         string token = serviceAuthentication.AuthenticationMail(person);
         using (HttpClient client = new HttpClient())
         {
-          client.BaseAddress = new Uri(link);
+          client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5201/");
           client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
-          HttpResponseMessage resultMail =  client.PostAsync(string.Format("mail/sendmail/{0}", idmail), null).Result;
+          HttpResponseMessage resultMail =  client.PostAsync(string.Format("sendmail/{0}", idmail), null).Result;
           return "Ok!";
         }
       }

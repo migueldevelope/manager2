@@ -1774,9 +1774,9 @@ namespace Manager.Services.Specific
         string token = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
-          client.BaseAddress = new Uri(link);
+          client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5201/");
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-          var resultMail = client.PostAsync("mail/sendmail/" + idmail, null).Result;
+          var resultMail = client.PostAsync("sendmail/" + idmail, null).Result;
           return token;
         }
       }
