@@ -788,16 +788,20 @@ namespace Manager.Services.Specific
       {
 
         int skip = (count * (page - 1));
-        var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEventHistoric.CountNewVersion(p => p.Person._id == id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return detail.Select(p => new ViewListEventHistoric()
+        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result;
+        foreach (var person in listperson)
         {
-          _id = p._id,
-          Name = p.Course.Name,
-          _idPerson = p.Person._id,
-          NamePerson = p.Person.Name
-        }).ToList();
+          var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceEventHistoric.CountNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+          return detail.Select(p => new ViewListEventHistoric()
+          {
+            _id = p._id,
+            Name = p.Course.Name,
+            _idPerson = p.Person._id,
+            NamePerson = p.Person.Name
+          }).ToList();
+        }
+        return null;
       }
       catch (Exception e)
       {

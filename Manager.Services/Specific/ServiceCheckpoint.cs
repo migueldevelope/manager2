@@ -416,10 +416,11 @@ namespace Manager.Services.Specific
       try
       {
         Checkpoint checkpoint = serviceCheckpoint.GetFreeNewVersion(p => p.Person._id == idperson && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
-        Person person = servicePerson.GetFreeNewVersion(p => p._id == checkpoint.Person._id).Result;
-
         if (checkpoint == null)
           return null;
+
+        Person person = servicePerson.GetFreeNewVersion(p => p._id == checkpoint.Person._id).Result;
+
         //throw new Exception("Checkpoint not available!");
 
          Task.Run(() => LogSave(_user._idPerson, string.Format("Person ended | {0}", checkpoint._id)));
