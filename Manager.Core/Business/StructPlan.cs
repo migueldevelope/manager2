@@ -15,5 +15,16 @@ namespace Manager.Core.Business
     public EnumTypeAction TypeAction { get; set; }
     public EnumTypeResponsible TypeResponsible { get; set; }
     public ViewPlanActivity PlanActivity { get; set; }
+    public ViewCrudStructPlan GetViewCrud()
+    {
+      return new ViewCrudStructPlan()
+      {
+        _id = _id,
+        Course = Course,
+        PlanActivity = PlanActivity,
+        TypeAction = TypeAction,
+        TypeResponsible = TypeResponsible
+      };
+    }
   }
 }

@@ -480,27 +480,22 @@ namespace Manager.Services.Specific
       try
       {
 
-        var eventhistoric = serviceEventHistoric.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+        var eventhistoric = serviceEventHistoric.GetFreeNewVersion(p => p._id == id).Result;
         Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
 
         return new ViewCrudEventHistoric()
         {
           _id = eventhistoric._id,
           Begin = eventhistoric.Begin,
-          Course = new ViewListCourse() { _id = eventhistoric.Course._id, Name = eventhistoric.Course.Name },
+          Course =  eventhistoric.Course,
           Name = eventhistoric.Name,
           End = eventhistoric.End,
           Workload = eventhistoric.Workload,
           _idPerson = eventhistoric.Person._id,
           NamePerson = eventhistoric.Person.Name,
-          Entity = new ViewCrudEntity() { _id = eventhistoric.Entity._id, Name = eventhistoric.Entity.Name },
-          Event = new ViewListEvent() { _id = eventhistoric.Event._id, Name = eventhistoric.Event.Name },
-          Attachments = eventhistoric.Attachments?.Select(p => new ViewCrudAttachmentField()
-          {
-            Url = p.Url,
-            _idAttachment = p._idAttachment,
-            Name = p.Name
-          }).ToList()
+          Entity =  eventhistoric.Entity,
+          Event = eventhistoric.Event,
+          Attachments = eventhistoric.Attachments
         };
       }
       catch (Exception e)

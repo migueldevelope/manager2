@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.BusinessModel;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using MongoDB.Bson;
@@ -29,9 +30,9 @@ namespace Manager.Core.Business
     public int Evaluation { get; set; }
     public string Result { get; set; }
     public EnumStatusPlanApproved StatusPlanApproved { get; set; }
-    public List<AttachmentField> Attachments { get; set; }
+    public List<ViewCrudAttachmentField> Attachments { get; set; }
     public EnumNewAction NewAction { get; set; }
-    public List<StructPlan> StructPlans { get; set; }
+    public List<ViewCrudStructPlan> StructPlans { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idMonitoring { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]

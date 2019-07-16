@@ -195,22 +195,13 @@ namespace Manager.Services.Specific
                 var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
-                upPlan.Skills = new List<ViewListSkill>();
-                foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetNewVersion(p => p._id == skill._id).Result.GetViewList());
+                upPlan.Skills = plan.Skills;
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
                 upPlan.StatusPlanApproved = plan.StatusPlanApproved;
                 upPlan.TypeAction = plan.TypeAction;
-                upPlan.Attachments = new List<AttachmentField>();
-                foreach (var attachments in plan.Attachments)
-                  upPlan.Attachments.Add(new AttachmentField()
-                  {
-                    _idAttachment = attachments._idAttachment,
-                    Name = attachments.Name,
-                    Url = attachments.Url
-                  });
+                upPlan.Attachments = plan.Attachments;
                 upPlan.NewAction = plan.NewAction;
                 upPlan.TextEnd = plan.TextEnd;
                 upPlan.TextEndManager = plan.TextEndManager;
@@ -261,22 +252,13 @@ namespace Manager.Services.Specific
                 var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
-                upPlan.Skills = new List<ViewListSkill>();
-                foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetNewVersion(p => p._id == skill._id).Result.GetViewList());
+                upPlan.Skills = plan.Skills;
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
                 upPlan.StatusPlanApproved = plan.StatusPlanApproved;
                 upPlan.TypeAction = plan.TypeAction;
-                upPlan.Attachments = new List<AttachmentField>();
-                foreach (var attachments in plan.Attachments)
-                  upPlan.Attachments.Add(new AttachmentField()
-                  {
-                    _idAttachment = attachments._idAttachment,
-                    Name = attachments.Name,
-                    Url = attachments.Url
-                  });
+                upPlan.Attachments = plan.Attachments;
                 upPlan.NewAction = plan.NewAction;
                 upPlan.TextEnd = plan.TextEnd;
                 upPlan.TextEndManager = plan.TextEndManager;
@@ -327,22 +309,13 @@ namespace Manager.Services.Specific
                 var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
                 upPlan.Description = plan.Description;
                 upPlan.Deadline = plan.Deadline;
-                upPlan.Skills = new List<ViewListSkill>();
-                foreach (var skill in plan.Skills)
-                  upPlan.Skills.Add(serviceSkill.GetNewVersion(p => p._id == skill._id).Result.GetViewList());
+                upPlan.Skills = plan.Skills;
                 upPlan.TypePlan = plan.TypePlan;
                 upPlan.SourcePlan = plan.SourcePlan;
                 upPlan.StatusPlan = plan.StatusPlan;
                 upPlan.StatusPlanApproved = plan.StatusPlanApproved;
                 upPlan.TypeAction = plan.TypeAction;
-                upPlan.Attachments = new List<AttachmentField>();
-                foreach (var attachments in plan.Attachments)
-                  upPlan.Attachments.Add(new AttachmentField()
-                  {
-                    _idAttachment = attachments._idAttachment,
-                    Name = attachments.Name,
-                    Url = attachments.Url
-                  });
+                upPlan.Attachments = plan.Attachments;
                 upPlan.NewAction = plan.NewAction;
                 upPlan.TextEnd = plan.TextEnd;
                 upPlan.TextEndManager = plan.TextEndManager;
@@ -609,11 +582,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    private StructPlan AddStructPlan(StructPlan structPlan)
+    private ViewCrudStructPlan AddStructPlan(StructPlan structPlan)
     {
       try
       {
-        return serviceStructPlan.InsertNewVersion(structPlan).Result;
+        return serviceStructPlan.InsertNewVersion(structPlan).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -731,18 +704,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAllNewVersion(p => p._id == viewPlan._id).Result.FirstOrDefault();
+        var plan = servicePlan.GetNewVersion(p => p._id == viewPlan._id).Result;
         plan.Deadline = viewPlan.Deadline;
         plan.Description = viewPlan.Description;
         plan.Name = viewPlan.Name;
         plan.DateEnd = DateTime.Now;
         plan.TypeAction = viewPlan.TypeAction;
-        plan.Attachments = viewPlan.Attachments?.Select(p => new AttachmentField()
-        {
-          _idAttachment = p._idAttachment,
-          Name = p.Name,
-          Url = p.Url
-        }).ToList();
+        plan.Attachments = viewPlan.Attachments;
         plan.StatusPlan = viewPlan.StatusPlan;
         plan.NewAction = viewPlan.NewAction;
         plan.TextEnd = viewPlan.TextEnd;
@@ -1206,7 +1174,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault();
+        var plan = servicePlan.GetNewVersion(p => p._id == idplan).Result;
 
         if (plan == null)
           return null;
@@ -1216,13 +1184,7 @@ namespace Manager.Services.Specific
           _id = plan._id,
           Description = plan.Description,
           Deadline = plan.Deadline,
-          Skills = plan.Skills == null ? null : plan.Skills.Select(p => new ViewListSkill()
-          {
-            _id = p._id,
-            Concept = p.Concept,
-            Name = p.Name,
-            TypeSkill = p.TypeSkill
-          }).ToList(),
+          Skills = plan.Skills,
           UserInclude = plan.Person?._id,
           DateInclude = plan.DateInclude,
           TypePlan = plan.TypePlan,
@@ -1238,22 +1200,9 @@ namespace Manager.Services.Specific
           TextEndManager = plan.TextEndManager,
           DateEnd = plan.DateEnd,
           Status = plan.Status,
-          Attachments = plan.Attachments == null ? null :
-          plan.Attachments.Select(p => new ViewCrudAttachmentField()
-          {
-            Name = p.Name,
-            Url = p.Url,
-            _idAttachment = p._idAttachment
-          }).ToList(),
+          Attachments = plan.Attachments,
           NewAction = plan.NewAction,
-          StructPlans = plan.StructPlans == null ? null : plan.StructPlans.Select(p => new ViewCrudStructPlan()
-          {
-            _id = p._id,
-            TypeResponsible = p.TypeResponsible,
-            TypeAction = p.TypeAction,
-            PlanActivity = new ViewPlanActivity() { _id = p.PlanActivity._id, Name = p.PlanActivity.Name },
-            Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name }
-          }).ToList(),
+          StructPlans = plan.StructPlans,
           Name = plan.Name
         };
 
@@ -1580,7 +1529,7 @@ namespace Manager.Services.Specific
         {
           _id = structplan._id,
           Course = structplan.Course,
-          PlanActivity = (structplan.PlanActivity == null) ? null : new ViewPlanActivity() { _id = structplan.PlanActivity._id, Name = structplan.PlanActivity.Name },
+          PlanActivity = structplan.PlanActivity,
           TypeAction = structplan.TypeAction,
           TypeResponsible = structplan.TypeResponsible
         }));
@@ -1589,15 +1538,10 @@ namespace Manager.Services.Specific
         {
           var trainingPlan = new TrainingPlan
           {
-            Course = (structplan.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == structplan.Course._id)
-            .Result.Select(p => new ViewListCourse()
-            {
-              _id = p._id,
-              Name = p.Name
-            }).FirstOrDefault(),
+            Course = structplan.Course,
             Deadline = deadline,
             Origin = EnumOrigin.Monitoring,
-            Person = servicePerson.GetAllNewVersion(p => p._id == plan.Person._id).Result.FirstOrDefault().GetViewListManager(),
+            Person = (plan.Person == null) ? null : servicePerson.GetAllNewVersion(p => p._id == plan.Person._id).Result.FirstOrDefault().GetViewListManager(),
             Include = DateTime.Now,
             StatusTrainingPlan = EnumStatusTrainingPlan.Open
           };
@@ -1676,7 +1620,7 @@ namespace Manager.Services.Specific
             }
 
             plan.StructPlans.Remove(structplan);
-            plan.StructPlans.Add(new StructPlan()
+            plan.StructPlans.Add(new ViewCrudStructPlan()
             {
               _id = structplanedit._id,
               Course = structplanedit.Course,
@@ -1732,12 +1676,7 @@ namespace Manager.Services.Specific
               StatusPlanApproved = EnumStatusPlanApproved.Open,
               Status = item.Status,
               NewAction = item.NewAction,
-              Attachments = item.Attachments?.Select(p => new AttachmentField()
-              {
-                _idAttachment = p._idAttachment,
-                Name = p.Name,
-                Url = p.Url
-              }).ToList()
+              Attachments = item.Attachments
             };
           else
             planUpdate = new Plan()
@@ -1761,12 +1700,7 @@ namespace Manager.Services.Specific
               StatusPlanApproved = item.StatusPlanApproved,
               Status = item.Status,
               NewAction = item.NewAction,
-              Attachments = item.Attachments?.Select(p => new AttachmentField()
-              {
-                _idAttachment = p._idAttachment,
-                Name = p.Name,
-                Url = p.Url
-              }).ToList()
+              Attachments = item.Attachments
             };
         }
 
