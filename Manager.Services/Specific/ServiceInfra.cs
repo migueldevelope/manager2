@@ -1189,10 +1189,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListQuestions> ListQuestions(string idcompany)
+    public List<ViewListQuestions> ListQuestions(ref long total, string idcompany)
     {
       try
       {
+        total = serviceQuestions.CountNewVersion(p => p.Company._id == idcompany).Result;
+
         return serviceQuestions.GetAllNewVersion(p => p.Company._id == idcompany).Result.OrderBy(p => p.Order)
           .Select(p => new ViewListQuestions()
           {

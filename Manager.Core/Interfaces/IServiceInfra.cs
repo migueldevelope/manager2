@@ -49,7 +49,7 @@ namespace Manager.Core.Interfaces
      List<ViewListAxis> GetAxis(string idcompany);
      List<ViewListArea> GetAreas();
      List<ViewListArea> GetAreas(string idcompany);
-     List<ViewListQuestions> ListQuestions(string idcompany);
+     List<ViewListQuestions> ListQuestions(ref long total, string idcompany);
      ViewCrudQuestions GetQuestions(string id);
      ViewCrudProcessLevelTwo GetProcessLevelTwo(string id);
      List<ViewListProcessLevelTwo> GetProcessLevelTwo();

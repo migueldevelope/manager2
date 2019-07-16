@@ -986,7 +986,10 @@ namespace Manager.Controllers
     [Route("listquestions/{idcompany}")]
     public async Task<List<ViewListQuestions>> GetQuestions(string idcompany)
     {
-      return await Task.Run(() =>service.ListQuestions(idcompany));
+      long total = 0;
+      var list = await Task.Run(() =>service.ListQuestions(ref total, idcompany));
+      Response.Headers.Add("x-total-count", total.ToString());
+      return list;
     }
     /// <summary>
     /// Busca informações da pergunta para editar

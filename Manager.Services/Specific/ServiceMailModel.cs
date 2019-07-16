@@ -57,7 +57,7 @@ namespace Manager.Services.Specific
             Subject = p.Subject
           }).ToList();
 
-        total = serviceMailModel.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceMailModel.CountNewVersion(p => p.Subject.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
