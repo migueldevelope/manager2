@@ -202,7 +202,7 @@ namespace Manager.Services.Specific
       try
       {
         Person person = servicePerson.GetFreeNewVersion(p => p._id == idperson).Result;
-        User user = serviceUser.GetAuthentication(p => p._id == person.User._id).FirstOrDefault();
+        User user = serviceUser.GetFreeNewVersion(p => p._id == person.User._id).Result;
         Task.Run(() => LogSave(person, "Authentication Change Person"));
         return serviceAuthentication.Authentication(user, false);
       }

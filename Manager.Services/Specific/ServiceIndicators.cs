@@ -266,7 +266,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var account = serviceAccount.GetAuthentication(p => p._id == id).FirstOrDefault();
+        var account = serviceAccount.GetFreeNewVersion(p => p._id == id).Result;
         if (account == null)
           return false;
         else
@@ -323,7 +323,7 @@ namespace Manager.Services.Specific
       {
         while (true)
         {
-          foreach (var person in servicePerson.GetAuthentication(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration).ToList())
+          foreach (var person in servicePerson.GetAllFreeNewVersion(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration).Result)
           {
             hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
             hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);

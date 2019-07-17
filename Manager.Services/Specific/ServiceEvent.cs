@@ -229,7 +229,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var item = serviceCourseESocial.GetAuthentication(p => p._id == id).FirstOrDefault();
+        var item = serviceCourseESocial.GetFreeNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
         serviceCourseESocial.UpdateAccount(item, null).Wait();
         return "deleted";
@@ -461,7 +461,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var course = serviceCourseESocial.GetAuthentication(p => p._id == id).FirstOrDefault();
+        var course = serviceCourseESocial.GetFreeNewVersion(p => p._id == id).Result;
         return new ViewCrudCourseESocial()
         {
           _id = course._idAccount,
@@ -838,7 +838,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var detail = serviceCourseESocial.GetAuthentication(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        var detail = serviceCourseESocial.GetAllFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceCourseESocial.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewCrudCourseESocial()
@@ -1319,7 +1319,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var esocial = serviceCourseESocial.GetAuthentication(p => p._id == view._id).FirstOrDefault();
+        var esocial = serviceCourseESocial.GetFreeNewVersion(p => p._id == view._id).Result;
         esocial.Name = view.Name;
         esocial.Code = view.Code;
 

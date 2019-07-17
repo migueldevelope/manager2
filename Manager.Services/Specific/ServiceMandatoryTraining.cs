@@ -89,7 +89,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var on = serviceTrainingPlan.GetAuthentication(p => p.Status == EnumStatus.Disabled).Count();
+        var on = serviceTrainingPlan.CountFreeNewVersion(p => p.Status == EnumStatus.Disabled).Result;
         if (on == 0)
         {
           var person = servicePerson.GetAllNewVersion().FirstOrDefault();

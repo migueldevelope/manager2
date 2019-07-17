@@ -215,18 +215,18 @@ namespace Manager.Data
     //  }
     //}
 
-    public virtual IQueryable<T> GetAuthentication(Expression<Func<T, bool>> filter)
-    {
-      try
-      {
-        var result = _collection.AsQueryable<T>().Where(filter);
-        return result;
-      }
-      catch
-      {
-        throw;
-      }
-    }
+    //public virtual IQueryable<T> GetAuthentication(Expression<Func<T, bool>> filter)
+    //{
+    //  try
+    //  {
+    //    var result = _collection.AsQueryable<T>().Where(filter);
+    //    return result;
+    //  }
+    //  catch
+    //  {
+    //    throw;
+    //  }
+    //}
 
     //public int Count(Expression<Func<T, bool>> predicate = null)
     //{
@@ -469,18 +469,18 @@ namespace Manager.Data
         throw;
       }
     }
-    public List<T> GetAll()
-    {
+    //public List<T> GetAll()
+    //{
 
-      try
-      {
-        return _collection.AsQueryable<T>().Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled).ToList();
-      }
-      catch
-      {
-        throw;
-      }
-    }
+    //  try
+    //  {
+    //    return _collection.AsQueryable<T>().Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled).ToList();
+    //  }
+    //  catch
+    //  {
+    //    throw;
+    //  }
+    //}
     public async Task<long> CountNewVersion(Expression<Func<T, bool>> filter)
     {
       try

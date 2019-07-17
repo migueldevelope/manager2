@@ -988,7 +988,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var Cbo = serviceCbo.GetAuthentication(p => p.Status == EnumStatus.Enabled)
+        var Cbo = serviceCbo.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result
           .Select(p => new ViewListCbo()
           {
             _id = p._id,
@@ -1008,7 +1008,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceCbo.GetAuthentication(p => p._id == id).FirstOrDefault().GetViewCrud();
+        return serviceCbo.GetFreeNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -2163,7 +2163,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var Cbo = serviceCbo.GetAuthentication(p => p._id == id).FirstOrDefault();
+        var Cbo = serviceCbo.GetFreeNewVersion(p => p._id == id).Result;
         Cbo.Status = EnumStatus.Disabled;
         serviceCbo.UpdateAccount(Cbo, null);
         return "update";
@@ -3762,7 +3762,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in serviceOccupation.GetAuthentication(p => p.Cbo._id == Cbo._id).ToList())
+        foreach (var item in serviceOccupation.GetAllFreeNewVersion(p => p.Cbo._id == Cbo._id).Result)
         {
           item.Cbo = Cbo.GetViewList();
           serviceOccupation.UpdateAccount(item, null);
@@ -3780,7 +3780,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in servicePerson.GetAuthentication(p => p.Occupation._id == occupation._id).ToList())
+        foreach (var item in servicePerson.GetAllFreeNewVersion(p => p.Occupation._id == occupation._id).Result.ToList())
         {
           item.Occupation = occupation.GetViewListResume();
           servicePerson.UpdateAccount(item, null);
