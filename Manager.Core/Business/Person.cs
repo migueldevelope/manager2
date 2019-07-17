@@ -14,35 +14,35 @@ namespace Manager.Core.Business
   public class Person : BaseEntity
   {
     public EnumStatusUser StatusUser { get; set; }
-    [BsonIgnoreIfNull]
+    
     public ViewListCompany Company { get; set; }
-    [BsonIgnoreIfNull]
+    
     public ViewListOccupationResume Occupation { get; set; }
-    [BsonIgnoreIfNull]
+    
     public BaseFields Manager { get; set; }
-    [BsonIgnoreIfNull]
+    
     public string DocumentManager { get; set; }
-    [BsonIgnoreIfNull]
+    
     public DateTime? DateLastOccupation { get; set; }
-    [BsonIgnoreIfNull]
+    
     public decimal Salary { get; set; }
-    [BsonIgnoreIfNull]
+    
     public DateTime? DateLastReadjust { get; set; }
-    [BsonIgnoreIfNull]
+    
     public DateTime? DateResignation { get; set; }
-    [BsonIgnoreIfNull]
+    
     public SalaryScalePerson SalaryScales { get; set; }
     public EnumTypeJourney TypeJourney { get; set; }
-    [BsonIgnoreIfNull]
+    
     public ViewListEstablishment Establishment { get; set; }
-    [BsonIgnoreIfNull]
+    
     public DateTime? HolidayReturn { get; set; }
-    [BsonIgnoreIfNull]
+    
     public string MotiveAside { get; set; }
     public EnumTypeUser TypeUser { get; set; }
-    [BsonIgnoreIfNull]
+    
     public string Registration { get; set; }
-    [BsonIgnoreIfNull]
+    
     public ViewCrudUser User { get; set; }
     public ViewListPerson GetViewList()
     {
