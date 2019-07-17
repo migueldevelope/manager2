@@ -14,12 +14,13 @@ namespace Manager.Data.Infrastructure.Migrations
       try
       {
         var script = @"db.Version.insert({ Number: 1, Date: ISODate('" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH\\:mm\\:ss") + @"')});";
-
+        
         var doc = new BsonDocument() { { "eval", script } };
         var command = new BsonDocumentCommand<BsonDocument>(doc);
         var response = context.RunCommand(command);
+        
 
-        script = @"db.AutoManager.drop();";
+        script = "db.AutoManager.drop();";
         script = script + "db.Certification.drop();";
         script = script + "db.CertificationPerson.drop();";
         script = script + "db.CompanyMandatory.drop();";
@@ -70,7 +71,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		Order: item.Order,";
         script = script + "		Template: null";
         script = script + "	};";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "		";
         script = script + "	db.AreaNew.insert(model);";
@@ -96,7 +97,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		TypeAxis: item.TypeAxis,";
         script = script + "		Template: null";
         script = script + "	};";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "		";
         script = script + "	db.AxisNew.insert(model);";
@@ -273,7 +274,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		TypeSphere: item.TypeSphere,";
         script = script + "		Template: null";
         script = script + "	};";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "		";
         script = script + "	db.SphereNew.insert(model);";
@@ -301,7 +302,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		Template: null";
         script = script + "	};";
         script = script + "	";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "		";
         script = script + "	db.TextDefaultNew.insert(model);";
@@ -325,7 +326,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		Template: null";
         script = script + "	};";
         script = script + "	";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "		";
         script = script + "	db.SkillNew.insert(model);";
@@ -350,7 +351,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		Template: null";
         script = script + "	};";
         script = script + "	";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "		";
         script = script + "	db.SchoolingNew.insert(model);";
@@ -390,7 +391,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		UserTermOfServices: item.UserTermOfServices";
         script = script + "	};";
         script = script + "	";
-        script = script + "	if(item.Schooling!=null){";
+        script = script + "	if(item.Schooling != null){";
         script = script + "		model.Schooling = {";
         script = script + "			_id: item.Schooling._id,";
         script = script + "			Name: item.Schooling.Name,";
@@ -425,7 +426,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		Template: null";
         script = script + "	};";
         script = script + "	";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "		";
         script = script + "	db.QuestionsNew.insert(model);";
@@ -466,7 +467,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		Template: null";
         script = script + "	};";
         script = script + "	";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "	";
         script = script + "	if(item.Skills != null){";
@@ -545,7 +546,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		User: null";
         script = script + "	};";
         script = script + "	";
-        script = script + "	if(item.User!=null){";
+        script = script + "	if(item.User != null){";
         script = script + "		model.User =  {";
         script = script + "			_id: item.User._id,";
         script = script + "			Name: item.User.Name,";
@@ -563,7 +564,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "			Sex: item.User.Sex,";
         script = script + "			Nickname: item.User.Nickname";
         script = script + "		};";
-        script = script + "		if(item.User.Schooling !=null)";
+        script = script + "		if(item.User.Schooling  != null)";
         script = script + "		{";
         script = script + "			model.User.Schooling = {";
         script = script + "			  _id: item.User.Schooling._id,";
@@ -572,7 +573,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "			};";
         script = script + "		}";
         script = script + "	}";
-        script = script + "	if(item.Company!=null)";
+        script = script + "	if(item.Company != null)";
         script = script + "	{";
         script = script + "		model.Company = {";
         script = script + "			_id:item.Company._id,";
@@ -580,14 +581,14 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		};";
         script = script + "	}";
         script = script + "	";
-        script = script + "	if(item.Establishment!=null)";
+        script = script + "	if(item.Establishment != null)";
         script = script + "	{";
         script = script + "		model.Establishment = {";
         script = script + "			_id:item.Establishment._id,";
         script = script + "			Name:item.Establishment.Name";
         script = script + "		};";
         script = script + "	}";
-        script = script + "   if(item.Occupation!=null)";
+        script = script + "   if(item.Occupation != null)";
         script = script + "	{";
         script = script + "		model.Occupation = {";
         script = script + "			_id:  item.Occupation._id,";
@@ -601,7 +602,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "			model.Occupation._idGroup = item.Occupation.Group._id;";
         script = script + "			model.Occupation.NameGroup = item.Occupation.Group.Name;";
         script = script + "		}";
-        script = script + "		if(item.Occupation.Cbo !=null){";
+        script = script + "		if(item.Occupation.Cbo  != null){";
         script = script + "			model.Occupation.Cbo = {";
         script = script + "				_id: item.Occupation.Cbo._id,";
         script = script + "				Name: item.Occupation.Cbo.Name,";
@@ -644,7 +645,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		SalaryScales: item.SalaryScales,";
         script = script + "	};";
         script = script + "	";
-        script = script + "	if(item.Group !=null)";
+        script = script + "	if(item.Group  != null)";
         script = script + "	{";
         script = script + "		model.Group = {";
         script = script + "			_id: item.Group._id,";
@@ -654,20 +655,20 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "			Sphere: null,";
         script = script + "			Axis: null";
         script = script + "		};";
-        script = script + "		if(item.Group.Company!=null){";
+        script = script + "		if(item.Group.Company != null){";
         script = script + "			model.Group.Company = {";
         script = script + "				_id: item.Group.Company._id,";
         script = script + "				Name: item.Group.Company.Name";
         script = script + "			};";
         script = script + "		}";
-        script = script + "		if(item.Group.Axis!=null){";
+        script = script + "		if(item.Group.Axis != null){";
         script = script + "			model.Group.Axis = {";
         script = script + "				_id: item.Group.Axis._id,";
         script = script + "				Name: item.Group.Axis.Name,";
         script = script + "				TypeAxis: item.Group.Axis.TypeAxis";
         script = script + "			};";
         script = script + "		}";
-        script = script + "		if(item.Group.Sphere !=null){";
+        script = script + "		if(item.Group.Sphere  != null){";
         script = script + "			model.Group.Sphere = {";
         script = script + "				_id: item.Group.Sphere._id,";
         script = script + "				Name: item.Group.Sphere.Name,";
@@ -677,7 +678,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "	}";
         script = script + "		";
         script = script + "	";
-        script = script + "	if(item.Cbo!=null)";
+        script = script + "	if(item.Cbo != null)";
         script = script + "	{";
         script = script + "		model.Cbo = {";
         script = script + "			_id:item.Cbo._id,";
@@ -686,7 +687,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		};";
         script = script + "	}";
         script = script + "	";
-        script = script + "	if(item.Template!=null)";
+        script = script + "	if(item.Template != null)";
         script = script + "		model.Template = item.Template._id;";
         script = script + "		";
         script = script + "	if(item.Skills != null){";
@@ -845,7 +846,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "			_idManager: null,";
         script = script + "			Manager: null";
         script = script + "		};";
-        script = script + "		if(item.Person.Manager!=null)";
+        script = script + "		if(item.Person.Manager != null)";
         script = script + "		{";
         script = script + "			model.Person._idManager = item.Person.Manager._id;";
         script = script + "			model.Person.Manager= item.Person.Manager.Name;";
@@ -923,10 +924,10 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "			_idManager: null,";
         script = script + "			Manager: null";
         script = script + "		};";
-        script = script + "		if(item.Person.Occupation!=null)";
+        script = script + "		if(item.Person.Occupation != null)";
         script = script + "			model.Person.Occupation = item.Person.Occupation.Name;";
         script = script + "			";
-        script = script + "		if(item.Person.Manager !=null)";
+        script = script + "		if(item.Person.Manager  != null)";
         script = script + "		{";
         script = script + "			model.Person._idManager = item.Person.Manager._id;";
         script = script + "			model.Person.Manager = item.Person.Manager.Name;";
@@ -960,7 +961,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "	if(item.Questions != null){";
         script = script + "		var i = 0;";
         script = script + "		item.Questions.forEach(function(questions){";
-        script = script + "			if(questions!=null){";
+        script = script + "			if(questions != null){";
         script = script + "				var view = {";
         script = script + "				   _id: questions._id,";
         script = script + "				  Mark: questions.Mark,";
@@ -1056,10 +1057,10 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "		if(item.Person.User != null)";
         script = script + "			model.Person.Name = item.Person.User.Name;";
         script = script + "			";
-        script = script + "		if(item.Person.Occupation!=null)";
+        script = script + "		if(item.Person.Occupation != null)";
         script = script + "			model.Person.Occupation = item.Person.Occupation.Name;";
         script = script + "			";
-        script = script + "		if(item.Person.Manager !=null)";
+        script = script + "		if(item.Person.Manager  != null)";
         script = script + "		{";
         script = script + "			model.Person._idManager = item.Person.Manager._id;";
         script = script + "			model.Person.Manager = item.Person.Manager.Name;";
@@ -1084,7 +1085,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  TypeSkill: skill.Skill.TypeSkill";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1121,7 +1122,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  TypeSkill: skill.Skill.TypeSkill";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1158,7 +1159,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  TypeSkill: skill.Skill.TypeSkill";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1194,7 +1195,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  Order: skill.Scope.Order";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1232,7 +1233,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  Type: skill.Schooling.Type";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1268,7 +1269,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  Order: skill.Activitie.Order";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1328,10 +1329,10 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "			_idManager: null,";
         script = script + "			Manager: null";
         script = script + "		};";
-        script = script + "		if(item.Person.Occupation!=null)";
+        script = script + "		if(item.Person.Occupation != null)";
         script = script + "			model.Person.Occupation = item.Person.Occupation.Name;";
         script = script + "			";
-        script = script + "		if(item.Person.Manager !=null)";
+        script = script + "		if(item.Person.Manager  != null)";
         script = script + "		{";
         script = script + "			model.Person._idManager = item.Person.Manager._id;";
         script = script + "			model.Person.Manager = item.Person.Manager.Name;";
@@ -1358,7 +1359,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  TypeSkill: skill.Skill.TypeSkill";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1371,7 +1372,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				   view.Comments[x] = viewIt;";
         script = script + "				});";
         script = script + "			}";
-        script = script + "			if(skill.Plans!=null){";
+        script = script + "			if(skill.Plans != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Plans.forEach(function(plan){";
         script = script + "				";
@@ -1436,7 +1437,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  Type: skill.Schooling.Type";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1449,7 +1450,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				   view.Comments[x] = viewIt;";
         script = script + "				});";
         script = script + "			}";
-        script = script + "			if(skill.Plans!=null){";
+        script = script + "			if(skill.Plans != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Plans.forEach(function(plan){";
         script = script + "				";
@@ -1512,7 +1513,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				  Order: skill.Activities.Order";
         script = script + "				}";
         script = script + "			};";
-        script = script + "			if(skill.Comments!=null){";
+        script = script + "			if(skill.Comments != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Comments.forEach(function(comment){";
         script = script + "				";
@@ -1525,7 +1526,7 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "				   view.Comments[x] = viewIt;";
         script = script + "				});";
         script = script + "			}";
-        script = script + "			if(skill.Plans!=null){";
+        script = script + "			if(skill.Plans != null){";
         script = script + "				var x = 0;";
         script = script + "				skill.Plans.forEach(function(plan){";
         script = script + "				";
@@ -1599,10 +1600,11 @@ namespace Manager.Data.Infrastructure.Migrations
         script = script + "	});";
         script = script + "});";
 
+
         doc = new BsonDocument() { { "eval", script } };
         command = new BsonDocumentCommand<BsonDocument>(doc);
         response = context.RunCommand(command);
-
+        
       }
       catch (Exception e)
       {

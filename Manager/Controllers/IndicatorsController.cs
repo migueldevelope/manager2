@@ -94,200 +94,200 @@ namespace Manager.Controllers
     //  return await Task.Run(() => result;
     //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("exportonboarding")]
-    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding()
-    {
-      return await Task.Run(() =>service.ExportStatusOnboarding());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("exportonboarding")]
+    //public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding()
+    //{
+    //  return await Task.Run(() =>service.ExportStatusOnboarding());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("exportstatuscertification")]
-    public async Task<List<ViewExportStatusCertification>> ExportStatusCertification()
-    {
-      return await Task.Run(() =>service.ExportStatusCertification());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("exportstatuscertification")]
+    //public async Task<List<ViewExportStatusCertification>> ExportStatusCertification()
+    //{
+    //  return await Task.Run(() =>service.ExportStatusCertification());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="idperson"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("exportstatuscertification/{idperson}")]
-    public async Task<List<ViewExportStatusCertificationPerson>> ExportStatusCertification(string idperson)
-    {
-      return await Task.Run(() =>service.ExportStatusCertification(idperson));
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="idperson"></param>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("exportstatuscertification/{idperson}")]
+    //public async Task<List<ViewExportStatusCertificationPerson>> ExportStatusCertification(string idperson)
+    //{
+    //  return await Task.Run(() =>service.ExportStatusCertification(idperson));
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("exportmonitoring")]
-    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring()
-    {
-      return await Task.Run(() =>service.ExportStatusMonitoring());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("exportmonitoring")]
+    //public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring()
+    //{
+    //  return await Task.Run(() =>service.ExportStatusMonitoring());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="idperson"></param>
-    /// <returns></returns>
-    [HttpGet]
-    [Route("exportonboarding/{idperson}")]
-    public async Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson)
-    {
-      return await Task.Run(() =>service.ExportStatusOnboarding(idperson));
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="idperson"></param>
+    ///// <returns></returns>
+    //[HttpGet]
+    //[Route("exportonboarding/{idperson}")]
+    //public async Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson)
+    //{
+    //  return await Task.Run(() =>service.ExportStatusOnboarding(idperson));
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="idperson"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("exportmonitoring/{idperson}")]
-    public async Task<List<ViewExportStatusMonitoring>> ExportStatusMonitoring(string idperson)
-    {
-      return await Task.Run(() =>service.ExportStatusMonitoring(idperson));
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="idperson"></param>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("exportmonitoring/{idperson}")]
+    //public async Task<List<ViewExportStatusMonitoring>> ExportStatusMonitoring(string idperson)
+    //{
+    //  return await Task.Run(() =>service.ExportStatusMonitoring(idperson));
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("exportcheckpoint")]
-    public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint()
-    {
-      return await Task.Run(() =>service.ExportStatusCheckpoint());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("exportcheckpoint")]
+    //public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint()
+    //{
+    //  return await Task.Run(() =>service.ExportStatusCheckpoint());
+    //}
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("exportplan")]
-    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan()
-    {
-      return await Task.Run(() =>service.ExportStatusPlan());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("exportplan")]
+    //public async Task<List<ViewExportStatusPlan>> ExportStatusPlan()
+    //{
+    //  return await Task.Run(() =>service.ExportStatusPlan());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("chartonboarding")]
-    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
-    {
-      return await Task.Run(() =>service.ChartOnboarding());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("chartonboarding")]
+    //public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
+    //{
+    //  return await Task.Run(() =>service.ChartOnboarding());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("chartmonitoring")]
-    public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring()
-    {
-      return await Task.Run(() =>service.ChartMonitoring());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("chartmonitoring")]
+    //public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring()
+    //{
+    //  return await Task.Run(() =>service.ChartMonitoring());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("chartcheckpoint")]
-    public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint()
-    {
-      return await Task.Run(() =>service.ChartCheckpoint());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("chartcheckpoint")]
+    //public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint()
+    //{
+    //  return await Task.Run(() =>service.ChartCheckpoint());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("chartplan")]
-    public async Task<IEnumerable<ViewChartPlan>> ChartPlan()
-    {
-      return await Task.Run(() =>service.ChartPlan());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("chartplan")]
+    //public async Task<IEnumerable<ViewChartPlan>> ChartPlan()
+    //{
+    //  return await Task.Run(() =>service.ChartPlan());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("chartmonitoringrealized")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized()
-    {
-      return await Task.Run(() =>service.ChartMonitoringRealized());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("chartmonitoringrealized")]
+    //public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized()
+    //{
+    //  return await Task.Run(() =>service.ChartMonitoringRealized());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("chartcheckpointrealized")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized()
-    {
-      return await Task.Run(() =>service.ChartCheckpointRealized());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("chartcheckpointrealized")]
+    //public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized()
+    //{
+    //  return await Task.Run(() =>service.ChartCheckpointRealized());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("chartplanrealized")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized()
-    {
-      return await Task.Run(() =>service.ChartPlanRealized());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("chartplanrealized")]
+    //public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized()
+    //{
+    //  return await Task.Run(() =>service.ChartPlanRealized());
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("chartonboardingrealized")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized()
-    {
-      return await Task.Run(() =>service.ChartOnboardingRealized());
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <returns></returns>
+    //[Authorize]
+    //[HttpGet]
+    //[Route("chartonboardingrealized")]
+    //public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized()
+    //{
+    //  return await Task.Run(() =>service.ChartOnboardingRealized());
+    //}
 
     /// <summary>
     /// 
