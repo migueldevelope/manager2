@@ -56,7 +56,7 @@ namespace Manager.Controllers
     [Route("getareasbyid/{idarea}")]
     public async Task<ViewCrudArea> GetAreasById(string idarea)
     {
-      return await Task.Run(() =>service.GetAreasById(idarea));
+      return await Task.Run(() => service.GetAreasById(idarea));
     }
     /// <summary>
     /// Lista areas
@@ -67,7 +67,7 @@ namespace Manager.Controllers
     [Route("getareas")]
     public async Task<List<ViewListArea>> GetAreas()
     {
-      return await Task.Run(() =>service.GetAreas());
+      return await Task.Run(() => service.GetAreas());
     }
     /// <summary>
     /// Lista areas filtrando pela empresa
@@ -79,7 +79,7 @@ namespace Manager.Controllers
     [Route("getareas/{idcompany}")]
     public async Task<List<ViewListArea>> GetAreas(string idcompany)
     {
-      return await Task.Run(() =>service.GetAreas(idcompany));
+      return await Task.Run(() => service.GetAreas(idcompany));
     }
     /// <summary>
     /// Inclusão area
@@ -91,7 +91,7 @@ namespace Manager.Controllers
     [Route("addarea")]
     public async Task<string> AddArea([FromBody]ViewCrudArea view)
     {
-      return await Task.Run(() =>service.AddArea(view));
+      return await Task.Run(() => service.AddArea(view));
     }
     /// <summary>
     /// Alterar a ordem da área
@@ -106,7 +106,7 @@ namespace Manager.Controllers
     [Route("areaorder/{idcompany}/{idarea}/{order}/{sum}")]
     public async Task<string> AreaOrder(string idcompany, string idarea, long order, bool sum)
     {
-      return await Task.Run(() =>service.AreaOrder(idcompany, idarea, order, sum));
+      return await Task.Run(() => service.AreaOrder(idcompany, idarea, order, sum));
     }
     /// <summary>
     /// Exclusão da area
@@ -118,7 +118,7 @@ namespace Manager.Controllers
     [Route("deletearea/{id}")]
     public async Task<string> DeleteArea(string id)
     {
-      return await Task.Run(() =>service.DeleteArea(id));
+      return await Task.Run(() => service.DeleteArea(id));
     }
     /// <summary>
     /// Atualização de dados 
@@ -130,7 +130,7 @@ namespace Manager.Controllers
     [Route("updatearea")]
     public async Task<string> UpdateArea([FromBody]ViewCrudArea view)
     {
-      return await Task.Run(() =>service.UpdateArea(view));
+      return await Task.Run(() => service.UpdateArea(view));
     }
     #endregion
 
@@ -144,7 +144,7 @@ namespace Manager.Controllers
     [Route("getaxis")]
     public async Task<List<ViewListAxis>> GetAxis()
     {
-      return await Task.Run(() =>service.GetAxis());
+      return await Task.Run(() => service.GetAxis());
     }
     /// <summary>
     /// Lista eixos filtrando pela empresa
@@ -156,7 +156,7 @@ namespace Manager.Controllers
     [Route("getaxis/{idcompany}")]
     public async Task<List<ViewListAxis>> GetAxis(string idcompany)
     {
-      return await Task.Run(() =>service.GetAxis(idcompany));
+      return await Task.Run(() => service.GetAxis(idcompany));
     }
     /// <summary>
     /// Busca informações para editar Area
@@ -168,7 +168,7 @@ namespace Manager.Controllers
     [Route("getaxisbyid/{id}")]
     public async Task<ViewCrudAxis> GetAxisById(string id)
     {
-      return await Task.Run(() =>service.GetAxisById(id));
+      return await Task.Run(() => service.GetAxisById(id));
     }
     /// <summary> eixo
     /// Inclusão
@@ -180,7 +180,7 @@ namespace Manager.Controllers
     [Route("addaxis")]
     public async Task<string> AddAxis([FromBody]ViewCrudAxis view)
     {
-      return await Task.Run(() =>service.AddAxis(view));
+      return await Task.Run(() => service.AddAxis(view));
     }
     /// <summary>
     /// Exclusão de eixo
@@ -192,7 +192,7 @@ namespace Manager.Controllers
     [Route("deleteaxis/{idaxis}")]
     public async Task<string> DeleteAxis(string idaxis)
     {
-      return await Task.Run(() =>service.DeleteAxis(idaxis));
+      return await Task.Run(() => service.DeleteAxis(idaxis));
     }
     /// <summary>
     /// Atualização de dados 
@@ -204,7 +204,7 @@ namespace Manager.Controllers
     [Route("updateaxis")]
     public async Task<string> UpdateAxis([FromBody]ViewCrudAxis view)
     {
-      return await Task.Run(() =>service.UpdateAxis(view));
+      return await Task.Run(() => service.UpdateAxis(view));
     }
     #endregion
 
@@ -218,7 +218,7 @@ namespace Manager.Controllers
     [Route("listCbo")]
     public async Task<List<ViewListCbo>> ListCbo()
     {
-      return await Task.Run(() =>service.ListCbo());
+      return await Task.Run(() => service.ListCbo());
     }
     /// <summary>
     /// Busca informações de Cbo para editar
@@ -230,7 +230,7 @@ namespace Manager.Controllers
     [Route("getCbo/{id}")]
     public async Task<ViewCrudCbo> GetCbo(string id)
     {
-      return await Task.Run(() =>service.GetCbo(id));
+      return await Task.Run(() => service.GetCbo(id));
     }
     /// <summary>
     /// Inclusão Cbo
@@ -242,7 +242,7 @@ namespace Manager.Controllers
     [Route("addCbo")]
     public async Task<string> AddCbo([FromBody]ViewCrudCbo view)
     {
-      return await Task.Run(() =>service.AddCbo(view));
+      return await Task.Run(() => service.AddCbo(view));
     }
     /// <summary>
     /// Exclusão de Cbo
@@ -254,7 +254,7 @@ namespace Manager.Controllers
     [Route("deleteCbo/{id}")]
     public async Task<string> DeleteCbo(string id)
     {
-      return await Task.Run(() =>service.DeleteCbo(id));
+      return await Task.Run(() => service.DeleteCbo(id));
     }
     /// <summary>
     /// Atualização de dados 
@@ -266,7 +266,7 @@ namespace Manager.Controllers
     [Route("updateCbo")]
     public async Task<string> UpdateCbo([FromBody]ViewCrudCbo view)
     {
-      return await Task.Run(() =>service.UpdateCbo(view));
+      return await Task.Run(() => service.UpdateCbo(view));
     }
     #endregion
 
@@ -280,7 +280,7 @@ namespace Manager.Controllers
     [Route("getcompanies")]
     public async Task<List<ViewListCompany>> GetCompanies()
     {
-      return await Task.Run(() =>service.GetCompanies());
+      return await Task.Run(() => service.GetCompanies());
     }
     #endregion
 
@@ -296,7 +296,7 @@ namespace Manager.Controllers
     [Route("getcourseoccupation/{idoccupation}/{type}")]
     public async Task<List<ViewListCourse>> GetCourseOccupation(string idoccupation, EnumTypeMandatoryTraining type)
     {
-      return await Task.Run(() =>service.GetCourseOccupation(idoccupation, type));
+      return await Task.Run(() => service.GetCourseOccupation(idoccupation, type));
     }
     #endregion
 
@@ -311,7 +311,7 @@ namespace Manager.Controllers
     [Route("getessential/{idcompany}")]
     public async Task<List<ViewListSkill>> GetEssential(string idcompany)
     {
-      return await Task.Run(() =>service.GetEssential(idcompany));
+      return await Task.Run(() => service.GetEssential(idcompany));
     }
     /// <summary>
     /// Inclusao skill essencial
@@ -323,7 +323,7 @@ namespace Manager.Controllers
     [Route("addessential")]
     public async Task<string> AddEssential([FromBody]ViewCrudEssential view)
     {
-      return await Task.Run(() =>service.AddEssential(view));
+      return await Task.Run(() => service.AddEssential(view));
     }
     /// <summary>
     /// Exclusão de competência essencial
@@ -336,7 +336,7 @@ namespace Manager.Controllers
     [Route("deleteessential/{idcompany}/{id}")]
     public async Task<string> DeleteEssential(string idcompany, string id)
     {
-      return await Task.Run(() =>service.DeleteEssential(idcompany, id));
+      return await Task.Run(() => service.DeleteEssential(idcompany, id));
     }
     #endregion
 
@@ -352,7 +352,7 @@ namespace Manager.Controllers
     [Route("getmapgroupscope/{idgroup}/{idscope}")]
     public async Task<ViewCrudMapGroupScope> GetMapGroupScopeById(string idgroup, string idscope)
     {
-      return await Task.Run(() =>service.GetMapGroupScopeById(idgroup, idscope));
+      return await Task.Run(() => service.GetMapGroupScopeById(idgroup, idscope));
     }
     /// <summary>
     /// Busca informações grupo para editar
@@ -364,7 +364,7 @@ namespace Manager.Controllers
     [Route("getgroup/{id}")]
     public async Task<ViewCrudGroup> GetGroup(string id)
     {
-      return await Task.Run(() =>service.GetGroup(id));
+      return await Task.Run(() => service.GetGroup(id));
     }
     /// <summary>
     /// Lista grupos
@@ -375,7 +375,7 @@ namespace Manager.Controllers
     [Route("getgroups")]
     public async Task<List<ViewListGroup>> GetGroups()
     {
-      return await Task.Run(() =>service.GetGroups());
+      return await Task.Run(() => service.GetGroups());
     }
     /// <summary>
     /// Busca informações para editar mapa do grupo
@@ -387,7 +387,7 @@ namespace Manager.Controllers
     [Route("getmapgroup/{id}")]
     public async Task<ViewMapGroup> GetMapGroup(string id)
     {
-      return await Task.Run(() =>service.GetMapGroup(id));
+      return await Task.Run(() => service.GetMapGroup(id));
     }
     /// <summary>
     /// Lista grupos filtrando pela empresa
@@ -399,7 +399,7 @@ namespace Manager.Controllers
     [Route("getgroups/{idcompany}")]
     public async Task<List<ViewGroupListLO>> GetGroups(string idcompany)
     {
-      return await Task.Run(() =>service.GetGroups(idcompany));
+      return await Task.Run(() => service.GetGroups(idcompany));
     }
     /// <summary>
     /// Lista cargos para visualização impressão
@@ -411,7 +411,7 @@ namespace Manager.Controllers
     [Route("getgroupsprint/{idcompany}")]
     public async Task<List<ViewListGroup>> GetGroupsPrint(string idcompany)
     {
-      return await Task.Run(() =>service.GetGroupsPrint(idcompany));
+      return await Task.Run(() => service.GetGroupsPrint(idcompany));
     }
     /// <summary>
     /// Reordenar o Scopo do grupo
@@ -426,7 +426,7 @@ namespace Manager.Controllers
     [Route("reordergroupscope/{idcompany}/{idgroup}/{idscope}/{sum}")]
     public async Task<string> ReorderGroupScope(string idcompany, string idgroup, string idscope, bool sum)
     {
-      return await Task.Run(() =>service.ReorderGroupScope(idcompany, idgroup, idscope, sum));
+      return await Task.Run(() => service.ReorderGroupScope(idcompany, idgroup, idscope, sum));
     }
     /// <summary>
     /// Reorganizar o escopo do grupo de maneira manual
@@ -441,7 +441,7 @@ namespace Manager.Controllers
     [Route("reordergroupscopemanual/{idcompany}/{idgroup}/{idscope}/{order}")]
     public async Task<string> ReorderGroupScopeManual(string idcompany, string idgroup, string idscope, long order)
     {
-      return await Task.Run(() =>service.ReorderGroupScopeManual(idcompany, idgroup, idscope, order));
+      return await Task.Run(() => service.ReorderGroupScopeManual(idcompany, idgroup, idscope, order));
     }
     /// <summary>
     /// Inclusão
@@ -453,7 +453,7 @@ namespace Manager.Controllers
     [Route("addmapgroupschooling")]
     public async Task<string> AddMapGroupSchooling([FromBody]ViewCrudMapGroupSchooling view)
     {
-      return await Task.Run(() =>service.AddMapGroupSchooling(view));
+      return await Task.Run(() => service.AddMapGroupSchooling(view));
     }
     /// <summary>
     /// Inclusao grupo
@@ -466,7 +466,7 @@ namespace Manager.Controllers
     public async Task<string> AddGroup([FromBody]ViewCrudGroup view)
     {
       service.AddGroup(view);
-      return await Task.Run(() =>"OK");
+      return await Task.Run(() => "OK");
     }
     /// <summary>
     /// Incluir escopo no mapa do grupo
@@ -478,7 +478,7 @@ namespace Manager.Controllers
     [Route("addmapgroupscope")]
     public async Task<string> AddMapGroupScope([FromBody]ViewCrudMapGroupScope view)
     {
-      return await Task.Run(() =>service.AddMapGroupScope(view));
+      return await Task.Run(() => service.AddMapGroupScope(view));
     }
     /// <summary>
     /// Inclusao skill no grupo
@@ -490,7 +490,7 @@ namespace Manager.Controllers
     [Route("addmapgroupskill")]
     public async Task<string> AddMapGroupSkill([FromBody]ViewCrudMapGroupSkill view)
     {
-      return await Task.Run(() =>service.AddMapGroupSkill(view));
+      return await Task.Run(() => service.AddMapGroupSkill(view));
     }
     /// <summary>
     /// Exclusão de grupo
@@ -502,7 +502,7 @@ namespace Manager.Controllers
     [Route("deletegroup/{id}")]
     public async Task<string> DeleteGroup(string id)
     {
-      return await Task.Run(() =>service.DeleteGroup(id));
+      return await Task.Run(() => service.DeleteGroup(id));
     }
     /// <summary>
     /// Exclusão de escolaridade do mapa do grupo
@@ -515,7 +515,7 @@ namespace Manager.Controllers
     [Route("deletemapgroupschooling/{idgroup}/{id}")]
     public async Task<string> DeleteMapGroupSchooling(string idgroup, string id)
     {
-      return await Task.Run(() =>service.DeleteMapGroupSchooling(idgroup, id));
+      return await Task.Run(() => service.DeleteMapGroupSchooling(idgroup, id));
     }
     /// <summary>
     /// Exclusão de competência do mapa do grupo
@@ -528,7 +528,7 @@ namespace Manager.Controllers
     [Route("deletemapgroupskill/{idgroup}/{id}")]
     public async Task<string> DeleteMapGroupSkill(string idgroup, string id)
     {
-      return await Task.Run(() =>service.DeleteMapGroupSkill(idgroup, id));
+      return await Task.Run(() => service.DeleteMapGroupSkill(idgroup, id));
     }
     /// <summary>
     /// Exclusão de escopo do mapa do grupo
@@ -541,7 +541,7 @@ namespace Manager.Controllers
     [Route("deletemapgroupscope/{idgroup}/{scope}")]
     public async Task<string> DeleteMapGroupScope(string idgroup, string scope)
     {
-      return await Task.Run(() =>service.DeleteMapGroupScope(idgroup, scope));
+      return await Task.Run(() => service.DeleteMapGroupScope(idgroup, scope));
     }
     /// <summary>
     /// Atualiza informações do scopo no grupo
@@ -554,7 +554,7 @@ namespace Manager.Controllers
     [Route("updatemapgroupscope/{idgroup}")]
     public async Task<string> UpdateMapGroupScope([FromBody]ViewCrudScope scope, string idgroup)
     {
-      return await Task.Run(() =>service.UpdateMapGroupScope(idgroup, scope));
+      return await Task.Run(() => service.UpdateMapGroupScope(idgroup, scope));
     }
     /// <summary>
     /// Atualiza inforamções de escolaridade no grupo
@@ -567,7 +567,7 @@ namespace Manager.Controllers
     [Route("updatemapgroupschooling/{idgroup}")]
     public async Task<string> UpdateMapGroupSchooling([FromBody]ViewCrudSchooling schooling, string idgroup)
     {
-      return await Task.Run(() =>service.UpdateMapGroupSchooling(idgroup, schooling));
+      return await Task.Run(() => service.UpdateMapGroupSchooling(idgroup, schooling));
     }
     /// <summary>
     /// Atualização de dados 
@@ -579,7 +579,7 @@ namespace Manager.Controllers
     [Route("updategroup")]
     public async Task<string> UpdateGroup([FromBody]ViewCrudGroup view)
     {
-      return await Task.Run(() =>service.UpdateGroup(view));
+      return await Task.Run(() => service.UpdateGroup(view));
     }
     /// <summary>
     /// Exportar o mapa de grupos de cargo em arquivo CSV
@@ -591,7 +591,7 @@ namespace Manager.Controllers
     [Route("getcsvcomparegroup/{idcompany}")]
     public async Task<string> GetCSVCompareGroup(string idcompany)
     {
-      return await Task.Run(() =>service.GetCSVCompareGroup(idcompany, XmlConnection.ReadVariablesSystem().BlobKey));
+      return await Task.Run(() => service.GetCSVCompareGroup(idcompany, XmlConnection.ReadVariablesSystem().BlobKey));
     }
     #endregion
 
@@ -606,7 +606,7 @@ namespace Manager.Controllers
     [Route("getmapoccupation/{id}")]
     public async Task<ViewMapOccupation> GetMapOccupation(string id)
     {
-      return await Task.Run(() =>service.GetMapOccupation(id));
+      return await Task.Run(() => service.GetMapOccupation(id));
     }
     /// <summary>
     /// Busca informações de cargos para editar
@@ -618,7 +618,7 @@ namespace Manager.Controllers
     [Route("getoccupation/{id}")]
     public async Task<ViewCrudOccupation> GetOccupation(string id)
     {
-      return await Task.Run(() =>service.GetOccupation(id));
+      return await Task.Run(() => service.GetOccupation(id));
     }
     /// <summary>
     /// Lista cargos
@@ -629,7 +629,7 @@ namespace Manager.Controllers
     [Route("getoccupations")]
     public async Task<List<ViewListOccupationView>> GetOccupations()
     {
-      return await Task.Run(() =>service.GetOccupations());
+      return await Task.Run(() => service.GetOccupations());
     }
     /// <summary>
     /// Lista cargos com filtro de empresa e a area para editar
@@ -644,12 +644,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupationedit/{idcompany}/{idarea}")]
-    public async Task<List<ViewOccupationListEdit>> ListOccupationEdit(string idcompany, string idarea,  int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    public async Task<List<ViewOccupationListEdit>> ListOccupationEdit(string idcompany, string idarea, int count = 10, int page = 1, string filter = "", string filterGroup = "")
     {
       long total = 0;
       var result = service.ListOccupationsEdit(idcompany, idarea, ref total, filter, count, page, filterGroup);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Lista cargos com filtro de empresa e area
@@ -662,7 +662,7 @@ namespace Manager.Controllers
     [Route("getoccupations/{idcompany}/{idarea}")]
     public async Task<List<ViewGetOccupation>> GetOccupations(string idcompany, string idarea)
     {
-      return await Task.Run(() =>service.GetOccupations(idcompany, idarea));
+      return await Task.Run(() => service.GetOccupations(idcompany, idarea));
     }
     /// <summary>
     /// Reorganizar as atividades do cargo
@@ -677,7 +677,7 @@ namespace Manager.Controllers
     [Route("reorderoccupationactivitie/{idcompany}/{idoccupation}/{idactivitie}/{sum}")]
     public async Task<string> ReorderOccupationActivitie(string idcompany, string idoccupation, string idactivitie, bool sum)
     {
-      return await Task.Run(() =>service.ReorderOccupationActivitie(idcompany, idoccupation, idactivitie, sum));
+      return await Task.Run(() => service.ReorderOccupationActivitie(idcompany, idoccupation, idactivitie, sum));
     }
     /// <summary>
     /// Reorganizar as atividades do cargo manualmente
@@ -692,7 +692,7 @@ namespace Manager.Controllers
     [Route("reorderoccupationactivitiemanual/{idcompany}/{idoccupation}/{idactivitie}/{order}")]
     public async Task<string> ReorderOccupationActivitieManual(string idcompany, string idoccupation, string idactivitie, long order)
     {
-      return await Task.Run(() =>service.ReorderOccupationActivitieManual(idcompany, idoccupation, idactivitie, order));
+      return await Task.Run(() => service.ReorderOccupationActivitieManual(idcompany, idoccupation, idactivitie, order));
     }
     /// <summary>
     /// Inclui os requisitos no cargo
@@ -705,7 +705,7 @@ namespace Manager.Controllers
     [Route("addspecificrequirements/{idoccupation}")]
     public async Task<string> AddSpecificRequirements([FromBody]ViewCrudSpecificRequirements view, string idoccupation)
     {
-      return await Task.Run(() =>service.AddSpecificRequirements(idoccupation, view));
+      return await Task.Run(() => service.AddSpecificRequirements(idoccupation, view));
     }
     /// <summary>
     /// Inclusão
@@ -717,7 +717,7 @@ namespace Manager.Controllers
     [Route("addoccupationactivities")]
     public async Task<string> AddOccupationActivities([FromBody]ViewCrudOccupationActivities view)
     {
-      return await Task.Run(() =>service.AddOccupationActivities(view));
+      return await Task.Run(() => service.AddOccupationActivities(view));
     }
     /// <summary>
     /// Inclusao cargo
@@ -729,7 +729,7 @@ namespace Manager.Controllers
     [Route("addoccupation")]
     public async Task<string> AddOccupation([FromBody]ViewCrudOccupation view)
     {
-      return await Task.Run(() =>service.AddOccupation(view));
+      return await Task.Run(() => service.AddOccupation(view));
     }
     /// <summary>
     /// Inclusão de entregas em lote
@@ -741,7 +741,7 @@ namespace Manager.Controllers
     [Route("addoccupationactivitieslist")]
     public async Task<string> AddOccupationActivitiesList([FromBody]List<ViewCrudOccupationActivities> list)
     {
-      return await Task.Run(() =>service.AddOccupationActivitiesList(list));
+      return await Task.Run(() => service.AddOccupationActivitiesList(list));
     }
     /// <summary>
     /// Inclusão de skill no occupation
@@ -753,7 +753,7 @@ namespace Manager.Controllers
     [Route("addoccupationskill")]
     public async Task<string> AddOccupationSkill([FromBody]ViewCrudOccupationSkill view)
     {
-      return await Task.Run(() =>service.AddOccupationSkill(view));
+      return await Task.Run(() => service.AddOccupationSkill(view));
     }
     /// <summary>
     /// Exclusão de cargo
@@ -765,7 +765,7 @@ namespace Manager.Controllers
     [Route("deleteoccupation/{id}")]
     public async Task<string> DeleteOccupation(string id)
     {
-      return await Task.Run(() =>service.DeleteOccupation(id));
+      return await Task.Run(() => service.DeleteOccupation(id));
     }
     /// <summary>
     /// Exclusão de atividade do mapa de cargo
@@ -778,7 +778,7 @@ namespace Manager.Controllers
     [Route("deleteoccupationactivities/{idoccupation}/{idactivitie}")]
     public async Task<string> DeleteOccupationActivities(string idoccupation, string idactivitie)
     {
-      return await Task.Run(() =>service.DeleteOccupationActivities(idoccupation, idactivitie));
+      return await Task.Run(() => service.DeleteOccupationActivities(idoccupation, idactivitie));
     }
     /// <summary>
     /// Exclusão de competência do mapa do cargo
@@ -791,7 +791,7 @@ namespace Manager.Controllers
     [Route("deleteoccupationskill/{idoccupation}/{id}")]
     public async Task<string> DeleteOccupationSkill(string idoccupation, string id)
     {
-      return await Task.Run(() =>service.DeleteOccupationSkill(idoccupation, id));
+      return await Task.Run(() => service.DeleteOccupationSkill(idoccupation, id));
     }
     /// <summary>
     /// Alteração da escolaridade do mapa do cargo
@@ -804,7 +804,7 @@ namespace Manager.Controllers
     [Route("updatemapoccupationschooling/{idoccupation}")]
     public async Task<string> UpdateMapOccupationSchooling([FromBody]ViewCrudSchooling schooling, string idoccupation)
     {
-      return await Task.Run(() =>service.UpdateMapOccupationSchooling(idoccupation, schooling));
+      return await Task.Run(() => service.UpdateMapOccupationSchooling(idoccupation, schooling));
     }
     /// <summary>
     /// Atualizar informações de entragas no cargo
@@ -817,7 +817,7 @@ namespace Manager.Controllers
     [Route("updatemapoccupationactivities/{idoccupation}")]
     public async Task<string> UpdateMapOccupationActivities([FromBody]ViewCrudActivities activitie, string idoccupation)
     {
-      return await Task.Run(() =>service.UpdateMapOccupationActivities(idoccupation, activitie));
+      return await Task.Run(() => service.UpdateMapOccupationActivities(idoccupation, activitie));
     }
     /// <summary>
     /// Atualização de dados 
@@ -829,7 +829,7 @@ namespace Manager.Controllers
     [Route("updateoccupation")]
     public async Task<string> UpdateOccupation([FromBody]ViewCrudOccupation view)
     {
-      return await Task.Run(() =>service.UpdateOccupation(view));
+      return await Task.Run(() => service.UpdateOccupation(view));
     }
     #endregion
 
@@ -844,7 +844,7 @@ namespace Manager.Controllers
     [Route("getlistprocessleveonebyarea/{idarea}")]
     public async Task<List<ViewListProcessLevelOneByArea>> GetListProcessLevelOneByArea(string idarea)
     {
-      return await Task.Run(() =>service.GetListProcessLevelOneByArea(idarea));
+      return await Task.Run(() => service.GetListProcessLevelOneByArea(idarea));
     }
     /// <summary>
     /// Inclusão processo nivel 1
@@ -857,7 +857,7 @@ namespace Manager.Controllers
     public async Task<string> AddProcessLevelOne([FromBody]ViewCrudProcessLevelOne processLevelOne)
     {
       service.AddProcessLevelOne(processLevelOne);
-      return await Task.Run(() =>"ok");
+      return await Task.Run(() => "ok");
     }
     /// <summary>
     /// Exclusão de processo nivel um
@@ -869,7 +869,7 @@ namespace Manager.Controllers
     [Route("deleteprocesslevelone/{id}")]
     public async Task<string> DeleteProcessLevelOne(string id)
     {
-      return await Task.Run(() =>service.DeleteProcessLevelOne(id));
+      return await Task.Run(() => service.DeleteProcessLevelOne(id));
     }
     /// <summary>
     /// Atualização de dados 
@@ -881,7 +881,7 @@ namespace Manager.Controllers
     [Route("updateprocesslevelone")]
     public async Task<string> UpdateProcessLevelOne([FromBody]ViewCrudProcessLevelOne view)
     {
-      return await Task.Run(() =>service.UpdateProcessLevelOne(view));
+      return await Task.Run(() => service.UpdateProcessLevelOne(view));
     }
 
     /// <summary>
@@ -894,7 +894,7 @@ namespace Manager.Controllers
     [Route("getlistprocesslevelonebyid/{id}")]
     public async Task<ViewCrudProcessLevelOne> GetListProcessLevelOneById(string id)
     {
-      return await Task.Run(() =>service.GetListProcessLevelOneById(id));
+      return await Task.Run(() => service.GetListProcessLevelOneById(id));
     }
 
     #endregion
@@ -910,7 +910,7 @@ namespace Manager.Controllers
     [Route("getlistprocessleveltwobyid/{id}")]
     public async Task<ViewCrudProcessLevelTwo> GetListProcessLevelTwoById(string id)
     {
-      return await Task.Run(() =>service.GetListProcessLevelTwoById(id));
+      return await Task.Run(() => service.GetListProcessLevelTwoById(id));
     }
 
     /// <summary>
@@ -923,7 +923,7 @@ namespace Manager.Controllers
     [Route("getprocessleveltwo/{idarea}")]
     public async Task<List<ViewListProcessLevelTwo>> GetProcessLevelTwo(string idarea)
     {
-      return await Task.Run(() =>service.GetProcessLevelTwoFilter(idarea));
+      return await Task.Run(() => service.GetProcessLevelTwoFilter(idarea));
     }
     /// <summary>
     /// Lista os processos nivel 2
@@ -934,7 +934,7 @@ namespace Manager.Controllers
     [Route("getprocessleveltwo")]
     public async Task<List<ViewListProcessLevelTwo>> GetProcessLevelTwo()
     {
-      return await Task.Run(() =>service.GetProcessLevelTwo());
+      return await Task.Run(() => service.GetProcessLevelTwo());
     }
     /// <summary>
     /// Inclusão processo nivel 2
@@ -947,7 +947,7 @@ namespace Manager.Controllers
     public async Task<string> AddProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo processLevelTwo)
     {
       service.AddProcessLevelTwo(processLevelTwo);
-      return await Task.Run(() =>"ok");
+      return await Task.Run(() => "ok");
     }
     /// <summary>
     /// Exclusão de processo nivel dois
@@ -959,7 +959,7 @@ namespace Manager.Controllers
     [Route("deleteprocessleveltwo/{id}")]
     public async Task<string> DeleteProcessLevelTwo(string id)
     {
-      return await Task.Run(() =>service.DeleteProcessLevelTwo(id));
+      return await Task.Run(() => service.DeleteProcessLevelTwo(id));
     }
     /// <summary>
     /// Atualização de dados 
@@ -971,7 +971,7 @@ namespace Manager.Controllers
     [Route("updateprocessleveltwo")]
     public async Task<string> UpdateProcessLevelTwo([FromBody]ViewCrudProcessLevelTwo view)
     {
-      return await Task.Run(() =>service.UpdateProcessLevelTwo(view));
+      return await Task.Run(() => service.UpdateProcessLevelTwo(view));
     }
     #endregion
 
@@ -987,7 +987,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListQuestions>> GetQuestions(string idcompany)
     {
       long total = 0;
-      var list = await Task.Run(() =>service.ListQuestions(ref total, idcompany));
+      var list = await Task.Run(() => service.ListQuestions(ref total, idcompany));
       Response.Headers.Add("x-total-count", total.ToString());
       return list;
     }
@@ -1001,7 +1001,7 @@ namespace Manager.Controllers
     [Route("getquestions/{id}")]
     public async Task<ViewCrudQuestions> GetQuestionsId(string id)
     {
-      return await Task.Run(() =>service.GetQuestions(id));
+      return await Task.Run(() => service.GetQuestions(id));
     }
     /// <summary>
     /// Inclusão
@@ -1010,11 +1010,11 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("addquestions")]
-    public async Task<string> AddQuestions([FromBody]ViewCrudQuestions questions)
+    [Route("addquestions/{idcompany}")]
+    public async Task<string> AddQuestions([FromBody]ViewCrudQuestions questions, string idcompany)
     {
-      service.AddQuestions(questions);
-      return await Task.Run(() =>"ok");
+      service.AddQuestions(questions, idcompany);
+      return await Task.Run(() => "ok");
     }
     /// <summary>
     /// Exclusão de pergunta
@@ -1026,7 +1026,7 @@ namespace Manager.Controllers
     [Route("deletequestion/{id}")]
     public async Task<string> DeleteQuestion(string id)
     {
-      return await Task.Run(() =>service.DeleteQuestion(id));
+      return await Task.Run(() => service.DeleteQuestion(id));
     }
     /// <summary>
     /// Atualização de dados 
@@ -1038,7 +1038,7 @@ namespace Manager.Controllers
     [Route("updatequestions")]
     public async Task<string> UpdateQuestions([FromBody]ViewCrudQuestions view)
     {
-      return await Task.Run(() =>service.UpdateQuestions(view));
+      return await Task.Run(() => service.UpdateQuestions(view));
     }
     #endregion
 
@@ -1052,7 +1052,7 @@ namespace Manager.Controllers
     [Route("getschooling")]
     public async Task<List<ViewListSchooling>> GetSchooling()
     {
-      return await Task.Run(() =>service.GetSchooling());
+      return await Task.Run(() => service.GetSchooling());
     }
     /// <summary>
     /// Busca informações para editar Escolaridade
@@ -1064,7 +1064,7 @@ namespace Manager.Controllers
     [Route("getschoolingbyid/{id}")]
     public async Task<ViewCrudSchooling> GetSchoolingById(string id)
     {
-      return await Task.Run(() =>service.GetSchoolingById(id));
+      return await Task.Run(() => service.GetSchoolingById(id));
     }
     /// <summary>
     /// Inclusão escolaridade
@@ -1077,7 +1077,7 @@ namespace Manager.Controllers
     public async Task<string> AddSchooling([FromBody]ViewCrudSchooling schooling)
     {
       service.AddSchooling(schooling);
-      return await Task.Run(() =>"ok");
+      return await Task.Run(() => "ok");
     }
     /// <summary>
     /// Exclusão de escolaridade
@@ -1089,7 +1089,7 @@ namespace Manager.Controllers
     [Route("deleteschooling/{idschooling}")]
     public async Task<string> DeleteSchooling(string idschooling)
     {
-      return await Task.Run(() =>service.DeleteSchooling(idschooling));
+      return await Task.Run(() => service.DeleteSchooling(idschooling));
     }
     /// <summary>
     /// Atualização de dados 
@@ -1101,7 +1101,7 @@ namespace Manager.Controllers
     [Route("updateschooling")]
     public async Task<string> UpdateSchooling([FromBody]ViewCrudSchooling view)
     {
-      return await Task.Run(() =>service.UpdateSchooling(view));
+      return await Task.Run(() => service.UpdateSchooling(view));
     }
     #endregion
 
@@ -1116,12 +1116,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills")]
-    public async Task<List<ViewListSkill>> GetSkills( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListSkill>> GetSkills(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkills(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Inclusao de nova skill
@@ -1133,7 +1133,7 @@ namespace Manager.Controllers
     [Route("addskill")]
     public async Task<ViewCrudSkill> AddSkill([FromBody]ViewCrudSkill view)
     {
-      return await Task.Run(() =>service.AddSkill(view));
+      return await Task.Run(() => service.AddSkill(view));
     }
     /// <summary>
     /// Busca informações para editar Skill
@@ -1145,7 +1145,7 @@ namespace Manager.Controllers
     [Route("getskillbyid/{id}")]
     public async Task<ViewCrudSkill> GetSkillById(string id)
     {
-      return await Task.Run(() =>service.GetSkillById(id));
+      return await Task.Run(() => service.GetSkillById(id));
     }
     /// <summary>
     /// Listar as competências da empresa
@@ -1158,12 +1158,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills/{company}")]
-    public async Task<List<ViewSkills>> GetSkills(string company,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewSkills>> GetSkills(string company, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkills(company, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Listar as competências do grupo de cargo
@@ -1177,12 +1177,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills/{idcompany}/{idgroup}")]
-    public async Task<List<ViewSkills>> GetSkills(string idcompany, string idgroup,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewSkills>> GetSkills(string idcompany, string idgroup, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkillsGroup(idgroup, idcompany, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Listar as competências por escolha de filtros
@@ -1197,12 +1197,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills/{idcompany}/{idgroup}/{idoccupation}")]
-    public async Task<List<ViewSkills>> GetSkills(string idcompany, string idgroup, string idoccupation,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewSkills>> GetSkills(string idcompany, string idgroup, string idoccupation, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkillsOccupation(idgroup, idcompany, idoccupation, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Exclusão de competência
@@ -1214,7 +1214,7 @@ namespace Manager.Controllers
     [Route("deleteskill/{idskill}")]
     public async Task<string> DeleteSkill(string idskill)
     {
-      return await Task.Run(() =>service.DeleteSkill(idskill));
+      return await Task.Run(() => service.DeleteSkill(idskill));
     }
     /// <summary>
     /// Atualização de dados 
@@ -1226,7 +1226,7 @@ namespace Manager.Controllers
     [Route("updateskill")]
     public async Task<string> UpdateSkill([FromBody]ViewCrudSkill view)
     {
-      return await Task.Run(() =>service.UpdateSkill(view));
+      return await Task.Run(() => service.UpdateSkill(view));
     }
     /// <summary>
     /// Adicionar uma competência
@@ -1239,7 +1239,7 @@ namespace Manager.Controllers
     public async Task<string> AddSkills([FromBody]List<ViewCrudSkill> view)
     {
       service.AddSkills(view);
-      return await Task.Run(() =>"ok");
+      return await Task.Run(() => "ok");
     }
     #endregion
 
@@ -1253,7 +1253,7 @@ namespace Manager.Controllers
     [Route("getspheres")]
     public async Task<List<ViewListSphere>> GetSpheres()
     {
-      return await Task.Run(() =>service.GetSpheres());
+      return await Task.Run(() => service.GetSpheres());
     }
     /// <summary>
     /// Lista de esferas filtrando pela empresa
@@ -1265,7 +1265,7 @@ namespace Manager.Controllers
     [Route("getspheres/{idcompany}")]
     public async Task<List<ViewListSphere>> GetSpheres(string idcompany)
     {
-      return await Task.Run(() =>service.GetSpheres(idcompany));
+      return await Task.Run(() => service.GetSpheres(idcompany));
     }
     /// <summary>
     /// Busca informações para editar Sphere
@@ -1277,7 +1277,7 @@ namespace Manager.Controllers
     [Route("getspherebyid/{id}")]
     public async Task<ViewCrudSphere> GetSphereById(string id)
     {
-      return await Task.Run(() =>service.GetSphereById(id));
+      return await Task.Run(() => service.GetSphereById(id));
     }
     /// <summary>
     /// Inclusão esfera
@@ -1289,7 +1289,7 @@ namespace Manager.Controllers
     [Route("addsphere")]
     public async Task<string> AddSphere([FromBody]ViewCrudSphere view)
     {
-      return await Task.Run(() =>service.AddSphere(view));
+      return await Task.Run(() => service.AddSphere(view));
     }
     /// <summary>
     /// Exclusão de esfera
@@ -1301,7 +1301,7 @@ namespace Manager.Controllers
     [Route("deletesphere/{idsphere}")]
     public async Task<string> DeleteSphere(string idsphere)
     {
-      return await Task.Run(() =>service.DeleteSphere(idsphere));
+      return await Task.Run(() => service.DeleteSphere(idsphere));
     }
     /// <summary>
     /// Atualização de dados 
@@ -1313,7 +1313,7 @@ namespace Manager.Controllers
     [Route("updatesphere")]
     public async Task<string> UpdateSphere([FromBody]ViewCrudSphere view)
     {
-      return await Task.Run(() =>service.UpdateSphere(view));
+      return await Task.Run(() => service.UpdateSphere(view));
     }
     #endregion
 
@@ -1329,7 +1329,7 @@ namespace Manager.Controllers
     [Route("gettextdefault/{idcompany}/{name}")]
     public async Task<ViewCrudTextDefault> GetTextDefault(string idcompany, string name)
     {
-      return await Task.Run(() =>service.GetTextDefault(idcompany, name));
+      return await Task.Run(() => service.GetTextDefault(idcompany, name));
     }
     /// <summary>
     /// Busca informações para editar
@@ -1341,7 +1341,7 @@ namespace Manager.Controllers
     [Route("gettextdefault/{id}")]
     public async Task<ViewCrudTextDefault> GetTextDefault(string id)
     {
-      return await Task.Run(() =>service.GetTextDefault(id));
+      return await Task.Run(() => service.GetTextDefault(id));
     }
     /// <summary>
     /// Lista textos
@@ -1353,7 +1353,7 @@ namespace Manager.Controllers
     [Route("listtextdefault/{idcompany}")]
     public async Task<List<ViewListTextDefault>> ListTextDefault(string idcompany)
     {
-      return await Task.Run(() =>service.ListTextDefault(idcompany));
+      return await Task.Run(() => service.ListTextDefault(idcompany));
     }
     /// <summary>
     /// Inclusao textos
@@ -1366,7 +1366,7 @@ namespace Manager.Controllers
     public async Task<string> AddTextDefault([FromBody]ViewCrudTextDefault textDefault)
     {
       service.AddTextDefault(textDefault);
-      return await Task.Run(() =>"ok");
+      return await Task.Run(() => "ok");
     }
     /// <summary>
     /// Exclusão de texto padrão
@@ -1378,7 +1378,7 @@ namespace Manager.Controllers
     [Route("deletetextdefault/{id}")]
     public async Task<string> DeleteTextDefault(string id)
     {
-      return await Task.Run(() =>service.DeleteTextDefault(id));
+      return await Task.Run(() => service.DeleteTextDefault(id));
     }
     /// <summary>
     /// Atualização de dados 
@@ -1390,7 +1390,7 @@ namespace Manager.Controllers
     [Route("updatetextdefault")]
     public async Task<string> UpdateTextDefault([FromBody]ViewCrudTextDefault view)
     {
-      return await Task.Run(() =>service.UpdateTextDefault(view));
+      return await Task.Run(() => service.UpdateTextDefault(view));
     }
     #endregion
 

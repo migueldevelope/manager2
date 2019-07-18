@@ -109,7 +109,7 @@ namespace Manager.Core.Interfaces
      string AddOccupation(ViewCrudOccupation occupation);
      string AddProcessLevelOne(ViewCrudProcessLevelOne model);
      string AddProcessLevelTwo(ViewCrudProcessLevelTwo model);
-     string AddQuestions(ViewCrudQuestions view);
+     string AddQuestions(ViewCrudQuestions view, string idcompany);
      string UpdateTextDefault(ViewCrudTextDefault view);
      string UpdateSkill(ViewCrudSkill view);
      string UpdateSphere(ViewCrudSphere view);

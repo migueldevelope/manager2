@@ -1773,16 +1773,19 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddQuestions(ViewCrudQuestions view)
+    public string AddQuestions(ViewCrudQuestions view, string idcompany)
     {
       try
       {
+        var company = serviceCompany.GetNewVersion(p => p._id == idcompany).Result.GetViewList();
+
         serviceQuestions.InsertNewVersion(new Questions()
         {
           Name = view.Name,
           Order = view.Order,
           TypeQuestion = view.TypeQuestion,
           TypeRotine = view.TypeRotine,
+          Company = company,
           Status = EnumStatus.Enabled,
           Content = view.Content
         });
