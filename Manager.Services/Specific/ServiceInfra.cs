@@ -3231,7 +3231,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceQuestions.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        var model = serviceQuestions.GetNewVersion(p => p._id == view._id).Result;
         model.Name = view.Name;
         model.Content = view.Content;
         model.TypeQuestion = view.TypeQuestion;
