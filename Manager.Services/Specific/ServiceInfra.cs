@@ -581,17 +581,35 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany & p._id == idoccupation).Result.FirstOrDefault();
+        long max = 1;
+        long min = 1;
+
+        var occupation = serviceOccupation.GetNewVersion(p => p.Group.Company._id == idcompany & p._id == idoccupation).Result;
         var activities = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
         ViewListActivitie activitiesOld;
         if (sum)
         {
-          var min = occupation.Activities.Where(p => p.Order > activities.Order).Min(p => p.Order);
+          try
+          {
+
+          min = occupation.Activities.Where(p => p.Order > activities.Order).Min(p => p.Order);
+          }
+          catch
+          {
+
+          }
           activitiesOld = occupation.Activities.Where(p => p.Order == min).FirstOrDefault();
         }
         else
         {
-          var max = occupation.Activities.Where(p => p.Order < activities.Order).Max(p => p.Order);
+          try
+          {
+            max = occupation.Activities.Where(p => p.Order < activities.Order).Max(p => p.Order);
+          }
+          catch
+          {
+
+          }
           activitiesOld = occupation.Activities.Where(p => p.Order == max).FirstOrDefault();
         }
 
