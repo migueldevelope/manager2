@@ -610,6 +610,7 @@ namespace Manager.Services.Specific
           {
 
           }
+
           activitiesOld = occupation.Activities.Where(p => p.Order == max).FirstOrDefault();
         }
 
@@ -3126,8 +3127,8 @@ namespace Manager.Services.Specific
       try
       {
         //var areas = new List<Area>();
-        var occupationOld = serviceOccupation.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
-        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        var occupationOld = serviceOccupation.GetNewVersion(p => p._id == view._id).Result;
+        var occupation = serviceOccupation.GetNewVersion(p => p._id == view._id).Result;
 
         occupation.Group = serviceGroup.GetNewVersion(p => p._id == view.Group._id).Result.GetViewList();
         occupation.Name = view.Name;
@@ -3176,7 +3177,7 @@ namespace Manager.Services.Specific
             }
           }
 
-          occupation.Schooling = occupation.Schooling;
+          occupation.Schooling = group.Schooling;
         }
 
         //occupation.Areas = areas;

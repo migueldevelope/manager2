@@ -225,7 +225,7 @@ namespace Manager.Services.Specific
           });
         }
 
-        var text = serviceTextDefault.GetAllNewVersion(p => p.TypeText == EnumTypeText.Certification).Result.FirstOrDefault();
+        var text = serviceTextDefault.GetNewVersion(p => p.TypeText == EnumTypeText.Certification).Result;
         if (text != null)
           certification.TextDefault = text.Content.Replace("{company_name}", companyname).Replace("{employee_name}", certification.Person.Name)
             .Replace("{manager_name}", certification.Person.NameManager).Replace("{item_name}", certification.CertificationItem.Name);
@@ -773,7 +773,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Person person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        Person person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
         item._id = ObjectId.GenerateNewId().ToString();
 
         Certification certification = new Certification()
