@@ -8,6 +8,7 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -1871,6 +1872,37 @@ namespace Manager.Services.Specific
 
 
         return resultPlan;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+
+
+
+    public List<ViewExportStatusPlan> ExportStatusPlan()
+    {
+      try
+      {
+
+        var list = servicePlan.GetAllNewVersion().Select(p => new ViewExportStatusPlan()
+        {
+          NameManager = p.Person.NameManager == null ? "Sem Gestor" : p.Person.NameManager,
+          NamePerson = p.Person.Name,
+          What = p.Name,
+          Description = p.Description,
+          Deadline = p.Deadline,
+          Status = p.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
+                        p.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
+          Obs = p.TextEnd,
+          DateEnd = p.DateEnd
+        }).ToList();
+
+
+        return list;
       }
       catch (Exception e)
       {

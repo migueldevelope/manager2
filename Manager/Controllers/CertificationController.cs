@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -214,6 +215,33 @@ namespace Manager.Controllers
     {
       return await Task.Run(() =>service.UpdateCertification(certification, idperson, idcertification));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportstatuscertification")]
+    public async Task<List<ViewExportStatusCertification>> ExportStatusCertification()
+    {
+      return await Task.Run(() => service.ExportStatusCertification());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportstatuscertification/{idperson}")]
+    public async Task<List<ViewExportStatusCertificationPerson>> ExportStatusCertification(string idperson)
+    {
+      return await Task.Run(() => service.ExportStatusCertification(idperson));
+    }
+
+
     #endregion
 
   }

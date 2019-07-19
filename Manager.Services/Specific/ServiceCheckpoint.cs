@@ -8,6 +8,7 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -89,7 +90,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Checkpoint
-    public List<ViewListCheckpoint> ListWaitManager(string idmanager, ref  long total,  string filter, int count,int page)
+    public List<ViewListCheckpoint> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -147,7 +148,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewListCheckpoint ListWaitPerson(string idperson)
+    public ViewListCheckpoint ListWaitPerson(string idperson)
     {
       try
       {
@@ -192,11 +193,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListCheckpoint> ListEnded(ref  long total,  string filter, int count,int page)
+    public List<ViewListCheckpoint> ListEnded(ref long total, string filter, int count, int page)
     {
       try
       {
-        
+
         int skip = (count * (page - 1));
         var detail = serviceCheckpoint.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "Person.User.Name").Result
           .Select(p => new ViewListCheckpoint()
@@ -218,7 +219,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewListCheckpoint NewCheckpoint(string idperson)
+    public ViewListCheckpoint NewCheckpoint(string idperson)
     {
       try
       {
@@ -246,7 +247,7 @@ namespace Manager.Services.Specific
           };
           checkpoint = LoadMap(checkpoint);
           checkpoint = serviceCheckpoint.InsertNewVersion(checkpoint).Result;
-           Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", checkpoint._id)));
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", checkpoint._id)));
         }
         return new ViewListCheckpoint()
         {
@@ -264,7 +265,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  ViewCrudCheckpoint GetCheckpoint(string id)
+    public ViewCrudCheckpoint GetCheckpoint(string id)
     {
       try
       {
@@ -278,7 +279,7 @@ namespace Manager.Services.Specific
         if (checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open)
         {
           checkpoint.StatusCheckpoint = EnumStatusCheckpoint.Wait;
-           serviceCheckpoint.Update(checkpoint, null).Wait();
+          serviceCheckpoint.Update(checkpoint, null).Wait();
         }
 
         return new ViewCrudCheckpoint()
@@ -329,7 +330,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string DeleteCheckpoint(string idcheckpoint)
+    public string DeleteCheckpoint(string idcheckpoint)
     {
       try
       {
@@ -337,9 +338,9 @@ namespace Manager.Services.Specific
         if (checkpoint == null)
           return "Checkpoint not available!";
 
-         Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | {0}", idcheckpoint)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete | {0}", idcheckpoint)));
         checkpoint.Status = EnumStatus.Disabled;
-         serviceCheckpoint.Update(checkpoint, null).Wait();
+        serviceCheckpoint.Update(checkpoint, null).Wait();
         return "Checkpoint deleted!";
       }
       catch (Exception e)
@@ -347,7 +348,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string UpdateCheckpoint(ViewCrudCheckpoint view)
+    public string UpdateCheckpoint(ViewCrudCheckpoint view)
     {
       try
       {
@@ -367,18 +368,18 @@ namespace Manager.Services.Specific
           if (view.TypeCheckpoint == EnumCheckpoint.Approved)
           {
             person.TypeJourney = EnumTypeJourney.Monitoring;
-             servicePerson.Update(person, null).Wait();
+            servicePerson.Update(person, null).Wait();
 
-             Task.Run(() => MailRhApproved(person, "Aprovado"));
-             Task.Run(() => MailPerson(person, "Aprovado"));
+            Task.Run(() => MailRhApproved(person, "Aprovado"));
+            Task.Run(() => MailPerson(person, "Aprovado"));
 
-             serviceLogMessages.NewLogMessage("Checkpoint", string.Format(" Colaborador {0} aprovado no Checkpoint", person.User.Name), person);
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Approved | {0}.", view._id)));
+            serviceLogMessages.NewLogMessage("Checkpoint", string.Format(" Colaborador {0} aprovado no Checkpoint", person.User.Name), person);
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Approved | {0}.", view._id)));
           }
           else
           {
-             Task.Run(() => MailRhDisapproved(person, "Reprovado"));
-             Task.Run(() => LogSave(_user._idPerson, string.Format("Disapproved | {0}.", view._id)));
+            Task.Run(() => MailRhDisapproved(person, "Reprovado"));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Disapproved | {0}.", view._id)));
           }
         }
         checkpoint.Comments = view.Comments;
@@ -403,7 +404,7 @@ namespace Manager.Services.Specific
             Mark = x.Mark
           }).ToList()
         }).ToList();
-         serviceCheckpoint.Update(checkpoint, null).Wait();
+        serviceCheckpoint.Update(checkpoint, null).Wait();
         return "Checkpoint altered!";
       }
       catch (Exception e)
@@ -411,7 +412,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudCheckpoint PersonCheckpointEnd(string idperson)
+    public ViewCrudCheckpoint PersonCheckpointEnd(string idperson)
     {
       try
       {
@@ -423,7 +424,7 @@ namespace Manager.Services.Specific
 
         //throw new Exception("Checkpoint not available!");
 
-         Task.Run(() => LogSave(_user._idPerson, string.Format("Person ended | {0}", checkpoint._id)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Person ended | {0}", checkpoint._id)));
 
         return new ViewCrudCheckpoint()
         {
@@ -745,6 +746,44 @@ namespace Manager.Services.Specific
           var resultMail = client.PostAsync("sendmail/" + idmail, null).Result;
           return token;
         }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+
+    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
+    {
+      try
+      {
+
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewExportStatusCheckpoint> result = new List<ViewExportStatusCheckpoint>();
+
+        foreach (var item in list)
+        {
+          var checkpoint = serviceCheckpoint.GetNewVersion(p => p.Person._id == item._id).Result;
+
+          result.Add(new ViewExportStatusCheckpoint
+          {
+            NameManager = item.Manager == null ? "Sem Gestor" : item.Manager.Name,
+            NamePerson = item.User.Name,
+            Status = checkpoint == null ? "Aguardando para iniciar" :
+             checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
+                checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
+            DateBegin = checkpoint?.DateBegin,
+            DateEnd = checkpoint?.DateEnd,
+            Occupation = item.Occupation?.Name,
+            Result = checkpoint == null ? "Não iniciado" :
+              checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
+                checkpoint.TypeCheckpoint == EnumCheckpoint.Disapproved ? "Não Efetivado" : "Aguardando Definição"
+          });
+        }
+
+        return result;
       }
       catch (Exception e)
       {

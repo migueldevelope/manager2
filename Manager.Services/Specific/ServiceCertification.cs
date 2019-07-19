@@ -8,6 +8,7 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -991,6 +992,67 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+    public List<ViewExportStatusCertification> ExportStatusCertification()
+    {
+      try
+      {
+
+        var list = serviceCertification.GetAllNewVersion(p => p.StatusCertification != EnumStatusCertification.Open).Result;
+        List<ViewExportStatusCertification> result = new List<ViewExportStatusCertification>();
+
+        foreach (var item in list)
+        {
+          result.Add(new ViewExportStatusCertification
+          {
+            NameManager = item.Person.NameManager,
+            NamePerson = item.Person.Name,
+            NameItem = item.CertificationItem.Name,
+            Status =
+                item.StatusCertification == EnumStatusCertification.Open ? "Aguardando Aprovação" :
+                  item.StatusCertification == EnumStatusCertification.Wait ? "Aguardando Aprovação" :
+                    item.StatusCertification == EnumStatusCertification.Approved ? "Aprovado" : "Reprovado",
+            Date = item.DateBegin
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson)
+    {
+      try
+      {
+
+        var list = serviceCertification.GetAllNewVersion(p => p.Person._id == idperson & p.StatusCertification != EnumStatusCertification.Open).Result;
+        List<ViewExportStatusCertificationPerson> result = new List<ViewExportStatusCertificationPerson>();
+
+        foreach (var item in list)
+        {
+          result.Add(new ViewExportStatusCertificationPerson
+          {
+            IdCertification = item._id,
+            NamePerson = item.Person.Name,
+            NameItem = item.CertificationItem.Name,
+            Status = item.StatusCertification,
+            DateEnd = item.DateEnd
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
   }

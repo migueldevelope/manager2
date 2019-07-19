@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -138,6 +139,18 @@ namespace Manager.Controllers
       var result = service.ListEnded(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportcheckpoint")]
+    public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint()
+    {
+      return await Task.Run(() => service.ExportStatusCheckpoint());
     }
     #endregion
 

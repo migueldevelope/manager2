@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -28,5 +29,7 @@ namespace Manager.Core.Interfaces
      string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
      List<ViewCrudComment> ListComments(string idonboarding, string iditem);
      List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref  long total,  string filter, int count, int page);
+    List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding();
+    List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson);
   }
 }

@@ -4,6 +4,7 @@ using Manager.Core.BusinessModel;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ namespace Manager.Core.Interfaces
     string NewPlanActivity(ViewPlanActivity model);
     string UpdatePlanActivity(ViewPlanActivity model);
     ViewListPlanStruct GetPlanStruct(string idmonitoring, string idplan);
+    List<ViewExportStatusPlan> ExportStatusPlan();
     #endregion
 
 

@@ -8,6 +8,7 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -1344,6 +1345,82 @@ namespace Manager.Services.Specific
       }
     }
 
+
+
+    public List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson)
+    {
+      try
+      {
+
+        var list = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson).Result;
+        List<ViewExportStatusMonitoring> result = new List<ViewExportStatusMonitoring>();
+
+        foreach (var item in list)
+        {
+          result.Add(new ViewExportStatusMonitoring
+          {
+            IdMonitoring = item._id,
+            NamePerson = item.Person.Name,
+            Status = item.StatusMonitoring,
+            Occupation = item.Person.Occupation,
+            DataEnd = item.DateEndEnd
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
+    {
+      try
+      {
+
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewExportStatusMonitoringGeral> result = new List<ViewExportStatusMonitoringGeral>();
+
+        foreach (var rows in list)
+        {
+          var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == rows._id).Result;
+          if (monitorings != null)
+          {
+            foreach (var item in monitorings)
+            {
+              result.Add(new ViewExportStatusMonitoringGeral
+              {
+                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
+                NamePerson = item.Person.Name,
+                Occupation = item.Person.Occupation,
+                Status =
+              item == null ? "Aguardando para iniciar" :
+                item.StatusMonitoring == EnumStatusMonitoring.Open ? "Aguardando para iniciar" :
+                  item.StatusMonitoring == EnumStatusMonitoring.InProgressPerson ? "Em andamento pelo colaborador" :
+                    item.StatusMonitoring == EnumStatusMonitoring.InProgressManager ? "Em andamento pelo gestor" :
+                      item.StatusMonitoring == EnumStatusMonitoring.Wait ? "Em andamento pelo gestor" :
+                        item.StatusMonitoring == EnumStatusMonitoring.End ? "Finalizado" :
+                          item.StatusMonitoring == EnumStatusMonitoring.WaitManager ? "Aguardando continuação pelo gestor" :
+                            item.StatusMonitoring == EnumStatusMonitoring.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+                DateBegin = item?.DateBeginPerson,
+                DateEnd = item?.DateEndEnd
+              });
+            }
+          }
+
+
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     #endregion
 
     #region private

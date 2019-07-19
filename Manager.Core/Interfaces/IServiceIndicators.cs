@@ -20,14 +20,6 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudPerson(string idperson);
     List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
     //string[] ExportStatusOnboarding(ref  long total,  string filter, int count, int page);
-    List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding();
-    List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring();
-    List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson);
-    List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson);
-    List<ViewExportStatusCheckpoint> ExportStatusCheckpoint();
-    List<ViewExportStatusPlan> ExportStatusPlan();
-    List<ViewExportStatusCertification> ExportStatusCertification();
-    List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson);
 
     IEnumerable<ViewChartOnboarding> ChartOnboarding();
 

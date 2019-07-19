@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -233,6 +234,33 @@ namespace Manager.Controllers
     {
       return await Task.Run(() =>service.AddComments(idonboarding, iditem, comments));
     }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("exportonboarding/{idperson}")]
+    public async Task<List<ViewExportStatusOnboarding>> ExportStatusOnboarding(string idperson)
+    {
+      return await Task.Run(() => service.ExportStatusOnboarding(idperson));
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportonboarding")]
+    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding()
+    {
+      return await Task.Run(() => service.ExportStatusOnboarding());
+    }
+
     #endregion
   }
 }

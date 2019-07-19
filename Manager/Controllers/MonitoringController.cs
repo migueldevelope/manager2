@@ -5,6 +5,7 @@ using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -358,6 +359,33 @@ namespace Manager.Controllers
     {
       return await Task.Run(() =>service.UpdatePlan(idmonitoring, iditem, plan));
     }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportmonitoring")]
+    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring()
+    {
+      return await Task.Run(() => service.ExportStatusMonitoring());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportmonitoring/{idperson}")]
+    public async Task<List<ViewExportStatusMonitoring>> ExportStatusMonitoring(string idperson)
+    {
+      return await Task.Run(() => service.ExportStatusMonitoring(idperson));
+    }
+
     #endregion
 
 

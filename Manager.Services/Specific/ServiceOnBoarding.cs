@@ -8,6 +8,7 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -1425,6 +1426,84 @@ namespace Manager.Services.Specific
             StatusOnBoarding = p.StatusOnBoarding,
             OccupationName = p.Person.Occupation
           }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
+    {
+      try
+      {
+
+        var list = serviceOnboarding.GetAllNewVersion(p => p.Person._id == idperson).Result;
+        List<ViewExportStatusOnboarding> result = new List<ViewExportStatusOnboarding>();
+
+        foreach (var item in list)
+        {
+          result.Add(new ViewExportStatusOnboarding
+          {
+            IdOnboarding = item._id,
+            NamePerson = item.Person.Name,
+            Status = item.StatusOnBoarding,
+            Occupation = item.Person.Occupation,
+            DataEnd = item.DateEndEnd
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
+    {
+      try
+      {
+
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewExportStatusOnboardingGeral> result = new List<ViewExportStatusOnboardingGeral>();
+
+        foreach (var rows in list)
+        {
+          var onboardings = serviceOnboarding.GetAllFreeNewVersion(p => p.Person._id == rows._id).Result;
+          if (onboardings != null)
+          {
+            foreach (var item in onboardings)
+            {
+              result.Add(new ViewExportStatusOnboardingGeral
+              {
+                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
+                NamePerson = item.Person.Name,
+                Type = item == null ? "Admissão" :
+                item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
+                Occupation = item.Person.Occupation,
+                Status =
+                item == null ? "Aguardando para iniciar" :
+                  item.StatusOnBoarding == EnumStatusOnBoarding.WaitBegin ? "Aguardando para iniciar" :
+                    item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
+                      item.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
+                        item.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson ? "Em andamento pelo gestor" :
+                          item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
+                            item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
+                              item.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+                DateBegin = item?.DateBeginPerson,
+                DateEnd = item?.DateEndEnd,
+
+              });
+            }
+          }
+
+        }
+
+        return result;
       }
       catch (Exception e)
       {

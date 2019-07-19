@@ -4,6 +4,7 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -334,6 +335,20 @@ namespace Manager.Controllers
     {
       return await Task.Run(() =>service.UpdatePlanActivity(model));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportplan")]
+    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan()
+    {
+      return await Task.Run(() => service.ExportStatusPlan());
+    }
+
+
     #endregion
 
 
