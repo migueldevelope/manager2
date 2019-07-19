@@ -501,7 +501,7 @@ namespace Manager.Services.Specific
             _id = ObjectId.GenerateNewId().ToString()
           });
         }
-        foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Skill & p.TypeRotine == EnumTypeRotine.Checkpoint).Result.ToList())
+        foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Skill & p.TypeRotine == EnumTypeRotine.Checkpoint).Result)
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
@@ -519,7 +519,7 @@ namespace Manager.Services.Specific
             Itens = itens
           });
         }
-        foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Checkpoint).Result.ToList())
+        foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Checkpoint).Result)
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {
@@ -536,9 +536,10 @@ namespace Manager.Services.Specific
             _id = ObjectId.GenerateNewId().ToString()
           });
         }
-        var text = serviceTextDefault.GetAllNewVersion(p => p.TypeText == EnumTypeText.Checkpoint).Result.FirstOrDefault();
+        var text = serviceTextDefault.GetNewVersion(p => p.TypeText == EnumTypeText.Checkpoint).Result;
         if (text != null)
           checkpoint.TextDefault = text.Content.Replace("{company_name}", company.Name).Replace("{employee_name}", checkpoint.Person.Name).Replace("{manager_name}", checkpoint.Person.Manager);
+
         return checkpoint;
       }
       catch (Exception e)

@@ -31,6 +31,7 @@ namespace Manager.Services.Specific
     private readonly ServiceLogMessages serviceLogMessages;
     private readonly ServiceGeneric<MailLog> serviceMail;
     private readonly ServiceMailModel serviceMailModel;
+    private readonly ServiceGeneric<User> serviceUser;
 
     #region Constructor
     public ServiceMeritocracy(DataContext context, DataContext contextLog) : base(context)
@@ -50,6 +51,7 @@ namespace Manager.Services.Specific
         serviceMail = new ServiceGeneric<MailLog>(context);
         serviceMailModel = new ServiceMailModel(context);
         serviceSchooling = new ServiceGeneric<Schooling>(context);
+        serviceUser = new ServiceGeneric<User>(context);
       }
       catch (Exception e)
       {
@@ -71,6 +73,7 @@ namespace Manager.Services.Specific
       serviceLogMessages.SetUser(_user);
       serviceMail._user = _user;
       serviceSchooling._user = _user;
+      serviceUser._user = _user;
       serviceMailModel.SetUser(_user);
     }
     public void SetUser(BaseUser user)
@@ -88,6 +91,7 @@ namespace Manager.Services.Specific
       serviceLogMessages.SetUser(_user);
       serviceMail._user = user;
       serviceSchooling._user = _user;
+      serviceUser._user = _user;
       serviceMailModel.SetUser(_user);
     }
 
@@ -275,6 +279,7 @@ namespace Manager.Services.Specific
           person.DateLastOccupation = meritocracy.Person.OccupationDate;
           servicePerson.Update(person, null).Wait();
         }
+
 
         byte schoolingWeight = 0;
         byte companyDateWeight = 0;
@@ -808,6 +813,31 @@ namespace Manager.Services.Specific
         if (meritocracy.StatusMeritocracy == EnumStatusMeritocracy.End)
           meritocracy.DateEnd = DateTime.Now;
 
+        serviceMeritocracy.Update(meritocracy, null).Wait();
+        Task.Run(() => MathMeritocracy(meritocracy));
+
+        return "Meritocracy altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateSchooling(string id, string idschooling)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == id).Result;
+        var schooling = serviceSchooling.GetNewVersion(p => p._id == idschooling).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == meritocracy.Person._id).Result;
+        var user = serviceUser.GetNewVersion(p => p._id == person.User._id).Result;
+
+        person.User.Schooling = schooling.GetViewList();
+        Task.Run(() => servicePerson.Update(person, null));
+        Task.Run(() => serviceUser.Update(user, null));
+
+        meritocracy.Person.CurrentSchooling = schooling?.Name;
         serviceMeritocracy.Update(meritocracy, null).Wait();
         Task.Run(() => MathMeritocracy(meritocracy));
 
