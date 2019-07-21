@@ -15,7 +15,7 @@ namespace IntegrationService.Api
       Person = person;
       clientSkill = new HttpClient()
       {
-        BaseAddress = new Uri(string.Format("{0}/integrationserver/", Person.Url))
+        BaseAddress = new Uri(string.Format("{0}/", Person.Url).Replace("//", "//integrationserver."))
       };
       clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));

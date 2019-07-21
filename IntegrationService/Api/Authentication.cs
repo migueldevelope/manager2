@@ -13,7 +13,7 @@ namespace IntegrationService.Api
       {
         HttpClient clientAuthentication = new HttpClient()
         {
-          BaseAddress = new Uri(string.Format("{0}/manager/authentication", url))
+          BaseAddress = new Uri(string.Format("{0}/authentication", url).Replace("//", "//manager."))
         };
         var data = new
         {
