@@ -25,9 +25,7 @@ namespace Tools
             ServerLog = "ServerLog",
             SignalRService = "SignalRService",
             TokenServer = "TokenServer",
-            QueueName = "QueueName",
-            ServiceBusConnectionString = "ServiceBusConnectionString",
-            QueueBaseHelp = "QueueBaseHelp"
+            ServiceBusConnectionString = "ServiceBusConnectionString"
           }, fileName);
         }
         XmlSerializer xs = new XmlSerializer(typeof(Config));
@@ -61,9 +59,7 @@ namespace Tools
               ServerLog = Environment.GetEnvironmentVariable("ANALISA_SERVERLOG", EnvironmentVariableTarget.Machine),
               SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.Machine),
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Machine),
-              QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.Machine),
               ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Machine),
-              QueueBaseHelp = Environment.GetEnvironmentVariable("ANALISA_QUEUEBASEHELP", EnvironmentVariableTarget.Machine),
             };
         }
         else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Process) != null)
@@ -81,9 +77,7 @@ namespace Tools
               ServerLog = Environment.GetEnvironmentVariable("ANALISA_SERVERLOG", EnvironmentVariableTarget.Process),
               SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.Process),
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Process),
-              QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.Process),
-              ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Process),
-              QueueBaseHelp = Environment.GetEnvironmentVariable("ANALISA_QUEUEBASEHELP", EnvironmentVariableTarget.Process),
+              ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Process)
             };
         }
         else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.User) != null)
@@ -101,9 +95,7 @@ namespace Tools
               ServerLog = Environment.GetEnvironmentVariable("ANALISA_SERVERLOG", EnvironmentVariableTarget.User),
               SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.User),
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.User),
-              QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.User),
               ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.User),
-              QueueBaseHelp = Environment.GetEnvironmentVariable("ANALISA_QUEUEBASEHELP", EnvironmentVariableTarget.User),
             };
         }
 

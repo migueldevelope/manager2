@@ -35,8 +35,8 @@ namespace Attachment
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
-      string queueName = conn.QueueName;
-      string queueBaseHelp = conn.QueueBaseHelp;
+      string queueName = "journey";
+      string queueBaseHelp = "basehelp";
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName,serviceMaturity);

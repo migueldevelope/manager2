@@ -57,8 +57,8 @@ namespace Manager
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
-      string queueName = conn.QueueName;
-      string queueBaseHelp = conn.QueueBaseHelp;
+      string queueName = "journey";
+      string queueBaseHelp = "basehelp";
 
       //new MigrationHandle(_context._db).Migrate();
 
