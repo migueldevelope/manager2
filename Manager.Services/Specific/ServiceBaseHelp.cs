@@ -53,9 +53,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        BaseHelp item = serviceBaseHelp.GetNewVersion(p => p._id == id).Result;
+        BaseHelp item = serviceBaseHelp.GetFreeNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceBaseHelp.Update(item, null).Wait();
+        serviceBaseHelp.UpdateAccount(item, null).Wait();
         return "BaseHelp deleted!";
       }
       catch (Exception e)
@@ -68,9 +68,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        BaseHelp basehelp = serviceBaseHelp.GetNewVersion(p => p._id == idBaseHelp).Result;
+        BaseHelp basehelp = serviceBaseHelp.GetFreeNewVersion(p => p._id == idBaseHelp).Result;
         basehelp.Attachment = new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid };
-        serviceBaseHelp.Update(basehelp, null).Wait();
+        serviceBaseHelp.UpdateAccount(basehelp, null).Wait();
       }
       catch (Exception e)
       {
@@ -82,7 +82,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        BaseHelp basehelp = serviceBaseHelp.InsertNewVersion(new BaseHelp()
+        BaseHelp basehelp = serviceBaseHelp.InsertFreeNewVersion(new BaseHelp()
         {
           _id = view._id,
           Name = view.Name,
@@ -101,7 +101,7 @@ namespace Manager.Services.Specific
         BaseHelp basehelp = serviceBaseHelp.GetNewVersion(p => p._id == id).Result;
         basehelp.AccessLink = link;
 
-        serviceBaseHelp.Update(basehelp, null).Wait();
+        serviceBaseHelp.UpdateAccount(basehelp, null).Wait();
         return "BaseHelp altered!";
       }
       catch (Exception e)
@@ -114,7 +114,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        BaseHelp basehelp = serviceBaseHelp.GetNewVersion(p => p._id == view._id).Result;
+        BaseHelp basehelp = serviceBaseHelp.GetFreeNewVersion(p => p._id == view._id).Result;
 
         basehelp.Name = view.Name;
         basehelp.Content = view.Content;
@@ -123,7 +123,7 @@ namespace Manager.Services.Specific
         basehelp.Infra = view.Infra;
         basehelp.Manager = view.Manager;
 
-        serviceBaseHelp.Update(basehelp, null).Wait();
+        serviceBaseHelp.UpdateAccount(basehelp, null).Wait();
 
 
         return "BaseHelp altered!";
@@ -152,7 +152,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceBaseHelp.GetNewVersion(p => p._id == id).Result.GetViewCrud();
+        return serviceBaseHelp.GetFreeNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -163,7 +163,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceBaseHelp.GetNewVersion(p => (p.Name.ToLower() == text.ToLower() || p.Content.ToLower() == text.ToLower())).Result.GetViewCrud();
+        return serviceBaseHelp.GetFreeNewVersion(p => (p.Name.ToLower() == text.ToLower() || p.Content.ToLower() == text.ToLower())).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -174,7 +174,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListBaseHelp> detail = serviceBaseHelp.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+        List<ViewListBaseHelp> detail = serviceBaseHelp.GetAllFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
           .Select(x => new ViewListBaseHelp()
           {
             _id = x._id,
@@ -182,7 +182,7 @@ namespace Manager.Services.Specific
             AccessCount = x.AccessCount,
             Content = x.Content
           }).ToList();
-        total = serviceBaseHelp.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceBaseHelp.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -234,7 +234,7 @@ namespace Manager.Services.Specific
         _idAccount = view._idAccount
       });
 
-      BaseHelp basehelp = serviceBaseHelp.GetNewVersion(p => p._id == view._id).Result;
+      BaseHelp basehelp = serviceBaseHelp.GetFreeNewVersion(p => p._id == view._id).Result;
       basehelp.AccessCount += 1;
       serviceBaseHelp.Update(basehelp, null).Wait();
 
