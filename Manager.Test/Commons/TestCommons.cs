@@ -14,10 +14,10 @@ namespace Manager.Test.Commons
   {
     public DataContext context;
     public BaseUser baseUser;
-    public IServiceMaturity serviceMaturity;
-    public IServiceControlQueue serviceControlQueue;
-    string serviceBusConnectionString = "Endpoint=sb://analisa.servicebus.windows.net/;SharedAccessKeyName=analisahomologacao;SharedAccessKey=MS943jYNc9KmGP3HoIcL/eGhxhgIEAscB5R5as48Xik=;";
-    string queueName = "analisahomologacao";
+    //public IServiceMaturity serviceMaturity;
+    //public IServiceControlQueue serviceControlQueue;
+    //string serviceBusConnectionString = "Endpoint=sb://analisa.servicebus.windows.net/;SharedAccessKeyName=analisahomologacao;SharedAccessKey=MS943jYNc9KmGP3HoIcL/eGhxhgIEAscB5R5as48Xik=;";
+    //string queueName = "analisahomologacao";
 
     public void Dispose()
     {
@@ -28,11 +28,9 @@ namespace Manager.Test.Commons
     {
       try
       {
-        context = new DataContext("mongodb://test:bti9010@10.0.0.14:27017/evaluations_test", "evaluations_test");
-
-        serviceMaturity = new ServiceMaturity(context);
-        serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
-
+        context = new DataContext("mongodb://analisa:bti9010@10.0.0.16:27017/analisa_teste", "analisa_teste");
+        //serviceMaturity = new ServiceMaturity(context);
+        //serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
         // Limpar todas as collections
       }
       catch (Exception e)
@@ -45,10 +43,10 @@ namespace Manager.Test.Commons
     {
       try
       {
-        context = new DataContext("mongodb://test:bti9010@10.0.0.14:27017/evaluations_test", "evaluations_test");
+        context = new DataContext("mongodb://analisa:bti9010@10.0.0.16:27017/analisa_teste", "analisa_teste");
 
-        serviceMaturity = new ServiceMaturity(context);
-        serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
+        //serviceMaturity = new ServiceMaturity(context);
+        //serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
 
         // Limpar todas as collections
 

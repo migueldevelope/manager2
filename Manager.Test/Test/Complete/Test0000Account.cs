@@ -14,21 +14,21 @@ using Xunit;
 
 namespace Manager.Test.Test.Complete
 {
-  public class TestBasic : TestCommons<Account>
+  public class Test0000Account : TestCommons<Account>
   {
     private readonly IServiceAccount serviceAccount;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private IServiceIntegration serviceIntegration;
 
-    public TestBasic()
+    public Test0000Account()
     {
       try
       {
-        base.InitOffAccount();
+        InitOffAccount();
         serviceAccount = new ServiceAccount(context, context);
-        servicePerson = new ServiceGeneric<Person>(context);
-        serviceOccupation = new ServiceGeneric<Occupation>(context);
+        //servicePerson = new ServiceGeneric<Person>(context);
+        //serviceOccupation = new ServiceGeneric<Occupation>(context);
       }
       catch (Exception e)
       {
@@ -41,14 +41,13 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        var view = new ViewNewAccount()
+        serviceAccount.NewAccount(new ViewNewAccount()
         {
           Mail = "suporte@jmsoft.com.br",
           NameAccount = "Support",
           NameCompany = "Support",
           Password = "1234"
-        };
-        this.serviceAccount.NewAccount(view);
+        });
       }
       catch (Exception e)
       {
