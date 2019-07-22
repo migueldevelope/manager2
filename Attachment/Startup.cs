@@ -36,6 +36,7 @@ namespace Attachment
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
+      string queueBaseHelp = conn.QueueBaseHelp;
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName,serviceMaturity);
@@ -54,8 +55,10 @@ namespace Attachment
       IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
+      IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString, queueBaseHelp);
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
 
+      services.AddSingleton(_ => serviceBaseHelp);
       services.AddSingleton(_ => serviceMaturity);
       services.AddSingleton(_ => serviceCertification);
       services.AddSingleton(_ => serviceUser);
