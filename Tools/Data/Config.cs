@@ -31,6 +31,7 @@ namespace Tools.Data
     public string ServiceBusConnectionString { get; set; }
     [XmlElement("QueueName")]
     public string QueueName { get; set; }
-
+    [XmlElement("QueueBaseHelp")]
+    public string QueueBaseHelp { get; set; }
   }
 }

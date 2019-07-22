@@ -58,6 +58,7 @@ namespace Manager
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
       string queueName = conn.QueueName;
+      string queueBaseHelp = conn.QueueBaseHelp;
 
       //new MigrationHandle(_context._db).Migrate();
 
@@ -66,6 +67,7 @@ namespace Manager
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
+      IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString, queueBaseHelp);
 
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
@@ -94,7 +96,9 @@ namespace Manager
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
+      serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
+      services.AddSingleton(_ => serviceBaseHelp);
       services.AddSingleton(_ => serviceMaturity);
       services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceMeritocracy);

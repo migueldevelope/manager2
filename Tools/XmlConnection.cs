@@ -26,7 +26,8 @@ namespace Tools
             SignalRService = "SignalRService",
             TokenServer = "TokenServer",
             QueueName = "QueueName",
-            ServiceBusConnectionString = "ServiceBusConnectionString"
+            ServiceBusConnectionString = "ServiceBusConnectionString",
+            QueueBaseHelp = "QueueBaseHelp"
           }, fileName);
         }
         XmlSerializer xs = new XmlSerializer(typeof(Config));
@@ -62,6 +63,7 @@ namespace Tools
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Machine),
               QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.Machine),
               ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Machine),
+              QueueBaseHelp = Environment.GetEnvironmentVariable("ANALISA_QUEUEBASEHELP", EnvironmentVariableTarget.Machine),
             };
         }
         else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Process) != null)
@@ -81,6 +83,7 @@ namespace Tools
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Process),
               QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.Process),
               ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Process),
+              QueueBaseHelp = Environment.GetEnvironmentVariable("ANALISA_QUEUEBASEHELP", EnvironmentVariableTarget.Process),
             };
         }
         else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.User) != null)
@@ -100,6 +103,7 @@ namespace Tools
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.User),
               QueueName = Environment.GetEnvironmentVariable("ANALISA_QUEUENAME", EnvironmentVariableTarget.User),
               ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.User),
+              QueueBaseHelp = Environment.GetEnvironmentVariable("ANALISA_QUEUEBASEHELP", EnvironmentVariableTarget.User),
             };
         }
 
