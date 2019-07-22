@@ -134,12 +134,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public void Count(string id)
+    public string Count(string id)
     {
       try
       {
         var data = new ViewIdAccount() { _id = id, _idAccount = _user._idAccount };
         SendMessageAsync(JsonConvert.SerializeObject(data));
+        return "count";
       }
       catch (Exception e)
       {

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Manager.Controllers
 {
   /// <summary>
-  /// Controlador da empresa
+  /// Controlador da base de conhecimento
   /// </summary>
   [Produces("application/json")]
   [Route("basehelp")]
@@ -22,7 +22,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Construtor
     /// </summary>
-    /// <param name="_service">Serviço da empresa</param>
+    /// <param name="_service">Serviço da base de conhecimento</param>
     /// <param name="contextAccessor">Token de segurança</param>
     public BaseHelpController(IServiceBaseHelp _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
@@ -33,12 +33,12 @@ namespace Manager.Controllers
 
     #region BaseHelp
     /// <summary>
-    /// Listar as empresas
+    /// Listar as base de conhecimentos
     /// </summary>
     /// <param name="count">Quantidade de registros</param>
     /// <param name="page">Página para mostrar</param>
-    /// <param name="filter">Filtro para o nome da empresa</param>
-    /// <returns>Lista de empresas cadastradas</returns>
+    /// <param name="filter">Filtro para o nome da base de conhecimento</param>
+    /// <returns>Lista de base de conhecimentos cadastradas</returns>
     [Authorize]
     [HttpGet]
     [Route("list")]
@@ -50,9 +50,9 @@ namespace Manager.Controllers
       return await Task.Run(() => result);
     }
     /// <summary>
-    /// Cadastrar uma nova empresa
+    /// Cadastrar uma nova base de conhecimento
     /// </summary>
-    /// <param name="view">Objeto de cadastro da empresa</param>
+    /// <param name="view">Objeto de cadastro da base de conhecimento</param>
     /// <returns></returns>
     [HttpPost]
     [Route("new")]
@@ -61,10 +61,10 @@ namespace Manager.Controllers
       return await Task.Run(() => Ok(service.New(view)));
     }
     /// <summary>
-    /// Retorar a empresa para manutenção
+    /// Retorar a base de conhecimento para manutenção
     /// </summary>
-    /// <param name="id">Identificador da empresa</param>
-    /// <returns>Objeto de manutenção da empresa</returns>
+    /// <param name="id">Identificador da base de conhecimento</param>
+    /// <returns>Objeto de manutenção da base de conhecimento</returns>
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
@@ -72,10 +72,23 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => service.Get(id));
     }
+
     /// <summary>
-    /// Alterar a empresa
+    /// Retorar a base de conhecimento para manutenção
     /// </summary>
-    /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <returns>Objeto de manutenção da base de conhecimento</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("gettext")]
+    public async Task<ViewCrudBaseHelp> GetText([FromBody]ViewText text)
+    {
+      return await Task.Run(() => service.GetByText(text.Text));
+    }
+
+    /// <summary>
+    /// Alterar a base de conhecimento
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da base de conhecimento</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
@@ -84,10 +97,38 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => Ok(service.Update(view)));
     }
+
     /// <summary>
-    /// Excluir uma empresa
+    /// Alterar a base de conhecimento
     /// </summary>
-    /// <param name="id">Identificação da empresa</param>
+    /// <param name="id">Objeto de manutenção da base de conhecimento</param>
+    /// <param name="link">Objeto de manutenção da base de conhecimento</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatelink/{link}/{id}")]
+    public async Task<IActionResult> UpdateLink(string link, string id)
+    {
+      return await Task.Run(() => Ok(service.UpdateLink(link, id)));
+    }
+
+    /// <summary>
+    /// Alterar a base de conhecimento
+    /// </summary>
+    /// <param name="id">identificador</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("count/{id}")]
+    public async Task<IActionResult> Count(string id)
+    {
+      return await Task.Run(() => Ok(service.Count(id)));
+    }
+
+    /// <summary>
+    /// Excluir uma base de conhecimento
+    /// </summary>
+    /// <param name="id">Identificação da base de conhecimento</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]

@@ -1006,6 +1006,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Inclusão
     /// </summary>
+    /// <param name="idcompany">id da empresa</param>
     /// <param name="questions">Objeto Crud</param>
     /// <returns></returns>
     [Authorize]

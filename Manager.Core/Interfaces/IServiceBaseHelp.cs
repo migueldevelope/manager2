@@ -16,9 +16,10 @@ namespace Manager.Core.Interfaces
     string New(ViewCrudBaseHelp view);
     string Update(ViewCrudBaseHelp view);
     ViewCrudBaseHelp Get(string id);
-    void Count(string id);
+    string Count(string id);
     ViewCrudBaseHelp GetByText(string text);
     List<ViewListBaseHelp> List(ref long total, int count = 10, int page = 1, string filter = "");
     void RegisterOnMessageHandlerAndReceiveMesssages();
+    string UpdateLink(string link, string id);
   }
 }
