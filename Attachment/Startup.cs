@@ -57,7 +57,9 @@ namespace Attachment
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
       IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString, queueBaseHelp);
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
+      IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context);
 
+      services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);
       services.AddSingleton(_ => serviceMaturity);
       services.AddSingleton(_ => serviceCertification);

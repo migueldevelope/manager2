@@ -36,7 +36,7 @@ namespace ManagerMessages
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
-      string queueName = conn.QueueName;
+      string queueName = "journey";
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
