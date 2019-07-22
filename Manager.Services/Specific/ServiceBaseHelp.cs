@@ -69,6 +69,7 @@ namespace Manager.Services.Specific
       try
       {
         BaseHelp basehelp = serviceBaseHelp.GetFreeNewVersion(p => p._id == idBaseHelp).Result;
+        basehelp.AccessLink = url;
         basehelp.Attachment = new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid };
         serviceBaseHelp.UpdateAccount(basehelp, null).Wait();
       }
@@ -159,22 +160,12 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudBaseHelp GetByText(string text)
-    {
-      try
-      {
-        return serviceBaseHelp.GetFreeNewVersion(p => (p.Name.ToLower() == text.ToLower() || p.Content.ToLower() == text.ToLower())).Result.GetViewCrud();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+
     public List<ViewListBaseHelp> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        List<ViewListBaseHelp> detail = serviceBaseHelp.GetAllFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+        List<ViewListBaseHelp> detail = serviceBaseHelp.GetAllFreeNewVersion(p => (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "Name").Result
           .Select(x => new ViewListBaseHelp()
           {
             _id = x._id,

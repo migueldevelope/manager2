@@ -73,17 +73,6 @@ namespace Manager.Controllers
       return await Task.Run(() => service.Get(id));
     }
 
-    /// <summary>
-    /// Retorar a base de conhecimento para manutenção
-    /// </summary>
-    /// <returns>Objeto de manutenção da base de conhecimento</returns>
-    [Authorize]
-    [HttpPost]
-    [Route("gettext")]
-    public async Task<ViewCrudBaseHelp> GetText([FromBody]ViewText text)
-    {
-      return await Task.Run(() => service.GetByText(text.Text));
-    }
 
     /// <summary>
     /// Alterar a base de conhecimento

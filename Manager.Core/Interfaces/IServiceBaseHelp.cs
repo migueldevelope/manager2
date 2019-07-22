@@ -17,7 +17,6 @@ namespace Manager.Core.Interfaces
     string Update(ViewCrudBaseHelp view);
     ViewCrudBaseHelp Get(string id);
     string Count(string id);
-    ViewCrudBaseHelp GetByText(string text);
     List<ViewListBaseHelp> List(ref long total, int count = 10, int page = 1, string filter = "");
     void RegisterOnMessageHandlerAndReceiveMesssages();
     string UpdateLink(string link, string id);
