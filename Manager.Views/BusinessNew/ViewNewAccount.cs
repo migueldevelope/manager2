@@ -7,5 +7,6 @@
     public string NameCompany { get; set; }
     public string Password { get; set; }
     public string InfoClient { get; set; }
+    public string Nickname { get; set; }
   }
 }

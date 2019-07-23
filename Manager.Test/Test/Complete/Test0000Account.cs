@@ -25,10 +25,10 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
-        InitOffAccount();
+        InitOffBase();
         serviceAccount = new ServiceAccount(context, context);
-        //servicePerson = new ServiceGeneric<Person>(context);
-        //serviceOccupation = new ServiceGeneric<Occupation>(context);
+        servicePerson = new ServiceGeneric<Person>(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
       }
       catch (Exception e)
       {
@@ -41,12 +41,14 @@ namespace Manager.Test.Test.Complete
     {
       try
       {
+        // Create new account
         serviceAccount.NewAccount(new ViewNewAccount()
         {
-          Mail = "suporte@jmsoft.com.br",
-          NameAccount = "Support",
-          NameCompany = "Support",
-          Password = "1234"
+          Mail = "juremir@jmsoft.com.br",
+          NameAccount = "Teste Account",
+          NameCompany = "Teste Company",
+          Password = "1234",
+          Nickname = "Teste"
         });
       }
       catch (Exception e)
@@ -360,17 +362,11 @@ namespace Manager.Test.Test.Complete
             TypeUser = EnumTypeUser.Employee
           });
         }
-
-//        var result = this.serviceIntegration.ImportPerson(list);
-//
-//        this.serviceIntegration.UpdateManager();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
   }
-
 }
