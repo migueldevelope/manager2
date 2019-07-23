@@ -214,7 +214,7 @@ namespace Manager.Services.Specific
         }).ToList();
         total = serviceBaseHelp.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail;
+        return detail.OrderByDescending(p => p.AccessCount).ToList();
       }
       catch (Exception e)
       {
