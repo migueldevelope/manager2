@@ -91,7 +91,7 @@ namespace Manager.Services.Specific
           Infra = view.Infra,
           Manager = view.Manager
         }).Result;
-        return "BaseHelp added!";
+        return basehelp._id;
       }
       catch (Exception e)
       {
@@ -265,7 +265,7 @@ namespace Manager.Services.Specific
 
       BaseHelp basehelp = serviceBaseHelp.GetFreeNewVersion(p => p._id == view._id).Result;
       basehelp.AccessCount += 1;
-      serviceBaseHelp.Update(basehelp, null).Wait();
+      serviceBaseHelp.UpdateAccount(basehelp, null).Wait();
 
       await queueClient.CompleteAsync(message.SystemProperties.LockToken);
     }
