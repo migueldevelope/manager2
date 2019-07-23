@@ -87,6 +87,11 @@ namespace Manager.Services.Specific
         {
           _id = view._id,
           Name = view.Name,
+          AccessLink = view.AccessLink,
+          Content = view.Content,
+          Employee = view.Employee,
+          Infra = view.Infra,
+          Manager =view.Manager
         }).Result;
         return "BaseHelp added!";
       }
