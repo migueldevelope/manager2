@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Data;
+using Manager.Data.Infrastructure;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
@@ -12,20 +14,36 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 using Tools;
 
 namespace Attachment
 {
+  /// <summary>
+  /// 
+  /// </summary>
   public class Startup
   {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configuration"></param>
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public IConfiguration Configuration { get; }
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
@@ -78,6 +96,10 @@ namespace Attachment
       services.AddSingleton(_ => serviceEvent);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
@@ -117,9 +139,35 @@ namespace Attachment
       ));
 
       services.AddMvc();
+      // Configurando o serviço de documentação do Swagger
+      services.AddSwaggerGen(c =>
+      {
+        c.SwaggerDoc("v1",
+            new Info
+            {
+              Title = "Attachment - Analisa Fluid Careers",
+              Version = "v1",
+              Description = "Sistema de carreiras fluidas",
+              Contact = new Contact
+              {
+                Name = "Jm Soft Informática Ltda",
+                Url = "http://www.jmsoft.com.br"
+              }
+            });
+        string caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
+        string nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
+        string caminhoXmlDoc = Path.Combine(caminhoAplicacao, $"{nomeAplicacao}.xml");
+        c.IncludeXmlComments(caminhoXmlDoc);
+      });
+
       RegistreServices(services);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="app"></param>
+    /// <param name="env"></param>
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
@@ -128,6 +176,12 @@ namespace Attachment
       app.UseAuthentication();
       app.UseCors("AllowAll");
       app.UseMvc();
+      app.UseSwagger();
+      app.UseSwaggerUI(c =>
+      {
+        c.RoutePrefix = "help";
+        c.SwaggerEndpoint("../swagger/v1/swagger.json", "Attachment");
+      });
     }
   }
 }

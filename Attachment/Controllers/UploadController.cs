@@ -20,6 +20,9 @@ using Tools.Data;
 
 namespace EdeskIntegration.Controllers
 {
+  /// <summary>
+  /// 
+  /// </summary>
   [Route("upload")]
   public class UploadController : Controller
   {
@@ -34,6 +37,17 @@ namespace EdeskIntegration.Controllers
     private readonly DataContext context;
     private readonly string blobKey;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contextAccessor"></param>
+    /// <param name="_companyService"></param>
+    /// <param name="_personService"></param>
+    /// <param name="_planService"></param>
+    /// <param name="_serviceEvent"></param>
+    /// <param name="_serviceCertification"></param>
+    /// <param name="_serviceBaseHelp"></param>
+    /// <param name="_serviceRecommendation"></param>
     public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _companyService, IServicePerson _personService, IServicePlan _planService,
       IServiceEvent _serviceEvent, IServiceCertification _serviceCertification, IServiceBaseHelp _serviceBaseHelp, IServiceRecommendation _serviceRecommendation)
     {
@@ -83,6 +97,10 @@ namespace EdeskIntegration.Controllers
       serviceRecommendation.SetUser(contextAccessor);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     public async Task<ObjectResult> Post()
@@ -132,6 +150,10 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("link")]
     public async Task<string> PostLink()
@@ -182,7 +204,11 @@ namespace EdeskIntegration.Controllers
       return "";
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idcompany"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{idcompany}/logocompany")]
     public async Task<ObjectResult> PostLogo(string idcompany)
@@ -236,6 +262,11 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idbasehelp"></param>
+    /// <returns></returns>
     [HttpPost("{idbasehelp}/basehelp")]
     public async Task<ObjectResult> PostBaseHelp(string idbasehelp)
     {
@@ -288,6 +319,11 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idrecommendation"></param>
+    /// <returns></returns>
     [HttpPost("{idrecommendation}/recommendation")]
     public async Task<ObjectResult> PostRecommendation(string idrecommendation)
     {
@@ -340,7 +376,11 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idevent"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{idevent}/event")]
     public async Task<ObjectResult> PostEvent(string idevent)
@@ -394,6 +434,11 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="ideventhistoric"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{ideventhistoric}/eventhistoric")]
     public async Task<ObjectResult> PostEventHistoric(string ideventhistoric)
@@ -447,6 +492,12 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmonitoring"></param>
+    /// <param name="idplan"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{idmonitoring}/plan/{idplan}")]
     public async Task<ObjectResult> PostPlan(string idmonitoring, string idplan)
@@ -501,6 +552,11 @@ namespace EdeskIntegration.Controllers
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idcertification"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("certification/{idcertification}")]
     public async Task<ObjectResult> PostCertification(string idcertification)
@@ -624,6 +680,11 @@ namespace EdeskIntegration.Controllers
     //  return Ok("Attachment deleted!");
     //}
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="id"></param>
+      /// <returns></returns>
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<ObjectResult> Delete(string id)
