@@ -213,6 +213,7 @@ namespace Manager.Services.Specific
           Content = x.Content
         }).ToList();
         total = serviceBaseHelp.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
         return detail;
       }
       catch (Exception e)
