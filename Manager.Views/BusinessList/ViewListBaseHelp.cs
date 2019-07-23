@@ -7,6 +7,7 @@ namespace Manager.Views.BusinessList
   public class ViewListBaseHelp: _ViewListBase
   {
     public string Content { get; set; }
+    public string AccessLink { get; set; }
     public long AccessCount { get; set; }
   }
 }
