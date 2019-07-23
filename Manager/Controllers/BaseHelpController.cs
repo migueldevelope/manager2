@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,26 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
+
+    /// <summary>
+    /// Listar as base de conhecimentos
+    /// </summary>
+    /// <param name="portal">portal</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da base de conhecimento</param>
+    /// <returns>Lista de base de conhecimentos cadastradas</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listtext/{portal}")]
+    public async Task<List<ViewListBaseHelp>> ListText(EnumPortal portal, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      List<ViewListBaseHelp> result = service.ListText(portal, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Cadastrar uma nova base de conhecimento
     /// </summary>

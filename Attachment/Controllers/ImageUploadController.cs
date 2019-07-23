@@ -17,6 +17,9 @@ using Tools.Data;
 
 namespace EdeskIntegration.Controllers
 {
+  /// <summary>
+  /// 
+  /// </summary>
   [Route("imageupload")]
   public class ImageController : Controller
   {
@@ -25,6 +28,11 @@ namespace EdeskIntegration.Controllers
     private readonly ObjectId account;
     private readonly string blobKey;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contextAccessor"></param>
     public ImageController(IHttpContextAccessor contextAccessor)
     {
       BaseUser baseUser = new BaseUser();
@@ -55,6 +63,12 @@ namespace EdeskIntegration.Controllers
       service = new ServiceGeneric<Attachments>(context);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <param name="extension"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{filename}/{extension}")]
     public async Task<ObjectResult> Post(string filename, string extension)
@@ -62,6 +76,12 @@ namespace EdeskIntegration.Controllers
       return await UploadImage(string.Format("{0}.{1}", filename, extension), "systemimage");
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <param name="extension"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{filename}/{extension}/account")]
     public async Task<ObjectResult> PostKeyAccount(string filename, string extension)

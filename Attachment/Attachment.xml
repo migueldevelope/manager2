@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Attachment</name>
+    </assembly>
+    <members>
+        <member name="T:EdeskIntegration.Controllers.DownloadController">
+            <summary>
+            Download
+            </summary>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.DownloadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.DownloadController.GetUrl(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EdeskIntegration.Controllers.ImageDownloadController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.ImageDownloadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.ImageDownloadController.Get(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <param name="extension"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.ImageDownloadController.GetUrl(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <param name="extension"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EdeskIntegration.Controllers.ImageController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.ImageController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.ImageController.Post(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <param name="extension"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.ImageController.PostKeyAccount(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <param name="extension"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EdeskIntegration.Controllers.UploadController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Manager.Core.Interfaces.IServiceCompany,Manager.Core.Interfaces.IServicePerson,Manager.Core.Interfaces.IServicePlan,Manager.Core.Interfaces.IServiceEvent,Manager.Core.Interfaces.IServiceCertification,Manager.Core.Interfaces.IServiceBaseHelp,Manager.Core.Interfaces.IServiceRecommendation)">
+            <summary>
+            
+            </summary>
+            <param name="contextAccessor"></param>
+            <param name="_companyService"></param>
+            <param name="_personService"></param>
+            <param name="_planService"></param>
+            <param name="_serviceEvent"></param>
+            <param name="_serviceCertification"></param>
+            <param name="_serviceBaseHelp"></param>
+            <param name="_serviceRecommendation"></param>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.Post">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostLink">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostLogo(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostBaseHelp(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idbasehelp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostRecommendation(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idrecommendation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostEvent(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idevent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostEventHistoric(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="ideventhistoric"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostPlan(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmonitoring"></param>
+            <param name="idplan"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostCertification(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcertification"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.Delete(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Attachment.Controllers.ValuesController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Attachment.Controllers.ValuesController.Get">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Attachment.Controllers.ValuesController.Get(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Attachment.Controllers.ValuesController.Post(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Attachment.Controllers.ValuesController.Put(System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Attachment.Controllers.ValuesController.Delete(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="T:Attachment.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Attachment.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Attachment.Program.BuildWebHost(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Attachment.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Attachment.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:Attachment.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Attachment.Startup.RegistreServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Attachment.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Attachment.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+    </members>
+</doc>

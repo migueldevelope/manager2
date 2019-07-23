@@ -10,13 +10,25 @@ using Microsoft.Extensions.Logging;
 
 namespace Attachment
 {
+  /// <summary>
+  /// 
+  /// </summary>
   public class Program
   {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="args"></param>
     public static void Main(string[] args)
     {
       BuildWebHost(args).Run();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="args"></param>
+    /// <returns></returns>
     public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
        .UseUrls("http://0.0.0.0:5202/")

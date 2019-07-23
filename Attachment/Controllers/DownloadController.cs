@@ -14,6 +14,9 @@ using Tools.Data;
 
 namespace EdeskIntegration.Controllers
 {
+  /// <summary>
+  /// Download
+  /// </summary>
   [Route("download")]
   public class DownloadController : Controller
   {
@@ -22,6 +25,10 @@ namespace EdeskIntegration.Controllers
     private readonly string account;
     private readonly string blobKey;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contextAccessor"></param>
     public DownloadController(IHttpContextAccessor contextAccessor)
     {
       BaseUser baseUser = new BaseUser();
@@ -58,6 +65,11 @@ namespace EdeskIntegration.Controllers
       service.User(contextAccessor);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("{id}/url")]
     public string GetUrl(string id)

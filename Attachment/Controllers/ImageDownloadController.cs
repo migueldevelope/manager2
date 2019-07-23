@@ -18,6 +18,9 @@ using Tools.Data;
 
 namespace EdeskIntegration.Controllers
 {
+  /// <summary>
+  /// 
+  /// </summary>
   [Route("imagedownload")]
   public class ImageDownloadController : Controller
   {
@@ -27,6 +30,10 @@ namespace EdeskIntegration.Controllers
     private readonly string blobKey;
     private readonly HttpContextAccessor aux;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contextAccessor"></param>
     public ImageDownloadController(IHttpContextAccessor contextAccessor)
     {
       BaseUser baseUser = new BaseUser();
@@ -59,6 +66,12 @@ namespace EdeskIntegration.Controllers
       aux = (HttpContextAccessor)contextAccessor;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <param name="extension"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("{filename}/{extension}")]
     public async Task<HttpResponseMessage> Get(string filename, string extension)
@@ -85,6 +98,12 @@ namespace EdeskIntegration.Controllers
       return result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <param name="extension"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("{filename}/extension/url")]
     public async Task<string> GetUrl(string filename, string extension)

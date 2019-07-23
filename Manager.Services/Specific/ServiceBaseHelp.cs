@@ -53,9 +53,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        BaseHelp item = serviceBaseHelp.GetFreeNewVersion(p => p._id == id).Result;
-        item.Status = EnumStatus.Disabled;
-        serviceBaseHelp.UpdateAccount(item, null).Wait();
+        serviceBaseHelp.Delete(id, false);
         return "BaseHelp deleted!";
       }
       catch (Exception e)
@@ -87,8 +85,13 @@ namespace Manager.Services.Specific
         {
           _id = view._id,
           Name = view.Name,
+          AccessLink = view.AccessLink,
+          Content = view.Content,
+          Employee = view.Employee,
+          Infra = view.Infra,
+          Manager = view.Manager
         }).Result;
-        return "BaseHelp added!";
+        return basehelp._id;
       }
       catch (Exception e)
       {
@@ -182,6 +185,42 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListBaseHelp> ListText(EnumPortal portal, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        var list = new List<BaseHelp>();
+
+        if (portal == EnumPortal.Infra)
+          list = serviceBaseHelp.GetAllFreeNewVersion(p => p.Infra == true
+        & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "AccessCount Desc").Result;
+
+        else if (portal == EnumPortal.Manager)
+          list = serviceBaseHelp.GetAllFreeNewVersion(p => p.Manager == true
+        & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "AccessCount Desc").Result;
+
+        else
+          list = serviceBaseHelp.GetAllFreeNewVersion(p => p.Employee == true
+          & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "AccessCount Desc").Result;
+
+
+        List<ViewListBaseHelp> detail = list.Select(x => new ViewListBaseHelp()
+        {
+          _id = x._id,
+          Name = x.Name,
+          AccessCount = x.AccessCount,
+          AccessLink = x.AccessLink,
+          Content = x.Content
+        }).ToList();
+        total = serviceBaseHelp.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail.OrderByDescending(p => p.AccessCount).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     #endregion
 
@@ -227,7 +266,7 @@ namespace Manager.Services.Specific
 
       BaseHelp basehelp = serviceBaseHelp.GetFreeNewVersion(p => p._id == view._id).Result;
       basehelp.AccessCount += 1;
-      serviceBaseHelp.Update(basehelp, null).Wait();
+      serviceBaseHelp.UpdateAccount(basehelp, null).Wait();
 
       await queueClient.CompleteAsync(message.SystemProperties.LockToken);
     }
