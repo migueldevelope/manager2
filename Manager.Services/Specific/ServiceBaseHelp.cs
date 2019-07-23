@@ -193,15 +193,15 @@ namespace Manager.Services.Specific
 
         if (portal == EnumPortal.Infra)
           list = serviceBaseHelp.GetAllFreeNewVersion(p => p.Infra == true
-        & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "Name").Result;
+        & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "AccessCount Desc").Result;
 
         else if (portal == EnumPortal.Manager)
           list = serviceBaseHelp.GetAllFreeNewVersion(p => p.Manager == true
-        & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "Name").Result;
+        & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "AccessCount Desc").Result;
 
         else
           list = serviceBaseHelp.GetAllFreeNewVersion(p => p.Employee == true
-          & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "Name").Result;
+          & (p.Name.ToUpper().Contains(filter.ToUpper()) || p.Content.ToUpper().Contains(filter.ToUpper())), count, count * (page - 1), "AccessCount Desc").Result;
 
 
         List<ViewListBaseHelp> detail = list.Select(x => new ViewListBaseHelp()
