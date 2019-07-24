@@ -17,7 +17,7 @@ namespace Manager.Services.Commons
       string webRootPath = _hostingEnvironment.WebRootPath;
       string newPath = Path.Combine(webRootPath, folderName);*/
 
-      string fullPath = @"SALARYSCALE.xlsx";
+      string fullPath = @"Models/SALARYSCALE.xlsx";
 
       StringBuilder sb = new StringBuilder();
       ISheet sheet;
