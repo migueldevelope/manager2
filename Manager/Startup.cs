@@ -93,7 +93,7 @@ namespace Manager
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer);
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
-      IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context);
+      IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
