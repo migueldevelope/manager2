@@ -20,16 +20,5 @@ namespace Manager.Controllers
       return new string[] { "version", "0.000000035" };
     }
 
-    /// <summary>
-    /// teste excel
-    /// </summary>
-    /// <returns></returns>
-    [Route("excel")]
-    [HttpGet]
-    public double[][] Excel()
-    {
-      var i = new ServiceExcel();
-      return i.ImportSalaryScale();
-    }
   }
 }
