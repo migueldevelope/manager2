@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -370,6 +371,50 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string ImportSalaryScale(string idsalaryscale, Stream stream)
+    {
+      try
+      {
+        var serviceExcel = new ServiceExcel();
+        var tuple = serviceExcel.ImportSalaryScale(stream);
+        var import = tuple.Item1;
+        var gradename = tuple.Item2;
+        var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+
+        for (int row = 0; row < 50; row++)
+        {
+          if (import[row][0].ToString() != string.Empty)
+          {
+            var grade = new Grade();
+            grade.Order = row + 1;
+            grade.Name = gradename[row];
+            grade.ListSteps = new List<ListSteps>();
+
+            for (int col = 0; col < 8; col++)
+            {
+              if (import[row][col].ToString() != string.Empty)
+              {
+                var step = new ListSteps();
+                step.Step = (EnumSteps)col;
+                step.Salary = decimal.Parse(import[row][col].ToString());
+                grade.ListSteps.Add(step);
+              }
+            }
+
+            salaryScale.Grades.Add(grade);
+          }
+        }
+        var scale = serviceSalaryScale.Update(salaryScale, null);
+
+        return "import ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
   }

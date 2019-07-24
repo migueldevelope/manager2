@@ -76,7 +76,9 @@ namespace Attachment
       IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString, queueBaseHelp);
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context);
+      IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
 
+      services.AddSingleton(_ => serviceSalaryScale);
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);
       services.AddSingleton(_ => serviceMaturity);

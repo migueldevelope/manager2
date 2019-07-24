@@ -3,6 +3,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
@@ -26,5 +27,6 @@ namespace Manager.Core.Interfaces
     ViewCrudGrade GetGrade(string idsalaryscale, string id);
     string UpdateGradePosition(string idsalaryscale, string idgrade, int position);
     string UpdateStep(ViewCrudStep view);
+    string ImportSalaryScale(string idsalaryscale, Stream stream);
   }
 }

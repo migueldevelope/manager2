@@ -145,41 +145,23 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => Ok(service.NewRecommendationPerson(view)));
     }
+
     /// <summary>
-    /// Buscar reconhecimento de pessoa para manutenção
+    /// Listar pessoa 
     /// </summary>
-    /// <param name="id">Identificador do reconhecimento de pessoa</param>
-    /// <returns>Objeto de manutenção do reconhecimento de pessoa</returns>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do reconhecimento de pessoa</param>
+    /// <returns>Lista de reconhecimento de pessoas da reconhecimento</returns>
     [Authorize]
     [HttpGet]
-    [Route("getrecommendationperson/{id}")]
-    public async Task<ViewCrudRecommendationPerson> ListRecommendationPerson(string id)
+    [Route("listperson")]
+    public async Task<List<ViewListPersonBase>> ListPerson(int count = 10, int page = 1, string filter = "")
     {
-      return await Task.Run(() => service.GetRecommendationPerson(id));
-    }
-    /// <summary>
-    /// Alterar o reconhecimento de pessoa
-    /// </summary>
-    /// <param name="view">Objeto de manutenção do reconhecimento de pessoa</param>
-    /// <returns>Mensagem de sucesso</returns>
-    [Authorize]
-    [HttpPut]
-    [Route("updaterecommendationperson")]
-    public async Task<IActionResult> UpdateRecommendationPerson([FromBody]ViewCrudRecommendationPerson view)
-    {
-      return await Task.Run(() => Ok(service.UpdateRecommendationPerson(view)));
-    }
-    /// <summary>
-    /// Deletar um reconhecimento de pessoa
-    /// </summary>
-    /// <param name="id">Identificador do reconhecimento de pessoa</param>
-    /// <returns>Mensagem de sucesso</returns>
-    [Authorize]
-    [HttpDelete]
-    [Route("deleterecommendationperson/{id}")]
-    public async Task<IActionResult> DeleteRecommendationPerson(string id)
-    {
-      return await Task.Run(() => Ok(service.RemoveRecommendationPerson(id)));
+      long total = 0;
+      List<ViewListPersonBase> result = service.ListPerson(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
     #endregion
 

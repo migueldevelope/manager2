@@ -79,7 +79,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Image = view.Image,
           Content = view.Content,
-          Skill = view.Skill          
+          Skill = view.Skill
         }).Result;
         return recommendation._id;
       }
@@ -159,20 +159,6 @@ namespace Manager.Services.Specific
     #endregion
 
     #region RecommendationPerson
-    public string RemoveRecommendationPerson(string id)
-    {
-      try
-      {
-        RecommendationPerson item = serviceRecommendationPerson.GetNewVersion(p => p._id == id).Result;
-        item.Status = EnumStatus.Disabled;
-        serviceRecommendationPerson.Update(item, null).Wait();
-        return "RecommendationPerson deleted!";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     public string NewRecommendationPerson(ViewCrudRecommendationPerson view)
     {
       try
@@ -188,36 +174,6 @@ namespace Manager.Services.Specific
             Comments = view.Comments
           }).Result;
         return "RecommendationPerson added!";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string UpdateRecommendationPerson(ViewCrudRecommendationPerson view)
-    {
-      try
-      {
-        RecommendationPerson recommendationperson = serviceRecommendationPerson.GetNewVersion(p => p._id == view._id).Result;
-        recommendationperson.Recommendation = view.Recommendation;
-        recommendationperson.Content = view.Content;
-        recommendationperson.Person = view.Person;
-        recommendationperson.Comments = view.Comments;
-        
-        recommendationperson.Recommendation = view.Recommendation;
-        serviceRecommendationPerson.Update(recommendationperson, null).Wait();
-        return "RecommendationPerson altered!";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public ViewCrudRecommendationPerson GetRecommendationPerson(string id)
-    {
-      try
-      {
-        return serviceRecommendationPerson.GetNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -269,6 +225,25 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListPersonBase> ListPerson(ref long total, int count, int page, string filter)
+    {
+      try
+      {
+        total = servicePerson.CountNewVersion(p => p.TypeUser > EnumTypeUser.Administrator 
+        & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
+        & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return servicePerson.GetAllNewVersion(p => p.TypeUser > EnumTypeUser.Administrator
+        & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
+        & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+        .Select(x => x.GetViewListBase()).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
   }

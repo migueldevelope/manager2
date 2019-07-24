@@ -26,7 +26,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Route("excel")]
     [HttpGet]
-    public string Excel()
+    public double[][] Excel()
     {
       var i = new ServiceExcel();
       return i.ImportSalaryScale();
