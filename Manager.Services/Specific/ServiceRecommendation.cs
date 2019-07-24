@@ -81,7 +81,7 @@ namespace Manager.Services.Specific
           Content = view.Content,
           Skill = view.Skill          
         }).Result;
-        return "Recommendation added!";
+        return recommendation._id;
       }
       catch (Exception e)
       {

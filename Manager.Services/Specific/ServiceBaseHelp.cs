@@ -53,7 +53,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceBaseHelp.Delete(id, false);
+        serviceBaseHelp.DeleteFree(id, false);
         return "BaseHelp deleted!";
       }
       catch (Exception e)

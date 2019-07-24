@@ -174,7 +174,32 @@ namespace Manager.Data
         throw;
       }
     }
- 
+
+    public long DeleteFree(string id, bool logical = false)
+    {
+      try
+      {
+        DeleteResult resultDelete;
+        if (logical)
+        {
+          var entity = GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+          entity.Status = EnumStatus.Disabled;
+          var filter = Builders<T>.Filter.Where(p => p._id == entity._id);
+          var result = _collection.ReplaceOneAsync(filter, entity);
+          return result.Result.ModifiedCount;
+        }
+        else
+        {
+          resultDelete = _collection.DeleteOne(s => s._id == id);
+          return resultDelete.DeletedCount;
+        }
+      }
+      catch
+      {
+        throw;
+      }
+    }
+
     public T Single(Expression<Func<T, bool>> predicate = null)
     {
       try
