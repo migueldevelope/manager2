@@ -143,7 +143,8 @@ namespace Manager.Services.Specific
           .Select(x => new ViewListRecommendation()
           {
             _id = x._id,
-            Name = x.Name
+            Name = x.Name,
+            Image = x.Image
           }).ToList();
         total = serviceRecommendation.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
