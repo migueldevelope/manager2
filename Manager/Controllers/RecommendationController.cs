@@ -99,6 +99,26 @@ namespace Manager.Controllers
     #endregion
 
     #region RecommendationPerson
+
+    /// <summary>
+    /// Listar as reconhecimentos
+    /// </summary>
+    /// <param name="idperson">id pessoa</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da reconhecimento</param>
+    /// <returns>Lista de reconhecimentos cadastradas</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listrecommendationpersonid/{idperson}")]
+    public async Task<List<ViewListRecommendationPersonId>> List(string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      List<ViewListRecommendationPersonId> result = service.ListRecommendationPersonId(idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Listar reconhecimento de pessoas
     /// </summary>

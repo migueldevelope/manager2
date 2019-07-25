@@ -19,6 +19,7 @@ namespace Manager.Core.Interfaces
     string NewRecommendationPerson(ViewCrudRecommendationPerson view);
     List<ViewListRecommendationPerson> ListRecommendationPerson(string idrecommendation, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListRecommendationPerson> ListRecommendationPerson(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListRecommendationPersonId> ListRecommendationPersonId(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     void SetImage(string idBaseHelp, string url, string fileName, string attachmentid);
     List<ViewListPersonBase> ListPerson(ref long total, int count, int page, string filter);
   }
