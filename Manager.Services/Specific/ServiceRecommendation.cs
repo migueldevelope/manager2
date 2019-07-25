@@ -27,6 +27,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Recommendation> serviceRecommendation;
     private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<Skill> serviceSkill;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<MailLog> serviceMail;
     private readonly ServiceMailModel serviceMailModel;
@@ -49,6 +50,7 @@ namespace Manager.Services.Specific
         serviceMail = new ServiceGeneric<MailLog>(context);
         serviceMailModel = new ServiceMailModel(context);
         serviceAccount = new ServiceGeneric<Account>(context);
+        serviceSkill = new ServiceGeneric<Skill>(context);
         serviceLog = new ServiceLog(context, contextLog);
         serviceControlQueue = _serviceControlQueue;
         path = pathToken;
@@ -385,7 +387,7 @@ namespace Manager.Services.Specific
                 Content = recommendation.Content,
                 Name = recommendation.Name,
                 Image = recommendation.Image,
-                Skill = recommendation.Skill,
+                Skill = serviceSkill.GetFreeNewVersion(p => p.Template == recommendation.Skill._id).Result.GetViewList(),
                 Status = recommendation.Status,
                 _idAccount = accountRecommendation._id,
                 _id = ObjectId.GenerateNewId().ToString()
