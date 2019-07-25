@@ -136,8 +136,6 @@ namespace Manager.Services.Specific
         Recommendation recommendation = serviceRecommendation.GetNewVersion(p => p._id == view._id).Result;
 
         recommendation.Name = view.Name;
-        recommendation.Skill = view.Skill;
-        recommendation.Content = view.Content;
         recommendation.Image = view.Image;
 
         serviceRecommendation.Update(recommendation, null).Wait();
