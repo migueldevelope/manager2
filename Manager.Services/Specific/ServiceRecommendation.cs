@@ -197,12 +197,13 @@ namespace Manager.Services.Specific
           return "many recommendation month";
 
         var person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
+        var recommendation = serviceRecommendation.GetNewVersion(p => p._id == view.Recommendation._id).Result;
         RecommendationPerson recommendationperson = serviceRecommendationPerson.InsertNewVersion(
           new RecommendationPerson()
           {
             _id = view._id,
             Recommendation = view.Recommendation,
-            Content = view.Content == null ? null : view.Content.Replace("{Name}",view.Person.Name).Replace("{NameSend}",personsend.User.Name),
+            Content = recommendation.Content == null ? null : recommendation.Content.Replace("{Name}",view.Person.Name).Replace("{NameSend}",personsend.User.Name),
             Person = view.Person,
             Comments = view.Comments,
             _idColleague = _user._idUser,

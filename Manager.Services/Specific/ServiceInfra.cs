@@ -47,6 +47,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Skill> serviceSkill;
     private readonly ServiceGeneric<Sphere> serviceSphere;
     private readonly ServiceGeneric<TextDefault> serviceTextDefault;
+    private readonly ServiceGeneric<Recommendation> serviceRecommendation;
+
 
     #region Constructor
     public ServiceInfra(DataContext context) : base(context)
@@ -74,6 +76,7 @@ namespace Manager.Services.Specific
         serviceSkill = new ServiceGeneric<Skill>(context);
         serviceSphere = new ServiceGeneric<Sphere>(context);
         serviceTextDefault = new ServiceGeneric<TextDefault>(context);
+        serviceRecommendation = new ServiceGeneric<Recommendation>(context);
       }
       catch (Exception e)
       {
@@ -104,6 +107,7 @@ namespace Manager.Services.Specific
       serviceSkill._user = _user;
       serviceSphere._user = _user;
       serviceTextDefault._user = _user;
+      serviceRecommendation._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -129,6 +133,7 @@ namespace Manager.Services.Specific
       serviceSkill._user = user;
       serviceSphere._user = user;
       serviceTextDefault._user = user;
+      serviceRecommendation._user = user;
     }
     #endregion
 
@@ -323,6 +328,24 @@ namespace Manager.Services.Specific
           groupLocal._id = ObjectId.GenerateNewId().ToString();
           Group result = serviceGroup.InsertFreeNewVersion(groupLocal).Result;
         }
+
+        //Recommendation
+        Recommendation recommendationLocal;
+        foreach (Recommendation recommendation in serviceRecommendation.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          recommendationLocal = new Recommendation()
+          {
+            Template = recommendation._id,
+            Content = recommendation.Content,
+            Name = recommendation.Name,
+            Image = recommendation.Image,
+            Skill = recommendation.Skill,
+            Status = recommendation.Status,
+            _idAccount = _user._idAccount,
+            _id = ObjectId.GenerateNewId().ToString()
+          };
+          serviceRecommendation.InsertFreeNewVersion(recommendationLocal).Result.GetViewList();
+        }
       }
       catch (Exception e)
       {
@@ -470,6 +493,30 @@ namespace Manager.Services.Specific
                 _id = ObjectId.GenerateNewId().ToString()
               };
               Questions result = serviceQuestions.InsertFreeNewVersion(local).Result;
+            }
+          }
+        }
+        // Recommendation
+        foreach (Recommendation recommendation in serviceRecommendation.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          Recommendation local;
+          foreach (Account accountRecommendation in accounts)
+          {
+            local = serviceRecommendation.GetFreeNewVersion(p => p._idAccount == accountRecommendation._idAccount && p.Template == recommendation._id).Result;
+            if (local == null)
+            {
+              local = new Recommendation()
+              {
+                Template = recommendation._id,
+                Content = recommendation.Content,
+                Name = recommendation.Name,
+                Image = recommendation.Image,
+                Skill = recommendation.Skill,
+                Status = recommendation.Status,
+                _idAccount = accountRecommendation._id,
+                _id = ObjectId.GenerateNewId().ToString()
+              };
+              Recommendation result = serviceRecommendation.InsertFreeNewVersion(local).Result;
             }
           }
         }
