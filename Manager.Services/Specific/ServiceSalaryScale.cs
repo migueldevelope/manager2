@@ -411,7 +411,10 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        if (e.Message == "not_numeric")
+          return e.Message;
+        else
+          throw e;
       }
     }
 

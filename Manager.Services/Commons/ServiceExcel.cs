@@ -45,6 +45,8 @@ namespace Manager.Services.Commons
             double num; bool isNum = double.TryParse(value, out num);
             if (isNum)
               matriz[i - 2][j - 2] = double.Parse(value);
+            else if(value.Trim().Length > 0)
+                throw new Exception("not_numeric");
           }
         }
       }

@@ -129,7 +129,8 @@ namespace Manager.Services.Specific
 
         recommendation.Name = view.Name;
         recommendation.Skill = view.Skill;
-        recommendation.Content = view.Image;
+        recommendation.Content = view.Content;
+        recommendation.Image = view.Image;
 
         serviceRecommendation.Update(recommendation, null).Wait();
 
@@ -180,6 +181,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var personsend = servicePerson.GetNewVersion(p => p.User._id == _user._idUser).Result;
+
         var verifyperson = serviceRecommendationPerson.GetNewVersion(p => p.Person._id == view.Person._id
         & p.Recommendation._id == view.Recommendation._id & p._idColleague == _user._idUser).Result;
         if (verifyperson != null)
@@ -196,7 +199,7 @@ namespace Manager.Services.Specific
           {
             _id = view._id,
             Recommendation = view.Recommendation,
-            Content = view.Content,
+            Content = view.Content.Replace("{Name}",view.Person.Name).Replace("{NameSend}",personsend.User.Name),
             Person = view.Person,
             Comments = view.Comments,
             _idColleague = _user._idUser,
