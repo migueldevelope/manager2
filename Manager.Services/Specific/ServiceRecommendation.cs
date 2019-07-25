@@ -122,13 +122,14 @@ namespace Manager.Services.Specific
     }
 
 
-    public void SetImage(string idBaseHelp, string url, string fileName, string attachmentid)
+    public void SetImage(string idrecommendation, string url, string fileName, string attachmentid)
     {
       try
       {
-        Recommendation basehelp = serviceRecommendation.GetFreeNewVersion(p => p._id == idBaseHelp).Result;
-        basehelp.Image = url;
-        serviceRecommendation.UpdateAccount(basehelp, null).Wait();
+        Recommendation recommendation = serviceRecommendation.GetFreeNewVersion(p => p._id == idrecommendation).Result;
+        recommendation.Image = url;
+        serviceRecommendation.UpdateAccount(recommendation, null).Wait();
+        Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
       }
       catch (Exception e)
       {
@@ -144,10 +145,13 @@ namespace Manager.Services.Specific
 
         recommendation.Name = view.Name;
         recommendation.Image = view.Image;
+        recommendation.Skill = view.Skill;
+        recommendation.Content = view.Content;
 
         serviceRecommendation.Update(recommendation, null).Wait();
 
         Task.Run(() => SynchronizeRecommendationsAsync());
+        Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
 
         return "Recommendation altered!";
       }
@@ -357,7 +361,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public async Task SynchronizeRecommendationsAsync()
+    public void SynchronizeRecommendationsAsync()
     {
       try
       {
@@ -387,6 +391,37 @@ namespace Manager.Services.Specific
                 _id = ObjectId.GenerateNewId().ToString()
               };
               Recommendation result = serviceRecommendation.InsertFreeNewVersion(local).Result;
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public void SynchronizeRecommendationsAsyncUpdate()
+    {
+      try
+      {
+        // Identificação da conta raiz do ANALISA
+        var idresolution = "5b6c4f47d9090156f08775aa";
+
+        List<Account> accounts = serviceAccount.GetAllFreeNewVersion(p => p._id != idresolution).Result;
+
+        // Recommendation
+        foreach (Recommendation recommendation in serviceRecommendation.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          Recommendation local;
+          foreach (Account accountRecommendation in accounts)
+          {
+            local = serviceRecommendation.GetFreeNewVersion(p => p._idAccount == accountRecommendation._idAccount && p.Template == recommendation._id).Result;
+            if (local != null)
+            {
+              local.Name = recommendation.Name;
+              local.Image = recommendation.Image;
+              var item = serviceRecommendation.Update(local, null);
             }
           }
         }
