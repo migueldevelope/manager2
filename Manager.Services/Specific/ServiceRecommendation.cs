@@ -188,8 +188,11 @@ namespace Manager.Services.Specific
         if (verifyperson != null)
           return "already recommendation to person";
 
+        DateTime dateStart = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Date.Month + "-01");
+        DateTime dateEnd = dateStart.AddMonths(1).AddDays(-1);
+
         var verifycount = serviceRecommendationPerson.CountNewVersion(p => p._idColleague == _user._idUser
-        & p.Date.Value.Month == DateTime.Now.Month & p.Date.Value.Year == DateTime.Now.Year).Result;
+         && p.Date >= dateStart && p.Date < dateEnd).Result;
         if (verifycount == 3)
           return "many recommendation month";
 
@@ -199,7 +202,7 @@ namespace Manager.Services.Specific
           {
             _id = view._id,
             Recommendation = view.Recommendation,
-            Content = view.Content.Replace("{Name}",view.Person.Name).Replace("{NameSend}",personsend.User.Name),
+            Content = view.Content == null ? null : view.Content.Replace("{Name}",view.Person.Name).Replace("{NameSend}",personsend.User.Name),
             Person = view.Person,
             Comments = view.Comments,
             _idColleague = _user._idUser,
