@@ -1,295 +1,234 @@
-﻿//using Manager.Core.Base;
-//using Manager.Core.Business;
-//using Manager.Core.BusinessModel;
-//using Manager.Core.Interfaces;
-//using Manager.Core.Views;
-//using Manager.Services.Commons;
-//using Manager.Services.Specific;
-//using Manager.Test.Commons;
-//using Manager.Views.BusinessCrud;
-//using Manager.Views.BusinessList;
-//using Manager.Views.Enumns;
-//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Text;
-//using Xunit;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
+using Manager.Core.BusinessModel;
+using Manager.Core.Interfaces;
+using Manager.Core.Views;
+using Manager.Services.Commons;
+using Manager.Services.Specific;
+using Manager.Test.Commons;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Xunit;
 
-//namespace Manager.Test.Test.Complete
-//{
-//  public class Test0010Infra : TestCommons<Group>
-//  {
-//    private ServiceInfra serviceInfra;
-//    private readonly ServiceGeneric<Person> servicePerson;
-//    private readonly ServiceGeneric<Group> serviceGroup;
-//    private readonly ServiceGeneric<Occupation> serviceOccupation;
-//    private readonly ServiceGeneric<Company> serviceCompany;
+namespace Manager.Test.Test.Complete
+{
+  public class Test0010Infra : TestCommons<Group>
+  {
+    public Test0010Infra()
+    {
+      InitUserInfra();
+    }
 
-//    public Test0010Infra()
-//    {
-//      base.Init();
-//      serviceInfra = new ServiceInfra(base.context);
-//      serviceInfra.SetUser(base.baseUser);
+    [Fact]
+    public void TestCompany()
+    {
+      try
+      {
+        ServiceCompany serviceCompany = new ServiceCompany(context);
+        serviceCompany.SetUser(baseUser);
 
-//      servicePerson = new ServiceGeneric<Person>(base.context);
-//      serviceGroup = new ServiceGeneric<Group>(base.context);
-//      serviceOccupation = new ServiceGeneric<Occupation>(base.context);
-//      serviceCompany = new ServiceGeneric<Company>(base.context);
+        ViewCrudCompany view = new ViewCrudCompany()
+        {
+          Name = string.Format("Company test {0}", DateTime.Now.Date),
+          Logo = null
+        };
+        string result = serviceCompany.New(view);
+        if (result != "Company added!")
+          throw new Exception("Erro ao incluir nova empresa");
 
-//      servicePerson._user = base.baseUser;
-//      serviceGroup._user = base.baseUser;
-//      serviceOccupation._user = base.baseUser;
-//      serviceCompany._user = base.baseUser;
+        view = serviceCompany.GetByName(view.Name);
+        if (view == null)
+          throw new Exception("Erro ao buscar pelo nome da empresa");
 
+        view = serviceCompany.Get(view._id);
+        if (view == null)
+          throw new Exception("Erro ao buscar pelo id da empresa");
 
-//    }
+        view.Name = string.Concat(view.Name, " alterada!");
+        string saveName = view.Name;
+        result = serviceCompany.Update(view);
+        if (result != "Company altered!")
+          throw new Exception("Erro ao alterar empresa");
 
+        view = serviceCompany.GetByName(view.Name);
+        if (view == null)
+          throw new Exception("Erro ao buscar pelo nome alterado da empresa");
 
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
-//    [Fact]
-//    public async void TestCompany()
-//    {
-//      try
-//      {
-//        foreach (var item in serviceCompany.GetAllNewVersion().ToList())
-//        {
-//          item.Skills = new List<ViewListSkill>();
-//          var i = serviceCompany.Update(item, null);
-//        }
+    [Fact]
+    public void TestEstablishment()
+    {
+      try
+      {
+        ServiceCompany serviceCompany = new ServiceCompany(context);
+        serviceCompany.SetUser(baseUser);
 
-//        var comp = new Company()
-//        {
-//          Name = "Test Infra",
-//          Skills = new List<ViewListSkill>(),
-//          Status = EnumStatus.Enabled
-//        };
+        ViewListCompany company = serviceCompany.GetNewVersion(p => p.Name == string.Format("Company test {0} alterada!", DateTime.Now.Date)).Result.GetViewList();
 
-//        await serviceCompany.InsertNewVersion(comp);
+        ViewCrudEstablishment view = new ViewCrudEstablishment()
+        {
+          Name = string.Format("Estabelecimento test {0}", DateTime.Now),
+          Company = company
+        };
+        string result = serviceCompany.NewEstablishment(view);
+        if (result != "Establishment added!")
+          throw new Exception("Erro ao incluir novo estabelecimento");
 
+        view = serviceCompany.GetEstablishmentByName(view.Company._id, view.Name);
+        if (view == null)
+          throw new Exception("Erro ao buscar pelo nome do estabelecimento");
 
-//      }
-//      catch (Exception e)
-//      {
-//        throw e;
-//      }
-//    }
+        view = serviceCompany.GetEstablishment(view._id);
+        if (view == null)
+          throw new Exception("Erro ao buscar pelo id do estabelecimento");
 
-//    [Fact]
-//    public void TestBasicVersion0()
-//    {
-//      try
-//      {
-//        var ares = serviceInfra.GetAreas();
-//        var company = serviceInfra.GetCompanies()
-//          .Select(p => new ViewListCompany()
-//          {
-//            _id = p._id,
-//            Name = p.Name
-//          }).FirstOrDefault();
-//        var newskill = serviceInfra.AddSkill(new ViewCrudSkill() { Name = "Skill 3", TypeSkill = EnumTypeSkill.Hard });
-//        long total = 0;
-//        var skill = serviceInfra.GetSkills(ref total, "3", 100, 1).FirstOrDefault();
-//        var newsphere = serviceInfra.AddSphere(new ViewCrudSphere() { Name = "Tatico", TypeSphere = EnumTypeSphere.Strategic, Company = company });
-//        var sphere = serviceInfra.GetSpheres().FirstOrDefault();
-//        var newaxis = serviceInfra.AddAxis(new ViewCrudAxis() { Name = "Tecnico", TypeAxis = EnumTypeAxis.Administrator, Company = company });
-//        var axis = serviceInfra.GetAxis().FirstOrDefault();
-//        var newessential = serviceInfra.AddEssential(new ViewCrudEssential()
-//        {
-//          _idCompany = company._id,
-//          Skill = new ViewCrudSkill()
-//          {
-//            _id = skill._id,
-//            Name = skill.Name,
-//            Concept = skill.Concept,
-//            TypeSkill = skill.TypeSkill
-//          }
-//        });
+        view.Name = string.Concat(view.Name, " alterado!");
+        string saveName = view.Name;
+        result = serviceCompany.UpdateEstablishment(view);
+        if (result != "Establishment altered!")
+          throw new Exception("Erro ao alterar estabelecimento");
 
-//      }
-//      catch (Exception e)
-//      {
-//        throw e;
-//      }
-//    }
+        view = serviceCompany.GetEstablishmentByName(view.Company._id, view.Name);
+        if (view == null)
+          throw new Exception("Erro ao buscar pelo nome alterado do estabelecimento");
 
-//    [Fact]
-//    public void TestBasicValidSchooling()
-//    {
-//      try
-//      {
-//        var schooling = new ViewCrudSchooling()
-//        {
-//          Name = "Teste1",
-//          Complement = "1",
-//          Type = EnumTypeSchooling.Excellence
-//        };
-//        //var group = servicePerson.GetAllNewVersion(p => p.User.Mail == "miguel@jmsoft.com.br").Result.FirstOrDefault().Occupation.Group;
+        view = new ViewCrudEstablishment()
+        {
+          Name = "Estabelecimento Padrão",
+          Company = company
+        };
+        result = serviceCompany.NewEstablishment(view);
+        if (result != "Establishment added!")
+          throw new Exception("Erro ao incluir novo estabelecimento padrão");
 
-//        var view = new ViewCrudMapGroupSchooling()
-//        {
-//          Schooling = schooling,
-//          //_idGroup = group._id
-//        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
-//        var newmapgroupschooling = serviceInfra.AddMapGroupSchooling(view);
+    [Fact]
+    public void TestSkill()
+    {
+      try
+      {
+        ServiceInfra serviceInfra = new ServiceInfra(context);
+        serviceInfra.SetUser(baseUser);
 
-//      }
-//      catch (Exception e)
-//      {
-//        throw e;
-//      }
-//    }
+        ViewCrudSkill viewCrudSkill;
+        for (int i = 1; i < 6; i++)
+        {
+          viewCrudSkill = new ViewCrudSkill()
+          {
+            TypeSkill = EnumTypeSkill.Soft,
+            Name = string.Format("Essencial {0}",i),
+            Concept = string.Format("Conceito da competência essencial {0}", i)
+          };
+          viewCrudSkill = serviceInfra.AddSkill(viewCrudSkill);
+        }
 
-//    [Fact]
-//    public void TestDelete0()
-//    {
-//      try
-//      {
-//        //5b59d5bda49e0f344cd97fb6/5b5a23bd3ac6f1466cdd7d3d
+        viewCrudSkill = serviceInfra.GetSkill("Essencial 1");
+        if (viewCrudSkill == null)
+          throw new Exception("Skill essencial não incluída!");
 
-//        //var idcompany = "5b59d5bda49e0f344cd97fb6";
-//        //var id = "5b5a23bd3ac6f1466cdd7d3d";
-//        //serviceInfra.DeleteEssential(idcompany, id);
+        viewCrudSkill.Name = "Essencial 1 alterada";
+        var result = serviceInfra.UpdateSkill(viewCrudSkill);
+        if (result != "update")
+          throw new Exception("Skill essencial não alterada!");
 
-//        var schooling = serviceInfra.GetSchooling().Where(p => p.Name.Contains("Teste")).FirstOrDefault();
-//        schooling.Name = schooling.Name + " Teste 1";
-//        //serviceInfra.UpdateSchooling(schooling);
-//        var company = serviceInfra.GetCompanies().FirstOrDefault();
-//        var area = serviceInfra.GetAreas().FirstOrDefault();
-//        var map = serviceInfra.GetOccupations(company._id, area._id);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
-//        var group = serviceInfra.GetGroups(company._id);
-//      }
-//      catch (Exception e)
-//      {
-//        throw e;
-//      }
-//    }
+    [Fact]
+    public void TestEssentialSkills()
+    {
+      try
+      {
+        ServiceCompany serviceCompany = new ServiceCompany(context);
+        ServiceInfra serviceInfra = new ServiceInfra(context);
+        serviceCompany.SetUser(baseUser);
+        serviceInfra.SetUser(baseUser);
 
+        ViewListCompany company = serviceCompany.GetNewVersion(p => p.Name == "Teste Company").Result.GetViewList();
 
+        ViewCrudSkill viewCrudSkill = serviceInfra.GetSkill("Essencial 1 alterada");
+        ViewCrudEssential view = new ViewCrudEssential()
+        {
+          Skill = viewCrudSkill,
+          _idCompany = company._id
+        };
+        var result = serviceInfra.AddEssential(view);
+        if (result != "ok")
+          throw new Exception("Skill essencial 1 não adicionada no mapa essencial!");
 
+        for (int i = 2; i < 6; i++)
+        {
+          viewCrudSkill = serviceInfra.GetSkill(string.Format("Essencial {0}", i));
+          view = new ViewCrudEssential()
+          {
+            Skill = viewCrudSkill,
+            _idCompany = company._id
+          };
+          result = serviceInfra.AddEssential(view);
+          if (result != "ok")
+            throw new Exception(string.Format("Skill essencial {0} não adicionada no mapa essencial!",i));
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
-//    //[Fact]
-//    //public void TestGroupNewAndReorder()
-//    //{
-//    //  try
-//    //  {
-//    //    var company = serviceInfra.GetCompanies().FirstOrDefault();
-//    //    var axis = serviceInfra.GetAxis(company._id).FirstOrDefault();
-//    //    var sphere = serviceInfra.GetSpheres(company._id).FirstOrDefault();
-//    //    long total = 0;
+    [Fact]
+    public void TestSphere()
+    {
+      try
+      {
+        ServiceCompany serviceCompany = new ServiceCompany(context);
+        ServiceInfra serviceInfra = new ServiceInfra(context);
+        serviceCompany.SetUser(baseUser);
+        serviceInfra.SetUser(baseUser);
 
-//    //    //var viewGroup = new ViewAddGroup()
-//    //    //{
-//    //    //  Axis = axis,
-//    //    //  Sphere = sphere,
-//    //    //  Company = company,
-//    //    //  Line = 0,
-//    //    //  Name = "Teste group miguel"
-//    //    //};
-//    //   // serviceInfra.AddGroup(viewGroup);
-//    //    var group = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault();
+        ViewListCompany company = serviceCompany.GetNewVersion(p => p.Name == string.Format("Company test {0} alterada!", DateTime.Now.Date)).Result.GetViewList();
 
+        ViewCrudSphere view = new ViewCrudSphere()
+        {
+          Name = "Esfera teste",
+          Company = company,
+          TypeSphere = EnumTypeSphere.Operational
+        };
+        string result = serviceInfra.AddSphere(view);
+        if (result != "ok")
+          throw new Exception("Erro ao incluir nova esfera");
 
-//    //    var view = new ViewAddMapGroupScope()
-//    //    {
-//    //      Group = group,
-//    //      Scope = new Scope() { Name = "teste", Order = 99 }
-//    //    };
-//    //    //serviceInfra.AddMapGroupScope(view);
+        ViewListSphere viewList = serviceInfra.GetSpheres(company._id)[0];
+        if (viewList.Name != "Esfera teste")
+          throw new Exception("Erro ao buscar pelo nome da esfera");
 
-//    //    var view2 = new ViewAddMapGroupScope()
-//    //    {
-//    //      Group = group,
-//    //      Scope = new Scope() { Name = "teste scope 2", Order = 99 }
-//    //    };
-
-//    //    //serviceInfra.AddMapGroupScope(view2);
-
-//    //    var scopeS = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 1).FirstOrDefault();
-
-//    //    serviceInfra.ReorderGroupScope(company._id, group._id, scopeS._id, true);
-
-//    //    var view3 = new ViewAddMapGroupScope()
-//    //    {
-//    //      Group = group,
-//    //      Scope = new Scope() { Name = "teste scope 3", Order = 99 }
-//    //    };
-
-//    //    //serviceInfra.AddMapGroupScope(view3);
-
-//    //    var scopeD = serviceInfra.GetGroups(company._id).Where(p => p.Name == "Teste group miguel").FirstOrDefault().Scope.Where(p => p.Order == 3).FirstOrDefault();
-
-//    //    serviceInfra.ReorderGroupScope(company._id, group._id, scopeD._id, false);
-
-//    //  }
-//    //  catch (Exception e)
-//    //  {
-//    //    throw e;
-//    //  }
-//    //}
-
-
-//    [Fact]
-//    public void TestEdiSubProcess()
-//    {
-//      try
-//      {
-//        //var item = serviceInfra.GetProcessLevelTwo().Where(p => p._id == "5ba912282aacd866424e566f").FirstOrDefault();
-//        //item.Name = "test sub novo 2";
-//        //serviceInfra.UpdateProcessLevelTwo(item);
-
-//        var i = serviceInfra.GetCSVCompareGroup("5b6c4f54d9090156f08775ab", "");
-//      }
-//      catch (Exception e)
-//      {
-//        throw e;
-//      }
-//    }
-//    [Fact]
-//    public void TestEdiArea()
-//    {
-//      try
-//      {
-//        var item = serviceInfra.GetAreas().Where(p => p._id == "5ba8d349ea4b69b2d3e2408d").FirstOrDefault();
-//        item.Name = "nv area 51 v5";
-//        //serviceInfra.UpdateArea(item);
-
-//      }
-//      catch (Exception e)
-//      {
-//        throw e;
-//      }
-//    }
-
-
-//    [Fact]
-//    public void TestUpdateBasicVersion0()
-//    {
-//      try
-//      {
-//        var company = serviceInfra.GetCompanies().FirstOrDefault();
-//        long total = 0;
-//        var groups = serviceInfra.GetGroups();
-//        var skill = serviceInfra.GetSkills(ref total, "", 100, 1).FirstOrDefault();
-//        var sphere = serviceInfra.GetSpheres().FirstOrDefault();
-//        var axis = serviceInfra.GetAxis().FirstOrDefault();
-
-//        sphere.Name = sphere.Name + " test";
-//        var result = serviceInfra.UpdateSphere(new ViewCrudSphere()
-//        {
-//          _id = sphere._id,
-//          Name = sphere.Name,
-//          TypeSphere = sphere.TypeSphere
-//        });
-
-//      }
-//      catch (Exception e)
-//      {
-//        throw e;
-//      }
-//    }
-
-//  }
-//}
+        view.Name = string.Concat(view.Name, " alterada!");
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+  }
+}

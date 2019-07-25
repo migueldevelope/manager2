@@ -1,6 +1,8 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -742,7 +744,7 @@ namespace Manager.Test.Commons
           skill = new Skill()
           {
             _idAccount = "5b6c4f47d9090156f08775aa",
-            Name = string.Format("Skill {0} {1}", i <= 15 ? "Soft" : "Hard",i),
+            Name = string.Format("Skill {0} {1}", i <= 25 ? "Soft" : "Hard",i),
             Concept = string.Format("Conceito da Skill {0} {1}", i <= 25 ? "Soft" : "Hard", i),
             Template = null,
             TypeSkill = EnumTypeSkill.Soft,
@@ -1041,6 +1043,7 @@ namespace Manager.Test.Commons
     {
       try
       {
+        #region Diretor
         // Eixo
         ServiceGeneric<Axis> serviceAxis = new ServiceGeneric<Axis>(context)
         {
@@ -1055,8 +1058,8 @@ namespace Manager.Test.Commons
           _user = baseUser
         };
         Sphere sphere = serviceSphere.GetNewVersion(p => p.Name == "Estratégico").Result;
-        if (axis == null)
-          throw new Exception("Erro no grupo buscando a esfere estratégico");
+        if (sphere == null)
+          throw new Exception("Erro no grupo buscando a esfera estratégico");
         // Escopo do grupo
         List<ViewListScope> scopeList = new List<ViewListScope>();
         ViewListScope scope;
@@ -1114,6 +1117,338 @@ namespace Manager.Test.Commons
           Skills = skillList
         };
         group = service.InsertNewVersion(group).Result;
+        #endregion
+
+        #region Gerente
+        // Escopo do grupo
+        scopeList = new List<ViewListScope>();
+        for (int i = 1; i < 5; i++)
+        {
+          scope = new ViewListScope()
+          {
+            Name = string.Format("Scopo do gerente {0}", i),
+            _id = ObjectId.GenerateNewId().ToString(),
+            Order = i
+          };
+          scopeList.Add(scope);
+        }
+        // Competências
+        skillList = new List<ViewListSkill>();
+        for (int i = 3; i < 7; i++)
+        {
+          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}", i)).Result;
+          if (skill == null)
+            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}", i));
+          skillList.Add(skill.GetViewList());
+        }
+        group = new Group()
+        {
+          _idAccount = "5b6c4f47d9090156f08775aa",
+          Name = "Gerente",
+          Company = company.GetViewList(),
+          Template = null,
+          Status = EnumStatus.Enabled,
+          Axis = axis.GetViewList(),
+          Sphere = sphere.GetViewList(),
+          Line = 2,
+          Occupations = null,
+          Scope = scopeList,
+          Schooling = schoolingList,
+          Skills = skillList
+        };
+        group = service.InsertNewVersion(group).Result;
+        #endregion
+
+        #region Coordenador
+        // Esfera
+        sphere = serviceSphere.GetNewVersion(p => p.Name == "Tático").Result;
+        if (sphere == null)
+          throw new Exception("Erro no grupo buscando a esfera tático");
+        // Escopo do grupo
+        scopeList = new List<ViewListScope>();
+        for (int i = 1; i < 5; i++)
+        {
+          scope = new ViewListScope()
+          {
+            Name = string.Format("Scopo do coordenador {0}", i),
+            _id = ObjectId.GenerateNewId().ToString(),
+            Order = i
+          };
+          scopeList.Add(scope);
+        }
+        // Escolaridades
+        schoolingList = new List<ViewCrudSchooling>();
+        schooling = serviceSchooling.GetNewVersion(p => p.Name == "Ensino Superior Completo").Result;
+        if (schooling == null)
+          throw new Exception("Erro no grupo buscando a escolaridade Ensino Superior Completo");
+        schoolingList.Add(schooling.GetViewCrud());
+        schooling = serviceSchooling.GetNewVersion(p => p.Name == "Pós Graduação Completo").Result;
+        if (schooling == null)
+          throw new Exception("Erro no grupo buscando a escolaridade Pós Graduação Completo");
+        schoolingList.Add(schooling.GetViewCrud());
+        // Competências
+        skillList = new List<ViewListSkill>();
+        for (int i = 6; i < 9; i++)
+        {
+          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}", i)).Result;
+          if (skill == null)
+            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}", i));
+          skillList.Add(skill.GetViewList());
+        }
+        group = new Group()
+        {
+          _idAccount = "5b6c4f47d9090156f08775aa",
+          Name = "Coordenador",
+          Company = company.GetViewList(),
+          Template = null,
+          Status = EnumStatus.Enabled,
+          Axis = axis.GetViewList(),
+          Sphere = sphere.GetViewList(),
+          Line = 1,
+          Occupations = null,
+          Scope = scopeList,
+          Schooling = schoolingList,
+          Skills = skillList
+        };
+        group = service.InsertNewVersion(group).Result;
+        #endregion
+
+        #region Especialista
+        // Eixo
+        axis = serviceAxis.GetNewVersion(p => p.Name == "Técnico").Result;
+        if (axis == null)
+          throw new Exception("Erro no grupo buscando o eixo técnico");
+        // Escopo do grupo
+        scopeList = new List<ViewListScope>();
+        for (int i = 1; i < 5; i++)
+        {
+          scope = new ViewListScope()
+          {
+            Name = string.Format("Scopo do especialista {0}", i),
+            _id = ObjectId.GenerateNewId().ToString(),
+            Order = i
+          };
+          scopeList.Add(scope);
+        }
+        // Competências
+        skillList = new List<ViewListSkill>();
+        for (int i = 9; i < 12; i++)
+        {
+          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}", i)).Result;
+          if (skill == null)
+            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}", i));
+          skillList.Add(skill.GetViewList());
+        }
+        group = new Group()
+        {
+          _idAccount = "5b6c4f47d9090156f08775aa",
+          Name = "Especialista",
+          Company = company.GetViewList(),
+          Template = null,
+          Status = EnumStatus.Enabled,
+          Axis = axis.GetViewList(),
+          Sphere = sphere.GetViewList(),
+          Line = 1,
+          Occupations = null,
+          Scope = scopeList,
+          Schooling = schoolingList,
+          Skills = skillList
+        };
+        group = service.InsertNewVersion(group).Result;
+        #endregion
+
+        #region Analista
+        // Eixo
+        axis = serviceAxis.GetNewVersion(p => p.Name == "Administrativo").Result;
+        if (axis == null)
+          throw new Exception("Erro no grupo buscando o eixo administrativo");
+        // Escopo do grupo
+        scopeList = new List<ViewListScope>();
+        for (int i = 1; i < 3; i++)
+        {
+          scope = new ViewListScope()
+          {
+            Name = string.Format("Scopo do analista {0}", i),
+            _id = ObjectId.GenerateNewId().ToString(),
+            Order = i
+          };
+          scopeList.Add(scope);
+        }
+        // Competências
+        skillList = new List<ViewListSkill>();
+        for (int i = 12; i < 15; i++)
+        {
+          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}", i)).Result;
+          if (skill == null)
+            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}", i));
+          skillList.Add(skill.GetViewList());
+        }
+        group = new Group()
+        {
+          _idAccount = "5b6c4f47d9090156f08775aa",
+          Name = "Analista",
+          Company = company.GetViewList(),
+          Template = null,
+          Status = EnumStatus.Enabled,
+          Axis = axis.GetViewList(),
+          Sphere = sphere.GetViewList(),
+          Line = 1,
+          Occupations = null,
+          Scope = scopeList,
+          Schooling = schoolingList,
+          Skills = skillList
+        };
+        group = service.InsertNewVersion(group).Result;
+        #endregion
+
+        #region Assistente
+        // Esfera
+        sphere = serviceSphere.GetNewVersion(p => p.Name == "Operacional").Result;
+        if (sphere == null)
+          throw new Exception("Erro no grupo buscando a esfera operacional");
+        // Escopo do grupo
+        scopeList = new List<ViewListScope>();
+        for (int i = 1; i < 3; i++)
+        {
+          scope = new ViewListScope()
+          {
+            Name = string.Format("Scopo do assistente {0}", i),
+            _id = ObjectId.GenerateNewId().ToString(),
+            Order = i
+          };
+          scopeList.Add(scope);
+        }
+        // Escolaridades
+        schoolingList = new List<ViewCrudSchooling>();
+        schooling = serviceSchooling.GetNewVersion(p => p.Name == "Técnico Completo").Result;
+        if (schooling == null)
+          throw new Exception("Erro no grupo buscando a escolaridade Técnico Completo");
+        schoolingList.Add(schooling.GetViewCrud());
+        schooling = serviceSchooling.GetNewVersion(p => p.Name == "Ensino Superior Completo").Result;
+        if (schooling == null)
+          throw new Exception("Erro no grupo buscando a escolaridade Ensino Superior Completo");
+        schoolingList.Add(schooling.GetViewCrud());
+        // Competências
+        skillList = new List<ViewListSkill>();
+        for (int i = 15; i < 18; i++)
+        {
+          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}", i)).Result;
+          if (skill == null)
+            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}", i));
+          skillList.Add(skill.GetViewList());
+        }
+        group = new Group()
+        {
+          _idAccount = "5b6c4f47d9090156f08775aa",
+          Name = "Assistente",
+          Company = company.GetViewList(),
+          Template = null,
+          Status = EnumStatus.Enabled,
+          Axis = axis.GetViewList(),
+          Sphere = sphere.GetViewList(),
+          Line = 1,
+          Occupations = null,
+          Scope = scopeList,
+          Schooling = schoolingList,
+          Skills = skillList
+        };
+        group = service.InsertNewVersion(group).Result;
+        #endregion
+
+        #region Auxiliar
+        // Escopo do grupo
+        scopeList = new List<ViewListScope>();
+        for (int i = 1; i < 3; i++)
+        {
+          scope = new ViewListScope()
+          {
+            Name = string.Format("Scopo do auxiliar {0}", i),
+            _id = ObjectId.GenerateNewId().ToString(),
+            Order = i
+          };
+          scopeList.Add(scope);
+        }
+        // Escolaridades
+        schoolingList = new List<ViewCrudSchooling>();
+        schooling = serviceSchooling.GetNewVersion(p => p.Name == "Ensino Médio Incompleto").Result;
+        if (schooling == null)
+          throw new Exception("Erro no grupo buscando a escolaridade Ensino Médio Incompleto");
+        schoolingList.Add(schooling.GetViewCrud());
+        schooling = serviceSchooling.GetNewVersion(p => p.Name == "Ensino Médio Completo").Result;
+        if (schooling == null)
+          throw new Exception("Erro no grupo buscando a escolaridade Ensino Médio Completo");
+        schoolingList.Add(schooling.GetViewCrud());
+        // Competências
+        skillList = new List<ViewListSkill>();
+        for (int i = 18; i < 21; i++)
+        {
+          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}", i)).Result;
+          if (skill == null)
+            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}", i));
+          skillList.Add(skill.GetViewList());
+        }
+        group = new Group()
+        {
+          _idAccount = "5b6c4f47d9090156f08775aa",
+          Name = "Auxiliar",
+          Company = company.GetViewList(),
+          Template = null,
+          Status = EnumStatus.Enabled,
+          Axis = axis.GetViewList(),
+          Sphere = sphere.GetViewList(),
+          Line = 2,
+          Occupations = null,
+          Scope = scopeList,
+          Schooling = schoolingList,
+          Skills = skillList
+        };
+        group = service.InsertNewVersion(group).Result;
+        #endregion
+
+        #region Operador
+        // Eixo
+        axis = serviceAxis.GetNewVersion(p => p.Name == "Técnico").Result;
+        if (axis == null)
+          throw new Exception("Erro no grupo buscando o eixo técnico");
+        // Escopo do grupo
+        scopeList = new List<ViewListScope>();
+        for (int i = 1; i < 3; i++)
+        {
+          scope = new ViewListScope()
+          {
+            Name = string.Format("Scopo do auxiliar {0}", i),
+            _id = ObjectId.GenerateNewId().ToString(),
+            Order = i
+          };
+          scopeList.Add(scope);
+        }
+        // Competências
+        skillList = new List<ViewListSkill>();
+        for (int i = 21; i < 23; i++)
+        {
+          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}", i)).Result;
+          if (skill == null)
+            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}", i));
+          skillList.Add(skill.GetViewList());
+        }
+        group = new Group()
+        {
+          _idAccount = "5b6c4f47d9090156f08775aa",
+          Name = "Operador",
+          Company = company.GetViewList(),
+          Template = null,
+          Status = EnumStatus.Enabled,
+          Axis = axis.GetViewList(),
+          Sphere = sphere.GetViewList(),
+          Line = 1,
+          Occupations = null,
+          Scope = scopeList,
+          Schooling = schoolingList,
+          Skills = skillList
+        };
+        group = service.InsertNewVersion(group).Result;
+        #endregion
+
       }
       catch (Exception)
       {
@@ -1123,17 +1458,94 @@ namespace Manager.Test.Commons
 
     #endregion
 
-    protected void Init()
+    #region Teste para inicialização com Usuário para Infra
+    protected void InitUserInfraTest()
     {
       try
       {
         context = new DataContext(databaseConnection, databaseName);
+        ServiceAuthentication service = new ServiceAuthentication(context, context);
+        ViewAuthentication view = new ViewAuthentication()
+        {
+          Mail = "analisa@jmsoft.com.br",
+          Password = "1234"
+        };
+        ViewPerson viewPerson = service.Authentication(view);
+        if (viewPerson.Contracts.Count != 1)
+          throw new Exception("Problema na autenticação do usuário, contrato não encontrado!");
+
+        ServiceGeneric<User> userService = new ServiceGeneric<User>(context);
+        baseUser = new BaseUser()
+        {
+          _idAccount = viewPerson.IdAccount
+        };
+        userService._user = baseUser;
+        User user = userService.GetNewVersion(viewPerson.IdUser).Result;
+        baseUser = new BaseUser()
+        {
+          Mail = user.Mail,
+          NameAccount = viewPerson.NameAccount,
+          NamePerson = viewPerson.Name,
+          _idAccount = viewPerson.IdAccount,
+          _idUser = viewPerson.IdUser,
+          _idPerson = viewPerson.Contracts[0].IdPerson
+        };
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    #endregion
+
+    #region inicialização com Usuário para Infra
+    protected void InitUserInfra()
+    {
+      try
+      {
+        context = new DataContext(databaseConnection, databaseName);
+        ServiceAuthentication service = new ServiceAuthentication(context, context);
+        ViewAuthentication view = new ViewAuthentication()
+        {
+          Mail = "analisa@jmsoft.com.br",
+          Password = "1234"
+        };
+        ViewPerson viewPerson;
+        while (true)
+        {
+          try
+          {
+            viewPerson = service.Authentication(view);
+            break;
+          }
+          catch (Exception)
+          {
+          }
+        }
+
+        ServiceGeneric<User> userService = new ServiceGeneric<User>(context);
+        baseUser = new BaseUser()
+        {
+          _idAccount = viewPerson.IdAccount
+        };
+        userService._user = baseUser;
+        User user = userService.GetNewVersion(viewPerson.IdUser).Result;
+        baseUser = new BaseUser()
+        {
+          Mail = user.Mail,
+          NameAccount = viewPerson.NameAccount,
+          NamePerson = viewPerson.Name,
+          _idAccount = viewPerson.IdAccount,
+          _idUser = viewPerson.IdUser,
+          _idPerson = viewPerson.Contracts[0].IdPerson
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
 
     public IList<ValidationResult> ValidateModel(object model)
     {
