@@ -9,6 +9,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<MailLog> serviceMail;
     private readonly ServiceMailModel serviceMailModel;
+    private readonly ServiceGeneric<Account> serviceAccount;
+
     private readonly IServiceControlQueue serviceControlQueue;
 
     private string path;
@@ -45,8 +48,10 @@ namespace Manager.Services.Specific
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceMail = new ServiceGeneric<MailLog>(context);
         serviceMailModel = new ServiceMailModel(context);
+        serviceAccount = new ServiceGeneric<Account>(context);
         serviceLog = new ServiceLog(context, contextLog);
         serviceControlQueue = _serviceControlQueue;
+        path = pathToken;
       }
       catch (Exception e)
       {
@@ -98,6 +103,9 @@ namespace Manager.Services.Specific
           Content = view.Content,
           Skill = view.Skill
         }).Result;
+
+        Task.Run(() => AddRecommendationsAccounts(recommendation));
+
         return recommendation._id;
       }
       catch (Exception e)
@@ -133,6 +141,8 @@ namespace Manager.Services.Specific
         recommendation.Image = view.Image;
 
         serviceRecommendation.Update(recommendation, null).Wait();
+
+        Task.Run(() => SynchronizeRecommendationsAsync());
 
         return "Recommendation altered!";
       }
@@ -203,7 +213,7 @@ namespace Manager.Services.Specific
           {
             _id = view._id,
             Recommendation = view.Recommendation,
-            Content = recommendation.Content == null ? null : recommendation.Content.Replace("{Name}",view.Person.Name).Replace("{NameSend}",personsend.User.Name),
+            Content = recommendation.Content == null ? null : recommendation.Content.Replace("{Name}", view.Person.Name).Replace("{NameSend}", personsend.User.Name),
             Person = view.Person,
             Comments = view.Comments,
             _idColleague = _user._idUser,
@@ -310,6 +320,77 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
+
+    public string AddRecommendationsAccounts(Recommendation recommendation)
+    {
+      try
+      {
+        // Identificação da conta raiz do ANALISA
+        var idresolution = "5b6c4f47d9090156f08775aa";
+        List<Account> accounts = serviceAccount.GetAllFreeNewVersion(p => p._id != idresolution).Result;
+        Recommendation local;
+        foreach (Account account in accounts)
+        {
+          local = new Recommendation()
+          {
+            Template = recommendation._id,
+            Content = recommendation.Content,
+            Name = recommendation.Name,
+            Image = recommendation.Image,
+            Skill = recommendation.Skill,
+            Status = recommendation.Status,
+            _idAccount = account._id,
+            _id = ObjectId.GenerateNewId().ToString()
+          };
+          Recommendation result = serviceRecommendation.InsertFreeNewVersion(local).Result;
+        }
+        return "Paramter added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public async Task SynchronizeRecommendationsAsync()
+    {
+      try
+      {
+        // Identificação da conta raiz do ANALISA
+        var idresolution = "5b6c4f47d9090156f08775aa";
+
+        List<Account> accounts = serviceAccount.GetAllFreeNewVersion(p => p._id != idresolution).Result;
+
+        // Recommendation
+        foreach (Recommendation recommendation in serviceRecommendation.GetAllFreeNewVersion(p => p._idAccount == idresolution).Result)
+        {
+          Recommendation local;
+          foreach (Account accountRecommendation in accounts)
+          {
+            local = serviceRecommendation.GetFreeNewVersion(p => p._idAccount == accountRecommendation._idAccount && p.Template == recommendation._id).Result;
+            if (local == null)
+            {
+              local = new Recommendation()
+              {
+                Template = recommendation._id,
+                Content = recommendation.Content,
+                Name = recommendation.Name,
+                Image = recommendation.Image,
+                Skill = recommendation.Skill,
+                Status = recommendation.Status,
+                _idAccount = accountRecommendation._id,
+                _id = ObjectId.GenerateNewId().ToString()
+              };
+              Recommendation result = serviceRecommendation.InsertFreeNewVersion(local).Result;
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     private void Mail(Person person, string skill)
     {

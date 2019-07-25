@@ -528,6 +528,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+
     #region Infra
     public List<ViewListSkill> GetEssential(string idcompany)
     {
@@ -3866,11 +3867,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //foreach (var item in personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).ToList())
-        //{
-        //  item.Occupation = occupation;
-        //  personService.Update(item, null);
-        //}
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).Result)
+        {
+          item.Occupation = occupation.GetViewListResume();
+          servicePerson.Update(item, null);
+        }
 
       }
       catch (Exception e)
