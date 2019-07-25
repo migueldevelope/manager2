@@ -81,7 +81,7 @@
             
             </summary>
         </member>
-        <member name="M:EdeskIntegration.Controllers.UploadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Manager.Core.Interfaces.IServiceCompany,Manager.Core.Interfaces.IServicePerson,Manager.Core.Interfaces.IServicePlan,Manager.Core.Interfaces.IServiceEvent,Manager.Core.Interfaces.IServiceCertification,Manager.Core.Interfaces.IServiceBaseHelp,Manager.Core.Interfaces.IServiceRecommendation)">
+        <member name="M:EdeskIntegration.Controllers.UploadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Manager.Core.Interfaces.IServiceCompany,Manager.Core.Interfaces.IServicePerson,Manager.Core.Interfaces.IServicePlan,Manager.Core.Interfaces.IServiceEvent,Manager.Core.Interfaces.IServiceCertification,Manager.Core.Interfaces.IServiceBaseHelp,Manager.Core.Interfaces.IServiceRecommendation,Manager.Core.Interfaces.IServiceSalaryScale)">
             <summary>
             
             </summary>
@@ -93,6 +93,7 @@
             <param name="_serviceCertification"></param>
             <param name="_serviceBaseHelp"></param>
             <param name="_serviceRecommendation"></param>
+            <param name="_serviceSalaryScale"></param>
         </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.Post">
             <summary>
@@ -118,6 +119,13 @@
             
             </summary>
             <param name="idbasehelp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostSalaryScale(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idsalaryscale"></param>
             <returns></returns>
         </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.PostRecommendation(System.String)">

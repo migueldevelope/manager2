@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using System;
 
 namespace Manager.Core.Business
 {
@@ -10,6 +11,8 @@ namespace Manager.Core.Business
     public ViewListRecommendation Recommendation { get; set; }
     public string Content { get; set; }
     public string Comments { get; set; }
+    public string _idColleague { get; set; }
+    public DateTime? Date { get; set; }
     public ViewListRecommendationPerson GetViewList()
     {
       return new ViewListRecommendationPerson()

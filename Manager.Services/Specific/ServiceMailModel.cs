@@ -555,12 +555,48 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Monitoring Mail
+
     public MailModel MonitoringApproval(string path)
     {
       try
       {
         MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "monitoringapproval").Result;
         return model ?? MonitoringApprovalDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private MailModel RecommendationDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = "Olá <strong>{Person}</strong>,<br>Seu col <strong>{Manager}</strong> acaba de reconhecer você em {Type}.<br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!<br><br>Para acessar o Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Subject = "Notificação de Reconhecimento | Recommendation",
+          Name = "recommendation",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public MailModel Recommendation(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "recommendation").Result;
+        return model ?? RecommendationDefault(path);
       }
       catch (Exception e)
       {
@@ -588,6 +624,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
     public MailModel MonitoringApprovalManager(string path)
     {
       try

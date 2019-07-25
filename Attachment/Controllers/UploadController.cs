@@ -33,6 +33,7 @@ namespace EdeskIntegration.Controllers
     private readonly IServiceCertification certificationService;
     private readonly IServiceEvent eventService;
     private readonly IServiceBaseHelp serviceBaseHelp;
+    private readonly IServiceSalaryScale serviceSalaryScale;
     private readonly IServiceRecommendation serviceRecommendation;
     private readonly DataContext context;
     private readonly string blobKey;
@@ -48,8 +49,10 @@ namespace EdeskIntegration.Controllers
     /// <param name="_serviceCertification"></param>
     /// <param name="_serviceBaseHelp"></param>
     /// <param name="_serviceRecommendation"></param>
+    /// <param name="_serviceSalaryScale"></param>
     public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _companyService, IServicePerson _personService, IServicePlan _planService,
-      IServiceEvent _serviceEvent, IServiceCertification _serviceCertification, IServiceBaseHelp _serviceBaseHelp, IServiceRecommendation _serviceRecommendation)
+      IServiceEvent _serviceEvent, IServiceCertification _serviceCertification, IServiceBaseHelp _serviceBaseHelp, IServiceRecommendation _serviceRecommendation,
+      IServiceSalaryScale _serviceSalaryScale)
     {
       BaseUser baseUser = new BaseUser();
       var user = contextAccessor.HttpContext.User;
@@ -86,7 +89,9 @@ namespace EdeskIntegration.Controllers
       certificationService = _serviceCertification;
       serviceBaseHelp = _serviceBaseHelp;
       serviceRecommendation = _serviceRecommendation;
+      serviceSalaryScale = _serviceSalaryScale;
 
+      serviceSalaryScale.SetUser(contextAccessor);
       certificationService.SetUser(contextAccessor);
       eventService.SetUser(baseUser);
       eventService.SetUser(contextAccessor);
@@ -317,6 +322,29 @@ namespace EdeskIntegration.Controllers
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idsalaryscale"></param>
+    /// <returns></returns>
+    [HttpPost("{idsalaryscale}/salaryscale")]
+    public string PostSalaryScale(string idsalaryscale)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        //var ext = Path.GetExtension(file.FileName).ToLower();
+        //if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+        if(file.FileName != "SALARYSCALE.xlsx")
+          return "Bad file type.";
+      }
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var result = serviceSalaryScale.ImportSalaryScale(idsalaryscale, file.OpenReadStream());
+        return result;
+      }
+      return "not file";
     }
 
     /// <summary>

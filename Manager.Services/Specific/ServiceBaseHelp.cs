@@ -174,7 +174,8 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Name,
             AccessCount = x.AccessCount,
-            Content = x.Content
+            Content = x.Content,
+            AccessLink = x.AccessLink
           }).ToList();
         total = serviceBaseHelp.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
