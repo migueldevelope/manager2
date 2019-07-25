@@ -65,6 +65,10 @@ namespace Manager.Services.Specific
       serviceRecommendationPerson._user = _user;
       servicePerson._user = _user;
       serviceSalaryScale._user = _user;
+      serviceMail._user = _user;
+      serviceLog._user = _user;
+      serviceMailModel._user = _user;
+
     }
     public void SetUser(BaseUser user)
     {
@@ -73,6 +77,9 @@ namespace Manager.Services.Specific
       serviceRecommendationPerson._user = user;
       servicePerson._user = user;
       serviceSalaryScale._user = user;
+      serviceMail._user = user;
+      serviceLog._user = user;
+      serviceMailModel._user = user;
     }
     #endregion
 
