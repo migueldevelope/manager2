@@ -207,9 +207,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = servicePerson.GetAllNewVersion(p => p._id == meritocracy.Person._id).Result.FirstOrDefault();
+        var user = serviceUser.GetNewVersion(p => p._id == meritocracy.Person._id).Result;
         if (meritocracy.Person.CurrentSchooling == null)
-          meritocracy.Person.CurrentSchooling = person.User.Schooling?.Name;
+          meritocracy.Person.CurrentSchooling = user.Schooling?.Name;
 
         if ((enabled) && meritocracy.Person.CurrentSchooling == null)
           return false;
