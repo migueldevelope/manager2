@@ -14,7 +14,6 @@ namespace Manager.Services.Commons
     {
       //string fullPath = @"c:/jms/SALARYSCALE4.xlsx";
       //var stream = new FileStream(fullPath, FileMode.Open);
-
       try
       {
         ISheet sheet;
@@ -22,6 +21,13 @@ namespace Manager.Services.Commons
         stream.Position = 0;
         XSSFWorkbook hssfwb = new XSSFWorkbook(stream); //This will read 2007 Excel format  
         sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook   
+
+
+        IRow rowpass = sheet.GetRow(3);
+        var pass = rowpass.GetCell(12).ToString();
+        if (pass != "sheetimport")
+          throw new Exception("not_sheet");
+
 
         long count = CountLines(sheet);
         string[] grades = new string[count];
