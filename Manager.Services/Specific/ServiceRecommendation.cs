@@ -348,7 +348,7 @@ namespace Manager.Services.Specific
             Content = recommendation.Content,
             Name = recommendation.Name,
             Image = recommendation.Image,
-            Skill = recommendation.Skill,
+            Skill = serviceSkill.GetFreeNewVersion(p => p._idAccount == account._id & p.Template == recommendation.Skill._id).Result.GetViewList(),
             Status = recommendation.Status,
             _idAccount = account._id,
             _id = ObjectId.GenerateNewId().ToString()
@@ -387,7 +387,7 @@ namespace Manager.Services.Specific
                 Content = recommendation.Content,
                 Name = recommendation.Name,
                 Image = recommendation.Image,
-                Skill = serviceSkill.GetFreeNewVersion(p => p.Template == recommendation.Skill._id).Result.GetViewList(),
+                Skill = serviceSkill.GetFreeNewVersion(p => p._idAccount == accountRecommendation._id & p.Template == recommendation.Skill._id).Result.GetViewList(),
                 Status = recommendation.Status,
                 _idAccount = accountRecommendation._id,
                 _id = ObjectId.GenerateNewId().ToString()
@@ -423,7 +423,7 @@ namespace Manager.Services.Specific
             {
               local.Name = recommendation.Name;
               local.Image = recommendation.Image;
-              var item = serviceRecommendation.Update(local, null);
+              var item = serviceRecommendation.UpdateAccount(local, null);
             }
           }
         }

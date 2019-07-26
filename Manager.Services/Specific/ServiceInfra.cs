@@ -339,7 +339,7 @@ namespace Manager.Services.Specific
             Content = recommendation.Content,
             Name = recommendation.Name,
             Image = recommendation.Image,
-            Skill = serviceSkill.GetFreeNewVersion(p => p.Template == recommendation.Skill._id).Result.GetViewList(),
+            Skill = serviceSkill.GetFreeNewVersion(p => p._idAccount == _user._idAccount & p.Template == recommendation.Skill._id).Result.GetViewList(),
             Status = recommendation.Status,
             _idAccount = _user._idAccount,
             _id = ObjectId.GenerateNewId().ToString()
@@ -511,7 +511,7 @@ namespace Manager.Services.Specific
                 Content = recommendation.Content,
                 Name = recommendation.Name,
                 Image = recommendation.Image,
-                Skill = serviceSkill.GetFreeNewVersion(p => p.Template == recommendation.Skill._id).Result.GetViewList(),
+                Skill = serviceSkill.GetFreeNewVersion(p => p._idAccount == accountRecommendation._id & p.Template == recommendation.Skill._id).Result.GetViewList(),
                 Status = recommendation.Status,
                 _idAccount = accountRecommendation._id,
                 _id = ObjectId.GenerateNewId().ToString()
