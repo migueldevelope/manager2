@@ -165,6 +165,13 @@
             <param name="idcertification"></param>
             <returns></returns>
         </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostPhoto(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.Delete(System.String)">
             <summary>
             

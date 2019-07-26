@@ -382,13 +382,16 @@ namespace Manager.Services.Specific
         var gradename = tuple.Item2;
         var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
 
-        for (int row = 0; row < 50; row++)
+        salaryScale.Grades = new List<Grade>();
+
+        for (int row = 0; row < tuple.Item3; row++)
         {
           if (import[row][0].ToString() != string.Empty)
           {
             var grade = new Grade();
             grade.Order = row + 1;
-            grade.Name = gradename[row];
+            grade._id = ObjectId.GenerateNewId().ToString();
+            grade.Name = gradename[row].ToString();
             grade.ListSteps = new List<ListSteps>();
 
             for (int col = 0; col < 8; col++)
