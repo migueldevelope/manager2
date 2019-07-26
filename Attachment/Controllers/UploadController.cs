@@ -643,6 +643,11 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost("{idperson}/photoperson")]
     public async Task<ObjectResult> PostPhoto(string idperson)
