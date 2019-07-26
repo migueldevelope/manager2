@@ -410,7 +410,7 @@ namespace Manager.Services.Specific
         }
         var scale = serviceSalaryScale.Update(salaryScale, null);
 
-        return "import ok";
+        return "import_ok";
       }
       catch (Exception e)
       {

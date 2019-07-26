@@ -342,14 +342,14 @@ namespace EdeskIntegration.Controllers
         //var ext = Path.GetExtension(file.FileName).ToLower();
         //if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
         if(file.FileName != "SALARYSCALE.xlsx")
-          return "Bad file type.";
+          return "bad_file_type";
       }
       foreach (var file in HttpContext.Request.Form.Files)
       {
         var result = serviceSalaryScale.ImportSalaryScale(idsalaryscale, file.OpenReadStream());
         return result;
       }
-      return "not file";
+      return "not_file";
     }
 
     /// <summary>
