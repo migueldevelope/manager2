@@ -942,7 +942,7 @@ namespace Manager.Services.Specific
             OccupationDate = person.DateLastOccupation ?? meritocracy.Person.OccupationDate,
             OccupationName = person.Occupation?.Name,
             Name = person.User.Name,
-            CurrentSchooling = person.User.Schooling?.Name,
+            CurrentSchooling = meritocracy.Person.CurrentSchooling != null ? meritocracy.Person.CurrentSchooling : person.User.Schooling?.Name,
             Salary = person.Salary,
             OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name
           },
