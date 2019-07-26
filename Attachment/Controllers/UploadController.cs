@@ -32,6 +32,7 @@ namespace EdeskIntegration.Controllers
     private readonly IServicePlan planService;
     private readonly IServiceCertification certificationService;
     private readonly IServiceEvent eventService;
+    private readonly IServiceUser serviceUser;
     private readonly IServiceBaseHelp serviceBaseHelp;
     private readonly IServiceSalaryScale serviceSalaryScale;
     private readonly IServiceRecommendation serviceRecommendation;
@@ -50,9 +51,10 @@ namespace EdeskIntegration.Controllers
     /// <param name="_serviceBaseHelp"></param>
     /// <param name="_serviceRecommendation"></param>
     /// <param name="_serviceSalaryScale"></param>
+    /// <param name="_serviceUser"></param>
     public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _companyService, IServicePerson _personService, IServicePlan _planService,
       IServiceEvent _serviceEvent, IServiceCertification _serviceCertification, IServiceBaseHelp _serviceBaseHelp, IServiceRecommendation _serviceRecommendation,
-      IServiceSalaryScale _serviceSalaryScale)
+      IServiceSalaryScale _serviceSalaryScale, IServiceUser _serviceUser)
     {
       BaseUser baseUser = new BaseUser();
       var user = contextAccessor.HttpContext.User;
@@ -90,6 +92,7 @@ namespace EdeskIntegration.Controllers
       serviceBaseHelp = _serviceBaseHelp;
       serviceRecommendation = _serviceRecommendation;
       serviceSalaryScale = _serviceSalaryScale;
+      serviceUser = _serviceUser;
 
       serviceSalaryScale.SetUser(contextAccessor);
       certificationService.SetUser(contextAccessor);
@@ -100,6 +103,8 @@ namespace EdeskIntegration.Controllers
       planService.SetUser(contextAccessor);
       serviceBaseHelp.SetUser(contextAccessor);
       serviceRecommendation.SetUser(contextAccessor);
+      serviceUser.SetUser(contextAccessor);
+      serviceUser.SetUser(baseUser);
     }
 
     /// <summary>
@@ -638,58 +643,58 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
-    //[Authorize]
-    //[HttpPost("{idperson}/photoperson")]
-    //public async Task<ObjectResult> PostPhoto(string idperson)
-    //{
-    //  foreach (var file in HttpContext.Request.Form.Files)
-    //  {
-    //    var ext = Path.GetExtension(file.FileName).ToLower();
-    //    if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
-    //      return BadRequest("Bad file type.");
-    //  }
-    //  List<Attachments> listAttachments = new List<Attachments>();
-    //  var url = "";
-    //  foreach (var file in HttpContext.Request.Form.Files)
-    //  {
-    //    Attachments attachment = new Attachments()
-    //    {
-    //      Extension = Path.GetExtension(file.FileName).ToLower(),
-    //      LocalName = file.FileName,
-    //      Lenght = file.Length,
-    //      Status = EnumStatus.Enabled,
-    //      Saved = true
-    //    };
-    //    this.service.InsertNewVersion(attachment);
-    //    try
-    //    {
-    //      CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
-    //      CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-    //      CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
-    //      if (await cloudBlobContainer.CreateIfNotExistsAsync())
-    //      {
-    //        await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
-    //        {
-    //          PublicAccess = BlobContainerPublicAccessType.Blob
-    //        });
-    //      }
-    //      CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
-    //      blockBlob.Properties.ContentType = file.ContentType;
-    //      await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
-    //      url = blockBlob.Uri.ToString();
-    //    }
-    //    catch (Exception)
-    //    {
-    //      attachment.Saved = false;
-    //      service.Update(attachment, null);
-    //      throw;
-    //    }
+    [Authorize]
+    [HttpPost("{idperson}/photoperson")]
+    public async Task<ObjectResult> PostPhoto(string idperson)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return BadRequest("Bad file type.");
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      var url = "";
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        await this.service.InsertNewVersion(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+          if (await cloudBlobContainer.CreateIfNotExistsAsync())
+          {
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          url = blockBlob.Uri.ToString();
+        }
+        catch (Exception)
+        {
+          attachment.Saved = false;
+          await service.Update(attachment, null);
+          throw;
+        }
 
-    //    personService.SetPhoto(idperson, url);
-    //    listAttachments.Add(attachment);
-    //  }
-    //  return Ok(listAttachments);
-    //}
+        serviceUser.SetPhoto(idperson, url);
+        listAttachments.Add(attachment);
+      }
+      return Ok(listAttachments);
+    }
 
     //[Authorize]
     //[HttpDelete("plan/{iddp}/delete/{id}")]
@@ -708,11 +713,11 @@ namespace EdeskIntegration.Controllers
     //  return Ok("Attachment deleted!");
     //}
 
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="id"></param>
-      /// <returns></returns>
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<ObjectResult> Delete(string id)

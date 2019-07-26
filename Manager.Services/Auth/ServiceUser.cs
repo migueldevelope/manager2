@@ -229,7 +229,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var person = serviceUser.GetAllNewVersion(p => p._id == idUser).Result.SingleOrDefault();
+        var person = serviceUser.GetNewVersion(p => p._id == idUser).Result;
         person.PhotoUrl = url;
         serviceUser.Update(person, null).Wait();
       }
