@@ -31,5 +31,6 @@ namespace Manager.Core.Interfaces
      List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref  long total,  string filter, int count, int page);
     List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding();
     List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson);
+    void MailTest();
   }
 }

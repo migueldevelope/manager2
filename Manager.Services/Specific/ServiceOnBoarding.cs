@@ -1294,6 +1294,7 @@ namespace Manager.Services.Specific
               Task.Run(() => serviceLogMessages.NewLogMessage("OnBoarding", string.Format("Embarque | OnBoarding de troca de cargo realizado para {0}.", onboarding.Person.Name), person));
 
             onboarding.DateEndEnd = DateTime.Now;
+            Task.Run(() => SendQueue(onboarding._id, person._id));
 
             if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
               person.TypeJourney = EnumTypeJourney.Monitoring;
@@ -1514,6 +1515,59 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Private
+
+    public void MailTest()
+    {
+      try
+      {
+        var person = servicePerson.GetFreeNewVersion(p => p.User.Mail == "suporte@jmsoft.com.br").Result;
+
+        var body = "";
+        var sendMail = new MailLog
+        {
+          From = new MailLogAddress("support@microsoft.com", "Suporte Microsoft"),
+          To = new List<MailLogAddress>(){
+                        new MailLogAddress("miguel@jmsoft.com.br", "Miguel")
+                    },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = "Test Miguel"
+        };
+        var mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
+        SendMail(pathToken, person, mailObj._id.ToString());
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private void SendQueue(string id, string idperson)
+    {
+      try
+      {
+        var data = new ViewCrudMaturityRegister
+        {
+          _idPerson = idperson,
+          TypeMaturity = EnumTypeMaturity.Onboarding,
+          _idRegister = id,
+          Date = DateTime.Now,
+          _idAccount = _user._idAccount
+        };
+
+        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+        
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private OnBoarding LoadMap(Person person)
     {
       try

@@ -12,6 +12,7 @@ using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +35,11 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Questions> serviceQuestions;
     private readonly ServiceGeneric<TextDefault> serviceTextDefault;
+    private readonly IServiceControlQueue serviceControlQueue;
     public string path;
 
     #region Contructor
-    public ServiceCheckpoint(DataContext context, DataContext contextLog, string pathToken) : base(context)
+    public ServiceCheckpoint(DataContext context, DataContext contextLog, string pathToken, IServiceControlQueue _serviceControlQueue) : base(context)
     {
       try
       {
@@ -52,6 +54,8 @@ namespace Manager.Services.Specific
         servicePerson = new ServiceGeneric<Person>(context);
         serviceQuestions = new ServiceGeneric<Questions>(context);
         serviceTextDefault = new ServiceGeneric<TextDefault>(context);
+        serviceControlQueue = _serviceControlQueue;
+
         path = pathToken;
       }
       catch (Exception e)
@@ -372,7 +376,7 @@ namespace Manager.Services.Specific
 
             Task.Run(() => MailRhApproved(person, "Aprovado"));
             Task.Run(() => MailPerson(person, "Aprovado"));
-
+            
             serviceLogMessages.NewLogMessage("Checkpoint", string.Format(" Colaborador {0} aprovado no Checkpoint", person.User.Name), person);
             Task.Run(() => LogSave(_user._idPerson, string.Format("Approved | {0}.", view._id)));
           }
@@ -381,6 +385,8 @@ namespace Manager.Services.Specific
             Task.Run(() => MailRhDisapproved(person, "Reprovado"));
             Task.Run(() => LogSave(_user._idPerson, string.Format("Disapproved | {0}.", view._id)));
           }
+          Task.Run(() => SendQueue(checkpoint._id, person._id));
+
         }
         checkpoint.Comments = view.Comments;
         checkpoint.Questions = view.Questions?.Select(p => new CheckpointQuestions()
@@ -476,6 +482,30 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Private
+
+
+    private void SendQueue(string id, string idperson)
+    {
+      try
+      {
+        var data = new ViewCrudMaturityRegister
+        {
+          _idPerson = idperson,
+          TypeMaturity = EnumTypeMaturity.Checkpoint,
+          _idRegister = id,
+          Date = DateTime.Now,
+          _idAccount = _user._idAccount
+        };
+
+        serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private Checkpoint LoadMap(Checkpoint checkpoint)
     {
       try

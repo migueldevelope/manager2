@@ -2,6 +2,6 @@
 {
   public enum EnumTypeMaturity : byte
   {
-    Monitoring = 0, Plan = 1, Praise = 2, Certification = 3, Recommendation = 4
+    Monitoring = 0, Plan = 1, Praise = 2, Certification = 3, Recommendation = 4, Onboarding = 5, Checkpoint = 6
   }
 }
