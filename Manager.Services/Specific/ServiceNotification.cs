@@ -403,7 +403,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+            From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
             To = sendTest ?
               new List<MailLogAddress>()
                 {
@@ -555,7 +555,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+            From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -606,7 +606,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+            From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
             To = sendTest ?
               new List<MailLogAddress>()
                 {
@@ -679,7 +679,7 @@ namespace Manager.Services.Specific
 
         MailLog sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
           To = sendTest ?
             new List<MailLogAddress>()
               {
@@ -898,7 +898,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+            From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -1205,7 +1205,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+            From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -1307,7 +1307,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+            From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
             To = sendTest ?
               new List<MailLogAddress>()
               {

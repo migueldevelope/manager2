@@ -713,7 +713,7 @@ namespace Manager.Services.Specific
                                 .Replace("{Occupation}", person.Occupation.Name);
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(mailreceived, namereceived)
                     },

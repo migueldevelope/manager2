@@ -29,7 +29,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseTools", "DatabaseTo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager.Views", "Manager.Views\Manager.Views.csproj", "{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerMessages", "ManagerMessages\ManagerMessages.csproj", "{B917FC9E-A8C2-4EC8-B81C-93DB0D8DA579}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagerMessages", "ManagerMessages\ManagerMessages.csproj", "{B917FC9E-A8C2-4EC8-B81C-93DB0D8DA579}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Indicators", "Indicators\Indicators.csproj", "{BFC3190C-C772-49C4-A52D-AB98B806EF54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,10 @@ Global
 		{B917FC9E-A8C2-4EC8-B81C-93DB0D8DA579}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B917FC9E-A8C2-4EC8-B81C-93DB0D8DA579}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B917FC9E-A8C2-4EC8-B81C-93DB0D8DA579}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFC3190C-C772-49C4-A52D-AB98B806EF54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFC3190C-C772-49C4-A52D-AB98B806EF54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFC3190C-C772-49C4-A52D-AB98B806EF54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFC3190C-C772-49C4-A52D-AB98B806EF54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

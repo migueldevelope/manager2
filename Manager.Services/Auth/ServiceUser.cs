@@ -312,7 +312,7 @@ namespace Manager.Services.Auth
 
         MailLog sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
           To = new List<MailLogAddress>()
             { new MailLogAddress(user.Mail, user.Name) },
           Priority = EnumPriorityMail.Low,

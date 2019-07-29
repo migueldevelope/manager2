@@ -204,7 +204,7 @@ namespace Manager.Services.Specific
           body = body.Replace("{Disapproved}", model.Link + "genericmessage/" + idMessageDis.ToString());
           var sendMail = new MailLog
           {
-            From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+            From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
             To = new List<MailLogAddress>(){
                   new MailLogAddress(requestor.User.Mail, requestor.User.Name)
               },

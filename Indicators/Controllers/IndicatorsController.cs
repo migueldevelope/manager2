@@ -9,13 +9,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Manager.Controllers
+namespace Indicators.Controllers
 {
   /// <summary>
   /// 
   /// </summary>
   [Produces("application/json")]
-  [Route("indicators")]
+  [Route("")]
   public class IndicatorsController : DefaultController
   {
     private readonly IServiceIndicators service;
@@ -83,101 +83,101 @@ namespace Manager.Controllers
       return await Task.Run(() =>service.ListTagsCloudPerson(idperson));
     }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //[Authorize]
-    //[HttpGet]
-    //[Route("chartonboarding")]
-    //public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
-    //{
-    //  return await Task.Run(() =>service.ChartOnboarding());
-    //}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("chartonboarding")]
+    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
+    {
+      return await Task.Run(() => service.ChartOnboarding());
+    }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //[Authorize]
-    //[HttpGet]
-    //[Route("chartmonitoring")]
-    //public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring()
-    //{
-    //  return await Task.Run(() =>service.ChartMonitoring());
-    //}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("chartmonitoring")]
+    public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring()
+    {
+      return await Task.Run(() => service.ChartMonitoring());
+    }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //[Authorize]
-    //[HttpGet]
-    //[Route("chartcheckpoint")]
-    //public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint()
-    //{
-    //  return await Task.Run(() =>service.ChartCheckpoint());
-    //}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("chartcheckpoint")]
+    public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint()
+    {
+      return await Task.Run(() => service.ChartCheckpoint());
+    }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //[Authorize]
-    //[HttpGet]
-    //[Route("chartplan")]
-    //public async Task<IEnumerable<ViewChartPlan>> ChartPlan()
-    //{
-    //  return await Task.Run(() =>service.ChartPlan());
-    //}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("chartplan")]
+    public async Task<IEnumerable<ViewChartPlan>> ChartPlan()
+    {
+      return await Task.Run(() => service.ChartPlan());
+    }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //[Authorize]
-    //[HttpGet]
-    //[Route("chartmonitoringrealized")]
-    //public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized()
-    //{
-    //  return await Task.Run(() =>service.ChartMonitoringRealized());
-    //}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("chartmonitoringrealized")]
+    public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized()
+    {
+      return await Task.Run(() => service.ChartMonitoringRealized());
+    }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //[Authorize]
-    //[HttpGet]
-    //[Route("chartcheckpointrealized")]
-    //public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized()
-    //{
-    //  return await Task.Run(() =>service.ChartCheckpointRealized());
-    //}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("chartcheckpointrealized")]
+    public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized()
+    {
+      return await Task.Run(() => service.ChartCheckpointRealized());
+    }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //[Authorize]
-    //[HttpGet]
-    //[Route("chartplanrealized")]
-    //public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized()
-    //{
-    //  return await Task.Run(() =>service.ChartPlanRealized());
-    //}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("chartplanrealized")]
+    public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized()
+    {
+      return await Task.Run(() => service.ChartPlanRealized());
+    }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //[Authorize]
-    //[HttpGet]
-    //[Route("chartonboardingrealized")]
-    //public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized()
-    //{
-    //  return await Task.Run(() =>service.ChartOnboardingRealized());
-    //}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("chartonboardingrealized")]
+    public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized()
+    {
+      return await Task.Run(() => service.ChartOnboardingRealized());
+    }
 
     /// <summary>
     /// 

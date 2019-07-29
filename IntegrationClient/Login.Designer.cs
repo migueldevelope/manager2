@@ -78,7 +78,7 @@
       this.txtEma.Name = "txtEma";
       this.txtEma.Size = new System.Drawing.Size(254, 22);
       this.txtEma.TabIndex = 1;
-      this.txtEma.Text = "suporte@jmsoft.com.br";
+      this.txtEma.Text = "suporte@analisa.solutions";
       // 
       // lblUrl
       // 

@@ -590,7 +590,7 @@ namespace Manager.Services.Specific
         }
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -627,7 +627,7 @@ namespace Manager.Services.Specific
         }
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -661,7 +661,7 @@ namespace Manager.Services.Specific
         };
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@jmsoft.com.br", "Notificação do Analisa"),
+          From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -723,7 +723,7 @@ namespace Manager.Services.Specific
             Name = "E-mail do RH para enviar aviso de Decisão de Efetivação | Checkpoint",
             Key = "mailcheckpoint",
             Help = "Informe um e-mail, ou vários e-mails separados por ponto-e-virgula, para enviar os avisos.",
-            Content = "suporte@jmsoft.com.br",
+            Content = "suporte@analisa.solutions",
             Status = EnumStatus.Enabled
           }).Result.Content;
         else
