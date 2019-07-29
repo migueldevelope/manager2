@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Indicators</name>
+    </assembly>
+    <members>
+        <member name="T:Indicators.Controllers.DefaultController">
+            <summary>
+            controller padrão
+            </summary>
+        </member>
+        <member name="M:Indicators.Controllers.DefaultController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="T:Indicators.Controllers.IndicatorsController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.#ctor(Manager.Core.Interfaces.IServiceIndicators,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="_service"></param>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetNotes(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetNotesPerson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloud(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudPerson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboarding">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartMonitoring">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartCheckpoint">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartPlan">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartMonitoringRealized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartCheckpointRealized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartPlanRealized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboardingRealized">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompany(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPerson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Indicators.Startup">
+            <summary>
+            Controle de inicialização da API
+            </summary>
+        </member>
+        <member name="M:Indicators.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:Indicators.Startup.Configuration">
+            <summary>
+            Propriedade de configuração
+            </summary>
+        </member>
+        <member name="M:Indicators.Startup.RegistreServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registrador de serviços
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Indicators.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configurador de servicos
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Indicators.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Configuração de aplicação
+            </summary>
+            <param name="app">Aplicação</param>
+            <param name="env">Ambiente de hospedagem</param>
+        </member>
+    </members>
+</doc>
