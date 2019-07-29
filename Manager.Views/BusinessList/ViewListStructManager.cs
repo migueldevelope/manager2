@@ -1,14 +1,11 @@
-﻿using Manager.Core.Base;
-using Manager.Views.BusinessList;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
-namespace Manager.Core.Business
+namespace Manager.Views.BusinessList
 {
-  public class StructManager:BaseEntity
+  public class ViewListStructManager: _ViewListBase
   {
-
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idManager { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]

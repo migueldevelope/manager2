@@ -1,9 +1,10 @@
-﻿using MongoDB.Bson;
+﻿using Manager.Core.Base;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Manager.Core.Business
 {
-  public class Manager
+  public class DirectTeam: BaseEntity
   {
 
     [BsonRepresentation(BsonType.ObjectId)]
