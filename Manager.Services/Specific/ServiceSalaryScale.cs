@@ -348,23 +348,31 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var salaryScale = serviceSalaryScale.GetNewVersion(p => p.Company._id == idcompany).Result;
-
-        if (salaryScale == null)
+        var list = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany).Result;
+          var result = new List<ViewListGradeFilter>();
+        if (list == null)
           return new List<ViewListGradeFilter>();
 
-        if (salaryScale.Grades == null)
-          return new List<ViewListGradeFilter>();
-
-        total = salaryScale.Grades.Count();
-
-        return salaryScale.Grades.Select(p => new ViewListGradeFilter()
+        foreach (var salaryScale in list)
         {
-          idGrade = p._id,
-          NameGrade = p.Name,
-          idSalaryScale = salaryScale._id,
-          NameSalaryScale = salaryScale.Name
-        }).ToList();
+          if(salaryScale.Grades != null)
+          {
+            foreach (var grade in salaryScale.Grades)
+            {
+              result.Add(new ViewListGradeFilter()
+              {
+                idGrade = grade._id,
+                NameGrade = grade.Name,
+                idSalaryScale = salaryScale._id,
+                NameSalaryScale = salaryScale.Name
+              });
+            }
+          }
+        }
+        
+        total = result.Count();
+
+        return result;
       }
       catch (Exception e)
       {
