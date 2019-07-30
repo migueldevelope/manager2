@@ -652,6 +652,26 @@ namespace Manager.Controllers
       return await Task.Run(() => result);
     }
     /// <summary>
+    /// Lista cargos com filtro de empresa e a area para editar
+    /// </summary>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <param name="filterGroup"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listoccupationedit/{idcompany}")]
+    public async Task<List<ViewOccupationListEdit>> ListOccupationEdit(string idcompany, int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    {
+      long total = 0;
+      var result = service.ListOccupationsEdit(idcompany, ref total, filter, count, page, filterGroup);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
     /// Lista cargos com filtro de empresa e area
     /// </summary>
     /// <param name="idcompany">Identificador empresa</param>

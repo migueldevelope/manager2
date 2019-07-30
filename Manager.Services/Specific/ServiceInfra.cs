@@ -2327,7 +2327,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var area = serviceArea.GetAllNewVersion(p => p._id == idarea).Result.FirstOrDefault();
+        var area = serviceArea.GetNewVersion(p => p._id == idarea).Result;
         var itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
         List<Occupation> list = new List<Occupation>();
         foreach (var item in itens)
@@ -2379,6 +2379,70 @@ namespace Manager.Services.Specific
           }).ToList();
 
         total = list.Count();
+
+        return itensResult;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup)
+    {
+      try
+      {
+        var itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
+        //List<Occupation> list = new List<Occupation>();
+        //foreach (var item in itens)
+        //{
+        //  if (item.Process != null)
+        //  {
+        //    if (item.Process.FirstOrDefault() != null)
+        //    {
+        //      if (item.Process.Where(p => p.ProcessLevelOne.Area._id == idarea).Count() > 0)
+        //      {
+        //        list.Add(new Occupation()
+        //        {
+        //          Name = item.Name,
+        //          Group = item.Group,
+        //          Line = item.Line,
+        //          Skills = item.Skills,
+        //          Schooling = item.Schooling,
+        //          Activities = item.Activities,
+        //          Template = item.Template,
+        //          Cbo = item.Cbo,
+        //          SpecificRequirements = item.SpecificRequirements,
+        //          Process = item.Process,
+        //          _id = item._id,
+        //          _idAccount = item._idAccount,
+        //          Status = item.Status,
+        //          //Areas = item.Areas
+        //        });
+        //      }
+
+        //    }
+        //  }
+        //}
+        //list.OrderBy(p => p.Name).ToList();
+
+        int skip = (count * (page - 1));
+
+        var itensResult = itens.Where(p => p.Group.Company._id == idcompany
+        & p.Name.ToUpper().Contains(filter.ToUpper())
+        & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).
+          Skip(skip).Take(count)
+          .OrderBy(p => p.Name).ToList().Select(p => new ViewOccupationListEdit
+          {
+            _id = p._id,
+            Name = p.Name,
+            NameGroup = p.Group.Name,
+            Activities = p.Activities.Count(),
+            Skills = p.Skills.Count(),
+            Schooling = p.Schooling.Where(x => x.Complement != null).Count()
+          }).ToList();
+
+        total = itens.Count();
 
         return itensResult;
       }
