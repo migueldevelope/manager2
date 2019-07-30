@@ -349,13 +349,13 @@ namespace Manager.Services.Specific
       try
       {
         var list = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany).Result;
-          var result = new List<ViewListGradeFilter>();
+        var result = new List<ViewListGradeFilter>();
         if (list == null)
           return new List<ViewListGradeFilter>();
 
         foreach (var salaryScale in list)
         {
-          if(salaryScale.Grades != null)
+          if (salaryScale.Grades != null)
           {
             foreach (var grade in salaryScale.Grades)
             {
@@ -369,7 +369,7 @@ namespace Manager.Services.Specific
             }
           }
         }
-        
+
         total = result.Count();
 
         return result;
@@ -408,7 +408,7 @@ namespace Manager.Services.Specific
               {
                 var step = new ListSteps();
                 step.Step = (EnumSteps)col;
-                step.Salary = decimal.Parse(import[row][col].ToString());
+                step.Salary = Math.Round(decimal.Parse(import[row][col].ToString()), 2);
                 grade.ListSteps.Add(step);
               }
             }
