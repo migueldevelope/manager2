@@ -36,19 +36,18 @@ namespace ManagerMessages
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
-      string queueName = "journey";
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
       serviceControlQueue.StartMathMaturity();
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
+      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue);
+      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
@@ -60,7 +59,7 @@ namespace ManagerMessages
       IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
-      IServiceNotification serviceNotification = new ServiceNotification(_context, _contextLog, conn.TokenServer);
+      IServiceNotification serviceNotification = new ServiceNotification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
 
 

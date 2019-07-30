@@ -29,5 +29,9 @@ namespace Tools.Data
     public string DataBaseIntegration { get; set; }
     [XmlElement("ServiceBusConnectionString")]
     public string ServiceBusConnectionString { get; set; }
+    [XmlElement("ServerStruct")]
+    public string ServerStruct { get; set; }
+    [XmlElement("DataBaseStruct")]
+    public string DataBaseStruct { get; set; }
   }
 }

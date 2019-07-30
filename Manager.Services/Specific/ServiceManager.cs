@@ -1,31 +1,36 @@
-﻿using Manager.Core.Business;
+﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
+using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
 {
   public class ServiceManager : Repository<Person>, IServiceManager
   {
-    private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<DirectTeam> serviceDirectTeam;
     private readonly ServiceGeneric<ListManager> serviceListManager;
     private readonly ServiceGeneric<StructManager> serviceStructManager;
-
+    private readonly IQueueClient queueClient;
     private readonly IServiceControlQueue serviceControlQueue;
-    public ServiceManager(DataContext context, IServiceControlQueue _serviceControlQueue) : base(context)
+    public ServiceManager(DataContext contextStruct, IServiceControlQueue _serviceControlQueue, string serviceBusConnectionString) : base(contextStruct)
     {
       try
       {
-        servicePerson = new ServiceGeneric<Person>(context);
-        serviceDirectTeam = new ServiceGeneric<DirectTeam>(context);
-        serviceListManager = new ServiceGeneric<ListManager>(context);
-        serviceStructManager = new ServiceGeneric<StructManager>(context);
+        serviceDirectTeam = new ServiceGeneric<DirectTeam>(contextStruct);
+        serviceListManager = new ServiceGeneric<ListManager>(contextStruct);
+        serviceStructManager = new ServiceGeneric<StructManager>(contextStruct);
         serviceControlQueue = _serviceControlQueue;
+        queueClient = new QueueClient(serviceBusConnectionString, "structmanager");
       }
       catch (Exception e)
       {
@@ -35,17 +40,27 @@ namespace Manager.Services.Specific
 
     #region public
 
+    public void SetUser(BaseUser user)
+    {
+      _user = user;
+      serviceListManager._user = user;
+      serviceStructManager._user = user;
+      serviceDirectTeam._user = user;
+    }
+
     public void UpdateStructManager()
     {
       try
       {
-        // clean list
-        RemoveListManager();
-        // add news managers
-        NewListManager();
-        // adjust direct team
-        NewDirectTeam();
-        NewStructManager();
+        var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+        {
+          MaxConcurrentCalls = 1,
+          AutoComplete = false
+        };
+
+        queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+
+
       }
       catch (Exception e)
       {
@@ -59,24 +74,14 @@ namespace Manager.Services.Specific
 
     #region private
 
-    private void NewListManager()
+    private void NewListManager(string idManager)
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.ErrorIntegration
-        & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator &
-        p.TypeUser != EnumTypeUser.Support).Result;
-
-        foreach (var item in persons)
+        var exists = serviceListManager.CountNewVersion(p => p._idManager == idManager).Result;
+        if (exists == 0)
         {
-          if (item.Manager != null)
-          {
-            var exists = serviceListManager.CountNewVersion(p => p._idManager == item.Manager._id).Result;
-            if (exists == 0)
-            {
-              var result = serviceListManager.InsertNewVersion(new ListManager() { _idManager = item.Manager._id });
-            }
-          }
+          var result = serviceListManager.InsertNewVersion(new ListManager() { _idManager = idManager });
         }
       }
       catch (Exception e)
@@ -108,9 +113,7 @@ namespace Manager.Services.Specific
         var listManager = serviceListManager.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in listManager)
         {
-          var persons = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.ErrorIntegration
-          & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator &
-            p.TypeUser != EnumTypeUser.Support & p.Manager._id == item._idManager).Result;
+          var persons = serviceDirectTeam.CountNewVersion(p => p._idManager == item._idManager).Result;
           if (persons == 0)
           {
             serviceListManager.Delete(item._id, false);
@@ -123,28 +126,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void NewDirectTeam()
+    private void NewDirectTeam(string idManager, string idPerson)
     {
       try
       {
-        var listManager = serviceListManager.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        foreach (var item in listManager)
+        var exists = serviceDirectTeam.CountNewVersion(p => p._idManager == idManager && p._idPerson == idPerson).Result;
+        if (exists == 0)
         {
-          var team = servicePerson.GetAllNewVersion(p => p.Manager._id == item._idManager).Result;
-          foreach (var person in team)
+          var result = serviceDirectTeam.InsertNewVersion(new DirectTeam()
           {
-            var exists = serviceDirectTeam.CountNewVersion(p => p._idManager == item._idManager && p._idPerson == person._id).Result;
-            if (exists == 0)
-            {
-              var result = serviceDirectTeam.InsertNewVersion(new DirectTeam()
-              {
-                _idPerson = person._id,
-                _idManager = item._idManager
-              });
-            }
-            RemoveManager(item._id, item._idManager);
-          }
+            _idPerson = idPerson,
+            _idManager = idManager
+          });
         }
+        RemoveManager(idPerson, idManager);
+
       }
       catch (Exception e)
       {
@@ -162,6 +158,33 @@ namespace Manager.Services.Specific
       {
         throw e;
       }
+    }
+
+
+
+    private async Task ProcessMessagesAsync(Message message, CancellationToken token)
+    {
+      var view = JsonConvert.DeserializeObject<ViewListStructManagerSend>(Encoding.UTF8.GetString(message.Body));
+      SetUser(new BaseUser()
+      {
+        _idAccount = view._idAccount
+      });
+
+      // add news managers
+      NewListManager(view._idManager);
+      // adjust direct team
+      NewDirectTeam(view._idManager, view._idPerson);
+      NewStructManager();
+      // clean list
+      RemoveListManager();
+
+      await queueClient.CompleteAsync(message.SystemProperties.LockToken);
+    }
+
+    private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+    {
+      var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+      return Task.CompletedTask;
     }
 
     #endregion

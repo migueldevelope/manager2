@@ -17,10 +17,12 @@ namespace Manager.Services.Commons
   {
     private readonly IQueueClient queueClient;
     private readonly IServiceMaturity serviceMaturity;
+    private readonly string serviceBusConnectionString;
 
-    public ServiceControlQueue(string serviceBusConnectionString, string queueName, IServiceMaturity _serviceMaturity)
+    public ServiceControlQueue(string _serviceBusConnectionString, IServiceMaturity _serviceMaturity)
     {
-      queueClient = new QueueClient(serviceBusConnectionString, queueName);
+      serviceBusConnectionString = _serviceBusConnectionString;
+      queueClient = new QueueClient(serviceBusConnectionString, "journey");
       serviceMaturity = _serviceMaturity;
     }
 
@@ -108,5 +110,9 @@ namespace Manager.Services.Commons
       return Task.CompletedTask;
     }
 
+    public string ServiceBusConnectionString()
+    {
+      return serviceBusConnectionString;
+    }
   }
 }

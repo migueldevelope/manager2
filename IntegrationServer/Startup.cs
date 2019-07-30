@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Services.Auth;
+using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -54,18 +55,23 @@ namespace IntegrationServer
       DataContext _contextIntegration;
       _contextIntegration = new DataContext(conn.ServerIntegration, conn.DataBaseIntegration);
 
+      var serviceBusConnectionString = conn.ServiceBusConnectionString;
+      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
+      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceAudit serviceAudit = new ServiceAudit(_context);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceIntegration serviceIntegration = new ServiceIntegration(_context, _contextLog, _contextIntegration);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue);
 
+      services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceAudit);
       services.AddSingleton(_ => serviceCompany);

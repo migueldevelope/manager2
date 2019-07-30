@@ -21,11 +21,11 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Workflow> serviceWorkflow;
 
     #region Constructor
-    public ServiceWorkflow(DataContext context, DataContext contextLog) : base(context)
+    public ServiceWorkflow(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue) : base(context)
     {
       try
       {
-        servicePerson = new ServicePerson(context, contextLog);
+        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue);
         serviceWorkflow = new ServiceGeneric<Workflow>(context);
       }
       catch (Exception e)
@@ -48,12 +48,12 @@ namespace Manager.Services.Specific
     #endregion
 
     #region WorkFlow
-    public  List<Workflow> NewFlow(ViewFlow view)
+    public List<Workflow> NewFlow(ViewFlow view)
     {
       try
       {
         if (view.Type == EnumTypeFlow.Manager)
-          return  Manager(view);
+          return Manager(view);
         return null;
       }
       catch (Exception e)
@@ -61,7 +61,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  List<Workflow> Manager(ViewFlow view)
+    public List<Workflow> Manager(ViewFlow view)
     {
       try
       {
@@ -75,7 +75,7 @@ namespace Manager.Services.Specific
           Requestor = manager.GetViewListBaseManager(),
           Sequence = 1
         };
-         serviceWorkflow.InsertNewVersion(workflow).Wait();
+        serviceWorkflow.InsertNewVersion(workflow).Wait();
         result.Add(workflow);
         return result;
       }
@@ -84,7 +84,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  Workflow Approved(ViewWorkflow view)
+    public Workflow Approved(ViewWorkflow view)
     {
       try
       {
@@ -92,7 +92,7 @@ namespace Manager.Services.Specific
         workflow.StatusWorkflow = EnumWorkflow.Approved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
-         serviceWorkflow.Update(workflow, null).Wait();
+        serviceWorkflow.Update(workflow, null).Wait();
         return workflow;
       }
       catch (Exception e)
@@ -100,7 +100,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  Workflow Disapproved(ViewWorkflow view)
+    public Workflow Disapproved(ViewWorkflow view)
     {
       try
       {
@@ -108,7 +108,7 @@ namespace Manager.Services.Specific
         workflow.StatusWorkflow = EnumWorkflow.Disapproved;
         workflow.Commetns = view.Comments;
         workflow.Date = DateTime.Now;
-         serviceWorkflow.Update(workflow, null).Wait();
+        serviceWorkflow.Update(workflow, null).Wait();
         return workflow;
       }
       catch (Exception e)

@@ -56,9 +56,11 @@ namespace Manager
 
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
+
+      DataContext _contextStruct;
+      _contextStruct = new DataContext(conn.ServerStruct, conn.DataBaseStruct);
+
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
-      string queueName = "journey";
-      string queueBaseHelp = "basehelp";
 
       //new MigrationHandle(_context._db).Migrate();
 
@@ -66,15 +68,16 @@ namespace Manager
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, queueName, serviceMaturity);
-      IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString, queueBaseHelp);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+      IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString);
+      IServiceManager serviceManager = new ServiceManager(_contextStruct, serviceControlQueue, serviceBusConnectionString);
 
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
+      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue);
+      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
@@ -89,15 +92,16 @@ namespace Manager
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
       IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog);
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue);
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer);
+      IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
       IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
+      serviceManager.UpdateStructManager();
 
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);

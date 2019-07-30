@@ -25,7 +25,11 @@ namespace Tools
             ServerLog = "ServerLog",
             SignalRService = "SignalRService",
             TokenServer = "TokenServer",
-            ServiceBusConnectionString = "ServiceBusConnectionString"
+            ServiceBusConnectionString = "ServiceBusConnectionString",
+            ServerStruct = "ServerStruct",
+            DataBaseIntegration = "DataBaseIntegration",
+            DataBaseStruct = "DataBaseStruct",
+            ServerIntegration = "ServerIntegration"
           }, fileName);
         }
         XmlSerializer xs = new XmlSerializer(typeof(Config));
@@ -60,6 +64,8 @@ namespace Tools
               SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.Machine),
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Machine),
               ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Machine),
+              ServerStruct = Environment.GetEnvironmentVariable("ANALISA_SERVERSTRUCT", EnvironmentVariableTarget.Machine),
+              DataBaseStruct = Environment.GetEnvironmentVariable("ANALISA_DATABASESTRUCT", EnvironmentVariableTarget.Machine),
             };
         }
         else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.Process) != null)
@@ -77,7 +83,9 @@ namespace Tools
               ServerLog = Environment.GetEnvironmentVariable("ANALISA_SERVERLOG", EnvironmentVariableTarget.Process),
               SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.Process),
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.Process),
-              ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Process)
+              ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.Process),
+              ServerStruct = Environment.GetEnvironmentVariable("ANALISA_SERVERSTRUCT", EnvironmentVariableTarget.Process),
+              DataBaseStruct = Environment.GetEnvironmentVariable("ANALISA_DATABASESTRUCT", EnvironmentVariableTarget.Process),
             };
         }
         else if (Environment.GetEnvironmentVariable("ANALISA_SERVER", EnvironmentVariableTarget.User) != null)
@@ -96,6 +104,8 @@ namespace Tools
               SignalRService = Environment.GetEnvironmentVariable("ANALISA_SIGNALRSERVICE", EnvironmentVariableTarget.User),
               TokenServer = Environment.GetEnvironmentVariable("ANALISA_TOKENSERVER", EnvironmentVariableTarget.User),
               ServiceBusConnectionString = Environment.GetEnvironmentVariable("ANALISA_SERVICEBUSCONNECTIONSTRING", EnvironmentVariableTarget.User),
+              ServerStruct = Environment.GetEnvironmentVariable("ANALISA_SERVERSTRUCT", EnvironmentVariableTarget.User),
+              DataBaseStruct = Environment.GetEnvironmentVariable("ANALISA_DATABASESTRUCT", EnvironmentVariableTarget.User),
             };
         }
 

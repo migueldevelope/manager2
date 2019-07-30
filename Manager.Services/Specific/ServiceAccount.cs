@@ -31,12 +31,12 @@ namespace Manager.Services.Specific
     private readonly ServiceLog serviceLog;
 
     #region Constructor
-    public ServiceAccount(DataContext context, DataContext contextLog) : base(context)
+    public ServiceAccount(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue) : base(context)
     {
       try
       {
         serviceAccount = new ServiceGeneric<Account>(context);
-        serviceAuthentication = new ServiceAuthentication(context, contextLog);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceUser = new ServiceGeneric<User>(context);
         serviceCompany = new ServiceGeneric<Company>(context);

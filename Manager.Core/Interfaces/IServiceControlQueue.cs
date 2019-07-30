@@ -9,5 +9,6 @@ namespace Manager.Core.Interfaces
     void SendMessageAsync(dynamic view);
     void RegisterOnMessageHandlerAndReceiveMesssages();
     void StartMathMaturity();
+    string ServiceBusConnectionString();
   }
 }

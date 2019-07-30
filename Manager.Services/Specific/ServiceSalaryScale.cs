@@ -348,7 +348,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var salaryScale = serviceSalaryScale.GetAllNewVersion(p => p.Company._id == idcompany).Result.FirstOrDefault();
+        var salaryScale = serviceSalaryScale.GetNewVersion(p => p.Company._id == idcompany).Result;
 
         if (salaryScale == null)
           return new List<ViewListGradeFilter>();

@@ -1,9 +1,11 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
+using Manager.Services.Specific;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
@@ -18,8 +20,10 @@ namespace Manager.Test.Commons
   public abstract class TestCommons<TEntity> : IDisposable
   {
     public DataContext context;
+    public IServiceControlQueue serviceControlQueue;
     readonly string databaseConnection = "mongodb://analisa_teste:bti9010@10.0.0.16:27017/analisa_teste";
     readonly string databaseName = "analisa_teste";
+    readonly string serviceBusConnectionString = "Endpoint=sb://analisahomologacao.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=1y2m++UIvKo5+hO676tldq574hoyqD3K7VE+fY+K5Xc=;";
 
     public BaseUser baseUser;
     //public IServiceMaturity serviceMaturity;
@@ -39,9 +43,13 @@ namespace Manager.Test.Commons
       {
         context = new DataContext(databaseConnection, databaseName);
 
+        IServiceMaturity serviceMaturity = new ServiceMaturity(context);
+        IServiceControlQueue _serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+        serviceControlQueue = _serviceControlQueue;
+
         // Limpeza do banco
         string script = @"db.getCollectionNames().forEach(function(c) { if (c.indexOf(""system."") == -1) db[c].drop(); })";
-        BsonDocument response = context._db.RunCommand(new BsonDocumentCommand<BsonDocument>(new BsonDocument() {{ "eval", script }}));
+        BsonDocument response = context._db.RunCommand(new BsonDocumentCommand<BsonDocument>(new BsonDocument() { { "eval", script } }));
 
         // Criar conta principal (Account)
         ServiceGeneric<Account> serviceAccount = new ServiceGeneric<Account>(context);
@@ -334,7 +342,7 @@ namespace Manager.Test.Commons
           Message = @"Olá <strong>Recursos Humanos</strong>,</br></br>O resultado do check point para o(a) colaborador(a) <strong>{Person}</strong> foi APROVADO.</br>Procure o gestor <strong>{Manager}</strong> para realizar os procedimentos de efetivação de período de experiência.</br></br>#VamosSerMaisFluidos",
           Name = "checkpointresult",
           StatusMail = EnumStatus.Enabled,
-          Subject = "Notificação de Decisão de Efetivação | Check point - APROVADO"          
+          Subject = "Notificação de Decisão de Efetivação | Check point - APROVADO"
         };
         mailModel = service.InsertNewVersion(mailModel).Result;
         mailModel = new MailModel()
@@ -744,7 +752,7 @@ namespace Manager.Test.Commons
           skill = new Skill()
           {
             _idAccount = "5b6c4f47d9090156f08775aa",
-            Name = string.Format("Skill {0} {1}", i <= 25 ? "Soft" : "Hard",i),
+            Name = string.Format("Skill {0} {1}", i <= 25 ? "Soft" : "Hard", i),
             Concept = string.Format("Conceito da Skill {0} {1}", i <= 25 ? "Soft" : "Hard", i),
             Template = null,
             TypeSkill = EnumTypeSkill.Soft,
@@ -1092,9 +1100,9 @@ namespace Manager.Test.Commons
         Skill skill;
         for (int i = 1; i < 4; i++)
         {
-          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}",i)).Result;
+          skill = serviceSkill.GetNewVersion(p => p.Name == string.Format("Skill Soft {0}", i)).Result;
           if (skill == null)
-            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}",i));
+            throw new Exception(string.Format("Erro no grupo buscando a skill soft {0}", i));
           skillList.Add(skill.GetViewList());
         }
         ServiceGeneric<Group> service = new ServiceGeneric<Group>(context)
@@ -1464,7 +1472,7 @@ namespace Manager.Test.Commons
       try
       {
         context = new DataContext(databaseConnection, databaseName);
-        ServiceAuthentication service = new ServiceAuthentication(context, context);
+        ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue);
         ViewAuthentication view = new ViewAuthentication()
         {
           Mail = "analisa@jmsoft.com.br",
@@ -1504,7 +1512,7 @@ namespace Manager.Test.Commons
       try
       {
         context = new DataContext(databaseConnection, databaseName);
-        ServiceAuthentication service = new ServiceAuthentication(context, context);
+        ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue);
         ViewAuthentication view = new ViewAuthentication()
         {
           Mail = "analisa@jmsoft.com.br",

@@ -24,11 +24,11 @@ namespace Manager.Services.Specific
     private readonly IQueueClient queueClient;
 
     #region Constructor
-    public ServiceBaseHelp(DataContext context, string serviceBusConnectionString, string queueName) : base(context)
+    public ServiceBaseHelp(DataContext context, string serviceBusConnectionString) : base(context)
     {
       try
       {
-        queueClient = new QueueClient(serviceBusConnectionString, queueName);
+        queueClient = new QueueClient(serviceBusConnectionString, "basehelp");
         serviceBaseHelp = new ServiceGeneric<BaseHelp>(context);
       }
       catch (Exception e)

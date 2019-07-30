@@ -9,9 +9,12 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Tools;
 
@@ -29,12 +32,14 @@ namespace Manager.Services.Auth
     private ServiceGeneric<SalaryScale> serviceSalaryScale;
     private ServiceGeneric<Schooling> serviceSchooling;
     private ServiceGeneric<User> serviceUser;
+    private readonly IQueueClient queueClient;
 
     #region Constructor
-    public ServicePerson(DataContext context, DataContext contextLog) : base(context)
+    public ServicePerson(DataContext context, DataContext contextLog, IServiceControlQueue seviceControlQueue) : base(context)
     {
       try
       {
+        queueClient = new QueueClient(seviceControlQueue.ServiceBusConnectionString(), "structmanager");
         serviceAttachment = new ServiceGeneric<Attachments>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceEstablishment = new ServiceGeneric<Establishment>(context);
@@ -221,7 +226,9 @@ namespace Manager.Services.Auth
     {
       try
       {
-        User user = serviceUser.GetAllNewVersion(p => p._id == view.User._id).Result.SingleOrDefault();
+        Person person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
+        User user = serviceUser.GetNewVersion(p => p._id == view.User._id).Result;
+
         user.Name = view.User.Name;
         user.Nickname = view.User.Nickname;
         user.Document = view.User.Document;
@@ -246,6 +253,15 @@ namespace Manager.Services.Auth
              Name = p.User.Name,
              Mail = p.User.Mail
            }).FirstOrDefault();
+
+          if (person.Manager != null)
+          {
+            if (person.Manager._id != view.Person.Manager._id)
+              Task.Run(() => SendQueue(view.Person.Manager._id, view.Person._id));
+          }
+          else
+            Task.Run(() => SendQueue(view.Person.Manager._id, view.Person._id));
+
         }
         SalaryScalePerson salaryScale = null;
         if (view.Person.SalaryScales != null)
@@ -253,7 +269,6 @@ namespace Manager.Services.Auth
             .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
             .FirstOrDefault();
 
-        Person person = servicePerson.GetAllNewVersion(p => p._id == view.Person._id).Result.FirstOrDefault();
         person.StatusUser = view.Person.StatusUser;
         person.Company = view.Person.Company;
         person.Occupation = view.Person.Occupation;
@@ -543,6 +558,7 @@ namespace Manager.Services.Auth
     {
       try
       {
+        Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
         User user = serviceUser.GetNewVersion(p => p._id == view.User._id).Result;
         user.DateAdm = view.User.DateAdm;
         user.DateBirth = view.User.DateBirth;
@@ -569,6 +585,15 @@ namespace Manager.Services.Auth
              Name = p.User.Name,
              Mail = p.User.Mail
            }).FirstOrDefault();
+
+          if (person.Manager != null)
+          {
+            if (person.Manager._id != view.Manager._id)
+              Task.Run(() => SendQueue(view.Manager._id, view._id));
+          }
+          else
+            Task.Run(() => SendQueue(view.Manager._id, view._id));
+
         }
         SalaryScalePerson salaryScale = null;
         if (view.SalaryScales != null)
@@ -576,7 +601,6 @@ namespace Manager.Services.Auth
             .Result.Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
             .FirstOrDefault();
 
-        Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
         person.Company = view.Company;
         person.DateLastOccupation = view.DateLastOccupation;
         person.DateLastReadjust = view.DateLastReadjust;
@@ -640,6 +664,40 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Private
+
+    private void SendMessageAsync(dynamic view)
+    {
+      try
+      {
+        var message = new Message(Encoding.UTF8.GetBytes(view));
+        queueClient.SendAsync(message);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private void SendQueue(string idmanager, string idperson)
+    {
+      try
+      {
+        var data = new ViewListStructManagerSend
+        {
+          _idPerson = idperson,
+          _idManager = idmanager,
+          _idAccount = _user._idAccount
+        };
+
+        SendMessageAsync(JsonConvert.SerializeObject(data));
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private void DefaultTypeRegisterPerson()
     {
       try

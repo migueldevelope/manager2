@@ -35,11 +35,11 @@ namespace Manager.Services.Specific
     public string path;
 
     #region Constructor
-    public ServiceGoals(DataContext context, DataContext contextLog, string pathToken) : base(context)
+    public ServiceGoals(DataContext context, DataContext contextLog, string pathToken, IServiceControlQueue _serviceControlQueue) : base(context)
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context, contextLog);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, _serviceControlQueue);
         serviceGoals = new ServiceGeneric<Goals>(context);
         serviceGoalsCompany = new ServiceGeneric<GoalsCompany>(context);
         serviceGoalsPeriod = new ServiceGeneric<GoalsPeriod>(context);

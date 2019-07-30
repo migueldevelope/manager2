@@ -62,13 +62,17 @@ namespace Indicators
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-      
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog);
+      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+
+
+      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog);
-      
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue);
+
+      services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceAuthentication);
       services.AddSingleton(_ => servicePerson);

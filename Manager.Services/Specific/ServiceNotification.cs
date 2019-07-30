@@ -37,10 +37,10 @@ namespace Manager.Services.Specific
     private readonly string path;
 
     #region Constructor
-    public ServiceNotification(DataContext context, DataContext contextLog, string _path) : base(context)
+    public ServiceNotification(DataContext context, DataContext contextLog, string _path, IServiceControlQueue serviceControlQueue) : base(context)
     {
       serviceAccount = new ServiceGeneric<Account>(context);
-      serviceAuthentication = new ServiceAuthentication(context, contextLog);
+      serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue);
       serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
       serviceConfigurationNotification = new ServiceGeneric<ConfigurationNotification>(context);
       serviceLog = new ServiceLog(context, contextLog);

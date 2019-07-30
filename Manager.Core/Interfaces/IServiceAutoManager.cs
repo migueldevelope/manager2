@@ -16,7 +16,6 @@ namespace Manager.Core.Interfaces
     List<ViewAutoManagerPerson> ListOpen(string idManager, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewAutoManagerPerson> ListEnd(string idManager, string filter);
     void SetManagerPerson(ViewManager view, string idPerson, string path);
-    string SendMail(string link, Person person, string idmail);
     string Disapproved(ViewWorkflow view, string idPerson, string idManager);
     string Approved(ViewWorkflow view, string idPerson, string idManager);
     void Canceled(string idPerson, string idManager);

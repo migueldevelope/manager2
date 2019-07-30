@@ -14,6 +14,10 @@ using Manager.Services.Auth;
 using Manager.Views.Enumns;
 using Manager.Views.BusinessView;
 using System.Threading.Tasks;
+using Microsoft.Azure.ServiceBus;
+using System.Text;
+using Newtonsoft.Json;
+using Manager.Views.BusinessList;
 
 namespace Manager.Services.Specific
 {
@@ -27,19 +31,21 @@ namespace Manager.Services.Specific
     private readonly ServiceMailModel serviceMailModel;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceWorkflow serviceWorkflow;
+    private readonly IQueueClient queueClient;
 
     #region Constructor
-    public ServiceAutoManager(DataContext context, DataContext contextLog) : base(context)
+    public ServiceAutoManager(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue) : base(context)
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context, contextLog);
+        queueClient = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "structmanager");
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue);
         serviceAutoManager = new ServiceGeneric<AutoManager>(context);
         serviceMailLog = new ServiceGeneric<MailLog>(contextLog);
         serviceMailModel = new ServiceMailModel(context);
         serviceMailMessage = new ServiceGeneric<MailMessage>(contextLog);
         servicePerson = new ServiceGeneric<Person>(context);
-        serviceWorkflow = new ServiceWorkflow(context, contextLog);
+        serviceWorkflow = new ServiceWorkflow(context, contextLog, serviceControlQueue);
       }
       catch (Exception e)
       {
@@ -158,6 +164,8 @@ namespace Manager.Services.Specific
             manager.TypeUser = EnumTypeUser.Manager;
             servicePerson.Update(manager, null).Wait();
           }
+          Task.Run(() => SendQueue(person.Manager._id, person._id));
+
           servicePerson.Update(person, null).Wait();
         }
         else
@@ -227,24 +235,6 @@ namespace Manager.Services.Specific
           messageDis.Name = "automanagerdisapproved";
           serviceMailMessage.Update(messageDis, null).Wait();
         };
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public string SendMail(string link, Person person, string idmail)
-    {
-      try
-      {
-        string token = serviceAuthentication.AuthenticationMail(person);
-        using (var client = new HttpClient())
-        {
-          client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5201/");
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-          var resultMail = client.PostAsync("sendmail/" + idmail, null);
-          return token;
-        }
       }
       catch (Exception e)
       {
@@ -355,6 +345,60 @@ namespace Manager.Services.Specific
         var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
         person.Manager = null;
         servicePerson.Update(person, null).Wait();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
+    #region private
+    private void SendMessageAsync(dynamic view)
+    {
+      try
+      {
+        var message = new Message(Encoding.UTF8.GetBytes(view));
+        queueClient.SendAsync(message);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private void SendQueue(string idmanager, string idperson)
+    {
+      try
+      {
+        var data = new ViewListStructManagerSend
+        {
+          _idPerson = idperson,
+          _idManager = idmanager,
+          _idAccount = _user._idAccount
+        };
+
+        SendMessageAsync(JsonConvert.SerializeObject(data));
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private string SendMail(string link, Person person, string idmail)
+    {
+      try
+      {
+        string token = serviceAuthentication.AuthenticationMail(person);
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5201/");
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+          var resultMail = client.PostAsync("sendmail/" + idmail, null);
+          return token;
+        }
       }
       catch (Exception e)
       {

@@ -44,7 +44,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context, contextLog);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, _serviceControlQueue);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceGroup = new ServiceGeneric<Group>(context);
         serviceLog = new ServiceLog(context, contextLog);
@@ -55,7 +55,6 @@ namespace Manager.Services.Specific
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceControlQueue = _serviceControlQueue;
-
 
         pathToken = _pathToken;
       }
@@ -1560,7 +1559,7 @@ namespace Manager.Services.Specific
         };
 
         serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
-        
+
       }
       catch (Exception e)
       {

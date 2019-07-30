@@ -33,14 +33,14 @@ namespace Manager.Services.Auth
     private readonly ServiceTermsOfService serviceTermsOfService;
 
     #region Constructor
-    public ServiceAuthentication(DataContext context, DataContext contextLog)
+    public ServiceAuthentication(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue)
     {
       try
       {
         serviceTermsOfService = new ServiceTermsOfService(context);
         serviceAccount = new ServiceGeneric<Account>(context);
         serviceLog = new ServiceLog(context, contextLog);
-        servicePerson = new ServicePerson(context, contextLog);
+        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue);
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
       }

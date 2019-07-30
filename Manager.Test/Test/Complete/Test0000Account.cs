@@ -29,7 +29,7 @@ namespace Manager.Test.Test.Complete
       {
         InitOffBase();
         // Create new account
-        ServiceAccount serviceAccount = new ServiceAccount(context, context);
+        ServiceAccount serviceAccount = new ServiceAccount(context, context,base.serviceControlQueue);
         serviceAccount.NewAccount(new ViewNewAccount()
         {
           Mail = "analisa@jmsoft.com.br",
