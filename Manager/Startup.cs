@@ -57,8 +57,6 @@ namespace Manager
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
-      DataContext _contextStruct;
-      _contextStruct = new DataContext(conn.ServerStruct, conn.DataBaseStruct);
 
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
@@ -70,8 +68,7 @@ namespace Manager
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
       IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString);
-      IServiceManager serviceManager = new ServiceManager(_contextStruct, serviceControlQueue, serviceBusConnectionString);
-
+    
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
       IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue);
@@ -101,7 +98,6 @@ namespace Manager
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
-      serviceManager.UpdateStructManager();
 
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);

@@ -175,6 +175,20 @@ namespace Manager.Data
       }
     }
 
+    public long DeleteAccount()
+    {
+      try
+      {
+        DeleteResult resultDelete;
+        resultDelete = _collection.DeleteMany(s => s._idAccount == _user._idAccount);
+        return resultDelete.DeletedCount;
+      }
+      catch
+      {
+        throw;
+      }
+    }
+
     public long DeleteFree(string id, bool logical = false)
     {
       try

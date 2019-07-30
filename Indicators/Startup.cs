@@ -55,6 +55,11 @@ namespace Indicators
 
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
+
+
+      DataContext _contextStruct;
+      _contextStruct = new DataContext(conn.ServerStruct, conn.DataBaseStruct);
+
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
       //new MigrationHandle(_context._db).Migrate();
@@ -71,6 +76,11 @@ namespace Indicators
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue);
+
+      IServiceManager serviceManager = new ServiceManager(_contextStruct, serviceControlQueue, serviceBusConnectionString);
+
+
+      serviceManager.UpdateStructManager();
 
       services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceAccount);

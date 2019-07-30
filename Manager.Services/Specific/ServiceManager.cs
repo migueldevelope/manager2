@@ -152,6 +152,31 @@ namespace Manager.Services.Specific
     {
       try
       {
+        serviceStructManager.DeleteAccount();
+
+        var listmanager = serviceListManager.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
+        foreach (var manager in listmanager)
+        {
+          //Filter Team Manger
+          var directteam = serviceDirectTeam.GetAllNewVersion(p => p._idManager == manager._idManager).Result;
+          foreach (var it in directteam)
+          {
+            var structmanager = new StructManager()
+            {
+              _idManager = it._idManager,
+              _idPerson = it._idPerson,
+              _idAccount = manager._idAccount,
+              Status = 0,
+              Team = new List<ViewListStructManager>()
+            };
+
+            structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = it._idPerson, _idManager = it._idManager });
+
+            var add = serviceStructManager.InsertNewVersion(structmanager);
+          }
+
+        }
 
       }
       catch (Exception e)
@@ -160,7 +185,28 @@ namespace Manager.Services.Specific
       }
     }
 
-
+    private List<ViewListStructManager> GetTeam(ViewListStructManager it)
+    {
+      var list = new List<ViewListStructManager>();
+      if (it != null)
+      {
+        var i = 0;
+        var directteam = serviceDirectTeam.GetAllNewVersion(p => p._idManager == it._idPerson).Result;
+        foreach (var person in directteam)
+        {
+          var team = new ViewListStructManager
+          {
+            _idManager = it._idPerson,
+            _idPerson = person._idPerson,
+            Team = new List<ViewListStructManager>()
+          };
+          team.Team = GetTeam(team);
+          list[i] = team;
+          i += 1;
+        }
+      }
+      return list;
+    }
 
     private async Task ProcessMessagesAsync(Message message, CancellationToken token)
     {
