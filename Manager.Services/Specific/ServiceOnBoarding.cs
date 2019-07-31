@@ -1473,7 +1473,7 @@ namespace Manager.Services.Specific
 
         foreach (var rows in list)
         {
-          var onboardings = serviceOnboarding.GetAllFreeNewVersion(p => p.Person._id == rows._id).Result;
+          var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Person._id == rows._id).Result;
           if (onboardings != null)
           {
             foreach (var item in onboardings)
