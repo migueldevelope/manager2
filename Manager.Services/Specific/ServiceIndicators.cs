@@ -445,21 +445,25 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         List<ViewChartOnboarding> result = new List<ViewChartOnboarding>();
         for (byte i = 0; i <= 6; i++) result.Add(new ViewChartOnboarding() { Status = (EnumStatusOnBoarding)i, Count = 0 });
 
-        foreach (var item in list)
+        foreach (var item in persons)
         {
-          var onboarding = serviceOnboarding.GetNewVersion(p => p.Person._id == item._id).Result;
-          if (onboarding != null)
-            result.Where(p => p.Status == onboarding.StatusOnBoarding).FirstOrDefault().Count += 1;
-          else
+          var list = serviceOnboarding.GetAllNewVersion(p => p.Person._id == item._id).Result;
+          if (list == null)
             result.Where(p => p.Status == EnumStatusOnBoarding.WaitBegin).FirstOrDefault().Count += 1;
-
+          else
+          {
+            foreach (var view in list)
+            {
+              result.Where(p => p.Status == view.StatusOnBoarding).FirstOrDefault().Count += 1;
+            }
+          }
         };
 
-        return result;
+        return result.Where(p => p.Count > 0).ToList();
       }
       catch (Exception e)
       {
@@ -472,15 +476,29 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-       .Result.ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetNewVersion(x => x.Person._id == p._id).Result })
-       .GroupBy(p => p.OnBoarding == null ? "Não Realizado" : (p.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
-       {
-         Status = x.Key,
-         Count = x.Count()
-       }).ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewChartStatus> result = new List<ViewChartStatus>();
+        result.Add(new ViewChartStatus() { Status = "Realizado", Count = 0 });
+        result.Add(new ViewChartStatus() { Status = "Não Realizado", Count = 0 });
 
-        return list;
+        foreach (var item in persons)
+        {
+          var list = serviceOnboarding.GetAllNewVersion(p => p.Person._id == item._id).Result;
+          if (list == null)
+            result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+          else
+          {
+            foreach (var view in list)
+            {
+              if (view.StatusOnBoarding == EnumStatusOnBoarding.End)
+                result.Where(p => p.Status == "Realizado").FirstOrDefault().Count += 1;
+              else
+                result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+            }
+          }
+        };
+
+        return result;
       }
       catch (Exception e)
       {
@@ -510,7 +528,7 @@ namespace Manager.Services.Specific
           }
         };
 
-        return result;
+        return result.Where(p => p.Count > 0).ToList();
       }
       catch (Exception e)
       {
@@ -523,15 +541,29 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-       .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
-       .GroupBy(p => p.Monitoring == null ? "Não Realizado" : (p.Monitoring.StatusMonitoring == EnumStatusMonitoring.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
-       {
-         Status = x.Key,
-         Count = x.Count()
-       }).ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewChartStatus> result = new List<ViewChartStatus>();
+        result.Add(new ViewChartStatus() { Status = "Realizado", Count = 0 });
+        result.Add(new ViewChartStatus() { Status = "Não Realizado", Count = 0 });
 
-        return list;
+        foreach (var item in persons)
+        {
+          var list = serviceMonitoring.GetAllNewVersion(p => p.Person._id == item._id).Result;
+          if (list == null)
+            result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+          else
+          {
+            foreach (var view in list)
+            {
+              if (view.StatusMonitoring == EnumStatusMonitoring.End)
+                result.Where(p => p.Status == "Realizado").FirstOrDefault().Count += 1;
+              else
+                result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+            }
+          }
+        };
+
+        return result;
       }
       catch (Exception e)
       {
@@ -543,7 +575,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         List<ViewChartCheckpoint> result = new List<ViewChartCheckpoint>();
         for (byte i = 0; i <= 2; i++) result.Add(new ViewChartCheckpoint() { Status = (EnumStatusCheckpoint)i, Count = 0 });
@@ -562,7 +593,7 @@ namespace Manager.Services.Specific
           }
         };
 
-        return result;
+        return result.Where(p => p.Count > 0).ToList();
       }
       catch (Exception e)
       {
@@ -574,16 +605,29 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewChartStatus> result = new List<ViewChartStatus>();
+        result.Add(new ViewChartStatus() { Status = "Realizado", Count = 0 });
+        result.Add(new ViewChartStatus() { Status = "Não Realizado", Count = 0 });
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-       .Result.ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
-       .GroupBy(p => p.Checkpoint == null ? "Não Realizado" : (p.Checkpoint.StatusCheckpoint == EnumStatusCheckpoint.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
-       {
-         Status = x.Key,
-         Count = x.Count()
-       }).ToList();
+        foreach (var item in persons)
+        {
+          var list = serviceCheckpoint.GetAllNewVersion(p => p.Person._id == item._id).Result;
+          if (list == null)
+            result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+          else
+          {
+            foreach (var view in list)
+            {
+              if (view.StatusCheckpoint == EnumStatusCheckpoint.End)
+                result.Where(p => p.Status == "Realizado").FirstOrDefault().Count += 1;
+              else
+                result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+            }
+          }
+        };
 
-        return list;
+        return result;
       }
       catch (Exception e)
       {
