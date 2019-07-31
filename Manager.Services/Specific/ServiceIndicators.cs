@@ -546,7 +546,7 @@ namespace Manager.Services.Specific
 
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         List<ViewChartCheckpoint> result = new List<ViewChartCheckpoint>();
-        for (byte i = 0; i <= 7; i++) result.Add(new ViewChartCheckpoint() { Status = (EnumStatusCheckpoint)i, Count = 0 });
+        for (byte i = 0; i <= 2; i++) result.Add(new ViewChartCheckpoint() { Status = (EnumStatusCheckpoint)i, Count = 0 });
 
         foreach (var item in persons)
         {
