@@ -648,52 +648,54 @@ namespace Manager.Services.Specific
     {
       try
       {
-
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() }).ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         List<dynamic> result = new List<dynamic>();
 
-        foreach (var item in list)
+        foreach (var item in persons)
         {
-          if (item.Monitoring != null)
+          var list = monitorings.Where(p => p.Person._id == item._id);
+          foreach (var view in list)
           {
-            foreach (var rows in item.Monitoring.Schoolings)
+            foreach (var rows in view.Schoolings)
             {
               foreach (var plan in rows.Plans)
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
+                  Name = item.User.Name,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
             }
 
-            foreach (var rows in item.Monitoring.SkillsCompany)
+            foreach (var rows in view.SkillsCompany)
             {
               foreach (var plan in rows.Plans)
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
+                  Name = item.User.Name,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
             }
 
-            foreach (var rows in item.Monitoring.Activities)
+            foreach (var rows in view.Activities)
             {
               foreach (var plan in rows.Plans)
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
+                  Name = item.User.Name,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
             }
+
           }
+
         }
 
         return result.GroupBy(p => p.Status).Select(x => new ViewChartPlan
@@ -713,52 +715,54 @@ namespace Manager.Services.Specific
     {
       try
       {
-
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() }).ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         List<dynamic> result = new List<dynamic>();
 
-        foreach (var item in list)
+        foreach (var item in persons)
         {
-          if (item.Monitoring != null)
+          var list = monitorings.Where(p => p.Person._id == item._id);
+          foreach (var view in list)
           {
-            foreach (var rows in item.Monitoring.Schoolings)
+            foreach (var rows in view.Schoolings)
             {
               foreach (var plan in rows.Plans)
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
+                  Name = item.User.Name,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }
             }
 
-            foreach (var rows in item.Monitoring.SkillsCompany)
+            foreach (var rows in view.SkillsCompany)
             {
               foreach (var plan in rows.Plans)
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
+                  Name = item.User.Name,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }
             }
 
-            foreach (var rows in item.Monitoring.Activities)
+            foreach (var rows in view.Activities)
             {
               foreach (var plan in rows.Plans)
               {
                 result.Add(new
                 {
-                  item.Person.User.Name,
+                  Name = item.User.Name,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }
             }
+
           }
+
         }
 
         return result.GroupBy(p => p.Status).Select(x => new ViewChartStatus
