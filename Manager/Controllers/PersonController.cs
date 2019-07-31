@@ -45,17 +45,18 @@ namespace Manager.Controllers
     /// Listar pessoas da base de dados
     /// </summary>
     /// <param name="type">Tipo do usuário que está fazendo a consulta</param>
+    /// <param name="status">Status do usuário</param>
     /// <param name="count">Quantidade de registros</param>
     /// <param name="page">Página para mostrar</param>
     /// <param name="filter">Filtro para o nome da pessoa</param>
     /// <returns>Lista de pessoas da tela de manutenção</returns>
     [Authorize]
     [HttpGet]
-    [Route("list/{type}")]
-    public async Task<List<ViewListPersonCrud>> List(EnumTypeUser type,  int count = 10, int page = 1, string filter = "")
+    [Route("list/{type}/{status}")]
+    public async Task<List<ViewListPersonCrud>> List(EnumTypeUser type, EnumStatusUserFilter status, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(ref total, count, page, filter, type);
+      var result = service.List(ref total, count, page, filter, type, status);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
     }
