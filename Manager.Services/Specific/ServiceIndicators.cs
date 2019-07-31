@@ -492,16 +492,25 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewChartMonitoring> result = new List<ViewChartMonitoring>();
+        for (byte i = 0; i <= 7; i++) result.Add(new ViewChartMonitoring() { Status = (EnumStatusMonitoring)i, Count = 0 });
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .Result.ToList().Select(p => new { Person = p, Monitoring = serviceMonitoring.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
-        .GroupBy(p => p.Monitoring == null ? EnumStatusMonitoring.Open : p.Monitoring.StatusMonitoring).Select(x => new ViewChartMonitoring
+        foreach (var item in persons)
         {
-          Status = x.Key,
-          Count = x.Count()
-        }).ToList();
+          var list = serviceMonitoring.GetAllNewVersion(p => p.Person._id == item._id).Result;
+          if (list == null)
+            result.Where(p => p.Status == EnumStatusMonitoring.Open).FirstOrDefault().Count += 1;
+          else
+          {
+            foreach (var view in list)
+            {
+              result.Where(p => p.Status == view.StatusMonitoring).FirstOrDefault().Count += 1;
+            }
+          }
+        };
 
-        return list;
+        return result;
       }
       catch (Exception e)
       {
@@ -535,15 +544,25 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .Result.ToList().Select(p => new { Person = p, Checkpoint = serviceCheckpoint.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
-        .GroupBy(p => p.Checkpoint == null ? EnumStatusCheckpoint.Open : p.Checkpoint.StatusCheckpoint).Select(x => new ViewChartCheckpoint
-        {
-          Status = x.Key,
-          Count = x.Count()
-        }).ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewChartCheckpoint> result = new List<ViewChartCheckpoint>();
+        for (byte i = 0; i <= 7; i++) result.Add(new ViewChartCheckpoint() { Status = (EnumStatusCheckpoint)i, Count = 0 });
 
-        return list;
+        foreach (var item in persons)
+        {
+          var list = serviceCheckpoint.GetAllNewVersion(p => p.Person._id == item._id).Result;
+          if (list == null)
+            result.Where(p => p.Status == EnumStatusCheckpoint.Open).FirstOrDefault().Count += 1;
+          else
+          {
+            foreach (var view in list)
+            {
+              result.Where(p => p.Status == view.StatusCheckpoint).FirstOrDefault().Count += 1;
+            }
+          }
+        };
+
+        return result;
       }
       catch (Exception e)
       {
