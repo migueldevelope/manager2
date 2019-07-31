@@ -132,10 +132,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        /*var list = serviceMonitoring.GetAllNewVersion(p => p.Person._idManager == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).
-          Select(p => p.Activities.Where(u => u.Plans.Result > 0).Select(
-            x => x.Plans.Select(u => u.Skills))).ToList();*/
-
         var list = serviceMonitoring.GetAllNewVersion(p => p.Person._idManager == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
@@ -449,15 +445,21 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .Result.ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
-        .GroupBy(p => p.OnBoarding == null ? EnumStatusOnBoarding.WaitBegin : p.OnBoarding.StatusOnBoarding).Select(x => new ViewChartOnboarding
-        {
-          Status = x.Key,
-          Count = x.Count()
-        }).ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<ViewChartOnboarding> result = new List<ViewChartOnboarding>();
+        for (byte i = 0; i <= 6; i++) result.Add(new ViewChartOnboarding() { Status = (EnumStatusOnBoarding)i, Count = 0 });
 
-        return list;
+        foreach (var item in list)
+        {
+          var onboarding = serviceOnboarding.GetNewVersion(p => p.Person._id == item._id).Result;
+          if (onboarding != null)
+            result.Where(p => p.Status == onboarding.StatusOnBoarding).FirstOrDefault().Count += 1;
+          else
+            result.Where(p => p.Status == EnumStatusOnBoarding.WaitBegin).FirstOrDefault().Count += 1;
+
+        };
+
+        return result;
       }
       catch (Exception e)
       {
@@ -471,7 +473,7 @@ namespace Manager.Services.Specific
       {
 
         var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-       .Result.ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id).Result.FirstOrDefault() })
+       .Result.ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetNewVersion(x => x.Person._id == p._id).Result })
        .GroupBy(p => p.OnBoarding == null ? "Não Realizado" : (p.OnBoarding.StatusOnBoarding == EnumStatusOnBoarding.End ? "Realizado" : "Não Realizado")).Select(x => new ViewChartStatus
        {
          Status = x.Key,
