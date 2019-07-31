@@ -29,12 +29,13 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> serviceMailLog;
     private readonly ServiceGeneric<MailMessage> serviceMailMessage;
     private readonly ServiceMailModel serviceMailModel;
-    private readonly ServiceGeneric<Person> servicePerson;
+    //private readonly ServiceGeneric<Person> servicePerson;
+    private readonly IServicePerson servicePerson;
     private readonly ServiceWorkflow serviceWorkflow;
     private readonly IQueueClient queueClient;
 
     #region Constructor
-    public ServiceAutoManager(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue) : base(context)
+    public ServiceAutoManager(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, IServicePerson _servicePerson) : base(context)
     {
       try
       {
@@ -44,7 +45,8 @@ namespace Manager.Services.Specific
         serviceMailLog = new ServiceGeneric<MailLog>(contextLog);
         serviceMailModel = new ServiceMailModel(context);
         serviceMailMessage = new ServiceGeneric<MailMessage>(contextLog);
-        servicePerson = new ServiceGeneric<Person>(context);
+        //servicePerson = new ServiceGeneric<Person>(context);
+        servicePerson = _servicePerson;
         serviceWorkflow = new ServiceWorkflow(context, contextLog, serviceControlQueue);
       }
       catch (Exception e)
@@ -59,7 +61,7 @@ namespace Manager.Services.Specific
       serviceMailLog._user = _user;
       serviceMailMessage._user = _user;
       serviceMailModel.SetUser(_user);
-      servicePerson._user = _user;
+      servicePerson.SetUser(_user);
       serviceWorkflow.SetUser(_user);
     }
     public void SetUser(BaseUser user)
@@ -69,7 +71,7 @@ namespace Manager.Services.Specific
       serviceMailLog._user = user;
       serviceMailMessage._user = user;
       serviceMailModel.SetUser(user);
-      servicePerson._user = user;
+      servicePerson.SetUser(user);
       serviceWorkflow.SetUser(user);
     }
     #endregion
@@ -103,15 +105,12 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var list = (from person in servicePerson.GetAllNewVersion()
+        var list = (from person in servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
                     where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
                     select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
 
         total = servicePerson.CountNewVersion(person => person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager).Result;
-        //var total = (from person in servicePerson.GetAllNewVersion()
-        //         where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
-        //         select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Count();
-
+   
         if (list.Count > 0)
           list.FirstOrDefault().total = total;
 
@@ -159,14 +158,13 @@ namespace Manager.Services.Specific
         {
           person.Manager = new BaseFields() { _id = manager._id, Mail = manager.User.Mail, Name = manager.User.Name };
           var exists = servicePerson.CountNewVersion(p => p.Manager._id == view.IdManager).Result;
-          if (exists == 0 & manager.TypeUser == EnumTypeUser.Employee)
-          {
-            manager.TypeUser = EnumTypeUser.Manager;
-            servicePerson.Update(manager, null).Wait();
-          }
-          Task.Run(() => SendQueue(person.Manager._id, person._id));
+          //if (exists == 0 & manager.TypeUser == EnumTypeUser.Employee)
+          //{
+          //  manager.TypeUser = EnumTypeUser.Manager;
+          //  servicePerson.Update(manager, null).Wait();
+          //}
 
-          servicePerson.Update(person, null).Wait();
+          servicePerson.UpdateManager(person._id, manager._id, null);
         }
         else
         {
@@ -278,15 +276,15 @@ namespace Manager.Services.Specific
 
         auto.Workflow = list;
         auto.StatusAutoManager = EnumStatusAutoManager.Approved;
-        var manager = servicePerson.GetAllNewVersion(p => p._id == idManager).Result.FirstOrDefault();
-        var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
+        var manager = servicePerson.GetNewVersion(p => p._id == idManager).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == idPerson).Result;
         person.Manager = new BaseFields() { _id = manager._id, Mail = manager.User.Mail, Name = manager.User.Name };
-        servicePerson.Update(person, null).Wait();
-        if (manager.TypeUser == EnumTypeUser.Employee)
-        {
-          manager.TypeUser = EnumTypeUser.Manager;
-          servicePerson.Update(manager, null).Wait();
-        }
+        servicePerson.UpdateManager(person._id, manager._id, null);
+        //if (manager.TypeUser == EnumTypeUser.Employee)
+        //{
+        //  manager.TypeUser = EnumTypeUser.Manager;
+        //  servicePerson.Update(manager, null).Wait();
+        //}
         serviceAutoManager.Update(auto, null).Wait();
 
         return "approved";
@@ -342,9 +340,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == idPerson).Result;
         person.Manager = null;
-        servicePerson.Update(person, null).Wait();
+        servicePerson.UpdateManager(person._id, null, person._id);
       }
       catch (Exception e)
       {
@@ -354,38 +352,6 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
-    private void SendMessageAsync(dynamic view)
-    {
-      try
-      {
-        var message = new Message(Encoding.UTF8.GetBytes(view));
-        queueClient.SendAsync(message);
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private void SendQueue(string idmanager, string idperson)
-    {
-      try
-      {
-        var data = new ViewListStructManagerSend
-        {
-          _idPerson = idperson,
-          _idManager = idmanager,
-          _idAccount = _user._idAccount
-        };
-
-        SendMessageAsync(JsonConvert.SerializeObject(data));
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
 
     private string SendMail(string link, Person person, string idmail)
     {

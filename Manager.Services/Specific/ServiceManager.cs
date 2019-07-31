@@ -126,6 +126,20 @@ namespace Manager.Services.Specific
       }
     }
 
+    private void RemoveDirectTeam(string idperson)
+    {
+      try
+      {
+        var person = serviceDirectTeam.GetNewVersion(p => p._idPerson == idperson).Result;
+        serviceDirectTeam.Delete(person._id, false);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     private void NewDirectTeam(string idManager, string idPerson)
     {
       try
@@ -216,13 +230,20 @@ namespace Manager.Services.Specific
         _idAccount = view._idAccount
       });
 
-      // add news managers
-      NewListManager(view._idManager);
-      // adjust direct team
-      NewDirectTeam(view._idManager, view._idPerson);
-      NewStructManager();
+      if (view._idManager == null)
+      {
+        RemoveDirectTeam(view._idPerson);
+      }
+      else
+      {
+        // add news managers
+        NewListManager(view._idManager);
+        // adjust direct team
+        NewDirectTeam(view._idManager, view._idPerson);
+      }
       // clean list
       RemoveListManager();
+      NewStructManager();
 
       await queueClient.CompleteAsync(message.SystemProperties.LockToken);
     }

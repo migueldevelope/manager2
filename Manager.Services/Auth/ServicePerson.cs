@@ -246,22 +246,7 @@ namespace Manager.Services.Auth
         BaseFields manager = null;
         if (view.Person.Manager != null)
         {
-          manager = servicePerson.GetAllNewVersion(p => p._id == view.Person.Manager._id).Result
-           .Select(p => new BaseFields()
-           {
-             _id = p._id,
-             Name = p.User.Name,
-             Mail = p.User.Mail
-           }).FirstOrDefault();
-
-          if (person.Manager != null)
-          {
-            if (person.Manager._id != view.Person.Manager._id)
-              Task.Run(() => SendQueue(view.Person.Manager._id, view.Person._id));
-          }
-          else
-            Task.Run(() => SendQueue(view.Person.Manager._id, view.Person._id));
-
+          manager = UpdateManager(view.Person._id, view.Person.Manager._id, person.Manager?._id);
         }
         SalaryScalePerson salaryScale = null;
         if (view.Person.SalaryScales != null)
@@ -454,6 +439,29 @@ namespace Manager.Services.Auth
       }
     }
 
+    public BaseFields UpdateManager(string _idPerson, string _idManager, string _idManagerOld)
+    {
+      try
+      {
+        var manager = servicePerson.GetAllNewVersion(p => p._id == _idManager).Result.
+          Select(p => new BaseFields()
+          {
+            _id = p._id,
+            Name = p.User.Name,
+            Mail = p.User.Mail
+          }).FirstOrDefault();
+
+        if (_idManager != _idManagerOld)
+          Task.Run(() => SendQueue(_idManager, _idPerson));
+
+        return manager;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewCrudPerson Get(string id)
     {
       try
@@ -622,22 +630,7 @@ namespace Manager.Services.Auth
         BaseFields manager = null;
         if (view.Manager != null)
         {
-          manager = servicePerson.GetAllNewVersion(p => p._id == view.Manager._id).Result.
-           Select(p => new BaseFields()
-           {
-             _id = p._id,
-             Name = p.User.Name,
-             Mail = p.User.Mail
-           }).FirstOrDefault();
-
-          if (person.Manager != null)
-          {
-            if (person.Manager._id != view.Manager._id)
-              Task.Run(() => SendQueue(view.Manager._id, view._id));
-          }
-          else
-            Task.Run(() => SendQueue(view.Manager._id, view._id));
-
+          manager = UpdateManager(view._id, view.Manager._id, person.Manager?._id);
         }
         SalaryScalePerson salaryScale = null;
         if (view.SalaryScales != null)
