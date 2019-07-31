@@ -12,7 +12,7 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
-    List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type);
+    List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type, EnumStatusUserFilter status);
     ViewCrudPerson Get(string id);
     ViewCrudPerson New(ViewCrudPerson view);
     string Update(ViewCrudPerson person);

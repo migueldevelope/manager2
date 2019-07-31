@@ -360,7 +360,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    public List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type)
+    public List<ViewListPersonCrud> List(ref long total, int count, int page, string filter, EnumTypeUser type, EnumStatusUserFilter status)
     {
       try
       {
@@ -368,21 +368,64 @@ namespace Manager.Services.Auth
         {
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
-            total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-            return servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
-            .Select(x => new ViewListPersonCrud()
+            if (status == EnumStatusUserFilter.Enabled)
             {
-              _id = x._id,
-              Registration = x.Registration,
-              User = x.User,
-              Company = x.Company,
-              Establishment = x.Establishment,
-              StatusUser = x.StatusUser,
-              TypeJourney = x.TypeJourney,
-              TypeUser = x.TypeUser,
-              Occupation = x.Occupation?.Name,
-              Manager = x.Manager?.Name
-            }).OrderBy(p => p.User.Name).ToList();
+              total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+              return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+              .Select(x => new ViewListPersonCrud()
+              {
+                _id = x._id,
+                Registration = x.Registration,
+                User = x.User,
+                Company = x.Company,
+                Establishment = x.Establishment,
+                StatusUser = x.StatusUser,
+                TypeJourney = x.TypeJourney,
+                TypeUser = x.TypeUser,
+                Occupation = x.Occupation?.Name,
+                Manager = x.Manager?.Name
+              }).OrderBy(p => p.User.Name).ToList();
+            }
+
+            else
+            {
+              if (status == EnumStatusUserFilter.Enabled)
+              {
+                total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+                return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+                .Select(x => new ViewListPersonCrud()
+                {
+                  _id = x._id,
+                  Registration = x.Registration,
+                  User = x.User,
+                  Company = x.Company,
+                  Establishment = x.Establishment,
+                  StatusUser = x.StatusUser,
+                  TypeJourney = x.TypeJourney,
+                  TypeUser = x.TypeUser,
+                  Occupation = x.Occupation?.Name,
+                  Manager = x.Manager?.Name
+                }).OrderBy(p => p.User.Name).ToList();
+              }
+              else
+              {
+                total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+                return servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+                .Select(x => new ViewListPersonCrud()
+                {
+                  _id = x._id,
+                  Registration = x.Registration,
+                  User = x.User,
+                  Company = x.Company,
+                  Establishment = x.Establishment,
+                  StatusUser = x.StatusUser,
+                  TypeJourney = x.TypeJourney,
+                  TypeUser = x.TypeUser,
+                  Occupation = x.Occupation?.Name,
+                  Manager = x.Manager?.Name
+                }).OrderBy(p => p.User.Name).ToList();
+              }
+            }
           case EnumTypeUser.HR:
           case EnumTypeUser.ManagerHR:
             total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support).Result;
@@ -410,6 +453,7 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+
     public ViewCrudPerson Get(string id)
     {
       try
