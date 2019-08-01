@@ -143,24 +143,82 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Grades
+
+    public string AddOccupationSalaryScale(ViewCrudOccupationSalaryScale view)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetNewVersion(p => p._id == view._idOccupation).Result;
+        if (occupation.SalaryScales == null)
+          occupation.SalaryScales = new List<SalaryScaleGrade>();
+
+        occupation.SalaryScales.Add(new SalaryScaleGrade()
+        {
+          _idGrade = view._idGrade,
+          _idSalaryScale = view._idSalaryScale,
+          Workload = view.Workload,
+          _id = ObjectId.GenerateNewId().ToString(),
+          NameGrade = view.NameGrade,
+          NameSalaryScale = view.NameSalaryScale
+        });
+        var result = serviceOccupation.Update(occupation, null);
+        return "add";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string RemoveOccupationSalaryScale(string idoccupation, string idgrade)
+    {
+      try
+      {
+        var occupation = serviceOccupation.GetNewVersion(p => p._id == idoccupation).Result;
+        
+        foreach(var item in occupation.SalaryScales)
+        {
+          if(item._idGrade == idgrade)
+          {
+            var result = serviceOccupation.Update(occupation, null);
+            return "deleted";
+          }
+        }
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListGrade> ListGrade(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         SalaryScale item = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
         if (item == null)
           throw new Exception("Salary scale not found!");
 
         var detail = new List<ViewListGrade>();
         foreach (var grade in item.Grades)
         {
+          var occupation = new List<_ViewListBase>();
+          foreach (var occ in occupations)
+          {
+            if (occ.SalaryScales.Where(p => p._idGrade == grade._id).Count() > 0)
+              occupation.Add(new _ViewListBase() { _id = occ._id, Name = occ.Name });
+          }
           var view = new ViewListGrade
           {
             _id = grade._id,
             Name = grade.Name,
             StepMedium = grade.StepMedium,
             Order = grade.Order,
-            Steps = new List<ViewListStep>()
+            Steps = new List<ViewListStep>(),
+            Occupation = occupation,
           };
           foreach (var step in grade.ListSteps)
           {

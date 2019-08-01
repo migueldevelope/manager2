@@ -101,6 +101,37 @@ namespace Manager.Controllers
     #endregion
 
     #region Grade
+
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("addoccupationsalaryscale")]
+    public async Task<string> AddOccupationSalaryScale([FromBody]ViewCrudOccupationSalaryScale view)
+    {
+      var result = service.AddOccupationSalaryScale(view);
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idoccupation"></param>
+    /// <param name="idgrade"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("removeoccupationsalaryscale/{idoccupation}/{idgrade}")]
+    public async Task<string> RemoveOccupationSalaryScale(string idoccupation, string idgrade)
+    {
+      var result = service.RemoveOccupationSalaryScale(idoccupation, idgrade);
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Listar todos os grades de uma tabela salarial
     /// </summary>
