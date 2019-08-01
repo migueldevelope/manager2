@@ -196,6 +196,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Order = view.Order,
           StepMedium = view.StepMedium,
+          Workload = view.Workload,
           ListSteps = new List<ListSteps>()
         };
         for (var step = 0; step <= 7; step++)
@@ -229,6 +230,7 @@ namespace Manager.Services.Specific
             grade.Name = view.Name;
             grade.Order = view.Order;
             grade.StepMedium = view.StepMedium;
+            grade.Workload = view.Workload;
           }
           list.Add(grade);
         }
@@ -388,6 +390,7 @@ namespace Manager.Services.Specific
         var tuple = serviceExcel.ImportSalaryScale(stream);
         var import = tuple.Item1;
         var gradename = tuple.Item2;
+        var workload = tuple.Item4;
         var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
 
         salaryScale.Grades = new List<Grade>();
@@ -401,6 +404,7 @@ namespace Manager.Services.Specific
             grade._id = ObjectId.GenerateNewId().ToString();
             grade.Name = gradename[row].ToString();
             grade.ListSteps = new List<ListSteps>();
+            grade.Workload = workload[row];
 
             for (int col = 0; col < 8; col++)
             {

@@ -14,5 +14,6 @@ namespace Manager.Core.BusinessModel
     public EnumSteps StepMedium { get; set; }
     public List<ListSteps> ListSteps { get; set; }
     public int Order { get; set; }
+    public int Workload { get; set; }
   }
 }

@@ -8,5 +8,6 @@ namespace Manager.Views.BusinessCrud
     public ViewListSalaryScale SalaryScale { get; set; }
     public EnumSteps StepMedium { get; set; }
     public int Order { get; set; }
+    public int Workload { get; set; }
   }
 }

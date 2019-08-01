@@ -10,7 +10,7 @@ namespace Manager.Services.Commons
 {
   public class ServiceExcel
   {
-    public Tuple<double[][], string[], long> ImportSalaryScale(Stream stream)
+    public Tuple<double[][], string[], long, int[]> ImportSalaryScale(Stream stream)
     {
       //string fullPath = @"c:/jms/SALARYSCALE4.xlsx";
       //var stream = new FileStream(fullPath, FileMode.Open);
@@ -31,6 +31,8 @@ namespace Manager.Services.Commons
 
         long count = CountLines(sheet);
         string[] grades = new string[count];
+        int[] workloads = new int[count];
+
         // col i = 9 lin = 50
         double[][] matriz = new double[count][];
         for (int i = 0; i < count; i++)
@@ -46,6 +48,13 @@ namespace Manager.Services.Commons
           if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
 
           grades[i - 2] = row.GetCell(0).ToString();
+          var workload = row.GetCell(0).ToString();
+          int numworkload; bool isNumworkload = int.TryParse(workload, out numworkload);
+          if (isNumworkload)
+            workloads[i - 2] = int.Parse(workload);
+          else
+            throw new Exception("not_numeric_workload");
+
           for (int j = 2; j < cellCount; j++)
           {
             if (row.GetCell(j) != null)
@@ -59,7 +68,7 @@ namespace Manager.Services.Commons
             }
           }
         }
-        return new Tuple<double[][], string[], long>(matriz, grades, count);
+        return new Tuple<double[][], string[], long, int[]>(matriz, grades, count, workloads);
       }
       catch(Exception e)
       {
