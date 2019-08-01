@@ -1391,7 +1391,7 @@ namespace Manager.Services.Specific
           {
             foreach (var item in monitorings)
             {
-              if (persons.Contains(new _ViewList() { _id = item.Person._id }))
+              if (persons.Where(p => p._id == item.Person._id).Count() > 0)
                 result.Add(new ViewExportStatusMonitoringGeral
                 {
                   NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,

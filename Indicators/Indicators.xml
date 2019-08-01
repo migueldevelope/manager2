@@ -55,52 +55,67 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboarding">
+        <member name="M:Indicators.Controllers.IndicatorsController.GetFilterPersons(System.String)">
             <summary>
             
             </summary>
+            <param name="idmanager"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartMonitoring">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboarding(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartCheckpoint">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartMonitoring(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartPlan">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartCheckpoint(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartMonitoringRealized">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartPlan(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartCheckpointRealized">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartMonitoringRealized(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartPlanRealized">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartCheckpointRealized(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboardingRealized">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartPlanRealized(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboardingRealized(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompany(System.String)">

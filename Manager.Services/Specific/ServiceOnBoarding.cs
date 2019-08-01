@@ -1478,7 +1478,7 @@ namespace Manager.Services.Specific
           {
             foreach (var item in onboardings)
             {
-              if (persons.Contains(new _ViewList() { _id = item.Person._id }))
+              if (persons.Where(p => p._id == item.Person._id).Count() > 0)
                 result.Add(new ViewExportStatusOnboardingGeral
                 {
                   NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,

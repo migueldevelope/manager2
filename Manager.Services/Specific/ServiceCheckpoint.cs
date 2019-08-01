@@ -797,7 +797,7 @@ namespace Manager.Services.Specific
         foreach (var item in list)
         {
           var checkpoint = serviceCheckpoint.GetNewVersion(p => p.Person._id == item._id).Result;
-          if (persons.Contains(new _ViewList() { _id = checkpoint.Person._id }))
+          if (persons.Where(p => p._id == item._id).Count() > 0)
             result.Add(new ViewExportStatusCheckpoint
             {
               NameManager = item.Manager == null ? "Sem Gestor" : item.Manager.Name,

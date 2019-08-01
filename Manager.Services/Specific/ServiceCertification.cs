@@ -1004,7 +1004,7 @@ namespace Manager.Services.Specific
 
         foreach (var item in list)
         {
-          if (persons.Contains(new _ViewList() { _id = item.Person._id }))
+          if (persons.Where(p => p._id == item.Person._id).Count() > 0)
             result.Add(new ViewExportStatusCertification
             {
               NameManager = item.Person.NameManager,
