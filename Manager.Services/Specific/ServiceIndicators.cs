@@ -4,6 +4,7 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
@@ -70,6 +71,26 @@ namespace Manager.Services.Specific
       serviceMail._user = _user;
       serviceCertification._user = _user;
       serviceCheckpoint._user = _user;
+    }
+
+    public List<_ViewList> GetFilterPersons(string idmanager)
+    {
+      try
+      {
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
+        & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result;
+        if(idmanager != string.Empty)
+        {
+          persons = persons.Where(p => p.Manager._id == idmanager).ToList();
+        }
+
+        return persons.Select(p => new _ViewList() { _id = p._id }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
 
     public List<ViewIndicatorsNotes> GetNotes(string id)
@@ -293,7 +314,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
     public void SendMessages(string link)
     {
       try
@@ -311,7 +331,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
 
     private void DoWork()
     {
@@ -333,7 +352,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
 
     //public string[] ExportStatusOnboarding(ref  long total,  string filter, int count,int page)
     //{
@@ -439,13 +457,11 @@ namespace Manager.Services.Specific
       }
     }
 
-
-    public IEnumerable<ViewChartOnboarding> ChartOnboarding()
+    public IEnumerable<ViewChartOnboarding> ChartOnboarding(List<_ViewList> persons)
     {
       try
       {
-
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        //var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         List<ViewChartOnboarding> result = new List<ViewChartOnboarding>();

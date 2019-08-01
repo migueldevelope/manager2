@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +42,7 @@ namespace Indicators.Controllers
     [Route("getnotes/{idperson}")]
     public async Task<List<ViewIndicatorsNotes>> GetNotes(string idperson)
     {
-      return await Task.Run(() =>service.GetNotes(idperson));
+      return await Task.Run(() => service.GetNotes(idperson));
     }
 
     /// <summary>
@@ -54,7 +55,7 @@ namespace Indicators.Controllers
     [Route("getnotesperson/{idperson}")]
     public async Task<List<ViewIndicatorsNotes>> GetNotesPerson(string idperson)
     {
-      return await Task.Run(() =>service.GetNotesPerson(idperson));
+      return await Task.Run(() => service.GetNotesPerson(idperson));
     }
 
     /// <summary>
@@ -67,7 +68,7 @@ namespace Indicators.Controllers
     [Route("listtagscloud/{idmanager}")]
     public async Task<List<ViewTagsCloud>> ListTagsCloud(string idmanager)
     {
-      return await Task.Run(() =>service.ListTagsCloud(idmanager));
+      return await Task.Run(() => service.ListTagsCloud(idmanager));
     }
 
     /// <summary>
@@ -80,19 +81,33 @@ namespace Indicators.Controllers
     [Route("listtagscloudperson/{idperson}")]
     public async Task<List<ViewTagsCloud>> ListTagsCloudPerson(string idperson)
     {
-      return await Task.Run(() =>service.ListTagsCloudPerson(idperson));
+      return await Task.Run(() => service.ListTagsCloudPerson(idperson));
     }
 
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idmanager"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("chartonboarding")]
-    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding()
+    [Route("getfilterpersons")]
+    public async Task<List<_ViewList>> GetFilterPersons(string idmanager = "")
     {
-      return await Task.Run(() => service.ChartOnboarding());
+      return await Task.Run(() => service.GetFilterPersons(idmanager));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("chartonboarding")]
+    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding([FromBody] List<_ViewList> persons)
+    {
+      return await Task.Run(() => service.ChartOnboarding(persons));
     }
 
     /// <summary>
@@ -189,7 +204,7 @@ namespace Indicators.Controllers
     [Route("listtagscloudcompany/{idmanager}")]
     public async Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager)
     {
-      return await Task.Run(() =>service.ListTagsCloudCompany(idmanager));
+      return await Task.Run(() => service.ListTagsCloudCompany(idmanager));
     }
 
 
@@ -203,7 +218,7 @@ namespace Indicators.Controllers
     [Route("listtagscloudcompanyperson/{idperson}")]
     public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPerson(string idperson)
     {
-      return await Task.Run(() =>service.ListTagsCloudCompanyPerson(idperson));
+      return await Task.Run(() => service.ListTagsCloudCompanyPerson(idperson));
     }
 
   }

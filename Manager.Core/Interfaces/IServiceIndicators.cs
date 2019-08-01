@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Views;
+using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -21,7 +22,8 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
     //string[] ExportStatusOnboarding(ref  long total,  string filter, int count, int page);
 
-    IEnumerable<ViewChartOnboarding> ChartOnboarding();
+    List<_ViewList> GetFilterPersons(string idmanager);
+    IEnumerable<ViewChartOnboarding> ChartOnboarding(List<_ViewList> persons);
 
     IEnumerable<ViewChartStatus> ChartOnboardingRealized();
 
