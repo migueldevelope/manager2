@@ -205,13 +205,13 @@ namespace Manager.Services.Specific
         var detail = new List<ViewListGrade>();
         foreach (var grade in item.Grades)
         {
-          var occupation = new List<_ViewListBase>();
+          var occupation = new List<ViewListOccupationSalaryScale>();
           foreach (var occ in occupations)
           {
             if(occ.SalaryScales != null)
             {
               if (occ.SalaryScales.Where(p => p._idGrade == grade._id).Count() > 0)
-                occupation.Add(new _ViewListBase() { _id = occ._id, Name = occ.Name });
+                occupation.Add(new ViewListOccupationSalaryScale() { _id = occ._id, Name = occ.Name, Wordload = occ.SalaryScales.FirstOrDefault().Workload });
             }
           }
           var view = new ViewListGrade
@@ -220,6 +220,7 @@ namespace Manager.Services.Specific
             Name = grade.Name,
             StepMedium = grade.StepMedium,
             Order = grade.Order,
+            Wordload = grade.Workload,
             Steps = new List<ViewListStep>(),
             Occupation = occupation,
           };

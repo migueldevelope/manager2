@@ -8,6 +8,7 @@ namespace Manager.Views.BusinessList
     public EnumSteps StepMedium { get; set; }
     public List<ViewListStep> Steps { get; set; }
     public int Order { get; set; }
-    public List<_ViewListBase> Occupation { get; set; }
+    public List<ViewListOccupationSalaryScale> Occupation { get; set; }
+    public int Wordload { get; set; }
   }
 }
