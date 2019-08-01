@@ -279,11 +279,11 @@ namespace Manager.Services.Specific
       {
         var monitoring = serviceMonitoring.GetNewVersion(p => p._id == id).Result;
         var count = monitoring.Activities.Where(p => p.StatusViewManager == EnumStatusView.None
-        & p.Comments != null & p.Comments.Count() > 0).Count()
+        & p.Comments != null && p.Comments.Count() > 0).Count()
           + monitoring.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None
-          & p.Comments != null & p.Comments.Count() > 0).Count()
+          & p.Comments != null && p.Comments.Count() > 0).Count()
           + monitoring.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None
-          & p.Comments != null & p.Comments.Count() > 0).Count();
+          & p.Comments != null && p.Comments.Count() > 0).Count();
 
         if (count > 0)
           return true;

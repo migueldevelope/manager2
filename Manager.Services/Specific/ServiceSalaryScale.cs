@@ -208,8 +208,11 @@ namespace Manager.Services.Specific
           var occupation = new List<_ViewListBase>();
           foreach (var occ in occupations)
           {
-            if (occ.SalaryScales.Where(p => p._idGrade == grade._id).Count() > 0)
-              occupation.Add(new _ViewListBase() { _id = occ._id, Name = occ.Name });
+            if(occ.SalaryScales != null)
+            {
+              if (occ.SalaryScales.Where(p => p._idGrade == grade._id).Count() > 0)
+                occupation.Add(new _ViewListBase() { _id = occ._id, Name = occ.Name });
+            }
           }
           var view = new ViewListGrade
           {
