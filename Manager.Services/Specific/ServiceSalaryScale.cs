@@ -180,6 +180,7 @@ namespace Manager.Services.Specific
         {
           if(item._idGrade == idgrade)
           {
+            occupation.SalaryScales.Remove(item);
             var result = serviceOccupation.Update(occupation, null);
             return "deleted";
           }
@@ -364,6 +365,7 @@ namespace Manager.Services.Specific
               Name = grade.Name,
               Order = grade.Order,
               StepMedium = grade.StepMedium,
+              Workload = grade.Workload,
               SalaryScale = new ViewListSalaryScale() { _id = salaryScale._id, Name = salaryScale.Name, Company = new ViewListCompany() { _id = salaryScale.Company._id, Name = salaryScale.Company.Name } }
             };
             break;
