@@ -48,7 +48,7 @@ namespace Manager.Services.Commons
           if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
 
           grades[i - 2] = row.GetCell(0).ToString();
-          var workload = row.GetCell(0).ToString();
+          var workload = row.GetCell(1).ToString();
           int numworkload; bool isNumworkload = int.TryParse(workload, out numworkload);
           if (isNumworkload)
             workloads[i - 2] = int.Parse(workload);
