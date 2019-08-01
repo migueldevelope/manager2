@@ -28,7 +28,7 @@ namespace Manager.Core.Interfaces
     ViewCrudCertification CertificationsWaitPerson(string idcertification);
     string UpdateStatusCertification(ViewCrudCertificationPersonStatus viewcertification, string idperson);
     List<ViewListCertificationItem> ListCertificationPerson(string idperson, ref long total, string filter, int count, int page);
-    List<ViewExportStatusCertification> ExportStatusCertification();
+    List<ViewExportStatusCertification> ExportStatusCertification(List<_ViewList> persons);
     List<ViewExportStatusCertificationPerson> ExportStatusCertification(string idperson);
 
   }

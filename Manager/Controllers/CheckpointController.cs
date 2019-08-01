@@ -144,13 +144,14 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="persons"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
+    [HttpPost]
     [Route("exportcheckpoint")]
-    public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint()
+    public async Task<List<ViewExportStatusCheckpoint>> ExportStatusCheckpoint([FromBody] List<_ViewList> persons)
     {
-      return await Task.Run(() => service.ExportStatusCheckpoint());
+      return await Task.Run(() => service.ExportStatusCheckpoint(persons));
     }
     #endregion
 

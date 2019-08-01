@@ -489,12 +489,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartOnboardingRealized()
+    public IEnumerable<ViewChartStatus> ChartOnboardingRealized(List<_ViewList> persons)
     {
       try
       {
-
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         var onboradings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         List<ViewChartStatus> result = new List<ViewChartStatus>();
         result.Add(new ViewChartStatus() { Status = "Realizado", Count = 0 });
@@ -525,11 +523,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartMonitoring> ChartMonitoring()
+    public IEnumerable<ViewChartMonitoring> ChartMonitoring(List<_ViewList> persons)
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         List<ViewChartMonitoring> result = new List<ViewChartMonitoring>();
         for (byte i = 0; i <= 7; i++) result.Add(new ViewChartMonitoring() { Status = (EnumStatusMonitoring)i, Count = 0 });
@@ -556,12 +553,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartMonitoringRealized()
+    public IEnumerable<ViewChartStatus> ChartMonitoringRealized(List<_ViewList> persons)
     {
       try
       {
-
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         List<ViewChartStatus> result = new List<ViewChartStatus>();
         result.Add(new ViewChartStatus() { Status = "Realizado", Count = 0 });
@@ -592,11 +587,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint()
+    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint(List<_ViewList> persons)
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         List<ViewChartCheckpoint> result = new List<ViewChartCheckpoint>();
@@ -624,11 +618,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartCheckpointRealized()
+    public IEnumerable<ViewChartStatus> ChartCheckpointRealized(List<_ViewList> persons)
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         List<ViewChartStatus> result = new List<ViewChartStatus>();
@@ -660,11 +653,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartPlan> ChartPlan()
+    public IEnumerable<ViewChartPlan> ChartPlan(List<_ViewList> persons)
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         List<dynamic> result = new List<dynamic>();
@@ -680,7 +672,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.User.Name,
+                  Name = item._id,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
@@ -692,7 +684,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.User.Name,
+                  Name = item._id,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
@@ -704,7 +696,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.User.Name,
+                  Name = item._id,
                   Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
                 });
               }
@@ -727,11 +719,10 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartPlanRealized()
+    public IEnumerable<ViewChartStatus> ChartPlanRealized(List<_ViewList> persons)
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         List<dynamic> result = new List<dynamic>();
@@ -747,7 +738,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.User.Name,
+                  Name = item._id,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }
@@ -759,7 +750,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.User.Name,
+                  Name = item._id,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }
@@ -771,7 +762,7 @@ namespace Manager.Services.Specific
               {
                 result.Add(new
                 {
-                  Name = item.User.Name,
+                  Name = item._id,
                   Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
                 });
               }

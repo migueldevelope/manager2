@@ -1463,7 +1463,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding()
+    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding(List<_ViewList> persons)
     {
       try
       {
@@ -1478,14 +1478,15 @@ namespace Manager.Services.Specific
           {
             foreach (var item in onboardings)
             {
-              result.Add(new ViewExportStatusOnboardingGeral
-              {
-                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
-                NamePerson = item.Person.Name,
-                Type = item == null ? "Admissão" :
+              if (persons.Contains(new _ViewList() { _id = item.Person._id }))
+                result.Add(new ViewExportStatusOnboardingGeral
+                {
+                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
+                  NamePerson = item.Person.Name,
+                  Type = item == null ? "Admissão" :
                 item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
-                Occupation = item.Person.Occupation,
-                Status =
+                  Occupation = item.Person.Occupation,
+                  Status =
                 item == null ? "Aguardando para iniciar" :
                   item.StatusOnBoarding == EnumStatusOnBoarding.WaitBegin ? "Aguardando para iniciar" :
                     item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
@@ -1494,10 +1495,10 @@ namespace Manager.Services.Specific
                           item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
                             item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
                               item.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
-                DateBegin = item?.DateBeginPerson,
-                DateEnd = item?.DateEndEnd,
+                  DateBegin = item?.DateBeginPerson,
+                  DateEnd = item?.DateEndEnd,
 
-              });
+                });
             }
           }
 

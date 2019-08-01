@@ -252,13 +252,14 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="persons"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
+    [HttpPost]
     [Route("exportonboarding")]
-    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding()
+    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding([FromBody] List<_ViewList> persons)
     {
-      return await Task.Run(() => service.ExportStatusOnboarding());
+      return await Task.Run(() => service.ExportStatusOnboarding(persons));
     }
 
     #endregion

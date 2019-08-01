@@ -25,18 +25,18 @@ namespace Manager.Core.Interfaces
     List<_ViewList> GetFilterPersons(string idmanager);
     IEnumerable<ViewChartOnboarding> ChartOnboarding(List<_ViewList> persons);
 
-    IEnumerable<ViewChartStatus> ChartOnboardingRealized();
+    IEnumerable<ViewChartStatus> ChartOnboardingRealized(List<_ViewList> persons);
 
-    IEnumerable<ViewChartMonitoring> ChartMonitoring();
+    IEnumerable<ViewChartMonitoring> ChartMonitoring(List<_ViewList> persons);
 
-    IEnumerable<ViewChartCheckpoint> ChartCheckpoint();
+    IEnumerable<ViewChartCheckpoint> ChartCheckpoint(List<_ViewList> persons);
 
-    IEnumerable<ViewChartPlan> ChartPlan();
+    IEnumerable<ViewChartPlan> ChartPlan(List<_ViewList> persons);
 
-    IEnumerable<ViewChartStatus> ChartMonitoringRealized();
+    IEnumerable<ViewChartStatus> ChartMonitoringRealized(List<_ViewList> persons);
 
-    IEnumerable<ViewChartStatus> ChartCheckpointRealized();
+    IEnumerable<ViewChartStatus> ChartCheckpointRealized(List<_ViewList> persons);
 
-    IEnumerable<ViewChartStatus> ChartPlanRealized();
+    IEnumerable<ViewChartStatus> ChartPlanRealized(List<_ViewList> persons);
   }
 }

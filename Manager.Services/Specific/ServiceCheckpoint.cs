@@ -376,7 +376,7 @@ namespace Manager.Services.Specific
 
             Task.Run(() => MailRhApproved(person, "Aprovado"));
             Task.Run(() => MailPerson(person, "Aprovado"));
-            
+
             serviceLogMessages.NewLogMessage("Checkpoint", string.Format(" Colaborador {0} aprovado no Checkpoint", person.User.Name), person);
             Task.Run(() => LogSave(_user._idPerson, string.Format("Approved | {0}.", view._id)));
           }
@@ -786,7 +786,7 @@ namespace Manager.Services.Specific
 
 
 
-    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint()
+    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint(List<_ViewList> persons)
     {
       try
       {
@@ -797,21 +797,21 @@ namespace Manager.Services.Specific
         foreach (var item in list)
         {
           var checkpoint = serviceCheckpoint.GetNewVersion(p => p.Person._id == item._id).Result;
-
-          result.Add(new ViewExportStatusCheckpoint
-          {
-            NameManager = item.Manager == null ? "Sem Gestor" : item.Manager.Name,
-            NamePerson = item.User.Name,
-            Status = checkpoint == null ? "Aguardando para iniciar" :
+          if (persons.Contains(new _ViewList() { _id = checkpoint.Person._id }))
+            result.Add(new ViewExportStatusCheckpoint
+            {
+              NameManager = item.Manager == null ? "Sem Gestor" : item.Manager.Name,
+              NamePerson = item.User.Name,
+              Status = checkpoint == null ? "Aguardando para iniciar" :
              checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
                 checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
-            DateBegin = checkpoint?.DateBegin,
-            DateEnd = checkpoint?.DateEnd,
-            Occupation = item.Occupation?.Name,
-            Result = checkpoint == null ? "Não iniciado" :
+              DateBegin = checkpoint?.DateBegin,
+              DateEnd = checkpoint?.DateEnd,
+              Occupation = item.Occupation?.Name,
+              Result = checkpoint == null ? "Não iniciado" :
               checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
                 checkpoint.TypeCheckpoint == EnumCheckpoint.Disapproved ? "Não Efetivado" : "Aguardando Definição"
-          });
+            });
         }
 
         return result;

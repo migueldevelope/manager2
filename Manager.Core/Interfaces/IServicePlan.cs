@@ -40,7 +40,7 @@ namespace Manager.Core.Interfaces
     string NewPlanActivity(ViewPlanActivity model);
     string UpdatePlanActivity(ViewPlanActivity model);
     ViewListPlanStruct GetPlanStruct(string idmonitoring, string idplan);
-    List<ViewExportStatusPlan> ExportStatusPlan();
+    List<ViewExportStatusPlan> ExportStatusPlan(List<_ViewList> persons);
     #endregion
 
 

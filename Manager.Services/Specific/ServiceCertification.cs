@@ -48,7 +48,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context, contextLog,_serviceControlQueue);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, _serviceControlQueue);
         serviceCertification = new ServiceGeneric<Certification>(context);
         serviceCertificationPerson = new ServiceGeneric<CertificationPerson>(context);
         serviceLog = new ServiceLog(context, contextLog);
@@ -994,7 +994,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewExportStatusCertification> ExportStatusCertification()
+    public List<ViewExportStatusCertification> ExportStatusCertification(List<_ViewList> persons)
     {
       try
       {
@@ -1004,17 +1004,18 @@ namespace Manager.Services.Specific
 
         foreach (var item in list)
         {
-          result.Add(new ViewExportStatusCertification
-          {
-            NameManager = item.Person.NameManager,
-            NamePerson = item.Person.Name,
-            NameItem = item.CertificationItem.Name,
-            Status =
-                item.StatusCertification == EnumStatusCertification.Open ? "Aguardando Aprovação" :
-                  item.StatusCertification == EnumStatusCertification.Wait ? "Aguardando Aprovação" :
-                    item.StatusCertification == EnumStatusCertification.Approved ? "Aprovado" : "Reprovado",
-            Date = item.DateBegin
-          });
+          if (persons.Contains(new _ViewList() { _id = item.Person._id }))
+            result.Add(new ViewExportStatusCertification
+            {
+              NameManager = item.Person.NameManager,
+              NamePerson = item.Person.Name,
+              NameItem = item.CertificationItem.Name,
+              Status =
+                  item.StatusCertification == EnumStatusCertification.Open ? "Aguardando Aprovação" :
+                    item.StatusCertification == EnumStatusCertification.Wait ? "Aguardando Aprovação" :
+                      item.StatusCertification == EnumStatusCertification.Approved ? "Aprovado" : "Reprovado",
+              Date = item.DateBegin
+            });
         }
 
         return result;

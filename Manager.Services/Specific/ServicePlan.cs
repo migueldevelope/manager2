@@ -1883,7 +1883,7 @@ namespace Manager.Services.Specific
 
 
 
-    public List<ViewExportStatusPlan> ExportStatusPlan()
+    public List<ViewExportStatusPlan> ExportStatusPlan(List<_ViewList> persons)
     {
       try
       {

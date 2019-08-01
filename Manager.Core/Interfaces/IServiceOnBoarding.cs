@@ -29,7 +29,7 @@ namespace Manager.Core.Interfaces
      string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
      List<ViewCrudComment> ListComments(string idonboarding, string iditem);
      List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref  long total,  string filter, int count, int page);
-    List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding();
+    List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding(List<_ViewList> persons);
     List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson);
     void MailTest();
   }

@@ -1376,7 +1376,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring()
+    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring(List<_ViewList> persons)
     {
       try
       {
@@ -1391,12 +1391,13 @@ namespace Manager.Services.Specific
           {
             foreach (var item in monitorings)
             {
-              result.Add(new ViewExportStatusMonitoringGeral
-              {
-                NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
-                NamePerson = item.Person.Name,
-                Occupation = item.Person.Occupation,
-                Status =
+              if (persons.Contains(new _ViewList() { _id = item.Person._id }))
+                result.Add(new ViewExportStatusMonitoringGeral
+                {
+                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
+                  NamePerson = item.Person.Name,
+                  Occupation = item.Person.Occupation,
+                  Status =
               item == null ? "Aguardando para iniciar" :
                 item.StatusMonitoring == EnumStatusMonitoring.Open ? "Aguardando para iniciar" :
                   item.StatusMonitoring == EnumStatusMonitoring.InProgressPerson ? "Em andamento pelo colaborador" :
@@ -1405,9 +1406,9 @@ namespace Manager.Services.Specific
                         item.StatusMonitoring == EnumStatusMonitoring.End ? "Finalizado" :
                           item.StatusMonitoring == EnumStatusMonitoring.WaitManager ? "Aguardando continuação pelo gestor" :
                             item.StatusMonitoring == EnumStatusMonitoring.Disapproved ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
-                DateBegin = item?.DateBeginPerson,
-                DateEnd = item?.DateEndEnd
-              });
+                  DateBegin = item?.DateBeginPerson,
+                  DateEnd = item?.DateEndEnd
+                });
             }
           }
 

@@ -364,13 +364,14 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="persons"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
+    [HttpPost]
     [Route("exportmonitoring")]
-    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring()
+    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring([FromBody] List<_ViewList> persons)
     {
-      return await Task.Run(() => service.ExportStatusMonitoring());
+      return await Task.Run(() => service.ExportStatusMonitoring(persons));
     }
 
     /// <summary>
