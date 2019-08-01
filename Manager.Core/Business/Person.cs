@@ -42,7 +42,7 @@ namespace Manager.Core.Business
     public EnumTypeUser TypeUser { get; set; }
     
     public string Registration { get; set; }
-    
+    public int Workload { get; set; }
     public ViewCrudUser User { get; set; }
     public ViewListPerson GetViewList()
     {

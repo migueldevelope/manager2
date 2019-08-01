@@ -22,6 +22,7 @@ namespace Manager.Views.BusinessCrud
     public string MotiveAside { get; set; }
     public EnumTypeUser TypeUser { get; set; }
     public string Registration { get; set; }
+    public int Workload { get; set; }
     public ViewCrudUser User { get; set; }
     public ViewSalaryScalePerson SalaryScales { get; set; }
   }

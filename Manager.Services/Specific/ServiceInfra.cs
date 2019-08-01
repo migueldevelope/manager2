@@ -2791,7 +2791,8 @@ namespace Manager.Services.Specific
               _id = s._idSalaryScale,
               Name = s.NameSalaryScale,
               NameGrade = s.NameGrade,
-              _idGrade = s._idGrade
+              _idGrade = s._idGrade,
+              Workload= s.Workload
             }).ToList(),
             Group = p.Group,
             Line = p.Line,
@@ -3230,6 +3231,7 @@ namespace Manager.Services.Specific
               NameSalaryScale = item.Name,
               _idGrade = item._idGrade,
               NameGrade = item.NameGrade,
+              Workload = item.Workload,
               _id = ObjectId.GenerateNewId().ToString()
             });
           }

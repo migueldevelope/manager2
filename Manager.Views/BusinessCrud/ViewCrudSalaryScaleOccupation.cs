@@ -6,5 +6,6 @@ namespace Manager.Views.BusinessCrud
   {
     public string _idGrade { get; set; }
     public string NameGrade { get; set; }
+    public int Workload { get; set; }
   }
 }

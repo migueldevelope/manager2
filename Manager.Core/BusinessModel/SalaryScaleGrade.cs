@@ -11,5 +11,6 @@ namespace Manager.Core.BusinessModel
     public string NameGrade { get; set; }
     public string _idSalaryScale { get; set; }
     public string NameSalaryScale { get; set; }
+    public int Workload { get; set; }
   }
 }

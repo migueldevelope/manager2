@@ -198,8 +198,9 @@ namespace Manager.Services.Auth
           MotiveAside = view.Person.MotiveAside,
           TypeUser = view.Person.TypeUser,
           Registration = view.Person.Registration,
-          SalaryScales = salaryScale
-        };
+          SalaryScales = salaryScale,
+          Workload = view.Person.Workload
+      };
 
         user.Password = EncryptServices.GetMD5Hash(view.User.Password);
         user.ChangePassword = Manager.Views.Enumns.EnumChangePassword.AccessFirst;
@@ -269,6 +270,7 @@ namespace Manager.Services.Auth
         person.TypeUser = view.Person.TypeUser;
         person.Registration = view.Person.Registration;
         person.SalaryScales = salaryScale;
+        person.Workload = view.Person.Workload;
         person.User = user.GetViewCrud();
         servicePerson.Update(person, null).Wait();
         serviceUser.Update(user, null).Wait();
@@ -489,6 +491,7 @@ namespace Manager.Services.Auth
           StatusUser = person.StatusUser,
           TypeJourney = person.TypeJourney,
           TypeUser = person.TypeUser,
+          Workload = person.Workload,
           SalaryScales = person.SalaryScales == null ? null : new Views.BusinessNew.ViewSalaryScalePerson()
           {
             _idSalaryScale = person.SalaryScales._idSalaryScale,
@@ -571,7 +574,8 @@ namespace Manager.Services.Auth
           TypeJourney = view.TypeJourney,
           TypeUser = view.TypeUser,
           User = user.GetViewCrud(),
-          SalaryScales = salaryScale
+          SalaryScales = salaryScale,
+          Workload = view.Workload
         };
 
         person = servicePerson.InsertNewVersion(person).Result;
@@ -638,6 +642,7 @@ namespace Manager.Services.Auth
             .Result.Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
             .FirstOrDefault();
 
+        person.Workload = view.Workload;
         person.Company = view.Company;
         person.DateLastOccupation = view.DateLastOccupation;
         person.DateLastReadjust = view.DateLastReadjust;
