@@ -576,7 +576,7 @@ namespace Manager.Services.Specific
         MailModel model = new MailModel
         {
           Status = EnumStatus.Enabled,
-          Message = "Olá <strong>{Person}</strong>,<br>Seu col <strong>{Manager}</strong> acaba de reconhecer você em {Type}.<br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.<br>Lembre-se: quanto mais engajamento nas suas ações de desenvolvimento, mais fluida será a sua carreira!<br><br>Para acessar o Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
+          Message = "Olá <strong>{Person}</strong>,<br>Você acaba de receber o reconhecimento em {Type}.<br>Não perca tempo, acesse agora o Analisa e veja este conteúdo.<br>Para acessar o Analisa <a href='{Link}'>clique aqui</a>.<br><br>#VamosSerMaisFluidos",
           Subject = "Notificação de Reconhecimento | Recommendation",
           Name = "recommendation",
           Link = path
