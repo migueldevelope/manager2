@@ -492,6 +492,8 @@ namespace Manager.Services.Specific
       {
         if (e.Message == "not_numeric")
           return e.Message;
+        else if (e.Message == "not_numeric_workload")
+          return e.Message;
         else
           throw e;
       }
