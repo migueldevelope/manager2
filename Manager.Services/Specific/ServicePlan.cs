@@ -1064,7 +1064,13 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
-        var plan = servicePlan.GetAllNewVersion(p => p.Person._idManager == id).Result;
+        var plan = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == id).Result.Select(p => p._id).ToList();
+        foreach(var item in plan)
+        {
+          if (persons.Where(p => p == item.Person?._id).Count() == 0)
+            plan.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
+        }
 
         if (activities == 0)
           plan = plan.Where(p => p.SourcePlan != EnumSourcePlan.Activite).ToList();
@@ -1116,7 +1122,7 @@ namespace Manager.Services.Specific
         }
 
 
-        result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
+        result = result.Where(p => p.Status != EnumStatus.Disabled && p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
         if (open == 0)
           result = result.Where(p => !(p.StatusPlanApproved == EnumStatusPlanApproved.Open & p.Deadline > DateTime.Now)).ToList();
