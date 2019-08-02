@@ -439,6 +439,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        serviceMailModel._user._idAccount = _user._idAccount;
         var model = serviceMailModel.Recommendation(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
