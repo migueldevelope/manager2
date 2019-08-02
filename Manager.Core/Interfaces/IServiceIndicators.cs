@@ -22,21 +22,21 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
     //string[] ExportStatusOnboarding(ref  long total,  string filter, int count, int page);
 
-    List<_ViewList> GetFilterPersons(string idmanager);
-    IEnumerable<ViewChartOnboarding> ChartOnboarding(List<_ViewList> persons);
+    List<ViewListIdIndicators> GetFilterPersons(string idmanager);
+    IEnumerable<ViewChartOnboarding> ChartOnboarding(List<ViewListIdIndicators> persons);
 
-    IEnumerable<ViewChartStatus> ChartOnboardingRealized(List<_ViewList> persons);
+    IEnumerable<ViewChartStatus> ChartOnboardingRealized(List<ViewListIdIndicators> persons);
 
-    IEnumerable<ViewChartMonitoring> ChartMonitoring(List<_ViewList> persons);
+    IEnumerable<ViewChartMonitoring> ChartMonitoring(List<ViewListIdIndicators> persons);
 
-    IEnumerable<ViewChartCheckpoint> ChartCheckpoint(List<_ViewList> persons);
+    IEnumerable<ViewChartCheckpoint> ChartCheckpoint(List<ViewListIdIndicators> persons);
 
-    IEnumerable<ViewChartPlan> ChartPlan(List<_ViewList> persons);
+    IEnumerable<ViewChartPlan> ChartPlan(List<ViewListIdIndicators> persons);
 
-    IEnumerable<ViewChartStatus> ChartMonitoringRealized(List<_ViewList> persons);
+    IEnumerable<ViewChartStatus> ChartMonitoringRealized(List<ViewListIdIndicators> persons);
 
-    IEnumerable<ViewChartStatus> ChartCheckpointRealized(List<_ViewList> persons);
+    IEnumerable<ViewChartStatus> ChartCheckpointRealized(List<ViewListIdIndicators> persons);
 
-    IEnumerable<ViewChartStatus> ChartPlanRealized(List<_ViewList> persons);
+    IEnumerable<ViewChartStatus> ChartPlanRealized(List<ViewListIdIndicators> persons);
   }
 }

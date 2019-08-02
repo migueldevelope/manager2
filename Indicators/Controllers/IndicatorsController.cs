@@ -92,7 +92,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpGet]
     [Route("getfilterpersons")]
-    public async Task<List<_ViewList>> GetFilterPersons(string idmanager = "")
+    public async Task<List<ViewListIdIndicators>> GetFilterPersons(string idmanager = "")
     {
       return await Task.Run(() => service.GetFilterPersons(idmanager));
     }
@@ -105,7 +105,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartonboarding")]
-    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding([FromBody] List<_ViewList> persons)
+    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboarding([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartOnboarding(persons));
     }
@@ -118,7 +118,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartmonitoring")]
-    public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring([FromBody] List<_ViewList> persons)
+    public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartMonitoring(persons));
     }
@@ -131,7 +131,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartcheckpoint")]
-    public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint([FromBody] List<_ViewList> persons)
+    public async Task<IEnumerable<ViewChartCheckpoint>> ChartCheckpoint([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartCheckpoint(persons));
     }
@@ -144,7 +144,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartplan")]
-    public async Task<IEnumerable<ViewChartPlan>> ChartPlan([FromBody] List<_ViewList> persons)
+    public async Task<IEnumerable<ViewChartPlan>> ChartPlan([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartPlan(persons));
     }
@@ -157,7 +157,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartmonitoringrealized")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized([FromBody] List<_ViewList> persons)
+    public async Task<IEnumerable<ViewChartStatus>> ChartMonitoringRealized([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartMonitoringRealized(persons));
     }
@@ -170,7 +170,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartcheckpointrealized")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized([FromBody] List<_ViewList> persons)
+    public async Task<IEnumerable<ViewChartStatus>> ChartCheckpointRealized([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartCheckpointRealized(persons));
     }
@@ -183,7 +183,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartplanrealized")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized([FromBody] List<_ViewList> persons)
+    public async Task<IEnumerable<ViewChartStatus>> ChartPlanRealized([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartPlanRealized(persons));
     }
@@ -196,7 +196,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartonboardingrealized")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized([FromBody] List<_ViewList> persons)
+    public async Task<IEnumerable<ViewChartStatus>> ChartOnboardingRealized([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartOnboardingRealized(persons));
     }

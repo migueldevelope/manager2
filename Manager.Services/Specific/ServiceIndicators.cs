@@ -73,19 +73,19 @@ namespace Manager.Services.Specific
       serviceCheckpoint._user = _user;
     }
 
-    public List<_ViewList> GetFilterPersons(string idmanager)
+    public List<ViewListIdIndicators> GetFilterPersons(string idmanager)
     {
       try
       {
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
         & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
         .Result;
-        if(idmanager != string.Empty)
+        if (idmanager != string.Empty)
         {
           persons = persons.Where(p => p.Manager._id == idmanager).ToList();
         }
 
-        return persons.Select(p => new _ViewList() { _id = p._id }).ToList();
+        return persons.Select(p => new ViewListIdIndicators() { _id = p._id }).ToList();
       }
       catch (Exception e)
       {
@@ -457,7 +457,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartOnboarding> ChartOnboarding(List<_ViewList> persons)
+    public IEnumerable<ViewChartOnboarding> ChartOnboarding(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -471,7 +471,10 @@ namespace Manager.Services.Specific
         {
           var list = onboardings.Where(p => p.Person._id == item._id);
           if (list.Count() == 0)
-            result.Where(p => p.Status == EnumStatusOnBoarding.WaitBegin).FirstOrDefault().Count += 1;
+          {
+            if (item.TypeJourney == EnumTypeJourney.OnBoarding)
+              result.Where(p => p.Status == EnumStatusOnBoarding.WaitBegin).FirstOrDefault().Count += 1;
+          }
           else
           {
             foreach (var view in list)
@@ -489,7 +492,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartOnboardingRealized(List<_ViewList> persons)
+    public IEnumerable<ViewChartStatus> ChartOnboardingRealized(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -502,7 +505,10 @@ namespace Manager.Services.Specific
         {
           var list = onboradings.Where(p => p.Person._id == item._id);
           if (list.Count() == 0)
-            result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+          {
+            if (item.TypeJourney == EnumTypeJourney.OnBoarding)
+              result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+          }
           else
           {
             foreach (var view in list)
@@ -523,7 +529,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartMonitoring> ChartMonitoring(List<_ViewList> persons)
+    public IEnumerable<ViewChartMonitoring> ChartMonitoring(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -535,7 +541,10 @@ namespace Manager.Services.Specific
         {
           var list = monitorings.Where(p => p.Person._id == item._id);
           if (list.Count() == 0)
-            result.Where(p => p.Status == EnumStatusMonitoring.Open).FirstOrDefault().Count += 1;
+          {
+            if (item.TypeJourney == EnumTypeJourney.Monitoring)
+              result.Where(p => p.Status == EnumStatusMonitoring.Open).FirstOrDefault().Count += 1;
+          }
           else
           {
             foreach (var view in list)
@@ -553,7 +562,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartMonitoringRealized(List<_ViewList> persons)
+    public IEnumerable<ViewChartStatus> ChartMonitoringRealized(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -574,7 +583,10 @@ namespace Manager.Services.Specific
               if (view.StatusMonitoring == EnumStatusMonitoring.End)
                 result.Where(p => p.Status == "Realizado").FirstOrDefault().Count += 1;
               else
-                result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+              {
+                if (item.TypeJourney == EnumTypeJourney.Monitoring)
+                  result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+              }
             }
           }
         };
@@ -587,7 +599,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint(List<_ViewList> persons)
+    public IEnumerable<ViewChartCheckpoint> ChartCheckpoint(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -600,7 +612,10 @@ namespace Manager.Services.Specific
         {
           var list = checkpoints.Where(p => p.Person._id == item._id);
           if (list.Count() == 0)
-            result.Where(p => p.Status == EnumStatusCheckpoint.Open).FirstOrDefault().Count += 1;
+          {
+            if (item.TypeJourney == EnumTypeJourney.Checkpoint)
+              result.Where(p => p.Status == EnumStatusCheckpoint.Open).FirstOrDefault().Count += 1;
+          }
           else
           {
             foreach (var view in list)
@@ -618,7 +633,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartCheckpointRealized(List<_ViewList> persons)
+    public IEnumerable<ViewChartStatus> ChartCheckpointRealized(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -640,7 +655,10 @@ namespace Manager.Services.Specific
               if (view.StatusCheckpoint == EnumStatusCheckpoint.End)
                 result.Where(p => p.Status == "Realizado").FirstOrDefault().Count += 1;
               else
-                result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+              {
+                if (item.TypeJourney == EnumTypeJourney.Checkpoint)
+                  result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+              }
             }
           }
         };
@@ -653,7 +671,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartPlan> ChartPlan(List<_ViewList> persons)
+    public IEnumerable<ViewChartPlan> ChartPlan(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -719,7 +737,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartPlanRealized(List<_ViewList> persons)
+    public IEnumerable<ViewChartStatus> ChartPlanRealized(List<ViewListIdIndicators> persons)
     {
       try
       {
