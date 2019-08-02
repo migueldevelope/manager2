@@ -71,6 +71,7 @@ namespace Manager.Services.Specific
       serviceMail._user = _user;
       serviceLog._user = _user;
       serviceMailModel._user = _user;
+      serviceMailModel.SetUser(_user);
 
     }
     public void SetUser(BaseUser user)
@@ -83,6 +84,7 @@ namespace Manager.Services.Specific
       serviceMail._user = user;
       serviceLog._user = user;
       serviceMailModel._user = user;
+      serviceMailModel.SetUser(_user);
     }
     #endregion
 
@@ -439,7 +441,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceMailModel._user._idAccount = _user._idAccount;
         var model = serviceMailModel.Recommendation(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
