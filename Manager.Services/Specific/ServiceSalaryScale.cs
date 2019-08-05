@@ -223,7 +223,7 @@ namespace Manager.Services.Specific
                   };
                   if (occupationStep.Wordload != grade.Workload)
                   {
-                    newStep.Salary = Math.Round((step.Salary * occupationStep.Wordload) / grade.Workload, 2);
+                    newStep.Salary = Math.Round((step.Salary * occupationStep.Wordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
                   }
                   occupationStep.Steps.Add(newStep);
                 }
