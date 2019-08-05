@@ -175,10 +175,10 @@ namespace Manager.Services.Specific
       try
       {
         var occupation = serviceOccupation.GetNewVersion(p => p._id == idoccupation).Result;
-        
-        foreach(var item in occupation.SalaryScales)
+
+        foreach (var item in occupation.SalaryScales)
         {
-          if(item._idGrade == idgrade)
+          if (item._idGrade == idgrade)
           {
             occupation.SalaryScales.Remove(item);
             var result = serviceOccupation.Update(occupation, null);
@@ -209,10 +209,26 @@ namespace Manager.Services.Specific
           var occupation = new List<ViewListOccupationSalaryScale>();
           foreach (var occ in occupations)
           {
-            if(occ.SalaryScales != null)
+            if (occ.SalaryScales != null)
             {
               if (occ.SalaryScales.Where(p => p._idGrade == grade._id).Count() > 0)
-                occupation.Add(new ViewListOccupationSalaryScale() { _id = occ._id, Name = occ.Name, Wordload = occ.SalaryScales.FirstOrDefault().Workload });
+              {
+                var occupationStep = new ViewListOccupationSalaryScale() { _id = occ._id, Name = occ.Name, Wordload = occ.SalaryScales.FirstOrDefault().Workload };
+                foreach (var step in grade.ListSteps)
+                {
+                  var newStep = new ViewListStep()
+                  {
+                    Step = step.Step,
+                    Salary = step.Salary
+                  };
+                  if (occupationStep.Wordload != grade.Workload)
+                  {
+                    newStep.Salary = Math.Round((step.Salary * occupationStep.Wordload) / grade.Workload, 2);
+                  }
+                  occupationStep.Steps.Add(newStep);
+                }
+                occupation.Add(occupationStep);
+              }
             }
           }
           var view = new ViewListGrade
