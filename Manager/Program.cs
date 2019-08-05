@@ -33,9 +33,7 @@ namespace Manager
            .UseUrls("http://0.0.0.0:5200/")
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
-            .UseKestrel(opts =>
-                opts.AllowSynchronousIO = true
-              )
+            .UseKestrel()
             .UseStartup<Startup>()
             .Build();
   }
