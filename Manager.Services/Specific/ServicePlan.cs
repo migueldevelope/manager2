@@ -1101,7 +1101,7 @@ namespace Manager.Services.Specific
                   Concept = p.Concept,
                   Name = p.Name
                 }).ToList(),
-                UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
+                UserInclude = res.Person?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = res.Person?._id,
                 NamePerson = res.Person?.Name,
@@ -1185,7 +1185,7 @@ namespace Manager.Services.Specific
                   Concept = p.Concept,
                   Name = p.Name
                 }).ToList(),
-                UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
+                UserInclude = res.Person?._id,
                 TypePlan = res.TypePlan,
                 _idPerson = res.Person._id,
                 NamePerson = res.Person.Name,
@@ -1347,7 +1347,7 @@ namespace Manager.Services.Specific
               Concept = p.Concept,
               Name = p.Name
             }).ToList(),
-            UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
+            UserInclude = res.Person?._id,
             TypePlan = res.TypePlan,
             _idPerson = res.Person._id,
             NamePerson = res.Person.Name,
@@ -1413,7 +1413,7 @@ namespace Manager.Services.Specific
               Concept = p.Concept,
               Name = p.Name
             }).ToList(),
-            UserInclude = res.Person == null ? null : servicePerson.GetAllNewVersion(p => p._id == res.Person._id).Result.FirstOrDefault()?._id,
+            UserInclude = res.Person?._id,
             TypePlan = res.TypePlan,
             _idPerson = res.Person._id,
             NamePerson = res.Person.Name,
