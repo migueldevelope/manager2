@@ -120,9 +120,12 @@ namespace Manager.Services.Commons
         //Stream getexcel = new MemoryStream();
         //hssfwb.Write(getexcel);
         //getexcel.FlushAsync().Wait();
-        FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/","") + ".xlsx");
+        File.Delete("SALARYSCALE.xlsx");
+        //FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/","") + ".xlsx");
+        FileStream sw = File.Create("SALARYSCALE.xlsx");
         hssfwb.Write(sw);
-        //sw.Close();
+        sw.Flush();
+        sw.Close();
 
         //getexcel.Close();
 

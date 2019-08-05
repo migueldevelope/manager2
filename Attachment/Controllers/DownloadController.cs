@@ -106,7 +106,10 @@ namespace EdeskIntegration.Controllers
         string fullPath = @"Models/SALARYSCALE.xlsx";
         var stream = new FileStream(fullPath, FileMode.Open);
 
-        var result = serviceSalaryScale.ExportSalaryScale(id, stream);
+        //var result = serviceSalaryScale.ExportSalaryScale(id, stream);
+        serviceSalaryScale.ExportSalaryScale(id, stream);
+        var result = new FileStream("SALARYSCALE.xlsx", FileMode.Open);
+        
 
         CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
         CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
