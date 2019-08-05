@@ -214,6 +214,7 @@ namespace Manager.Services.Specific
               if (occ.SalaryScales.Where(p => p._idGrade == grade._id).Count() > 0)
               {
                 var occupationStep = new ViewListOccupationSalaryScale() { _id = occ._id, Name = occ.Name, Wordload = occ.SalaryScales.FirstOrDefault().Workload };
+                occupationStep.Steps = new List<ViewListStep>();
                 foreach (var step in grade.ListSteps)
                 {
                   var newStep = new ViewListStep()
