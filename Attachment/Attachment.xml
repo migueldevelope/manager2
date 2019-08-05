@@ -9,13 +9,21 @@
             Download
             </summary>
         </member>
-        <member name="M:EdeskIntegration.Controllers.DownloadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+        <member name="M:EdeskIntegration.Controllers.DownloadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Manager.Core.Interfaces.IServiceSalaryScale)">
             <summary>
             
             </summary>
             <param name="contextAccessor"></param>
+            <param name="_serviceSalaryScale"></param>
         </member>
         <member name="M:EdeskIntegration.Controllers.DownloadController.GetUrl(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.DownloadController.GetSalaryScale(System.String)">
             <summary>
             
             </summary>

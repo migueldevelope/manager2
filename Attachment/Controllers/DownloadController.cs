@@ -11,6 +11,11 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Manager.Core.Base;
 using Tools.Data;
+using Manager.Core.Interfaces;
+using System.IO;
+using MongoDB.Bson;
+using System.Threading.Tasks;
+using System;
 
 namespace EdeskIntegration.Controllers
 {
@@ -22,6 +27,7 @@ namespace EdeskIntegration.Controllers
   {
     private readonly ServiceGeneric<Attachments> service;
     private readonly DataContext context;
+    private readonly IServiceSalaryScale serviceSalaryScale;
     private readonly string account;
     private readonly string blobKey;
 
@@ -29,7 +35,8 @@ namespace EdeskIntegration.Controllers
     /// 
     /// </summary>
     /// <param name="contextAccessor"></param>
-    public DownloadController(IHttpContextAccessor contextAccessor)
+    /// <param name="_serviceSalaryScale"></param>
+    public DownloadController(IHttpContextAccessor contextAccessor, IServiceSalaryScale _serviceSalaryScale)
     {
       BaseUser baseUser = new BaseUser();
       var user = contextAccessor.HttpContext.User;
@@ -63,6 +70,9 @@ namespace EdeskIntegration.Controllers
       blobKey = conn.BlobKey;
       service = new ServiceGeneric<Attachments>(context);
       service.User(contextAccessor);
+      serviceSalaryScale = _serviceSalaryScale;
+
+      serviceSalaryScale.SetUser(contextAccessor);
     }
 
     /// <summary>
@@ -80,6 +90,45 @@ namespace EdeskIntegration.Controllers
       CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(account.ToString());
       CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
       return blockBlob.Uri.ToString();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet("{id}/salaryscale")]
+    public async Task<string> GetSalaryScale(string id)
+    {
+      try
+      {
+        string fullPath = @"Models/SALARYSCALE.xlsx";
+        var stream = new FileStream(fullPath, FileMode.Open);
+
+        var result = serviceSalaryScale.ExportSalaryScale(id, stream);
+
+        CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+        CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+        CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+        if (await cloudBlobContainer.CreateIfNotExistsAsync())
+        {
+          await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+          {
+            PublicAccess = BlobContainerPublicAccessType.Blob
+          });
+        }
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", ObjectId.GenerateNewId().ToString(), ".xlsx"));
+        //blockBlob.Properties.ContentType = "xlsx";
+        await blockBlob.UploadFromStreamAsync(result);
+
+        return blockBlob.Uri.ToString();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
   }
 }

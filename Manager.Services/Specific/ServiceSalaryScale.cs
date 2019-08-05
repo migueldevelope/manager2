@@ -516,6 +516,48 @@ namespace Manager.Services.Specific
       }
     }
 
+    public Stream ExportSalaryScale(string idsalaryscale, Stream excel)
+    {
+      try
+      {
+        var serviceExcel = new ServiceExcel();
+
+        var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+        if (salaryScale.Grades.Count > 0)
+        {
+          long count = salaryScale.Grades.Count;
+          string[] grades = new string[count];
+          int[] workloads = new int[count];
+          double[][] matriz = new double[count][];
+          for (int i = 0; i < count; i++)
+            matriz[i] = new double[9];
+
+          int row = 0;
+
+          foreach (var item in salaryScale.Grades)
+          {
+
+            grades[row] = item.Name;
+            workloads[row] = item.Workload;
+            foreach (var step in item.ListSteps)
+            {
+              matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+            }
+            row += 1;
+          }
+
+          var export = serviceExcel.ExportSalaryScale(new Tuple<Stream, double[][], string[], int[], long>(excel, matriz, grades, workloads, count));
+          return export;
+        }
+
+        return excel;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
   }

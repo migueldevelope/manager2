@@ -279,7 +279,8 @@ namespace Manager.Services.Specific
             _id = p._id,
             Image = p.Recommendation.Image,
             NameRecommendation = p.Recommendation.Name,
-            Content = p.Content
+            Content = p.Content,
+            Comments = p.Comments
           }).ToList();
         total = serviceRecommendationPerson.CountNewVersion(p => p.Person._id == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;

@@ -30,5 +30,6 @@ namespace Manager.Core.Interfaces
     string ImportSalaryScale(string idsalaryscale, Stream stream);
     string RemoveOccupationSalaryScale(string idoccupation, string idgrade);
     string AddOccupationSalaryScale(ViewCrudOccupationSalaryScale view);
+    Stream ExportSalaryScale(string idsalaryscale, Stream excel);
   }
 }
