@@ -152,8 +152,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
-        var manager = servicePerson.GetAllNewVersion(p => p._id == view.IdManager).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == idPerson).Result;
+        var manager = servicePerson.GetNewVersion(p => p._id == view.IdManager).Result;
         if (view.Status == EnumStatusAutoManagerView.Open)
         {
           person.Manager = new BaseFields() { _id = manager._id, Mail = manager.User.Mail, Name = manager.User.Name };
@@ -164,7 +164,8 @@ namespace Manager.Services.Specific
           //  servicePerson.Update(manager, null).Wait();
           //}
 
-          servicePerson.UpdateManager(person._id, manager._id, null);
+          person.Manager = servicePerson.UpdateManager(person._id, manager._id, null);
+          
         }
         else
         {

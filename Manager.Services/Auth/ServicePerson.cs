@@ -445,6 +445,8 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var person = servicePerson.GetNewVersion(p => p._id == _idPerson).Result;
+
         var manager = servicePerson.GetAllNewVersion(p => p._id == _idManager).Result.
           Select(p => new BaseFields()
           {
@@ -455,6 +457,9 @@ namespace Manager.Services.Auth
 
         if (_idManager != _idManagerOld)
           Task.Run(() => SendQueue(_idManager, _idPerson));
+
+        person.Manager = manager;
+        var result = servicePerson.Update(person, null);
 
         return manager;
       }
