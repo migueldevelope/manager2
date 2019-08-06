@@ -86,7 +86,9 @@ namespace Manager.Services.Specific
         {
           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
           Name = item.Name,
-          _id = item._id
+          _id = item._id,
+          _idSalaryScalePrevious = item._idSalaryScalePrevious,
+          Date = item.Date
         };
       }
       catch (Exception e)
@@ -102,7 +104,9 @@ namespace Manager.Services.Specific
         {
           Name = view.Name,
           Company = view.Company,
-          Grades = new List<Grade>()
+          Grades = new List<Grade>(),
+          Date = DateTime.Now,
+          _idSalaryScalePrevious = view._idSalaryScalePrevious
         };
         serviceSalaryScale.InsertNewVersion(salaryScale).Wait();
         return "Salary scale added!";
