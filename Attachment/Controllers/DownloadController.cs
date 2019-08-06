@@ -103,12 +103,12 @@ namespace EdeskIntegration.Controllers
     {
       try
       {
-        string fullPath = @"Models/SALARYSCALE.xlsx";
-        var stream = new FileStream(fullPath, FileMode.Open);
+        //string fullPath = @"Models/SALARYSCALE.xlsx";
+        //var stream = new FileStream(fullPath, FileMode.Open);
 
-        //var result = serviceSalaryScale.ExportSalaryScale(id, stream);
-        serviceSalaryScale.ExportSalaryScale(id, stream);
-        var result = new FileStream("SALARYSCALE.xlsx", FileMode.Open);
+        //var result = serviceSalaryScale.ExportSalaryScale(id);
+        var name = serviceSalaryScale.ExportSalaryScale(id);
+        var result = new FileStream(name, FileMode.Open);
         
 
         CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);

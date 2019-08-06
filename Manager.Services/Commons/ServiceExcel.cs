@@ -79,57 +79,72 @@ namespace Manager.Services.Commons
 
     }
 
-    public Stream ExportSalaryScale(Tuple<Stream, double[][], string[], int[], long> tuple)
+    public string ExportSalaryScale(Tuple<double[][], string[], int[], long> tuple)
     {
       try
       {
         ISheet sheet;
         var excel = tuple.Item1;
 
-        excel.Position = 0;
-        XSSFWorkbook hssfwb = new XSSFWorkbook(excel); //This will read 2007 Excel format  
-        sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook   
+        //XSSFWorkbook hssfwb = new XSSFWorkbook(excel); //This will read 2007 Excel format  
+        XSSFWorkbook hssfwb = new XSSFWorkbook(); //This will read 2007 Excel format  
 
-        long count = tuple.Item5;
-        string[] grades = tuple.Item3;
-        int[] workloads = tuple.Item4;
+        sheet = hssfwb.CreateSheet("salaryscale"); //get first sheet from workbook   
+
+        long count = tuple.Item4;
+        string[] grades = tuple.Item2;
+        int[] workloads = tuple.Item3;
 
         // col i = 9 lin = 50
-        double[][] matriz = tuple.Item2;
+        double[][] matriz = tuple.Item1;
 
-        IRow headerRow = sheet.GetRow(0); //Get Header Row
-        int cellCount = headerRow.LastCellNum;
+        IRow headerRow = sheet.CreateRow(0); //Get Header Row
+        headerRow.CreateCell(0).SetCellValue("CARGOS");
+        headerRow.CreateCell(1).SetCellValue("CARGA HORÁRIA");
+        headerRow.CreateCell(2).SetCellValue("A");
+        headerRow.CreateCell(3).SetCellValue("B");
+        headerRow.CreateCell(4).SetCellValue("C");
+        headerRow.CreateCell(5).SetCellValue("D");
+        headerRow.CreateCell(6).SetCellValue("E");
+        headerRow.CreateCell(7).SetCellValue("F");
+        headerRow.CreateCell(8).SetCellValue("G");
+        headerRow.CreateCell(9).SetCellValue("H");
+        headerRow.CreateCell(10).SetCellValue("I");
 
-        for (int i = 2; i < (count + 2); i++) //Read Excel File
+        var font = hssfwb.CreateFont();
+        font.Boldweight = (short)FontBoldWeight.Bold;
+        for (var hd = 0; hd <= 10; hd++)
         {
-          IRow row = sheet.GetRow(i);
-          if (row == null) continue;
-          if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
+          headerRow.GetCell(hd).CellStyle = hssfwb.CreateCellStyle();
 
-          row.GetCell(0).SetCellValue(grades[i - 2]);
-          row.GetCell(1).SetCellValue(workloads[i - 2]);
+          headerRow.GetCell(hd).CellStyle.SetFont(font);
+        }
 
-          for (int j = 2; j < cellCount; j++)
+
+        long cellCount = count;
+
+        for (int i = 1; i < count; i++) //Read Excel File
+        {
+          IRow row = sheet.CreateRow(i);
+
+          row.CreateCell(0).SetCellValue(grades[i - 1]);
+          row.CreateCell(1).SetCellValue(workloads[i - 1]);
+
+          for (int j = 2; j < 10; j++)
           {
-            if (row.GetCell(j) != null)
-            {
-              row.GetCell(j).SetCellValue(matriz[i - 2][j - 2]);
-            }
+            row.CreateCell(j).SetCellValue(matriz[i - 1][j - 2]);
           }
         }
-        //Stream getexcel = new MemoryStream();
-        //hssfwb.Write(getexcel);
-        //getexcel.FlushAsync().Wait();
-        File.Delete("SALARYSCALE.xlsx");
-        //FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/","") + ".xlsx");
-        FileStream sw = File.Create("SALARYSCALE.xlsx");
+        //FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");
+        FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");
+
         hssfwb.Write(sw);
-        sw.Flush();
-        sw.Close();
+        //sw.Flush();
+        //sw.Close();
 
         //getexcel.Close();
 
-        return sw;
+        return sw.Name;
       }
       catch (Exception e)
       {

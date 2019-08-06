@@ -516,11 +516,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public Stream ExportSalaryScale(string idsalaryscale, Stream excel)
+    public string ExportSalaryScale(string idsalaryscale)
     {
       try
       {
         var serviceExcel = new ServiceExcel();
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
         if (salaryScale.Grades.Count > 0)
@@ -536,21 +537,35 @@ namespace Manager.Services.Specific
 
           foreach (var item in salaryScale.Grades)
           {
-
-            grades[row] = item.Name;
-            workloads[row] = item.Workload;
-            foreach (var step in item.ListSteps)
+            foreach (var occ in occupations)
             {
-              matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+              if (occ.SalaryScales != null)
+              {
+                if (occ.SalaryScales.Where(p => p._idGrade == item._id).Count() > 0)
+                {
+                  grades[row] = occ.Name;
+                  workloads[row] = occ.SalaryScales.FirstOrDefault().Workload;
+                  foreach (var step in item.ListSteps)
+                  {
+
+                    if (occ.SalaryScales.FirstOrDefault().Workload != item.Workload)
+                      matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.FirstOrDefault().Workload) / (item.Workload == 0 ? 1 : item.Workload), 2).ToString());
+                    else
+                      matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+                  }
+
+                  row += 1;
+                }
+              }
             }
-            row += 1;
+
           }
 
-          var export = serviceExcel.ExportSalaryScale(new Tuple<Stream, double[][], string[], int[], long>(excel, matriz, grades, workloads, count));
+          var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], int[], long>(matriz, grades, workloads, row + 1));
           return export;
         }
 
-        return excel;
+        return "";
       }
       catch (Exception e)
       {
