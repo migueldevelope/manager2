@@ -99,7 +99,7 @@ namespace EdeskIntegration.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet("{id}/salaryscale")]
-    public async Task<string> GetSalaryScale(string id)
+    public async Task<dynamic> GetSalaryScale(string id)
     {
       try
       {
@@ -125,7 +125,7 @@ namespace EdeskIntegration.Controllers
         //blockBlob.Properties.ContentType = "xlsx";
         await blockBlob.UploadFromStreamAsync(result);
 
-        return blockBlob.Uri.ToString();
+        return new { Url = blockBlob.Uri.ToString() };
 
       }
       catch (Exception e)
