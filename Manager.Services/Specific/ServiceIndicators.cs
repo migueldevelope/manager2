@@ -589,7 +589,8 @@ namespace Manager.Services.Specific
         {
           var list = monitorings.Where(p => p.Person._id == item._id);
           if (list.Count() == 0)
-            result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+            if (item.TypeJourney == EnumTypeJourney.Monitoring)
+              result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
           else
           {
             foreach (var view in list)

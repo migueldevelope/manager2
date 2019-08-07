@@ -740,7 +740,7 @@ namespace Manager.Services.Specific
         string token = serviceAuthentication.AuthenticationMail(person);
         using (var client = new HttpClient())
         {
-          client.BaseAddress = new Uri(link.Substring(0, link.Length -1) + ":5201/");
+          client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5201/");
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
           var resultMail = client.PostAsync("sendmail/" + idmail, null).Result;
           return token;
@@ -1066,7 +1066,7 @@ namespace Manager.Services.Specific
 
         var plan = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == id).Result.Select(p => p._id).ToList();
-        foreach(var item in plan)
+        foreach (var item in plan)
         {
           if (persons.Where(p => p == item.Person?._id).Count() == 0)
             plan.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
@@ -1889,23 +1889,33 @@ namespace Manager.Services.Specific
 
 
 
-    public List<ViewExportStatusPlan> ExportStatusPlan(List<_ViewList> persons)
+    public List<ViewExportStatusPlan> ExportStatusPlan(List<ViewListIdIndicators> persons)
     {
       try
       {
 
-        var list = servicePlan.GetAllNewVersion().Select(p => new ViewExportStatusPlan()
+
+        var list = new List<ViewExportStatusPlan>();
+        foreach (var item in persons)
         {
-          NameManager = p.Person.NameManager == null ? "Sem Gestor" : p.Person.NameManager,
-          NamePerson = p.Person.Name,
-          What = p.Name,
-          Description = p.Description,
-          Deadline = p.Deadline,
-          Status = p.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
+          var result = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+          foreach (var p in result)
+          {
+            list.Add(new ViewExportStatusPlan()
+            {
+              NameManager = p.Person.NameManager == null ? "Sem Gestor" : p.Person.NameManager,
+              NamePerson = p.Person.Name,
+              What = p.Name,
+              Description = p.Description,
+              Deadline = p.Deadline,
+              Status = p.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         p.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
-          Obs = p.TextEnd,
-          DateEnd = p.DateEnd
-        }).ToList();
+              Obs = p.TextEnd,
+              DateEnd = p.DateEnd
+            });
+          }
+
+        };
 
 
         return list;
