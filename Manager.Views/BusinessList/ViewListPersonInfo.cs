@@ -14,5 +14,6 @@ namespace Manager.Views.BusinessList
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idManager { get; set; }
     public string Manager { get; set; }
+    public string Registration { get; set; }
   }
 }

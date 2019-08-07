@@ -349,7 +349,8 @@ namespace Manager.Services.Auth
         Occupation = p.Occupation?.Name,
         Name = p.User.Name,
         Manager = p.Manager?.Name,
-        _idManager = p.Manager?._id
+        _idManager = p.Manager?._id,
+        Registration = p.Registration
       }).ToList();
     }
     #endregion
