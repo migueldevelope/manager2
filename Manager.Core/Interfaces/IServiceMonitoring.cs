@@ -42,7 +42,7 @@ namespace Manager.Core.Interfaces
     List<ViewCrudComment> GetListComments(string idmonitoring, string iditem);
     List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan);
     List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan plan);
-    List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring(List<_ViewList> persons);
+    List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring(List<ViewListIdIndicators> persons);
     List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson);
 
     #endregion

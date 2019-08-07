@@ -1376,7 +1376,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring(List<_ViewList> persons)
+    public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -1413,14 +1413,18 @@ namespace Manager.Services.Specific
           }
           else
           {
-            var person = servicePerson.GetNewVersion(p => p._id == rows._id).Result;
-            result.Add(new ViewExportStatusMonitoringGeral
+            if(rows.TypeJourney == EnumTypeJourney.Monitoring)
             {
-              NameManager = person.Manager == null ? "Sem Gestor" : person.Manager.Name,
-              NamePerson = person.User.Name,
-              Occupation = person.Occupation.Name,
-              Status = "Aguardando para iniciar"
-            });
+              var person = servicePerson.GetNewVersion(p => p._id == rows._id).Result;
+              result.Add(new ViewExportStatusMonitoringGeral
+              {
+                NameManager = person.Manager == null ? "Sem Gestor" : person.Manager.Name,
+                NamePerson = person.User.Name,
+                Occupation = person.Occupation.Name,
+                Status = "Aguardando para iniciar"
+              });
+            }
+            
 
           }
 

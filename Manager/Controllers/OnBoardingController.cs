@@ -257,7 +257,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("exportonboarding")]
-    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding([FromBody] List<_ViewList> persons)
+    public async Task<List<ViewExportStatusOnboardingGeral>> ExportStatusOnboarding([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ExportStatusOnboarding(persons));
     }

@@ -369,7 +369,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("exportmonitoring")]
-    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring([FromBody] List<_ViewList> persons)
+    public async Task<List<ViewExportStatusMonitoringGeral>> ExportStatusMonitoring([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ExportStatusMonitoring(persons));
     }

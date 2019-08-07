@@ -1463,7 +1463,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding(List<_ViewList> persons)
+    public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -1503,8 +1503,10 @@ namespace Manager.Services.Specific
           }
           else
           {
-            var person = servicePerson.GetNewVersion(p => p._id == rows._id).Result;
-            if (person.TypeJourney == EnumTypeJourney.OnBoarding)
+
+            if (rows.TypeJourney == EnumTypeJourney.OnBoarding)
+            {
+              var person = servicePerson.GetNewVersion(p => p._id == rows._id).Result;
               result.Add(new ViewExportStatusOnboardingGeral
               {
                 NameManager = person.Manager == null ? "Sem Gestor" : person.Manager.Name,
@@ -1513,6 +1515,8 @@ namespace Manager.Services.Specific
                 Occupation = person.Occupation.Name,
                 Status = "Aguardando para iniciar"
               });
+            }
+
           }
 
         }

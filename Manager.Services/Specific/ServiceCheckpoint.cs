@@ -786,32 +786,49 @@ namespace Manager.Services.Specific
 
 
 
-    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint(List<_ViewList> persons)
+    public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint(List<ViewListIdIndicators> persons)
     {
       try
       {
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        //var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         List<ViewExportStatusCheckpoint> result = new List<ViewExportStatusCheckpoint>();
 
-        foreach (var item in list)
+        foreach (var item in persons)
         {
           var checkpoint = serviceCheckpoint.GetNewVersion(p => p.Person._id == item._id).Result;
           if (persons.Where(p => p._id == item._id).Count() > 0)
             result.Add(new ViewExportStatusCheckpoint
             {
-              NameManager = item.Manager == null ? "Sem Gestor" : item.Manager.Name,
-              NamePerson = item.User.Name,
+              NameManager = checkpoint.Person.Manager,
+              NamePerson = checkpoint.Person.Name,
               Status = checkpoint == null ? "Aguardando para iniciar" :
              checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
                 checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
               DateBegin = checkpoint?.DateBegin,
               DateEnd = checkpoint?.DateEnd,
-              Occupation = item.Occupation?.Name,
+              Occupation = checkpoint.Person.Occupation,
               Result = checkpoint == null ? "Não iniciado" :
               checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
                 checkpoint.TypeCheckpoint == EnumCheckpoint.Disapproved ? "Não Efetivado" : "Aguardando Definição"
             });
+          else
+          {
+            if (item.TypeJourney == EnumTypeJourney.Checkpoint)
+            {
+              var person = servicePerson.GetNewVersion(p => p._id == item._id).Result;
+              result.Add(new ViewExportStatusCheckpoint
+              {
+                NameManager = person.Manager == null ? "Sem Gestor" : person.Manager.Name,
+                NamePerson = person.User.Name,
+                Status = "Aguardando para iniciar",
+                Occupation = person.Occupation?.Name,
+                Result = "Não iniciado"
+              });
+            }
+              
+          }
+
         }
 
         return result;

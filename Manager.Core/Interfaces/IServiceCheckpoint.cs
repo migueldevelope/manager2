@@ -21,6 +21,6 @@ namespace Manager.Core.Interfaces
     ViewCrudCheckpoint PersonCheckpointEnd(string idperson);
     List<ViewListCheckpoint> ListEnded(ref long total, string filter, int count, int page);
     string DeleteCheckpoint(string idcheckpoint);
-    List<ViewExportStatusCheckpoint> ExportStatusCheckpoint(List<_ViewList> persons);
+    List<ViewExportStatusCheckpoint> ExportStatusCheckpoint(List<ViewListIdIndicators> persons);
   }
 }
