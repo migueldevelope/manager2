@@ -23,7 +23,7 @@ namespace Manager.Test.Commons
     public IServiceControlQueue serviceControlQueue;
     readonly string databaseConnection = "mongodb://analisa_teste:bti9010@10.0.0.16:27017/analisa_teste";
     readonly string databaseName = "analisa_teste";
-    readonly string serviceBusConnectionString = "Endpoint=sb://analisahomologacao.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=1y2m++UIvKo5+hO676tldq574hoyqD3K7VE+fY+K5Xc=;";
+    readonly string serviceBusConnectionString = "Endpoint=sb://analisatest.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=Ud7K7tzd9meSK+vTQyDzEtvQt5hpULzgqjVVKyEyf6c=;";
 
     public BaseUser baseUser;
     //public IServiceMaturity serviceMaturity;
@@ -42,10 +42,8 @@ namespace Manager.Test.Commons
       try
       {
         context = new DataContext(databaseConnection, databaseName);
-
         IServiceMaturity serviceMaturity = new ServiceMaturity(context);
-        IServiceControlQueue _serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
-        serviceControlQueue = _serviceControlQueue;
+        serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
 
         // Limpeza do banco
         string script = @"db.getCollectionNames().forEach(function(c) { if (c.indexOf(""system."") == -1) db[c].drop(); })";
@@ -1472,6 +1470,10 @@ namespace Manager.Test.Commons
       try
       {
         context = new DataContext(databaseConnection, databaseName);
+
+        IServiceMaturity serviceMaturity = new ServiceMaturity(context);
+        serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+
         ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue);
         ViewAuthentication view = new ViewAuthentication()
         {
@@ -1512,6 +1514,10 @@ namespace Manager.Test.Commons
       try
       {
         context = new DataContext(databaseConnection, databaseName);
+
+        IServiceMaturity serviceMaturity = new ServiceMaturity(context);
+        serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+
         ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue);
         ViewAuthentication view = new ViewAuthentication()
         {

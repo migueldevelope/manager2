@@ -32,11 +32,11 @@ namespace IntegrationService.Enumns
     DescricaoCargo = 12,
     [Description("Descrição do Grau de Instrução/Descricao do Grau de Instrução/Descrição do Grau de Instrucao/Descricao do Grau de Instrucao")]
     DescricaoGrauInstrucao = 13,
-    [Description("Nome Empresa do Chefe")]
+    [Description("Nome Empresa do Chefe/Nome Empresa do Gestor")]
     NomeEmpresaGestor = 14,
-    [Description("Cpf do Chefe")]
+    [Description("Cpf do Chefe/Cpf do Gestor")]
     CpfGestor = 15,
-    [Description("Matrícula do Chefe/Matricula do Chefe")]
+    [Description("Matrícula do Chefe/Matricula do Chefe/Matrícula do Gestor/Matricula do Gestor")]
     MatriculaGestor = 16
   }
 }

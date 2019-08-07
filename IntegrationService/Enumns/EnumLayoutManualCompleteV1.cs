@@ -48,11 +48,11 @@ namespace IntegrationService.Enumns
     Salario = 20,
     [Description("Data Último Reajuste/Data Ultimo Reajuste")]
     DataUltimoReajuste = 21,
-    [Description("Nome Empresa do Chefe")]
+    [Description("Nome Empresa do Chefe/Nome Empresa do Gestor")]
     NomeEmpresaGestor = 22,
-    [Description("Cpf do Chefe")]
+    [Description("Cpf do Chefe/Cpf do Gestor")]
     CpfGestor = 23,
-    [Description("Matrícula do Chefe/Matricula do Chefe")]
+    [Description("Matrícula do Chefe/Matricula do Chefe/Matrícula do Gestor/Matricula do Gestor")]
     MatriculaGestor = 24
   }
 }

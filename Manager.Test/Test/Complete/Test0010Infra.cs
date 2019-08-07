@@ -18,6 +18,7 @@ using Xunit;
 
 namespace Manager.Test.Test.Complete
 {
+  [TestCaseOrderer("Manager.Test.AlphabeticalOrderer", "Manager.Test")]
   public class Test0010Infra : TestCommons<Group>
   {
     public Test0010Infra()
@@ -68,7 +69,40 @@ namespace Manager.Test.Test.Complete
     }
 
     [Fact]
-    public void TestEstablishment()
+    public void TestCompanyAxis()
+    {
+      try
+      {
+        ServiceCompany serviceCompany = new ServiceCompany(context);
+        ServiceInfra serviceInfra = new ServiceInfra(context);
+        serviceCompany.SetUser(baseUser);
+        serviceInfra.SetUser(baseUser);
+
+        ViewListCompany company = serviceCompany.GetNewVersion(p => p.Name == string.Format("Company test {0} alterada!", DateTime.Now.Date)).Result.GetViewList();
+
+        ViewCrudAxis view = new ViewCrudAxis()
+        {
+          Name = "Eixo teste",
+          Company = company,
+          TypeAxis = EnumTypeAxis.Manager
+        };
+        string result = serviceInfra.AddAxis(view);
+        if (result != "ok")
+          throw new Exception("Erro ao incluir novo eixo");
+
+        ViewListAxis viewList = serviceInfra.GetAxis(company._id)[0];
+        if (viewList.Name != "Eixo teste")
+          throw new Exception("Erro ao buscar pelo nome do eixo");
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    [Fact]
+    public void TestCompanyEstablishment()
     {
       try
       {
@@ -121,6 +155,39 @@ namespace Manager.Test.Test.Complete
     }
 
     [Fact]
+    public void TestCompanySphere()
+    {
+      try
+      {
+        ServiceCompany serviceCompany = new ServiceCompany(context);
+        ServiceInfra serviceInfra = new ServiceInfra(context);
+        serviceCompany.SetUser(baseUser);
+        serviceInfra.SetUser(baseUser);
+
+        ViewListCompany company = serviceCompany.GetNewVersion(p => p.Name == string.Format("Company test {0} alterada!", DateTime.Now.Date)).Result.GetViewList();
+
+        ViewCrudSphere view = new ViewCrudSphere()
+        {
+          Name = "Esfera teste",
+          Company = company,
+          TypeSphere = EnumTypeSphere.Operational
+        };
+        string result = serviceInfra.AddSphere(view);
+        if (result != "ok")
+          throw new Exception("Erro ao incluir nova esfera");
+
+        ViewListSphere viewList = serviceInfra.GetSpheres(company._id)[0];
+        if (viewList.Name != "Esfera teste")
+          throw new Exception("Erro ao buscar pelo nome da esfera");
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    [Fact]
     public void TestSkill()
     {
       try
@@ -157,7 +224,7 @@ namespace Manager.Test.Test.Complete
     }
 
     [Fact]
-    public void TestEssentialSkills()
+    public void TestSkillEssential()
     {
       try
       {
@@ -169,6 +236,7 @@ namespace Manager.Test.Test.Complete
         ViewListCompany company = serviceCompany.GetNewVersion(p => p.Name == "Teste Company").Result.GetViewList();
 
         ViewCrudSkill viewCrudSkill = serviceInfra.GetSkill("Essencial 1 alterada");
+
         ViewCrudEssential view = new ViewCrudEssential()
         {
           Skill = viewCrudSkill,
@@ -188,7 +256,7 @@ namespace Manager.Test.Test.Complete
           };
           result = serviceInfra.AddEssential(view);
           if (result != "ok")
-            throw new Exception(string.Format("Skill essencial {0} não adicionada no mapa essencial!",i));
+            throw new Exception(string.Format("Skill essencial {0} não adicionada no mapa essencial!", i));
         }
       }
       catch (Exception e)
@@ -198,7 +266,7 @@ namespace Manager.Test.Test.Complete
     }
 
     [Fact]
-    public void TestSphere()
+    public void TestZGroup()
     {
       try
       {
@@ -209,26 +277,34 @@ namespace Manager.Test.Test.Complete
 
         ViewListCompany company = serviceCompany.GetNewVersion(p => p.Name == string.Format("Company test {0} alterada!", DateTime.Now.Date)).Result.GetViewList();
 
-        ViewCrudSphere view = new ViewCrudSphere()
+        ViewListAxis axis = serviceInfra.GetAxis(company._id)[0];
+        if (axis.Name != "Eixo teste")
+          throw new Exception("Erro ao buscar pelo nome do eixo no grupo");
+
+        ViewListSphere sphere = serviceInfra.GetSpheres(company._id)[0];
+        if (sphere.Name != "Esfera teste")
+          throw new Exception("Erro ao buscar pelo nome da esfera no grupo");
+
+        ViewCrudGroup view = new ViewCrudGroup()
         {
-          Name = "Esfera teste",
+          Name = "Grupo Teste",
           Company = company,
-          TypeSphere = EnumTypeSphere.Operational
+          Axis = axis,
+          Sphere = sphere,
+          Line = 1
         };
-        string result = serviceInfra.AddSphere(view);
-        if (result != "ok")
-          throw new Exception("Erro ao incluir nova esfera");
+        view = serviceInfra.AddGroup(view);
 
-        ViewListSphere viewList = serviceInfra.GetSpheres(company._id)[0];
-        if (viewList.Name != "Esfera teste")
-          throw new Exception("Erro ao buscar pelo nome da esfera");
+        ViewGroupListLO viewList = serviceInfra.GetGroups(company._id)[0];
+        if (viewList.Name != "Grupo Teste")
+          throw new Exception("Erro ao buscar pelo nome do grupo");
 
-        view.Name = string.Concat(view.Name, " alterada!");
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+
   }
 }
