@@ -800,14 +800,14 @@ namespace Manager.Services.Specific
           if (persons.Where(p => p._id == item._id).Count() > 0)
             result.Add(new ViewExportStatusCheckpoint
             {
-              NameManager = checkpoint.Person.Manager,
-              NamePerson = checkpoint.Person.Name,
+              NameManager = checkpoint == null ? null : checkpoint.Person?.Manager,
+              NamePerson = checkpoint == null ? null : checkpoint.Person?.Name,
               Status = checkpoint == null ? "Aguardando para iniciar" :
              checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
                 checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
               DateBegin = checkpoint?.DateBegin,
               DateEnd = checkpoint?.DateEnd,
-              Occupation = checkpoint.Person.Occupation,
+              Occupation = checkpoint == null ? null : checkpoint.Person?.Occupation,
               Result = checkpoint == null ? "Não iniciado" :
               checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
                 checkpoint.TypeCheckpoint == EnumCheckpoint.Disapproved ? "Não Efetivado" : "Aguardando Definição"
@@ -826,7 +826,7 @@ namespace Manager.Services.Specific
                 Result = "Não iniciado"
               });
             }
-              
+
           }
 
         }
