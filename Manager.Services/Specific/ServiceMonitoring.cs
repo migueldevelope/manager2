@@ -1384,7 +1384,7 @@ namespace Manager.Services.Specific
         var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         List<ViewExportStatusMonitoringGeral> result = new List<ViewExportStatusMonitoringGeral>();
 
-        foreach (var rows in list)
+        foreach (var rows in persons)
         {
           var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == rows._id).Result;
           if (monitorings != null)
@@ -1410,6 +1410,18 @@ namespace Manager.Services.Specific
                   DateEnd = item?.DateEndEnd
                 });
             }
+          }
+          else
+          {
+            var person = servicePerson.GetNewVersion(p => p._id == rows._id).Result;
+            result.Add(new ViewExportStatusMonitoringGeral
+            {
+              NameManager = person.Manager == null ? "Sem Gestor" : person.Manager.Name,
+              NamePerson = person.User.Name,
+              Occupation = person.Occupation.Name,
+              Status = "Aguardando para iniciar"
+            });
+
           }
 
 

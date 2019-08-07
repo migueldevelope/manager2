@@ -1468,10 +1468,10 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        //var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         List<ViewExportStatusOnboardingGeral> result = new List<ViewExportStatusOnboardingGeral>();
 
-        foreach (var rows in list)
+        foreach (var rows in persons)
         {
           var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Person._id == rows._id).Result;
           if (onboardings != null)
@@ -1500,6 +1500,19 @@ namespace Manager.Services.Specific
 
                 });
             }
+          }
+          else
+          {
+            var person = servicePerson.GetNewVersion(p => p._id == rows._id).Result;
+            if (person.TypeJourney == EnumTypeJourney.OnBoarding)
+              result.Add(new ViewExportStatusOnboardingGeral
+              {
+                NameManager = person.Manager == null ? "Sem Gestor" : person.Manager.Name,
+                NamePerson = person.User.Name,
+                Type = person == null ? "Admissão" : person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
+                Occupation = person.Occupation.Name,
+                Status = "Aguardando para iniciar"
+              });
           }
 
         }

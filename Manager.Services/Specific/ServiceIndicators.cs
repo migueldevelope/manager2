@@ -85,7 +85,7 @@ namespace Manager.Services.Specific
           persons = persons.Where(p => p.Manager._id == idmanager).ToList();
         }
 
-        return persons.Select(p => new ViewListIdIndicators() { _id = p._id }).ToList();
+        return persons.Select(p => new ViewListIdIndicators() { _id = p._id, TypeJourney = p.TypeJourney }).ToList();
       }
       catch (Exception e)
       {
