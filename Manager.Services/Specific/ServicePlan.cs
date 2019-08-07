@@ -1898,7 +1898,7 @@ namespace Manager.Services.Specific
         var list = new List<ViewExportStatusPlan>();
         foreach (var item in persons)
         {
-          var result = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+          var result = servicePlan.GetAllNewVersion(p => p.Person._id == item._id).Result;
           foreach (var p in result)
           {
             list.Add(new ViewExportStatusPlan()
