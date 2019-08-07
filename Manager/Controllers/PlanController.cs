@@ -344,7 +344,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("exportplan")]
-    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan([FromBody] List<_ViewList> persons)
+    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ExportStatusPlan(persons));
     }
