@@ -100,9 +100,54 @@ namespace Manager.Controllers
     }
     #endregion
 
+    #region Salary Scale
+    /// <summary>
+    /// Listar todas as tabelas salariais da empresa
+    /// </summary>
+    /// <param name="idcompany">Identificador da empresa</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da tabela salarial</param>
+    /// <returns>Lista de tabelas salariais</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listsalaryscalelog/{idcompany}")]
+    public async Task<List<ViewListSalaryScaleLog>> ListSalaryScaleLog(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListSalaryScaleLog(idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+    /// <summary>
+    /// Buscar objeto de manutenção da tabela salarial
+    /// </summary>
+    /// <param name="id">Identificador da tabela salarial</param>
+    /// <returns>Objeto de menutenção da tabela salarial</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("get/{id}")]
+    public async Task<ViewCrudSalaryScaleLog> GetSalaryScaleLog(string id)
+    {
+      return await Task.Run(() => service.GetSalaryScaleLog(id));
+    }
+    /// <summary>
+    /// Incluir nova tabela salarial
+    /// </summary>
+    /// <param name="idsalaryscale">identificador da tabela salarial</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("newversion/{idsalaryscale}")]
+    public async Task<IActionResult> NewVersion([FromBody]string idsalaryscale)
+    {
+      return await Task.Run(() => Ok(service.NewVersion(idsalaryscale)));
+    }
+    #endregion
+
     #region Grade
 
-    
+
     /// <summary>
     /// 
     /// </summary>

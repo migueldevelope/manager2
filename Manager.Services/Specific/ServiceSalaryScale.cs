@@ -23,6 +23,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
+    private readonly ServiceGeneric<SalaryScaleLog> serviceSalaryScaleLog;
 
     #region Constructor
     public ServiceSalaryScale(DataContext context) : base(context)
@@ -33,6 +34,7 @@ namespace Manager.Services.Specific
         servicePerson = new ServiceGeneric<Person>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
+        serviceSalaryScaleLog = new ServiceGeneric<SalaryScaleLog>(context);
       }
       catch (Exception e)
       {
@@ -46,6 +48,7 @@ namespace Manager.Services.Specific
       serviceOccupation._user = _user;
       servicePerson._user = _user;
       serviceSalaryScale._user = _user;
+      serviceSalaryScaleLog._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -54,6 +57,7 @@ namespace Manager.Services.Specific
       servicePerson._user = user;
       serviceOccupation._user = user;
       serviceSalaryScale._user = user;
+      serviceSalaryScaleLog._user = user;
     }
     #endregion
 
@@ -112,6 +116,30 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string NewVersion(string idsalaryscale)
+    {
+      try
+      {
+        var old = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+
+        var salaryScale = new SalaryScaleLog()
+        {
+          Name = old.Name,
+          Company = old.Company,
+          Grades = old.Grades,
+          _idSalaryScalePrevious = old._id,
+          Date = DateTime.Now
+        };
+        serviceSalaryScaleLog.InsertNewVersion(salaryScale).Wait();
+        return "Salary scale added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string Update(ViewCrudSalaryScale view)
     {
       try
@@ -140,6 +168,48 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListSalaryScaleLog> ListSalaryScaleLog(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListSalaryScaleLog> detail = serviceSalaryScaleLog.GetAllNewVersion(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(x => new ViewListSalaryScaleLog()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
+            Date = x.Date
+          }).ToList();
+        total = serviceSalaryScale.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudSalaryScaleLog GetSalaryScaleLog(string id)
+    {
+      try
+      {
+        SalaryScaleLog item = serviceSalaryScaleLog.GetNewVersion(p => p._id == id).Result;
+        return new ViewCrudSalaryScaleLog()
+        {
+          Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
+          Name = item.Name,
+          _id = item._id,
+          Date = item.Date,
+          _idSalaryScalePrevious = item._idSalaryScalePrevious
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region Grades

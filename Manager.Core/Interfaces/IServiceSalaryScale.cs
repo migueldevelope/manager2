@@ -31,5 +31,8 @@ namespace Manager.Core.Interfaces
     string RemoveOccupationSalaryScale(string idoccupation, string idgrade);
     string AddOccupationSalaryScale(ViewCrudOccupationSalaryScale view);
     string ExportSalaryScale(string idsalaryscale);
+    string NewVersion(string idsalaryscale);
+    List<ViewListSalaryScaleLog> ListSalaryScaleLog(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    ViewCrudSalaryScaleLog GetSalaryScaleLog(string id);
   }
 }
