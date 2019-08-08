@@ -8,13 +8,13 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
-  /// <summary>
-  ///  Objeto persiste no banco de dados - tabela salarial
-  /// </summary>
-  public class SalaryScale : BaseEntity
+  public class SalaryScaleLog: BaseEntity
   {
     public ViewListCompany Company { get; set; }
     public string Name { get; set; }
     public List<Grade> Grades { get; set; }
+    public DateTime? Date { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _idSalaryScalePrevious { get; set; }
   }
 }
