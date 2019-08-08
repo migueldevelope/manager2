@@ -589,8 +589,12 @@ namespace Manager.Services.Specific
         {
           var list = monitorings.Where(p => p.Person._id == item._id);
           if (list.Count() == 0)
+          {
+
+
             if (item.TypeJourney == EnumTypeJourney.Monitoring)
               result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+          }
           else
           {
             foreach (var view in list)
@@ -599,8 +603,7 @@ namespace Manager.Services.Specific
                 result.Where(p => p.Status == "Realizado").FirstOrDefault().Count += 1;
               else
               {
-                if (item.TypeJourney == EnumTypeJourney.Monitoring)
-                  result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
+                result.Where(p => p.Status == "Não Realizado").FirstOrDefault().Count += 1;
               }
             }
           }
