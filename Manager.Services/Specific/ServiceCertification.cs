@@ -457,7 +457,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var certification = serviceCertification.GetAllNewVersion(p => p._id == idcertification).Result.FirstOrDefault();
+        var certification = serviceCertification.GetNewVersion(p => p._id == idcertification).Result;
+
         foreach (var item in certification.ListPersons)
         {
           if (item._id == idcertificationperson)
@@ -645,7 +646,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var certificaiton = serviceCertification.GetAllNewVersion(p => p._id == idcertification).Result.FirstOrDefault();
+        var certificaiton = serviceCertification.GetNewVersion(p => p._id == idcertification).Result;
+        if (certificaiton == null)
+          return null;
 
         var outros = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Support & p.StatusUser != EnumStatusUser.Disabled
         & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator
