@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using Swashbuckle.AspNetCore.Swagger;
 using Tools;
 
@@ -101,6 +102,10 @@ namespace Manager
 
       long total = 0;
       serviceParameters.List(ref total);
+      serviceOnBoarding.ListExcluded(ref total, "", 1, 1);
+      serviceMonitoring.GetListExclud(ref total, "", 1, 1);
+      serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
+      servicePerson.ListCompany(ref total, "", 1, 1);
 
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);

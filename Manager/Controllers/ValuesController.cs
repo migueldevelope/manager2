@@ -36,7 +36,7 @@ namespace Manager.Controllers
     public IEnumerable<string> Get()
     {
       long total = 0;
-      service.ListExcluded(ref total, "", 1, 1);
+      //service.ListExcluded(ref total, "", 1, 1);
       return new string[] { "version", "0.000000036" };
     }
 
