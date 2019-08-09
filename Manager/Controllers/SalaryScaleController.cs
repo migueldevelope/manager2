@@ -126,7 +126,7 @@ namespace Manager.Controllers
     /// <returns>Objeto de menutenção da tabela salarial</returns>
     [Authorize]
     [HttpGet]
-    [Route("get/{id}")]
+    [Route("getsalaryscalelog/{id}")]
     public async Task<ViewCrudSalaryScaleLog> GetSalaryScaleLog(string id)
     {
       return await Task.Run(() => service.GetSalaryScaleLog(id));
