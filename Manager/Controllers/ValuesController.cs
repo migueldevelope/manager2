@@ -35,7 +35,9 @@ namespace Manager.Controllers
     [HttpGet]
     public IEnumerable<string> Get()
     {
-      return new string[] { "version", "0.000000035" };
+      long total = 0;
+      service.ListExcluded(ref total, "", 1, 1);
+      return new string[] { "version", "0.000000036" };
     }
 
     /// <summary>
