@@ -99,6 +99,9 @@ namespace Manager
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
+      long total = 0;
+      serviceParameters.List(ref total);
+
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);
       services.AddSingleton(_ => serviceMaturity);
@@ -130,6 +133,7 @@ namespace Manager
       services.AddSingleton(_ => serviceMandatoryTraining);
 
       //serviceIndicators.SendMessages(conn.SignalRService);
+
     }
 
 
@@ -201,6 +205,7 @@ namespace Manager
       });
 
       RegistreServices(services);
+
     }
 
 
