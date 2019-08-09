@@ -139,7 +139,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("newversion/{idsalaryscale}")]
-    public async Task<IActionResult> NewVersion([FromBody]string idsalaryscale)
+    public async Task<IActionResult> NewVersion(string idsalaryscale)
     {
       return await Task.Run(() => Ok(service.NewVersion(idsalaryscale)));
     }
