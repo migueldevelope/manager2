@@ -13,14 +13,11 @@ namespace Manager.Controllers
   [Route("api/[controller]")]
   public class ValuesController : Controller
   {
-    /// <summary>
-    /// 
-    /// </summary>
-    public IServiceOnBoarding serviceOnBoarding;
-    public IServiceParameters serviceParameters;
-    public IServiceMonitoring serviceMonitoring;
-    public IServiceCertification serviceCertification;
-    public IServicePerson servicePerson;
+    private IServiceOnBoarding serviceOnBoarding;
+    private IServiceParameters serviceParameters;
+    private IServiceMonitoring serviceMonitoring;
+    private IServiceCertification serviceCertification;
+    private IServicePerson servicePerson;
 
     /// <summary>
     /// 
@@ -53,10 +50,10 @@ namespace Manager.Controllers
       long total = 0;
       //service.ListExcluded(ref total, "", 1, 1);
       serviceParameters.List(ref total);
-      serviceOnBoarding.ListExcluded(ref total, "", 1, 1);
-      serviceMonitoring.GetListExclud(ref total, "", 1, 1);
-      serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
-      servicePerson.ListCompany(ref total, "", 1, 1);
+      //serviceOnBoarding.ListExcluded(ref total, "", 1, 1);
+      //serviceMonitoring.GetListExclud(ref total, "", 1, 1);
+      //serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
+      //servicePerson.ListCompany(ref total, "", 1, 1);
       return new string[] { "version", "0.000000036" };
     }
 
