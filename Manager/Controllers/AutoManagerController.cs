@@ -73,7 +73,7 @@ namespace Manager.Controllers
     [Route("{idperson}/new")]
     public async Task<IActionResult> New([FromBody]ViewManager view, string idperson)
     {
-      service.SetManagerPerson(view, idperson, XmlConnection.ReadVariablesSystem().TokenServer);
+      service.SetManagerPerson(view, idperson);
       return await Task.Run(() =>Ok("Auto manager added!"));
     }
     /// <summary>

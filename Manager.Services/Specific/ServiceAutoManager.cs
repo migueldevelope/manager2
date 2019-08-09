@@ -33,9 +33,9 @@ namespace Manager.Services.Specific
     private readonly IServicePerson servicePerson;
     private readonly ServiceWorkflow serviceWorkflow;
     private readonly IQueueClient queueClient;
-
+    private readonly string path;
     #region Constructor
-    public ServiceAutoManager(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, IServicePerson _servicePerson) : base(context)
+    public ServiceAutoManager(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, IServicePerson _servicePerson, string _path) : base(context)
     {
       try
       {
@@ -48,6 +48,7 @@ namespace Manager.Services.Specific
         //servicePerson = new ServiceGeneric<Person>(context);
         servicePerson = _servicePerson;
         serviceWorkflow = new ServiceWorkflow(context, contextLog, serviceControlQueue);
+        path = _path;
       }
       catch (Exception e)
       {
@@ -148,7 +149,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void SetManagerPerson(ViewManager view, string idPerson, string path)
+    public void SetManagerPerson(ViewManager view, string idPerson)
     {
       try
       {
