@@ -3,6 +3,7 @@ using Manager.Core.Interfaces;
 using Manager.Services.Commons;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace Manager.Controllers
 {
@@ -15,17 +16,31 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
-    public IServiceOnBoarding service;
+    public IServiceOnBoarding serviceOnBoarding;
+    public IServiceParameters serviceParameters;
+    public IServiceMonitoring serviceMonitoring;
+    public IServiceCertification serviceCertification;
+    public IServicePerson servicePerson;
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="serviceOnboarding"></param>
+    /// <param name="_serviceOnboarding"></param>
     /// <param name="contextAccessor"></param>
-    public ValuesController(IServiceOnBoarding serviceOnboarding, IHttpContextAccessor contextAccessor)
+    /// <param name="_serviceParameters"></param>
+    /// <param name="_serviceMonitoring"></param>
+    /// <param name="_serviceCertification"></param>
+    /// <param name="_servicePerson"></param>
+    public ValuesController(IServiceOnBoarding _serviceOnboarding, IHttpContextAccessor contextAccessor,IServiceParameters _serviceParameters,
+     IServiceMonitoring _serviceMonitoring, IServiceCertification _serviceCertification, IServicePerson _servicePerson)
     {
-      service = serviceOnboarding;
-      service.SetUser(contextAccessor);
+      serviceOnBoarding = _serviceOnboarding;
+      serviceParameters = _serviceParameters;
+      serviceMonitoring = _serviceMonitoring;
+      serviceCertification = _serviceCertification;
+      servicePerson = _servicePerson;
+
+      serviceOnBoarding.SetUser(contextAccessor);
     }
 
     /// <summary>
@@ -37,6 +52,11 @@ namespace Manager.Controllers
     {
       long total = 0;
       //service.ListExcluded(ref total, "", 1, 1);
+      serviceParameters.List(ref total);
+      serviceOnBoarding.ListExcluded(ref total, "", 1, 1);
+      serviceMonitoring.GetListExclud(ref total, "", 1, 1);
+      serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
+      servicePerson.ListCompany(ref total, "", 1, 1);
       return new string[] { "version", "0.000000036" };
     }
 
@@ -48,7 +68,7 @@ namespace Manager.Controllers
     [HttpGet]
     public IEnumerable<string> Mail()
     {
-      service.MailTest();
+      serviceOnBoarding.MailTest();
       return new string[] { "test", "0.000000035" };
     }
 
