@@ -30,6 +30,9 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> serviceMail;
     private readonly ServiceGeneric<Account> serviceAccount;
     private readonly ServiceGeneric<Certification> serviceCertification;
+    private readonly ServiceGeneric<Recommendation> serviceRecommendation;
+    private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
+
     public string path;
     private HubConnection hubConnection;
 
@@ -49,6 +52,8 @@ namespace Manager.Services.Specific
         serviceWorkflow = new ServiceGeneric<Workflow>(context);
         serviceAccount = new ServiceGeneric<Account>(context);
         serviceCertification = new ServiceGeneric<Certification>(context);
+        serviceRecommendation = new ServiceGeneric<Recommendation>(context);
+        serviceRecommendationPerson = new ServiceGeneric<RecommendationPerson>(context);
 
         path = pathToken;
       }
@@ -71,6 +76,8 @@ namespace Manager.Services.Specific
       serviceMail._user = _user;
       serviceCertification._user = _user;
       serviceCheckpoint._user = _user;
+      serviceRecommendation._user = _user;
+      serviceRecommendationPerson._user = _user;
     }
 
     public List<ViewListIdIndicators> GetFilterPersons(string idmanager)
@@ -755,6 +762,42 @@ namespace Manager.Services.Specific
       }
     }
 
+
+    public IEnumerable<ViewChartRecommendation> ChartRecommendation(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in persons)
+        {
+          var list = recommendations.Where(p => p.Person._id == item._id);
+          foreach (var view in list)
+          {
+            result.Add(new
+            {
+              Name = view.Recommendation.Name,
+              _id = view.Person._id
+            });
+          }
+
+        }
+
+        return result.GroupBy(p => p.Name).Select(x => new ViewChartRecommendation
+        {
+          Name = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public IEnumerable<ViewChartStatus> ChartPlanRealized(List<ViewListIdIndicators> persons)
     {
       try
@@ -809,6 +852,44 @@ namespace Manager.Services.Specific
         }
 
         return result.GroupBy(p => p.Status).Select(x => new ViewChartStatus
+        {
+          Status = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public IEnumerable<ViewChartStatus> ChartCertificationStatus(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var certifications = serviceCertification.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in persons)
+        {
+          var list = certifications.Where(p => p.Person._id == item._id);
+          foreach (var view in list)
+          {
+            result.Add(new
+            {
+              Name = view.StatusCertification == EnumStatusCertification.Open ? "Open" :
+               view.StatusCertification == EnumStatusCertification.Wait ? "Aguardando validação" :
+               view.StatusCertification == EnumStatusCertification.Approved ? "Aprovado" :
+              view.StatusCertification == EnumStatusCertification.Disaproved ? "Reprovado" : "Aguardando validação",
+              _id = view.Person._id
+            });
+          }
+
+        }
+
+        return result.GroupBy(p => p.Name).Select(x => new ViewChartStatus
         {
           Status = x.Key,
           Count = x.Count()

@@ -63,6 +63,8 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => Ok(service.DeleteCertification(idcertification)));
     }
+
+
     /// <summary>
     /// Retira uma pessoa da acreditãção
     /// </summary>

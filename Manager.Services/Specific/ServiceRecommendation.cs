@@ -7,6 +7,7 @@ using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -325,6 +326,36 @@ namespace Manager.Services.Specific
         & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
         & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
         .Select(x => x.GetViewListBase()).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewExportRecommendation> ExportRecommendation(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        List<ViewExportRecommendation> result = new List<ViewExportRecommendation>();
+
+        foreach (var rows in persons)
+        {
+          var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Person._id == rows._id).Result;
+            foreach (var item in recommendations)
+            {
+              if (persons.Where(p => p._id == item.Person._id).Count() > 0)
+                result.Add(new ViewExportRecommendation
+                {
+                  Name = item.Person.Name,
+                  NameRecommendation = item.Recommendation.Name,
+                  Comments = item.Comments,
+                  NameColleague = servicePerson.GetNewVersion(p => p._id == item._idColleague).Result?.User.Name
+                });
+            }
+        }
+
+        return result;
       }
       catch (Exception e)
       {

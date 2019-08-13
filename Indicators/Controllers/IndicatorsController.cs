@@ -117,6 +117,32 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
+    [Route("chartrecommendation")]
+    public async Task<IEnumerable<ViewChartRecommendation>> ChartRecommendation([FromBody] List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.ChartRecommendation(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("chartcertificationstatus")]
+    public async Task<IEnumerable<ViewChartStatus>> ChartCertificationStatus([FromBody] List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.ChartCertificationStatus(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
     [Route("chartmonitoring")]
     public async Task<IEnumerable<ViewChartMonitoring>> ChartMonitoring([FromBody] List<ViewListIdIndicators> persons)
     {
