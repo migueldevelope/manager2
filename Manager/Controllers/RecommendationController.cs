@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -54,12 +55,27 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="view">Objeto de cadastro da reconhecimento</param>
     /// <returns></returns>
+    [Authorize]
     [HttpPost]
     [Route("new")]
     public async Task<IActionResult> Post([FromBody]ViewCrudRecommendation view)
     {
       return await Task.Run(() => Ok(service.New(view)));
     }
+
+    /// <summary>
+    /// exporta reconhecimentos
+    /// </summary>
+    /// <param name="view">Objeto de cadastro da reconhecimento</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("exportrecommendation")]
+    public async Task<List<ViewExportRecommendation>> ExportRecommendation([FromBody]List<ViewListIdIndicators> view)
+    {
+      return await Task.Run(() => service.ExportRecommendation(view));
+    }
+
     /// <summary>
     /// Retorar a reconhecimento para manutenção
     /// </summary>

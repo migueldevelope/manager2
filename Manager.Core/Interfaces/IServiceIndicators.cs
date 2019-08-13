@@ -38,5 +38,7 @@ namespace Manager.Core.Interfaces
     IEnumerable<ViewChartStatus> ChartCheckpointRealized(List<ViewListIdIndicators> persons);
 
     IEnumerable<ViewChartStatus> ChartPlanRealized(List<ViewListIdIndicators> persons);
+    IEnumerable<ViewChartRecommendation> ChartRecommendation(List<ViewListIdIndicators> persons);
+    IEnumerable<ViewChartStatus> ChartCertificationStatus(List<ViewListIdIndicators> persons);
   }
 }

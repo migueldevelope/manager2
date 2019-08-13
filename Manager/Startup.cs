@@ -61,7 +61,7 @@ namespace Manager
 
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
-      //new MigrationHandle(_context._db).Migrate();
+      new MigrationHandle(_context._db).Migrate();
 
 
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
