@@ -200,10 +200,15 @@ namespace Manager.Services.Auth
           Registration = view.Person.Registration,
           SalaryScales = salaryScale,
           Workload = view.Person.Workload
-      };
+        };
+        if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
+
+        if (person.Occupation == null)
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
 
         user.Password = EncryptServices.GetMD5Hash(view.User.Password);
-        user.ChangePassword = Manager.Views.Enumns.EnumChangePassword.AccessFirst;
+        user.ChangePassword = EnumChangePassword.AccessFirst;
         user.Status = EnumStatus.Enabled;
         person.Status = EnumStatus.Enabled;
 
@@ -272,6 +277,10 @@ namespace Manager.Services.Auth
         person.SalaryScales = salaryScale;
         person.Workload = view.Person.Workload;
         person.User = user.GetViewCrud();
+        if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        if (person.Occupation == null)
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
         servicePerson.Update(person, null).Wait();
         serviceUser.Update(user, null).Wait();
         return "Person altered!";
@@ -665,6 +674,10 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user.GetViewCrud();
         person.SalaryScales = salaryScale;
+        if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        if (person.Occupation == null)
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
         servicePerson.Update(person, null).Wait();
         return "Person altered!";
       }

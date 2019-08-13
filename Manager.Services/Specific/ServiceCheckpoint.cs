@@ -98,10 +98,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListCheckpoint> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
-                                        p.TypeUser != EnumTypeUser.Administrator &&
+        List<ViewListCheckpoint> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
                                         p.TypeJourney == EnumTypeJourney.Checkpoint &&
-                                        p.Manager._id == idmanager &&
                                         p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
                                         .Select(p => new ViewListCheckpoint()
                                         {
@@ -129,7 +127,6 @@ namespace Manager.Services.Specific
             else
               checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusCheckpoint == EnumStatusCheckpoint.End).Result;
 
-
             if (checkpoint?.TypeCheckpoint != EnumCheckpoint.Disapproved)
               detail.Add(item);
 
@@ -138,12 +135,9 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
-                                p.TypeUser != EnumTypeUser.Administrator &&
+        total = servicePerson.CountNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
                                 p.TypeJourney == EnumTypeJourney.Checkpoint &&
-                                p.Manager._id == idmanager &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
 
         return detail;
       }
@@ -156,19 +150,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListCheckpoint> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
-                                        p.TypeUser != EnumTypeUser.Administrator &&
-                                        p.TypeJourney == EnumTypeJourney.Checkpoint &&
-                                        p._id == idperson).Result
-                                        .Select(p => new ViewListCheckpoint()
-                                        {
-                                          _id = string.Empty,
-                                          _idPerson = p._id,
-                                          Name = p.User.Name,
-                                          OccupationName = p.Occupation.Name,
-                                          StatusCheckpoint = EnumStatusCheckpoint.Open,
-                                          TypeCheckpoint = EnumCheckpoint.None
-                                        }).ToList();
+        List<ViewListCheckpoint> list = servicePerson.GetAllNewVersion(p => p._id == idperson && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Checkpoint).Result
+          .Select(p => new ViewListCheckpoint()
+          {
+            _id = string.Empty,
+            _idPerson = p._id,
+            Name = p.User.Name,
+            OccupationName = p.Occupation.Name,
+            StatusCheckpoint = EnumStatusCheckpoint.Open,
+            TypeCheckpoint = EnumCheckpoint.None
+          }).ToList();
         List<ViewListCheckpoint> detail = new List<ViewListCheckpoint>();
         if (serviceCheckpoint.Exists("Checkpoint"))
         {
@@ -227,10 +218,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Person person = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
-                                        p.TypeUser != EnumTypeUser.Administrator &&
-                                        p.TypeJourney == EnumTypeJourney.Checkpoint &&
-                                        p._id == idperson).Result;
+        Person person = servicePerson.GetNewVersion(p => p._id == idperson && p.TypeJourney == EnumTypeJourney.Checkpoint).Result;
         if (person == null)
           throw new Exception("Person not available!");
 
@@ -427,9 +415,6 @@ namespace Manager.Services.Specific
           return null;
 
         Person person = servicePerson.GetFreeNewVersion(p => p._id == checkpoint.Person._id).Result;
-
-        //throw new Exception("Checkpoint not available!");
-
         Task.Run(() => LogSave(_user._idPerson, string.Format("Person ended | {0}", checkpoint._id)));
 
         return new ViewCrudCheckpoint()
@@ -764,7 +749,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public string SendMail(string link, Person person, string idmail)
     {
       try
@@ -784,30 +768,25 @@ namespace Manager.Services.Specific
       }
     }
 
-
-
     public List<ViewExportStatusCheckpoint> ExportStatusCheckpoint(List<ViewListIdIndicators> persons)
     {
       try
       {
-
-        //var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         List<ViewExportStatusCheckpoint> result = new List<ViewExportStatusCheckpoint>();
-
         foreach (var item in persons)
         {
           var checkpoint = serviceCheckpoint.GetNewVersion(p => p.Person._id == item._id).Result;
           if (checkpoint != null)
             result.Add(new ViewExportStatusCheckpoint
             {
-              NameManager = checkpoint == null ? null : checkpoint.Person?.Manager,
-              NamePerson = checkpoint == null ? null : checkpoint.Person?.Name,
+              NameManager = checkpoint?.Person?.Manager,
+              NamePerson = checkpoint?.Person?.Name,
               Status = checkpoint == null ? "Aguardando para iniciar" :
              checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Open ? "Aguardando para iniciar" :
                 checkpoint.StatusCheckpoint == EnumStatusCheckpoint.Wait ? "Em Andamento" : "Finalizado",
               DateBegin = checkpoint?.DateBegin,
               DateEnd = checkpoint?.DateEnd,
-              Occupation = checkpoint == null ? null : checkpoint.Person?.Occupation,
+              Occupation = checkpoint?.Person?.Occupation,
               Result = checkpoint == null ? "Não iniciado" :
               checkpoint.TypeCheckpoint == EnumCheckpoint.Approved ? "Efetivado" :
                 checkpoint.TypeCheckpoint == EnumCheckpoint.Disapproved ? "Não Efetivado" : "Aguardando Definição"
@@ -826,11 +805,8 @@ namespace Manager.Services.Specific
                 Result = "Não iniciado"
               });
             }
-
           }
-
         }
-
         return result;
       }
       catch (Exception e)
@@ -838,7 +814,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     #endregion
 
   }

@@ -37,7 +37,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Plan> servicePlan;
     private readonly IServiceControlQueue serviceControlQueue;
 
-    private string path;
+    private readonly string path;
 
     #region Constructor
     public ServiceMonitoring(DataContext context, DataContext contextLog, string pathToken, IServiceControlQueue _serviceControlQueue) : base(context)
@@ -555,18 +555,15 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.TypeJourney == EnumTypeJourney.Monitoring & p.Manager._id == idmanager
-        & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
-        .ToList();
+        List<Person> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
+            && p.User.Name.ToUpper().Contains(filter.ToUpper()),count,skip,"User.Name").Result.ToList();
 
-        var detail = new List<Monitoring>();
-
+        List<Monitoring> detail = new List<Monitoring>();
         if (serviceMonitoring.Exists("Monitoring"))
         {
-          foreach (var item in list)
+          foreach (Person item in list)
           {
-            var monitoring = serviceMonitoring.GetNewVersion(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == item._id).Result;
-
+            Monitoring monitoring = serviceMonitoring.GetNewVersion(x => x.Person._id == item._id && x.StatusMonitoring != EnumStatusMonitoring.End).Result;
             if (monitoring == null)
               detail.Add(new Monitoring
               {
@@ -576,11 +573,9 @@ namespace Manager.Services.Specific
               });
             else
               if (monitoring.StatusMonitoring != EnumStatusMonitoring.End)
-              detail.Add(monitoring);
+                detail.Add(monitoring);
           }
-
         }
-
         total = detail.Count();
         return detail.Skip(skip).Take(count).Select(p => new ViewListMonitoring()
         {
@@ -602,7 +597,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceMonitoring.GetAllNewVersion(p => p.Person._id == idmanager & p.StatusMonitoring == EnumStatusMonitoring.End).Result.OrderBy(p => p.Person.Name)
+        return serviceMonitoring.GetAllNewVersion(p => p.Person._id == idmanager && p.StatusMonitoring == EnumStatusMonitoring.End).Result.OrderBy(p => p.Person.Name)
           .Select(p => new ViewListMonitoring()
           {
             _id = p._id,
@@ -625,9 +620,8 @@ namespace Manager.Services.Specific
         if (!serviceMonitoring.Exists("Monitoring"))
           return null;
 
-        var item = servicePerson.GetNewVersion(p => p.TypeJourney == EnumTypeJourney.Monitoring & p._id == idmanager).Result;
-        var monitoring = serviceMonitoring.GetNewVersion(x => x.StatusMonitoring != EnumStatusMonitoring.End & x.Person._id == idmanager).Result;
-
+        var item = servicePerson.GetNewVersion(p => p._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring).Result;
+        var monitoring = serviceMonitoring.GetNewVersion(x => x.Person._id == idmanager && x.StatusMonitoring != EnumStatusMonitoring.End).Result;
 
         if (item == null)
           return null;
@@ -1381,10 +1375,10 @@ namespace Manager.Services.Specific
       try
       {
 
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
+        List<Person> list = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.Monitoring).Result;
         List<ViewExportStatusMonitoringGeral> result = new List<ViewExportStatusMonitoringGeral>();
 
-        foreach (var rows in persons)
+        foreach (ViewListIdIndicators rows in persons)
         {
           var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == rows._id).Result;
           if (monitorings != null)
@@ -1394,7 +1388,7 @@ namespace Manager.Services.Specific
               if (persons.Where(p => p._id == item.Person._id).Count() > 0)
                 result.Add(new ViewExportStatusMonitoringGeral
                 {
-                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
+                  NameManager = item.Person.Manager ?? "Sem Gestor",
                   NamePerson = item.Person.Name,
                   Occupation = item.Person.Occupation,
                   Status =
@@ -1424,13 +1418,8 @@ namespace Manager.Services.Specific
                 Status = "Aguardando para iniciar"
               });
             }
-            
-
           }
-
-
         }
-
         return result;
       }
       catch (Exception e)

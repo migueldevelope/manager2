@@ -98,10 +98,8 @@ namespace Manager.Services.Specific
       try
       {
         //LogSave(idmanager, "List");
-        List<ViewListOnBoarding> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
-                                             p.TypeUser > EnumTypeUser.Administrator &&
+        List<ViewListOnBoarding> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
                                              (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
-                                             p.Manager._id == idmanager && p.Occupation != null &&
                                              p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
           .Select(p => new ViewListOnBoarding()
           {
@@ -128,9 +126,9 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator &&
-          (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
-          p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = servicePerson.CountNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
+                                             (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
+                                             p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail;
       }
@@ -143,9 +141,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //LogSave(idperson, "ListWait");
-        Person person = servicePerson.GetNewVersion(p => p.Manager != null & p.StatusUser != EnumStatusUser.Disabled &&
-                                             p.TypeUser > EnumTypeUser.Administrator &&
+        Person person = servicePerson.GetNewVersion(p => p.Manager != null && p.Occupation != null &&
                                              (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
                                              p._id == idperson).Result;
         if (person == null)
@@ -179,10 +175,8 @@ namespace Manager.Services.Specific
       try
       {
 
-        Person person = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
-                                             p.TypeUser > EnumTypeUser.Administrator &&
-                                             (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
-                                             p._id == idperson).Result;
+        Person person = servicePerson.GetNewVersion(p => (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
+                                             p._id == idperson && p.Occupation != null).Result;
 
         var manager = servicePerson.GetNewVersion(p => p._id == person.Manager._id).Result;
 
@@ -240,7 +234,6 @@ namespace Manager.Services.Specific
 
         if (onBoarding == null)
           return null;
-        //throw new Exception("OnBoarding not available!");
 
         ViewCrudOnboarding result = new ViewCrudOnboarding()
         {
@@ -537,7 +530,7 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            foreach (var comment in item.Comments)
+            foreach (ListComments comment in item.Comments)
             {
               if (comment._id == idcomments)
               {
@@ -553,7 +546,7 @@ namespace Manager.Services.Specific
         {
           if (item._id == iditem)
           {
-            foreach (var comment in item.Comments)
+            foreach (ListComments comment in item.Comments)
             {
               if (comment._id == idcomments)
               {
@@ -1392,16 +1385,16 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) & p.Manager._id == idmanager
-        & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
-        .ToList().Select(p => new { Person = p, OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id & x.StatusOnBoarding != EnumStatusOnBoarding.End).Result.FirstOrDefault() })
-        .ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+                              && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
+        .ToList().Select(p => new
+          { Person = p,
+            OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result.FirstOrDefault()
+          }).ToList();
 
         var detail = new List<OnBoarding>();
         foreach (var item in list)
         {
-
-
           if ((item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation) || (item.Person.TypeJourney == EnumTypeJourney.OnBoarding))
           {
             if (item.OnBoarding == null)
@@ -1432,17 +1425,15 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
-
     public List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson)
     {
       try
       {
 
-        var list = serviceOnboarding.GetAllNewVersion(p => p.Person._id == idperson).Result;
+        List<OnBoarding> list = serviceOnboarding.GetAllNewVersion(p => p.Person._id == idperson).Result;
         List<ViewExportStatusOnboarding> result = new List<ViewExportStatusOnboarding>();
 
-        foreach (var item in list)
+        foreach (OnBoarding item in list)
         {
           result.Add(new ViewExportStatusOnboarding
           {
@@ -1453,7 +1444,6 @@ namespace Manager.Services.Specific
             DataEnd = item.DateEndEnd
           });
         }
-
         return result;
       }
       catch (Exception e)
@@ -1461,17 +1451,12 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
-
     public List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding(List<ViewListIdIndicators> persons)
     {
       try
       {
-
-        //var list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator).Result;
         List<ViewExportStatusOnboardingGeral> result = new List<ViewExportStatusOnboardingGeral>();
-
-        foreach (var rows in persons)
+        foreach (ViewListIdIndicators rows in persons)
         {
           var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Person._id == rows._id).Result;
           if (onboardings != null)
@@ -1481,29 +1466,26 @@ namespace Manager.Services.Specific
               if (persons.Where(p => p._id == item.Person._id).Count() > 0)
                 result.Add(new ViewExportStatusOnboardingGeral
                 {
-                  NameManager = item.Person.Manager == null ? "Sem Gestor" : item.Person.Manager,
+                  NameManager = item.Person.Manager ?? "Sem Gestor",
                   NamePerson = item.Person.Name,
                   Type = item == null ? "Admissão" :
-                item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
+                  item.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation ? "Troca de Cargo" : "Admissão",
                   Occupation = item.Person.Occupation,
-                  Status =
-                item == null ? "Aguardando para iniciar" :
-                  item.StatusOnBoarding == EnumStatusOnBoarding.WaitBegin ? "Aguardando para iniciar" :
-                    item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
-                      item.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
-                        item.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson ? "Em andamento pelo gestor" :
-                          item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
-                            item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
-                              item.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
+                  Status = item == null ? "Aguardando para iniciar" :
+                    item.StatusOnBoarding == EnumStatusOnBoarding.WaitBegin ? "Aguardando para iniciar" :
+                      item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
+                        item.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
+                          item.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson ? "Em andamento pelo gestor" :
+                            item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
+                              item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
+                                item.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
                   DateBegin = item?.DateBeginPerson,
-                  DateEnd = item?.DateEndEnd,
-
+                  DateEnd = item?.DateEndEnd
                 });
             }
           }
           else
           {
-
             if (rows.TypeJourney == EnumTypeJourney.OnBoarding)
             {
               var person = servicePerson.GetNewVersion(p => p._id == rows._id).Result;
@@ -1516,11 +1498,8 @@ namespace Manager.Services.Specific
                 Status = "Aguardando para iniciar"
               });
             }
-
           }
-
         }
-
         return result;
       }
       catch (Exception e)
@@ -1538,7 +1517,6 @@ namespace Manager.Services.Specific
       try
       {
         var person = servicePerson.GetFreeNewVersion(p => p.User.Mail == "suporte@jmsoft.com.br").Result;
-
         var body = "";
         var sendMail = new MailLog
         {
@@ -1575,16 +1553,13 @@ namespace Manager.Services.Specific
           Date = DateTime.Now,
           _idAccount = _user._idAccount
         };
-
         serviceControlQueue.SendMessageAsync(JsonConvert.SerializeObject(data));
-
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-
     private OnBoarding LoadMap(Person person)
     {
       try
@@ -1657,7 +1632,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     private void LogSave(string idperson, string local)
     {
       try
@@ -1676,7 +1650,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    // send mail
     private void Mail(Person person)
     {
       try
@@ -1685,7 +1658,6 @@ namespace Manager.Services.Specific
         var model = serviceMailModel.OnBoardingApproval(pathToken);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
-
         string managername = "";
         try
         {
@@ -1736,9 +1708,8 @@ namespace Manager.Services.Specific
         {
 
         }
-
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
-        var sendMail = new MailLog
+        string body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        MailLog sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
           To = new List<MailLogAddress>(){
@@ -1752,8 +1723,8 @@ namespace Manager.Services.Specific
           Included = DateTime.Now,
           Subject = model.Subject
         };
-        var mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
-        var token = SendMail(pathToken, person, mailObj._id.ToString());
+        MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
+        string token = SendMail(pathToken, person, mailObj._id.ToString());
       }
       catch (Exception e)
       {
@@ -1769,13 +1740,14 @@ namespace Manager.Services.Specific
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
-        var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
-        var sendMail = new MailLog
+        string body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", person.Manager.Name).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
+        MailLog sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
-          To = new List<MailLogAddress>(){
-                        new MailLogAddress(person.User.Mail, person.User.Name)
-                    },
+          To = new List<MailLogAddress>()
+            {
+              new MailLogAddress(person.User.Mail, person.User.Name)
+            },
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
           NamePerson = person.User.Name,
@@ -1956,9 +1928,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
-
     #endregion
-
   }
 }
