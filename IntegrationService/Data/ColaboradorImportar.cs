@@ -308,9 +308,9 @@ namespace IntegrationService.Data
       try
       {
         DateTime? result = null;
-        DateTime.TryParse(data.Substring(0, 10), CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.None, out DateTime resultParse);
+        DateTime.TryParse(data.Substring(0, 10), CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.AdjustToUniversal, out DateTime resultParse);
         if (!string.IsNullOrEmpty(data))
-          result = resultParse;
+          result = resultParse.ToUniversalTime();
         return result;
 
       }
