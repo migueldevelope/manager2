@@ -55,6 +55,41 @@ namespace Manager.Data.Infrastructure.Migrations
         command = new BsonDocumentCommand<BsonDocument>(doc);
         response = context.RunCommand(command);
 
+        script = @"db.Person.updateMany({ ""TypeUser"" : 4}, { $set: { ""TypeJourney"": Number(9) } } )";
+        doc = new BsonDocument() { { "eval", script } };
+        command = new BsonDocumentCommand<BsonDocument>(doc);
+        response = context.RunCommand(command);
+
+        script = @"db.Plan.createIndex( { _idAccount: 1, Status: 1, ""Person._idManager"": 1 } )";
+        doc = new BsonDocument() { { "eval", script } };
+        command = new BsonDocumentCommand<BsonDocument>(doc);
+        response = context.RunCommand(command);
+
+        script = @"db.Plan.createIndex( { _idAccount: 1, Status: 1, ""Person._id"": 1 } )";
+        doc = new BsonDocument() { { "eval", script } };
+        command = new BsonDocumentCommand<BsonDocument>(doc);
+        response = context.RunCommand(command);
+
+        script = @"db.CertificationPerson.createIndex( { _idAccount: 1, Status: 1, ""Person._id"": 1 } )";
+        doc = new BsonDocument() { { "eval", script } };
+        command = new BsonDocumentCommand<BsonDocument>(doc);
+        response = context.RunCommand(command);
+
+        script = @"db.Certification.createIndex( { _idAccount: 1, Status: 1, ""Person._id"": 1 } )";
+        doc = new BsonDocument() { { "eval", script } };
+        command = new BsonDocumentCommand<BsonDocument>(doc);
+        response = context.RunCommand(command);
+
+        script = @"db.Certification.createIndex( { _idAccount: 1, Status: 1, ""Person._idManager"": 1 } )";
+        doc = new BsonDocument() { { "eval", script } };
+        command = new BsonDocumentCommand<BsonDocument>(doc);
+        response = context.RunCommand(command);
+
+        script = @"db.Meritocracy.createIndex( { _idAccount: 1, Status: 1, ""Person._id"": 1 } )";
+        doc = new BsonDocument() { { "eval", script } };
+        command = new BsonDocumentCommand<BsonDocument>(doc);
+        response = context.RunCommand(command);
+
       }
       catch (Exception e)
       {
