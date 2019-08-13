@@ -943,7 +943,7 @@ namespace Manager.Services.Specific
             OccupationDate = person.DateLastOccupation ?? meritocracy.Person.OccupationDate,
             OccupationName = person.Occupation?.Name,
             Name = person.User.Name,
-            CurrentSchooling = meritocracy.Person.CurrentSchooling != null ? meritocracy.Person.CurrentSchooling : person.User.Schooling?.Name,
+            CurrentSchooling = meritocracy.Person.CurrentSchooling ?? person.User.Schooling?.Name,
             Salary = person.Salary,
             OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name
           },
@@ -1041,23 +1041,21 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListMeritocracy> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
-                                        p.TypeUser != EnumTypeUser.Administrator &&
-                                        p.Manager._id == idmanager &&
+        List<ViewListMeritocracy> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.TypeJourney == EnumTypeJourney.Monitoring &&
                                         p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
-                                        .Select(p => new ViewListMeritocracy()
-                                        {
-                                          _id = string.Empty,
-                                          _idPerson = p._id,
-                                          Name = p.User.Name,
-                                          OccupationName = p.Occupation?.Name,
-                                          StatusMeritocracy = EnumStatusMeritocracy.Open,
-                                        }).ToList();
+          .Select(p => new ViewListMeritocracy()
+          {
+            _id = string.Empty,
+            _idPerson = p._id,
+            Name = p.User.Name,
+            OccupationName = p.Occupation?.Name,
+            StatusMeritocracy = EnumStatusMeritocracy.Open,
+          }).ToList();
         List<ViewListMeritocracy> detail = new List<ViewListMeritocracy>();
         if (serviceMeritocracy.Exists("Meritocracy"))
         {
           Meritocracy meritocracy;
-          foreach (var item in list)
+          foreach (ViewListMeritocracy item in list)
           {
             meritocracy = serviceMeritocracy.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusMeritocracy != EnumStatusMeritocracy.End).Result;
             if (meritocracy != null)
@@ -1074,9 +1072,7 @@ namespace Manager.Services.Specific
         else
           detail = list;
 
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration &&
-                                p.TypeUser != EnumTypeUser.Administrator &&
-                                p.Manager._id == idmanager &&
+        total = servicePerson.CountNewVersion(p => p.Manager._id == idmanager && p.TypeJourney == EnumTypeJourney.Monitoring &&
                                 p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }

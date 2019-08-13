@@ -296,7 +296,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
+        Occupation occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         if (occupation.SalaryScales != null)
           return occupation.SalaryScales
             .Select(p => new ViewListSalaryScalePerson
@@ -317,9 +317,9 @@ namespace Manager.Services.Auth
     {
       try
       {
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        int skip = (count * (page - 1));
-        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Manager._id == idPerson & p._id != idPerson & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count)
+        total = servicePerson.CountNewVersion(p => p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        int skip = count * (page - 1);
+        return servicePerson.GetAllNewVersion(p => p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper()),count,skip,"User.Name").Result
           .Select(item => new ViewListPersonTeam()
           {
             Name = item.User.Name,
@@ -338,9 +338,9 @@ namespace Manager.Services.Auth
     {
       try
       {
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        int skip = (count * (page - 1));
-        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count)
+        total = servicePerson.CountNewVersion(p => p.TypeJourney != EnumTypeJourney.OutOfJourney && p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        int skip = count * (page - 1);
+        return servicePerson.GetAllNewVersion(p => p.TypeJourney != EnumTypeJourney.OutOfJourney && p.Company._id == idcompany & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name).Skip(skip).Take(count)
           .Select(p => new ViewListPerson()
           {
             _id = p._id,

@@ -106,7 +106,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var list = (from person in servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
+        List<ViewAutoManagerPerson> list = (from person in servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
                     where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
                     select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
 
@@ -126,12 +126,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var result = new List<ViewAutoManagerPerson>();
-        foreach (var item in servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Support && p.TypeUser != EnumTypeUser.Administrator && p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration && p.User.Name.ToUpper().Contains(filter.ToUpper()) && p.StatusUser != EnumStatusUser.Disabled && p.StatusUser != EnumStatusUser.ErrorIntegration && p._id != idManager && p.Manager._id != idManager).Result.ToList())
+        List<ViewAutoManagerPerson> result = new List<ViewAutoManagerPerson>();
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.Manager._id != idManager && p._id != idManager && p.TypeJourney != EnumTypeJourney.OutOfJourney && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList())
         {
-          var view = new ViewAutoManagerPerson();
-          var exists = serviceAutoManager.CountNewVersion(p => p.Person._id == item._id && p.Requestor._id == idManager && p.StatusAutoManager == EnumStatusAutoManager.Requested).Result;
-          var existsManager = servicePerson.CountNewVersion(p => p._id == item._id && p.Manager._id != null).Result;
+          ViewAutoManagerPerson view = new ViewAutoManagerPerson();
+          long exists = serviceAutoManager.CountNewVersion(p => p.Person._id == item._id && p.Requestor._id == idManager && p.StatusAutoManager == EnumStatusAutoManager.Requested).Result;
+          long existsManager = servicePerson.CountNewVersion(p => p._id == item._id && p.Manager._id != null).Result;
           view.IdPerson = item._id;
           view.NamePerson = item.User.Name;
           if (exists > 0)

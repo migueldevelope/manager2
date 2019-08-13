@@ -540,15 +540,15 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
 
-        var person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        Person person = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
         List<ViewListCertificationPerson> list = new List<ViewListCertificationPerson>();
 
         //load certification guest
-        foreach (var item in serviceCertificationPerson.GetAllNewVersion(p => p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait & p.Person._id == idperson).Result.ToList())
+        foreach (CertificationPerson item in serviceCertificationPerson.GetAllNewVersion(p => p.Person._id == idperson && p.StatusCertificationPerson == EnumStatusCertificationPerson.Wait).Result.ToList())
         {
-          var view = item.GetViewList();
+          ViewCrudCertificationPerson view = item.GetViewList();
           view.Mail = person.User.Mail;
-          var certification = serviceCertification.GetAllNewVersion(
+          Certification certification = serviceCertification.GetAllNewVersion(
           p => p.ListPersons.Contains(view)).Result.FirstOrDefault();
           if (certification != null)
           {
@@ -564,7 +564,7 @@ namespace Manager.Services.Specific
         };
 
         //load certification manager
-        foreach (var item in serviceCertification.GetAllNewVersion(p => p.Person._idManager == idperson & p.StatusCertification == EnumStatusCertification.Wait).Result.ToList())
+        foreach (Certification item in serviceCertification.GetAllNewVersion(p => p.Person._idManager == idperson && p.StatusCertification == EnumStatusCertification.Wait).Result.ToList())
         {
           list.Add(new ViewListCertificationPerson()
           {
@@ -576,7 +576,7 @@ namespace Manager.Services.Specific
         };
 
 
-        var result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        List<ViewListCertificationPerson> result = list.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         result = result.Distinct(new ViewCertificationComparer()).ToList();
         total = result.Count();
 
@@ -594,8 +594,8 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
 
-        var result = serviceCertification.GetAllNewVersion(p => p.Person._id == idperson & p.StatusCertification == EnumStatusCertification.Approved
-        & p.CertificationItem.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.CertificationItem.Name).Skip(skip).Take(count)
+        var result = serviceCertification.GetAllNewVersion(p => p.Person._id == idperson && p.StatusCertification == EnumStatusCertification.Approved
+        && p.CertificationItem.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.CertificationItem.Name).Skip(skip).Take(count)
         .Select(p => new ViewListCertificationItem
         {
           _id = p.CertificationItem._id,
@@ -609,7 +609,7 @@ namespace Manager.Services.Specific
           p.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationHard ? EnumItemCertificationView.Hard : EnumItemCertificationView.Soft
         }).ToList();
 
-        total = serviceCertification.CountNewVersion(p => p.Person._id == idperson & p.StatusCertification == EnumStatusCertification.Approved).Result;
+        total = serviceCertification.CountNewVersion(p => p.Person._id == idperson && p.StatusCertification == EnumStatusCertification.Approved).Result;
         return result;
       }
       catch (Exception e)
@@ -625,7 +625,7 @@ namespace Manager.Services.Specific
       {
 
         int skip = (count * (page - 1));
-        var detail = serviceCertification.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.Name).Skip(skip).Take(count).ToList();
+        List<Certification> detail = serviceCertification.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper()),count,skip,"Person.Name").Result.ToList();
         total = serviceCertification.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewListCertification()
@@ -646,15 +646,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var certificaiton = serviceCertification.GetNewVersion(p => p._id == idcertification).Result;
+        Certification certificaiton = serviceCertification.GetNewVersion(p => p._id == idcertification).Result;
         if (certificaiton == null)
           return null;
 
-        var outros = servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Support & p.StatusUser != EnumStatusUser.Disabled
-        & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator
-        ).Result.ToList();
+        List<Person> outros = servicePerson.GetAllNewVersion(p => p.TypeJourney != EnumTypeJourney.OutOfJourney).Result.ToList();
         List<ViewListPersonBase> details = new List<ViewListPersonBase>();
-        foreach (var item in outros)
+        foreach (Person item in outros)
           details.Add(item.GetViewListBase());
 
         var detail = details.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(o => o.Name).ToList();

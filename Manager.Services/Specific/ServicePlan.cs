@@ -1329,9 +1329,9 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
-        var plan = servicePlan.GetAllNewVersion(p => p.Person._id == id).Result.ToList();
+        List<Plan> plan = servicePlan.GetAllNewVersion(p => p.Person._id == id).Result.ToList();
 
-        foreach (var res in plan)
+        foreach (Plan res in plan)
         {
           result.Add(new ViewGetPlan()
           {
@@ -1395,7 +1395,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
-        var plan = servicePlan.GetAllNewVersion(p => p.Person._idManager == id).Result.ToList();
+        List<Plan> plan = servicePlan.GetAllNewVersion(p => p.Person._idManager == id).Result.ToList();
 
         foreach (var res in plan)
         {
@@ -1808,7 +1808,7 @@ namespace Manager.Services.Specific
           TypeAction = plan.TypeAction,
           TypePlan = plan.TypePlan,
           Evaluation = plan.Evaluation,
-          Skills = plan.Skills == null ? null : plan.Skills.OrderBy(x => x.Name).Select(x =>
+          Skills = plan.Skills?.OrderBy(x => x.Name).Select(x =>
           new ViewListSkill()
           {
             _id = x._id,
@@ -1822,7 +1822,7 @@ namespace Manager.Services.Specific
           TextEndManager = plan.TextEndManager,
           Status = plan.Status,
           DateEnd = plan.DateEnd,
-          Attachments = plan.Attachments == null ? null : plan.Attachments.Select(x => new ViewCrudAttachmentField()
+          Attachments = plan.Attachments?.Select(x => new ViewCrudAttachmentField()
           {
             Name = x.Name,
             Url = x.Url,
@@ -1903,7 +1903,7 @@ namespace Manager.Services.Specific
           {
             list.Add(new ViewExportStatusPlan()
             {
-              NameManager = p.Person.NameManager == null ? "Sem Gestor" : p.Person.NameManager,
+              NameManager = p.Person.NameManager ?? "Sem Gestor",
               NamePerson = p.Person.Name,
               What = p.Name,
               Description = p.Description,
