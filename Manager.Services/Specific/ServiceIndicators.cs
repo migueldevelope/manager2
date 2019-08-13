@@ -879,10 +879,7 @@ namespace Manager.Services.Specific
           {
             result.Add(new
             {
-              Name = view.StatusCertification == EnumStatusCertification.Open ? "Open" :
-               view.StatusCertification == EnumStatusCertification.Wait ? "Aguardando validação" :
-               view.StatusCertification == EnumStatusCertification.Approved ? "Aprovado" :
-              view.StatusCertification == EnumStatusCertification.Disaproved ? "Reprovado" : "Aguardando validação",
+              Name = ((byte)EnumStatusCertification.Open).ToString(),
               _id = view.Person._id
             });
           }

@@ -344,13 +344,14 @@ namespace Manager.Services.Specific
           var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Person._id == rows._id).Result;
             foreach (var item in recommendations)
             {
+            var colleague = servicePerson.GetFreeNewVersion(p => p.User._id == item._idColleague).Result;
               if (persons.Where(p => p._id == item.Person._id).Count() > 0)
                 result.Add(new ViewExportRecommendation
                 {
                   Name = item.Person.Name,
                   NameRecommendation = item.Recommendation.Name,
                   Comments = item.Comments,
-                  NameColleague = servicePerson.GetNewVersion(p => p._id == item._idColleague).Result?.User.Name
+                  NameColleague = colleague?.User.Name
                 });
             }
         }
