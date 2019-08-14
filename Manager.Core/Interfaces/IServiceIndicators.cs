@@ -39,6 +39,6 @@ namespace Manager.Core.Interfaces
 
     IEnumerable<ViewChartStatus> ChartPlanRealized(List<ViewListIdIndicators> persons);
     IEnumerable<ViewChartRecommendation> ChartRecommendation(List<ViewListIdIndicators> persons);
-    IEnumerable<ViewChartStatus> ChartCertificationStatus(List<ViewListIdIndicators> persons);
+    IEnumerable<ViewChartCeritificationStatus> ChartCertificationStatus(List<ViewListIdIndicators> persons);
   }
 }

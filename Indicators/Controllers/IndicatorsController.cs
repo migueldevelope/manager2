@@ -131,7 +131,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("chartcertificationstatus")]
-    public async Task<IEnumerable<ViewChartStatus>> ChartCertificationStatus([FromBody] List<ViewListIdIndicators> persons)
+    public async Task<IEnumerable<ViewChartCeritificationStatus>> ChartCertificationStatus([FromBody] List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.ChartCertificationStatus(persons));
     }

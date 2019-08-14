@@ -864,7 +864,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public IEnumerable<ViewChartStatus> ChartCertificationStatus(List<ViewListIdIndicators> persons)
+    public IEnumerable<ViewChartCeritificationStatus> ChartCertificationStatus(List<ViewListIdIndicators> persons)
     {
       try
       {
@@ -879,14 +879,14 @@ namespace Manager.Services.Specific
           {
             result.Add(new
             {
-              Name = ((byte)EnumStatusCertification.Open).ToString(),
+              Name = view.StatusCertification,
               _id = view.Person._id
             });
           }
 
         }
 
-        return result.GroupBy(p => p.Name).Select(x => new ViewChartStatus
+        return result.GroupBy(p => p.Name).Select(x => new ViewChartCeritificationStatus
         {
           Status = x.Key,
           Count = x.Count()
