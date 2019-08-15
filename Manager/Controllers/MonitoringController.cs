@@ -377,6 +377,19 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("exportmonitoringcomments")]
+    public async Task<List<ViewExportMonitoringComments>> ExportMonitoringComments([FromBody] List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.ExportMonitoringComments(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]

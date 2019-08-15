@@ -32,6 +32,7 @@ namespace Manager.Core.Interfaces
     List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page);
     List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding(List<ViewListIdIndicators> persons);
     List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson);
+    public List<ViewExportOnboardingComments> ExportOnboardingComments(List<ViewListIdIndicators> persons);
     void MailTest();
   }
 }

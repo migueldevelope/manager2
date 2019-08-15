@@ -1370,6 +1370,69 @@ namespace Manager.Services.Specific
     }
 
 
+    public List<ViewExportMonitoringComments> ExportMonitoringComments(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        List<ViewExportMonitoringComments> result = new List<ViewExportMonitoringComments>();
+        foreach (ViewListIdIndicators rows in persons)
+        {
+          var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == rows._id && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
+          foreach (var monitoring in monitorings)
+          {
+            var view = new ViewExportMonitoringComments();
+
+
+            foreach (var item in monitoring.Schoolings)
+            {
+              foreach (var comm in item.Comments)
+              {
+                view.NameManager = monitoring.Person.Manager;
+                view.NamePerson = monitoring.Person.Name;
+                view.NameItem = item.Schooling.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+
+            foreach (var item in monitoring.Activities)
+            {
+              foreach (var comm in item.Comments)
+              {
+                view.NameManager = monitoring.Person.Manager;
+                view.NamePerson = monitoring.Person.Name;
+                view.NameItem = item.Activities.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+
+            foreach (var item in monitoring.SkillsCompany)
+            {
+              foreach (var comm in item.Comments)
+              {
+                view.NameManager = monitoring.Person.Manager;
+                view.NamePerson = monitoring.Person.Name;
+                view.NameItem = item.Skill.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+
+
+          }
+        }
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring(List<ViewListIdIndicators> persons)
     {
       try

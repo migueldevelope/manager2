@@ -1550,6 +1550,105 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewExportOnboardingComments> ExportOnboardingComments(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        List<ViewExportOnboardingComments> result = new List<ViewExportOnboardingComments>();
+        foreach (ViewListIdIndicators rows in persons)
+        {
+          var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Person._id == rows._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result;
+          foreach (var onboarding in onboardings)
+          {
+            var view = new ViewExportOnboardingComments();
+
+            foreach(var item in onboarding.Activities)
+            {
+              foreach(var comm in item.Comments)
+              {
+                view.NameManager = onboarding.Person.Manager;
+                view.NamePerson = onboarding.Person.Name;
+                view.NameItem = item.Activitie.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+
+            foreach (var item in onboarding.Schoolings)
+            {
+              foreach (var comm in item.Comments)
+              {
+                view.NameManager = onboarding.Person.Manager;
+                view.NamePerson = onboarding.Person.Name;
+                view.NameItem = item.Schooling.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+
+            foreach (var item in onboarding.Scopes)
+            {
+              foreach (var comm in item.Comments)
+              {
+                view.NameManager = onboarding.Person.Manager;
+                view.NamePerson = onboarding.Person.Name;
+                view.NameItem = item.Scope.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+
+            foreach (var item in onboarding.SkillsCompany)
+            {
+              foreach (var comm in item.Comments)
+              {
+                view.NameManager = onboarding.Person.Manager;
+                view.NamePerson = onboarding.Person.Name;
+                view.NameItem = item.Skill.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+
+            foreach (var item in onboarding.SkillsGroup)
+            {
+              foreach (var comm in item.Comments)
+              {
+                view.NameManager = onboarding.Person.Manager;
+                view.NamePerson = onboarding.Person.Name;
+                view.NameItem = item.Skill.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+            foreach (var item in onboarding.SkillsOccupation)
+            {
+              foreach (var comm in item.Comments)
+              {
+                view.NameManager = onboarding.Person.Manager;
+                view.NamePerson = onboarding.Person.Name;
+                view.NameItem = item.Skill.Name;
+                view.Date = comm.Date;
+                view.Comments = comm.Comments;
+                result.Add(view);
+              }
+            }
+
+          }
+        }
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region Private

@@ -259,6 +259,18 @@ namespace Manager.Controllers
       return await Task.Run(() => service.ExportStatusOnboarding(idperson));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("exportonboardingcomments")]
+    public async Task<List<ViewExportOnboardingComments>> ExportOnboardingComments([FromBody] List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.ExportOnboardingComments(persons));
+    }
 
     /// <summary>
     /// 
