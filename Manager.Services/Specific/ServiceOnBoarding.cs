@@ -137,6 +137,47 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListOnBoarding> List_v2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        List<ViewListOnBoarding> detail = new List<ViewListOnBoarding>();
+        if (serviceOnboarding.Exists("OnBoarding"))
+        {
+          OnBoarding onboarding;
+          foreach (var item in persons)
+          {
+            if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
+            {
+              var person = servicePerson.GetNewVersion(p => p._id == item._id).Result;
+
+              var view = new ViewListOnBoarding()
+              {
+                StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
+                _idPerson = item._id,
+                Name = person.User.Name,
+                OccupationName = person.Occupation.Name
+              };
+              onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+              if (onboarding != null)
+              {
+                view._id = onboarding._id;
+                view.StatusOnBoarding = onboarding.StatusOnBoarding;
+              }
+              detail.Add(view);
+            }
+          }
+
+          total = detail.Count();
+        }
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public ViewListOnBoarding PersonWait(string idperson)
     {
       try
@@ -1388,9 +1429,10 @@ namespace Manager.Services.Specific
         var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
                               && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.User.Name)
         .ToList().Select(p => new
-          { Person = p,
-            OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result.FirstOrDefault()
-          }).ToList();
+        {
+          Person = p,
+          OnBoarding = serviceOnboarding.GetAllNewVersion(x => x.Person._id == p._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result.FirstOrDefault()
+        }).ToList();
 
         var detail = new List<OnBoarding>();
         foreach (var item in list)
