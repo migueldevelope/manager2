@@ -150,25 +150,20 @@ namespace Manager.Services.Specific
           {
             if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
             {
-              var person = servicePerson.GetNewVersion(p => p._id == item._id).Result;
-              if(person != null)
+              var view = new ViewListOnBoarding()
               {
-                var view = new ViewListOnBoarding()
-                {
-                  StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
-                  _idPerson = item._id,
-                  Name = person.User?.Name,
-                  OccupationName = person.Occupation?.Name
-                };
-                onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
-                if (onboarding != null)
-                {
-                  view._id = onboarding._id;
-                  view.StatusOnBoarding = onboarding.StatusOnBoarding;
-                }
-                detail.Add(view);
+                StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
+                _idPerson = item._id,
+                Name = item.Name,
+                OccupationName = item.OccupationName
+              };
+              onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+              if (onboarding != null)
+              {
+                view._id = onboarding._id;
+                view.StatusOnBoarding = onboarding.StatusOnBoarding;
               }
-              
+              detail.Add(view);
             }
           }
 
@@ -1565,9 +1560,9 @@ namespace Manager.Services.Specific
           {
             var view = new ViewExportOnboardingComments();
 
-            foreach(var item in onboarding.Activities)
+            foreach (var item in onboarding.Activities)
             {
-              foreach(var comm in item.Comments)
+              foreach (var comm in item.Comments)
               {
                 view.NameManager = onboarding.Person.Manager;
                 view.NamePerson = onboarding.Person.Name;

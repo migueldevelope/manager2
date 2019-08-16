@@ -143,7 +143,13 @@ namespace Manager.Services.Auth
           persons = persons.Where(p => p.Manager?._id == idmanager).ToList();
         }
 
-        return persons.Select(p => new ViewListIdIndicators() { _id = p._id, TypeJourney = p.TypeJourney }).ToList();
+        return persons.Select(p => new ViewListIdIndicators()
+        {
+          _id = p._id,
+          TypeJourney = p.TypeJourney,
+          Name = p.User?.Name,
+          OccupationName = p.Occupation?.Name
+        }).ToList();
       }
       catch (Exception e)
       {
@@ -340,7 +346,7 @@ namespace Manager.Services.Auth
       {
         total = servicePerson.CountNewVersion(p => p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = count * (page - 1);
-        return servicePerson.GetAllNewVersion(p => p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper()),count,skip,"User.Name").Result
+        return servicePerson.GetAllNewVersion(p => p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "User.Name").Result
           .Select(item => new ViewListPersonTeam()
           {
             Name = item.User.Name,
