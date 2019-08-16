@@ -57,13 +57,12 @@ namespace Manager.Services.Specific
     #endregion
 
     #region TermsOfService
-    public  string Delete(string id)
+    public string Delete(string id)
     {
       try
       {
-        TermsOfService item = serviceTermsOfService.GetFreeNewVersion(p => p._id == id).Result;
-        item.Status = EnumStatus.Disabled;
-         serviceTermsOfService.UpdateAccount(item, null).Wait();
+        //TermsOfService item = serviceTermsOfService.GetFreeNewVersion(p => p._id == id).Result;
+        serviceTermsOfService.DeleteFree(id);
         return "TermsOfService deleted!";
       }
       catch (Exception e)
@@ -72,11 +71,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public  string New(ViewCrudTermsOfService view)
+    public string New(ViewCrudTermsOfService view)
     {
       try
       {
-        TermsOfService termsofservice =serviceTermsOfService.InsertFreeNewVersion(new TermsOfService()
+        TermsOfService termsofservice = serviceTermsOfService.InsertFreeNewVersion(new TermsOfService()
         {
           _id = view._id,
           Text = view.Text,
@@ -89,7 +88,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string Update(ViewCrudTermsOfService view)
+    public string Update(ViewCrudTermsOfService view)
     {
       try
       {
@@ -97,7 +96,7 @@ namespace Manager.Services.Specific
 
         termsofservice.Text = view.Text;
         termsofservice.Date = view.Date;
-         serviceTermsOfService.UpdateAccount(termsofservice, null).Wait();
+        serviceTermsOfService.UpdateAccount(termsofservice, null).Wait();
 
         return "TermsOfService altered!";
       }
@@ -106,11 +105,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudTermsOfService Get(string id)
+    public ViewCrudTermsOfService Get(string id)
     {
       try
       {
-        TermsOfService termsofservice =  serviceTermsOfService.GetFreeNewVersion(p => p._id == id).Result;
+        TermsOfService termsofservice = serviceTermsOfService.GetFreeNewVersion(p => p._id == id).Result;
         return new ViewCrudTermsOfService()
         {
           _id = termsofservice._id,
@@ -123,7 +122,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewListTermsOfService GetTerm()
+    public ViewListTermsOfService GetTerm()
     {
       try
       {
@@ -138,7 +137,7 @@ namespace Manager.Services.Specific
         var date = serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.Max(p => p.Date);
         TermsOfService termsofservice = serviceTermsOfService.GetAllFreeNewVersion(p => p.Date == date).Result.FirstOrDefault();
 
-         new Task(null);
+        new Task(null);
 
         return new ViewListTermsOfService()
         {
@@ -152,7 +151,7 @@ namespace Manager.Services.Specific
         return null;
       }
     }
-    public List<ViewListTermsOfService> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListTermsOfService> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
