@@ -1565,6 +1565,7 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
+                view = new ViewExportOnboardingComments();
                 view.NameManager = onboarding.Person.Manager;
                 view.NamePerson = onboarding.Person.Name;
                 view.NameItem = item.Activitie.Name;
@@ -1578,6 +1579,7 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
+                view = new ViewExportOnboardingComments();
                 view.NameManager = onboarding.Person.Manager;
                 view.NamePerson = onboarding.Person.Name;
                 view.NameItem = item.Schooling.Name;
@@ -1591,6 +1593,7 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
+                view = new ViewExportOnboardingComments();
                 view.NameManager = onboarding.Person.Manager;
                 view.NamePerson = onboarding.Person.Name;
                 view.NameItem = item.Scope.Name;
@@ -1604,6 +1607,7 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
+                view = new ViewExportOnboardingComments();
                 view.NameManager = onboarding.Person.Manager;
                 view.NamePerson = onboarding.Person.Name;
                 view.NameItem = item.Skill.Name;
@@ -1617,6 +1621,7 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
+                view = new ViewExportOnboardingComments();
                 view.NameManager = onboarding.Person.Manager;
                 view.NamePerson = onboarding.Person.Name;
                 view.NameItem = item.Skill.Name;
@@ -1625,10 +1630,12 @@ namespace Manager.Services.Specific
                 result.Add(view);
               }
             }
+
             foreach (var item in onboarding.SkillsOccupation)
             {
               foreach (var comm in item.Comments)
               {
+                view = new ViewExportOnboardingComments();
                 view.NameManager = onboarding.Person.Manager;
                 view.NamePerson = onboarding.Person.Name;
                 view.NameItem = item.Skill.Name;

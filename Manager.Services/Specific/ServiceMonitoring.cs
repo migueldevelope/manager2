@@ -1429,6 +1429,7 @@ namespace Manager.Services.Specific
               if (item.Comments != null)
                 foreach (var comm in item.Comments)
                 {
+                  view = new ViewExportMonitoringComments();
                   view.NameManager = monitoring.Person.Manager;
                   view.NamePerson = monitoring.Person.Name;
                   view.NameItem = item.Schooling.Name;
@@ -1443,6 +1444,7 @@ namespace Manager.Services.Specific
               if (item.Comments != null)
                 foreach (var comm in item.Comments)
                 {
+                  view = new ViewExportMonitoringComments();
                   view.NameManager = monitoring.Person.Manager;
                   view.NamePerson = monitoring.Person.Name;
                   view.NameItem = item.Activities.Name;
@@ -1457,6 +1459,7 @@ namespace Manager.Services.Specific
               if (item.Comments != null)
                 foreach (var comm in item.Comments)
                 {
+                  view = new ViewExportMonitoringComments();
                   view.NameManager = monitoring.Person.Manager;
                   view.NamePerson = monitoring.Person.Name;
                   view.NameItem = item.Skill.Name;
