@@ -1516,7 +1516,7 @@ namespace Manager.Services.Specific
                     item.StatusOnBoarding == EnumStatusOnBoarding.WaitBegin ? "Aguardando para iniciar" :
                       item.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson ? "Em andamento pelo colaborador" :
                         item.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager ? "Em andamento pelo gestor" :
-                          item.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson ? "Em andamento pelo gestor" :
+                          item.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson ? "Aguardando aceite do colaborador" :
                             item.StatusOnBoarding == EnumStatusOnBoarding.End ? "Finalizado" :
                               item.StatusOnBoarding == EnumStatusOnBoarding.WaitManager ? "Aguardando continuação pelo gestor" :
                                 item.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision ? "Aguardando revisão do gestor" : "Aguardando para iniciar",
