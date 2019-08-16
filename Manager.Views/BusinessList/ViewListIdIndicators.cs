@@ -1,4 +1,5 @@
 ﻿using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Views.BusinessList
 {
@@ -6,5 +7,6 @@ namespace Manager.Views.BusinessList
   {
     public EnumTypeJourney TypeJourney { get; set; }
     public string OccupationName { get; set; }
+    public DateTime? DateAdm { get; set; }
   }
 }

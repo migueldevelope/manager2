@@ -26,6 +26,7 @@ namespace Manager.Core.Interfaces
     string AddPersonUser(ViewCrudPersonUser view);
     string UpdatePersonUser(ViewCrudPersonUser view);
     List<ViewListPersonTeam> ListTeam(ref long total, string idPerson, string filter, int count, int page);
+    List<ViewListPersonTeam> ListTeam_V2(ref long total, List<ViewListIdIndicators> persons, string filter, int count, int page);
     List<ViewListSalaryScalePerson> ListSalaryScale(string idoccupation);
     List<ViewListPerson> ListPersonsCompany(ref long total, string idcompany, string filter, int count, int page);
     Task<long> CountNewVersion(Expression<Func<Person, bool>> filter);

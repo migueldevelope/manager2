@@ -64,10 +64,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("v2/list")]
-    public async Task<List<ViewListOnBoarding>> List_v2([FromBody] List<ViewListIdIndicators> persons, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> List_V2([FromBody] List<ViewListIdIndicators> persons, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListOnBoarding> result = service.List_v2(persons, ref total, filter, count, page);
+      List<ViewListOnBoarding> result = service.List_V2(persons, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }

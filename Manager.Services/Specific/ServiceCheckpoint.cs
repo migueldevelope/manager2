@@ -94,6 +94,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Checkpoint
+
     public List<ViewListCheckpoint> ListWaitManager(string idmanager, ref long total, string filter, int count, int page)
     {
       try
@@ -146,6 +147,46 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListCheckpoint> ListWaitManager_V2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+
+        List<ViewListCheckpoint> detail = new List<ViewListCheckpoint>();
+
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).ToList();
+
+        foreach (var item in persons)
+        {
+          var checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._id && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+          var view = new ViewListCheckpoint()
+          {
+            Name = item.Name,
+            OccupationName = item.OccupationName,
+            StatusCheckpoint = EnumStatusCheckpoint.Open,
+            TypeCheckpoint = EnumCheckpoint.None
+          };
+          if (checkpoint != null)
+          {
+            view._id = checkpoint._id;
+            view.StatusCheckpoint = checkpoint.StatusCheckpoint;
+            view.TypeCheckpoint = checkpoint.TypeCheckpoint;
+            view.OccupationName = checkpoint.Occupation?.Name;
+          }
+          detail.Add(view);
+        }
+
+        total = detail.Count();
+
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewListCheckpoint ListWaitPerson(string idperson)
     {
       try

@@ -556,7 +556,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         List<Person> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
-            && p.User.Name.ToUpper().Contains(filter.ToUpper()),count,skip,"User.Name").Result.ToList();
+            && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "User.Name").Result.ToList();
 
         List<Monitoring> detail = new List<Monitoring>();
         if (serviceMonitoring.Exists("Monitoring"))
@@ -573,7 +573,7 @@ namespace Manager.Services.Specific
               });
             else
               if (monitoring.StatusMonitoring != EnumStatusMonitoring.End)
-                detail.Add(monitoring);
+              detail.Add(monitoring);
           }
         }
         total = detail.Count();
@@ -587,6 +587,47 @@ namespace Manager.Services.Specific
           OccupationName = p.Person.Occupation,
 
         }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListMonitoring> ListMonitoringsWait_V2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        List<ViewListMonitoring> detail = new List<ViewListMonitoring>();
+
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Monitoring).ToList();
+
+
+        foreach (var item in persons)
+        {
+          Monitoring monitoring = serviceMonitoring.GetNewVersion(x => x.Person._id == item._id && x.StatusMonitoring != EnumStatusMonitoring.End).Result;
+          var view = new ViewListMonitoring
+          {
+            _id = null,
+            StatusMonitoring = EnumStatusMonitoring.Open,
+            idPerson = item._id,
+            Name = item.Name,
+            OccupationName = item.OccupationName
+          };
+
+          if (monitoring != null)
+          {
+            view._id = monitoring._id;
+            view.StatusMonitoring = monitoring.StatusMonitoring;
+          }
+
+          detail.Add(view);
+        }
+
+        total = detail.Count();
+        return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
@@ -1470,7 +1511,7 @@ namespace Manager.Services.Specific
           }
           else
           {
-            if(rows.TypeJourney == EnumTypeJourney.Monitoring)
+            if (rows.TypeJourney == EnumTypeJourney.Monitoring)
             {
               var person = servicePerson.GetNewVersion(p => p._id == rows._id).Result;
               result.Add(new ViewExportStatusMonitoringGeral

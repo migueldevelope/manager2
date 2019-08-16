@@ -58,7 +58,7 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.List(ref total, count, page, filter, type, status);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
 
 
@@ -85,7 +85,7 @@ namespace Manager.Controllers
     [Route("edit/{id}")]
     public async Task<ViewCrudPerson> Get(string id)
     {
-      return await Task.Run(() =>service.Get(id));
+      return await Task.Run(() => service.Get(id));
     }
     /// <summary>
     /// Incluir uma nova pessoa
@@ -97,7 +97,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<ViewCrudPerson> New([FromBody] ViewCrudPerson view)
     {
-      return await Task.Run(() =>service.New(view));
+      return await Task.Run(() => service.New(view));
     }
     /// <summary>
     /// Alterar uma pessoa
@@ -109,7 +109,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody] ViewCrudPerson view)
     {
-      return await Task.Run(() =>Ok( service.Update(view)));
+      return await Task.Run(() => Ok(service.Update(view)));
     }
 
     /// <summary>
@@ -143,13 +143,32 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("directteam/{idmanager}")]
-    public async Task<List<ViewListPersonTeam>> ListTeam(string idmanager,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonTeam>> ListTeam(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListTeam(ref total, idmanager, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
+    /// <summary>
+    /// Lista time de gestor
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("v2/directteam")]
+    public async Task<List<ViewListPersonTeam>> ListTeam_V2([FromBody]List<ViewListIdIndicators> persons, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTeam_V2(ref total, persons, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     #endregion
 
     #region SalaryScale
@@ -163,7 +182,7 @@ namespace Manager.Controllers
     [Route("listsalaryscale/{idoccupation}")]
     public async Task<List<ViewListSalaryScalePerson>> ListSalaryScale(string idoccupation)
     {
-      return await Task.Run(() =>service.ListSalaryScale(idoccupation));
+      return await Task.Run(() => service.ListSalaryScale(idoccupation));
     }
     #endregion
 
@@ -178,12 +197,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupation")]
-    public async Task<List<ViewListOccupationResume>> ListOccupation( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOccupationResume>> ListOccupation(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListOccupation(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Listar as empresas para manutenção da pessoa
@@ -195,12 +214,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcompany")]
-    public async Task<List<ViewListCompany>> ListCompany( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCompany>> ListCompany(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListCompany(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Listar os gestores para manutenção da pessoa
@@ -212,12 +231,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listmanager")]
-    public async Task<List<ViewBaseFields>> ListManager( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewBaseFields>> ListManager(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListManager(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     #endregion
 

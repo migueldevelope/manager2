@@ -138,37 +138,38 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListOnBoarding> List_v2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page)
+    public List<ViewListOnBoarding> List_V2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page)
     {
       try
       {
         List<ViewListOnBoarding> detail = new List<ViewListOnBoarding>();
-        if (serviceOnboarding.Exists("OnBoarding"))
-        {
-          OnBoarding onboarding;
-          foreach (var item in persons)
-          {
-            if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
-            {
-              var view = new ViewListOnBoarding()
-              {
-                StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
-                _idPerson = item._id,
-                Name = item.Name,
-                OccupationName = item.OccupationName
-              };
-              onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
-              if (onboarding != null)
-              {
-                view._id = onboarding._id;
-                view.StatusOnBoarding = onboarding.StatusOnBoarding;
-              }
-              detail.Add(view);
-            }
-          }
 
-          total = detail.Count();
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation).ToList();
+
+        OnBoarding onboarding;
+        foreach (var item in persons)
+        {
+          if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
+          {
+            var view = new ViewListOnBoarding()
+            {
+              StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
+              _idPerson = item._id,
+              Name = item.Name,
+              OccupationName = item.OccupationName
+            };
+            onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+            if (onboarding != null)
+            {
+              view._id = onboarding._id;
+              view.StatusOnBoarding = onboarding.StatusOnBoarding;
+            }
+            detail.Add(view);
+          }
         }
+
+        total = detail.Count();
+
         return detail;
       }
       catch (Exception e)

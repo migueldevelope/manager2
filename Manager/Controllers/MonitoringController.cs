@@ -202,6 +202,27 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
     }
+
+    /// <summary>
+    /// Lista monitoring em andamento para gestor
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("v2/list")]
+    public async Task<List<ViewListMonitoring>> ListMonitoringsWait_V2([FromBody]List<ViewListIdIndicators> persons, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListMonitoringsWait_V2(persons, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+
     /// <summary>
     /// Lista monitoring para pessoa
     /// </summary>

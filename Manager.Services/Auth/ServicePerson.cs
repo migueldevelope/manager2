@@ -136,7 +136,8 @@ namespace Manager.Services.Auth
       try
       {
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
-        & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser > EnumTypeUser.Administrator)
+        && p.StatusUser != EnumStatusUser.ErrorIntegration && p.TypeUser > EnumTypeUser.Administrator
+        && p.TypeJourney != EnumTypeJourney.OutOfJourney)
         .Result;
         if (idmanager != string.Empty)
         {
@@ -148,7 +149,8 @@ namespace Manager.Services.Auth
           _id = p._id,
           TypeJourney = p.TypeJourney,
           Name = p.User?.Name,
-          OccupationName = p.Occupation?.Name
+          OccupationName = p.Occupation?.Name,
+          DateAdm = p.User?.DateAdm
         }).ToList();
       }
       catch (Exception e)
@@ -360,6 +362,30 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+
+    public List<ViewListPersonTeam> ListTeam_V2(ref long total, List<ViewListIdIndicators> persons, string filter, int count, int page)
+    {
+      try
+      {
+
+        int skip = count * (page - 1);
+        total = persons.Count();
+
+        return persons.Where(p => p.Name.ToUpper().Contains(filter.ToUpper()))
+          .Select(item => new ViewListPersonTeam()
+          {
+            Name = item.Name,
+            _idPerson = item._id,
+            Occupation = item.OccupationName,
+            DataAdm = item.DateAdm
+          }).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public List<ViewListPerson> ListPersonsCompany(ref long total, string idcompany, string filter, int count, int page)
     {

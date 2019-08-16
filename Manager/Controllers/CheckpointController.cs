@@ -51,6 +51,26 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
     }
+
+    /// <summary>
+    /// Listar pendências de checkpoint para gestor
+    /// </summary>
+    /// <param name="persons">Identificador do gestor</param>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome do colaborador</param>
+    /// <returns>Lista de pendência de checkpoint</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("v2/listwaitmanager")]
+    public async Task<List<ViewListCheckpoint>> ListWaitManager_V2([FromBody]List<ViewListIdIndicators> persons, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListWaitManager_V2(persons, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Listar status de checkpoint para colaborador
     /// </summary>

@@ -14,7 +14,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     List<ViewListOnBoarding> List(string idmanager, ref long total, string filter, int count, int page);
-    List<ViewListOnBoarding> List_v2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page);
+    List<ViewListOnBoarding> List_V2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page);
     ViewListOnBoarding PersonWait(string idperson);
     ViewListOnBoarding New(string idperson);
     ViewCrudOnboarding Get(string id);

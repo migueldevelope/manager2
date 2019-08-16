@@ -46,6 +46,7 @@ namespace Manager.Core.Interfaces
     List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson);
 
     List<ViewExportMonitoringComments> ExportMonitoringComments(List<ViewListIdIndicators> persons);
+    List<ViewListMonitoring> ListMonitoringsWait_V2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page);
 
     #endregion
 

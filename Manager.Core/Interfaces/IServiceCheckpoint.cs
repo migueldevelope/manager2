@@ -22,5 +22,6 @@ namespace Manager.Core.Interfaces
     List<ViewListCheckpoint> ListEnded(ref long total, string filter, int count, int page);
     string DeleteCheckpoint(string idcheckpoint);
     List<ViewExportStatusCheckpoint> ExportStatusCheckpoint(List<ViewListIdIndicators> persons);
+    List<ViewListCheckpoint> ListWaitManager_V2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page);
   }
 }
