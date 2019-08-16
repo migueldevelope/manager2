@@ -22,7 +22,6 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
     //string[] ExportStatusOnboarding(ref  long total,  string filter, int count, int page);
 
-    List<ViewListIdIndicators> GetFilterPersons(string idmanager);
     IEnumerable<ViewChartOnboarding> ChartOnboarding(List<ViewListIdIndicators> persons);
 
     IEnumerable<ViewChartStatus> ChartOnboardingRealized(List<ViewListIdIndicators> persons);

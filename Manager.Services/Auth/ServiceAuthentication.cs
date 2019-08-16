@@ -31,7 +31,7 @@ namespace Manager.Services.Auth
     private readonly ServiceGeneric<Account> serviceAccount;
     private readonly ServiceDictionarySystem serviceDictionarySystem;
     private readonly ServiceTermsOfService serviceTermsOfService;
-
+    private readonly IServicePerson serviceIPerson;
     #region Constructor
     public ServiceAuthentication(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue)
     {
@@ -43,6 +43,7 @@ namespace Manager.Services.Auth
         servicePerson = new ServicePerson(context, contextLog, serviceControlQueue);
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
+        serviceIPerson = new ServicePerson(context, contextLog,serviceControlQueue);
       }
       catch (Exception e)
       {
@@ -154,6 +155,7 @@ namespace Manager.Services.Auth
         {
           _idAccount = user._idAccount
         };
+        serviceIPerson.SetUser(_user);
         serviceTermsOfService.SetUser(_user);
         serviceTermsOfService._user = _user;
 
@@ -211,7 +213,7 @@ namespace Manager.Services.Auth
           Task.Run(() => LogSave(person.Contracts[0].IdPerson));
         }
 
-
+        person.Team = serviceIPerson.GetFilterPersons(person.Contracts.FirstOrDefault().IdPerson);
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
         // Token

@@ -87,19 +87,6 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="idmanager"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("getfilterpersons")]
-    public async Task<List<ViewListIdIndicators>> GetFilterPersons(string idmanager = "")
-    {
-      return await Task.Run(() => service.GetFilterPersons(idmanager));
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="persons"></param>
     /// <returns></returns>
     [Authorize]

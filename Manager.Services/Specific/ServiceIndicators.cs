@@ -32,11 +32,12 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Certification> serviceCertification;
     private readonly ServiceGeneric<Recommendation> serviceRecommendation;
     private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
+    private readonly IServicePerson serviceIPerson;
 
     public string path;
     private HubConnection hubConnection;
 
-    public ServiceIndicators(DataContext context, DataContext contextLog, string pathToken)
+    public ServiceIndicators(DataContext context, DataContext contextLog, string pathToken, IServicePerson _serviceIPerson)
       : base(context)
     {
       try
@@ -54,6 +55,7 @@ namespace Manager.Services.Specific
         serviceCertification = new ServiceGeneric<Certification>(context);
         serviceRecommendation = new ServiceGeneric<Recommendation>(context);
         serviceRecommendationPerson = new ServiceGeneric<RecommendationPerson>(context);
+        serviceIPerson = _serviceIPerson;
 
         path = pathToken;
       }
@@ -78,27 +80,10 @@ namespace Manager.Services.Specific
       serviceCheckpoint._user = _user;
       serviceRecommendation._user = _user;
       serviceRecommendationPerson._user = _user;
+      serviceIPerson.SetUser(_user);
     }
 
-    public List<ViewListIdIndicators> GetFilterPersons(string idmanager)
-    {
-      try
-      {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
-        & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
-        .Result;
-        if (idmanager != string.Empty)
-        {
-          persons = persons.Where(p => p.Manager._id == idmanager).ToList();
-        }
-
-        return persons.Select(p => new ViewListIdIndicators() { _id = p._id, TypeJourney = p.TypeJourney }).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+   
 
     public List<ViewIndicatorsNotes> GetNotes(string id)
     {

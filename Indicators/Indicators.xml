@@ -55,14 +55,21 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.GetFilterPersons(System.String)">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboarding(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
             <summary>
             
             </summary>
-            <param name="idmanager"></param>
+            <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboarding(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendation(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartCertificationStatus(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
             <summary>
             
             </summary>

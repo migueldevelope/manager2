@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Business;
+using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using System.Collections.Generic;
 
@@ -16,5 +17,6 @@ namespace Manager.Core.Views
     public List<DictionarySystem> DictionarySystem { get; set; }
     public List<ViewContract> Contracts { get; set; }
     public bool TermOfService { get; set; }
+    public List<ViewListIdIndicators> Team { get; set; }
   }
 }

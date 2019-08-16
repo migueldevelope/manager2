@@ -60,6 +60,21 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
     }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getfilterpersons")]
+    public async Task<List<ViewListIdIndicators>> GetFilterPersons(string idmanager = "")
+    {
+      return await Task.Run(() => service.GetFilterPersons(idmanager));
+    }
+
     /// <summary>
     /// Buscar informações da pessoa para alteração
     /// </summary>

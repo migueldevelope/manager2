@@ -130,6 +130,27 @@ namespace Manager.Services.Auth
     #endregion
 
     #region Person
+
+    public List<ViewListIdIndicators> GetFilterPersons(string idmanager)
+    {
+      try
+      {
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
+        & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator)
+        .Result;
+        if (idmanager != string.Empty)
+        {
+          persons = persons.Where(p => p.Manager._id == idmanager).ToList();
+        }
+
+        return persons.Select(p => new ViewListIdIndicators() { _id = p._id, TypeJourney = p.TypeJourney }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string AddPersonUser(ViewCrudPersonUser view)
     {
       try
