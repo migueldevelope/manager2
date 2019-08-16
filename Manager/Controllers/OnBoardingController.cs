@@ -52,9 +52,18 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("/v2/list")]
+    [Route("v2/list")]
     public async Task<List<ViewListOnBoarding>> List_v2([FromBody] List<ViewListIdIndicators> persons, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;

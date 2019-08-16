@@ -151,21 +151,24 @@ namespace Manager.Services.Specific
             if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
             {
               var person = servicePerson.GetNewVersion(p => p._id == item._id).Result;
-
-              var view = new ViewListOnBoarding()
+              if(person != null)
               {
-                StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
-                _idPerson = item._id,
-                Name = person.User.Name,
-                OccupationName = person.Occupation.Name
-              };
-              onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
-              if (onboarding != null)
-              {
-                view._id = onboarding._id;
-                view.StatusOnBoarding = onboarding.StatusOnBoarding;
+                var view = new ViewListOnBoarding()
+                {
+                  StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
+                  _idPerson = item._id,
+                  Name = person.User?.Name,
+                  OccupationName = person.Occupation?.Name
+                };
+                onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+                if (onboarding != null)
+                {
+                  view._id = onboarding._id;
+                  view.StatusOnBoarding = onboarding.StatusOnBoarding;
+                }
+                detail.Add(view);
               }
-              detail.Add(view);
+              
             }
           }
 

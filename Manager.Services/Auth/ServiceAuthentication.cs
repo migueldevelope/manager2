@@ -43,7 +43,7 @@ namespace Manager.Services.Auth
         servicePerson = new ServicePerson(context, contextLog, serviceControlQueue);
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
-        serviceIPerson = new ServicePerson(context, contextLog,serviceControlQueue);
+        serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue);
       }
       catch (Exception e)
       {
@@ -54,7 +54,7 @@ namespace Manager.Services.Auth
 
     #region Authentication
 
-    public  string AlterContract(string idperson)
+    public string AlterContract(string idperson)
     {
       try
       {
@@ -87,7 +87,7 @@ namespace Manager.Services.Auth
     }
 
 
-    public  ViewPerson Authentication(ViewAuthentication userLogin)
+    public ViewPerson Authentication(ViewAuthentication userLogin)
     {
       try
       {
@@ -136,7 +136,7 @@ namespace Manager.Services.Auth
         }
         else
         {
-          user =  serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
+          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
           if (user == null)
             throw new Exception("User/Password invalid!");
         }
@@ -213,7 +213,10 @@ namespace Manager.Services.Auth
           Task.Run(() => LogSave(person.Contracts[0].IdPerson));
         }
 
-        person.Team = serviceIPerson.GetFilterPersons(person.Contracts.FirstOrDefault().IdPerson);
+        var per = person?.Contracts;
+        if (per.Count() > 0)
+          person.Team = serviceIPerson.GetFilterPersons(per.FirstOrDefault().IdPerson);
+
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
         // Token
@@ -313,7 +316,7 @@ namespace Manager.Services.Auth
           var content = new StringContent("login=" + login + "&senha=" + password);
           content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
           client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
-          HttpResponseMessage result =  client.PostAsync("wspucsede/WService.asmx/ValidateUser", content).Result;
+          HttpResponseMessage result = client.PostAsync("wspucsede/WService.asmx/ValidateUser", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
             throw new Exception("User/Password invalid!");
         }
@@ -352,7 +355,7 @@ namespace Manager.Services.Auth
           StringContent content = new StringContent(json);
           content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          HttpResponseMessage result =  client.PostAsync("/", content).Result;
+          HttpResponseMessage result = client.PostAsync("/", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
           {
             throw new Exception(result.ReasonPhrase);
