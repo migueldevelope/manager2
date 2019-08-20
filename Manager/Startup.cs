@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
 using Manager.Data.Infrastructure;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
+using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using Manager.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using Tools;
 
@@ -44,6 +50,43 @@ namespace Manager
     public IConfiguration Configuration { get; }
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
+
+    private void CallAPIColdStart(IServiceAuthentication serviceAuthentication, string link)
+    {
+      try
+      {
+        System.Threading.Thread.Sleep(20000);
+        var user = new ViewAuthentication()
+        {
+          Mail = "suporte@jmsoft.com.br",
+          Password = "x14r53p5!a"
+        };
+        var body = new ViewListIdIndicators
+        {
+          DateAdm = null,
+          Name = "Test",
+          OccupationName = "Test",
+          TypeJourney = EnumTypeJourney.OnBoarding,
+          _id = "5d52b89acf99e80001cae10c"
+        };
+        var list = new List<ViewListIdIndicators>();
+        list.Add(body);
+
+        string token = serviceAuthentication.Authentication(user).Token;
+        using (var client = new HttpClient())
+        {
+          var json = JsonConvert.SerializeObject(list);
+          var content = new StringContent(json, Encoding.UTF8, "application/json");
+          client.BaseAddress = new Uri(link);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+          var resultMail = client.PostAsync("onboarding/v2/list", content).Result;
+        }
+      }
+      catch (Exception e)
+      {
+        var message = e;
+      }
+    }
     /// <summary>
     /// Registrador de serviços
     /// </summary>
@@ -69,7 +112,7 @@ namespace Manager
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
       IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString);
-    
+
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
       IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue);
@@ -79,7 +122,7 @@ namespace Manager
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer,servicePerson);
+      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
       IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer, serviceControlQueue);
@@ -99,13 +142,6 @@ namespace Manager
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
-
-      long total = 0;
-      serviceParameters.List(ref total);
-      serviceOnBoarding.ListExcluded(ref total, "", 1, 1);
-      serviceMonitoring.GetListExclud(ref total, "", 1, 1);
-      serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
-      servicePerson.ListCompany(ref total, "", 1, 1);
 
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);
@@ -138,6 +174,7 @@ namespace Manager
       services.AddSingleton(_ => serviceMandatoryTraining);
 
       //serviceIndicators.SendMessages(conn.SignalRService);
+      Task.Run(() => CallAPIColdStart(serviceAuthentication, conn.TokenServer));
 
     }
 
