@@ -153,6 +153,8 @@ namespace Manager.Services.Specific
       try
       {
 
+        int skip = (count * (page - 1));
+
         List<ViewListCheckpoint> detail = new List<ViewListCheckpoint>();
 
         persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).ToList();
@@ -179,7 +181,7 @@ namespace Manager.Services.Specific
 
         total = detail.Count();
 
-        return detail;
+        return detail.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {

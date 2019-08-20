@@ -213,9 +213,17 @@ namespace Manager.Services.Auth
           Task.Run(() => LogSave(person.Contracts[0].IdPerson));
         }
 
+        
         var per = person?.Contracts;
         if (per.Count() > 0)
-          person.Team = serviceIPerson.GetFilterPersons(per.FirstOrDefault().IdPerson);
+        {
+          var perT = per.FirstOrDefault();
+          if((perT.TypeUser == EnumTypeUser.Manager) || (perT.TypeUser == EnumTypeUser.ManagerHR))
+          {
+            person.Team = serviceIPerson.GetFilterPersons(perT.IdPerson);
+          }
+        }
+          
 
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;

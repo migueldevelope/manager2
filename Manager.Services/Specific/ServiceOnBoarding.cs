@@ -172,7 +172,7 @@ namespace Manager.Services.Specific
 
         total = detail.Count();
 
-        return detail.Skip(skip).Take(count).ToList();
+        return detail.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
