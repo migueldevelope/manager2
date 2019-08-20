@@ -80,6 +80,8 @@ namespace Manager
           client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5200/");
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
           var resultMail = client.PostAsync("onboarding/v2/list", content).Result;
+          resultMail = client.PostAsync("monitoring/v2/list", content).Result;
+          resultMail = client.PostAsync("checkpotin/v2/listwaitmanager", content).Result;
         }
       }
       catch (Exception e)

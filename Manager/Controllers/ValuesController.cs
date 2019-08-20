@@ -98,6 +98,8 @@ namespace Manager.Controllers
           client.BaseAddress = new Uri(conn.TokenServer.Substring(0, conn.TokenServer.Length - 1) + ":5200/");
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
           var resultMail = client.PostAsync("onboarding/v2/list", content).Result;
+          resultMail = client.PostAsync("monitoring/v2/list", content).Result;
+          resultMail = client.PostAsync("checkpotin/v2/listwaitmanager", content).Result;
         }
       }
       catch (Exception e)
