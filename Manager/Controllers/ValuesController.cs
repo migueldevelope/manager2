@@ -95,7 +95,7 @@ namespace Manager.Controllers
         {
           var json = JsonConvert.SerializeObject(list);
           var content = new StringContent(json, Encoding.UTF8, "application/json");
-          client.BaseAddress = new Uri(conn.TokenServer);
+          client.BaseAddress = new Uri(conn.TokenServer.Substring(0, conn.TokenServer.Length - 1) + ":5200/");
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
           var resultMail = client.PostAsync("onboarding/v2/list", content).Result;
         }
