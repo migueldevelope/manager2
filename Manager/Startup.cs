@@ -77,7 +77,7 @@ namespace Manager
         {
           var json = JsonConvert.SerializeObject(list);
           var content = new StringContent(json, Encoding.UTF8, "application/json");
-          client.BaseAddress = new Uri(link);
+          client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5200/");
           client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
           var resultMail = client.PostAsync("onboarding/v2/list", content).Result;
         }
