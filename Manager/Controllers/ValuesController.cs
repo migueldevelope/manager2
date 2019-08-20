@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Services.Commons;
+using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using Newtonsoft.Json;
+using Tools;
 
 namespace Manager.Controllers
 {
@@ -18,6 +26,7 @@ namespace Manager.Controllers
     private IServiceMonitoring serviceMonitoring;
     private IServiceCertification serviceCertification;
     private IServicePerson servicePerson;
+    private IServiceAuthentication serviceAuthentication;
 
     /// <summary>
     /// 
@@ -27,15 +36,17 @@ namespace Manager.Controllers
     /// <param name="_serviceParameters"></param>
     /// <param name="_serviceMonitoring"></param>
     /// <param name="_serviceCertification"></param>
+    /// <param name="_serviceAuthentication"></param>
     /// <param name="_servicePerson"></param>
     public ValuesController(IServiceOnBoarding _serviceOnboarding, IHttpContextAccessor contextAccessor,IServiceParameters _serviceParameters,
-     IServiceMonitoring _serviceMonitoring, IServiceCertification _serviceCertification, IServicePerson _servicePerson)
+     IServiceMonitoring _serviceMonitoring, IServiceCertification _serviceCertification, IServicePerson _servicePerson, IServiceAuthentication _serviceAuthentication)
     {
       serviceOnBoarding = _serviceOnboarding;
       serviceParameters = _serviceParameters;
       serviceMonitoring = _serviceMonitoring;
       serviceCertification = _serviceCertification;
       servicePerson = _servicePerson;
+      serviceAuthentication= _serviceAuthentication;
 
       serviceOnBoarding.SetUser(contextAccessor);
     }
@@ -47,14 +58,52 @@ namespace Manager.Controllers
     [HttpGet]
     public IEnumerable<string> Get()
     {
-      long total = 0;
+      //long total = 0;
       //service.ListExcluded(ref total, "", 1, 1);
-      serviceParameters.List(ref total);
+      //serviceParameters.List(ref total);
       //serviceOnBoarding.ListExcluded(ref total, "", 1, 1);
       //serviceMonitoring.GetListExclud(ref total, "", 1, 1);
       //serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
       //servicePerson.ListCompany(ref total, "", 1, 1);
+      CallAPIColdStart();
       return new string[] { "version", "0.000000036" };
+    }
+
+    private void CallAPIColdStart()
+    {
+      try
+      {
+        var conn = XmlConnection.ReadVariablesSystem();
+        var user = new ViewAuthentication()
+        {
+          Mail = "suporte@jmsoft.com.br",
+          Password = "x14r53p5!a"
+        };
+        var body = new ViewListIdIndicators
+        {
+          DateAdm = null,
+          Name = "Test",
+          OccupationName = "Test",
+          TypeJourney = EnumTypeJourney.OnBoarding,
+          _id = "5d52b89acf99e80001cae10c"
+        };
+        var list = new List<ViewListIdIndicators>();
+        list.Add(body);
+
+        string token = serviceAuthentication.Authentication(user).Token;
+        using (var client = new HttpClient())
+        {
+          var json = JsonConvert.SerializeObject(list);
+          var content = new StringContent(json, Encoding.UTF8, "application/json");
+          client.BaseAddress = new Uri(conn.TokenServer);
+          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+          var resultMail = client.PostAsync("onboarding/v2/list", content).Result;
+        }
+      }
+      catch (Exception e)
+      {
+        var message = e;
+      }
     }
 
     /// <summary>

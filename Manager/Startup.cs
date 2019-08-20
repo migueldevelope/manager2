@@ -87,6 +87,7 @@ namespace Manager
         var message = e;
       }
     }
+
     /// <summary>
     /// Registrador de serviços
     /// </summary>
