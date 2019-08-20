@@ -144,6 +144,8 @@ namespace Manager.Services.Specific
       {
         List<ViewListOnBoarding> detail = new List<ViewListOnBoarding>();
 
+        int skip = count * (page - 1);
+
         persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation).ToList();
 
         OnBoarding onboarding;
@@ -170,7 +172,7 @@ namespace Manager.Services.Specific
 
         total = detail.Count();
 
-        return detail;
+        return detail.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {

@@ -378,7 +378,7 @@ namespace Manager.Services.Auth
             _idPerson = item._id,
             Occupation = item.OccupationName,
             DataAdm = item.DateAdm
-          }).OrderBy(p => p.Name).ToList();
+          }).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
