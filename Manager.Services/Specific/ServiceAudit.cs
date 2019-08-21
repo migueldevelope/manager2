@@ -59,6 +59,7 @@ namespace Manager.Services.Specific
         {
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
+          case EnumTypeUser.Anonymous:
             return serviceUser.GetAllFreeNewVersion(p => p._idAccount == serviceUser._user._idAccount).Result
               .Select(p => new ViewAuditUser()
               {
@@ -88,6 +89,7 @@ namespace Manager.Services.Specific
         {
           case EnumTypeUser.Support:
           case EnumTypeUser.Administrator:
+          case EnumTypeUser.Anonymous:
             return servicePerson.GetAllFreeNewVersion(p => p._idAccount == serviceUser._user._idAccount).Result
               .Select(p => new ViewAuditPerson()
               {
