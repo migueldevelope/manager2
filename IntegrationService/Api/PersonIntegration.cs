@@ -13,9 +13,13 @@ namespace IntegrationService.Api
     public PersonIntegration(ViewPersonLogin person)
     {
       Person = person;
+      string pathUrl = string.Format("{0}/", Person.Url).Replace("//", "//integrationserver.");
+      if (Person.Url == "https://analisa.unimednordesters.com.br")
+        pathUrl = "https://analisa.unimednordesters.com.br/integrationserver/";
+
       clientSkill = new HttpClient()
       {
-        BaseAddress = new Uri(string.Format("{0}/", Person.Url).Replace("//", "//integrationserver."))
+        BaseAddress = new Uri(pathUrl)
       };
       clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));

@@ -549,7 +549,7 @@ namespace Manager.Services.Specific
 
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores sem <strong>feedback à mais de 90 dias</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores sem <strong>feedback hà mais de 90 dias</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST1}", list);
 
