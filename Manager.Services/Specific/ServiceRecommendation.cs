@@ -43,7 +43,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context, contextLog, _serviceControlQueue);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, _serviceControlQueue, pathToken);
         serviceRecommendation = new ServiceGeneric<Recommendation>(context);
         serviceRecommendationPerson = new ServiceGeneric<RecommendationPerson>(context);
         servicePerson = new ServiceGeneric<Person>(context);

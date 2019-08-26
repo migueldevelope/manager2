@@ -9,6 +9,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 using System;
@@ -33,9 +34,11 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Schooling> serviceSchooling;
     private ServiceGeneric<User> serviceUser;
     private readonly IQueueClient queueClient;
+    private HubConnection hubConnection;
+    private readonly string pathSignalr;
 
     #region Constructor
-    public ServicePerson(DataContext context, DataContext contextLog, IServiceControlQueue seviceControlQueue) : base(context)
+    public ServicePerson(DataContext context, DataContext contextLog, IServiceControlQueue seviceControlQueue, string _pathSignalr) : base(context)
     {
       try
       {
@@ -50,6 +53,7 @@ namespace Manager.Services.Auth
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSchooling = new ServiceGeneric<Schooling>(context);
         serviceUser = new ServiceGeneric<User>(context);
+        pathSignalr = _pathSignalr;
       }
       catch (Exception e)
       {
@@ -522,6 +526,13 @@ namespace Manager.Services.Auth
 
         person.Manager = manager;
         var result = servicePerson.Update(person, null);
+
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(pathSignalr + "messagesHub")
+            .Build();
+
+        hubConnection.StartAsync();
+        hubConnection.InvokeAsync("GetFilterPersons", person.Manager._id, person._idAccount);
 
         return manager;
       }

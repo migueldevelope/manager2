@@ -44,7 +44,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        serviceAuthentication = new ServiceAuthentication(context, contextLog, _serviceControlQueue);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, _serviceControlQueue, pathToken);
         serviceLog = new ServiceLog(context, contextLog);
         serviceLogMessages = new ServiceLogMessages(context);
         serviceMail = new ServiceGeneric<MailLog>(context);

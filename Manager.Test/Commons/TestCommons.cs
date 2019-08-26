@@ -1474,7 +1474,7 @@ namespace Manager.Test.Commons
         IServiceMaturity serviceMaturity = new ServiceMaturity(context);
         serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
 
-        ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue);
+        ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue, "");
         ViewAuthentication view = new ViewAuthentication()
         {
           Mail = "analisa@jmsoft.com.br",
@@ -1518,7 +1518,7 @@ namespace Manager.Test.Commons
         IServiceMaturity serviceMaturity = new ServiceMaturity(context);
         serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
 
-        ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue);
+        ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue, "");
         ViewAuthentication view = new ViewAuthentication()
         {
           Mail = "analisa@jmsoft.com.br",

@@ -21,11 +21,11 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Workflow> serviceWorkflow;
 
     #region Constructor
-    public ServiceWorkflow(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue) : base(context)
+    public ServiceWorkflow(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, string pathSignalr) : base(context)
     {
       try
       {
-        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue);
+        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue, pathSignalr);
         serviceWorkflow = new ServiceGeneric<Workflow>(context);
       }
       catch (Exception e)

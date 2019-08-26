@@ -34,20 +34,21 @@ namespace Manager.Services.Specific
     private readonly ServiceWorkflow serviceWorkflow;
     private readonly IQueueClient queueClient;
     private readonly string path;
+
     #region Constructor
     public ServiceAutoManager(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, IServicePerson _servicePerson, string _path) : base(context)
     {
       try
       {
         queueClient = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "structmanager");
-        serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue, _path);
         serviceAutoManager = new ServiceGeneric<AutoManager>(context);
         serviceMailLog = new ServiceGeneric<MailLog>(contextLog);
         serviceMailModel = new ServiceMailModel(context);
         serviceMailMessage = new ServiceGeneric<MailMessage>(contextLog);
         //servicePerson = new ServiceGeneric<Person>(context);
         servicePerson = _servicePerson;
-        serviceWorkflow = new ServiceWorkflow(context, contextLog, serviceControlQueue);
+        serviceWorkflow = new ServiceWorkflow(context, contextLog, serviceControlQueue, _path);
         path = _path;
       }
       catch (Exception e)

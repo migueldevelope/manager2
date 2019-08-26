@@ -40,7 +40,7 @@ namespace Manager.Services.Specific
     public ServiceNotification(DataContext context, DataContext contextLog, string _path, IServiceControlQueue serviceControlQueue) : base(context)
     {
       serviceAccount = new ServiceGeneric<Account>(context);
-      serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue);
+      serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue, _path);
       serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
       serviceConfigurationNotification = new ServiceGeneric<ConfigurationNotification>(context);
       serviceLog = new ServiceLog(context, contextLog);

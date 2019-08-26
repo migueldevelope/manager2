@@ -118,9 +118,9 @@ namespace Manager
 
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue);
+      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson, conn.TokenServer);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
@@ -136,7 +136,7 @@ namespace Manager
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
       IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue);
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
@@ -176,7 +176,8 @@ namespace Manager
       services.AddSingleton(_ => serviceEvent);
       services.AddSingleton(_ => serviceMandatoryTraining);
 
-      //serviceIndicators.SendMessages(conn.SignalRService);
+      serviceIndicators.SendMessages(conn.SignalRService);
+
       Task.Run(() => CallAPIColdStart(serviceAuthentication, conn.TokenServer));
 
     }
@@ -268,10 +269,10 @@ namespace Manager
       app.UseMiddleware<ErrorHandlingMiddleware>();
       app.UseCors("AllowAll");
       app.UseMvc();
-      //app.UseSignalR(routes =>
-      //{
-      //  routes.MapHub<MessagesHub>("/messagesHub");
-      //});
+      app.UseSignalR(routes =>
+      {
+        routes.MapHub<MessagesHub>("/messagesHub");
+      });
       // Ativando middlewares para uso do Swagger
       app.UseSwagger();
       app.UseSwaggerUI(c =>

@@ -32,18 +32,19 @@ namespace Manager.Services.Auth
     private readonly ServiceDictionarySystem serviceDictionarySystem;
     private readonly ServiceTermsOfService serviceTermsOfService;
     private readonly IServicePerson serviceIPerson;
+    private readonly string pathSignalr;
     #region Constructor
-    public ServiceAuthentication(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue)
+    public ServiceAuthentication(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, string _pathSignalr)
     {
       try
       {
         serviceTermsOfService = new ServiceTermsOfService(context);
         serviceAccount = new ServiceGeneric<Account>(context);
         serviceLog = new ServiceLog(context, contextLog);
-        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue);
+        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
-        serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue);
+        serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue, pathSignalr);
       }
       catch (Exception e)
       {

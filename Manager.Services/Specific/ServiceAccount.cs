@@ -36,7 +36,7 @@ namespace Manager.Services.Specific
       try
       {
         serviceAccount = new ServiceGeneric<Account>(context);
-        serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue);
+        serviceAuthentication = new ServiceAuthentication(context, contextLog, serviceControlQueue ,"");
         servicePerson = new ServiceGeneric<Person>(context);
         serviceUser = new ServiceGeneric<User>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
