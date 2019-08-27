@@ -10,6 +10,7 @@ namespace IntegrationService.Api
 {
   public class ApiUnimedNers
   {
+
     public List<ViewIntegrationUnimedNers> GetUnimedEmployee()
     {
       try
@@ -42,7 +43,7 @@ namespace IntegrationService.Api
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
           HttpResponseMessage result = client.PostAsync("/", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
-            throw new Exception("User/Password invalid!");
+            throw new Exception("Integration Error!");
 
           string resultContent = result.Content.ReadAsStringAsync().Result;
           IsoDateTimeConverter dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" };
@@ -54,6 +55,52 @@ namespace IntegrationService.Api
         throw e;
       }
     }
+
+    public string GetUnimedTest()
+    {
+      try
+      {
+        string username = "analisa";
+        //        string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
+        string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
+        string password2 = GetMD5HashTypeTwo(password).ToLower();
+
+        using (HttpClient client = new HttpClient())
+        {
+          client.Timeout = TimeSpan.FromMinutes(60);
+          client.DefaultRequestHeaders.Add("Autorization", "Basic " + password);
+          client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(new UTF8Encoding().GetBytes(username + ":" + password2)));
+          client.BaseAddress = new Uri("https://api.unimednordesters.com.br");
+
+          var data = new
+          {
+            channel = "analisa",
+            parametros = new
+            {
+              dat_inicial = "",
+              dat_final = "",
+              des_situacao = "Ativo"
+            }
+          };
+          string json = JsonConvert.SerializeObject(data);
+          StringContent content = new StringContent(json);
+          content.Headers.ContentType.MediaType = "application/json";
+          client.DefaultRequestHeaders.Add("ContentType", "application/json");
+          HttpResponseMessage result = client.PostAsync("/", content).Result;
+          if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            throw new Exception("Integration Error!");
+
+          string resultContent = result.Content.ReadAsStringAsync().Result;
+
+          return resultContent.ToString();
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private static string GetMD5HashTypeTwo(string input)
     {
       System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();

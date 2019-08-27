@@ -31,6 +31,7 @@ namespace IntegrationService.Service
     private readonly string LogFileName;
     private readonly Version VersionProgram;
     private bool hasLogFile;
+    public string testresult;
 
     #region Construtores
     public ImportService(ViewPersonLogin person, ConfigurationService serviceConfiguration)
@@ -177,17 +178,21 @@ namespace IntegrationService.Service
 
         List<ViewIntegrationUnimedNers> colaboradoresUnimed = unimedNers.GetUnimedEmployee();
 
+
+
         Colaboradores = new List<ColaboradorImportar>();
         // Carregar Lista de Colaboradores
         foreach (ViewIntegrationUnimedNers colaboradoreUnimed in colaboradoresUnimed)
+        {
           Colaboradores.Add(new ColaboradorImportar(colaboradoreUnimed, new EnumLayoutSystemCompleteV1()));
-
+        }
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+
     #endregion
 
     #region Listas
@@ -675,6 +680,7 @@ namespace IntegrationService.Service
       try
       {
         int search;
+
         foreach (var colaborador in Colaboradores.Where(p => !string.IsNullOrEmpty(p.Message)))
         {
           search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);

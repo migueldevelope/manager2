@@ -16,6 +16,7 @@ namespace IntegrationService.Data
     {
       try
       {
+
         DateTime? dataNascimento = FieldDate(list[(int)EnumLayoutManualBasicV1.DataNascimento]);
         DateTime? dataAdmissao = FieldDate(list[(int)EnumLayoutManualBasicV1.DataAdmissao]);
         DateTime? dataDemissao = FieldDate(list[(int)EnumLayoutManualBasicV1.DataDemissao]);
