@@ -25,6 +25,9 @@ namespace IntegrationClient
 
         serviceConfiguration = new ConfigurationService(Program.PersonLogin);
 
+        //MessageBox.Show(serviceConfiguration.test1, "RETORNO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //MessageBox.Show(serviceConfiguration.test2, "RETORNO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
         CboDatabaseType.DataSource = Enum.GetValues(typeof(EnumDatabaseType));
         CboProc.DataSource = Enum.GetValues(typeof(EnumIntegrationProcess));
         CboType.DataSource = Enum.GetValues(typeof(EnumIntegrationType));
@@ -329,6 +332,16 @@ namespace IntegrationClient
       {
         MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
+    }
+
+    private void label12_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void grpApi_Enter(object sender, EventArgs e)
+    {
+
     }
   }
 }

@@ -15,6 +15,7 @@ namespace IntegrationService.Api
       try
       {
         string username = "analisa";
+        //        string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
         string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
         string password2 = GetMD5HashTypeTwo(password).ToLower();
 

@@ -19,7 +19,7 @@ namespace IntegrationService.Api
       Person = person;
       string pathUrl = string.Format("{0}/", Person.Url).Replace("//", "//integrationserver.");
       if (person.Url == "https://analisa.unimednordesters.com.br")
-        pathUrl = "https://analisa.unimednordesters.com.br/integrationserver";
+        pathUrl = "https://analisa.unimednordesters.com.br/integrationserver/";
 
       clientSkill = new HttpClient() {
         BaseAddress = new Uri(pathUrl)

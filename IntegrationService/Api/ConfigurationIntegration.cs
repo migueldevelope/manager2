@@ -14,9 +14,13 @@ namespace IntegrationService.Api
     public ConfigurationIntegration(ViewPersonLogin person)
     {
       Person = person;
+      string pathUrl = string.Format("{0}/", Person.Url).Replace("//", "//integrationserver.");
+      if (person.Url == "https://analisa.unimednordesters.com.br")
+        pathUrl = "https://analisa.unimednordesters.com.br/integrationserver/";
+
       clientSkill = new HttpClient()
       {
-        BaseAddress = new Uri(string.Format("{0}/", Person.Url).Replace("//", "//integrationserver."))
+        BaseAddress = new Uri(pathUrl)
       };
       clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
@@ -34,6 +38,33 @@ namespace IntegrationService.Api
         return null;
       }
     }
+
+    public string GetParameterTest()
+    {
+      try
+      {
+        var result = clientSkill.GetAsync("configuration").Result;
+        return result.Content.ReadAsStringAsync().Result;
+      }
+      catch (Exception)
+      {
+        return null;
+      }
+    }
+
+    public string GetParameterTestReturn()
+    {
+      try
+      {
+        var result = clientSkill.GetAsync("configuration").Result;
+        return result.ToString();
+      }
+      catch (Exception)
+      {
+        return null;
+      }
+    }
+
     public ViewCrudIntegrationParameter SetParameter(ViewCrudIntegrationParameter view)
     {
       try

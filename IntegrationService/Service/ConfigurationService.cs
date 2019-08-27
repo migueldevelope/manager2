@@ -10,6 +10,9 @@ namespace IntegrationService.Service
     public ViewCrudIntegrationParameter Param { get; private set; }
     private readonly ViewPersonLogin Person;
     private ConfigurationIntegration Service;
+    public string test1;
+    public string test2;
+
     public ConfigurationService(ViewPersonLogin person)
     {
       try
@@ -17,6 +20,9 @@ namespace IntegrationService.Service
         Person = person;
         Service = new ConfigurationIntegration(person);
         Param = Service.GetParameter();
+        test1 = Service.GetParameterTest();
+        test2 = Service.GetParameterTestReturn();
+
         if (Param == null)
         {
           Param = new ViewCrudIntegrationParameter();
