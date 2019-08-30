@@ -176,7 +176,7 @@ namespace Manager
       services.AddSingleton(_ => serviceEvent);
       services.AddSingleton(_ => serviceMandatoryTraining);
 
-      serviceIndicators.SendMessages(conn.SignalRService);
+      //serviceIndicators.SendMessages(conn.SignalRService);
 
       //Task.Run(() => CallAPIColdStart(serviceAuthentication, conn.TokenServer));
 
