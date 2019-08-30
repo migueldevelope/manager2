@@ -288,7 +288,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("checkpointinday")]
-    public async Task<List<ViewListPending>> CheckpointInDay(List<ViewListIdIndicators> persons)
+    public async Task<List<ViewListPending>> CheckpointInDay([FromBody]List<ViewListIdIndicators> persons)
     {
       return await Task.Run(() => service.CheckpointInDay(persons));
     }
