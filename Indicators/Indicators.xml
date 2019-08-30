@@ -186,7 +186,7 @@
             
             </summary>
             <param name="date"></param>
-            <param name="idManager"></param>
+            <param name="idmanager"></param>
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPeriod(Manager.Views.BusinessView.ViewFilterDate,System.String)">
