@@ -106,8 +106,8 @@ namespace Manager.Core.Business
         Establishment = Establishment,
         Registration = Registration,
         User = User,
-        _idManager = Manager._id,
-        NameManager = Manager.Name
+        _idManager = Manager?._id,
+        NameManager = Manager?.Name
       };
     }
     public ViewListPersonInfo GetViewListPersonInfo()

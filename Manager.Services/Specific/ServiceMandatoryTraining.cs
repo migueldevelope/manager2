@@ -120,10 +120,10 @@ namespace Manager.Services.Specific
           }).FirstOrDefault();
 
         NewOnZero(course);
-        var listPlans = serviceTrainingPlan.GetAllNewVersion(p => p.Course._id == course._id & p.Person == viewPerson).Result.ToList();
+        var listPlans = serviceTrainingPlan.GetAllNewVersion(p => p.Course._id == course._id & p.Person._id == viewPerson._id).Result.ToList();
 
         // VERITY DATE LAST COURSE REALIZED
-        var realized = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == course._id & p.Person == person.GetViewListBaseManager()).Result.ToList();
+        var realized = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == course._id & p.Person._id == person._id).Result.ToList();
         var equivalents = Equivalents(course._id, person._id);
 
         DateTime? dateMax = null;
@@ -172,7 +172,7 @@ namespace Manager.Services.Specific
         {
           serviceTrainingPlan.InsertNewVersion(new TrainingPlan()
           {
-            Person = person.Manager == null ? null : person.GetViewListManager(),
+            Person = person.GetViewListManager(),
             Course = new ViewListCourse() { _id = course._id, Name = course.Name },
             Include = DateTime.Now,
             Observartion = string.Empty,
@@ -836,8 +836,8 @@ namespace Manager.Services.Specific
         view.TraningPlans = new List<ViewTrainingPlan>();
         foreach (var item in list)
         {
-          if (item.Person != view.Person)
-          {
+          //if (item.Person != view.Person)
+          //{
 
             if (totalGeral > 0)
             {
@@ -853,7 +853,8 @@ namespace Manager.Services.Specific
             totalGeral = 0;
             countRealized = 0;
             countNo = 0;
-          }
+          //}
+
           var training = new ViewTrainingPlan
           {
             Person = view.Person,
