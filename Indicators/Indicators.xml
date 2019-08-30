@@ -139,6 +139,80 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingInDay(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingToWin(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingLate(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointInDay(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointToWin(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointLate(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetMoninitoringQtd(Manager.Views.BusinessView.ViewFilterDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idManager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPeriod(Manager.Views.BusinessView.ViewFilterDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudPeriod(Manager.Views.BusinessView.ViewFilterDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetListPlanQtd(Manager.Views.BusinessView.ViewFilterDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idManager"></param>
+            <returns></returns>
+        </member>
         <member name="T:Indicators.Controllers.ValuesController">
             <summary>
             

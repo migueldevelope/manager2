@@ -44,7 +44,8 @@ namespace Manager.Services.Auth
         servicePerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
-        serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue, pathSignalr);
+        serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
+        pathSignalr = _pathSignalr;
       }
       catch (Exception e)
       {
@@ -92,6 +93,7 @@ namespace Manager.Services.Auth
     {
       try
       {
+        
         if (string.IsNullOrEmpty(userLogin.Mail))
           throw new Exception("MSG1");
         if (string.IsNullOrEmpty(userLogin.Password))
@@ -386,6 +388,8 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var message = pathSignalr;
+
         serviceLog.NewLog(new ViewLog()
         {
           Description = "Login",

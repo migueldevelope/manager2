@@ -677,7 +677,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        var message = e; 
       }
     }
 

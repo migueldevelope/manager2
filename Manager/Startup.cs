@@ -178,7 +178,7 @@ namespace Manager
 
       serviceIndicators.SendMessages(conn.SignalRService);
 
-      Task.Run(() => CallAPIColdStart(serviceAuthentication, conn.TokenServer));
+      //Task.Run(() => CallAPIColdStart(serviceAuthentication, conn.TokenServer));
 
     }
 
