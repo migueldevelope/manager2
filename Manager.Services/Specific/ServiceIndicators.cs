@@ -32,6 +32,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Certification> serviceCertification;
     private readonly ServiceGeneric<Recommendation> serviceRecommendation;
     private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
+    private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly IServicePerson serviceIPerson;
 
     public string path;
@@ -55,6 +56,7 @@ namespace Manager.Services.Specific
         serviceCertification = new ServiceGeneric<Certification>(context);
         serviceRecommendation = new ServiceGeneric<Recommendation>(context);
         serviceRecommendationPerson = new ServiceGeneric<RecommendationPerson>(context);
+        serviceParameter = new ServiceGeneric<Parameter>(context);
         serviceIPerson = _serviceIPerson;
 
         path = pathToken;
@@ -80,10 +82,330 @@ namespace Manager.Services.Specific
       serviceCheckpoint._user = _user;
       serviceRecommendation._user = _user;
       serviceRecommendationPerson._user = _user;
+      serviceParameter._user = _user;
       serviceIPerson.SetUser(_user);
     }
 
-   
+    public List<ViewListPending> OnboardingInDay(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
+
+        foreach (var item in persons)
+        {
+          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          if (days >= 21)
+          {
+            var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
+            if (view == null)
+              list.Add(new ViewListPending()
+              {
+                Manager = item.Manager,
+                Person = item.Name,
+                Days = days
+              });
+          }
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> OnboardingToWin(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
+
+        foreach (var item in persons)
+        {
+          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          if (days <= 20)
+          {
+            var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
+            if (view == null)
+              list.Add(new ViewListPending()
+              {
+                Manager = item.Manager,
+                Person = item.Name,
+                Days = days
+              });
+          }
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> OnboardingLate(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
+
+        foreach (var item in persons)
+        {
+          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          if (days < 0)
+          {
+            var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
+            if (view == null)
+              list.Add(new ViewListPending()
+              {
+                Manager = item.Manager,
+                Person = item.Name,
+                Days = days
+              });
+          }
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> CheckpointInDay(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).ToList();
+
+        foreach (var item in persons)
+        {
+          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          if (days >= 11)
+          {
+            var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
+            if (view == null)
+              list.Add(new ViewListPending()
+              {
+                Manager = item.Manager,
+                Person = item.Name,
+                Days = days
+              });
+          }
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> CheckpointToWin(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).ToList();
+
+        foreach (var item in persons)
+        {
+          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          if (days <= 10)
+          {
+            var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
+            if (view == null)
+              list.Add(new ViewListPending()
+              {
+                Manager = item.Manager,
+                Person = item.Name,
+                Days = days
+              });
+          }
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> CheckpointLate(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).ToList();
+
+        foreach (var item in persons)
+        {
+          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          if (days <= 0)
+          {
+            var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
+            if (view == null)
+              list.Add(new ViewListPending()
+              {
+                Manager = item.Manager,
+                Person = item.Name,
+                Days = days
+              });
+          }
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public ViewMoninitoringQtd GetMoninitoringQtd(ViewFilterDate date, string idManager)
+    {
+      try
+      {
+        var view = new ViewMoninitoringQtd();
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+        && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End & p.Person._idManager == idManager).Result;
+
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public List<ViewTagsCloud> ListTagsCloudCompanyPeriod(ViewFilterDate date, string idmanager)
+    {
+      try
+      {
+        var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+        && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
+        foreach (var item in list)
+        {
+          if (persons.Where(p => p == item.Person?._id).Count() == 0)
+            list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
+        }
+        list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
+
+        List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloud() { text = row.Skill.Name });
+          }
+        }
+
+
+        var result = listResult.GroupBy(x => x.text)
+            .Select(x => new ViewTagsCloud()
+            {
+              text = x.Key,
+              weight = x.Count()
+            }).ToList();
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewTagsCloud> ListTagsCloudPeriod(ViewFilterDate date, string idmanager)
+    {
+      try
+      {
+        var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+        && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
+        foreach (var item in list)
+        {
+          if (persons.Where(p => p == item.Person?._id).Count() == 0)
+            list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
+        }
+        list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
+
+        List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.Activities)
+          {
+            foreach (var skill in row.Plans)
+            {
+              foreach (var view in skill.Skills)
+              {
+                listResult.Add(new ViewTagsCloud() { text = view.Name });
+              }
+            }
+          }
+        }
+
+
+        var result = listResult.GroupBy(x => x.text)
+            .Select(x => new ViewTagsCloud()
+            {
+              text = x.Key,
+              weight = x.Count()
+            }).ToList();
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewListPlanQtd GetListPlanQtd(ViewFilterDate date, string idManager)
+    {
+      try
+      {
+        var view = new ViewListPlanQtd();
+        var plans = servicePlan.GetAllNewVersion(p => p.Person._idManager == idManager && p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
+
+        view.Schedules = plans.Count();
+        view.Ends = plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
+        view.Lates = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     public List<ViewIndicatorsNotes> GetNotes(string id)
     {

@@ -241,5 +241,139 @@ namespace Indicators.Controllers
       return await Task.Run(() => service.ListTagsCloudCompanyPerson(idperson));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("onboardinginday")]
+    public async Task<List<ViewListPending>> OnboardingInDay([FromBody]List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.OnboardingInDay(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("onboardingtowin")]
+    public async Task<List<ViewListPending>> OnboardingToWin([FromBody]List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.OnboardingToWin(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("onboardinglate")]
+    public async Task<List<ViewListPending>> OnboardingLate([FromBody]List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.OnboardingLate(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("checkpointinday")]
+    public async Task<List<ViewListPending>> CheckpointInDay(List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.CheckpointInDay(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("checkpointtowin")]
+    public async Task<List<ViewListPending>> CheckpointToWin([FromBody]List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.CheckpointToWin(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("checkpointlate")]
+    public async Task<List<ViewListPending>> CheckpointLate([FromBody]List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.CheckpointLate(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idManager"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("getmoninitoringqtd/{idmanager}")]
+    public async Task<ViewMoninitoringQtd> GetMoninitoringQtd([FromBody]ViewFilterDate date, string idManager)
+    {
+      return await Task.Run(() => service.GetMoninitoringQtd(date, idManager));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idmanager"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listtagscloudcompanyperiod/{idmanager}")]
+    public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPeriod([FromBody]ViewFilterDate date, string idmanager)
+    {
+      return await Task.Run(() => service.ListTagsCloudCompanyPeriod(date, idmanager));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idmanager"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listtagscloudperiod/{idmanager}")]
+    public async Task<List<ViewTagsCloud>> ListTagsCloudPeriod([FromBody]ViewFilterDate date, string idmanager)
+    {
+      return await Task.Run(() => service.ListTagsCloudPeriod(date, idmanager));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idManager"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("getlistplanqtd/{idmanager}")]
+    public async Task<ViewListPlanQtd> GetListPlanQtd([FromBody]ViewFilterDate date, string idManager)
+    {
+      return await Task.Run(() => service.GetListPlanQtd(date, idManager));
+    }
+
   }
 }

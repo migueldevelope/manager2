@@ -154,7 +154,8 @@ namespace Manager.Services.Auth
           TypeJourney = p.TypeJourney,
           Name = p.User?.Name,
           OccupationName = p.Occupation?.Name,
-          DateAdm = p.User?.DateAdm
+          DateAdm = p.User?.DateAdm,
+          Manager = p.Manager?.Name
         }).ToList();
       }
       catch (Exception e)

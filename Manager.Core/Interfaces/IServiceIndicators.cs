@@ -39,5 +39,16 @@ namespace Manager.Core.Interfaces
     IEnumerable<ViewChartStatus> ChartPlanRealized(List<ViewListIdIndicators> persons);
     IEnumerable<ViewChartRecommendation> ChartRecommendation(List<ViewListIdIndicators> persons);
     IEnumerable<ViewChartCeritificationStatus> ChartCertificationStatus(List<ViewListIdIndicators> persons);
+
+    List<ViewListPending> OnboardingInDay(List<ViewListIdIndicators> persons);
+    List<ViewListPending> OnboardingToWin(List<ViewListIdIndicators> persons);
+    List<ViewListPending> OnboardingLate(List<ViewListIdIndicators> persons);
+    List<ViewListPending> CheckpointInDay(List<ViewListIdIndicators> persons);
+    List<ViewListPending> CheckpointToWin(List<ViewListIdIndicators> persons);
+    List<ViewListPending> CheckpointLate(List<ViewListIdIndicators> persons);
+    ViewMoninitoringQtd GetMoninitoringQtd(ViewFilterDate date, string idManager);
+    List<ViewTagsCloud> ListTagsCloudCompanyPeriod(ViewFilterDate date, string idmanager);
+    List<ViewTagsCloud> ListTagsCloudPeriod(ViewFilterDate date, string idmanager);
+    ViewListPlanQtd GetListPlanQtd(ViewFilterDate date, string idManager);
   }
 }
