@@ -141,7 +141,7 @@ namespace Manager.Services.Specific
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
-          if ((days <= 20) && (days < 10))
+          if ((days <= 20) && (days > 10))
           {
             var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
             if (view == null)
