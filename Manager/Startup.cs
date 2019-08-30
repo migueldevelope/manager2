@@ -227,7 +227,7 @@ namespace Manager
       ));
       services.AddMvc();
 
-      //services.AddSignalR();
+      services.AddSignalR();
 
       // Configurando o serviço de documentação do Swagger
       services.AddSwaggerGen(c =>
@@ -271,7 +271,7 @@ namespace Manager
       app.UseMvc();
       app.UseSignalR(routes =>
       {
-        routes.MapHub<MessagesHub>("/messagesHub");
+        routes.MapHub<MessagesHub>("/MessagesHub");
       });
       // Ativando middlewares para uso do Swagger
       app.UseSwagger();
