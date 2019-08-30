@@ -92,12 +92,18 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
+
         persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
 
         foreach (var item in persons)
         {
-          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          var days = (dateadm.AddDays(parameter) - dateadm).Days;
+
           if (days >= 21)
           {
             var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
@@ -125,12 +131,16 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
         persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
 
         foreach (var item in persons)
         {
-          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          var days = (dateadm.AddDays(parameter) - dateadm).Days;
           if (days <= 20)
           {
             var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
@@ -158,12 +168,16 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
         persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
 
         foreach (var item in persons)
         {
-          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          var days = (dateadm.AddDays(parameter) - dateadm).Days;
           if (days < 0)
           {
             var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
@@ -191,12 +205,16 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
         persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).ToList();
 
         foreach (var item in persons)
         {
-          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          var days = (dateadm.AddDays(parameter) - dateadm).Days;
           if (days >= 11)
           {
             var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
@@ -224,12 +242,16 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
         persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).ToList();
 
         foreach (var item in persons)
         {
-          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          var days = (dateadm.AddDays(parameter) - dateadm).Days;
           if (days <= 10)
           {
             var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
@@ -257,12 +279,16 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameter = long.Parse(serviceParameter.GetNewVersion(p => p.Name == "DeadlineAdm").Result.Content);
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
         persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).ToList();
 
         foreach (var item in persons)
         {
-          var days = (item.DateAdm.Value.AddDays(parameter) - item.DateAdm).Value.Days;
+          DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          var days = (dateadm.AddDays(parameter) - dateadm).Days;
           if (days <= 0)
           {
             var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
@@ -677,7 +703,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        var message = e; 
+        var message = e;
       }
     }
 

@@ -323,14 +323,14 @@ namespace Indicators.Controllers
     /// 
     /// </summary>
     /// <param name="date"></param>
-    /// <param name="idManager"></param>
+    /// <param name="idmanager"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("getmoninitoringqtd/{idmanager}")]
-    public async Task<ViewMoninitoringQtd> GetMoninitoringQtd([FromBody]ViewFilterDate date, string idManager)
+    public async Task<ViewMoninitoringQtd> GetMoninitoringQtd([FromBody]ViewFilterDate date, string idmanager)
     {
-      return await Task.Run(() => service.GetMoninitoringQtd(date, idManager));
+      return await Task.Run(() => service.GetMoninitoringQtd(date, idmanager));
     }
 
     /// <summary>
@@ -365,14 +365,14 @@ namespace Indicators.Controllers
     /// 
     /// </summary>
     /// <param name="date"></param>
-    /// <param name="idManager"></param>
+    /// <param name="idmanager"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("getlistplanqtd/{idmanager}")]
-    public async Task<ViewListPlanQtd> GetListPlanQtd([FromBody]ViewFilterDate date, string idManager)
+    public async Task<ViewListPlanQtd> GetListPlanQtd([FromBody]ViewFilterDate date, string idmanager)
     {
-      return await Task.Run(() => service.GetListPlanQtd(date, idManager));
+      return await Task.Run(() => service.GetListPlanQtd(date, idmanager));
     }
 
   }
