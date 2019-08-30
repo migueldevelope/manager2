@@ -94,7 +94,7 @@ namespace Manager.Core.Business
         _id = _id,
         Document = User.Document,
         Name = User.Name,
-        Cbo = Occupation.Cbo
+        Cbo = Occupation?.Cbo
       };
     }
     public ViewListPersonPlan GetViewListManager()
