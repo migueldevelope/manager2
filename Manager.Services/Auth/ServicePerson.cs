@@ -843,6 +843,11 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+
+    public List<Person> Load()
+    {
+      return servicePerson.GetAllFreeNewVersion().Result;
+    }
     #endregion
 
   }

@@ -317,9 +317,62 @@ namespace Manager.Services.Specific
       try
       {
         var view = new ViewMoninitoringQtd();
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
-        && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End & p.Person._idManager == idManager).Result;
+        List<Monitoring> monitorings = new List<Monitoring>();
 
+        if (idManager != string.Empty)
+          monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End & p.Person._idManager == idManager).Result;
+        else
+          monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+
+        long comments = 0;
+        long praises = 0;
+        long plans = 0;
+
+        foreach (var moni in monitorings)
+        {
+          if (moni.SkillsCompany != null)
+          {
+            foreach (var item in moni.SkillsCompany)
+            {
+              if (item.Comments != null)
+                comments += item.Comments.Count();
+              if (item.Plans != null)
+                plans += item.Plans.Count();
+              if (item.Praise != null)
+                praises += item.Praise.Count();
+            }
+          }
+          if (moni.Schoolings != null)
+          {
+            foreach (var item in moni.Schoolings)
+            {
+              if (item.Comments != null)
+                comments += item.Comments.Count();
+              if (item.Plans != null)
+                plans += item.Plans.Count();
+              if (item.Praise != null)
+                praises += item.Praise.Count();
+            }
+          }
+          if (moni.Activities != null)
+          {
+            foreach (var item in moni.Activities)
+            {
+              if (item.Comments != null)
+                comments += item.Comments.Count();
+              if (item.Plans != null)
+                plans += item.Plans.Count();
+              if (item.Praise != null)
+                praises += item.Praise.Count();
+            }
+          }
+        }
+
+        view.Comments = comments;
+        view.Praises = praises;
+        view.Plans = plans;
 
         return view;
       }
@@ -334,8 +387,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
-        && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
+        var list = new List<Monitoring>();
+
+        if (idmanager != string.Empty)
+          list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Person._idManager == idmanager).Result.ToList();
+        else
+          list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
+
         var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
         foreach (var item in list)
         {
@@ -374,8 +434,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
-        && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
+        var list = new List<Monitoring>();
+
+        if (idmanager != string.Empty)
+          list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Person._idManager == idmanager).Result.ToList();
+        else
+          list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
+
         var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
         foreach (var item in list)
         {
@@ -420,7 +487,12 @@ namespace Manager.Services.Specific
       try
       {
         var view = new ViewListPlanQtd();
-        var plans = servicePlan.GetAllNewVersion(p => p.Person._idManager == idManager && p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
+        var plans = new List<Plan>();
+
+        if(idManager != string.Empty)
+          plans = servicePlan.GetAllNewVersion(p => p.Person._idManager == idManager && p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
+        else
+          plans = servicePlan.GetAllNewVersion(p => p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
 
         view.Schedules = plans.Count();
         view.Ends = plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();

@@ -2077,6 +2077,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<OnBoarding> Load()
+    {
+      return serviceOnboarding.GetAllFreeNewVersion().Result;
+    }
     #endregion
   }
 }

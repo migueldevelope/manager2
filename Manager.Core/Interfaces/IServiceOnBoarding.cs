@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Core.Business;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
@@ -34,5 +35,6 @@ namespace Manager.Core.Interfaces
     List<ViewExportStatusOnboarding> ExportStatusOnboarding(string idperson);
     List<ViewExportOnboardingComments> ExportOnboardingComments(List<ViewListIdIndicators> persons);
     void MailTest();
+    List<OnBoarding> Load();
   }
 }

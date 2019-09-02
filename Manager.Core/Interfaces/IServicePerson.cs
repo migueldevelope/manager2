@@ -34,5 +34,6 @@ namespace Manager.Core.Interfaces
     Task<List<Person>> GetAllNewVersion(Expression<Func<Person, bool>> filter);
     BaseFields UpdateManager(string _idPerson, string _idManager, string _idManagerOld);
     List<ViewListIdIndicators> GetFilterPersons(string idmanager);
+    List<Person> Load();
   }
 }

@@ -327,8 +327,8 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("getmoninitoringqtd/{idmanager}")]
-    public async Task<ViewMoninitoringQtd> GetMoninitoringQtd([FromBody]ViewFilterDate date, string idmanager)
+    [Route("getmoninitoringqtd")]
+    public async Task<ViewMoninitoringQtd> GetMoninitoringQtd([FromBody]ViewFilterDate date, string idmanager = "")
     {
       return await Task.Run(() => service.GetMoninitoringQtd(date, idmanager));
     }
@@ -341,8 +341,8 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("listtagscloudcompanyperiod/{idmanager}")]
-    public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPeriod([FromBody]ViewFilterDate date, string idmanager)
+    [Route("listtagscloudcompanyperiod")]
+    public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPeriod([FromBody]ViewFilterDate date, string idmanager = "")
     {
       return await Task.Run(() => service.ListTagsCloudCompanyPeriod(date, idmanager));
     }
@@ -355,8 +355,8 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("listtagscloudperiod/{idmanager}")]
-    public async Task<List<ViewTagsCloud>> ListTagsCloudPeriod([FromBody]ViewFilterDate date, string idmanager)
+    [Route("listtagscloudperiod")]
+    public async Task<List<ViewTagsCloud>> ListTagsCloudPeriod([FromBody]ViewFilterDate date, string idmanager = "")
     {
       return await Task.Run(() => service.ListTagsCloudPeriod(date, idmanager));
     }
@@ -369,8 +369,8 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("getlistplanqtd/{idmanager}")]
-    public async Task<ViewListPlanQtd> GetListPlanQtd([FromBody]ViewFilterDate date, string idmanager)
+    [Route("getlistplanqtd")]
+    public async Task<ViewListPlanQtd> GetListPlanQtd([FromBody]ViewFilterDate date, string idmanager = "")
     {
       return await Task.Run(() => service.GetListPlanQtd(date, idmanager));
     }

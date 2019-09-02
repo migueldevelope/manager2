@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Services.Commons;
@@ -65,9 +66,33 @@ namespace Manager.Controllers
       //serviceMonitoring.GetListExclud(ref total, "", 1, 1);
       //serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
       //servicePerson.ListCompany(ref total, "", 1, 1);
-      CallAPIColdStart();
+      //CallAPIColdStart();
       return new string[] { "version", "0.000000036" };
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Route("onboarding/load")]
+    [HttpGet]
+    public List<OnBoarding> OnboardingLoad()
+    {
+      return serviceOnBoarding.Load();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Route("person/load")]
+    [HttpGet]
+    public List<Person> PersonLoad()
+    {
+      return servicePerson.Load();
+    }
+
+
 
     private void CallAPIColdStart()
     {
@@ -119,6 +144,7 @@ namespace Manager.Controllers
       serviceOnBoarding.MailTest();
       return new string[] { "test", "0.000000035" };
     }
+
 
   }
 }

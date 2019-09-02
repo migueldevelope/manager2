@@ -317,6 +317,27 @@ namespace Manager.Services.Auth
     #endregion
 
     #region private
+    public void GetMaristasAsyncTest(string login, string password)
+    {
+      try
+      {
+        using (var client = new HttpClient())
+        {
+          client.BaseAddress = new Uri("http://localhost:59500/");
+          var content = new StringContent("login=" + login + "&senha=" + password);
+          content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
+          client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
+          HttpResponseMessage result = client.PostAsync("validationapi/test", content).Result;
+          if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            throw new Exception("User/Password invalid!");
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private void GetMaristasAsync(string login, string password)
     {
       try

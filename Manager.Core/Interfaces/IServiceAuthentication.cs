@@ -8,6 +8,7 @@ namespace Manager.Core.Interfaces
   {
     ViewPerson Authentication(ViewAuthentication userLogin);
     string AlterContract(string idperson);
+    void GetMaristasAsyncTest(string login, string password);
     //void GetUnimedAsync(string login, string passwordClient);
   }
 }
