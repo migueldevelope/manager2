@@ -35,7 +35,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Schooling> serviceSchooling;
     private ServiceGeneric<OnBoarding> serviceOnboarding;
     private ServiceGeneric<Monitoring> serviceMonitoring;
-    private ServiceAutoManager serviceAutoManager;
+    private IServiceAutoManager serviceAutoManager;
     private ServiceGeneric<Checkpoint> serviceCheckpoint;
     private ServiceGeneric<User> serviceUser;
     private readonly IQueueClient queueClient;
@@ -43,7 +43,7 @@ namespace Manager.Services.Auth
     private readonly string pathSignalr;
 
     #region Constructor
-    public ServicePerson(DataContext context, DataContext contextLog, IServiceControlQueue seviceControlQueue, string _pathSignalr) : base(context)
+    public ServicePerson(DataContext context, DataContext contextLog, IServiceAutoManager _serviceAutoManager, IServiceControlQueue seviceControlQueue, string _pathSignalr) : base(context)
     {
       try
       {
@@ -61,7 +61,7 @@ namespace Manager.Services.Auth
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
-        serviceAutoManager = new ServiceAutoManager(context, contextLog, seviceControlQueue, this, _pathSignalr);
+        serviceAutoManager = _serviceAutoManager;
         pathSignalr = _pathSignalr;
       }
       catch (Exception e)
@@ -103,8 +103,7 @@ namespace Manager.Services.Auth
       serviceUser._user = user;
       serviceOnboarding._user = user;
       serviceMonitoring._user = user;
-      serviceAutoManager._user = user;
-      serviceAutoManager._user = user;
+      serviceAutoManager.SetUser(user);
       serviceCheckpoint._user = user;
       DefaultTypeRegisterPerson();
     }

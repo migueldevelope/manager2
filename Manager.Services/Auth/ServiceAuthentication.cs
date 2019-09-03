@@ -42,11 +42,11 @@ namespace Manager.Services.Auth
         serviceTermsOfService = new ServiceTermsOfService(context);
         serviceAccount = new ServiceGeneric<Account>(context);
         serviceLog = new ServiceLog(context, contextLog);
-        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
+        servicePerson = new ServicePerson(context,  contextLog, null, serviceControlQueue, _pathSignalr);
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
-        serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
+        serviceIPerson = new ServicePerson(context, contextLog, null, serviceControlQueue, _pathSignalr);
         pathSignalr = _pathSignalr;
       }
       catch (Exception e)

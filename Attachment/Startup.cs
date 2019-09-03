@@ -60,7 +60,7 @@ namespace Attachment
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, null, serviceControlQueue, conn.SignalRService);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson, conn.TokenServer);

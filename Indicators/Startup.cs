@@ -72,7 +72,7 @@ namespace Indicators
 
 
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, null, serviceControlQueue, conn.SignalRService);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer,servicePerson);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);

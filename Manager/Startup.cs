@@ -51,45 +51,6 @@ namespace Manager
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
 
-    private void CallAPIColdStart(IServiceAuthentication serviceAuthentication, string link)
-    {
-      try
-      {
-        System.Threading.Thread.Sleep(20000);
-        var user = new ViewAuthentication()
-        {
-          Mail = "suporte@jmsoft.com.br",
-          Password = "x14r53p5!a"
-        };
-        var body = new ViewListIdIndicators
-        {
-          DateAdm = null,
-          Name = "Test",
-          OccupationName = "Test",
-          TypeJourney = EnumTypeJourney.OnBoarding,
-          _id = "5d52b89acf99e80001cae10c"
-        };
-        var list = new List<ViewListIdIndicators>();
-        list.Add(body);
-
-        string token = serviceAuthentication.Authentication(user).Token;
-        using (var client = new HttpClient())
-        {
-          var json = JsonConvert.SerializeObject(list);
-          var content = new StringContent(json, Encoding.UTF8, "application/json");
-          client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5200/");
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-          var resultMail = client.PostAsync("onboarding/v2/list", content).Result;
-          resultMail = client.PostAsync("monitoring/v2/list", content).Result;
-          resultMail = client.PostAsync("checkpotin/v2/listwaitmanager", content).Result;
-        }
-      }
-      catch (Exception e)
-      {
-        var message = e;
-      }
-    }
-
     /// <summary>
     /// Registrador de serviços
     /// </summary>
@@ -118,10 +79,12 @@ namespace Manager
 
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
+      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, null, conn.TokenServer);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceAutoManager,  serviceControlQueue, conn.SignalRService);
+      serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson, conn.TokenServer);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson, conn.TokenServer);
+      
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);

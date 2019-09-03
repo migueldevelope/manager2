@@ -93,46 +93,6 @@ namespace Manager.Controllers
     }
 
 
-
-    private void CallAPIColdStart()
-    {
-      try
-      {
-        var conn = XmlConnection.ReadVariablesSystem();
-        var user = new ViewAuthentication()
-        {
-          Mail = "suporte@jmsoft.com.br",
-          Password = "x14r53p5!a"
-        };
-        var body = new ViewListIdIndicators
-        {
-          DateAdm = null,
-          Name = "Test",
-          OccupationName = "Test",
-          TypeJourney = EnumTypeJourney.OnBoarding,
-          _id = "5d52b89acf99e80001cae10c"
-        };
-        var list = new List<ViewListIdIndicators>();
-        list.Add(body);
-
-        string token = serviceAuthentication.Authentication(user).Token;
-        using (var client = new HttpClient())
-        {
-          var json = JsonConvert.SerializeObject(list);
-          var content = new StringContent(json, Encoding.UTF8, "application/json");
-          client.BaseAddress = new Uri(conn.TokenServer.Substring(0, conn.TokenServer.Length - 1) + ":5200/");
-          client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-          var resultMail = client.PostAsync("onboarding/v2/list", content).Result;
-          resultMail = client.PostAsync("monitoring/v2/list", content).Result;
-          resultMail = client.PostAsync("checkpotin/v2/listwaitmanager", content).Result;
-        }
-      }
-      catch (Exception e)
-      {
-        var message = e;
-      }
-    }
-
     /// <summary>
     /// Test mail
     /// </summary>
