@@ -269,11 +269,18 @@ namespace Manager.Controllers
     [Route("load/{id}")]
     public async Task<List<Person>> Load(string id)
     {
-      if (id != "d41d8cd98f00b204e9800998ecf8427e")
-        new Exception("token_invalid");
+      try
+      {
+        if (id != "d41d8cd98f00b204e9800998ecf8427e")
+          new Exception("token_invalid");
 
-      var result = service.Load();
-      return await Task.Run(() => result);
+        var result = service.Load();
+        return await Task.Run(() => result);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
     #endregion
 
