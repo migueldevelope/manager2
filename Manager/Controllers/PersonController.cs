@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -254,6 +256,23 @@ namespace Manager.Controllers
       long total = 0;
       var result = service.ListManager(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+
+  
+    /// <summary>
+    /// Workload Power BI
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("load/{if}")]
+    public async Task<List<Person>> Load(string id)
+    {
+      if (id != "d41d8cd98f00b204e9800998ecf8427e")
+        new HttpRequestException("token_invalid");
+
+      var result = service.Load();
       return await Task.Run(() => result);
     }
     #endregion
