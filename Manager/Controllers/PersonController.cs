@@ -266,7 +266,7 @@ namespace Manager.Controllers
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [Route("load/{if}")]
+    [Route("load/{id}")]
     public async Task<List<Person>> Load(string id)
     {
       if (id != "d41d8cd98f00b204e9800998ecf8427e")
