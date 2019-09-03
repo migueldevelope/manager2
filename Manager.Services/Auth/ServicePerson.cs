@@ -32,6 +32,9 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Person> servicePerson;
     private ServiceGeneric<SalaryScale> serviceSalaryScale;
     private ServiceGeneric<Schooling> serviceSchooling;
+    private ServiceGeneric<OnBoarding> serviceOnboarding;
+    private ServiceGeneric<Monitoring> serviceMonitoring;
+    private ServiceGeneric<Checkpoint> serviceCheckpoint;
     private ServiceGeneric<User> serviceUser;
     private readonly IQueueClient queueClient;
     private HubConnection hubConnection;
@@ -53,6 +56,9 @@ namespace Manager.Services.Auth
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSchooling = new ServiceGeneric<Schooling>(context);
         serviceUser = new ServiceGeneric<User>(context);
+        serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
+        serviceMonitoring = new ServiceGeneric<Monitoring>(context);
+        serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
         pathSignalr = _pathSignalr;
       }
       catch (Exception e)
@@ -73,6 +79,9 @@ namespace Manager.Services.Auth
       serviceSalaryScale._user = _user;
       serviceSchooling._user = _user;
       serviceUser._user = _user;
+      serviceOnboarding._user = _user;
+      serviceMonitoring._user = _user;
+      serviceCheckpoint._user = _user;
       DefaultTypeRegisterPerson();
     }
     public void SetUser(BaseUser user)
@@ -88,6 +97,9 @@ namespace Manager.Services.Auth
       serviceSalaryScale._user = user;
       serviceSchooling._user = user;
       serviceUser._user = user;
+      serviceOnboarding._user = user;
+      serviceMonitoring._user = user;
+      serviceCheckpoint._user = user;
       DefaultTypeRegisterPerson();
     }
     #endregion
@@ -786,6 +798,104 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+    #endregion
+
+    #region journey
+    public ViewListJourney ListJourney(string idmanager, string filter, int count, int page)
+    {
+      try
+      {
+        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
+                                             (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
+                                             p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
+
+        List<ViewListOnBoarding> listOnBoarding = new List<ViewListOnBoarding>();
+        List<ViewListMonitoring> listMonitoring = new List<ViewListMonitoring>();
+        List<ViewListCheckpoint> listCheckpoint = new List<ViewListCheckpoint>();
+
+        foreach (var item in list)
+        {
+          if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
+          {
+            var onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+            var view = new ViewListOnBoarding()
+            {
+              Name = item.User?.Name,
+              OccupationName = item.Occupation?.Name,
+              _idPerson = item._id,
+              StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
+            };
+            if (onboarding != null)
+            {
+              view._id = onboarding._id;
+              view.StatusOnBoarding = onboarding.StatusOnBoarding;
+            }
+            listOnBoarding.Add(view);
+          }
+          else if (item.TypeJourney == EnumTypeJourney.Monitoring)
+          {
+            var monitoring = serviceMonitoring.GetNewVersion(x => x.Person._id == item._id && x.StatusMonitoring != EnumStatusMonitoring.End).Result;
+            var view = new ViewListMonitoring()
+            {
+              Name = item.User?.Name,
+              OccupationName = item.Occupation?.Name,
+              idPerson = item._id,
+              StatusMonitoring = EnumStatusMonitoring.Open
+            };
+            if (monitoring != null)
+            {
+              view._id = monitoring._id;
+              view.StatusMonitoring = monitoring.StatusMonitoring;
+            }
+            listMonitoring.Add(view);
+          }
+          else if (item.TypeJourney == EnumTypeJourney.Checkpoint)
+          {
+            var checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._id && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+            var view = new ViewListCheckpoint()
+            {
+              Name = item.User?.Name,
+              OccupationName = item.Occupation?.Name,
+              _idPerson = item._id,
+              StatusCheckpoint = EnumStatusCheckpoint.Open
+            };
+            if (checkpoint != null)
+            {
+              view._id = checkpoint._id;
+              view.StatusCheckpoint = checkpoint.StatusCheckpoint;
+            }
+            listCheckpoint.Add(view);
+          }
+
+
+        }
+
+
+        var totalOnboarding = servicePerson.CountNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
+                                             (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
+                                             p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var totalMonitoring = servicePerson.CountNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
+                                             (p.TypeJourney == EnumTypeJourney.Monitoring) &&
+                                             p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var totalCheckpoint = servicePerson.CountNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
+                                             (p.TypeJourney == EnumTypeJourney.Checkpoint) &&
+                                             p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        var result = new ViewListJourney();
+        result.listOnBoarding = listOnBoarding;
+        result.listMonitoring = listMonitoring;
+        result.listCheckpoint = listCheckpoint;
+        result.totalOnBoarding = totalOnboarding;
+        result.totalMonitoring = totalMonitoring;
+        result.totalCheckpoint = totalCheckpoint;
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region Private

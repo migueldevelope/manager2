@@ -35,5 +35,6 @@ namespace Manager.Core.Interfaces
     BaseFields UpdateManager(string _idPerson, string _idManager, string _idManagerOld);
     List<ViewListIdIndicators> GetFilterPersons(string idmanager);
     List<Person> Load();
+    ViewListJourney ListJourney(string idmanager, string filter, int count, int page);
   }
 }
