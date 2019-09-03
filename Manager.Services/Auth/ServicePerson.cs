@@ -805,7 +805,8 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
+        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        int skip = (count * (page - 1));
 
         List<ViewListOnBoarding> listOnBoarding = new List<ViewListOnBoarding>();
         List<ViewListMonitoring> listMonitoring = new List<ViewListMonitoring>();
@@ -816,7 +817,7 @@ namespace Manager.Services.Auth
           if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
           {
             var onboarding = serviceOnboarding.GetNewVersion(x => x.Person._id == item._id && x.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
-            var view = new ViewListOnBoarding()
+            var viewOnboarding = new ViewListOnBoarding()
             {
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
@@ -825,15 +826,15 @@ namespace Manager.Services.Auth
             };
             if (onboarding != null)
             {
-              view._id = onboarding._id;
-              view.StatusOnBoarding = onboarding.StatusOnBoarding;
+              viewOnboarding._id = onboarding._id;
+              viewOnboarding.StatusOnBoarding = onboarding.StatusOnBoarding;
             }
-            listOnBoarding.Add(view);
+            listOnBoarding.Add(viewOnboarding);
           }
           else if (item.TypeJourney == EnumTypeJourney.Monitoring)
           {
             var monitoring = serviceMonitoring.GetNewVersion(x => x.Person._id == item._id && x.StatusMonitoring != EnumStatusMonitoring.End).Result;
-            var view = new ViewListMonitoring()
+            var viewMonitoring = new ViewListMonitoring()
             {
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
@@ -842,15 +843,15 @@ namespace Manager.Services.Auth
             };
             if (monitoring != null)
             {
-              view._id = monitoring._id;
-              view.StatusMonitoring = monitoring.StatusMonitoring;
+              viewMonitoring._id = monitoring._id;
+              viewMonitoring.StatusMonitoring = monitoring.StatusMonitoring;
             }
-            listMonitoring.Add(view);
+            listMonitoring.Add(viewMonitoring);
           }
           else if (item.TypeJourney == EnumTypeJourney.Checkpoint)
           {
             var checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._id && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
-            var view = new ViewListCheckpoint()
+            var viewCheckpoint = new ViewListCheckpoint()
             {
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
@@ -859,10 +860,10 @@ namespace Manager.Services.Auth
             };
             if (checkpoint != null)
             {
-              view._id = checkpoint._id;
-              view.StatusCheckpoint = checkpoint.StatusCheckpoint;
+              viewCheckpoint._id = checkpoint._id;
+              viewCheckpoint.StatusCheckpoint = checkpoint.StatusCheckpoint;
             }
-            listCheckpoint.Add(view);
+            listCheckpoint.Add(viewCheckpoint);
           }
 
 
@@ -880,9 +881,9 @@ namespace Manager.Services.Auth
                                              p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         var result = new ViewListJourney();
-        result.listOnBoarding = listOnBoarding;
-        result.listMonitoring = listMonitoring;
-        result.listCheckpoint = listCheckpoint;
+        result.listOnBoarding = listOnBoarding.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        result.listMonitoring = listMonitoring.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        result.listCheckpoint = listCheckpoint.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
         result.totalOnBoarding = totalOnboarding;
         result.totalMonitoring = totalMonitoring;
         result.totalCheckpoint = totalCheckpoint;
