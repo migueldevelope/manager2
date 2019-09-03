@@ -7,6 +7,7 @@ using Manager.Services.Commons;
 using Manager.Services.Specific;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -34,6 +35,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Schooling> serviceSchooling;
     private ServiceGeneric<OnBoarding> serviceOnboarding;
     private ServiceGeneric<Monitoring> serviceMonitoring;
+    private ServiceAutoManager serviceAutoManager;
     private ServiceGeneric<Checkpoint> serviceCheckpoint;
     private ServiceGeneric<User> serviceUser;
     private readonly IQueueClient queueClient;
@@ -59,6 +61,7 @@ namespace Manager.Services.Auth
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
+        serviceAutoManager = new ServiceAutoManager(context, contextLog, seviceControlQueue, this, _pathSignalr);
         pathSignalr = _pathSignalr;
       }
       catch (Exception e)
@@ -82,6 +85,7 @@ namespace Manager.Services.Auth
       serviceOnboarding._user = _user;
       serviceMonitoring._user = _user;
       serviceCheckpoint._user = _user;
+      serviceAutoManager.SetUser(_user);
       DefaultTypeRegisterPerson();
     }
     public void SetUser(BaseUser user)
@@ -99,6 +103,8 @@ namespace Manager.Services.Auth
       serviceUser._user = user;
       serviceOnboarding._user = user;
       serviceMonitoring._user = user;
+      serviceAutoManager._user = user;
+      serviceAutoManager._user = user;
       serviceCheckpoint._user = user;
       DefaultTypeRegisterPerson();
     }
@@ -887,6 +893,47 @@ namespace Manager.Services.Auth
         result.totalOnBoarding = totalOnboarding;
         result.totalMonitoring = totalMonitoring;
         result.totalCheckpoint = totalCheckpoint;
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewListTeam ListTeam_V3(string idmanager, string filter, int count, int page)
+    {
+      try
+      {
+        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        int skip = (count * (page - 1));
+
+        List<ViewListPersonTeam> listTeam = new List<ViewListPersonTeam>();
+
+        foreach (var item in list)
+        {
+          listTeam.Add(new ViewListPersonTeam()
+          {
+            Name  = item.User?.Name,
+            DataAdm = item.User?.DateAdm,
+            Occupation = item.Occupation?.Name,
+            _idPerson = item._id
+          });
+
+        }
+
+
+        var totalTeam = servicePerson.CountNewVersion(p => p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        long totalAutoManager = 0;
+        long totalApproved = 0;
+
+        var result = new ViewListTeam();
+        result.Team = listTeam.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        result.AutoManager = serviceAutoManager.List(idmanager,ref totalAutoManager, count, page, filter);
+        result.Approved = serviceAutoManager.ListApproved(idmanager);
+        result.totalTeam = totalTeam;
+        result.totalAutoManager = totalAutoManager;
+        result.totalApproved = totalApproved;
         return result;
       }
       catch (Exception e)

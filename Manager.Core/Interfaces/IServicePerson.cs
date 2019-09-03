@@ -36,5 +36,6 @@ namespace Manager.Core.Interfaces
     List<ViewListIdIndicators> GetFilterPersons(string idmanager);
     List<Person> Load();
     ViewListJourney ListJourney(string idmanager, string filter, int count, int page);
+    ViewListTeam ListTeam_V3(string idmanager, string filter, int count, int page);
   }
 }

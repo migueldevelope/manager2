@@ -190,6 +190,24 @@ namespace Manager.Controllers
 
     #region Person Auxiliar
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listteam/{idmanager}")]
+    public async Task<ViewListTeam> ListTeam_V3(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      var result = service.ListTeam_V3(idmanager, filter, count, page);
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Lista jornadas
     /// </summary>

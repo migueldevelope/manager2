@@ -18,5 +18,8 @@ namespace Manager.Core.Views
     public List<ViewContract> Contracts { get; set; }
     public bool TermOfService { get; set; }
     public List<ViewListIdIndicators> Team { get; set; }
+    public string ViewLO { get; set; }
+    public string GoalProcess { get; set; }
+    public string MeritocracyProcess { get; set; }
   }
 }

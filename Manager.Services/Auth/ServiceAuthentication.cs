@@ -31,6 +31,7 @@ namespace Manager.Services.Auth
     private readonly ServiceGeneric<Account> serviceAccount;
     private readonly ServiceDictionarySystem serviceDictionarySystem;
     private readonly ServiceTermsOfService serviceTermsOfService;
+    private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly IServicePerson serviceIPerson;
     private readonly string pathSignalr;
     #region Constructor
@@ -44,6 +45,7 @@ namespace Manager.Services.Auth
         servicePerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
+        serviceParameter = new ServiceGeneric<Parameter>(context);
         serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
         pathSignalr = _pathSignalr;
       }
@@ -226,8 +228,13 @@ namespace Manager.Services.Auth
             person.Team = serviceIPerson.GetFilterPersons(perT.IdPerson);
           }
         }
-          
+        var param1 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "viewlo").Result.Content;
+        var param2 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "goalProcess").Result.Content;
+        var param3 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result.Content;
 
+        person.ViewLO = param1;
+        person.GoalProcess = param2;
+        person.MeritocracyProcess = param3;
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
         // Token
