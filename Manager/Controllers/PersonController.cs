@@ -187,6 +187,24 @@ namespace Manager.Controllers
     #endregion
 
     #region Person Auxiliar
+
+    /// <summary>
+    /// Lista jornadas
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listjourney/{idmanager}")]
+    public async Task<ViewListJourney> ListJourney(string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      var result = service.ListJourney(idmanager,filter,count,page);
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Listar os cargos para manutenção da pessoa
     /// </summary>
