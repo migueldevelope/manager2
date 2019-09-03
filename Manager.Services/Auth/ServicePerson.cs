@@ -805,9 +805,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
-                                             (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
-                                             p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
+        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
 
         List<ViewListOnBoarding> listOnBoarding = new List<ViewListOnBoarding>();
         List<ViewListMonitoring> listMonitoring = new List<ViewListMonitoring>();
