@@ -341,7 +341,7 @@ namespace Manager.Services.Specific
               if (item.Plans != null)
                 plans += item.Plans.Count();
               if (item.Praise != null)
-                praises += item.Praise.Count();
+                praises += 1;
             }
           }
           if (moni.Schoolings != null)
@@ -353,7 +353,7 @@ namespace Manager.Services.Specific
               if (item.Plans != null)
                 plans += item.Plans.Count();
               if (item.Praise != null)
-                praises += item.Praise.Count();
+                praises += 1;
             }
           }
           if (moni.Activities != null)
@@ -365,7 +365,7 @@ namespace Manager.Services.Specific
               if (item.Plans != null)
                 plans += item.Plans.Count();
               if (item.Praise != null)
-                praises += item.Praise.Count();
+                praises += 1;
             }
           }
         }
@@ -494,6 +494,7 @@ namespace Manager.Services.Specific
         else
           plans = servicePlan.GetAllNewVersion(p => p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
 
+        
         view.Schedules = plans.Count();
         view.Ends = plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
         view.Lates = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
