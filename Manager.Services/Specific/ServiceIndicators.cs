@@ -74,6 +74,7 @@ namespace Manager.Services.Specific
       servicePerson._user = _user;
       serviceOnboarding._user = _user;
       serviceMonitoring._user = _user;
+      servicePlan._user = _user;
       serviceLog._user = _user;
       serviceMailModel._user = _user;
       serviceWorkflow._user = _user;
@@ -397,12 +398,12 @@ namespace Manager.Services.Specific
             && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
 
         //var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
-        foreach (var item in list)
-        {
-          //if (persons.Where(p => p == item.Person?._id).Count() == 0)
-            list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
-        }
-        list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
+        //foreach (var item in list)
+        //{
+        //  //if (persons.Where(p => p == item.Person?._id).Count() == 0)
+        //    list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
+        //}
+        //list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
@@ -444,12 +445,12 @@ namespace Manager.Services.Specific
             && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
 
         //var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
-        foreach (var item in list)
-        {
-          //if (persons.Where(p => p == item.Person?._id).Count() == 0)
-          list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
-        }
-        list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
+        //foreach (var item in list)
+        //{
+        //  //if (persons.Where(p => p == item.Person?._id).Count() == 0)
+        //  list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
+        //}
+        //list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
 
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
@@ -488,13 +489,13 @@ namespace Manager.Services.Specific
       {
         var view = new ViewListPlanQtd();
         var plans = new List<Plan>();
+        
 
         if (idManager != string.Empty)
           plans = servicePlan.GetAllNewVersion(p => p.Person._idManager == idManager && p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
         else
           plans = servicePlan.GetAllNewVersion(p => p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
 
-        
         view.Schedules = plans.Count();
         view.Ends = plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
         view.Lates = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
