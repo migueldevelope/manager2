@@ -290,10 +290,12 @@ namespace Manager.Controllers
       try
       {
         if (id != "d41d8cd98f00b204e9800998ecf8427e")
-          new Exception("token_invalid");
-
-        var result = service.Load();
-        return await Task.Run(() => result);
+          return null;// new Exception("token_invalid");
+        else
+        {
+          var result = service.Load();
+          return await Task.Run(() => result);
+        }
       }
       catch (Exception e)
       {

@@ -63,7 +63,8 @@ namespace Manager.Services.Specific
       serviceMailLog._user = _user;
       serviceMailMessage._user = _user;
       serviceMailModel.SetUser(_user);
-      servicePerson.SetUser(_user);
+      if (servicePerson != null)
+        servicePerson.SetUser(_user);
       serviceWorkflow.SetUser(_user);
     }
     public void SetUser(BaseUser user)
@@ -73,7 +74,8 @@ namespace Manager.Services.Specific
       serviceMailLog._user = user;
       serviceMailMessage._user = user;
       serviceMailModel.SetUser(user);
-      servicePerson.SetUser(user);
+      if(servicePerson != null)
+        servicePerson.SetUser(user);
       serviceWorkflow.SetUser(user);
     }
     #endregion
