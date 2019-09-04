@@ -1426,50 +1426,51 @@ namespace Manager.Services.Specific
 
             foreach (var item in monitoring.Schoolings)
             {
+              view = new ViewExportMonitoringComments();
+              view.NameManager = monitoring.Person.Manager;
+              view.NamePerson = monitoring.Person.Name;
+              view.NameItem = item.Schooling.Name;
               if (item.Comments != null)
                 foreach (var comm in item.Comments)
                 {
-                  view = new ViewExportMonitoringComments();
-                  view.NameManager = monitoring.Person.Manager;
-                  view.NamePerson = monitoring.Person.Name;
-                  view.NameItem = item.Schooling.Name;
                   view.Date = comm.Date;
-                  view.Praise = item.Praise;
                   view.Comments = comm.Comments;
-                  result.Add(view);
                 }
+              view.Praise = item.Praise;
+              result.Add(view);
             }
 
             foreach (var item in monitoring.Activities)
             {
+
+              view = new ViewExportMonitoringComments();
+              view.NameManager = monitoring.Person.Manager;
+              view.NamePerson = monitoring.Person.Name;
+              view.NameItem = item.Activities.Name;
               if (item.Comments != null)
                 foreach (var comm in item.Comments)
                 {
-                  view = new ViewExportMonitoringComments();
-                  view.NameManager = monitoring.Person.Manager;
-                  view.NamePerson = monitoring.Person.Name;
-                  view.NameItem = item.Activities.Name;
                   view.Date = comm.Date;
-                  view.Praise = item.Praise;
                   view.Comments = comm.Comments;
-                  result.Add(view);
                 }
+              view.Praise = item.Praise;
+              result.Add(view);
             }
 
             foreach (var item in monitoring.SkillsCompany)
             {
+              view = new ViewExportMonitoringComments();
+              view.NameManager = monitoring.Person.Manager;
+              view.NamePerson = monitoring.Person.Name;
+              view.NameItem = item.Skill.Name;
               if (item.Comments != null)
                 foreach (var comm in item.Comments)
                 {
-                  view = new ViewExportMonitoringComments();
-                  view.NameManager = monitoring.Person.Manager;
-                  view.NamePerson = monitoring.Person.Name;
-                  view.NameItem = item.Skill.Name;
                   view.Date = comm.Date;
-                  view.Praise = item.Praise;
                   view.Comments = comm.Comments;
-                  result.Add(view);
                 }
+              view.Praise = item.Praise;
+              result.Add(view);
             }
 
 
