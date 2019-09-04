@@ -1244,7 +1244,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+        && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
 
         List<dynamic> result = new List<dynamic>();
 
