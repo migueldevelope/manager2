@@ -85,11 +85,24 @@ namespace Manager.Controllers
     /// 
     /// </summary>
     /// <returns></returns>
-    [Route("person/load")]
+    [Route("person/load/{id}")]
     [HttpGet]
-    public List<Person> PersonLoad()
+    public List<Person> PersonLoad(string id)
     {
-      return servicePerson.Load();
+      try
+      {
+        if (id != "d41d8cd98f00b204e9800998ecf8427e")
+          return null;// new Exception("token_invalid");
+        else
+        {
+          var result = servicePerson.Load();
+          return result;
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
 
 
