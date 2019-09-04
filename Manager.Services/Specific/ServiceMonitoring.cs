@@ -1436,8 +1436,10 @@ namespace Manager.Services.Specific
                   view.Date = comm.Date;
                   view.Comments = comm.Comments;
                 }
+
               view.Praise = item.Praise;
-              result.Add(view);
+              if ((view.Praise != null) || (item.Comments != null))
+                result.Add(view);
             }
 
             foreach (var item in monitoring.Activities)
@@ -1454,7 +1456,8 @@ namespace Manager.Services.Specific
                   view.Comments = comm.Comments;
                 }
               view.Praise = item.Praise;
-              result.Add(view);
+              if ((view.Praise != null) || (item.Comments != null))
+                result.Add(view);
             }
 
             foreach (var item in monitoring.SkillsCompany)
@@ -1470,10 +1473,9 @@ namespace Manager.Services.Specific
                   view.Comments = comm.Comments;
                 }
               view.Praise = item.Praise;
-              result.Add(view);
+              if ((view.Praise != null) || (item.Comments != null))
+                result.Add(view);
             }
-
-
           }
         }
         return result;
