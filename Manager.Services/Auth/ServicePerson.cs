@@ -41,13 +41,14 @@ namespace Manager.Services.Auth
     private readonly IQueueClient queueClient;
     private HubConnection hubConnection;
     private readonly string pathSignalr;
+    IServiceControlQueue seviceControlQueue;
 
     #region Constructor
-    public ServicePerson(DataContext context, DataContext contextLog, IServiceAutoManager _serviceAutoManager, IServiceControlQueue seviceControlQueue, string _pathSignalr) : base(context)
+    public ServicePerson(DataContext context, DataContext contextLog, IServiceControlQueue _seviceControlQueue, string _pathSignalr) : base(context)
     {
       try
       {
-        queueClient = new QueueClient(seviceControlQueue.ServiceBusConnectionString(), "structmanager");
+        queueClient = new QueueClient(_seviceControlQueue.ServiceBusConnectionString(), "structmanager");
         serviceAttachment = new ServiceGeneric<Attachments>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceEstablishment = new ServiceGeneric<Establishment>(context);
@@ -61,7 +62,7 @@ namespace Manager.Services.Auth
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
-        serviceAutoManager = _serviceAutoManager;
+        seviceControlQueue = _seviceControlQueue;
         pathSignalr = _pathSignalr;
       }
       catch (Exception e)
@@ -906,6 +907,8 @@ namespace Manager.Services.Auth
     {
       try
       {
+        serviceAutoManager = new ServiceAutoManager(this._context, this._context, seviceControlQueue, this, pathSignalr);
+
         var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = (count * (page - 1));
 

@@ -25,7 +25,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        servicePerson = new ServicePerson(context, contextLog, null, serviceControlQueue, pathSignalr);
+        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue, pathSignalr);
         serviceWorkflow = new ServiceGeneric<Workflow>(context);
       }
       catch (Exception e)
