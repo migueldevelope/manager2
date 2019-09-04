@@ -1434,6 +1434,7 @@ namespace Manager.Services.Specific
                   view.NamePerson = monitoring.Person.Name;
                   view.NameItem = item.Schooling.Name;
                   view.Date = comm.Date;
+                  view.Praise = item.Praise;
                   view.Comments = comm.Comments;
                   result.Add(view);
                 }

@@ -1893,7 +1893,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
 
         var list = new List<ViewExportStatusPlan>();
         foreach (var item in persons)
@@ -1901,18 +1901,22 @@ namespace Manager.Services.Specific
           var result = servicePlan.GetAllNewVersion(p => p.Person._id == item._id).Result;
           foreach (var p in result)
           {
-            list.Add(new ViewExportStatusPlan()
+            var count = monitorings.Where(x => x._id == p._idMonitoring).Count();
+            if(count > 0)
             {
-              NameManager = p.Person.NameManager ?? "Sem Gestor",
-              NamePerson = p.Person.Name,
-              What = p.Name,
-              Description = p.Description,
-              Deadline = p.Deadline,
-              Status = p.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
+              list.Add(new ViewExportStatusPlan()
+              {
+                NameManager = p.Person.NameManager ?? "Sem Gestor",
+                NamePerson = p.Person.Name,
+                What = p.Name,
+                Description = p.Description,
+                Deadline = p.Deadline,
+                Status = p.StatusPlan == EnumStatusPlan.Realized ? "Realizado" :
                         p.StatusPlan == EnumStatusPlan.NoRealized ? "Não Realizado" : "Em aberto",
-              Obs = p.TextEnd,
-              DateEnd = p.DateEnd
-            });
+                Obs = p.TextEnd,
+                DateEnd = p.DateEnd
+              });
+            }
           }
 
         };
