@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Manager.Controllers
@@ -28,7 +29,6 @@ namespace Manager.Controllers
     #endregion
 
     #region Authentication
-
     /// <summary>
     /// Autenticação de usuário
     /// </summary>
@@ -36,37 +36,19 @@ namespace Manager.Controllers
     /// <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
     [AllowAnonymous]
     [HttpPost]
+    [ProducesResponseType(typeof(ViewPerson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ObjectResult> PostNewAuthentication([FromBody]ViewAuthentication userLogin)
     {
       try
       {
         return await Task.Run(() =>Ok(service.Authentication(userLogin)));
-        //test
-        //return await Task.Run(() =>Ok(new { id = "1" });
       }
       catch (Exception e)
       {
         return await Task.Run(() =>BadRequest(e.Message));
       }
     }
-
-    //[AllowAnonymous]
-    //[HttpGet]
-    //[Route("unimed")]
-    //public  string unimed()
-    //{
-    //  try
-    //  {
-    //    service.GetUnimedAsync("testeinfra", "unimed");
-    //    return "";
-    //  }
-    //  catch (Exception e)
-    //  {
-    //    throw e;
-    //  }
-    //}
-
-
     /// <summary>
     /// 
     /// </summary>
@@ -75,11 +57,19 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("altercontract/{idperson}")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<string> AlterContract(string idperson)
     {
-      return await Task.Run(() =>service.AlterContract(idperson));
+      try
+      {
+        return await Task.Run(() => service.AlterContract(idperson));
+      }
+      catch (Exception e)
+      {
+        return await Task.Run(() => e.Message);
+      }
     }
-
     #endregion
 
   }
