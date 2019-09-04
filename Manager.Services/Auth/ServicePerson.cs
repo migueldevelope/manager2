@@ -85,7 +85,8 @@ namespace Manager.Services.Auth
       serviceOnboarding._user = _user;
       serviceMonitoring._user = _user;
       serviceCheckpoint._user = _user;
-      serviceAutoManager.SetUser(_user);
+      if (serviceAutoManager != null)
+        serviceAutoManager.SetUser(_user);
       DefaultTypeRegisterPerson();
     }
     public void SetUser(BaseUser user)
@@ -103,7 +104,8 @@ namespace Manager.Services.Auth
       serviceUser._user = user;
       serviceOnboarding._user = user;
       serviceMonitoring._user = user;
-      serviceAutoManager.SetUser(user);
+      if (serviceAutoManager != null)
+        serviceAutoManager.SetUser(user);
       serviceCheckpoint._user = user;
       DefaultTypeRegisterPerson();
     }
@@ -913,7 +915,7 @@ namespace Manager.Services.Auth
         {
           listTeam.Add(new ViewListPersonTeam()
           {
-            Name  = item.User?.Name,
+            Name = item.User?.Name,
             DataAdm = item.User?.DateAdm,
             Occupation = item.Occupation?.Name,
             _idPerson = item._id
@@ -928,7 +930,7 @@ namespace Manager.Services.Auth
 
         var result = new ViewListTeam();
         result.Team = listTeam.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        result.AutoManager = serviceAutoManager.List(idmanager,ref totalAutoManager, count, page, filter);
+        result.AutoManager = serviceAutoManager.List(idmanager, ref totalAutoManager, count, page, filter);
         result.Approved = serviceAutoManager.ListApproved(idmanager);
         result.totalTeam = totalTeam;
         result.totalAutoManager = totalAutoManager;

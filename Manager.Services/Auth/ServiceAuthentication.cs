@@ -228,9 +228,9 @@ namespace Manager.Services.Auth
             person.Team = serviceIPerson.GetFilterPersons(perT.IdPerson);
           }
         }
-        var param1 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "viewlo").Result.Content;
-        var param2 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "goalProcess").Result.Content;
-        var param3 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result.Content;
+        var param1 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "viewlo").Result?.Content;
+        var param2 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "goalProcess").Result?.Content;
+        var param3 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result?.Content;
 
         person.ViewLO = param1;
         person.GoalProcess = param2;
