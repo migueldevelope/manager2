@@ -505,7 +505,7 @@ namespace Manager.Services.Specific
 
         plans = plans.Where(p => p.Status == EnumStatus.Enabled).ToList();
 
-        view.Schedules = plans.Count(p => p.StatusPlan == EnumStatusPlan.Open);
+        view.Schedules = plans.Count(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline >= DateTime.Now);
         view.Ends = plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
         view.Lates = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
 
