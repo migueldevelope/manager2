@@ -489,14 +489,23 @@ namespace Manager.Services.Specific
       {
         var view = new ViewListPlanQtd();
         var plans = new List<Plan>();
-        
+
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
 
         if (idManager != string.Empty)
           plans = servicePlan.GetAllNewVersion(p => p.Person._idManager == idManager && p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
         else
           plans = servicePlan.GetAllNewVersion(p => p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
 
-        view.Schedules = plans.Count();
+        foreach(var item in plans)
+        {
+          if (monitorings.Where(p => p._id == item._idMonitoring).FirstOrDefault() == null)
+            item.Status = EnumStatus.Disabled;
+        }
+
+        plans = plans.Where(p => p.Status == EnumStatus.Enabled).ToList();
+
+        view.Schedules = plans.Count(p => p.StatusPlan == EnumStatusPlan.Open);
         view.Ends = plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
         view.Lates = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
 
