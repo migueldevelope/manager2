@@ -1438,7 +1438,7 @@ namespace Manager.Services.Specific
                 }
 
               view.Praise = item.Praise;
-              if ((view.Praise?.Count() > 0) || (item.Comments != null))
+              if ((item.Praise != null) || (item.Comments != null))
                 result.Add(view);
             }
 
@@ -1456,7 +1456,7 @@ namespace Manager.Services.Specific
                   view.Comments = comm.Comments;
                 }
               view.Praise = item.Praise;
-              if ((view.Praise?.Count() > 0) || (item.Comments != null))
+              if ((item.Praise != null) || (item.Comments != null))
                 result.Add(view);
             }
 
@@ -1473,7 +1473,7 @@ namespace Manager.Services.Specific
                   view.Comments = comm.Comments;
                 }
               view.Praise = item.Praise;
-              if ((view.Praise?.Count() > 0) || (item.Comments != null))
+              if ((item.Praise != null) || (item.Comments != null))
                 result.Add(view);
             }
           }
