@@ -62,9 +62,6 @@ namespace Indicators
 
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
-      //new MigrationHandle(_context._db).Migrate();
-
-
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);

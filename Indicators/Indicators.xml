@@ -213,6 +213,12 @@
             <param name="idmanager"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetAccountEnableds">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Indicators.Controllers.ValuesController">
             <summary>
             
