@@ -189,7 +189,7 @@ namespace Manager
       ));
       services.AddMvc();
 
-      services.AddSignalR();
+      //services.AddSignalR();
 
       // Configurando o serviço de documentação do Swagger
       services.AddSwaggerGen(c =>
@@ -231,10 +231,10 @@ namespace Manager
       app.UseMiddleware<ErrorHandlingMiddleware>();
       app.UseCors("AllowAll");
       app.UseMvc();
-      app.UseSignalR(routes =>
-      {
-        routes.MapHub<MessagesHub>("/MessagesHub");
-      });
+      //app.UseSignalR(routes =>
+      //{
+      //  routes.MapHub<MessagesHub>("/MessagesHub");
+      //});
       // Ativando middlewares para uso do Swagger
       app.UseSwagger();
       app.UseSwaggerUI(c =>
