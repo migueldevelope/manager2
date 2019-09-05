@@ -35,7 +35,6 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Schooling> serviceSchooling;
     private ServiceGeneric<OnBoarding> serviceOnboarding;
     private ServiceGeneric<Monitoring> serviceMonitoring;
-    private IServiceAutoManager serviceAutoManager;
     private ServiceGeneric<Checkpoint> serviceCheckpoint;
     private ServiceGeneric<User> serviceUser;
     private readonly IQueueClient queueClient;
@@ -86,8 +85,6 @@ namespace Manager.Services.Auth
       serviceOnboarding._user = _user;
       serviceMonitoring._user = _user;
       serviceCheckpoint._user = _user;
-      if (serviceAutoManager != null)
-        serviceAutoManager.SetUser(_user);
       DefaultTypeRegisterPerson();
     }
     public void SetUser(BaseUser user)
@@ -105,8 +102,6 @@ namespace Manager.Services.Auth
       serviceUser._user = user;
       serviceOnboarding._user = user;
       serviceMonitoring._user = user;
-      if (serviceAutoManager != null)
-        serviceAutoManager.SetUser(user);
       serviceCheckpoint._user = user;
       DefaultTypeRegisterPerson();
     }
@@ -903,11 +898,11 @@ namespace Manager.Services.Auth
       }
     }
 
-    public ViewListTeam ListTeam_V3(string idmanager, string filter, int count, int page)
+    public ViewListTeam ListTeam_V3(string idmanager, IServiceAutoManager serviceAutoManager, string filter, int count, int page)
     {
       try
       {
-        serviceAutoManager = new ServiceAutoManager(this._context, this._context, seviceControlQueue, this, pathSignalr);
+        
 
         var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = (count * (page - 1));

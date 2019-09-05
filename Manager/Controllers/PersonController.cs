@@ -21,19 +21,23 @@ namespace Manager.Controllers
   public class PersonController : DefaultController
   {
     private readonly IServicePerson service;
+    private readonly IServiceAutoManager serviceAutoManager;
 
     #region Constructor
+
     /// <summary>
-    /// Contrutor do controlador
+    /// 
     /// </summary>
-    /// <param name="_service">Serviço da pessoa</param>
-    /// <param name="contextAccessor">Autorização</param>
-    public PersonController(IServicePerson _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
+    /// <param name="_service"></param>
+    /// <param name="_serviceAutoManager"></param>
+    /// <param name="contextAccessor"></param>
+    public PersonController(IServicePerson _service, IServiceAutoManager _serviceAutoManager, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       try
       {
         service = _service;
         service.SetUser(contextAccessor);
+        serviceAutoManager = _serviceAutoManager;
       }
       catch (Exception e)
       {
@@ -195,6 +199,7 @@ namespace Manager.Controllers
     /// 
     /// </summary>
     /// <param name="idmanager"></param>
+    /// <param name="contextAccessor"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
@@ -204,7 +209,7 @@ namespace Manager.Controllers
     [Route("listteam/{idmanager}")]
     public async Task<ViewListTeam> ListTeam_V3(string idmanager, int count = 10, int page = 1, string filter = "")
     {
-      var result = service.ListTeam_V3(idmanager, filter, count, page);
+      var result = service.ListTeam_V3(idmanager, serviceAutoManager, filter, count, page);
       return await Task.Run(() => result);
     }
 
@@ -221,7 +226,7 @@ namespace Manager.Controllers
     [Route("listjourney/{idmanager}")]
     public async Task<ViewListJourney> ListJourney(string idmanager, int count = 10, int page = 1, string filter = "")
     {
-      var result = service.ListJourney(idmanager,filter,count,page);
+      var result = service.ListJourney(idmanager, filter, count, page);
       return await Task.Run(() => result);
     }
 
@@ -278,7 +283,7 @@ namespace Manager.Controllers
     }
 
 
-  
+
     #endregion
 
   }
