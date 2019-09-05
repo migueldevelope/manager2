@@ -50,5 +50,6 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudCompanyPeriod(ViewFilterDate date, string idmanager);
     List<ViewTagsCloud> ListTagsCloudPeriod(ViewFilterDate date, string idmanager);
     ViewListPlanQtd GetListPlanQtd(ViewFilterDate date, string idManager);
+    List<ViewAccountEnableds> GetAccountEnableds();
   }
 }

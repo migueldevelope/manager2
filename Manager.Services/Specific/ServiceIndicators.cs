@@ -489,18 +489,51 @@ namespace Manager.Services.Specific
       {
         var view = new ViewListPlanQtd();
         var plans = new List<Plan>();
-        
+
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
 
         if (idManager != string.Empty)
           plans = servicePlan.GetAllNewVersion(p => p.Person._idManager == idManager && p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
         else
           plans = servicePlan.GetAllNewVersion(p => p.DateInclude >= date.Begin && p.DateInclude <= date.End).Result.ToList();
 
-        view.Schedules = plans.Count();
+        foreach (var item in plans)
+        {
+          if (monitorings.Where(p => p._id == item._idMonitoring).FirstOrDefault() == null)
+            item.Status = EnumStatus.Disabled;
+        }
+
+        plans = plans.Where(p => p.Status == EnumStatus.Enabled).ToList();
+
+        view.Schedules = plans.Count(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline >= DateTime.Now);
         view.Ends = plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
         view.Lates = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
 
         return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public List<ViewAccountEnableds> GetAccountEnableds()
+    {
+      try
+      {
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
+        && p.TypeJourney != EnumTypeJourney.OutOfJourney)
+          .Result.Select(p => new ViewAccountEnableds()
+          {
+            Person = p.User?.Name,
+            DateAdm = p.User?.DateAdm,
+            Mail = p.User?.Mail,
+            Manager = p.Manager?.Name,
+            OccupationName = p.Occupation?.Name,
+            TypeJourney = p.TypeJourney.ToString(),
+            TypeUser = p.TypeUser.ToString(),
+          }).ToList();
+
+        return persons;
       }
       catch (Exception e)
       {
@@ -1108,7 +1141,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+        && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
 
         List<dynamic> result = new List<dynamic>();
 
@@ -1210,7 +1244,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+        && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
 
         List<dynamic> result = new List<dynamic>();
 

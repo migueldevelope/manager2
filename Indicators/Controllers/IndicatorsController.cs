@@ -375,5 +375,17 @@ namespace Indicators.Controllers
       return await Task.Run(() => service.GetListPlanQtd(date, idmanager));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getaccountenableds")]
+    public async Task<List<ViewAccountEnableds>> GetAccountEnableds()
+    {
+      return await Task.Run(() => service.GetAccountEnableds());
+    }
+
   }
 }

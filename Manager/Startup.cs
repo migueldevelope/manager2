@@ -79,9 +79,8 @@ namespace Manager
 
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, null, conn.TokenServer);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceAutoManager,  serviceControlQueue, conn.SignalRService);
-      serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson, conn.TokenServer);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
+      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson, conn.TokenServer);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
       

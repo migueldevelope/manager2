@@ -41,13 +41,14 @@ namespace Manager.Services.Auth
     private readonly IQueueClient queueClient;
     private HubConnection hubConnection;
     private readonly string pathSignalr;
+    IServiceControlQueue seviceControlQueue;
 
     #region Constructor
-    public ServicePerson(DataContext context, DataContext contextLog, IServiceAutoManager _serviceAutoManager, IServiceControlQueue seviceControlQueue, string _pathSignalr) : base(context)
+    public ServicePerson(DataContext context, DataContext contextLog, IServiceControlQueue _seviceControlQueue, string _pathSignalr) : base(context)
     {
       try
       {
-        queueClient = new QueueClient(seviceControlQueue.ServiceBusConnectionString(), "structmanager");
+        queueClient = new QueueClient(_seviceControlQueue.ServiceBusConnectionString(), "structmanager");
         serviceAttachment = new ServiceGeneric<Attachments>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceEstablishment = new ServiceGeneric<Establishment>(context);
@@ -61,7 +62,7 @@ namespace Manager.Services.Auth
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
-        serviceAutoManager = _serviceAutoManager;
+        seviceControlQueue = _seviceControlQueue;
         pathSignalr = _pathSignalr;
       }
       catch (Exception e)
@@ -85,7 +86,8 @@ namespace Manager.Services.Auth
       serviceOnboarding._user = _user;
       serviceMonitoring._user = _user;
       serviceCheckpoint._user = _user;
-      serviceAutoManager.SetUser(_user);
+      if (serviceAutoManager != null)
+        serviceAutoManager.SetUser(_user);
       DefaultTypeRegisterPerson();
     }
     public void SetUser(BaseUser user)
@@ -103,7 +105,8 @@ namespace Manager.Services.Auth
       serviceUser._user = user;
       serviceOnboarding._user = user;
       serviceMonitoring._user = user;
-      serviceAutoManager.SetUser(user);
+      if (serviceAutoManager != null)
+        serviceAutoManager.SetUser(user);
       serviceCheckpoint._user = user;
       DefaultTypeRegisterPerson();
     }
@@ -904,6 +907,8 @@ namespace Manager.Services.Auth
     {
       try
       {
+        serviceAutoManager = new ServiceAutoManager(this._context, this._context, seviceControlQueue, this, pathSignalr);
+
         var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = (count * (page - 1));
 
@@ -913,7 +918,7 @@ namespace Manager.Services.Auth
         {
           listTeam.Add(new ViewListPersonTeam()
           {
-            Name  = item.User?.Name,
+            Name = item.User?.Name,
             DataAdm = item.User?.DateAdm,
             Occupation = item.Occupation?.Name,
             _idPerson = item._id
@@ -928,7 +933,7 @@ namespace Manager.Services.Auth
 
         var result = new ViewListTeam();
         result.Team = listTeam.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        result.AutoManager = serviceAutoManager.List(idmanager,ref totalAutoManager, count, page, filter);
+        result.AutoManager = serviceAutoManager.List(idmanager, ref totalAutoManager, count, page, filter);
         result.Approved = serviceAutoManager.ListApproved(idmanager);
         result.totalTeam = totalTeam;
         result.totalAutoManager = totalAutoManager;
