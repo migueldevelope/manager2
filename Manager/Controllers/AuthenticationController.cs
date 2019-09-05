@@ -38,7 +38,7 @@ namespace Manager.Controllers
     [HttpPost]
     [ProducesResponseType(typeof(ViewPerson), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<ObjectResult> PostNewAuthentication([FromBody]ViewAuthentication userLogin)
+    public async Task<ObjectResult> Post([FromBody]ViewAuthentication userLogin)
     {
       try
       {

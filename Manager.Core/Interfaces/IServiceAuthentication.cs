@@ -1,6 +1,4 @@
-﻿using Manager.Core.Business;
-using Manager.Core.Views;
-using System.Threading.Tasks;
+﻿using Manager.Core.Views;
 
 namespace Manager.Core.Interfaces
 {
@@ -8,7 +6,7 @@ namespace Manager.Core.Interfaces
   {
     ViewPerson Authentication(ViewAuthentication userLogin);
     string AlterContract(string idperson);
+    // test
     void GetMaristasAsyncTest(string login, string password);
-    //void GetUnimedAsync(string login, string passwordClient);
   }
 }
