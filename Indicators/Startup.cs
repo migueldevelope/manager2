@@ -76,7 +76,6 @@ namespace Indicators
 
       IServiceManager serviceManager = new ServiceManager(_contextStruct, serviceControlQueue, serviceBusConnectionString);
 
-
       serviceManager.UpdateStructManager();
 
       services.AddSingleton(_ => serviceControlQueue);
