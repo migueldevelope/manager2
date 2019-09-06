@@ -577,7 +577,7 @@ namespace Manager.Services.Specific
           }
         }
         total = detail.Count();
-        return detail.Skip(skip).Take(count).Select(p => new ViewListMonitoring()
+        return detail.Select(p => new ViewListMonitoring()
         {
           _id = p._id,
           Name = p.Person.Name,
