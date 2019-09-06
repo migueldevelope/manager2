@@ -42,7 +42,7 @@ namespace Manager.Services.Auth
         serviceTermsOfService = new ServiceTermsOfService(context);
         serviceAccount = new ServiceGeneric<Account>(context);
         serviceLog = new ServiceLog(context, contextLog);
-        servicePerson = new ServicePerson(context,  contextLog, serviceControlQueue, _pathSignalr);
+        servicePerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
@@ -95,7 +95,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        
+
         if (string.IsNullOrEmpty(userLogin.Mail))
           throw new Exception("MSG1");
         if (string.IsNullOrEmpty(userLogin.Password))
@@ -165,10 +165,10 @@ namespace Manager.Services.Auth
         serviceTermsOfService._user = _user;
 
         var date = serviceTermsOfService.GetTerm();
+        var countterm = serviceTermsOfService.GetAllNewVersion().Count();
 
         UserTermOfService term = null;
         UserTermOfService viewDate = null;
-        bool existsterm = true;
 
         if (date != null)
         {
@@ -189,10 +189,8 @@ namespace Manager.Services.Auth
             }
           }
         }
-        else
-          existsterm = false;
-        
-          
+
+
 
 
 
@@ -209,7 +207,7 @@ namespace Manager.Services.Auth
           DictionarySystem = null
         };
 
-        person.ExistsTermOfService = existsterm;
+        person.ExistsTermOfService = countterm == 0 ? false : true;
 
         person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id).Result
           .Select(x => new ViewContract()
@@ -226,12 +224,12 @@ namespace Manager.Services.Auth
           Task.Run(() => LogSave(person.Contracts[0].IdPerson));
         }
 
-        
+
         var per = person?.Contracts;
         if (per.Count() > 0)
         {
           var perT = per.FirstOrDefault();
-          if((perT.TypeUser == EnumTypeUser.Manager) || (perT.TypeUser == EnumTypeUser.ManagerHR))
+          if ((perT.TypeUser == EnumTypeUser.Manager) || (perT.TypeUser == EnumTypeUser.ManagerHR))
           {
             person.Team = serviceIPerson.GetFilterPersons(perT.IdPerson);
           }
