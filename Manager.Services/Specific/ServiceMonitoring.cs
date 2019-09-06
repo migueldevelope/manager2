@@ -1810,7 +1810,6 @@ namespace Manager.Services.Specific
 
     #endregion
 
-
 #pragma warning restore 1998
   }
 }

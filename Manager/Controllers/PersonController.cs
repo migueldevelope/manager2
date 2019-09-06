@@ -199,7 +199,6 @@ namespace Manager.Controllers
     /// 
     /// </summary>
     /// <param name="idmanager"></param>
-    /// <param name="contextAccessor"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
