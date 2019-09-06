@@ -886,9 +886,9 @@ namespace Manager.Services.Auth
                                              p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         var result = new ViewListJourney();
-        result.listOnBoarding = listOnBoarding.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        result.listMonitoring = listMonitoring.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
-        result.listCheckpoint = listCheckpoint.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        result.listOnBoarding = listOnBoarding.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        result.listMonitoring = listMonitoring.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        result.listCheckpoint = listCheckpoint.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         result.totalOnBoarding = totalOnboarding;
         result.totalMonitoring = totalMonitoring;
         result.totalCheckpoint = totalCheckpoint;
@@ -929,7 +929,7 @@ namespace Manager.Services.Auth
         long totalApproved = 0;
 
         var result = new ViewListTeam();
-        result.Team = listTeam.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+        result.Team = listTeam.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         result.AutoManager = serviceAutoManager.List(idmanager, ref totalAutoManager, count, page, filter);
         result.Approved = serviceAutoManager.ListApproved(idmanager);
         result.totalTeam = totalTeam;
