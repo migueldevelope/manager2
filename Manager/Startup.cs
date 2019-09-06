@@ -65,7 +65,6 @@ namespace Manager
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
-
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
       new MigrationHandle(_context._db).Migrate();
