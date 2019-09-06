@@ -137,7 +137,7 @@ namespace Manager.Services.Specific
         var date = serviceTermsOfService.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.Max(p => p.Date);
         TermsOfService termsofservice = serviceTermsOfService.GetAllFreeNewVersion(p => p.Date == date).Result.FirstOrDefault();
 
-        new Task(null);
+        //new Task(null);
 
         return new ViewListTermsOfService()
         {

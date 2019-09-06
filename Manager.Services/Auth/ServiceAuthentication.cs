@@ -168,6 +168,7 @@ namespace Manager.Services.Auth
 
         UserTermOfService term = null;
         UserTermOfService viewDate = null;
+        bool existsterm = true;
 
         if (date != null)
         {
@@ -188,6 +189,11 @@ namespace Manager.Services.Auth
             }
           }
         }
+        else
+          existsterm = false;
+        
+          
+
 
 
         serviceDictionarySystem.SetUser(_user);
@@ -202,6 +208,8 @@ namespace Manager.Services.Auth
           TermOfService = date == null ? true : term == null ? false : true,
           DictionarySystem = null
         };
+
+        person.ExistsTermOfService = existsterm;
 
         person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id).Result
           .Select(x => new ViewContract()
