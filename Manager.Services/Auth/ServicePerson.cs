@@ -366,9 +366,9 @@ namespace Manager.Services.Auth
     {
       try
       {
-        total = servicePerson.CountNewVersion(p => p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = count * (page - 1);
-        return servicePerson.GetAllNewVersion(p => p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "User.Name").Result
+        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "User.Name").Result
           .Select(item => new ViewListPersonTeam()
           {
             Name = item.User.Name,
@@ -808,7 +808,9 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var list = servicePerson.GetAllNewVersion(p =>
+        p.StatusUser != EnumStatusUser.Disabled &&
+        p.Manager._id == idmanager && p.Occupation != null && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = (count * (page - 1));
 
         List<ViewListOnBoarding> listOnBoarding = new List<ViewListOnBoarding>();
@@ -902,7 +904,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        
+
 
         var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = (count * (page - 1));
