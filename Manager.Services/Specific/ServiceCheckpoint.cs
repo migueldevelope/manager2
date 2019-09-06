@@ -100,6 +100,7 @@ namespace Manager.Services.Specific
       try
       {
         List<ViewListCheckpoint> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
+                                        p.StatusUser != EnumStatusUser.Disabled &&
                                         p.TypeJourney == EnumTypeJourney.Checkpoint &&
                                         p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
                                         .Select(p => new ViewListCheckpoint()

@@ -99,6 +99,7 @@ namespace Manager.Services.Specific
       {
         //LogSave(idmanager, "List");
         List<ViewListOnBoarding> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
+        p.StatusUser != EnumStatusUser.Disabled &&
                                              (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation) &&
                                              p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
           .Select(p => new ViewListOnBoarding()

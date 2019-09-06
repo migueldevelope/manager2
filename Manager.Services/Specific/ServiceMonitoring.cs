@@ -555,7 +555,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        List<Person> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
+        List<Person> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
             && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "User.Name").Result.ToList();
 
         List<Monitoring> detail = new List<Monitoring>();
