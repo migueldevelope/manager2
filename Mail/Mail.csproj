@@ -37,7 +37,7 @@
 
   <ItemGroup>
     <None Update="docker-compose.yml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Mail.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
