@@ -109,6 +109,7 @@ namespace Manager.Services.Auth
           if (user == null)
             throw new Exception("User not authorized!");
         }
+
         //else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1)
         //{
         //  GetUnimedAsync(userLogin.Mail, userLogin.Password);
