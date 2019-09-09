@@ -264,7 +264,6 @@ namespace Manager.Services.Auth
         if ((authMaristas) || (authPUC))
           user.ChangePassword = EnumChangePassword.No;
 
-        //person.User = user;
         person.User = serviceUser.InsertNewVersion(user).Result.GetViewCrud();
 
         servicePerson.InsertNewVersion(person).Wait();
