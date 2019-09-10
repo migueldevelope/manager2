@@ -41,6 +41,7 @@
     <ProjectReference Include="..\Manager.Core\Manager.Core.csproj" />
     <ProjectReference Include="..\Manager.Data\Manager.Data.csproj" />
     <ProjectReference Include="..\Manager.Services\Manager.Services.csproj" />
+    <ProjectReference Include="..\Manager.Views\Manager.Views.csproj" />
     <ProjectReference Include="..\Tools\Tools.csproj" />
   </ItemGroup>
 
