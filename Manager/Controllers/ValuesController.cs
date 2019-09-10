@@ -67,7 +67,7 @@ namespace Manager.Controllers
       //serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
       //servicePerson.ListCompany(ref total, "", 1, 1);
       //CallAPIColdStart();
-      return new string[] { "version", "0.000000038" };
+      return new string[] { "version", "0.000000039" };
     }
 
     /// <summary>
