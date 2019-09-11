@@ -150,7 +150,7 @@ namespace Manager.Services.Auth
 
     #region Person
 
-    public List<ViewListIdIndicators> GetFilterPersons(string idmanager)
+    public List<ViewListIdIndicators> GetFilterPersons(List<_ViewList> idmanagers)
     {
       try
       {
@@ -158,10 +158,18 @@ namespace Manager.Services.Auth
         && p.StatusUser != EnumStatusUser.ErrorIntegration && p.TypeUser > EnumTypeUser.Administrator
         && p.TypeJourney != EnumTypeJourney.OutOfJourney)
         .Result;
-        if (idmanager != string.Empty)
+        if (idmanagers.Count() > 0)
         {
-          persons = persons.Where(p => p.Manager?._id == idmanager).ToList();
+          foreach (var person in persons)
+          {
+            foreach (var manager in idmanagers)
+            {
+              if (manager._id != person.Manager?._id)
+                person.Status = EnumStatus.Disabled;
+            }
+          }
         }
+        persons = persons.Where(p => p.Status == EnumStatus.Enabled).ToList();
 
         return persons.Select(p => new ViewListIdIndicators()
         {

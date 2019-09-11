@@ -71,14 +71,14 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="idmanager"></param>
+    /// <param name="idmanagers"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
+    [HttpPost]
     [Route("getfilterpersons")]
-    public async Task<List<ViewListIdIndicators>> GetFilterPersons(string idmanager = "")
+    public async Task<List<ViewListIdIndicators>> GetFilterPersons([FromBody]List<_ViewList> idmanagers)
     {
-      return await Task.Run(() => service.GetFilterPersons(idmanager));
+      return await Task.Run(() => service.GetFilterPersons(idmanagers));
     }
 
     /// <summary>

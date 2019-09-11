@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Manager.Core.BusinessModel;
 using Manager.Views.CustomClient;
+using Manager.Views.BusinessList;
 
 namespace Manager.Services.Auth
 {
@@ -166,7 +167,10 @@ namespace Manager.Services.Auth
         serviceTermsOfService._user = _user;
 
         var date = serviceTermsOfService.GetTerm();
-        var countterm = serviceTermsOfService.GetAllNewVersion().Count();
+        var countterm = 0;
+        var account = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result;
+        if ((account.InfoClient != null) && (account?.InfoClient != string.Empty))
+          countterm = 1;
 
         UserTermOfService term = null;
         UserTermOfService viewDate = null;
@@ -203,7 +207,7 @@ namespace Manager.Services.Auth
           IdAccount = user._idAccount,
           ChangePassword = user.ChangePassword,
           Photo = user.PhotoUrl,
-          NameAccount = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result.Name,
+          NameAccount = account?.Name,
           TermOfService = date == null ? true : term == null ? false : true,
           DictionarySystem = null
         };
@@ -232,7 +236,9 @@ namespace Manager.Services.Auth
           var perT = per.FirstOrDefault();
           if ((perT.TypeUser == EnumTypeUser.Manager) || (perT.TypeUser == EnumTypeUser.ManagerHR))
           {
-            person.Team = serviceIPerson.GetFilterPersons(perT.IdPerson);
+            var idmanagers = new List<_ViewList>();
+            idmanagers.Add(new _ViewList() { _id = perT.IdPerson });
+            person.Team = serviceIPerson.GetFilterPersons(idmanagers);
           }
         }
         var param1 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "viewlo").Result?.Content;
