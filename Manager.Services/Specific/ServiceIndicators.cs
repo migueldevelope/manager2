@@ -93,7 +93,7 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
         if (parameterget != null)
           parameter = long.Parse(parameterget.Content);
@@ -132,7 +132,7 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
         if (parameterget != null)
           parameter = long.Parse(parameterget.Content);
@@ -169,7 +169,7 @@ namespace Manager.Services.Specific
       {
         var list = new List<ViewListPending>();
         var onboardings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
         if (parameterget != null)
           parameter = long.Parse(parameterget.Content);
