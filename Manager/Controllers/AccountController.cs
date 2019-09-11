@@ -39,7 +39,7 @@ namespace Manager.Controllers
 
     #region Account
     /// <summary>
-    /// Incluir uma nova conta de cliente
+    /// Incluir uma nova conta de cliente.
     /// </summary>
     /// <param name="view">Objeto para nova conta</param>
     /// <returns></returns>
