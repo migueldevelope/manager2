@@ -1564,6 +1564,9 @@ namespace Manager.Services.Specific
       try
       {
         var viewperiod = serviceGoalsPeriod.GetNewVersion(p => p.ChangeCheck == true).Result;
+        if(viewperiod == null)
+          return null;
+
         var period = new ViewListGoalPeriod
         {
           _id = viewperiod?._id,
