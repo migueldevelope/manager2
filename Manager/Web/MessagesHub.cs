@@ -92,7 +92,7 @@ namespace Manager.Web
       //servicePerson._user;
 
 
-      await Clients.All.SendAsync("ReceiveMessageTeam" + idperson + idaccount, servicePerson.GetFilterPersons(idperson));
+      //await Clients.All.SendAsync("ReceiveMessageTeam" + idperson + idaccount, servicePerson.GetFilterPersons(idperson));
     }
 
   }
