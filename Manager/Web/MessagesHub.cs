@@ -91,7 +91,7 @@ namespace Manager.Web
       service.SetUser(baseUser);
       //servicePerson._user;
 
-
+     
       //await Clients.All.SendAsync("ReceiveMessageTeam" + idperson + idaccount, servicePerson.GetFilterPersons(idperson));
     }
 

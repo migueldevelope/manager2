@@ -366,6 +366,46 @@ namespace Indicators.Controllers
     /// </summary>
     /// <param name="date"></param>
     /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listtagscloudcompanyperiodperson")]
+    public async Task<List<ViewTagsCloudPerson>> ListTagsCloudCompanyPeriodPerson([FromBody]ViewFilterDate date, string idmanager = "", int count = 10, int page= 1, string filter = "")
+    {
+      long total = 0;
+      var result = await Task.Run(() => service.ListTagsCloudCompanyPeriodPerson(date, idmanager,count, page, ref total, filter));
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listtagscloudperiodperson")]
+    public async Task<List<ViewTagsCloudPerson>> ListTagsCloudPeriodPerson([FromBody]ViewFilterDate date, string idmanager = "", int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = await Task.Run(() => service.ListTagsCloudPeriodPerson(date, idmanager, count, page, ref total, filter));
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idmanager"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]

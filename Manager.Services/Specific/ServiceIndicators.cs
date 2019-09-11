@@ -483,6 +483,77 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewTagsCloudPerson> ListTagsCloudCompanyPeriodPerson(ViewFilterDate date, string idmanager, int count, int page, ref long total, string filter)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var list = new List<Monitoring>();
+
+        if (idmanager != string.Empty)
+          list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Person._idManager == idmanager).Result.ToList();
+        else
+          list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
+
+        List<ViewTagsCloudPerson> listResult = new List<ViewTagsCloudPerson>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Text = row.Skill.Name,  Person = item.Person?.Name });
+          }
+        }
+
+        total = listResult.Count();
+        return listResult.Where(p => p.Person.Contains(filter)).Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewTagsCloudPerson> ListTagsCloudPeriodPerson(ViewFilterDate date, string idmanager, int count, int page, ref long total, string filter)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var list = new List<Monitoring>();
+
+        if (idmanager != string.Empty)
+          list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Person._idManager == idmanager).Result.ToList();
+        else
+          list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.ToList();
+
+        List<ViewTagsCloudPerson> listResult = new List<ViewTagsCloudPerson>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.Activities)
+          {
+            foreach (var skill in row.Plans)
+            {
+              foreach (var view in skill.Skills)
+              {
+                listResult.Add(new ViewTagsCloudPerson() { Text = view.Name, Person = item.Person?.Name });
+              }
+            }
+          }
+        }
+
+        total = listResult.Count();
+        return listResult.Where(p => p.Person.Contains(filter)).Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewListPlanQtd GetListPlanQtd(ViewFilterDate date, string idManager)
     {
       try
