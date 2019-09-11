@@ -1239,7 +1239,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = servicePerson.GetAllNewVersion(p => p._id == idPerson).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == idPerson).Result;
         List<ViewCrudGoalItem> detailCompany = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Company._id == person.Company._id && p.Company.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
                   .Select(p => new ViewCrudGoalItem()
@@ -1566,8 +1566,8 @@ namespace Manager.Services.Specific
         var viewperiod = serviceGoalsPeriod.GetNewVersion(p => p.ChangeCheck == true).Result;
         var period = new ViewListGoalPeriod
         {
-          _id = viewperiod._id,
-          Name = viewperiod.Name
+          _id = viewperiod?._id,
+          Name = viewperiod?.Name
         };
 
         List<ViewListGoalPersonControl> detail = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
