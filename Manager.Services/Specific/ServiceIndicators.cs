@@ -516,7 +516,7 @@ namespace Manager.Services.Specific
         }
 
         total = list.Count();
-        return list.Skip(skip).Take(count).ToList();
+        return list.Where(p => p.Manager.Contains(filter)).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
