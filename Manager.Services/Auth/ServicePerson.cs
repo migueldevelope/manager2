@@ -164,8 +164,9 @@ namespace Manager.Services.Auth
           {
             foreach (var manager in idmanagers)
             {
-              if (manager._id != person.Manager?._id)
-                person.Status = EnumStatus.Disabled;
+              person.Status = EnumStatus.Disabled;
+              if (manager._id == person.Manager?._id)
+                person.Status = EnumStatus.Enabled;
             }
           }
         }
