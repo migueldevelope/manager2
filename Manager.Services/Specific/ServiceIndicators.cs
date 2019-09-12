@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
@@ -25,6 +26,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Workflow> serviceWorkflow;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Plan> servicePlan;
+    private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceLog serviceLog;
     private readonly ServiceMailModel serviceMailModel;
     private readonly ServiceGeneric<MailLog> serviceMail;
@@ -57,6 +59,7 @@ namespace Manager.Services.Specific
         serviceRecommendation = new ServiceGeneric<Recommendation>(context);
         serviceRecommendationPerson = new ServiceGeneric<RecommendationPerson>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
+        serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceIPerson = _serviceIPerson;
 
         path = pathToken;
@@ -84,6 +87,7 @@ namespace Manager.Services.Specific
       serviceRecommendation._user = _user;
       serviceRecommendationPerson._user = _user;
       serviceParameter._user = _user;
+      serviceSalaryScale._user = _user;
       serviceIPerson.SetUser(_user);
     }
 
@@ -313,6 +317,64 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewPersonsNotInfo> GetPersonsNotInfo(int count, int page, ref long total, string filter)
+    {
+      try
+      {
+        var list = new List<ViewPersonsNotInfo>();
+        int skip = (count * (page - 1));
+
+        var salaryscale = serviceSalaryScale.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result == 0 ? false : true;
+
+        var persons = servicePerson.GetAllNewVersion(p => p.TypeJourney != EnumTypeJourney.OutOfJourney
+        && p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator
+        && p.User.Name.Contains(filter)
+        && (p.Manager == null || p.Occupation == null || p.SalaryScales == null ||
+        p.User.Schooling == null || p.User.DateAdm == null)
+        , count, skip, "User.Name").Result;
+
+        foreach (var item in persons)
+        {
+          if (salaryscale == false)
+            item.SalaryScales = new SalaryScalePerson();
+
+
+          if ((item.Occupation == null) || (item.Manager == null) || (item.SalaryScales == null)
+            || (item.User?.Schooling == null) || (item.User?.DateAdm == null))
+          {
+            var view = new ViewPersonsNotInfo()
+            {
+              DateAdm = false,
+              Occupation = false,
+              Manager = false,
+              SalaryScale = false,
+              Schooling = false
+            };
+
+            if (item.User?.DateAdm == null)
+              view.DateAdm = true;
+            if (item.Occupation == null)
+              view.Occupation = true;
+            if (item.Manager == null)
+              view.Manager = true;
+            if (item.SalaryScales == null)
+              view.SalaryScale = true;
+            if (item.User?.Schooling == null)
+              view.Schooling = true;
+
+
+            list.Add(view);
+          }
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public ViewMoninitoringQtd GetMoninitoringQtd(ViewFilterDate date, string idManager)
     {
@@ -401,7 +463,7 @@ namespace Manager.Services.Specific
         foreach (var moni in monitorings)
         {
           if (list.Where(p => p._idManager == moni.Person._idManager).Count() == 0)
-            list.Add(new ViewMoninitoringQtdManager{ Manager = moni.Person.Manager, _idManager = moni.Person._idManager, Praises = 0, Comments = 0, Plans = 0 });
+            list.Add(new ViewMoninitoringQtdManager { Manager = moni.Person.Manager, _idManager = moni.Person._idManager, Praises = 0, Comments = 0, Plans = 0 });
 
           foreach (var lst in list.Where(p => p._idManager == moni.Person._idManager))
           {
@@ -442,7 +504,7 @@ namespace Manager.Services.Specific
               }
             }
           }
-          
+
         }
 
         return list;
@@ -573,7 +635,7 @@ namespace Manager.Services.Specific
           foreach (var row in item.SkillsCompany)
           {
             if (row.Plans.Count() > 0)
-              listResult.Add(new ViewTagsCloudPerson() { Text = row.Skill.Name,  Person = item.Person?.Name });
+              listResult.Add(new ViewTagsCloudPerson() { Text = row.Skill.Name, Person = item.Person?.Name });
           }
         }
 

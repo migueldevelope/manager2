@@ -441,5 +441,25 @@ namespace Indicators.Controllers
       return await Task.Run(() => service.GetAccountEnableds());
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getpersonsnotinfo")]
+    public async Task<List<ViewPersonsNotInfo>> GetPersonsNotInfo(string idmanager = "", int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = await Task.Run(() => service.GetPersonsNotInfo(count, page, ref total, filter));
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
   }
 }
