@@ -168,8 +168,9 @@ namespace Manager.Services.Auth
                 person.Status = EnumStatus.Disabled;
             }
           }
+
+          persons = persons.Where(p => p.Status == EnumStatus.Disabled).ToList();
         }
-        persons = persons.Where(p => p.Status == EnumStatus.Disabled).ToList();
 
         return persons.Select(p => new ViewListIdIndicators()
         {
