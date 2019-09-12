@@ -1411,14 +1411,16 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewExportMonitoringComments> ExportMonitoringComments(List<ViewListIdIndicators> persons)
+    public List<ViewExportMonitoringComments> ExportMonitoringComments(ViewFilterIdAndDate filter)
     {
       try
       {
         List<ViewExportMonitoringComments> result = new List<ViewExportMonitoringComments>();
-        foreach (ViewListIdIndicators rows in persons)
+        foreach (ViewListIdIndicators rows in filter.Persons)
         {
-          var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == rows._id && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
+          var monitorings = serviceMonitoring.GetAllNewVersion(p =>  p.Person._id == rows._id && p.StatusMonitoring == EnumStatusMonitoring.End
+           && p.DateEndEnd >= filter.Date.Begin && p.DateEndEnd <= filter.Date.End).Result;
+
           foreach (var monitoring in monitorings)
           {
             var view = new ViewExportMonitoringComments();
@@ -1438,7 +1440,13 @@ namespace Manager.Services.Specific
                 }
 
               view.Praise = item.Praise;
-              if ((item.Praise != null) || (item.Comments != null))
+
+              if (view.Praise == string.Empty)
+                view.Praise = null;
+              if (view.Comments == string.Empty)
+                view.Comments = null;
+
+              if ((view.Praise != null) || (view.Comments != null))
                 result.Add(view);
             }
 
@@ -1456,7 +1464,13 @@ namespace Manager.Services.Specific
                   view.Comments = comm.Comments;
                 }
               view.Praise = item.Praise;
-              if ((item.Praise != null) || (item.Comments != null))
+
+              if (view.Praise == string.Empty)
+                view.Praise = null;
+              if (view.Comments == string.Empty)
+                view.Comments = null;
+
+              if ((view.Praise != null) || (view.Comments != null))
                 result.Add(view);
             }
 
@@ -1473,7 +1487,12 @@ namespace Manager.Services.Specific
                   view.Comments = comm.Comments;
                 }
               view.Praise = item.Praise;
-              if ((item.Praise != null) || (item.Comments != null))
+              if (view.Praise == string.Empty)
+                view.Praise = null;
+              if (view.Comments == string.Empty)
+                view.Comments = null;
+
+              if ((view.Praise != null) || (view.Comments != null))
                 result.Add(view);
             }
           }

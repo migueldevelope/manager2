@@ -341,6 +341,20 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
+    [Route("getmoninitoringqtdmanager")]
+    public async Task<List<ViewMoninitoringQtdManager>> GetMoninitoringQtdManager([FromBody]ViewFilterDate date, string idmanager = "")
+    {
+      return await Task.Run(() => service.GetMoninitoringQtdManager(date, idmanager));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idmanager"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
     [Route("listtagscloudcompanyperiod")]
     public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPeriod([FromBody]ViewFilterDate date, string idmanager = "")
     {

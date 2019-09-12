@@ -189,6 +189,14 @@
             <param name="idmanager"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetMoninitoringQtdManager(Manager.Views.BusinessView.ViewFilterDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPeriod(Manager.Views.BusinessView.ViewFilterDate,System.String)">
             <summary>
             

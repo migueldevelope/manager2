@@ -398,14 +398,14 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="persons"></param>
+    /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("exportmonitoringcomments")]
-    public async Task<List<ViewExportMonitoringComments>> ExportMonitoringComments([FromBody] List<ViewListIdIndicators> persons)
-    {
-      return await Task.Run(() => service.ExportMonitoringComments(persons));
+    public async Task<List<ViewExportMonitoringComments>> ExportMonitoringComments([FromBody] ViewFilterIdAndDate filter)
+    {  
+      return await Task.Run(() => service.ExportMonitoringComments(filter));
     }
 
     /// <summary>

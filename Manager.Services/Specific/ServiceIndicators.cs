@@ -103,6 +103,7 @@ namespace Manager.Services.Specific
         foreach (var item in persons)
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
 
           if (days >= 10)
@@ -376,6 +377,75 @@ namespace Manager.Services.Specific
         view.Plans = plans;
 
         return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager)
+    {
+      try
+      {
+        var list = new List<ViewMoninitoringQtdManager>();
+        List<Monitoring> monitorings = new List<Monitoring>();
+
+        if (idManager != string.Empty)
+          monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End & p.Person._idManager == idManager).Result;
+        else
+          monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+
+        foreach (var moni in monitorings)
+        {
+          if (list.Where(p => p._idManager == moni.Person._idManager).Count() == 0)
+            list.Add(new ViewMoninitoringQtdManager{ Manager = moni.Person.Manager, _idManager = moni.Person._idManager, Praises = 0, Comments = 0, Plans = 0 });
+
+          foreach (var lst in list.Where(p => p._idManager == moni.Person._idManager))
+          {
+            if (moni.SkillsCompany != null)
+            {
+              foreach (var item in moni.SkillsCompany)
+              {
+                if (item.Comments != null)
+                  lst.Comments += item.Comments.Count();
+                if (item.Plans != null)
+                  lst.Plans += item.Plans.Count();
+                if (item.Praise != null)
+                  lst.Praises += 1;
+              }
+            }
+            if (moni.Schoolings != null)
+            {
+              foreach (var item in moni.Schoolings)
+              {
+                if (item.Comments != null)
+                  lst.Comments += item.Comments.Count();
+                if (item.Plans != null)
+                  lst.Plans += item.Plans.Count();
+                if (item.Praise != null)
+                  lst.Praises += 1;
+              }
+            }
+            if (moni.Activities != null)
+            {
+              foreach (var item in moni.Activities)
+              {
+                if (item.Comments != null)
+                  lst.Comments += item.Comments.Count();
+                if (item.Plans != null)
+                  lst.Plans += item.Plans.Count();
+                if (item.Praise != null)
+                  lst.Praises += 1;
+              }
+            }
+          }
+          
+        }
+
+        return list;
       }
       catch (Exception e)
       {
