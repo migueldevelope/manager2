@@ -164,13 +164,12 @@ namespace Manager.Services.Auth
           {
             foreach (var manager in idmanagers)
             {
-              person.Status = EnumStatus.Disabled;
               if (manager._id == person.Manager?._id)
-                person.Status = EnumStatus.Enabled;
+                person.Status = EnumStatus.Disabled;
             }
           }
         }
-        persons = persons.Where(p => p.Status == EnumStatus.Enabled).ToList();
+        persons = persons.Where(p => p.Status == EnumStatus.Disabled).ToList();
 
         return persons.Select(p => new ViewListIdIndicators()
         {
