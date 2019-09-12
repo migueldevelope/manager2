@@ -333,6 +333,12 @@ namespace Manager.Services.Specific
         p.User.Schooling == null || p.User.DateAdm == null)
         , count, skip, "User.Name").Result;
 
+        total = servicePerson.CountNewVersion(p => p.TypeJourney != EnumTypeJourney.OutOfJourney
+        && p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator
+        && p.User.Name.Contains(filter)
+        && (p.Manager == null || p.Occupation == null || p.SalaryScales == null ||
+        p.User.Schooling == null || p.User.DateAdm == null)).Result;
+
         foreach (var item in persons)
         {
           if (salaryscale == false)
@@ -446,10 +452,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager)
+    public List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter)
     {
       try
       {
+        int skip = (count * (page - 1));
+
         var list = new List<ViewMoninitoringQtdManager>();
         List<Monitoring> monitorings = new List<Monitoring>();
 
@@ -507,7 +515,8 @@ namespace Manager.Services.Specific
 
         }
 
-        return list;
+        total = list.Count();
+        return list.Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {

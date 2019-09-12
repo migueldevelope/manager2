@@ -53,7 +53,7 @@ namespace Manager.Core.Interfaces
     List<ViewAccountEnableds> GetAccountEnableds();
     List<ViewTagsCloudPerson> ListTagsCloudCompanyPeriodPerson(ViewFilterDate date, string idmanager, int count, int page, ref long total, string filter);
     List<ViewTagsCloudPerson> ListTagsCloudPeriodPerson(ViewFilterDate date, string idmanager, int count, int page, ref long total, string filter);
-    List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager);
+    List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter);
     List<ViewPersonsNotInfo> GetPersonsNotInfo(int count, int page, ref long total, string filter);
   }
 }
