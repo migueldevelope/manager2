@@ -105,7 +105,7 @@ namespace Manager.Services.Specific
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
 
-          if (days >= 21)
+          if (days >= 10)
           {
             var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
             if (view == null)
@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
-          if ((days <= 20) && (days > 10))
+          if ((days < 10) && (days >= 0))
           {
             var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
             if (view == null)
@@ -179,7 +179,7 @@ namespace Manager.Services.Specific
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
-          if (days <= 10)
+          if (days < 0)
           {
             var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
             if (view == null)
@@ -187,7 +187,7 @@ namespace Manager.Services.Specific
               {
                 Manager = item.Manager,
                 Person = item.Name,
-                Days = days
+                Days = (days * -1)
               });
           }
         }
@@ -216,7 +216,7 @@ namespace Manager.Services.Specific
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
-          if (days >= 11)
+          if (days >= 10)
           {
             var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
             if (view == null)
@@ -253,7 +253,7 @@ namespace Manager.Services.Specific
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
-          if ((days <= 10) && (days > 0))
+          if ((days < 10) && (days >= 0))
           {
             var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
             if (view == null)
@@ -291,7 +291,7 @@ namespace Manager.Services.Specific
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
-          if (days <= 0)
+          if (days < 0)
           {
             var view = checkpoints.Where(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).FirstOrDefault();
             if (view == null)
@@ -299,7 +299,7 @@ namespace Manager.Services.Specific
               {
                 Manager = item.Manager,
                 Person = item.Name,
-                Days = days
+                Days = (days * -1)
               });
           }
         }
