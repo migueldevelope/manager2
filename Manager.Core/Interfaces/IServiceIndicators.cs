@@ -47,12 +47,12 @@ namespace Manager.Core.Interfaces
     List<ViewListPending> CheckpointToWin(List<ViewListIdIndicators> persons);
     List<ViewListPending> CheckpointLate(List<ViewListIdIndicators> persons);
     ViewMoninitoringQtd GetMoninitoringQtd(ViewFilterDate date, string idManager);
-    List<ViewTagsCloud> ListTagsCloudCompanyPeriod(ViewFilterDate date, string idmanager);
-    List<ViewTagsCloud> ListTagsCloudPeriod(ViewFilterDate date, string idmanager);
+    List<ViewTagsCloud> ListTagsCloudCompanyPeriod(ViewFilterManagerAndDate filters, string idmanager);
+    List<ViewTagsCloud> ListTagsCloudPeriod(ViewFilterManagerAndDate filters, string idmanager);
     ViewListPlanQtd GetListPlanQtd(ViewFilterDate date, string idManager);
     List<ViewAccountEnableds> GetAccountEnableds();
-    List<ViewTagsCloudPerson> ListTagsCloudCompanyPeriodPerson(ViewFilterDate date, string idmanager, int count, int page, ref long total, string filter);
-    List<ViewTagsCloudPerson> ListTagsCloudPeriodPerson(ViewFilterDate date, string idmanager, int count, int page, ref long total, string filter);
+    List<ViewTagsCloudPerson> ListTagsCloudCompanyPeriodPerson(ViewFilterManagerAndDate filters, string idmanager, int count, int page, ref long total, string filter);
+    List<ViewTagsCloudPerson> ListTagsCloudPeriodPerson(ViewFilterManagerAndDate filters, string idmanager, int count, int page, ref long total, string filter);
     List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter);
     List<ViewPersonsNotInfo> GetPersonsNotInfo(int count, int page, ref long total, string filter);
   }

@@ -356,35 +356,35 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="date"></param>
+    /// <param name="filters"></param>
     /// <param name="idmanager"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("listtagscloudcompanyperiod")]
-    public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPeriod([FromBody]ViewFilterDate date, string idmanager = "")
+    public async Task<List<ViewTagsCloud>> ListTagsCloudCompanyPeriod([FromBody]ViewFilterManagerAndDate filters, string idmanager = "")
     {
-      return await Task.Run(() => service.ListTagsCloudCompanyPeriod(date, idmanager));
+      return await Task.Run(() => service.ListTagsCloudCompanyPeriod(filters, idmanager));
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="date"></param>
+    /// <param name="filters"></param>
     /// <param name="idmanager"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("listtagscloudperiod")]
-    public async Task<List<ViewTagsCloud>> ListTagsCloudPeriod([FromBody]ViewFilterDate date, string idmanager = "")
+    public async Task<List<ViewTagsCloud>> ListTagsCloudPeriod([FromBody]ViewFilterManagerAndDate filters, string idmanager = "")
     {
-      return await Task.Run(() => service.ListTagsCloudPeriod(date, idmanager));
+      return await Task.Run(() => service.ListTagsCloudPeriod(filters, idmanager));
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="date"></param>
+    /// <param name="filters"></param>
     /// <param name="idmanager"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
@@ -393,10 +393,10 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("listtagscloudcompanyperiodperson")]
-    public async Task<List<ViewTagsCloudPerson>> ListTagsCloudCompanyPeriodPerson([FromBody]ViewFilterDate date, string idmanager = "", int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewTagsCloudPerson>> ListTagsCloudCompanyPeriodPerson([FromBody]ViewFilterManagerAndDate filters, string idmanager = "", int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = await Task.Run(() => service.ListTagsCloudCompanyPeriodPerson(date, idmanager, count, page, ref total, filter));
+      var result = await Task.Run(() => service.ListTagsCloudCompanyPeriodPerson(filters, idmanager, count, page, ref total, filter));
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -404,7 +404,7 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="date"></param>
+    /// <param name="filters"></param>
     /// <param name="idmanager"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
@@ -413,10 +413,10 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("listtagscloudperiodperson")]
-    public async Task<List<ViewTagsCloudPerson>> ListTagsCloudPeriodPerson([FromBody]ViewFilterDate date, string idmanager = "", int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewTagsCloudPerson>> ListTagsCloudPeriodPerson([FromBody]ViewFilterManagerAndDate filters, string idmanager = "", int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = await Task.Run(() => service.ListTagsCloudPeriodPerson(date, idmanager, count, page, ref total, filter));
+      var result = await Task.Run(() => service.ListTagsCloudPeriodPerson(filters, idmanager, count, page, ref total, filter));
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
@@ -450,7 +450,6 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="date"></param>
     /// <param name="idmanager"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>

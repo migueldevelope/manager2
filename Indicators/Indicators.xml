@@ -189,31 +189,7 @@
             <param name="idmanager"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.GetMoninitoringQtdManager(Manager.Views.BusinessView.ViewFilterDate,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="date"></param>
-            <param name="idmanager"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPeriod(Manager.Views.BusinessView.ViewFilterDate,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="date"></param>
-            <param name="idmanager"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudPeriod(Manager.Views.BusinessView.ViewFilterDate,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="date"></param>
-            <param name="idmanager"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPeriodPerson(Manager.Views.BusinessView.ViewFilterDate,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:Indicators.Controllers.IndicatorsController.GetMoninitoringQtdManager(Manager.Views.BusinessView.ViewFilterDate,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>
@@ -224,11 +200,38 @@
             <param name="filter"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudPeriodPerson(Manager.Views.BusinessView.ViewFilterDate,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPeriod(Manager.Views.BusinessView.ViewFilterManagerAndDate,System.String)">
             <summary>
             
             </summary>
-            <param name="date"></param>
+            <param name="filters"></param>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudPeriod(Manager.Views.BusinessView.ViewFilterManagerAndDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filters"></param>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPeriodPerson(Manager.Views.BusinessView.ViewFilterManagerAndDate,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filters"></param>
+            <param name="idmanager"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudPeriodPerson(Manager.Views.BusinessView.ViewFilterManagerAndDate,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filters"></param>
             <param name="idmanager"></param>
             <param name="count"></param>
             <param name="page"></param>
@@ -253,7 +256,6 @@
             <summary>
             
             </summary>
-            <param name="date"></param>
             <param name="idmanager"></param>
             <param name="count"></param>
             <param name="page"></param>
