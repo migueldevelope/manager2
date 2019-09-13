@@ -339,14 +339,14 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="persons"></param>
+    /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("exportplan")]
-    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan([FromBody] List<ViewListIdIndicators> persons)
+    public async Task<List<ViewExportStatusPlan>> ExportStatusPlan([FromBody] ViewFilterIdAndDate filter)
     {
-      return await Task.Run(() => service.ExportStatusPlan(persons));
+      return await Task.Run(() => service.ExportStatusPlan(filter));
     }
 
 

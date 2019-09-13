@@ -1889,14 +1889,15 @@ namespace Manager.Services.Specific
 
 
 
-    public List<ViewExportStatusPlan> ExportStatusPlan(List<ViewListIdIndicators> persons)
+    public List<ViewExportStatusPlan> ExportStatusPlan(ViewFilterIdAndDate filter)
     {
       try
       {
-        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+         && p.DateEndEnd >= filter.Date.Begin && p.DateEndEnd <= filter.Date.End).Result;
 
         var list = new List<ViewExportStatusPlan>();
-        foreach (var item in persons)
+        foreach (var item in filter.Persons)
         {
           var result = servicePlan.GetAllNewVersion(p => p.Person._id == item._id).Result;
           foreach (var p in result)
