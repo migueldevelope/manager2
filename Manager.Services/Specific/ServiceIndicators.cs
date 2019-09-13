@@ -330,14 +330,8 @@ namespace Manager.Services.Specific
         && p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator
         && p.User.Name.Contains(filter)
         && (p.Manager == null || p.Occupation == null || p.SalaryScales == null ||
-        p.User.Schooling == null || p.User.DateAdm == null)
-        , count, skip, "User.Name").Result;
-
-        total = servicePerson.CountNewVersion(p => p.TypeJourney != EnumTypeJourney.OutOfJourney
-        && p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator
-        && p.User.Name.Contains(filter)
-        && (p.Manager == null || p.Occupation == null || p.SalaryScales == null ||
         p.User.Schooling == null || p.User.DateAdm == null)).Result;
+
 
         foreach (var item in persons)
         {
@@ -372,8 +366,9 @@ namespace Manager.Services.Specific
             list.Add(view);
           }
         }
+        total = list.Count();
 
-        return list;
+        return list.OrderBy(p => p.Person).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {

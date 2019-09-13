@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\IndicatorsController.cs~RF2e1a00.TMP" />
     <None Remove="Startup.cs~RF19d0aa2d.TMP" />
   </ItemGroup>
 
