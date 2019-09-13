@@ -14,33 +14,33 @@ namespace Manager.Core.Business
   public class Person : BaseEntity
   {
     public EnumStatusUser StatusUser { get; set; }
-    
+
     public ViewListCompany Company { get; set; }
-    
+
     public ViewListOccupationResume Occupation { get; set; }
-    
+
     public BaseFields Manager { get; set; }
-    
+
     public string DocumentManager { get; set; }
-    
+
     public DateTime? DateLastOccupation { get; set; }
-    
+
     public decimal Salary { get; set; }
-    
+
     public DateTime? DateLastReadjust { get; set; }
-    
+
     public DateTime? DateResignation { get; set; }
-    
+
     public SalaryScalePerson SalaryScales { get; set; }
     public EnumTypeJourney TypeJourney { get; set; }
-    
+
     public ViewListEstablishment Establishment { get; set; }
-    
+
     public DateTime? HolidayReturn { get; set; }
-    
+
     public string MotiveAside { get; set; }
     public EnumTypeUser TypeUser { get; set; }
-    
+
     public string Registration { get; set; }
     public int Workload { get; set; }
     public ViewCrudUser User { get; set; }
@@ -84,7 +84,7 @@ namespace Manager.Core.Business
         view.NameManager = Manager.Name;
         view._idManager = Manager._id;
       }
-      
+
       return view;
     }
     public ViewListPersonResume GetViewListResume()
@@ -119,7 +119,9 @@ namespace Manager.Core.Business
         TypeJourney = TypeJourney,
         Occupation = Occupation?.Name,
         _idManager = Manager?._id,
-        Manager = Manager?.Name
+        Manager = Manager?.Name,
+        DateAdm = User?.DateAdm,
+        Schooling = User.Schooling?.Name
       };
     }
   }

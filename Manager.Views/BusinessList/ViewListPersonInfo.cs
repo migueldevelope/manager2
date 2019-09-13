@@ -15,5 +15,7 @@ namespace Manager.Views.BusinessList
     public string _idManager { get; set; }
     public string Manager { get; set; }
     public string Registration { get; set; }
+    public string Schooling { get; set; }
+    public DateTime? DateAdm { get; set; }
   }
 }
