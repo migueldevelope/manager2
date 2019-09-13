@@ -474,7 +474,13 @@ namespace Manager.Services.Specific
               foreach (var item in moni.SkillsCompany)
               {
                 if (item.Plans != null)
+                {
                   lst.Schedule += item.Plans.Count();
+                  lst.Realized += item.Plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
+                  lst.Late += item.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
+                  lst.Balance = lst.Realized - lst.Late;
+                }
+
               }
             }
             if (moni.Schoolings != null)
@@ -482,7 +488,12 @@ namespace Manager.Services.Specific
               foreach (var item in moni.Schoolings)
               {
                 if (item.Plans != null)
+                {
                   lst.Schedule += item.Plans.Count();
+                  lst.Realized += item.Plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
+                  lst.Late += item.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
+                  lst.Balance = lst.Realized - lst.Late;
+                }
               }
             }
             if (moni.Activities != null)
@@ -490,7 +501,12 @@ namespace Manager.Services.Specific
               foreach (var item in moni.Activities)
               {
                 if (item.Plans != null)
+                {
                   lst.Schedule += item.Plans.Count();
+                  lst.Realized += item.Plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
+                  lst.Late += item.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
+                  lst.Balance = lst.Realized - lst.Late;
+                }
               }
             }
           }
