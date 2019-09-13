@@ -1,7 +1,12 @@
-﻿namespace Manager.Views.BusinessView
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace Manager.Views.BusinessView
 {
   public class ViewPlanQtd
   {
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _idManager { get; set; }
     public string Manager { get; set; }
     public long Schedule { get; set; }
     public long Realized { get; set; }

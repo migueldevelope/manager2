@@ -462,50 +462,39 @@ namespace Manager.Services.Specific
         monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
               && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
 
-        long comments = 0;
-        long praises = 0;
-        long plans = 0;
-
         foreach (var moni in monitorings)
         {
-          if (moni.SkillsCompany != null)
+          if (result.Where(p => p._idManager == moni.Person._idManager).Count() == 0)
+            result.Add(new ViewPlanQtd() { _idManager = moni.Person._idManager, Manager = moni.Person.Manager });
+
+          foreach (var lst in result.Where(p => p._idManager == moni.Person._idManager))
           {
-            foreach (var item in moni.SkillsCompany)
+            if (moni.SkillsCompany != null)
             {
-              if (item.Comments != null)
-                comments += item.Comments.Count();
-              if (item.Plans != null)
-                plans += item.Plans.Count();
-              if (item.Praise != null)
-                praises += 1;
+              foreach (var item in moni.SkillsCompany)
+              {
+                if (item.Plans != null)
+                  lst.Schedule += item.Plans.Count();
+              }
             }
-          }
-          if (moni.Schoolings != null)
-          {
-            foreach (var item in moni.Schoolings)
+            if (moni.Schoolings != null)
             {
-              if (item.Comments != null)
-                comments += item.Comments.Count();
-              if (item.Plans != null)
-                plans += item.Plans.Count();
-              if (item.Praise != null)
-                praises += 1;
+              foreach (var item in moni.Schoolings)
+              {
+                if (item.Plans != null)
+                  lst.Schedule += item.Plans.Count();
+              }
             }
-          }
-          if (moni.Activities != null)
-          {
-            foreach (var item in moni.Activities)
+            if (moni.Activities != null)
             {
-              if (item.Comments != null)
-                comments += item.Comments.Count();
-              if (item.Plans != null)
-                plans += item.Plans.Count();
-              if (item.Praise != null)
-                praises += 1;
+              foreach (var item in moni.Activities)
+              {
+                if (item.Plans != null)
+                  lst.Schedule += item.Plans.Count();
+              }
             }
           }
         }
-
 
         return result;
       }
