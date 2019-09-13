@@ -368,7 +368,7 @@ namespace Manager.Services.Specific
             if (item.User?.Schooling == null)
               view.Schooling = true;
 
-
+            view.Person = item.User.Name;
             list.Add(view);
           }
         }
