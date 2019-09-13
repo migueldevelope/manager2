@@ -460,7 +460,8 @@ namespace Manager.Services.Specific
         List<Monitoring> monitorings = new List<Monitoring>();
 
         monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
-              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End
+              && p.Person.Manager.Contains(filter)).Result;
 
         foreach (var moni in monitorings)
         {
@@ -512,7 +513,9 @@ namespace Manager.Services.Specific
           }
         }
 
-        return result;
+        total = result.Count();
+
+        return result.OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
