@@ -55,5 +55,7 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloudPerson> ListTagsCloudPeriodPerson(ViewFilterManagerAndDate filters, string idmanager, int count, int page, ref long total, string filter);
     List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter);
     List<ViewPersonsNotInfo> GetPersonsNotInfo(int count, int page, ref long total, string filter);
+    IEnumerable<ViewChartCeritification> ChartCertification(ViewFilterDate date);
+    IEnumerable<ViewChartCertificationCount> ChartCertificationCount(ViewFilterDate date);
   }
 }

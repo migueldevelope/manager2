@@ -32,6 +32,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> serviceMail;
     private readonly ServiceGeneric<Account> serviceAccount;
     private readonly ServiceGeneric<Certification> serviceCertification;
+    private readonly ServiceGeneric<CertificationPerson> serviceCertificationPerson;
     private readonly ServiceGeneric<Recommendation> serviceRecommendation;
     private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
     private readonly ServiceGeneric<Parameter> serviceParameter;
@@ -56,6 +57,7 @@ namespace Manager.Services.Specific
         serviceWorkflow = new ServiceGeneric<Workflow>(context);
         serviceAccount = new ServiceGeneric<Account>(context);
         serviceCertification = new ServiceGeneric<Certification>(context);
+        serviceCertificationPerson = new ServiceGeneric<CertificationPerson>(context);
         serviceRecommendation = new ServiceGeneric<Recommendation>(context);
         serviceRecommendationPerson = new ServiceGeneric<RecommendationPerson>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
@@ -88,6 +90,7 @@ namespace Manager.Services.Specific
       serviceRecommendationPerson._user = _user;
       serviceParameter._user = _user;
       serviceSalaryScale._user = _user;
+      serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
     }
 
@@ -1590,6 +1593,64 @@ namespace Manager.Services.Specific
       }
     }
 
+    public IEnumerable<ViewChartCeritification> ChartCertification(ViewFilterDate date)
+    {
+      try
+      {
+        var certifications = serviceCertification.GetAllNewVersion(p => p.StatusCertification == EnumStatusCertification.Approved
+        && p.DateEnd >= date.Begin && p.DateEnd <= date.End).Result;
+
+        List<ViewChartCeritification> result = new List<ViewChartCeritification>();
+
+        foreach (var item in certifications)
+        {
+          result.Add(new ViewChartCeritification()
+          {
+            Person = item.Person.Name,
+            Skill = item.CertificationItem.Name
+          });
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public IEnumerable<ViewChartCertificationCount> ChartCertificationCount(ViewFilterDate date)
+    {
+      try
+      {
+        var certifications = serviceCertification.GetAllNewVersion(p => p.StatusCertification == EnumStatusCertification.Approved
+        && p.DateEnd >= date.Begin && p.DateEnd <= date.End).Result;
+
+        List<ViewChartCeritification> result = new List<ViewChartCeritification>();
+
+        foreach (var item in certifications)
+        {
+          result.Add(new ViewChartCeritification()
+          {
+            Skill = item.CertificationItem.Name
+          });
+        }
+
+        return result.GroupBy(p => p.Skill).Select(x => new ViewChartCertificationCount
+        {
+          Item = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
   }
-#pragma warning restore 4014
+
 }
+
+#pragma warning restore 4014
+

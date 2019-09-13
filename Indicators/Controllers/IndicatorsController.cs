@@ -466,5 +466,31 @@ namespace Indicators.Controllers
       return result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("chartcertification")]
+    public async Task<IEnumerable<ViewChartCeritification>> ChartCertification([FromBody] ViewFilterDate date)
+    {
+      return await Task.Run(() => service.ChartCertification(date));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("chartcertification")]
+    public async Task<IEnumerable<ViewChartCertificationCount>> ChartCertificationCount([FromBody] ViewFilterDate date)
+    {
+      return await Task.Run(() => service.ChartCertificationCount(date));
+    }
+
   }
 }
