@@ -716,7 +716,7 @@ namespace Manager.Services.Specific
             {
               foreach (var view in skill.Skills)
               {
-                listResult.Add(new ViewTagsCloudPerson() { Text = view.Name, Person = item.Person?.Name });
+                listResult.Add(new ViewTagsCloudPerson() { Item = row.Activities.Name, Text = view.Name, Person = item.Person?.Name });
               }
             }
           }

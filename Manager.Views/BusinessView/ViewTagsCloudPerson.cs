@@ -4,5 +4,6 @@
   {
     public string Text { get; set; }
     public string Person { get; set; }
+    public string Item { get; set; }
   }
 }

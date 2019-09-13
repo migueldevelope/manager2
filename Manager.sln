@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager.Views", "Manager.Vi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagerMessages", "ManagerMessages\ManagerMessages.csproj", "{B917FC9E-A8C2-4EC8-B81C-93DB0D8DA579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Indicators", "Indicators\Indicators.csproj", "{BFC3190C-C772-49C4-A52D-AB98B806EF54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Indicators", "Indicators\Indicators.csproj", "{BFC3190C-C772-49C4-A52D-AB98B806EF54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
