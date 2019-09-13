@@ -57,5 +57,6 @@ namespace Manager.Core.Interfaces
     List<ViewPersonsNotInfo> GetPersonsNotInfo(int count, int page, ref long total, string filter);
     IEnumerable<ViewChartCeritification> ChartCertification(ViewFilterDate date);
     IEnumerable<ViewChartCertificationCount> ChartCertificationCount(ViewFilterDate date);
+    List<ViewPlanQtd> GetPlanQtd(ViewFilterDate date, int count, int page, ref long total, string filter);
   }
 }

@@ -276,6 +276,16 @@
             <param name="date"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetPlanQtd(Manager.Views.BusinessView.ViewFilterDate,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
         <member name="T:Indicators.Controllers.ValuesController">
             <summary>
             

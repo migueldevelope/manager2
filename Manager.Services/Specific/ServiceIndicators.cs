@@ -450,6 +450,71 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewPlanQtd> GetPlanQtd(ViewFilterDate date, int count, int page, ref long total, string filter)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        var result = new List<ViewPlanQtd>();
+        List<Monitoring> monitorings = new List<Monitoring>();
+
+        monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+
+        long comments = 0;
+        long praises = 0;
+        long plans = 0;
+
+        foreach (var moni in monitorings)
+        {
+          if (moni.SkillsCompany != null)
+          {
+            foreach (var item in moni.SkillsCompany)
+            {
+              if (item.Comments != null)
+                comments += item.Comments.Count();
+              if (item.Plans != null)
+                plans += item.Plans.Count();
+              if (item.Praise != null)
+                praises += 1;
+            }
+          }
+          if (moni.Schoolings != null)
+          {
+            foreach (var item in moni.Schoolings)
+            {
+              if (item.Comments != null)
+                comments += item.Comments.Count();
+              if (item.Plans != null)
+                plans += item.Plans.Count();
+              if (item.Praise != null)
+                praises += 1;
+            }
+          }
+          if (moni.Activities != null)
+          {
+            foreach (var item in moni.Activities)
+            {
+              if (item.Comments != null)
+                comments += item.Comments.Count();
+              if (item.Plans != null)
+                plans += item.Plans.Count();
+              if (item.Praise != null)
+                praises += 1;
+            }
+          }
+        }
+
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter)
     {
       try

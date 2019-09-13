@@ -486,10 +486,29 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("chartcertification")]
+    [Route("chartcertificationcount")]
     public async Task<IEnumerable<ViewChartCertificationCount>> ChartCertificationCount([FromBody] ViewFilterDate date)
     {
       return await Task.Run(() => service.ChartCertificationCount(date));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("getplanqtd")]
+    public async Task<List<ViewPlanQtd>> GetPlanQtd([FromBody]ViewFilterDate date, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = await Task.Run(() => service.GetPlanQtd(date, count, page, ref total, filter));
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
     }
 
   }
