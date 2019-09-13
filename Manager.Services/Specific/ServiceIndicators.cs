@@ -1635,7 +1635,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var certifications = serviceCertification.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var certifications = serviceCertification.GetAllNewVersion(p => p.StatusCertification != EnumStatusCertification.Open).Result;
 
         List<dynamic> result = new List<dynamic>();
 
