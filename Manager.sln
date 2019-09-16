@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagerMessages", "ManagerM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Indicators", "Indicators\Indicators.csproj", "{BFC3190C-C772-49C4-A52D-AB98B806EF54}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Training", "Training\Training.csproj", "{74187F16-12EB-4FE8-BC0F-8317BC2B1764}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{BFC3190C-C772-49C4-A52D-AB98B806EF54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFC3190C-C772-49C4-A52D-AB98B806EF54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFC3190C-C772-49C4-A52D-AB98B806EF54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74187F16-12EB-4FE8-BC0F-8317BC2B1764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74187F16-12EB-4FE8-BC0F-8317BC2B1764}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74187F16-12EB-4FE8-BC0F-8317BC2B1764}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74187F16-12EB-4FE8-BC0F-8317BC2B1764}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
