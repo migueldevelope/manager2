@@ -742,7 +742,7 @@ namespace Manager.Services.Specific
           foreach (var row in item.SkillsCompany)
           {
             if (row.Plans.Count() > 0)
-              listResult.Add(new ViewTagsCloudPerson() { Text = row.Skill.Name, Person = item.Person?.Name });
+              listResult.Add(new ViewTagsCloudPerson() { Item = item.Activities.FirstOrDefault()?.Activities?.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
         }
 
