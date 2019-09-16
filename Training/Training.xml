@@ -1,0 +1,573 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Training</name>
+    </assembly>
+    <members>
+        <member name="T:Training.Controllers.DefaultController">
+            <summary>
+            controller padrão
+            </summary>
+        </member>
+        <member name="M:Training.Controllers.DefaultController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="T:Training.Controllers.EventController">
+            <summary>
+            Controlador de Registro de Turmas de Treinamento
+            </summary>
+        </member>
+        <member name="M:Training.Controllers.EventController.#ctor(Manager.Core.Interfaces.IServiceEvent,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="_service">Serviço específico</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Training.Controllers.EventController.Delete(System.String)">
+            <summary>
+            Excluir um evento
+            </summary>
+            <param name="id">Identificador do evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.DeleteEventHistoric(System.String)">
+            <summary>
+            Excluir um evento histórico
+            </summary>
+            <param name="id">Identificador do evento histórico</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.DeleteCourse(System.String)">
+            <summary>
+            Excluir um curso
+            </summary>
+            <param name="id">Identificador do curso</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.DeleteCourseESocial(System.String)">
+            <summary>
+            Excluir um curso do e-Social
+            </summary>
+            <param name="id">Identificador do curso do e-Social</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.RemoveParticipant(System.String,System.String)">
+            <summary>
+            Excluir um participante do evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.RemoveDays(System.String,System.String,System.String,System.String)">
+            <summary>
+            Excluir um dia do evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="begin">Inicio</param>
+            <param name="end">Fim</param>
+            <param name="idday">Identificador do dia</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.RemoveInstructor(System.String,System.String)">
+            <summary>
+            Excluir instrutor do evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="id">Identificador do instrutor</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.Present(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Marcar a presença do aluno
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="idparticipant">Identificador do participante</param>
+            <param name="idday">Identificador do dia</param>
+            <param name="present">Marcar presença o retirar presença</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.SetGrade(System.String,System.String,System.Decimal)">
+            <summary>
+            Setar a grade de participantes
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="idparticipant">Identificador do perticipante</param>
+            <param name="grade"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ReopeningEvent(System.String)">
+            <summary>
+            Reabrir evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.New(Manager.Views.BusinessCrud.ViewCrudEvent)">
+            <summary>
+            Inclusão de um evento
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListEventOpenSubscription(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos para inscrição
+            </summary>
+            <param name="idperson">Identificador contrato</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListEventSubscription(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos inscritos
+            </summary>
+            <param name="idperson">Identificador contrato</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListEventOpen(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos abertos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListEventEnd(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista eventos encerrados
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListPersonInstructor(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista instrutores de um evento
+            </summary>
+            <param name="idevent">Identificador evento</param>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListPersonParticipants(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista participante do evento
+            </summary>
+            <param name="idevent">Identificador evento</param>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListEntity(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista entidades
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.List(System.String)">
+            <summary>
+            Busca informações de evento para editar 
+            </summary>
+            <param name="id">Identificador evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.Update(Manager.Views.BusinessCrud.ViewCrudEvent)">
+            <summary>
+            Atualiza informações de um evento
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.NewEventHistoricFrontEnd(Manager.Views.BusinessCrud.ViewCrudEventHistoric)">
+            <summary>
+            Inclusão histórico de evento
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListEventHistoric(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista histórico de eventos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListEventHistoricPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os histórico de evento de um contrato
+            </summary>
+            <param name="id">Identificador usuário</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.GetEventHistoric(System.String)">
+            <summary>
+            Busca informações para editar um histórico de evento
+            </summary>
+            <param name="id">Identificador histórico de evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.UpdateEventHistoric(Manager.Views.BusinessCrud.ViewCrudEventHistoric)">
+            <summary>
+            Atualiza informações de um historico de eventos
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.NewCourse(Manager.Views.BusinessCrud.ViewCrudCourse)">
+            <summary>
+            Inclusão de um novo curso
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListCourse(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os cursos
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.GetCourse(System.String)">
+            <summary>
+            Busca informações para editar um curso
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.UpdateCourse(Manager.Views.BusinessCrud.ViewCrudCourse)">
+            <summary>
+            Atualizar informaçõe de um curso
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.NewCourseESocial(Manager.Views.BusinessCrud.ViewCrudCourseESocial)">
+            <summary>
+            Inclusão curso esocial
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListCourseESocial(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista cursos do esocial
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.GetCourseESocial(System.String)">
+            <summary>
+            Busca informações de um curso do esocial para editar
+            </summary>
+            <param name="id">Identificador do curso esocial</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.UpdateCourseESocial(Manager.Views.BusinessCrud.ViewCrudCourseESocial)">
+            <summary>
+            Atualiza informações de um curso do esocial
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.AddParticipant(Manager.Views.BusinessCrud.ViewCrudParticipant,System.String)">
+            <summary>
+            Adiciona um participante a um evento
+            </summary>
+            <param name="participant">Objeto Crud</param>
+            <param name="idevent">Identificador evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.AddDays(Manager.Views.BusinessCrud.ViewCrudDaysEvent,System.String)">
+            <summary>
+            Adicionar dias a um evento
+            </summary>
+            <param name="days">Objeto Crud</param>
+            <param name="idevent">Identificador evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.AddDays(Manager.Views.BusinessCrud.ViewCrudInstructor,System.String)">
+            <summary>
+            Adiciona um instrutor em um evento
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <param name="idevent">Identificador evento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListParticipants(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os participante de um evento
+            </summary>
+            <param name="idevent">Identificador do evento</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Training.Controllers.MandatoryTrainingController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.#ctor(Manager.Core.Interfaces.IServiceMandatoryTraining,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="_service"></param>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.AddCompany(Manager.Views.BusinessCrud.ViewCrudCompanyMandatory)">
+            <summary>
+            
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.AddOccuaption(Manager.Views.BusinessCrud.ViewCrudOccupationMandatory)">
+            <summary>
+            
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.AddPerson(Manager.Views.BusinessCrud.ViewCrudPersonMandatory)">
+            <summary>
+            
+            </summary>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListCompany(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListOccupation(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idcompany"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListTrainingPlanPersonList(System.String,Manager.Views.Enumns.EnumTypeUser,Manager.Views.Enumns.EnumOrigin,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmanager"></param>
+            <param name="type"></param>
+            <param name="origin"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListPerson(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista pessoas
+            </summary>
+            <param name="idcourse">Identificador curso</param>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="count">contador</param>
+            <param name="page">pagina</param>
+            <param name="filter">filtro</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListTrainingPlanPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            lista treinamento obrigatório 
+            </summary>
+            <param name="idperson">identificaodor pessoa</param>
+            <param name="count">contador</param>
+            <param name="page">pagina</param>
+            <param name="filter">filtro</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.RemoveCompany(System.String,System.String)">
+            <summary>
+            remove empresa
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idcompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.RemoveOccupation(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idoccupation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.RemovePerson(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.RemoveTrainingPlan(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.UpdateTrainingPlan(Manager.Views.BusinessCrud.ViewCrudTrainingPlan)">
+            <summary>
+            Atualizar informações do plano
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListTrainingPlan(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista de plano de treinamento da empresa
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListTrainingPlan(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista planos de treinamento de um contrato
+            </summary>
+            <param name="idcompany">Identificador da empresa</param>
+            <param name="iduser">Identificador do usuario</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.NewTrainingPlan(Manager.Views.BusinessCrud.ViewCrudTrainingPlan)">
+            <summary>
+            Inclusão de novo plano de treinamento
+            </summary>
+            <param name="view">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.GetTrainingPlan(System.String)">
+            <summary>
+            Busca informações para editar plano de treinamento
+            </summary>
+            <param name="id">Identificador do plano de treinamento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.GetMandatoryTraining(System.String)">
+            <summary>
+            Busca informações para editar treinamento obrigatório
+            </summary>
+            <param name="idcourse">Identificador do curso</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista treinamentos obrigatórios
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Training.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Training.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Training.Program.BuildWebHost(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Training.Startup">
+            <summary>
+            Controle de inicialização da API
+            </summary>
+        </member>
+        <member name="M:Training.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:Training.Startup.Configuration">
+            <summary>
+            Propriedade de configuração
+            </summary>
+        </member>
+        <member name="M:Training.Startup.RegistreServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registrador de serviços
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Training.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configurador de servicos
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Training.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Configuração de aplicação
+            </summary>
+            <param name="app">Aplicação</param>
+            <param name="env">Ambiente de hospedagem</param>
+        </member>
+    </members>
+</doc>
