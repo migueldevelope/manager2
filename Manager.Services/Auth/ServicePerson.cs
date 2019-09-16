@@ -556,7 +556,7 @@ namespace Manager.Services.Auth
             .Build();
 
         hubConnection.StartAsync();
-        hubConnection.InvokeAsync("GetFilterPersons", person.Manager._id, person._idAccount);
+        hubConnection.InvokeAsync("GetFilterPersons", person.Manager?._id, person._idAccount);
 
         return manager;
       }
