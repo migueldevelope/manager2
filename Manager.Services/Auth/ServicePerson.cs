@@ -146,6 +146,31 @@ namespace Manager.Services.Auth
         .Skip(skip).Take(count).Select(p => p.GetViewListResume()).ToList();
 
     }
+
+    public List<_ViewListBase> ListOccupationManager(string idmanager, ref long total, string filter, int count, int page)
+    {
+      var occupations = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select
+        (p => new _ViewListBase()
+        {
+          _id = p.Occupation?._id,
+          Name = p.Occupation?.Name
+        }).ToList();
+
+      //distinct
+      occupations = occupations.GroupBy(i => i._id).Select(g => new _ViewListBase
+      {
+        _id = g.Key,
+        Name = g.Max(row => row.Name)
+      }).ToList();
+
+      total = occupations.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+      int skip = count * (page - 1);
+      return occupations.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
+        .Skip(skip).Take(count).ToList();
+
+    }
+
     #endregion
 
     #region Person
