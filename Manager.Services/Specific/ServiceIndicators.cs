@@ -513,9 +513,9 @@ namespace Manager.Services.Specific
           }
         }
 
-        total = result.Count();
+        total = result.Where(p => p.Schedule > 0).Count();
 
-        return result.OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
+        return result.Where(p => p.Schedule > 0).OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
@@ -586,8 +586,8 @@ namespace Manager.Services.Specific
 
         }
 
-        total = list.Count();
-        return list.Where(p => p.Manager.Contains(filter)).Skip(skip).Take(count).ToList();
+        total = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).Count();
+        return list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
