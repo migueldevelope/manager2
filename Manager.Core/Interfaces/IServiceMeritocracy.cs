@@ -35,5 +35,6 @@ namespace Manager.Core.Interfaces
     List<ViewCrudSalaryScaleScore> ListSalaryScaleScore(ref long total, int count = 10, int page = 1, string filter = "");
     string End(string id);
     string UpdateSchooling(string id, string idschooling);
+    List<ViewListMeritocracyResume> ListMeritocracy(string idmanager, List<_ViewList> occupations, ref long total, int count, int page, string filter);
   }
 }

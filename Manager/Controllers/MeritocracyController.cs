@@ -269,6 +269,19 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => Ok(service.RemoveMeritocracyScore(id)));
     }
+
+   
+    [Authorize]
+    [HttpPost]
+    [Route("listmeritocracy/{idmanager}")]
+    public async Task<List<ViewListMeritocracyResume>> ListMeritocracy([FromBody]List<_ViewList> occupations, string idmanager, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListMeritocracy(idmanager, occupations, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     #endregion
 
     #region SalaryScaleScore

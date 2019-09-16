@@ -704,6 +704,46 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Meritocracy
+
+    public List<ViewListMeritocracyResume> ListMeritocracy(string idmanager, List<_ViewList> occupations, ref long total, int count, int page, string filter)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
+        var list = new List<ViewListMeritocracyResume>();
+        foreach(var occ in occupations)
+        {
+          foreach (var item in persons)
+          {
+            if(item.Occupation?._id == occ._id)
+            {
+              var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id).Result;
+              if (meritocracy.Count() > 0)
+              {
+                var result = meritocracy.Max(p => p.ResultEnd);
+                list.Add(new ViewListMeritocracyResume()
+                {
+                  Name = item.User?.Name,
+                  Manager = item.Manager?.Name,
+                  Occupation = item.Occupation?.Name,
+                  ResultEnd = result
+                });
+              }
+            }
+          }
+        }
+        
+
+        total = list.Count();
+        list = list.Where(p => p.Name.Contains(filter)).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public string Delete(string id)
     {
       try
