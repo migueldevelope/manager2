@@ -710,12 +710,88 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idmanager).Result;
         var list = new List<ViewListMeritocracyResume>();
 
         if (occupations.Count > 0)
         {
           foreach (var occ in occupations)
+          {
+            foreach (var item in persons)
+            {
+              if (item.Occupation?._id == occ._id)
+              {
+                var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id).Result;
+                if (meritocracy.Count() > 0)
+                {
+                  var result = meritocracy.Max(p => p.ResultEnd);
+                  list.Add(new ViewListMeritocracyResume()
+                  {
+                    Name = item.User?.Name,
+                    Manager = item.Manager?.Name,
+                    Occupation = item.Occupation?.Name,
+                    ResultEnd = result
+                  });
+                }
+              }
+            }
+          }
+        }
+        else
+        {
+          foreach (var item in persons)
+          {
+            var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id
+            && p.StatusMeritocracy == EnumStatusMeritocracy.End).Result;
+            if (meritocracy.Count() > 0)
+            {
+              var result = meritocracy.Max(p => p.ResultEnd);
+              list.Add(new ViewListMeritocracyResume()
+              {
+                Name = item.User?.Name,
+                Manager = item.Manager?.Name,
+                Occupation = item.Occupation?.Name,
+                ResultEnd = result
+              });
+            }
+          }
+        }
+
+
+
+        total = list.Count();
+        list = list.Where(p => p.Name.Contains(filter)).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListMeritocracyResume> ListMeritocracyRH(ViewFilterOccupationsAndManagers view, ref long total, int count, int page, string filter)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        var list = new List<ViewListMeritocracyResume>();
+
+        if (view.Managers.Count > 0)
+        {
+          foreach (var item in persons)
+          {
+            if (view.Managers.Contains(new _ViewListBase() { _id = item.Manager?._id }))
+            {
+              item.Status = EnumStatus.Disabled;
+            }
+          }
+          persons = persons.Where(p => p.Status == EnumStatus.Disabled).ToList();
+        }
+
+        if (view.Occupations.Count > 0)
+        {
+          foreach (var occ in view.Occupations)
           {
             foreach (var item in persons)
             {

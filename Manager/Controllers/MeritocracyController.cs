@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -271,6 +272,15 @@ namespace Manager.Controllers
     }
 
    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="occupations"></param>
+    /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("listmeritocracy/{idmanager}")]
@@ -278,6 +288,26 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.ListMeritocracy(idmanager, occupations, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listmeritocracyrh")]
+    public async Task<List<ViewListMeritocracyResume>> ListMeritocracyRH([FromBody]ViewFilterOccupationsAndManagers view, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListMeritocracyRH(view, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }

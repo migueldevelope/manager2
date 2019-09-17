@@ -36,5 +36,6 @@ namespace Manager.Core.Interfaces
     string End(string id);
     string UpdateSchooling(string id, string idschooling);
     List<ViewListMeritocracyResume> ListMeritocracy(string idmanager, List<_ViewList> occupations, ref long total, int count, int page, string filter);
+    List<ViewListMeritocracyResume> ListMeritocracyRH(ViewFilterOccupationsAndManagers view, ref long total, int count, int page, string filter);
   }
 }
