@@ -286,6 +286,24 @@
             <param name="filter"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListSucessFactors1">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListSucessFactors2">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ListSucessFactors3">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Indicators.Controllers.ValuesController">
             <summary>
             

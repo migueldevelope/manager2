@@ -487,48 +487,15 @@ namespace Manager.Services.Specific
 
           foreach (var lst in result.Where(p => p._idManager == moni.Person._idManager))
           {
-            if (moni.SkillsCompany != null)
-            {
-              foreach (var item in moni.SkillsCompany)
-              {
-                if (item.Plans != null)
-                {
-                  lst.Schedule += item.Plans.Count();
-                  lst.Realized += item.Plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
-                  lst.Late += item.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
-                  lst.Balance = lst.Realized - lst.Late;
-                }
+            var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == moni._id).Result;
+            lst.Schedule += plans.Count();
+            lst.Realized += plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
+            lst.Late += plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
+            lst.Balance = lst.Realized - lst.Late;
 
-              }
-            }
-            if (moni.Schoolings != null)
-            {
-              foreach (var item in moni.Schoolings)
-              {
-                if (item.Plans != null)
-                {
-                  lst.Schedule += item.Plans.Count();
-                  lst.Realized += item.Plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
-                  lst.Late += item.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
-                  lst.Balance = lst.Realized - lst.Late;
-                }
-              }
-            }
-            if (moni.Activities != null)
-            {
-              foreach (var item in moni.Activities)
-              {
-                if (item.Plans != null)
-                {
-                  lst.Schedule += item.Plans.Count();
-                  lst.Realized += item.Plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
-                  lst.Late += item.Plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
-                  lst.Balance = lst.Realized - lst.Late;
-                }
-              }
-            }
           }
         }
+
 
         total = result.Where(p => p.Schedule > 0).Count();
 
