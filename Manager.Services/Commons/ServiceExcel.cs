@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Manager.Views.BusinessView;
+using MongoDB.Bson;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -11,6 +12,8 @@ namespace Manager.Services.Commons
 {
   public class ServiceExcel
   {
+
+    #region SalaryScale
     public Tuple<double[][], string[], long, int[]> ImportSalaryScale(Stream stream)
     {
       //string fullPath = @"c:/jms/SALARYSCALE4.xlsx";
@@ -78,7 +81,6 @@ namespace Manager.Services.Commons
 
 
     }
-
     public string ExportSalaryScale(Tuple<double[][], string[], int[], long> tuple)
     {
       try
@@ -151,9 +153,93 @@ namespace Manager.Services.Commons
         throw e;
       }
     }
+    #endregion
+
+    #region Training
+    public List<ViewImportTraining> ImportTraning(Stream stream)
+    {
+      //string fullPath = @"c:/jms/SALARYSCALE4.xlsx";
+      //var stream = new FileStream(fullPath, FileMode.Open);
+      try
+      {
+        //HISTORYTRAINING
+        ISheet sheet;
+        var list = new List<ViewImportTraining>();
+        stream.Position = 0;
+        XSSFWorkbook hssfwb = new XSSFWorkbook(stream); //This will read 2007 Excel format  
+        sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook   
 
 
-    public long CountLines(ISheet sheet)
+        IRow rowpass = sheet.GetRow(3);
+        var pass = rowpass.GetCell(12).ToString();
+        if (pass != "sheetimport")
+          throw new Exception("not_sheet");
+
+
+        long count = CountLines(sheet);
+
+
+        IRow headerRow = sheet.GetRow(0); //Get Header Row
+        int cellCount = headerRow.LastCellNum;
+
+        for (int i = 1; i < (count -1); i++) //Read Excel File
+        {
+          IRow row = sheet.GetRow(i);
+          if (row == null) continue;
+          if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
+
+          var cpf = row.GetCell(0)?.ToString();
+          var namecourse = row.GetCell(1)?.ToString();
+          var content = row.GetCell(2)?.ToString();
+          var peridiocity = row.GetCell(3)?.ToString();
+          var nameeevent = row.GetCell(4)?.ToString();
+          var workload = row.GetCell(5)?.ToString();
+          var nameentity = row.GetCell(6)?.ToString();
+          var datebegin = row.GetCell(7)?.ToString();
+          var dateend = row.GetCell(8)?.ToString();
+
+          int intParsed;
+          decimal decimalParsed;
+          DateTime dateParsed;
+
+          if ((decimal.TryParse(workload.Trim(), out decimalParsed)) == false)
+            throw new Exception("workload_incorret");
+
+          if ((int.TryParse(peridiocity.Trim(), out intParsed)) == false)
+            peridiocity = "0";
+
+          if ((DateTime.TryParse(dateend.Trim(), out dateParsed)) == false)
+            throw new Exception("dateend_incorret");
+
+          if ((DateTime.TryParse(datebegin.Trim(), out dateParsed)) == false)
+            datebegin = dateend;
+
+          var view = new ViewImportTraining()
+          {
+            Cpf = cpf,
+            NameCourse = namecourse,
+            Content = content,
+            NameEvent = nameeevent,
+            NameEntity = nameentity,
+            Workload = decimal.Parse(workload),
+            Peridiocity = byte.Parse(peridiocity),
+            DateBegin = DateTime.Parse(datebegin),
+            DateEnd = DateTime.Parse(dateend)
+          };
+          list.Add(view);
+        }
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
+    #region private
+    private long CountLines(ISheet sheet)
     {
       long count = 0;
       byte blankline = 0;
@@ -182,6 +268,8 @@ namespace Manager.Services.Commons
       }
       return count;
     }
+    #endregion
+
 
   }
 }

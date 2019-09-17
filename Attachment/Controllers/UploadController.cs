@@ -355,6 +355,26 @@ namespace EdeskIntegration.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <returns></returns>
+    [HttpPost("training")]
+    public string PostTraining()
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        if (file.FileName != "HISTORYTRAINING.xlsx")
+          return "bad_file_type";
+      }
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var result = eventService.ImportTraning(file.OpenReadStream());
+        return result;
+      }
+      return "not_file";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="idrecommendation"></param>
     /// <returns></returns>
     [HttpPost("{idrecommendation}/recommendation")]

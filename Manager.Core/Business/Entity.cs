@@ -1,4 +1,6 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessList;
 
 namespace Manager.Core.Business
 {
@@ -8,5 +10,13 @@ namespace Manager.Core.Business
   public class Entity : BaseEntity
   {
     public string Name { get; set; }
+    public ViewCrudEntity GetCrudEntity()
+    {
+      return new ViewCrudEntity()
+      {
+        _id = _id,
+        Name = Name
+      };
+    }
   }
 }

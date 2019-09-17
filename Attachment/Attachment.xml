@@ -137,6 +137,12 @@
             <param name="idsalaryscale"></param>
             <returns></returns>
         </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostTraining">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.PostRecommendation(System.String)">
             <summary>
             

@@ -3,6 +3,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
@@ -54,5 +55,6 @@ namespace Manager.Core.Interfaces
     List<ViewListEvent> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListEvent> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListEvent> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+    string ImportTraning(Stream stream);
   }
 }

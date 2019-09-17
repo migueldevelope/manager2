@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -487,13 +488,13 @@ namespace Manager.Services.Specific
         {
           _id = eventhistoric._id,
           Begin = eventhistoric.Begin,
-          Course =  eventhistoric.Course,
+          Course = eventhistoric.Course,
           Name = eventhistoric.Name,
           End = eventhistoric.End,
           Workload = eventhistoric.Workload,
           _idPerson = eventhistoric.Person._id,
           NamePerson = eventhistoric.Person.Name,
-          Entity =  eventhistoric.Entity,
+          Entity = eventhistoric.Entity,
           Event = eventhistoric.Event,
           Attachments = eventhistoric.Attachments
         };
@@ -1489,6 +1490,69 @@ namespace Manager.Services.Specific
       {
         throw e;
       }
+    }
+
+    public string ImportTraning(Stream stream)
+    {
+      try
+      {
+        var serviceExcel = new ServiceExcel();
+        var list = serviceExcel.ImportTraning(stream);
+
+        foreach (var item in list)
+        {
+          var course = serviceCourse.GetNewVersion(p => p.Name == item.NameCourse).Result;
+          if (course == null)
+          {
+            course = new Course()
+            {
+              Name = item.NameCourse,
+              Content = item.Content,
+              Wordkload = item.Workload
+            };
+            course = serviceCourse.InsertNewVersion(course).Result;
+          }
+
+          var entity = serviceEntity.GetNewVersion(p => p.Name == item.NameEntity).Result;
+          if (entity == null)
+            entity = serviceEntity.InsertNewVersion(new Entity { Name = item.NameEntity }).Result;
+
+          var cpf = item.Cpf.Replace(".", "").Replace("-", "").Trim();
+          var person = servicePerson.GetNewVersion(p => p.User.Document == cpf).Result;
+          if (person != null)
+          {
+            var eventHistoric = new EventHistoric()
+            {
+              Course = course.GetViewList(),
+              Workload = item.Workload,
+              Begin = item.DateBegin.Value,
+              End = item.DateEnd.Value,
+              Name = item.NameEvent,
+              Entity = entity.GetCrudEntity(),
+              Event = new ViewListEvent()
+              {
+                Name = item.NameEvent,
+                NameCourse = item.NameCourse,
+                _idCourse = course._id,
+                _id = ObjectId.GenerateNewId().ToString()
+              },
+              Person = person.GetViewListBase()
+            };
+
+            var hst = serviceEventHistoric.InsertNewVersion(eventHistoric).Result;
+          }
+          //throw new Exception("not_person");
+
+
+
+        }
+        return "import_ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+
     }
 
     #endregion

@@ -1766,7 +1766,7 @@ namespace Manager.Services.Specific
             var area = serviceArea.GetFreeNewVersion(p => p._id == item.Occupation._idArea).Result;
             view.Area = area?.Name;
           }
-
+          list.Add(view);
         }
 
         return list.OrderBy(p => p.Company).ThenBy(p => p.Manager).ThenBy(p => p.Person).ToList();
@@ -1797,6 +1797,8 @@ namespace Manager.Services.Specific
             var area = serviceArea.GetFreeNewVersion(p => p._id == item.Occupation._idArea).Result;
             view.Area = area?.Name;
           }
+
+          list.Add(view);
 
         }
 
