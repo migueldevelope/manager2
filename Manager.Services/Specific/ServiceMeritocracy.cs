@@ -741,7 +741,8 @@ namespace Manager.Services.Specific
         {
           foreach (var item in persons)
           {
-            var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id).Result;
+            var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id
+            && p.StatusMeritocracy == EnumStatusMeritocracy.End).Result;
             if (meritocracy.Count() > 0)
             {
               var result = meritocracy.Max(p => p.ResultEnd);
