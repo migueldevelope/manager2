@@ -58,5 +58,8 @@ namespace Manager.Core.Interfaces
     IEnumerable<ViewChartCeritification> ChartCertification(ViewFilterDate date);
     IEnumerable<ViewChartCertificationCount> ChartCertificationCount(ViewFilterDate date);
     List<ViewPlanQtd> GetPlanQtd(ViewFilterDate date, int count, int page, ref long total, string filter);
+    List<ViewListSucessFactors1> ListSucessFactors1();
+    List<ViewListSucessFactors2> ListSucessFactors2();
+    List<ViewListSucessFactors3> ListSucessFactors3();
   }
 }

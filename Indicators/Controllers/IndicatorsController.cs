@@ -511,5 +511,40 @@ namespace Indicators.Controllers
       return result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listsucessfactors1")]
+    public async Task<List<ViewListSucessFactors1>> ListSucessFactors1()
+    {
+      return await Task.Run(() => service.ListSucessFactors1());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listsucessfactors2")]
+    public async Task<List<ViewListSucessFactors2>> ListSucessFactors2()
+    {
+      return await Task.Run(() => service.ListSucessFactors2());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listsucessfactors3")]
+    public async Task<List<ViewListSucessFactors3>> ListSucessFactors3()
+    {
+      return await Task.Run(() => service.ListSucessFactors3());
+    }
   }
 }

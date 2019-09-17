@@ -22,6 +22,8 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<Monitoring> serviceMonitoring;
     private readonly ServiceGeneric<OnBoarding> serviceOnboarding;
+    private readonly ServiceGeneric<Occupation> serviceOccupation;
+    private readonly ServiceGeneric<Area> serviceArea;
     private readonly ServiceGeneric<Checkpoint> serviceCheckpoint;
     private readonly ServiceGeneric<Workflow> serviceWorkflow;
     private readonly ServiceGeneric<Person> servicePerson;
@@ -62,6 +64,8 @@ namespace Manager.Services.Specific
         serviceRecommendationPerson = new ServiceGeneric<RecommendationPerson>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
+        serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceArea = new ServiceGeneric<Area>(context);
         serviceIPerson = _serviceIPerson;
 
         path = pathToken;
@@ -90,6 +94,8 @@ namespace Manager.Services.Specific
       serviceRecommendationPerson._user = _user;
       serviceParameter._user = _user;
       serviceSalaryScale._user = _user;
+      serviceOccupation._user = _user;
+      serviceArea._user = _user;
       serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
     }
@@ -1721,6 +1727,87 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListSucessFactors1> ListSucessFactors1()
+    {
+      try
+      {
+        return servicePerson.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result.
+          Select(p => new ViewListSucessFactors1()
+          {
+            Person = p.User?.Name,
+            Company = p.Company?.Name,
+            DateAdm = p.User?.DateAdm
+          }).OrderBy(p => p.Company).ThenBy(p => p.Person).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListSucessFactors2> ListSucessFactors2()
+    {
+      try
+      {
+        var persons = servicePerson.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var list = new List<ViewListSucessFactors2>();
+
+        foreach (var item in persons)
+        {
+          var view = new ViewListSucessFactors2()
+          {
+            Person = item.User?.Name,
+            Company = item.Company?.Name,
+            Manager = item.Manager?.Name
+          };
+          if (item.Occupation != null)
+          {
+            var area = serviceArea.GetFreeNewVersion(p => p._id == item.Occupation._idArea).Result;
+            view.Area = area?.Name;
+          }
+
+        }
+
+        return list.OrderBy(p => p.Company).ThenBy(p => p.Manager).ThenBy(p => p.Person).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListSucessFactors3> ListSucessFactors3()
+    {
+      try
+      {
+        var persons = servicePerson.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var list = new List<ViewListSucessFactors3>();
+
+        foreach (var item in persons)
+        {
+          var view = new ViewListSucessFactors3()
+          {
+            Person = item.User?.Name,
+            Company = item.Company?.Name,
+            Mail = item.User?.Mail
+          };
+          if (item.Occupation != null)
+          {
+            var area = serviceArea.GetFreeNewVersion(p => p._id == item.Occupation._idArea).Result;
+            view.Area = area?.Name;
+          }
+
+        }
+
+        return list.OrderBy(p => p.Company).ThenBy(p => p.Person).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
   }
 
 }
