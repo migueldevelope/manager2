@@ -712,28 +712,51 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
         var list = new List<ViewListMeritocracyResume>();
-        foreach(var occ in occupations)
+
+        if (occupations.Count > 0)
         {
-          foreach (var item in persons)
+          foreach (var occ in occupations)
           {
-            if(item.Occupation?._id == occ._id)
+            foreach (var item in persons)
             {
-              var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id).Result;
-              if (meritocracy.Count() > 0)
+              if (item.Occupation?._id == occ._id)
               {
-                var result = meritocracy.Max(p => p.ResultEnd);
-                list.Add(new ViewListMeritocracyResume()
+                var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id).Result;
+                if (meritocracy.Count() > 0)
                 {
-                  Name = item.User?.Name,
-                  Manager = item.Manager?.Name,
-                  Occupation = item.Occupation?.Name,
-                  ResultEnd = result
-                });
+                  var result = meritocracy.Max(p => p.ResultEnd);
+                  list.Add(new ViewListMeritocracyResume()
+                  {
+                    Name = item.User?.Name,
+                    Manager = item.Manager?.Name,
+                    Occupation = item.Occupation?.Name,
+                    ResultEnd = result
+                  });
+                }
               }
             }
           }
         }
-        
+        else
+        {
+          foreach (var item in persons)
+          {
+            var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id).Result;
+            if (meritocracy.Count() > 0)
+            {
+              var result = meritocracy.Max(p => p.ResultEnd);
+              list.Add(new ViewListMeritocracyResume()
+              {
+                Name = item.User?.Name,
+                Manager = item.Manager?.Name,
+                Occupation = item.Occupation?.Name,
+                ResultEnd = result
+              });
+            }
+          }
+        }
+
+
 
         total = list.Count();
         list = list.Where(p => p.Name.Contains(filter)).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
