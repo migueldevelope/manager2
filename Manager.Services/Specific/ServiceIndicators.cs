@@ -485,17 +485,16 @@ namespace Manager.Services.Specific
           if (result.Where(p => p._idManager == moni.Person._idManager).Count() == 0)
             result.Add(new ViewPlanQtd() { _idManager = moni.Person._idManager, Manager = moni.Person.Manager });
 
-          foreach (var lst in result.Where(p => p._idManager == moni.Person._idManager))
+          var person = servicePerson.GetNewVersion(p => p._id == moni.Person._id).Result;
+          foreach (var lst in result.Where(p => p._idManager == person.Manager?._id))
           {
             var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == moni._id).Result;
             lst.Schedule += plans.Count();
             lst.Realized += plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
             lst.Late += plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
             lst.Balance = lst.Realized - lst.Late;
-
           }
         }
-
 
         total = result.Where(p => p.Schedule > 0).Count();
 
