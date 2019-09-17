@@ -9,5 +9,6 @@ namespace Manager.Views.BusinessList
     public string OccupationName { get; set; }
     public DateTime? DateAdm { get; set; }
     public string Manager { get; set; }
+    public DateTime? DateLastOccupation { get; set; }
   }
 }

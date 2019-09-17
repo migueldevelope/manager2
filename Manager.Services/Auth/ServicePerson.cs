@@ -204,7 +204,8 @@ namespace Manager.Services.Auth
           Name = p.User?.Name,
           OccupationName = p.Occupation?.Name,
           DateAdm = p.User?.DateAdm,
-          Manager = p.Manager?.Name
+          Manager = p.Manager?.Name,
+          DateLastOccupation = p.DateLastOccupation
         }).ToList();
       }
       catch (Exception e)

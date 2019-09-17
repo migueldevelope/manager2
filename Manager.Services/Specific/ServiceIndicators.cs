@@ -111,11 +111,14 @@ namespace Manager.Services.Specific
         if (parameterget != null)
           parameter = long.Parse(parameterget.Content);
 
-        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
+        persons = persons.Where(p => (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)).ToList();
 
         foreach (var item in persons)
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          if (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            if (item.DateLastOccupation != null)
+              dateadm = item.DateLastOccupation.Value;
 
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
 
@@ -150,11 +153,15 @@ namespace Manager.Services.Specific
         long parameter = 90;
         if (parameterget != null)
           parameter = long.Parse(parameterget.Content);
-        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
+        persons = persons.Where(p => (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)).ToList();
 
         foreach (var item in persons)
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          if (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            if (item.DateLastOccupation != null)
+              dateadm = item.DateLastOccupation.Value;
+
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
           if ((days < 10) && (days >= 0))
           {
@@ -187,11 +194,15 @@ namespace Manager.Services.Specific
         long parameter = 90;
         if (parameterget != null)
           parameter = long.Parse(parameterget.Content);
-        persons = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding).ToList();
+        persons = persons.Where(p => (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)).ToList();
 
         foreach (var item in persons)
         {
           DateTime dateadm = item.DateAdm == null ? DateTime.Now : item.DateAdm.Value;
+          if (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            if (item.DateLastOccupation != null)
+              dateadm = item.DateLastOccupation.Value;
+
           var days = (dateadm.AddDays(parameter) - DateTime.Now).Days;
           if (days < 0)
           {
