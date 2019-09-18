@@ -535,11 +535,20 @@ namespace Manager.Services.Specific
               foreach (var item in moni.SkillsCompany)
               {
                 if (item.Comments != null)
+                {
                   lst.Comments += item.Comments.Count();
+                  lst.Total += item.Comments.Count();
+                }
                 if (item.Plans != null)
+                {
                   lst.Plans += item.Plans.Count();
+                  lst.Total += item.Plans.Count();
+                }
                 if (item.Praise != null)
+                {
                   lst.Praises += 1;
+                  lst.Total += 1;
+                }
               }
             }
             if (moni.Schoolings != null)
@@ -547,11 +556,20 @@ namespace Manager.Services.Specific
               foreach (var item in moni.Schoolings)
               {
                 if (item.Comments != null)
+                {
                   lst.Comments += item.Comments.Count();
+                  lst.Total += item.Comments.Count();
+                }
                 if (item.Plans != null)
+                {
                   lst.Plans += item.Plans.Count();
+                  lst.Total += item.Plans.Count();
+                }
                 if (item.Praise != null)
+                {
                   lst.Praises += 1;
+                  lst.Total += 1;
+                }
               }
             }
             if (moni.Activities != null)
@@ -559,11 +577,20 @@ namespace Manager.Services.Specific
               foreach (var item in moni.Activities)
               {
                 if (item.Comments != null)
+                {
                   lst.Comments += item.Comments.Count();
+                  lst.Total += item.Comments.Count();
+                }
                 if (item.Plans != null)
+                {
                   lst.Plans += item.Plans.Count();
+                  lst.Total += item.Plans.Count();
+                }
                 if (item.Praise != null)
+                {
                   lst.Praises += 1;
+                  lst.Total += 1;
+                }
               }
             }
           }
@@ -574,8 +601,8 @@ namespace Manager.Services.Specific
         result.Plans = result.Plans / total;
         result.Praises = result.Praises / total;
 
-        result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).Skip(skip).Take(count).ToList();
-        
+        result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderByDescending(p => p.Total).Skip(skip).Take(count).ToList();
+
         return result;
       }
       catch (Exception e)
