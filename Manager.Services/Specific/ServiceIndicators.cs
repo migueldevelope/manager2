@@ -604,6 +604,9 @@ namespace Manager.Services.Specific
 
         }
         total = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).Count();
+
+        list = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).ToList();
+
         if(list.Count > 0)
         {
           result.Comments = list.Average(p => p.Comments);
