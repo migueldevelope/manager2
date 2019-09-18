@@ -503,7 +503,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("getplanqtd")]
-    public async Task<List<ViewPlanQtd>> GetPlanQtd([FromBody]ViewFilterDate date, int count = 10, int page = 1, string filter = "")
+    public async Task<ViewListPlanQtdGerals> GetPlanQtd([FromBody]ViewFilterDate date, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = await Task.Run(() => service.GetPlanQtd(date, count, page, ref total, filter));

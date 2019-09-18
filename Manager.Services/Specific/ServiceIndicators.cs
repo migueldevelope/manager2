@@ -467,10 +467,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewPlanQtd> GetPlanQtd(ViewFilterDate date, int count, int page, ref long total, string filter)
+    public ViewListPlanQtdGerals GetPlanQtd(ViewFilterDate date, int count, int page, ref long total, string filter)
     {
       try
       {
+        var view = new ViewListPlanQtdGerals();
         int skip = (count * (page - 1));
 
         var result = new List<ViewPlanQtd>();
@@ -497,8 +498,13 @@ namespace Manager.Services.Specific
         }
 
         total = result.Where(p => p.Schedule > 0).Count();
+        view.Schedule = result.Average(p => p.Schedule);
+        view.Realized = result.Average(p => p.Realized);
+        view.Late = result.Average(p => p.Late);
+        view.Balance = result.Average(p => p.Balance);
 
-        return result.Where(p => p.Schedule > 0).OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
+        view.List = result.Where(p => p.Schedule > 0).OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
+        return view;
       }
       catch (Exception e)
       {
@@ -601,7 +607,7 @@ namespace Manager.Services.Specific
         {
           result.Comments = list.Average(p => p.Comments);
           result.Plans = list.Average(p => p.Plans);
-          result.Praises = list.Average(p => p.Plans);
+          result.Praises = list.Average(p => p.Praises);
         }
         
 
