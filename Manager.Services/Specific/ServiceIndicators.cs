@@ -506,11 +506,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewMoninitoringQtdManager> GetMoninitoringQtdManager(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter)
+    public ViewListMonitoringQtdManagerGeral GetMoninitoringQtdManager(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter)
     {
       try
       {
         int skip = (count * (page - 1));
+        var result = new ViewListMonitoringQtdManagerGeral();
 
         var list = new List<ViewMoninitoringQtdManager>();
         List<Monitoring> monitorings = new List<Monitoring>();
@@ -568,9 +569,14 @@ namespace Manager.Services.Specific
           }
 
         }
-
         total = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).Count();
-        return list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).Skip(skip).Take(count).ToList();
+        result.Comments = result.Comments / total;
+        result.Plans = result.Plans / total;
+        result.Praises = result.Praises / total;
+
+        result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).Skip(skip).Take(count).ToList();
+        
+        return result;
       }
       catch (Exception e)
       {

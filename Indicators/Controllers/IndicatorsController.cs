@@ -345,7 +345,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("getmoninitoringqtdmanager")]
-    public async Task<List<ViewMoninitoringQtdManager>> GetMoninitoringQtdManager([FromBody]ViewFilterDate date, string idmanager = "", int count = 10, int page = 1, string filter = "")
+    public async Task<ViewListMonitoringQtdManagerGeral> GetMoninitoringQtdManager([FromBody]ViewFilterDate date, string idmanager = "", int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = await Task.Run(() => service.GetMoninitoringQtdManager(date, idmanager, count, page, ref total, filter));
