@@ -472,39 +472,39 @@ namespace Manager.Services.Specific
       try
       {
         var view = new ViewListPlanQtdGerals();
-        int skip = (count * (page - 1));
+        //int skip = (count * (page - 1));
 
-        var result = new List<ViewPlanQtd>();
-        List<Monitoring> monitorings = new List<Monitoring>();
+        //var result = new List<ViewPlanQtd>();
+        //List<Monitoring> monitorings = new List<Monitoring>();
 
-        monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
-              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End
-              && p.Person.Manager.Contains(filter)).Result;
+        //monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+        //      && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End
+        //      && p.Person.Manager.Contains(filter)).Result;
 
-        foreach (var moni in monitorings)
-        {
-          if (result.Where(p => p._idManager == moni.Person._idManager).Count() == 0)
-            result.Add(new ViewPlanQtd() { _idManager = moni.Person._idManager, Manager = moni.Person.Manager });
+        //foreach (var moni in monitorings)
+        //{
+        //  if (result.Where(p => p._idManager == moni.Person._idManager).Count() == 0)
+        //    result.Add(new ViewPlanQtd() { _idManager = moni.Person._idManager, Manager = moni.Person.Manager });
 
-          var person = servicePerson.GetNewVersion(p => p._id == moni.Person._id).Result;
-          foreach (var lst in result.Where(p => p._idManager == person.Manager?._id))
-          {
-            var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == moni._id).Result;
-            lst.Schedule += plans.Count();
-            lst.Realized += plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
-            lst.Late += plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
-            lst.Balance = lst.Realized - lst.Late;
-          }
-        }
+        //  var person = servicePerson.GetNewVersion(p => p._id == moni.Person._id).Result;
+        //  foreach (var lst in result.Where(p => p._idManager == person.Manager?._id))
+        //  {
+        //    var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == moni._id).Result;
+        //    lst.Schedule += plans.Count();
+        //    lst.Realized += plans.Where(p => p.StatusPlan != EnumStatusPlan.Open).Count();
+        //    lst.Late += plans.Where(p => p.StatusPlan == EnumStatusPlan.Open && p.Deadline < DateTime.Now).Count();
+        //    lst.Balance = lst.Realized - lst.Late;
+        //  }
+        //}
 
-        total = result.Where(p => p.Schedule > 0).Count();
-        result = result.Where(p => p.Schedule > 0).ToList();
-        view.Schedule = result.Average(p => p.Schedule);
-        view.Realized = result.Average(p => p.Realized);
-        view.Late = result.Average(p => p.Late);
-        view.Balance = result.Average(p => p.Balance);
+        //total = result.Where(p => p.Schedule > 0).Count();
+        //result = result.Where(p => p.Schedule > 0).ToList();
+        //view.Schedule = result.Average(p => p.Schedule);
+        //view.Realized = result.Average(p => p.Realized);
+        //view.Late = result.Average(p => p.Late);
+        //view.Balance = result.Average(p => p.Balance);
 
-        view.List = result.OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
+        //view.List = result.OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
         return view;
       }
       catch (Exception e)
@@ -520,102 +520,102 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         var result = new ViewListMonitoringQtdManagerGeral();
 
-        var list = new List<ViewMoninitoringQtdManager>();
-        List<Monitoring> monitorings = new List<Monitoring>();
+        //var list = new List<ViewMoninitoringQtdManager>();
+        //List<Monitoring> monitorings = new List<Monitoring>();
 
-        if (idManager != string.Empty)
-          monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
-              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End & p.Person._idManager == idManager).Result;
-        else
-          monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
-              && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+        //if (idManager != string.Empty)
+        //  monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+        //      && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End & p.Person._idManager == idManager).Result;
+        //else
+        //  monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+        //      && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
 
-        foreach (var moni in monitorings)
-        {
-          if (list.Where(p => p._idManager == moni.Person._idManager).Count() == 0)
-            list.Add(new ViewMoninitoringQtdManager { Manager = moni.Person.Manager, _idManager = moni.Person._idManager, Praises = 0, Comments = 0, Plans = 0 });
+        //foreach (var moni in monitorings)
+        //{
+        //  if (list.Where(p => p._idManager == moni.Person._idManager).Count() == 0)
+        //    list.Add(new ViewMoninitoringQtdManager { Manager = moni.Person.Manager, _idManager = moni.Person._idManager, Praises = 0, Comments = 0, Plans = 0 });
 
-          foreach (var lst in list.Where(p => p._idManager == moni.Person._idManager))
-          {
-            if (moni.SkillsCompany != null)
-            {
-              foreach (var item in moni.SkillsCompany)
-              {
-                if (item.Comments != null)
-                {
-                  lst.Comments += item.Comments.Count();
-                  lst.Total += item.Comments.Count();
-                }
-                if (item.Plans != null)
-                {
-                  lst.Plans += item.Plans.Count();
-                  lst.Total += item.Plans.Count();
-                }
-                if (item.Praise != null)
-                {
-                  lst.Praises += 1;
-                  lst.Total += 1;
-                }
-              }
-            }
-            if (moni.Schoolings != null)
-            {
-              foreach (var item in moni.Schoolings)
-              {
-                if (item.Comments != null)
-                {
-                  lst.Comments += item.Comments.Count();
-                  lst.Total += item.Comments.Count();
-                }
-                if (item.Plans != null)
-                {
-                  lst.Plans += item.Plans.Count();
-                  lst.Total += item.Plans.Count();
-                }
-                if (item.Praise != null)
-                {
-                  lst.Praises += 1;
-                  lst.Total += 1;
-                }
-              }
-            }
-            if (moni.Activities != null)
-            {
-              foreach (var item in moni.Activities)
-              {
-                if (item.Comments != null)
-                {
-                  lst.Comments += item.Comments.Count();
-                  lst.Total += item.Comments.Count();
-                }
-                if (item.Plans != null)
-                {
-                  lst.Plans += item.Plans.Count();
-                  lst.Total += item.Plans.Count();
-                }
-                if (item.Praise != null)
-                {
-                  lst.Praises += 1;
-                  lst.Total += 1;
-                }
-              }
-            }
-          }
+        //  foreach (var lst in list.Where(p => p._idManager == moni.Person._idManager))
+        //  {
+        //    if (moni.SkillsCompany != null)
+        //    {
+        //      foreach (var item in moni.SkillsCompany)
+        //      {
+        //        if (item.Comments != null)
+        //        {
+        //          lst.Comments += item.Comments.Count();
+        //          lst.Total += item.Comments.Count();
+        //        }
+        //        if (item.Plans != null)
+        //        {
+        //          lst.Plans += item.Plans.Count();
+        //          lst.Total += item.Plans.Count();
+        //        }
+        //        if (item.Praise != null)
+        //        {
+        //          lst.Praises += 1;
+        //          lst.Total += 1;
+        //        }
+        //      }
+        //    }
+        //    if (moni.Schoolings != null)
+        //    {
+        //      foreach (var item in moni.Schoolings)
+        //      {
+        //        if (item.Comments != null)
+        //        {
+        //          lst.Comments += item.Comments.Count();
+        //          lst.Total += item.Comments.Count();
+        //        }
+        //        if (item.Plans != null)
+        //        {
+        //          lst.Plans += item.Plans.Count();
+        //          lst.Total += item.Plans.Count();
+        //        }
+        //        if (item.Praise != null)
+        //        {
+        //          lst.Praises += 1;
+        //          lst.Total += 1;
+        //        }
+        //      }
+        //    }
+        //    if (moni.Activities != null)
+        //    {
+        //      foreach (var item in moni.Activities)
+        //      {
+        //        if (item.Comments != null)
+        //        {
+        //          lst.Comments += item.Comments.Count();
+        //          lst.Total += item.Comments.Count();
+        //        }
+        //        if (item.Plans != null)
+        //        {
+        //          lst.Plans += item.Plans.Count();
+        //          lst.Total += item.Plans.Count();
+        //        }
+        //        if (item.Praise != null)
+        //        {
+        //          lst.Praises += 1;
+        //          lst.Total += 1;
+        //        }
+        //      }
+        //    }
+        //  }
 
-        }
-        total = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).Count();
+        //}
+        //total = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).Count();
 
-        list = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).ToList();
+        //list = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).ToList();
 
-        if(list.Count > 0)
-        {
-          result.Comments = list.Average(p => p.Comments);
-          result.Plans = list.Average(p => p.Plans);
-          result.Praises = list.Average(p => p.Praises);
-        }
+        //if(list.Count > 0)
+        //{
+        //  result.Comments = list.Average(p => p.Comments);
+        //  result.Plans = list.Average(p => p.Plans);
+        //  result.Praises = list.Average(p => p.Praises);
+        //}
         
 
-        result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderByDescending(p => p.Total).Skip(skip).Take(count).ToList();
+        //result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderByDescending(p => p.Total).Skip(skip).Take(count).ToList();
 
         return result;
       }
