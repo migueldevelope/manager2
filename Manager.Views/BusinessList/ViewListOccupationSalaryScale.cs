@@ -6,5 +6,6 @@ namespace Manager.Views.BusinessList
   {
     public int Wordload { get; set; }
     public List<ViewListStep> Steps { get; set; }
+    public List<ViewListProcessLevelTwo> Process { get; set; }
   }
 }

@@ -780,11 +780,14 @@ namespace Manager.Services.Specific
 
         if (view.Managers.Count > 0)
         {
-          foreach (var item in persons)
+          foreach (var manager in view.Managers)
           {
-            if (view.Managers.Contains(new _ViewListBase() { _id = item.Manager?._id }))
+            foreach (var item in persons)
             {
-              item.Status = EnumStatus.Disabled;
+              if (manager._id == item.Manager?._id)
+              {
+                item.Status = EnumStatus.Disabled;
+              }
             }
           }
           persons = persons.Where(p => p.Status == EnumStatus.Disabled).ToList();
@@ -798,7 +801,8 @@ namespace Manager.Services.Specific
             {
               if (item.Occupation?._id == occ._id)
               {
-                var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id).Result;
+                var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id
+                && p.StatusMeritocracy == EnumStatusMeritocracy.End).Result;
                 if (meritocracy.Count() > 0)
                 {
                   var result = meritocracy.Max(p => p.ResultEnd);

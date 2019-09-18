@@ -283,7 +283,20 @@ namespace Manager.Services.Specific
             {
               if (occ.SalaryScales.Where(p => p._idGrade == grade._id).Count() > 0)
               {
-                var occupationStep = new ViewListOccupationSalaryScale() { _id = occ._id, Name = occ.Name, Wordload = occ.SalaryScales.FirstOrDefault().Workload };
+                var occupationStep = new ViewListOccupationSalaryScale()
+                {
+                  _id = occ._id,
+                  Name = occ.Name,
+                  Wordload = occ.SalaryScales.FirstOrDefault().Workload,
+                  Process = occ.Process == null ? null : occ.Process.Select(
+                  x => new ViewListProcessLevelTwo()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Order = x.Order,
+                    ProcessLevelOne = x.ProcessLevelOne
+                  }).ToList()
+                };
                 occupationStep.Steps = new List<ViewListStep>();
                 foreach (var step in grade.ListSteps)
                 {
