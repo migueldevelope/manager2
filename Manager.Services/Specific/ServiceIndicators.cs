@@ -505,6 +505,7 @@ namespace Manager.Services.Specific
         //view.Balance = result.Average(p => p.Balance);
 
         //view.List = result.OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
+        view.List = new List<ViewPlanQtd>();
         return view;
       }
       catch (Exception e)
@@ -613,10 +614,10 @@ namespace Manager.Services.Specific
         //  result.Plans = list.Average(p => p.Plans);
         //  result.Praises = list.Average(p => p.Praises);
         //}
-        
+
 
         //result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderByDescending(p => p.Total).Skip(skip).Take(count).ToList();
-
+        result.List = new List<ViewMoninitoringQtdManager>();
         return result;
       }
       catch (Exception e)
