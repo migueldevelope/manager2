@@ -597,9 +597,13 @@ namespace Manager.Services.Specific
 
         }
         total = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).Count();
-        result.Comments = result.Comments / total;
-        result.Plans = result.Plans / total;
-        result.Praises = result.Praises / total;
+        if(list.Count > 0)
+        {
+          result.Comments = list.Average(p => p.Comments);
+          result.Plans = list.Average(p => p.Plans);
+          result.Praises = list.Average(p => p.Plans);
+        }
+        
 
         result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderByDescending(p => p.Total).Skip(skip).Take(count).ToList();
 

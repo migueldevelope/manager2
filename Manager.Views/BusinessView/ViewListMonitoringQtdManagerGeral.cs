@@ -5,8 +5,8 @@ namespace Manager.Views.BusinessView
   public class ViewListMonitoringQtdManagerGeral
   {
     public List<ViewMoninitoringQtdManager> List { get; set; }
-    public decimal Praises { get; set; }
-    public decimal Comments { get; set; }
-    public decimal Plans { get; set; }
+    public double Praises { get; set; }
+    public double Comments { get; set; }
+    public double Plans { get; set; }
   }
 }
