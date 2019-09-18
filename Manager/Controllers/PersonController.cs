@@ -6,6 +6,7 @@ using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -262,6 +263,24 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.ListOccupationManager(idmanager, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listoccupationprocess")]
+    public async Task<List<ViewListOccupationProcess>> ListOccupationProcess(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListOccupationProcess(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }

@@ -171,6 +171,30 @@ namespace Manager.Services.Auth
 
     }
 
+    public List<ViewListOccupationProcess> ListOccupationProcess(ref long total, string filter, int count, int page)
+    {
+      var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select
+        (p => new ViewListOccupationProcess()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Process = p.Process == null ? null : p.Process.Select(x => new ViewListProcessLevelTwo()
+          {
+            _id = x._id,
+            Name = x.Name,
+            ProcessLevelOne = x.ProcessLevelOne
+          }).ToList()
+        }).ToList();
+
+
+      total = occupations.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).Count();
+
+      int skip = count * (page - 1);
+      return occupations.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Name)
+        .Skip(skip).Take(count).ToList();
+
+    }
+
     #endregion
 
     #region Person

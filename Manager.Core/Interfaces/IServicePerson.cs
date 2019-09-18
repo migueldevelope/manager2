@@ -2,6 +2,7 @@
 using Manager.Core.Business;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -38,5 +39,6 @@ namespace Manager.Core.Interfaces
     ViewListJourney ListJourney(string idmanager, string filter, int count, int page);
     ViewListTeam ListTeam_V3(string idmanager, IServiceAutoManager serviceAutoManager, string filter, int count, int page);
     List<_ViewListBase> ListOccupationManager(string idmanager, ref long total, string filter, int count, int page);
+    List<ViewListOccupationProcess> ListOccupationProcess(ref long total, string filter, int count, int page);
   }
 }
