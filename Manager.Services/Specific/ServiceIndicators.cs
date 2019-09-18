@@ -498,12 +498,13 @@ namespace Manager.Services.Specific
         }
 
         total = result.Where(p => p.Schedule > 0).Count();
+        result = result.Where(p => p.Schedule > 0).ToList();
         view.Schedule = result.Average(p => p.Schedule);
         view.Realized = result.Average(p => p.Realized);
         view.Late = result.Average(p => p.Late);
         view.Balance = result.Average(p => p.Balance);
 
-        view.List = result.Where(p => p.Schedule > 0).OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
+        view.List = result.OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
         return view;
       }
       catch (Exception e)
