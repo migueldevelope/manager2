@@ -214,7 +214,8 @@ namespace Manager.Services.Auth
 
         person.ExistsTermOfService = countterm == 0 ? false : true;
 
-        person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id).Result
+        person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id
+        && p.StatusUser != EnumStatusUser.Disabled).Result
           .Select(x => new ViewContract()
           {
             IdPerson = x._id,
