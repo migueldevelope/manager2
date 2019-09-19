@@ -235,10 +235,10 @@ namespace Manager.Services.Commons
             Content = content,
             NameEvent = nameeevent,
             NameEntity = nameentity,
-            Workload = decimal.Parse(workload),
+            Workload = (decimal.Parse(workload) * 60),
             Peridiocity = byte.Parse(peridiocity),
-            DateBegin = DateTime.Parse(datebegin),
-            DateEnd = DateTime.Parse(dateend)
+            DateBegin = DateTime.Parse(datebegin).AddDays(1),
+            DateEnd = DateTime.Parse(dateend).AddDays(1)
           };
           list.Add(view);
         }
