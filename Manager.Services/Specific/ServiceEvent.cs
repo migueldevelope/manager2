@@ -1550,7 +1550,7 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        return e.Message;
       }
 
     }

@@ -182,7 +182,7 @@ namespace Manager.Services.Commons
         IRow headerRow = sheet.GetRow(0); //Get Header Row
         int cellCount = headerRow.LastCellNum;
 
-        for (int i = 1; i < (count+1); i++) //Read Excel File
+        for (int i = 1; i < (count + 1); i++) //Read Excel File
         {
           IRow row = sheet.GetRow(i);
           if (row == null) continue;
@@ -202,14 +202,28 @@ namespace Manager.Services.Commons
           decimal decimalParsed;
           DateTime dateParsed;
 
-          if ((decimal.TryParse(workload.Trim(), out decimalParsed)) == false)
+          try
+          {
+            if ((decimal.TryParse(workload.Trim(), out decimalParsed)) == false)
+              throw new Exception("workload_incorret");
+          }
+          catch (Exception)
+          {
             throw new Exception("workload_incorret");
+          }
 
           if ((int.TryParse(peridiocity.Trim(), out intParsed)) == false)
             peridiocity = "0";
 
-          if ((DateTime.TryParse(dateend.Trim(), out dateParsed)) == false)
+          try
+          {
+            if ((DateTime.TryParse(dateend.Trim(), out dateParsed)) == false)
+              throw new Exception("dateend_incorret");
+          }
+          catch (Exception)
+          {
             throw new Exception("dateend_incorret");
+          }
 
           if ((DateTime.TryParse(datebegin.Trim(), out dateParsed)) == false)
             datebegin = dateend;
