@@ -182,7 +182,7 @@ namespace Manager.Services.Commons
         IRow headerRow = sheet.GetRow(0); //Get Header Row
         int cellCount = headerRow.LastCellNum;
 
-        for (int i = 1; i < (count -1); i++) //Read Excel File
+        for (int i = 1; i < (count+1); i++) //Read Excel File
         {
           IRow row = sheet.GetRow(i);
           if (row == null) continue;
