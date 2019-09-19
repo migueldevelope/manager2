@@ -747,7 +747,8 @@ namespace Manager.Services.Specific
             && p.StatusMeritocracy == EnumStatusMeritocracy.End).Result;
             if (meritocracy.Count() > 0)
             {
-              var result = meritocracy.Max(p => p.ResultEnd);
+              var date = meritocracy.Max(p => p.DateEnd);
+              var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault().ResultEnd;
               list.Add(new ViewListMeritocracyResume()
               {
                 Name = item.User?.Name,
@@ -828,7 +829,8 @@ namespace Manager.Services.Specific
             && p.StatusMeritocracy == EnumStatusMeritocracy.End).Result;
             if (meritocracy.Count() > 0)
             {
-              var result = meritocracy.Max(p => p.ResultEnd);
+              var date = meritocracy.Max(p => p.DateEnd);
+              var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault().ResultEnd;
               list.Add(new ViewListMeritocracyResume()
               {
                 Name = item.User?.Name,
