@@ -333,19 +333,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewExportRecommendation> ExportRecommendation(List<ViewListIdIndicators> persons)
+    public List<ViewExportRecommendation> ExportRecommendation(ViewFilterIdAndDate filter)
     {
       try
       {
         List<ViewExportRecommendation> result = new List<ViewExportRecommendation>();
 
-        foreach (var rows in persons)
+        foreach (var rows in filter.Persons)
         {
-          var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Person._id == rows._id).Result;
+          var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Person._id == rows._id
+          && p.Date >= filter.Date.Begin && p.Date <= filter.Date.End).Result;
+
             foreach (var item in recommendations)
             {
             var colleague = servicePerson.GetFreeNewVersion(p => p.User._id == item._idColleague).Result;
-              if (persons.Where(p => p._id == item.Person._id).Count() > 0)
+              if (filter.Persons.Where(p => p._id == item.Person._id).Count() > 0)
+
                 result.Add(new ViewExportRecommendation
                 {
                   Name = item.Person.Name,

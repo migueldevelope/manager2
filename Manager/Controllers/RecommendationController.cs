@@ -71,7 +71,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("exportrecommendation")]
-    public async Task<List<ViewExportRecommendation>> ExportRecommendation([FromBody]List<ViewListIdIndicators> view)
+    public async Task<List<ViewExportRecommendation>> ExportRecommendation([FromBody]ViewFilterIdAndDate view)
     {
       return await Task.Run(() => service.ExportRecommendation(view));
     }

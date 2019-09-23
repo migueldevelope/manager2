@@ -61,5 +61,6 @@ namespace Manager.Core.Interfaces
     List<ViewListSucessFactors1> ListSucessFactors1();
     List<ViewListSucessFactors2> ListSucessFactors2();
     List<ViewListSucessFactors3> ListSucessFactors3();
+    IEnumerable<ViewChartRecommendation> ChartRecommendationPersons(ViewFilterIdAndDate filter);
   }
 }

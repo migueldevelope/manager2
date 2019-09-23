@@ -117,6 +117,19 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
+    [Route("chartrecommendationpersons")]
+    public async Task<IEnumerable<ViewChartRecommendation>> ChartRecommendationPersons([FromBody] ViewFilterIdAndDate filter)
+    {
+      return await Task.Run(() => service.ChartRecommendationPersons(filter));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
     [Route("chartcertificationstatus")]
     public async Task<IEnumerable<ViewChartCeritificationStatus>> ChartCertificationStatus([FromBody] List<ViewListIdIndicators> persons)
     {

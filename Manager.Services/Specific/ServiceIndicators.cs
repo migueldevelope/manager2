@@ -1620,6 +1620,42 @@ namespace Manager.Services.Specific
       }
     }
 
+    public IEnumerable<ViewChartRecommendation> ChartRecommendationPersons(ViewFilterIdAndDate filter)
+    {
+      try
+      {
+        var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+        && p.Date >= filter.Date.Begin && p.Date <= filter.Date.End).Result;
+
+        List<dynamic> result = new List<dynamic>();
+
+        foreach (var item in filter.Persons)
+        {
+          var list = recommendations.Where(p => p.Person._id == item._id);
+          foreach (var view in list)
+          {
+            result.Add(new
+            {
+              Name = view.Person.Name,
+              _id = view.Recommendation._id
+            });
+          }
+
+        }
+
+        return result.GroupBy(p => p.Name).Select(x => new ViewChartRecommendation
+        {
+          Name = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public IEnumerable<ViewChartStatus> ChartPlanRealized(List<ViewListIdIndicators> persons)
     {
       try
