@@ -610,7 +610,8 @@ namespace Manager.Services.Specific
         }
         total = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).Count();
 
-        list = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).ToList();
+        //list = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).ToList();
+        list = list.ToList();
 
         if (list.Count > 0)
         {
@@ -619,6 +620,23 @@ namespace Manager.Services.Specific
           result.Praises = list.Average(p => p.Praises);
         }
 
+        foreach(var item in list)
+        {
+          if (item.Praises > result.Praises)
+            item.PraisesAvg = true;
+          else
+            item.PraisesAvg = false;
+
+          if (item.Comments > result.Comments)
+            item.CommentsAvg = true;
+          else
+            item.CommentsAvg = false;
+
+          if (item.Plans > result.Plans)
+            item.PlansAvg = true;
+          else
+            item.PlansAvg = false;
+        }
 
         result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderByDescending(p => p.Total).Skip(skip).Take(count).ToList();
         return result;
