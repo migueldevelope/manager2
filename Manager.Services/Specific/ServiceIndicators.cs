@@ -365,6 +365,7 @@ namespace Manager.Services.Specific
             var view = new ViewPersonsNotInfo()
             {
               DateAdm = false,
+              DateLastOccupation = false,
               Occupation = false,
               Manager = false,
               SalaryScale = false,
@@ -381,6 +382,8 @@ namespace Manager.Services.Specific
               view.SalaryScale = true;
             if (item.User?.Schooling == null)
               view.Schooling = true;
+            if (item.DateLastOccupation == null)
+              view.DateLastOccupation = true;
 
             view.Person = item.User.Name;
             list.Add(view);
@@ -902,6 +905,7 @@ namespace Manager.Services.Specific
           {
             Person = p.User?.Name,
             DateAdm = p.User?.DateAdm,
+            DateLastOccupation = p.DateLastOccupation,
             Mail = p.User?.Mail,
             Manager = p.Manager?.Name,
             OccupationName = p.Occupation?.Name,

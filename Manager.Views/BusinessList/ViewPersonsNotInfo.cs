@@ -7,6 +7,7 @@
     public bool Occupation { get; set; }
     public bool Schooling { get; set; }
     public bool DateAdm { get; set; }
+    public bool DateLastOccupation { get; set; }
     public bool SalaryScale { get; set; }
   }
 }
