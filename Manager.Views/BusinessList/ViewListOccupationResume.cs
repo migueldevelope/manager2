@@ -14,5 +14,6 @@ namespace Manager.Views.BusinessList
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idArea { get; set; }
     public ViewListCbo Cbo { get; set; }
+    public string Description { get; set; }
   }
 }

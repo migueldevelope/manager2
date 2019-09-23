@@ -27,6 +27,7 @@ namespace Manager.Core.Business
     public string SpecificRequirements { get; set; }
     public List<ViewListProcessLevelTwo> Process { get; set; }
     public List<SalaryScaleGrade> SalaryScales { get; set; }
+    public string Description { get; set; } 
     public ViewListOccupation GetViewList()
     {
       return new ViewListOccupation()
@@ -36,6 +37,7 @@ namespace Manager.Core.Business
         Group = Group,
         Line = Line,
         Process = Process,
+        Description = Description,
         Cbo = Cbo
       };
     }
@@ -48,6 +50,7 @@ namespace Manager.Core.Business
         Cbo = Cbo,
         _idGroup = Group._id,
         NameGroup = Group.Name,
+        Description = Description,
         _idArea = Process.FirstOrDefault()?.ProcessLevelOne.Area._id
       };
     }

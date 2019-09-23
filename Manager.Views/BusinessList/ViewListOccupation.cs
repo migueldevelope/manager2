@@ -9,5 +9,6 @@ namespace Manager.Views.BusinessList
     public List<ViewListProcessLevelTwo> Process { get; set; }
     public long Line { get; set; }
     public ViewListCbo Cbo { get; set; }
+    public string Description { get; set; }
   }
 }

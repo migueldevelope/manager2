@@ -1748,6 +1748,7 @@ namespace Manager.Services.Specific
           Line = view.Line,
           Status = EnumStatus.Enabled,
           Group = group.GetViewList(),
+          Description = view.Description,
           Skills = new List<ViewListSkill>(),
           Cbo = view.Cbo,
           Activities = new List<ViewListActivitie>(),
@@ -2786,6 +2787,7 @@ namespace Manager.Services.Specific
           {
             _id = p._id,
             Name = p.Name,
+            Description = p.Description,
             SalaryScales = p.SalaryScales?.Select(s => new ViewCrudSalaryScaleOccupation()
             {
               _id = s._idSalaryScale,
@@ -2869,6 +2871,7 @@ namespace Manager.Services.Specific
             Name = p.Name,
             Group = p.Group,
             Line = p.Line,
+            Description = p.Description,
             Process = p.Process?.OrderBy(x => x.ProcessLevelOne.Area.Name).ThenBy(x => x.ProcessLevelOne.Order).ThenBy(x => x.Order)
             .Select(x => new ViewListProcessLevelTwo()
             {
@@ -2908,7 +2911,8 @@ namespace Manager.Services.Specific
               _id = item._id,
               Name = item.Name,
               NameGroup = item.Group.Name,
-              NameArea = proc.ProcessLevelOne.Area.Name
+              NameArea = proc.ProcessLevelOne.Area.Name,
+              Description = item.Description
             });
           }
 
@@ -3215,6 +3219,7 @@ namespace Manager.Services.Specific
 
         occupation.Group = serviceGroup.GetNewVersion(p => p._id == view.Group._id).Result.GetViewList();
         occupation.Name = view.Name;
+        occupation.Description = view.Description;
         occupation.Line = view.Line;
 
         if (view.Cbo != null)
