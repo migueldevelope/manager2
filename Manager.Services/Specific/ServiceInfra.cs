@@ -2352,6 +2352,7 @@ namespace Manager.Services.Specific
                   SpecificRequirements = item.SpecificRequirements,
                   Process = item.Process,
                   _id = item._id,
+                  Description = item.Description,
                   _idAccount = item._idAccount,
                   Status = item.Status,
                   //Areas = item.Areas
@@ -2376,6 +2377,7 @@ namespace Manager.Services.Specific
             NameGroup = p.Group.Name,
             Activities = p.Activities.Count(),
             Skills = p.Skills.Count(),
+            Description = p.Description,
             Schooling = p.Schooling.Where(x => x.Complement != null).Count()
           }).ToList();
 
@@ -2407,6 +2409,7 @@ namespace Manager.Services.Specific
             NameGroup = p.Group.Name,
             Activities = p.Activities.Count(),
             Skills = p.Skills.Count(),
+            Description = p.Description,
             Schooling = p.Schooling.Where(x => x.Complement != null).Count()
           }).ToList();
 

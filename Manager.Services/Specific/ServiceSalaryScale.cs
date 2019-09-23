@@ -287,6 +287,7 @@ namespace Manager.Services.Specific
                 {
                   _id = occ._id,
                   Name = occ.Name,
+                  Description = occ.Description,
                   Wordload = occ.SalaryScales.FirstOrDefault().Workload,
                   Process = occ.Process == null ? null : occ.Process.Select(
                   x => new ViewListProcessLevelTwo()
