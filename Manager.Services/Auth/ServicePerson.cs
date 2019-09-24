@@ -204,10 +204,25 @@ namespace Manager.Services.Auth
       try
       {
         var managers = idmanagers.Select(p => p._id).ToList();
-        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
+        if (managers.Count > 0)
+          return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
+          && p.StatusUser != EnumStatusUser.ErrorIntegration && p.TypeUser > EnumTypeUser.Administrator
+          && p.TypeJourney != EnumTypeJourney.OutOfJourney
+          && managers.Contains(p.Manager._id))
+          .Result.Select(p => new ViewListIdIndicators()
+          {
+            _id = p._id,
+            TypeJourney = p.TypeJourney,
+            Name = p.User?.Name,
+            OccupationName = p.Occupation?.Name,
+            DateAdm = p.User?.DateAdm,
+            Manager = p.Manager?.Name,
+            DateLastOccupation = p.DateLastOccupation
+          }).ToList();
+        else
+          return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
         && p.StatusUser != EnumStatusUser.ErrorIntegration && p.TypeUser > EnumTypeUser.Administrator
-        && p.TypeJourney != EnumTypeJourney.OutOfJourney
-        && managers.Contains(p.Manager._id))
+        && p.TypeJourney != EnumTypeJourney.OutOfJourney)
         .Result.Select(p => new ViewListIdIndicators()
         {
           _id = p._id,
