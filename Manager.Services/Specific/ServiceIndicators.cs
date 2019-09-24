@@ -306,7 +306,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        
+
 
         var list = new List<ViewListPending>();
         var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
@@ -1398,7 +1398,7 @@ namespace Manager.Services.Specific
           list.Add(new ViewChartOnboarding()
           {
             Count = long.Parse(item.value.ToString()),
-            Status  = (EnumStatusOnBoarding)byte.Parse(item._id.ToString())
+            Status = (EnumStatusOnBoarding)byte.Parse(item._id.ToString())
           });
         }
 
@@ -1874,13 +1874,18 @@ namespace Manager.Services.Specific
         {
           result.Add(new ViewChartCeritification()
           {
-            Skill = item.CertificationItem.Name
+            Skill = item.CertificationItem.Name,
+            ItemCertificationView = item.CertificationItem.ItemCertification == EnumItemCertification.SkillCompanyHard ? EnumItemCertificationView.Company :
+                item.CertificationItem.ItemCertification == EnumItemCertification.SkillCompanySoft ? EnumItemCertificationView.Company :
+                item.CertificationItem.ItemCertification == EnumItemCertification.SkillGroupHard ? EnumItemCertificationView.Hard :
+                item.CertificationItem.ItemCertification == EnumItemCertification.SkillOccupationHard ? EnumItemCertificationView.Hard : EnumItemCertificationView.Soft
           });
         }
 
-        return result.GroupBy(p => p.Skill).Select(x => new ViewChartCertificationCount
+        return result.GroupBy(p => new { p.Skill, p.ItemCertificationView }).Select(x => new ViewChartCertificationCount
         {
-          Item = x.Key,
+          Item = x.Key.Skill,
+          ItemCertificationView = x.Key.ItemCertificationView,
           Count = x.Count()
         }).ToList();
 
