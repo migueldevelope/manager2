@@ -126,7 +126,7 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="persons"></param>
+    /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
@@ -381,6 +381,15 @@ namespace Indicators.Controllers
       return result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idmanager"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("map/getmoninitoringqtdmanager")]

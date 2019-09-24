@@ -668,28 +668,103 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var map = new BsonJavaScript(@" function() { emit(this.StatusOnBoarding, 1);};");
-        var reduce = new BsonJavaScript("function(StatusOnboarding, count) { return Array.sum(count);};");
-        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("OnBoarding");
-        var options = new MapReduceOptions<BsonDocument, ViewListMap>();
-        var filters = Builders<OnBoarding>.Filter.Where(p => p._idAccount == _user._idAccount
-        && p.Status == EnumStatus.Enabled);
+
+        int skip = (count * (page - 1));
+
+        string mapper = "function() { ";
+        mapper += "if(this.Person != null){";
+        mapper += " if(this.Person.Manager != null){";
+        mapper += " if (this.SkillsCompany != null){";
+        mapper += " this.SkillsCompany.forEach((it) => {";
+        mapper += " if (it.Comments != null)";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Comments.length);";
+        mapper += " if (it.Plans != null)    ";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.length); ";
+        mapper += " if (it.Praise != null)";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, 1);  ";
+        mapper += " });";
+        mapper += " }";
+        mapper += " if (this.Schoolings != null){";
+        mapper += " this.Schoolings.forEach((it) => {";
+        mapper += " if (it.Comments != null)";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Comments.length);";
+        mapper += " if (it.Plans != null)    ";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.length); ";
+        mapper += " if (it.Praise != null)";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, 1); ";
+        mapper += " });";
+        mapper += " }";
+        mapper += " if (this.Activities != null){";
+        mapper += " this.Activities.forEach((it) => {";
+        mapper += " if (it.Comments != null)";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Comments.length);";
+        mapper += " if (it.Plans != null)    ";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.length); ";
+        mapper += " if (it.Praise != null)";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, 1); ";
+        mapper += " }); }}}};";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Monitoring");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapCompose>();
+        FilterDefinition<Monitoring> filters = null;
+
+        if (idManager != string.Empty)
+          filters = Builders<Monitoring>.Filter.Where(p => p._idAccount == _user._idAccount
+          && p.Status == EnumStatus.Enabled && p.StatusMonitoring == EnumStatusMonitoring.End
+          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Person._idManager == idManager);
+        else
+          filters = Builders<Monitoring>.Filter.Where(p => p._idAccount == _user._idAccount
+          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Status == EnumStatus.Enabled && p.StatusMonitoring == EnumStatusMonitoring.End);
+
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
         options.OutputOptions = MapReduceOutputOptions.Inline;
-        var res = coll.MapReduce(map, reduce, options).ToList();
+        var result = coll.MapReduce(map, reduce, options).ToList();
 
         var view = new ViewListMonitoringQtdManagerGeral();
-        var list = new List<ViewChartOnboarding>();
-        foreach (var item in res)
+        var list = new List<ViewMoninitoringQtdManager>();
+
+        list = result.GroupBy(x => new { x._id.manager, x._id.type })
+            .Select(x => new ViewMoninitoringQtdManager()
+            {
+              Manager = x.Key.manager,
+              Comments = x.Key.type == 0 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
+              Plans = x.Key.type == 1 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
+              Praises = x.Key.type == 2 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
+              Total = long.Parse(x.Sum(p => p.value).ToString())
+            }).ToList();
+
+        if (list.Count > 0)
         {
-          list.Add(new ViewChartOnboarding()
-          {
-            Count = long.Parse(item.value.ToString()),
-            Status = (EnumStatusOnBoarding)byte.Parse(item._id.ToString())
-          });
+          view.Comments = list.Average(p => p.Comments);
+          view.Plans = list.Average(p => p.Plans);
+          view.Praises = list.Average(p => p.Praises);
         }
 
+        long ranking = 1;
+        foreach (var item in list.OrderByDescending(p => p.Total))
+        {
+          item.Ranking = ranking;
+          ranking += 1;
+          if (item.Praises > view.Praises)
+            item.PraisesAvg = true;
+          else
+            item.PraisesAvg = false;
+
+          if (item.Comments > view.Comments)
+            item.CommentsAvg = true;
+          else
+            item.CommentsAvg = false;
+
+          if (item.Plans > view.Plans)
+            item.PlansAvg = true;
+          else
+            item.PlansAvg = false;
+        }
+
+        view.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderByDescending(p => p.Total).Skip(skip).Take(count).ToList();
         return view;
       }
       catch (Exception e)

@@ -80,7 +80,7 @@
             <summary>
             
             </summary>
-            <param name="persons"></param>
+            <param name="filter"></param>
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ChartCertificationStatus(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
@@ -204,6 +204,17 @@
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.GetMoninitoringQtdManager(Manager.Views.BusinessView.ViewFilterDate,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idmanager"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetMoninitoringQtdManagerMap(Manager.Views.BusinessView.ViewFilterDate,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>
