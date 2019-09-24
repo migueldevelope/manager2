@@ -532,6 +532,75 @@ namespace Manager.Services.Specific
       }
     }
 
+    public ViewListPlanQtdGerals GetPlanQtdMap(ViewFilterDate date, int count, int page, ref long total, string filter)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var view = new ViewListPlanQtdGerals();
+
+        string mapper = "function() {";
+        mapper += " var date = new Date();";
+        mapper += " var plans = this.Plans.find({ _id: this._id, Status: 0}).count();";
+        mapper += " var plansRealized = this.Plans.find({ _id: this._id, StatusPlan: { $ne: 0 } , Status: 0}).count();";
+        mapper += " var plansLate = this.Plans.find({ _id: this._id, StatusPlan: 0, Deadline: {$lt: date }, Status: 0}).count();";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, plans);";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, plansRealized);";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, plansLate);}; ";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Monitoring");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapCompose>();
+        FilterDefinition<Monitoring> filters = null;
+
+        filters = Builders<Monitoring>.Filter.Where(p => p._idAccount == _user._idAccount
+        && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Status == EnumStatus.Enabled && p.StatusMonitoring == EnumStatusMonitoring.End);
+
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var result = coll.MapReduce(map, reduce, options).ToList();
+
+        var list = new List<ViewPlanQtd>();
+
+        list = result.GroupBy(x => new { x._id.manager, x._id.type })
+            .Select(x => new ViewPlanQtd()
+            {
+              Manager = x.Key.manager,
+              Schedule = x.Key.type == 0 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
+              Realized = x.Key.type == 1 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
+              Late = x.Key.type == 2 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
+              Balance = (x.Key.type == 1 ? long.Parse(x.Sum(p => p.value).ToString()) : 0) - (x.Key.type == 2 ? long.Parse(x.Sum(p => p.value).ToString()) : 0)
+            }).ToList();
+
+        total = list.Where(p => p.Schedule > 0).Count();
+        list = list.Where(p => p.Schedule > 0).ToList();
+        if (result.Count > 0)
+        {
+          view.Schedule = list.Average(p => p.Schedule);
+          view.Realized = list.Average(p => p.Realized);
+          view.Late = list.Average(p => p.Late);
+          view.Balance = list.Average(p => p.Balance);
+        }
+
+        long ranking = 1;
+        foreach (var item in list.OrderByDescending(p => p.Balance))
+        {
+          item.Ranking = ranking;
+          ranking += 1;
+        }
+
+        view.List = list.OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewListMonitoringQtdManagerGeral GetMoninitoringQtdManager(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter)
     {
       try
