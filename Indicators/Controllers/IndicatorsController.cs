@@ -104,6 +104,19 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
+    [Route("map/chartonboarding")]
+    public async Task<IEnumerable<ViewChartOnboarding>> ChartOnboardingMap([FromBody] List<ViewListIdIndicators> persons)
+    {
+      return await Task.Run(() => service.ChartOnboardingMap(persons));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="persons"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
     [Route("chartrecommendation")]
     public async Task<IEnumerable<ViewChartRecommendation>> ChartRecommendation([FromBody] List<ViewListIdIndicators> persons)
     {
@@ -346,6 +359,8 @@ namespace Indicators.Controllers
       return await Task.Run(() => service.GetMoninitoringQtd(date, idmanager));
     }
 
+
+
     /// <summary>
     /// 
     /// </summary>
@@ -362,6 +377,17 @@ namespace Indicators.Controllers
     {
       long total = 0;
       var result = await Task.Run(() => service.GetMoninitoringQtdManager(date, idmanager, count, page, ref total, filter));
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Route("map/getmoninitoringqtdmanager")]
+    public async Task<ViewListMonitoringQtdManagerGeral> GetMoninitoringQtdManagerMap([FromBody]ViewFilterDate date, string idmanager = "", int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = await Task.Run(() => service.GetMoninitoringQtdManagerMap(date, idmanager, count, page, ref total, filter));
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

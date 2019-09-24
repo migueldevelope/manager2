@@ -10,6 +10,9 @@ using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -303,6 +306,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        
+
         var list = new List<ViewListPending>();
         var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
@@ -623,7 +628,7 @@ namespace Manager.Services.Specific
           result.Praises = list.Average(p => p.Praises);
         }
 
-        foreach(var item in list)
+        foreach (var item in list)
         {
           if (item.Praises > result.Praises)
             item.PraisesAvg = true;
@@ -650,6 +655,39 @@ namespace Manager.Services.Specific
       }
     }
 
+    public ViewListMonitoringQtdManagerGeral GetMoninitoringQtdManagerMap(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter)
+    {
+      try
+      {
+        var map = new BsonJavaScript(@" function() { emit(this.StatusOnBoarding, 1);};");
+        var reduce = new BsonJavaScript("function(StatusOnboarding, count) { return Array.sum(count);};");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("OnBoarding");
+        var options = new MapReduceOptions<BsonDocument, ViewListMap>();
+        var filters = Builders<OnBoarding>.Filter.Where(p => p._idAccount == _user._idAccount
+        && p.Status == EnumStatus.Enabled);
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var res = coll.MapReduce(map, reduce, options).ToList();
+
+        var view = new ViewListMonitoringQtdManagerGeral();
+        var list = new List<ViewChartOnboarding>();
+        foreach (var item in res)
+        {
+          list.Add(new ViewChartOnboarding()
+          {
+            Count = long.Parse(item.value.ToString()),
+            Status = (EnumStatusOnBoarding)byte.Parse(item._id.ToString())
+          });
+        }
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     public List<ViewTagsCloud> ListTagsCloudCompanyPeriod(ViewFilterManagerAndDate filters, string idmanager)
     {
@@ -1333,6 +1371,45 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public IEnumerable<ViewChartOnboarding> ChartOnboardingMap(List<ViewListIdIndicators> persons)
+    {
+      try
+      {
+        var filterperson = persons.Where(p => (p.TypeJourney == EnumTypeJourney.OnBoarding)
+        || (p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)).Select(p => p._id).ToList();
+        var map = new BsonJavaScript(@" function() { emit(this.StatusOnBoarding, 1);};");
+        var reduce = new BsonJavaScript("function(StatusOnboarding, count) { return Array.sum(count);};");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("OnBoarding");
+        var options = new MapReduceOptions<BsonDocument, ViewListMap>();
+        var filter = Builders<OnBoarding>.Filter.Where(p => p._idAccount == _user._idAccount
+        && p.Status == EnumStatus.Enabled && filterperson.Contains(p.Person._id));
+        var json = filter.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+
+
+        var res = coll.MapReduce(map, reduce, options).ToList();
+
+        var list = new List<ViewChartOnboarding>();
+        foreach (var item in res)
+        {
+          list.Add(new ViewChartOnboarding()
+          {
+            Count = long.Parse(item.value.ToString()),
+            Status  = (EnumStatusOnBoarding)byte.Parse(item._id.ToString())
+          });
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public IEnumerable<ViewChartStatus> ChartOnboardingRealized(List<ViewListIdIndicators> persons)
     {

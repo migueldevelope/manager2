@@ -62,5 +62,7 @@ namespace Manager.Core.Interfaces
     List<ViewListSucessFactors2> ListSucessFactors2();
     List<ViewListSucessFactors3> ListSucessFactors3();
     IEnumerable<ViewChartRecommendation> ChartRecommendationPersons(ViewFilterIdAndDate filter);
+    IEnumerable<ViewChartOnboarding> ChartOnboardingMap(List<ViewListIdIndicators> persons);
+    ViewListMonitoringQtdManagerGeral GetMoninitoringQtdManagerMap(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter);
   }
 }

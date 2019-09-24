@@ -123,6 +123,7 @@ namespace IntegrationServer
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials()
+          .WithExposedHeaders("x-total-count")
       ));
 
       services.AddMvc();

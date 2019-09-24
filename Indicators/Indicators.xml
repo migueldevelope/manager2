@@ -62,7 +62,21 @@
             <param name="persons"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboardingMap(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendation(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendationPersons(Manager.Views.BusinessList.ViewFilterIdAndDate)">
             <summary>
             
             </summary>
