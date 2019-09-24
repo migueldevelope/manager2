@@ -515,6 +515,12 @@ namespace Manager.Services.Specific
           view.Balance = result.Average(p => p.Balance);
         }
 
+        long ranking = 1;
+        foreach (var item in result.OrderByDescending(p => p.Balance))
+        {
+          item.Ranking = ranking;
+          ranking += 1;
+        }
 
         view.List = result.OrderByDescending(p => p.Balance).Skip(skip).Take(count).ToList();
 
@@ -628,8 +634,11 @@ namespace Manager.Services.Specific
           result.Praises = list.Average(p => p.Praises);
         }
 
-        foreach (var item in list)
+        long ranking = 1;
+        foreach (var item in list.OrderByDescending(p => p.Total))
         {
+          item.Ranking = ranking;
+          ranking += 1;
           if (item.Praises > result.Praises)
             item.PraisesAvg = true;
           else
