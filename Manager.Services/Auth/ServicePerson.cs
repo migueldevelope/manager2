@@ -203,25 +203,12 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
+        var managers = idmanagers.Select(p => p._id).ToList();
+        return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
         && p.StatusUser != EnumStatusUser.ErrorIntegration && p.TypeUser > EnumTypeUser.Administrator
-        && p.TypeJourney != EnumTypeJourney.OutOfJourney)
-        .Result;
-        if (idmanagers.Count() > 0)
-        {
-          foreach (var person in persons)
-          {
-            foreach (var manager in idmanagers)
-            {
-              if (manager._id == person.Manager?._id)
-                person.Status = EnumStatus.Disabled;
-            }
-          }
-
-          persons = persons.Where(p => p.Status == EnumStatus.Disabled).ToList();
-        }
-
-        return persons.Select(p => new ViewListIdIndicators()
+        && p.TypeJourney != EnumTypeJourney.OutOfJourney
+        && managers.Contains(p.Manager._id))
+        .Result.Select(p => new ViewListIdIndicators()
         {
           _id = p._id,
           TypeJourney = p.TypeJourney,
@@ -231,6 +218,31 @@ namespace Manager.Services.Auth
           Manager = p.Manager?.Name,
           DateLastOccupation = p.DateLastOccupation
         }).ToList();
+
+        //if (idmanagers.Count() > 0)
+        //{
+        //  foreach (var person in persons)
+        //  {
+        //    foreach (var manager in idmanagers)
+        //    {
+        //      if (manager._id == person.Manager?._id)
+        //        person.Status = EnumStatus.Disabled;
+        //    }
+        //  }
+
+        //  persons = persons.Where(p => p.Status == EnumStatus.Disabled).ToList();
+        //}
+
+        //return persons.Select(p => new ViewListIdIndicators()
+        //{
+        //  _id = p._id,
+        //  TypeJourney = p.TypeJourney,
+        //  Name = p.User?.Name,
+        //  OccupationName = p.Occupation?.Name,
+        //  DateAdm = p.User?.DateAdm,
+        //  Manager = p.Manager?.Name,
+        //  DateLastOccupation = p.DateLastOccupation
+        //}).ToList();
       }
       catch (Exception e)
       {
