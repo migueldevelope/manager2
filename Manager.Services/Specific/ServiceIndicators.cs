@@ -135,7 +135,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        return list;
+        return list.OrderBy(p => p.Days).ToList();
       }
       catch (Exception e)
       {
@@ -176,7 +176,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        return list;
+        return list.OrderBy(p => p.Days).ToList();
       }
       catch (Exception e)
       {
@@ -217,7 +217,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        return list;
+        return list.OrderByDescending(p => p.Days).ToList();
       }
       catch (Exception e)
       {
@@ -254,7 +254,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        return list;
+        return list.OrderBy(p => p.Days).ToList();
       }
       catch (Exception e)
       {
@@ -291,7 +291,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        return list;
+        return list.OrderBy(p => p.Days).ToList();
       }
       catch (Exception e)
       {
@@ -329,7 +329,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        return list;
+        return list.OrderByDescending(p => p.Days).ToList();
       }
       catch (Exception e)
       {
