@@ -126,14 +126,20 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="filters"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
     /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("chartrecommendationpersons")]
-    public async Task<IEnumerable<ViewChartRecommendation>> ChartRecommendationPersons([FromBody] ViewFilterIdAndDate filter)
+    public async Task<IEnumerable<ViewChartRecommendation>> ChartRecommendationPersons([FromBody] ViewFilterIdAndDate filters, int count = 10, int page = 1, string filter = "")
     {
-      return await Task.Run(() => service.ChartRecommendationPersons(filter));
+      long total = 0;
+      var result = service.ChartRecommendationPersons(filters, count, page, ref total, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
     /// <summary>
