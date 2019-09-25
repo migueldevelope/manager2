@@ -103,10 +103,14 @@ namespace Manager.Services.Specific
       serviceIPerson.SetUser(_user);
     }
 
-    public List<ViewListPending> OnboardingInDayMap()
+    public List<ViewListPending> OnboardingInDayMap(List<_ViewList> managers)
     {
       try
       {
+        List<string> filtermanager = null;
+        if (managers.Count > 0)
+          filtermanager = managers.Select(p => p._id).ToList();
+
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
@@ -140,9 +144,17 @@ namespace Manager.Services.Specific
         var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
         FilterDefinition<Person> filters = null;
 
-        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-        && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-        && !onboardings.Contains(p._id));
+
+        if (managers.Count > 0)
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+            && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id));
+        else
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+            && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            && !onboardings.Contains(p._id));
+
+
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -164,10 +176,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPending> OnboardingToWinMap()
+    public List<ViewListPending> OnboardingToWinMap(List<_ViewList> managers)
     {
       try
       {
+        List<string> filtermanager = null;
+        if (managers.Count > 0)
+          filtermanager = managers.Select(p => p._id).ToList();
+
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
@@ -201,10 +217,14 @@ namespace Manager.Services.Specific
         var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
         FilterDefinition<Person> filters = null;
 
-        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-        && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-        && !onboardings.Contains(p._id));
-
+        if (managers.Count > 0)
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+            && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id));
+        else
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+          && !onboardings.Contains(p._id));
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
         options.OutputOptions = MapReduceOutputOptions.Inline;
@@ -225,10 +245,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPending> OnboardingLateMap()
+    public List<ViewListPending> OnboardingLateMap(List<_ViewList> managers)
     {
       try
       {
+        List<string> filtermanager = null;
+        if (managers.Count > 0)
+          filtermanager = managers.Select(p => p._id).ToList();
+
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
@@ -262,9 +286,14 @@ namespace Manager.Services.Specific
         var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
         FilterDefinition<Person> filters = null;
 
-        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-        && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-        && !onboardings.Contains(p._id));
+        if (managers.Count > 0)
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+            && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id));
+        else
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+          && !onboardings.Contains(p._id));
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -286,10 +315,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPending> CheckpointInDayMap()
+    public List<ViewListPending> CheckpointInDayMap(List<_ViewList> managers)
     {
       try
       {
+        List<string> filtermanager = null;
+        if (managers.Count > 0)
+          filtermanager = managers.Select(p => p._id).ToList();
+
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
         long parameter = 90;
@@ -320,8 +353,13 @@ namespace Manager.Services.Specific
         var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
         FilterDefinition<Person> filters = null;
 
-        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-        && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+        if (managers.Count > 0)
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
+          && filtermanager.Contains(p.Manager._id));
+        else
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -343,10 +381,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPending> CheckpointToWinMap()
+    public List<ViewListPending> CheckpointToWinMap(List<_ViewList> managers)
     {
       try
       {
+        List<string> filtermanager = null;
+        if (managers.Count > 0)
+          filtermanager = managers.Select(p => p._id).ToList();
+
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
         long parameter = 90;
@@ -377,8 +419,13 @@ namespace Manager.Services.Specific
         var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
         FilterDefinition<Person> filters = null;
 
-        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-        && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+        if (managers.Count > 0)
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
+          && filtermanager.Contains(p.Manager._id));
+        else
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -400,10 +447,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPending> CheckpointLateMap()
+    public List<ViewListPending> CheckpointLateMap(List<_ViewList> managers)
     {
       try
       {
+        List<string> filtermanager = null;
+        if (managers.Count > 0)
+          filtermanager = managers.Select(p => p._id).ToList();
+
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
         long parameter = 90;
@@ -434,8 +485,13 @@ namespace Manager.Services.Specific
         var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
         FilterDefinition<Person> filters = null;
 
-        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-        && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+        if (managers.Count > 0)
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
+          && filtermanager.Contains(p.Manager._id));
+        else
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -1117,6 +1173,8 @@ namespace Manager.Services.Specific
       {
 
         int skip = (count * (page - 1));
+        List<string> persons = null;
+        persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idManager).Result.Select(p => p._id).ToList();
 
         string mapper = "function() { ";
         mapper += "if(this.Person != null){";
@@ -1160,7 +1218,7 @@ namespace Manager.Services.Specific
         if (idManager != string.Empty)
           filters = Builders<Monitoring>.Filter.Where(p => p._idAccount == _user._idAccount
           && p.Status == EnumStatus.Enabled && p.StatusMonitoring == EnumStatusMonitoring.End
-          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Person._idManager == idManager);
+          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && persons.Contains(p.Person._id));
         else
           filters = Builders<Monitoring>.Filter.Where(p => p._idAccount == _user._idAccount
           && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Status == EnumStatus.Enabled && p.StatusMonitoring == EnumStatusMonitoring.End);

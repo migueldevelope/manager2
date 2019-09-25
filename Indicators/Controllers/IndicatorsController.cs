@@ -289,73 +289,79 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="managers"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("map/onboardinginday")]
-    public async Task<List<ViewListPending>> OnboardingInDayMap()
+    public async Task<List<ViewListPending>> OnboardingInDayMap(List<_ViewList> managers)
     {
-      return await Task.Run(() => service.OnboardingInDayMap());
+      return await Task.Run(() => service.OnboardingInDayMap(managers));
     }
 
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="managers"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("map/onboardingtowin")]
-    public async Task<List<ViewListPending>> OnboardingToWinMap()
+    public async Task<List<ViewListPending>> OnboardingToWinMap(List<_ViewList> managers)
     {
-      return await Task.Run(() => service.OnboardingToWinMap());
+      return await Task.Run(() => service.OnboardingToWinMap(managers));
     }
 
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="managers"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("map/onboardinglate")]
-    public async Task<List<ViewListPending>> OnboardingLateMap()
+    public async Task<List<ViewListPending>> OnboardingLateMap(List<_ViewList> managers)
     {
-      return await Task.Run(() => service.OnboardingLateMap());
+      return await Task.Run(() => service.OnboardingLateMap(managers));
     }
 
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="managers"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("map/checkpointinday")]
-    public async Task<List<ViewListPending>> CheckpointInDayMap()
+    public async Task<List<ViewListPending>> CheckpointInDayMap(List<_ViewList> managers)
     {
-      return await Task.Run(() => service.CheckpointInDayMap());
+      return await Task.Run(() => service.CheckpointInDayMap(managers));
     }
 
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="managers"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("map/checkpointtowin")]
-    public async Task<List<ViewListPending>> CheckpointToWinMap()
+    public async Task<List<ViewListPending>> CheckpointToWinMap(List<_ViewList> managers)
     {
-      return await Task.Run(() => service.CheckpointToWinMap());
+      return await Task.Run(() => service.CheckpointToWinMap(managers));
     }
 
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="managers"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("map/checkpointlate")]
-    public async Task<List<ViewListPending>> CheckpointLateMap()
+    public async Task<List<ViewListPending>> CheckpointLateMap(List<_ViewList> managers)
     {
-      return await Task.Run(() => service.CheckpointLateMap());
+      return await Task.Run(() => service.CheckpointLateMap(managers));
     }
 
     /// <summary>

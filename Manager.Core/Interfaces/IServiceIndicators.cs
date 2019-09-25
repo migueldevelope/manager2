@@ -66,12 +66,12 @@ namespace Manager.Core.Interfaces
     IEnumerable<ViewChartOnboarding> ChartOnboardingMap(List<ViewListIdIndicators> persons);
     ViewListMonitoringQtdManagerGeral GetMoninitoringQtdManagerMap(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter);
     ViewListPlanQtdGerals GetPlanQtdMap(ViewFilterDate date, int count, int page, ref long total, string filter);
-    List<ViewListPending> OnboardingInDayMap();
-    List<ViewListPending> OnboardingToWinMap();
-    List<ViewListPending> OnboardingLateMap();
-    List<ViewListPending> CheckpointInDayMap();
-    List<ViewListPending> CheckpointToWinMap();
-    List<ViewListPending> CheckpointLateMap();
+    List<ViewListPending> OnboardingInDayMap(List<_ViewList> managers);
+    List<ViewListPending> OnboardingToWinMap(List<_ViewList> managers);
+    List<ViewListPending> OnboardingLateMap(List<_ViewList> managers);
+    List<ViewListPending> CheckpointInDayMap(List<_ViewList> managers);
+    List<ViewListPending> CheckpointToWinMap(List<_ViewList> managers);
+    List<ViewListPending> CheckpointLateMap(List<_ViewList> managers);
     void UpdateStatusPlanMonitoring();
   }
 }
