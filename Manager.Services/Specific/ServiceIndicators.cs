@@ -304,7 +304,7 @@ namespace Manager.Services.Specific
         {
           Person = p._id.person,
           Manager = p._id.manager,
-          Days = parameter - long.Parse(p.value.ToString())
+          Days = (parameter - long.Parse(p.value.ToString())) * -1
         }).ToList();
 
         return list.OrderBy(p => p.Days).ToList();
@@ -502,7 +502,7 @@ namespace Manager.Services.Specific
         {
           Person = p._id.person,
           Manager = p._id.manager,
-          Days = parameter - long.Parse(p.value.ToString())
+          Days = (parameter - long.Parse(p.value.ToString())) * -1
         }).ToList();
 
         return list.OrderBy(p => p.Days).ToList();

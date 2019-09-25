@@ -163,40 +163,46 @@
             <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingInDayMap">
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingInDayMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="managers"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingToWinMap">
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingToWinMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="managers"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingLateMap">
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingLateMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="managers"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointInDayMap">
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointInDayMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="managers"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointToWinMap">
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointToWinMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="managers"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointLateMap">
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointLateMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
             <summary>
             
             </summary>
+            <param name="managers"></param>
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.OnboardingToWin(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
