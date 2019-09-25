@@ -307,7 +307,7 @@ namespace Manager.Services.Specific
           Days = (parameter - long.Parse(p.value.ToString())) * -1
         }).ToList();
 
-        return list.OrderBy(p => p.Days).ToList();
+        return list.OrderByDescending(p => p.Days).ToList();
       }
       catch (Exception e)
       {
@@ -505,7 +505,7 @@ namespace Manager.Services.Specific
           Days = (parameter - long.Parse(p.value.ToString())) * -1
         }).ToList();
 
-        return list.OrderBy(p => p.Days).ToList();
+        return list.OrderByDescending(p => p.Days).ToList();
       }
       catch (Exception e)
       {

@@ -294,7 +294,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("map/onboardinginday")]
-    public async Task<List<ViewListPending>> OnboardingInDayMap(List<_ViewList> managers)
+    public async Task<List<ViewListPending>> OnboardingInDayMap([FromBody]List<_ViewList> managers)
     {
       return await Task.Run(() => service.OnboardingInDayMap(managers));
     }
@@ -307,7 +307,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("map/onboardingtowin")]
-    public async Task<List<ViewListPending>> OnboardingToWinMap(List<_ViewList> managers)
+    public async Task<List<ViewListPending>> OnboardingToWinMap([FromBody]List<_ViewList> managers)
     {
       return await Task.Run(() => service.OnboardingToWinMap(managers));
     }
@@ -320,7 +320,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("map/onboardinglate")]
-    public async Task<List<ViewListPending>> OnboardingLateMap(List<_ViewList> managers)
+    public async Task<List<ViewListPending>> OnboardingLateMap([FromBody]List<_ViewList> managers)
     {
       return await Task.Run(() => service.OnboardingLateMap(managers));
     }
@@ -333,7 +333,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("map/checkpointinday")]
-    public async Task<List<ViewListPending>> CheckpointInDayMap(List<_ViewList> managers)
+    public async Task<List<ViewListPending>> CheckpointInDayMap([FromBody]List<_ViewList> managers)
     {
       return await Task.Run(() => service.CheckpointInDayMap(managers));
     }
@@ -346,7 +346,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("map/checkpointtowin")]
-    public async Task<List<ViewListPending>> CheckpointToWinMap(List<_ViewList> managers)
+    public async Task<List<ViewListPending>> CheckpointToWinMap([FromBody]List<_ViewList> managers)
     {
       return await Task.Run(() => service.CheckpointToWinMap(managers));
     }
@@ -359,7 +359,7 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("map/checkpointlate")]
-    public async Task<List<ViewListPending>> CheckpointLateMap(List<_ViewList> managers)
+    public async Task<List<ViewListPending>> CheckpointLateMap([FromBody]List<_ViewList> managers)
     {
       return await Task.Run(() => service.CheckpointLateMap(managers));
     }
