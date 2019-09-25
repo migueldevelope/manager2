@@ -941,14 +941,15 @@ namespace Manager.Services.Specific
 
         var list = new List<ViewPlanQtd>();
 
-        list = result.GroupBy(x => new { x._id.manager, x._id.type })
+        list = result.GroupBy(x => new { x._id.manager })
             .Select(x => new ViewPlanQtd()
             {
               Manager = x.Key.manager,
-              Schedule = x.Key.type == 0 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
-              Realized = x.Key.type == 1 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
-              Late = x.Key.type == 2 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
-              Balance = (x.Key.type == 1 ? long.Parse(x.Sum(p => p.value).ToString()) : 0) - (x.Key.type == 2 ? long.Parse(x.Sum(p => p.value).ToString()) : 0)
+              Schedule = long.Parse(x.Where(y => y._id.type == 0).Sum(y => y.value).ToString()),
+              Realized = long.Parse(x.Where(y => y._id.type == 1).Sum(y => y.value).ToString()),
+              Late = long.Parse(x.Where(y => y._id.type == 2).Sum(y => y.value).ToString()),
+              Balance = long.Parse(x.Where(y => y._id.type == 1).Sum(y => y.value).ToString()) -
+              long.Parse(x.Where(y => y._id.type == 2).Sum(y => y.value).ToString()),
             }).ToList();
 
         total = list.Where(p => p.Schedule > 0).Count();
@@ -1172,14 +1173,14 @@ namespace Manager.Services.Specific
         var view = new ViewListMonitoringQtdManagerGeral();
         var list = new List<ViewMoninitoringQtdManager>();
 
-        list = result.GroupBy(x => new { x._id.manager, x._id.type })
+        list = result.GroupBy(x => x._id.manager)
             .Select(x => new ViewMoninitoringQtdManager()
             {
-              Manager = x.Key.manager,
-              Comments = x.Key.type == 0 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
-              Plans = x.Key.type == 1 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
-              Praises = x.Key.type == 2 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
-              Total = long.Parse(x.Sum(p => p.value).ToString())
+              Manager = x.Key,
+              Comments = long.Parse(x.Where(y => y._id.type == 0).Sum(y => y.value).ToString()),
+              Plans = long.Parse(x.Where(y => y._id.type == 1).Sum(y => y.value).ToString()),
+              Praises = long.Parse(x.Where(y => y._id.type == 2).Sum(y => y.value).ToString()),
+              Total = long.Parse(x.Sum(y => y.value).ToString())
             }).ToList();
 
         if (list.Count > 0)
@@ -1517,15 +1518,16 @@ namespace Manager.Services.Specific
 
         var list = new List<ViewPlanQtd>();
 
-        list = result.GroupBy(x => new { x._id.manager, x._id.type })
-            .Select(x => new ViewPlanQtd()
-            {
-              Manager = x.Key.manager,
-              Schedule = x.Key.type == 0 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
-              Realized = x.Key.type == 1 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
-              Late = x.Key.type == 2 ? long.Parse(x.Sum(p => p.value).ToString()) : 0
-            }).ToList();
-
+        list = result.GroupBy(x => new { x._id.manager })
+             .Select(x => new ViewPlanQtd()
+             {
+               Manager = x.Key.manager,
+               Schedule = long.Parse(x.Where(y => y._id.type == 0).Sum(y => y.value).ToString()),
+               Realized = long.Parse(x.Where(y => y._id.type == 1).Sum(y => y.value).ToString()),
+               Late = long.Parse(x.Where(y => y._id.type == 2).Sum(y => y.value).ToString()),
+               Balance = long.Parse(x.Where(y => y._id.type == 1).Sum(y => y.value).ToString()) -
+               long.Parse(x.Where(y => y._id.type == 2).Sum(y => y.value).ToString()),
+             }).ToList();
 
         view.Schedules = list.Sum(p => p.Schedule);
         view.Ends = list.Sum(p => p.Realized);
