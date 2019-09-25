@@ -76,10 +76,13 @@
             <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendationPersons(Manager.Views.BusinessList.ViewFilterIdAndDate)">
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendationPersons(Manager.Views.BusinessList.ViewFilterIdAndDate,System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>
+            <param name="filters"></param>
+            <param name="count"></param>
+            <param name="page"></param>
             <param name="filter"></param>
             <returns></returns>
         </member>
@@ -271,6 +274,14 @@
             <param name="idmanager"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetListPlanQtdMap(Manager.Views.BusinessView.ViewFilterDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
         <member name="M:Indicators.Controllers.IndicatorsController.GetAccountEnableds">
             <summary>
             
@@ -302,6 +313,16 @@
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.GetPlanQtd(Manager.Views.BusinessView.ViewFilterDate,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetPlanQtdMap(Manager.Views.BusinessView.ViewFilterDate,System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>

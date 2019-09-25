@@ -539,14 +539,37 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
         var view = new ViewListPlanQtdGerals();
 
-        string mapper = "function() {";
-        mapper += " var date = new Date();";
-        mapper += " var plans = this.Plans.find({ _id: this._id, Status: 0}).count();";
-        mapper += " var plansRealized = this.Plans.find({ _id: this._id, StatusPlan: { $ne: 0 } , Status: 0}).count();";
-        mapper += " var plansLate = this.Plans.find({ _id: this._id, StatusPlan: 0, Deadline: {$lt: date }, Status: 0}).count();";
-        mapper += " emit({ manager: this.Person.Manager, type: 0}, plans);";
-        mapper += " emit({ manager: this.Person.Manager, type: 1}, plansRealized);";
-        mapper += " emit({ manager: this.Person.Manager, type: 2}, plansLate);}; ";
+        string mapper = "function() { ";
+        mapper += " if (this.Person != null) {";
+        mapper += " if (this.Person.Manager != null) {";
+        mapper += " if (this.SkillsCompany != null) {";
+        mapper += " this.SkillsCompany.forEach((it) => {";
+        mapper += " if (it.Plans != null) {";
+        mapper += " var getdate = new Date();";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Plans.length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.filter(function(el) { return el.StatusPlan != 0 }).length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, it.Plans.filter(function(el) {";
+        mapper += " return el.StatusPlan == 0&& el.Deadline < getdate }).length);";
+        mapper += " } }); }";
+        mapper += " if (this.Schoolings != null) {";
+        mapper += " this.Schoolings.forEach((it) => {";
+        mapper += " if (it.Plans != null) {";
+        mapper += " var getdate = new Date();";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Plans.length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.filter(function(el) { return el.StatusPlan != 0 }).length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, it.Plans.filter(function(el) {";
+        mapper += " return el.StatusPlan == 0 && el.Deadline < getdate }).length);";
+        mapper += " } }); }";
+        mapper += " if (this.Activities != null){";
+        mapper += " this.Activities.forEach((it) => {";
+        mapper += " if (it.Plans != null)  {";
+        mapper += " var getdate = new Date();";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Plans.length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.filter(function(el) { return el.StatusPlan != 0 }).length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, it.Plans.filter(function(el) {";
+        mapper += " return el.StatusPlan == 0 && el.Deadline < getdate }).length);";
+        mapper += " } });";
+        mapper += " }}}};";
 
         var map = new BsonJavaScript(mapper);
         var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
@@ -1086,6 +1109,82 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public ViewListPlanQtd GetListPlanQtdMap(ViewFilterDate date, string idManager)
+    {
+      try
+      {
+        var view = new ViewListPlanQtd();
+        string mapper = "function() { ";
+        mapper += " if (this.Person != null) {";
+        mapper += " if (this.Person.Manager != null) {";
+        mapper += " if (this.SkillsCompany != null) {";
+        mapper += " this.SkillsCompany.forEach((it) => {";
+        mapper += " if (it.Plans != null) {";
+        mapper += " var getdate = new Date();";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Plans.length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.filter(function(el) { return el.StatusPlan != 0 }).length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, it.Plans.filter(function(el) {";
+        mapper += " return el.StatusPlan == 0&& el.Deadline < getdate }).length);";
+        mapper += " } }); }";
+        mapper += " if (this.Schoolings != null) {";
+        mapper += " this.Schoolings.forEach((it) => {";
+        mapper += " if (it.Plans != null) {";
+        mapper += " var getdate = new Date();";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Plans.length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.filter(function(el) { return el.StatusPlan != 0 }).length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, it.Plans.filter(function(el) {";
+        mapper += " return el.StatusPlan == 0 && el.Deadline < getdate }).length);";
+        mapper += " } }); }";
+        mapper += " if (this.Activities != null){";
+        mapper += " this.Activities.forEach((it) => {";
+        mapper += " if (it.Plans != null)  {";
+        mapper += " var getdate = new Date();";
+        mapper += " emit({ manager: this.Person.Manager, type: 0}, it.Plans.length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 1}, it.Plans.filter(function(el) { return el.StatusPlan != 0 }).length);";
+        mapper += " emit({ manager: this.Person.Manager, type: 2}, it.Plans.filter(function(el) {";
+        mapper += " return el.StatusPlan == 0 && el.Deadline < getdate }).length);";
+        mapper += " } });";
+        mapper += " }}}};";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Monitoring");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapCompose>();
+        FilterDefinition<Monitoring> filters = null;
+
+        filters = Builders<Monitoring>.Filter.Where(p => p._idAccount == _user._idAccount
+        && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End && p.Status == EnumStatus.Enabled && p.StatusMonitoring == EnumStatusMonitoring.End);
+
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var result = coll.MapReduce(map, reduce, options).ToList();
+
+        var list = new List<ViewPlanQtd>();
+
+        list = result.GroupBy(x => new { x._id.manager, x._id.type })
+            .Select(x => new ViewPlanQtd()
+            {
+              Manager = x.Key.manager,
+              Schedule = x.Key.type == 0 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
+              Realized = x.Key.type == 1 ? long.Parse(x.Sum(p => p.value).ToString()) : 0,
+              Late = x.Key.type == 2 ? long.Parse(x.Sum(p => p.value).ToString()) : 0
+            }).ToList();
+
+
+        view.Schedules = list.Sum(p => p.Schedule);
+        view.Ends = list.Sum(p => p.Realized);
+        view.Lates = list.Sum(p => p.Late);
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewAccountEnableds> GetAccountEnableds()
     {
       try
@@ -1358,6 +1457,66 @@ namespace Manager.Services.Specific
         hubConnection.StartAsync();
 
         DoWork();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public void UpdateStatusPlanMonitoring()
+    {
+      try
+      {
+        var monitorings = serviceMonitoring.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled
+        && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
+        foreach (var moni in monitorings)
+        {
+          if (moni.SkillsCompany != null)
+          {
+            foreach (var item in moni.SkillsCompany)
+            {
+              if (item.Plans != null)
+              {
+                foreach (var plan in item.Plans)
+                {
+                  var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
+                  plan.StatusPlan = status;
+                }
+              }
+            }
+          }
+
+          if (moni.Schoolings != null)
+          {
+            foreach (var item in moni.Schoolings)
+            {
+              if (item.Plans != null)
+              {
+                foreach (var plan in item.Plans)
+                {
+                  var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
+                  plan.StatusPlan = status;
+                }
+              }
+            }
+          }
+
+          if (moni.Activities != null)
+          {
+            foreach (var item in moni.Activities)
+            {
+              if (item.Plans != null)
+              {
+                foreach (var plan in item.Plans)
+                {
+                  var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
+                  plan.StatusPlan = status;
+                }
+              }
+            }
+          }
+        }
       }
       catch (Exception e)
       {
@@ -1882,6 +2041,7 @@ namespace Manager.Services.Specific
           Count = x.Count()
         }).ToList();
 
+        total = response.Count();
         return response.Where(p => p.Name.Contains(filter)).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
 
       }

@@ -50,6 +50,7 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudCompanyPeriod(ViewFilterManagerAndDate filters, string idmanager);
     List<ViewTagsCloud> ListTagsCloudPeriod(ViewFilterManagerAndDate filters, string idmanager);
     ViewListPlanQtd GetListPlanQtd(ViewFilterDate date, string idManager);
+    ViewListPlanQtd GetListPlanQtdMap(ViewFilterDate date, string idManager);
     List<ViewAccountEnableds> GetAccountEnableds();
     List<ViewTagsCloudPerson> ListTagsCloudCompanyPeriodPerson(ViewFilterManagerAndDate filters, string idmanager, int count, int page, ref long total, string filter);
     List<ViewTagsCloudPerson> ListTagsCloudPeriodPerson(ViewFilterManagerAndDate filters, string idmanager, int count, int page, ref long total, string filter);
@@ -64,5 +65,7 @@ namespace Manager.Core.Interfaces
     IEnumerable<ViewChartRecommendation> ChartRecommendationPersons(ViewFilterIdAndDate filters, int count, int page, ref long total, string filter);
     IEnumerable<ViewChartOnboarding> ChartOnboardingMap(List<ViewListIdIndicators> persons);
     ViewListMonitoringQtdManagerGeral GetMoninitoringQtdManagerMap(ViewFilterDate date, string idManager, int count, int page, ref long total, string filter);
+    ViewListPlanQtdGerals GetPlanQtdMap(ViewFilterDate date, int count, int page, ref long total, string filter);
+    void UpdateStatusPlanMonitoring();
   }
 }

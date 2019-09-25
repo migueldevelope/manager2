@@ -492,6 +492,20 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idmanager"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/getlistplanqtd")]
+    public async Task<ViewListPlanQtd> GetListPlanQtdMap([FromBody]ViewFilterDate date, string idmanager = "")
+    {
+      return await Task.Run(() => service.GetListPlanQtdMap(date, idmanager));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
@@ -561,6 +575,25 @@ namespace Indicators.Controllers
     {
       long total = 0;
       var result = await Task.Run(() => service.GetPlanQtd(date, count, page, ref total, filter));
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/getplanqtd")]
+    public async Task<ViewListPlanQtdGerals> GetPlanQtdMap([FromBody]ViewFilterDate date, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = await Task.Run(() => service.GetPlanQtdMap(date, count, page, ref total, filter));
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
