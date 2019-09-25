@@ -103,6 +103,360 @@ namespace Manager.Services.Specific
       serviceIPerson.SetUser(_user);
     }
 
+    public List<ViewListPending> OnboardingInDayMap()
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
+
+        var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding == EnumStatusOnBoarding.End).Result.Select(p => p.Person._id).ToList();
+
+        string mapper = "function() {";
+        mapper += " var manager = null;";
+        mapper += " var person = null;";
+        mapper += " if (this.Manager != null)";
+        mapper += " manager = this.Manager.Name;";
+        mapper += " if (this.User != null)";
+        mapper += " person = this.User.Name;";
+        mapper += " var getdate = new Date();";
+        mapper += " var dateadm = this.User.DateAdm;";
+        mapper += " if (this.TypeJourney == 3) {";
+        mapper += " if (this.DateLastOccupation != null)";
+        mapper += " dateadm = this.DateLastOccupation; }";
+        //mapper += " if (dateadm == null)";
+        //mapper += " dateadm = getdate;";
+        mapper += " var datea = new Date(dateadm);";
+        mapper += " var diff = Date.parse(getdate) - Date.parse(datea.toString());";
+        mapper += " var days = Math.floor(diff / 86400000);";
+        mapper += " emit({ manager: manager, person: person }, days)};";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Person");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
+        FilterDefinition<Person> filters = null;
+
+        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+        && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+        && !onboardings.Contains(p._id));
+
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var result = coll.MapReduce(map, reduce, options).ToList();
+
+        list = result.Where(p => (parameter - p.value) >= 10).Select(p => new ViewListPending()
+        {
+          Person = p._id.person,
+          Manager = p._id.manager,
+          Days = parameter - long.Parse(p.value.ToString())
+        }).ToList();
+
+        return list.OrderBy(p => p.Days).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> OnboardingToWinMap()
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
+
+        var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding == EnumStatusOnBoarding.End).Result.Select(p => p.Person._id).ToList();
+
+        string mapper = "function() {";
+        mapper += " var manager = null;";
+        mapper += " var person = null;";
+        mapper += " if (this.Manager != null)";
+        mapper += " manager = this.Manager.Name;";
+        mapper += " if (this.User != null)";
+        mapper += " person = this.User.Name;";
+        mapper += " var getdate = new Date();";
+        mapper += " var dateadm = this.User.DateAdm;";
+        mapper += " if (this.TypeJourney == 3) {";
+        mapper += " if (this.DateLastOccupation != null)";
+        mapper += " dateadm = this.DateLastOccupation; }";
+        //mapper += " if (dateadm == null)";
+        //mapper += " dateadm = getdate;";
+        mapper += " var datea = new Date(dateadm);";
+        mapper += " var diff = Date.parse(getdate) - Date.parse(datea.toString());";
+        mapper += " var days = Math.floor(diff / 86400000);";
+        mapper += " emit({ manager: manager, person: person }, days)};";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Person");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
+        FilterDefinition<Person> filters = null;
+
+        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+        && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+        && !onboardings.Contains(p._id));
+
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var result = coll.MapReduce(map, reduce, options).ToList();
+
+        list = result.Where(p => (parameter - p.value) < 10 && (parameter - p.value) >= 0).Select(p => new ViewListPending()
+        {
+          Person = p._id.person,
+          Manager = p._id.manager,
+          Days = parameter - long.Parse(p.value.ToString())
+        }).ToList();
+
+        return list.OrderBy(p => p.Days).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> OnboardingLateMap()
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
+
+        var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding == EnumStatusOnBoarding.End).Result.Select(p => p.Person._id).ToList();
+
+        string mapper = "function() {";
+        mapper += " var manager = null;";
+        mapper += " var person = null;";
+        mapper += " if (this.Manager != null)";
+        mapper += " manager = this.Manager.Name;";
+        mapper += " if (this.User != null)";
+        mapper += " person = this.User.Name;";
+        mapper += " var getdate = new Date();";
+        mapper += " var dateadm = this.User.DateAdm;";
+        mapper += " if (this.TypeJourney == 3) {";
+        mapper += " if (this.DateLastOccupation != null)";
+        mapper += " dateadm = this.DateLastOccupation; }";
+        //mapper += " if (dateadm == null)";
+        //mapper += " dateadm = getdate;";
+        mapper += " var datea = new Date(dateadm);";
+        mapper += " var diff = Date.parse(getdate) - Date.parse(datea.toString());";
+        mapper += " var days = Math.floor(diff / 86400000);";
+        mapper += " emit({ manager: manager, person: person }, days)};";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Person");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
+        FilterDefinition<Person> filters = null;
+
+        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+        && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+        && !onboardings.Contains(p._id));
+
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var result = coll.MapReduce(map, reduce, options).ToList();
+
+        list = result.Where(p => (parameter - p.value) < 0).Select(p => new ViewListPending()
+        {
+          Person = p._id.person,
+          Manager = p._id.manager,
+          Days = parameter - long.Parse(p.value.ToString())
+        }).ToList();
+
+        return list.OrderBy(p => p.Days).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> CheckpointInDayMap()
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
+
+        var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.StatusCheckpoint == EnumStatusCheckpoint.End).Result.Select(p => p.Person._id).ToList();
+
+        string mapper = "function() {";
+        mapper += " var manager = null;";
+        mapper += " var person = null;";
+        mapper += " if (this.Manager != null)";
+        mapper += " manager = this.Manager.Name;";
+        mapper += " if (this.User != null)";
+        mapper += " person = this.User.Name;";
+        mapper += " var getdate = new Date();";
+        mapper += " var dateadm = this.User.DateAdm;";
+        //mapper += " if (dateadm == null)";
+        //mapper += " dateadm = getdate;";
+        mapper += " var datea = new Date(dateadm);";
+        mapper += " var diff = Date.parse(getdate) - Date.parse(datea.toString());";
+        mapper += " var days = Math.floor(diff / 86400000);";
+        mapper += " emit({ manager: manager, person: person }, days)};";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Person");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
+        FilterDefinition<Person> filters = null;
+
+        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+        && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var result = coll.MapReduce(map, reduce, options).ToList();
+
+        list = result.Where(p => (parameter - p.value) >= 10).Select(p => new ViewListPending()
+        {
+          Person = p._id.person,
+          Manager = p._id.manager,
+          Days = parameter - long.Parse(p.value.ToString())
+        }).ToList();
+
+        return list.OrderBy(p => p.Days).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> CheckpointToWinMap()
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
+
+        var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.StatusCheckpoint == EnumStatusCheckpoint.End).Result.Select(p => p.Person._id).ToList();
+
+        string mapper = "function() {";
+        mapper += " var manager = null;";
+        mapper += " var person = null;";
+        mapper += " if (this.Manager != null)";
+        mapper += " manager = this.Manager.Name;";
+        mapper += " if (this.User != null)";
+        mapper += " person = this.User.Name;";
+        mapper += " var getdate = new Date();";
+        mapper += " var dateadm = this.User.DateAdm;";
+        //mapper += " if (dateadm == null)";
+        //mapper += " dateadm = getdate;";
+        mapper += " var datea = new Date(dateadm);";
+        mapper += " var diff = Date.parse(getdate) - Date.parse(datea.toString());";
+        mapper += " var days = Math.floor(diff / 86400000);";
+        mapper += " emit({ manager: manager, person: person }, days)};";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Person");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
+        FilterDefinition<Person> filters = null;
+
+        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+        && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var result = coll.MapReduce(map, reduce, options).ToList();
+
+        list = result.Where(p => (parameter - p.value) < 10 && (parameter - p.value) >= 0).Select(p => new ViewListPending()
+        {
+          Person = p._id.person,
+          Manager = p._id.manager,
+          Days = parameter - long.Parse(p.value.ToString())
+        }).ToList();
+
+        return list.OrderBy(p => p.Days).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPending> CheckpointLateMap()
+    {
+      try
+      {
+        var list = new List<ViewListPending>();
+        var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result;
+        long parameter = 90;
+        if (parameterget != null)
+          parameter = long.Parse(parameterget.Content);
+
+        var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.StatusCheckpoint == EnumStatusCheckpoint.End).Result.Select(p => p.Person._id).ToList();
+
+        string mapper = "function() {";
+        mapper += " var manager = null;";
+        mapper += " var person = null;";
+        mapper += " if (this.Manager != null)";
+        mapper += " manager = this.Manager.Name;";
+        mapper += " if (this.User != null)";
+        mapper += " person = this.User.Name;";
+        mapper += " var getdate = new Date();";
+        mapper += " var dateadm = this.User.DateAdm;";
+        //mapper += " if (dateadm == null)";
+        //mapper += " dateadm = getdate;";
+        mapper += " var datea = new Date(dateadm);";
+        mapper += " var diff = Date.parse(getdate) - Date.parse(datea.toString());";
+        mapper += " var days = Math.floor(diff / 86400000);";
+        mapper += " emit({ manager: manager, person: person }, days)};";
+
+        var map = new BsonJavaScript(mapper);
+        var reduce = new BsonJavaScript("function(Manager, val) { return Array.sum(val); };");
+        var coll = serviceOnboarding._context._db.GetCollection<BsonDocument>("Person");
+        var options = new MapReduceOptions<BsonDocument, ViewListMapPersonManager>();
+        FilterDefinition<Person> filters = null;
+
+        filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+        && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+
+        var json = filters.RenderToBsonDocument().ToJson();
+        options.Filter = json;
+        options.OutputOptions = MapReduceOutputOptions.Inline;
+        var result = coll.MapReduce(map, reduce, options).ToList();
+
+        list = result.Where(p => (parameter - p.value) < 0).Select(p => new ViewListPending()
+        {
+          Person = p._id.person,
+          Manager = p._id.manager,
+          Days = parameter - long.Parse(p.value.ToString())
+        }).ToList();
+
+        return list.OrderBy(p => p.Days).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListPending> OnboardingInDay(List<ViewListIdIndicators> persons)
     {
       try

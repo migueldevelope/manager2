@@ -289,6 +289,78 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/onboardinginday")]
+    public async Task<List<ViewListPending>> OnboardingInDayMap()
+    {
+      return await Task.Run(() => service.OnboardingInDayMap());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/onboardingtowin")]
+    public async Task<List<ViewListPending>> OnboardingToWinMap()
+    {
+      return await Task.Run(() => service.OnboardingToWinMap());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/onboardinglate")]
+    public async Task<List<ViewListPending>> OnboardingLateMap()
+    {
+      return await Task.Run(() => service.OnboardingLateMap());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/checkpointinday")]
+    public async Task<List<ViewListPending>> CheckpointInDayMap()
+    {
+      return await Task.Run(() => service.CheckpointInDayMap());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/checkpointtowin")]
+    public async Task<List<ViewListPending>> CheckpointToWinMap()
+    {
+      return await Task.Run(() => service.CheckpointToWinMap());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/checkpointlate")]
+    public async Task<List<ViewListPending>> CheckpointLateMap()
+    {
+      return await Task.Run(() => service.CheckpointLateMap());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="persons"></param>
     /// <returns></returns>
     [Authorize]

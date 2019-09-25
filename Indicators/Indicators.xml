@@ -163,6 +163,42 @@
             <param name="persons"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingInDayMap">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingToWinMap">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingLateMap">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointInDayMap">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointToWinMap">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointLateMap">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Indicators.Controllers.IndicatorsController.OnboardingToWin(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
             <summary>
             
