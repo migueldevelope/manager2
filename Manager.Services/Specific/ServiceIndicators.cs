@@ -2456,7 +2456,7 @@ namespace Manager.Services.Specific
         }).ToList();
 
         total = response.Count();
-        return response.Where(p => p.Name.Contains(filter)).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        return response.Where(p => p.Name.Contains(filter)).OrderByDescending(p => p.Count).Skip(skip).Take(count).ToList();
 
       }
       catch (Exception e)
@@ -2619,7 +2619,7 @@ namespace Manager.Services.Specific
           Item = x.Key.Skill,
           ItemCertificationView = x.Key.ItemCertificationView,
           Count = x.Count()
-        }).ToList();
+        }).OrderByDescending(p => p.Count).ToList();
 
       }
       catch (Exception e)
