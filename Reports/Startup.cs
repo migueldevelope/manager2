@@ -73,11 +73,11 @@ namespace Reports
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-
+      IServiceReports serviceReports = new ServiceReports(_context, _contextLog, conn.TokenServer, servicePerson);
       IServiceManager serviceManager = new ServiceManager(_contextStruct, serviceControlQueue, serviceBusConnectionString);
 
-      serviceManager.UpdateStructManager();
 
+      services.AddSingleton(_ => serviceReports);
       services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceAuthentication);
