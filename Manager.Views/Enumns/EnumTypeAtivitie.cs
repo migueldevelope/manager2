@@ -2,6 +2,6 @@
 {
   public enum EnumTypeAtivitie : byte
   {
-    Occupation = 0, Individual = 1
+    Occupation = 0, Individual = 1, Scope = 2
   }
 }

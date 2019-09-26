@@ -1418,7 +1418,7 @@ namespace Manager.Services.Specific
         List<ViewExportMonitoringComments> result = new List<ViewExportMonitoringComments>();
         foreach (ViewListIdIndicators rows in filter.Persons)
         {
-          var monitorings = serviceMonitoring.GetAllNewVersion(p =>  p.Person._id == rows._id && p.StatusMonitoring == EnumStatusMonitoring.End
+          var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == rows._id && p.StatusMonitoring == EnumStatusMonitoring.End
            && p.DateEndEnd >= filter.Date.Begin && p.DateEndEnd <= filter.Date.End).Result;
 
           foreach (var monitoring in monitorings)
@@ -1666,7 +1666,12 @@ namespace Manager.Services.Specific
         monitoring.Activities = new List<MonitoringActivities>();
         foreach (var item in occupation.Activities)
         {
-          monitoring.Activities.Add(new MonitoringActivities() { Activities = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
+          monitoring.Activities.Add(new MonitoringActivities() { TypeAtivitie  = EnumTypeAtivitie.Occupation, Activities = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
+        }
+
+        foreach (var item in group.Scope)
+        {
+          monitoring.Activities.Add(new MonitoringActivities() { TypeAtivitie = EnumTypeAtivitie.Scope, Activities = new ViewListActivitie() { _id = item._id, Name = item.Name, Order = item.Order }, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
         }
 
         monitoring.Schoolings = new List<MonitoringSchooling>();
