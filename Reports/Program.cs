@@ -31,7 +31,7 @@ namespace Reports
     /// <returns></returns>
     public static IWebHost BuildWebHost(string[] args) =>
         WebHost.CreateDefaultBuilder(args)
-           .UseUrls("http://0.0.0.0:5207/")
+           .UseUrls("http://0.0.0.0:5208/")
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
             .UseKestrel(opts =>
