@@ -345,6 +345,93 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListGrade> ListGradeManager(string idmanager, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        var listidocc = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p =>
+        p.Occupation?._id).ToList();
+
+        var occupations = serviceOccupation.GetAllNewVersion(p => listidocc.Contains(p._id)).Result;
+
+        var detail = new List<ViewListGrade>();
+        var occupation = new List<ViewListOccupationSalaryScale>();
+        foreach (var occ in occupations)
+        {
+          foreach (var sal in occ.SalaryScales)
+          {
+            SalaryScale item = serviceSalaryScale.GetNewVersion(p => p._id == sal._idSalaryScale).Result;
+            if (item == null)
+              throw new Exception("Salary scale not found!");
+
+            foreach (var grade in item.Grades)
+            {
+              var occupationStep = new ViewListOccupationSalaryScale()
+              {
+                _id = occ._id,
+                Name = occ.Name,
+                Description = occ.Description,
+                Wordload = occ.SalaryScales.FirstOrDefault().Workload,
+                Process = occ.Process == null ? null : occ.Process.Select(
+                x => new ViewListProcessLevelTwo()
+                {
+                  _id = x._id,
+                  Name = x.Name,
+                  Order = x.Order,
+                  ProcessLevelOne = x.ProcessLevelOne
+                }).ToList()
+              };
+              occupationStep.Steps = new List<ViewListStep>();
+              foreach (var step in grade.ListSteps)
+              {
+                var newStep = new ViewListStep()
+                {
+                  Step = step.Step,
+                  Salary = step.Salary
+                };
+                if (occupationStep.Wordload != grade.Workload)
+                {
+                  newStep.Salary = Math.Round((step.Salary * occupationStep.Wordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
+                }
+                occupationStep.Steps.Add(newStep);
+              }
+              occupation.Add(occupationStep);
+
+              var view = new ViewListGrade
+              {
+                _id = grade._id,
+                Name = grade.Name,
+                StepMedium = grade.StepMedium,
+                Order = grade.Order,
+                Wordload = grade.Workload,
+                Steps = new List<ViewListStep>(),
+                Occupation = occupation,
+              };
+              foreach (var step in grade.ListSteps)
+              {
+                var newStep = new ViewListStep()
+                {
+                  Step = step.Step,
+                  Salary = step.Salary
+                };
+                view.Steps.Add(newStep);
+
+                detail.Add(view);
+              }
+            }
+          }
+        }
+
+        total = detail.Count();
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string AddGrade(ViewCrudGrade view)
     {
       try
