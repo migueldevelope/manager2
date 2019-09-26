@@ -4,6 +4,35 @@
         <name>Reports</name>
     </assembly>
     <members>
+        <member name="T:Reports.Controllers.ReportsController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Reports.Controllers.ReportsController.#ctor(Manager.Core.Interfaces.IServiceReports,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="_service"></param>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="M:Reports.Controllers.ReportsController.ListPersons">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Reports.Controllers.ValuesController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Reports.Controllers.ValuesController.Get">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Reports.Program">
             <summary>
             

@@ -86,6 +86,16 @@
             <param name="filter"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendationPersonsMap(Manager.Views.BusinessView.ViewFilterManagerAndDate,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filters"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ChartCertificationStatus(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
             <summary>
             

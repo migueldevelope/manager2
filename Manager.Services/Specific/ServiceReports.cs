@@ -44,7 +44,7 @@ namespace Manager.Services.Specific
     private readonly IServicePerson serviceIPerson;
 
     public string path;
-    private HubConnection hubConnection;
+    //private HubConnection hubConnection;
 
     public ServiceReports(DataContext context, DataContext contextLog, string pathToken, IServicePerson _serviceIPerson)
       : base(context)
