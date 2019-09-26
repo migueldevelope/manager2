@@ -72,6 +72,7 @@ namespace Manager.Core.Interfaces
     List<ViewListPending> CheckpointInDayMap(List<_ViewList> managers);
     List<ViewListPending> CheckpointToWinMap(List<_ViewList> managers);
     List<ViewListPending> CheckpointLateMap(List<_ViewList> managers);
+    IEnumerable<ViewChartRecommendation> ChartRecommendationPersonsMap(ViewFilterManagerAndDate filters, int count, int page, ref long total, string filter);
     void UpdateStatusPlanMonitoring();
   }
 }

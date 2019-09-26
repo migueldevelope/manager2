@@ -2465,6 +2465,50 @@ namespace Manager.Services.Specific
       }
     }
 
+
+    public IEnumerable<ViewChartRecommendation> ChartRecommendationPersonsMap(ViewFilterManagerAndDate filters, int count, int page, ref long total, string filter)
+    {
+      try
+      {
+
+        int skip = (count * (page - 1));
+
+        var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+        && p.Date >= filters.Date.Begin && p.Date <= filters.Date.End).Result;
+
+        List<dynamic> result = new List<dynamic>();
+
+        //foreach (var item in filters.Persons)
+        //{
+        //  var list = recommendations.Where(p => p.Person._id == item._id);
+        //  foreach (var view in list)
+        //  {
+        //    result.Add(new
+        //    {
+        //      Name = view.Person.Name,
+        //      _id = view.Recommendation._id
+        //    });
+        //  }
+
+        //}
+
+        var response = result.GroupBy(p => p.Name).Select(x => new ViewChartRecommendation
+        {
+          Name = x.Key,
+          Count = x.Count()
+        }).ToList();
+
+        total = response.Count();
+        return response.Where(p => p.Name.Contains(filter)).OrderByDescending(p => p.Count).Skip(skip).Take(count).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     public IEnumerable<ViewChartStatus> ChartPlanRealized(List<ViewListIdIndicators> persons)
     {
       try
