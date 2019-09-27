@@ -5,17 +5,22 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
+using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Azure.ServiceBus;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
@@ -41,12 +46,14 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Recommendation> serviceRecommendation;
     private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
     private readonly ServiceGeneric<Parameter> serviceParameter;
+    private readonly ServiceGeneric<Reports> serviceReport;
     private readonly IServicePerson serviceIPerson;
 
     public string path;
-    //private HubConnection hubConnection;
+    private readonly IQueueClient queueClient;
 
-    public ServiceReports(DataContext context, DataContext contextLog, string pathToken, IServicePerson _serviceIPerson)
+    #region construtctor
+    public ServiceReports(DataContext context, DataContext contextLog, string pathToken, IServicePerson _serviceIPerson, string serviceBusConnectionString)
       : base(context)
     {
       try
@@ -69,8 +76,9 @@ namespace Manager.Services.Specific
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceArea = new ServiceGeneric<Area>(context);
+        serviceReport = new ServiceGeneric<Reports>(context);
         serviceIPerson = _serviceIPerson;
-
+        queueClient = new QueueClient(serviceBusConnectionString, "reports");
         path = pathToken;
       }
       catch (Exception e)
@@ -78,7 +86,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
 
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
@@ -91,6 +98,7 @@ namespace Manager.Services.Specific
       serviceMailModel._user = _user;
       serviceWorkflow._user = _user;
       serviceMail._user = _user;
+      serviceReport._user = _user;
       serviceCertification._user = _user;
       serviceCheckpoint._user = _user;
       serviceRecommendation._user = _user;
@@ -114,6 +122,7 @@ namespace Manager.Services.Specific
       serviceMailModel._user = _user;
       serviceWorkflow._user = _user;
       serviceMail._user = _user;
+      serviceReport._user = _user;
       serviceCertification._user = _user;
       serviceCheckpoint._user = _user;
       serviceRecommendation._user = _user;
@@ -125,13 +134,58 @@ namespace Manager.Services.Specific
       serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
     }
+    #endregion
 
-    public List<_ViewListBase> ListPersons()
+
+    #region reports
+    public string ListPersons()
     {
       try
       {
-        return servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
+        var data = servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
           .Select(p => new _ViewListBase() { _id = p._id, Name = p.User.Name }).ToList();
+
+        var view = new ViewReport()
+        {
+          Data = data,
+          Name = "ListPersons"
+        };
+        SendMessageAsync(view);
+
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
+    #region ... private ...
+
+    private void SendMessageAsync(ViewReport view)
+    {
+      try
+      {
+        var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(view)));
+        queueClient.SendAsync(message);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public void RegisterOnMessageHandlerAndReceiveMesssages()
+    {
+      try
+      {
+        var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+        {
+          MaxConcurrentCalls = 1,
+          AutoComplete = false
+        };
+
+        queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
       }
       catch (Exception e)
       {
@@ -139,7 +193,29 @@ namespace Manager.Services.Specific
       }
     }
 
+    private async Task ProcessMessagesAsync(Message message, CancellationToken token)
+    {
+      var view = JsonConvert.DeserializeObject<ViewCrudReport>(Encoding.UTF8.GetString(message.Body));
+      SetUser(new BaseUser()
+      {
+        _idAccount = view._idAccount
+      });
 
+      Reports report = serviceReport.GetFreeNewVersion(p => p._id == view._id).Result;
+      report.StatusReport = view.StatusReport;
+      report.Link = view.Link;
+      serviceReport.UpdateAccount(report, null).Wait();
+
+      await queueClient.CompleteAsync(message.SystemProperties.LockToken);
+    }
+
+    private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+    {
+      var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+      return Task.CompletedTask;
+    }
+
+    #endregion
   }
 
 }

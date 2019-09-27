@@ -12,6 +12,7 @@ namespace Manager.Core.Interfaces
   {
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser baseUser);
-    List<_ViewListBase> ListPersons();
+    void RegisterOnMessageHandlerAndReceiveMesssages();
+    string ListPersons();
   }
 }
