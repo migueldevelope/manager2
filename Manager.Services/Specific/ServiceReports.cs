@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -148,11 +149,22 @@ namespace Manager.Services.Specific
         var view = new ViewReport()
         {
           Data = data,
-          Name = "ListPersons"
+          Name = "listpersons",
+          _idReport = NewReport("listpersons"),
+          _idAccount = _user._idAccount
         };
         SendMessageAsync(view);
+        var report = new ViewCrudReport();
 
-        return null;
+        while(report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+          
+        return report.Link;
       }
       catch (Exception e)
       {
@@ -162,6 +174,25 @@ namespace Manager.Services.Specific
     #endregion
 
     #region ... private ...
+
+    private string NewReport(string name)
+    {
+      try
+      {
+        var report = new Reports()
+        {
+          StatusReport = EnumStatusReport.Open,
+          Date = DateTime.Now,
+          Name = name
+        };
+
+        return serviceReport.InsertNewVersion(report).Result._id;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     private void SendMessageAsync(ViewReport view)
     {
@@ -195,18 +226,30 @@ namespace Manager.Services.Specific
 
     private async Task ProcessMessagesAsync(Message message, CancellationToken token)
     {
-      var view = JsonConvert.DeserializeObject<ViewCrudReport>(Encoding.UTF8.GetString(message.Body));
-      SetUser(new BaseUser()
+      try
       {
-        _idAccount = view._idAccount
-      });
+        var view = JsonConvert.DeserializeObject<ViewCrudReport>(Encoding.UTF8.GetString(message.Body));
+        SetUser(new BaseUser()
+        {
+          _idAccount = view._idAccount
+        });
 
-      Reports report = serviceReport.GetFreeNewVersion(p => p._id == view._id).Result;
-      report.StatusReport = view.StatusReport;
-      report.Link = view.Link;
-      serviceReport.UpdateAccount(report, null).Wait();
+        if (view.StatusReport != EnumStatusReport.Open)
+        {
+          Reports report = serviceReport.GetFreeNewVersion(p => p._id == view._id).Result;
+          report.StatusReport = view.StatusReport;
+          report.Link = view.Link;
+          serviceReport.UpdateAccount(report, null).Wait();
 
-      await queueClient.CompleteAsync(message.SystemProperties.LockToken);
+          await queueClient.CompleteAsync(message.SystemProperties.LockToken);
+        }
+      }
+      catch (Exception e)
+      {
+        var error = e.Message;
+        queueClient.CompleteAsync(message.SystemProperties.LockToken);
+      }
+
     }
 
     private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)

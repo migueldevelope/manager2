@@ -39,7 +39,7 @@ namespace Reports.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersons")]
-    public async Task<List<_ViewListBase>> ListPersons()
+    public async Task<string> ListPersons()
     {
       return await Task.Run(() => service.ListPersons());
     }
