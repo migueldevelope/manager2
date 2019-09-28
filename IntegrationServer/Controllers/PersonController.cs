@@ -5,6 +5,7 @@ using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
+using Manager.Views.Integration.V2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -293,7 +294,135 @@ namespace IntegrationServer.InfraController
       }
       return view;
     }
+    #endregion
 
+    #region Colaborador V2
+    /// <summary>
+    /// Admissão de colaborador
+    /// </summary>
+    /// <param name="view">Objeto de integração do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("v2/admissao")]
+    public ColaboradorV2Retorno AdmissaoV2([FromBody]ColaboradorV2Admissao view)
+    {
+      ColaboradorV2Retorno result = new ColaboradorV2Retorno()
+      {
+        Situacao = EnumSituacaoRetornoIntegracao.Erro,
+        Mensagem = "Não implementado"
+      };
+      return result;
+    }
+    /// <summary>
+    /// Alteração de Cargo
+    /// </summary>
+    /// <param name="view">Objeto de alteração do cargo do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/cargo")]
+    public ColaboradorV2Retorno CargoV2([FromBody]ColaboradorV2Cargo view)
+    {
+      return new ColaboradorV2Retorno()
+      {
+        IdContract = string.Empty,
+        IdUser = string.Empty,
+        Mensagem = "Não implementado",
+        Situacao = EnumSituacaoRetornoIntegracao.Erro
+      };
+    }
+    /// <summary>
+    /// Alteração de Centro de Custo
+    /// </summary>
+    /// <param name="view">Objeto de alteração do centro de custo do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/centrocusto")]
+    public ColaboradorV2Retorno CentroCustoV2([FromBody]ColaboradorV2CentroCusto view)
+    {
+      return new ColaboradorV2Retorno()
+      {
+        IdContract = string.Empty,
+        IdUser = string.Empty,
+        Mensagem = "Não implementado",
+        Situacao = EnumSituacaoRetornoIntegracao.Erro
+      };
+    }
+    /// <summary>
+    /// Alteração de colaborador
+    /// </summary>
+    /// <param name="view">Objeto de alteração geral do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/completo")]
+    public ColaboradorV2Retorno AlteracaoV2([FromBody]ColaboradorV2Completo view)
+    {
+      return new ColaboradorV2Retorno()
+      {
+        Mensagem = "Não implementado",
+        Situacao = EnumSituacaoRetornoIntegracao.Erro
+      };
+    }
+    /// <summary>
+    /// Demissão de colaborador
+    /// </summary>
+    /// <param name="view">Objeto de demissão do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/demissao")]
+    public ColaboradorV2Retorno DemissaoV2([FromBody]ColaboradorV2Demissao view)
+    {
+      return new ColaboradorV2Retorno()
+      {
+        IdContract = string.Empty,
+        IdUser = string.Empty,
+        Mensagem = "Não implementado",
+        Situacao = EnumSituacaoRetornoIntegracao.Erro
+      };
+    }
+    /// <summary>
+    /// Gestor de colaborador
+    /// </summary>
+    /// <param name="view">Objeto de alteração do gestor do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/gestor")]
+    public ColaboradorV2Retorno GestorV2([FromBody]ColaboradorV2Gestor view)
+    {
+      return new ColaboradorV2Retorno()
+      {
+        IdContract = string.Empty,
+        IdUser = string.Empty,
+        Mensagem = "Não implementado",
+        Situacao = EnumSituacaoRetornoIntegracao.Erro
+      };
+    }
+    /// <summary>
+    /// Salário do colaborador
+    /// </summary>
+    /// <param name="view">Objeto de alteração do salário do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/salario")]
+    public ColaboradorV2Retorno SalarioV2([FromBody]ColaboradorV2Salario view)
+    {
+      return new ColaboradorV2Retorno()
+      {
+        IdContract = string.Empty,
+        IdUser = string.Empty,
+        Mensagem = "Não implementado",
+        Situacao = EnumSituacaoRetornoIntegracao.Erro
+      };
+    }
+    #endregion
+
+    #region Private
     private string Capitalization(string nome)
     {
       try
