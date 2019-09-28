@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Data;
+using Manager.Data.Infrastructure;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
@@ -18,71 +19,76 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using Tools;
 
-namespace IntegrationServer
+namespace Reports
 {
   /// <summary>
-  /// Controlador de Inicialização do Projeto
+  /// Controle de inicialização da API
   /// </summary>
   public class Startup
   {
+
     /// <summary>
-    /// Construtor
+    /// Construtor do controle
     /// </summary>
-    /// <param name="configuration">Configurador</param>
+    /// <param name="configuration"></param>
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
     }
+
     /// <summary>
-    /// Propriedade publica do configurador
+    /// Propriedade de configuração
     /// </summary>
     public IConfiguration Configuration { get; }
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
+
     /// <summary>
-    /// Configurador de serviços
+    /// Registrador de serviços
     /// </summary>
     /// <param name="services">Coleção de serviços</param>
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
-
       var conn = XmlConnection.ReadVariablesSystem();
       _context = new DataContext(conn.Server, conn.DataBase);
+
 
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
-      DataContext _contextIntegration;
-      _contextIntegration = new DataContext(conn.ServerIntegration, conn.DataBaseIntegration);
 
-      var serviceBusConnectionString = conn.ServiceBusConnectionString;
+      DataContext _contextStruct;
+      _contextStruct = new DataContext(conn.ServerStruct, conn.DataBaseStruct);
+
+      string serviceBusConnectionString = conn.ServiceBusConnectionString;
+
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
 
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
-      IServiceAudit serviceAudit = new ServiceAudit(_context);
-      IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceIntegration serviceIntegration = new ServiceIntegration(_context, _contextLog, _contextIntegration);
-      IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
-      IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
 
+      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
+      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
+      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson);
+      IServiceParameters serviceParameters = new ServiceParameters(_context);
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
+      IServiceReports serviceReports = new ServiceReports(_context, _contextLog, conn.TokenServer, servicePerson, serviceBusConnectionString);
+      IServiceManager serviceManager = new ServiceManager(_contextStruct, serviceControlQueue, serviceBusConnectionString);
+
+      serviceReports.RegisterOnMessageHandlerAndReceiveMesssages();
+
+      services.AddSingleton(_ => serviceReports);
       services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceAccount);
-      services.AddSingleton(_ => serviceAudit);
-      services.AddSingleton(_ => serviceCompany);
-      services.AddSingleton(_ => serviceInfra);
-      services.AddSingleton(_ => serviceIntegration);
-      services.AddSingleton(_ => serviceLog);
-      services.AddSingleton(_ => serviceParameters);
+      services.AddSingleton(_ => serviceAuthentication);
       services.AddSingleton(_ => servicePerson);
-      services.AddSingleton(_ => serviceUser);
-      services.AddSingleton(_ => serviceWorkflow);
+      services.AddSingleton(_ => serviceIndicators);
+      services.AddSingleton(_ => serviceParameters);
+
     }
+
+
     // This method gets called by the runtime. Use this method to add services to the container.
     /// <summary>
     /// Configurador de servicos
@@ -125,7 +131,6 @@ namespace IntegrationServer
           .AllowCredentials()
           .WithExposedHeaders("x-total-count")
       ));
-
       services.AddMvc();
 
       //services.AddSignalR();
@@ -136,9 +141,9 @@ namespace IntegrationServer
         c.SwaggerDoc("v1",
             new Info
             {
-              Title = "Integration Server - Integração de Funcionários",
+              Title = "Reports - Analisa Fluid Careers",
               Version = "v1",
-              Description = "Responsável pelas ferramentas de integração de funcionários do ANALISA Fluid Careers",
+              Description = "Sistema de carreiras fluidas",
               Contact = new Contact
               {
                 Name = "Jm Soft Informática Ltda",
@@ -153,9 +158,11 @@ namespace IntegrationServer
 
       RegistreServices(services);
     }
+
+
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     /// <summary>
-    /// Configurador de ambiente
+    /// Configuração de aplicação
     /// </summary>
     /// <param name="app">Aplicação</param>
     /// <param name="env">Ambiente de hospedagem</param>
@@ -163,16 +170,19 @@ namespace IntegrationServer
     {
       if (env.IsDevelopment())
         app.UseDeveloperExceptionPage();
-
       app.UseAuthentication();
       app.UseCors("AllowAll");
       app.UseMvc();
+      //app.UseSignalR(routes =>
+      //{
+      //  routes.MapHub<MessagesHub>("/messagesHub");
+      //});
       // Ativando middlewares para uso do Swagger
       app.UseSwagger();
       app.UseSwaggerUI(c =>
       {
         c.RoutePrefix = "help";
-        c.SwaggerEndpoint("../swagger/v1/swagger.json", "Integration Server");
+        c.SwaggerEndpoint("../swagger/v1/swagger.json", "Reports");
       });
     }
   }

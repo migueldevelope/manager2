@@ -12,5 +12,6 @@ namespace Manager.Views.BusinessView
     public long Realized { get; set; }
     public long Late { get; set; }
     public long Balance { get; set; }
+    public long Ranking { get; set; }
   }
 }

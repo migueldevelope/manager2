@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Training.Controllers
+namespace Reports.Controllers
 {
   /// <summary>
   /// 
@@ -20,7 +20,8 @@ namespace Training.Controllers
     [HttpGet]
     public IEnumerable<string> Get()
     {
-      return new string[] { "version", "0.00000000" };
+      return new string[] { "Version", "0.000000001" };
     }
+
   }
 }

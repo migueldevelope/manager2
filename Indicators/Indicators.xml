@@ -62,11 +62,38 @@
             <param name="persons"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartOnboardingMap(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendation(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
             <summary>
             
             </summary>
             <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendationPersons(Manager.Views.BusinessList.ViewFilterIdAndDate,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filters"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.ChartRecommendationPersonsMap(Manager.Views.BusinessView.ViewFilterManagerAndDate,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filters"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ChartCertificationStatus(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
@@ -146,6 +173,48 @@
             <param name="persons"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingInDayMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
+            <summary>
+            
+            </summary>
+            <param name="managers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingToWinMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
+            <summary>
+            
+            </summary>
+            <param name="managers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.OnboardingLateMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
+            <summary>
+            
+            </summary>
+            <param name="managers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointInDayMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
+            <summary>
+            
+            </summary>
+            <param name="managers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointToWinMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
+            <summary>
+            
+            </summary>
+            <param name="managers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.CheckpointLateMap(System.Collections.Generic.List{Manager.Views.BusinessList._ViewList})">
+            <summary>
+            
+            </summary>
+            <param name="managers"></param>
+            <returns></returns>
+        </member>
         <member name="M:Indicators.Controllers.IndicatorsController.OnboardingToWin(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
             <summary>
             
@@ -190,6 +259,17 @@
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.GetMoninitoringQtdManager(Manager.Views.BusinessView.ViewFilterDate,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idmanager"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetMoninitoringQtdManagerMap(Manager.Views.BusinessView.ViewFilterDate,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>
@@ -246,6 +326,14 @@
             <param name="idmanager"></param>
             <returns></returns>
         </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetListPlanQtdMap(Manager.Views.BusinessView.ViewFilterDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idmanager"></param>
+            <returns></returns>
+        </member>
         <member name="M:Indicators.Controllers.IndicatorsController.GetAccountEnableds">
             <summary>
             
@@ -277,6 +365,16 @@
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.GetPlanQtd(Manager.Views.BusinessView.ViewFilterDate,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Indicators.Controllers.IndicatorsController.GetPlanQtdMap(Manager.Views.BusinessView.ViewFilterDate,System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>

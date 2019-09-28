@@ -18,6 +18,7 @@ using Microsoft.Azure.ServiceBus;
 using System.Text;
 using Newtonsoft.Json;
 using Manager.Views.BusinessList;
+using MongoDB.Bson;
 
 namespace Manager.Services.Specific
 {
@@ -202,7 +203,7 @@ namespace Manager.Services.Specific
             Body = " { '_idWorkFlow': '" + auto.Workflow + "' } "
           };
           var idMessageApv = serviceMailMessage.InsertNewVersion(message).Result._id;
-          var requestor = servicePerson.GetAllNewVersion(p => p._id == auto.Workflow.FirstOrDefault()).Result.FirstOrDefault();
+          var requestor = servicePerson.GetAllNewVersion(p => p._id == auto.Requestor._id).Result.FirstOrDefault();
           var body = model.Message.Replace("{Person}", serviceWorkflow.GetNewVersion(p => p._id == auto.Workflow.FirstOrDefault()).Result.Requestor.Name).Replace("{Manager}", requestor.User.Name);
           body = body.Replace("{Requestor}", auto.Requestor.Name);
           body = body.Replace("{Employee}", person.User.Name);
@@ -211,6 +212,7 @@ namespace Manager.Services.Specific
           url = path + "manager/automanager/" + person._id.ToString() + "/disapproved/" + manager._id.ToString();
           //disapproved link
           message.Url = url;
+          message._id = ObjectId.GenerateNewId().ToString();
           var idMessageDis = serviceMailMessage.InsertNewVersion(message).Result._id;
           body = body.Replace("{Disapproved}", model.Link + "genericmessage/" + idMessageDis.ToString());
           var sendMail = new MailLog

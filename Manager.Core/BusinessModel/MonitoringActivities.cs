@@ -10,7 +10,7 @@ namespace Manager.Core.BusinessModel
   /// <summary>
   /// Coleção para entregas de monitoring
   /// </summary>
-  public class MonitoringActivities: BaseEntityId
+  public class MonitoringActivities : BaseEntityId
   {
     public ViewListActivitie Activities { get; set; }
     public string CommentsPerson { get; set; }
