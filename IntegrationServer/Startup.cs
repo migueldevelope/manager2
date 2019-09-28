@@ -136,9 +136,9 @@ namespace IntegrationServer
         c.SwaggerDoc("v1",
             new Info
             {
-              Title = "Integration Server - Integração de Funcionários",
+              Title = "Integration Server - Integração de Colaboradores",
               Version = "v1",
-              Description = "Responsável pelas ferramentas de integração de funcionários do ANALISA Fluid Careers",
+              Description = "Responsável pelas ferramentas de integração de colaboradores do ANALISA Fluid Careers",
               Contact = new Contact
               {
                 Name = "Jm Soft Informática Ltda",

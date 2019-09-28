@@ -302,17 +302,20 @@ namespace IntegrationServer.InfraController
     /// </summary>
     /// <param name="view">Objeto de integração do colaborador</param>
     /// <returns>Objeto do colaborador atualizado</returns>
+    /// <response code="200">Informações sobre a admissão do colaborador</response>
     [Authorize]
     [HttpPost]
     [Route("v2/admissao")]
-    public ColaboradorV2Retorno AdmissaoV2([FromBody]ColaboradorV2Admissao view)
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    public ObjectResult AdmissaoV2([FromBody]ColaboradorV2Admissao view)
     {
       ColaboradorV2Retorno result = new ColaboradorV2Retorno()
       {
         Situacao = EnumSituacaoRetornoIntegracao.Erro,
         Mensagem = "Não implementado"
       };
-      return result;
+      return Ok(result);
     }
     /// <summary>
     /// Alteração de Cargo

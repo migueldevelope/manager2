@@ -4,5 +4,346 @@
         <name>IntegrationServer</name>
     </assembly>
     <members>
+        <member name="T:IntegrationServer.Controllers.AuditController">
+            <summary>
+            Controlador de Configuração da Integração
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.Controllers.AuditController.#ctor(Manager.Core.Interfaces.IServiceAudit,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Inicializador do controlador de configuração da integração
+            </summary>
+            <param name="_service">Serviço de Integração</param>
+            <param name="contextAccessor">Token de autenticação</param>
+        </member>
+        <member name="M:IntegrationServer.Controllers.AuditController.ListUser">
+            <summary>
+            Retornar uma lista crud dos usuários da conta
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IntegrationServer.Controllers.AuditController.ListPerson">
+            <summary>
+            Retornar uma lista crud das pessoas da conta
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IntegrationServer.Controllers.AuditController.ListOccupationSkills">
+            <summary>
+            Retornar uma lista crud das pessoas da conta
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:IntegrationServer.Controllers.ConfigurationController">
+            <summary>
+            Controlador de Configuração da Integração
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.Controllers.ConfigurationController.#ctor(Manager.Core.Interfaces.IServiceIntegration,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Inicializador do controlador de configuração da integração
+            </summary>
+            <param name="_service">Serviço de Integração</param>
+            <param name="contextAccessor">Token de autenticação</param>
+        </member>
+        <member name="M:IntegrationServer.Controllers.ConfigurationController.GetParameter">
+            <summary>
+            Ler todos parâmetros de integração
+            </summary>
+            <returns>View dos parâmetros de integração</returns>
+        </member>
+        <member name="M:IntegrationServer.Controllers.ConfigurationController.SetParameterMode(Manager.Views.BusinessCrud.ViewCrudIntegrationParameter)">
+            <summary>
+            Atualizar os parâmetros de integração
+            </summary>
+            <param name="view">View da integração</param>
+            <returns>View da integração atualizado</returns>
+        </member>
+        <member name="T:IntegrationServer.Controllers.ValuesController">
+            <summary>
+            Controle para verficação de API ativa
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.Controllers.ValuesController.Get">
+            <summary>
+            Método único para demonstração de API REST ativa
+            </summary>
+            <returns>String com a versão da API REST</returns>
+        </member>
+        <member name="T:IntegrationServer.InfraController.IntegrationController">
+            <summary>
+            Controlador para executar a integração de funcionários
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.#ctor(Manager.Core.Interfaces.IServiceIntegration,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Inicializador do controlador de integração de funcionários
+            </summary>
+            <param name="_service">Interface de inicialização</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetStatusDashboard">
+            <summary>
+            Retornar o status da integração de funcionários
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetStatusIntegration">
+            <summary>
+            Verificar se tem pendência de integração
+            </summary>
+            <returns>Mensagem com pendência de integração ou vazio se estiver tudo resolvido.</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetCompanyList(System.Int32,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Listar as empresas identificadas na integração
+            </summary>
+            <param name="count">Opcional: quantidade de registros para retornar</param>
+            <param name="page">Opcional: número da página para retornar</param>
+            <param name="filter">Opcional: filtro no nome da empresa</param>
+            <param name="all">Opcional: trazer todos os registros ou só registros com problema</param>
+            <returns>Lista de empresas na integração</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostCompany(System.String,System.String)">
+            <summary>
+            Atualizar o registro de integração da empresa do ANALISA para com o da FOLHA
+            </summary>
+            <param name="idintegration">Identificador do registro de integração da empresa da folha de pagamento</param>
+            <param name="idcompany">Identificador da empresa do ANALISA</param>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.DeleteCompany(System.String)">
+            <summary>
+            Excluir uma empresa da integração de funcionários
+            </summary>
+            <param name="idintegration">Identificador da integração da empresa da folha de pagamento</param>
+            <returns>Retorna Ok caso exclusão seja bem sucedida</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetCompanyRootList">
+            <summary>
+            Listar as empresas
+            </summary>
+            <returns>Lista de empresas</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetEstablishmentList(System.Int32,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Listar os estabelecimentos não identificados na integração
+            </summary>
+            <param name="count">Opcional: quantidade de registros para retornar</param>
+            <param name="page">Opcional: número da página para retornar</param>
+            <param name="filter">Opcional: filtro no nome do estabelecimento</param>
+            <param name="all">Opcional: trazer todos os registros ou só registros com problema</param>
+            <returns>Lista de estabelecimentos na integração</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostEstablishment(System.String,System.String)">
+            <summary>
+            Atualizar o registro de integração do estabelecimento do ANALISA para com o da FOLHA
+            </summary>
+            <param name="idintegration">Identificador do registro de integração do estabelecimento da folha de pagamento</param>
+            <param name="idestablishment">Identificador do estabelecimento no ANALISA</param>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.EstablishmentCompany(System.String)">
+            <summary>
+            Excluir um estabelecimento da integração de funcionários
+            </summary>
+            <param name="idintegration">Identificador da integração do estabelecimento da folha de pagamento</param>
+            <returns>Retorna Ok caso exclusão seja bem sucedida</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetOccupationList(System.Int32,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Listar os cargos não identificados na integração
+            </summary>
+            <param name="count">Opcional: quantidade de registros para retornar</param>
+            <param name="page">Opcional: número da página para retornar</param>
+            <param name="filter">Opcional: filtro no nome do cargo</param>
+            <param name="all">Opcional: trazer todos os registros ou só registros com problema</param>
+            <returns>Lista de cargos na integração</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostOccupation(System.String,System.String)">
+            <summary>
+            Atualizar o registro de integração do cargo do ANALISA para com o da FOLHA
+            </summary>
+            <param name="idintegration">Identificador do registro de integração do cargo da folha de pagamento</param>
+            <param name="idoccupation">Identificador do cargo no ANALISA</param>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.OccupationCompany(System.String)">
+            <summary>
+            Excluir um cargo da integração de funcionários
+            </summary>
+            <param name="idintegration">Identificador do cargo da folha de pagamento</param>
+            <returns>Retorna Ok caso exclusão seja bem sucedida</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetSchoolingList(System.Int32,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Listar as escolaridades não identificadas na integração
+            </summary>
+            <param name="count">Opcional: quantidade de registros para retornar</param>
+            <param name="page">Opcional: número da página para retornar</param>
+            <param name="filter">Opcional: filtro no nome da escolaridade</param>
+            <param name="all">Opcional: trazer todos os registros ou só registros com problema</param>
+            <returns>Lista de escolaridades na integração</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostSchooling(System.String,System.String)">
+            <summary>
+            Atualizar o registro de integração da escolaridade do ANALISA para com o da FOLHA
+            </summary>
+            <param name="idintegration">Identificador do registro de integração da escolaridade da folha de pagamento</param>
+            <param name="idschooling">Identificador da escolaridade do ANALISA</param>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.SchoolingCompany(System.String)">
+            <summary>
+            Excluir uma escolaridade da integração de funcionários
+            </summary>
+            <param name="idintegration">Identificador da integração da escolaridade da folha de pagamento</param>
+            <returns>Retorna Ok caso exclusão seja bem sucedida</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetProcessLevelTwoList">
+            <summary>
+            Listar de subprocessos do cliente
+            </summary>
+            <returns>Lista de subprocessos</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostSkill(Manager.Views.BusinessCrud.ViewCrudSkill)">
+            <summary>
+            Atualizar o registro de integração da escolaridade do ANALISA para com o da FOLHA
+            </summary>
+            <param name="view">Competência para validar</param>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostOccupation(Manager.Views.Integration.ViewIntegrationProfileOccupation)">
+            <summary>
+            Atualizar o cargo e o mapa do cargo através de integração com o ANALISA
+            </summary>
+            <param name="view">Cargo para validar</param>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="T:IntegrationServer.InfraController.PersonController">
+            <summary>
+            Controlador para integração de funcionários
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.#ctor(Manager.Core.Interfaces.IServiceIntegration,Manager.Core.Interfaces.IServicePerson,Manager.Core.Interfaces.IServiceCompany,Manager.Core.Interfaces.IServiceUser,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Serviço de integração</param>
+            <param name="_servicePerson">Serviço específico da pessoa</param>
+            <param name="_serviceCompany">Serviço da empresa</param>
+            <param name="_serviceUser">Serviço do Usuário</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.PutPerson(Manager.Views.Integration.ViewIntegrationColaborador)">
+            <summary>
+            Integração de funcionário
+            </summary>
+            <param name="view">Objeto de integração do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.AdmissaoV2(Manager.Views.Integration.V2.ColaboradorV2Admissao)">
+            <summary>
+            Admissão de colaborador
+            </summary>
+            <param name="view">Objeto de integração do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+            <response code="200">Informações sobre a admissão do colaborador</response>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.CargoV2(Manager.Views.Integration.V2.ColaboradorV2Cargo)">
+            <summary>
+            Alteração de Cargo
+            </summary>
+            <param name="view">Objeto de alteração do cargo do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.CentroCustoV2(Manager.Views.Integration.V2.ColaboradorV2CentroCusto)">
+            <summary>
+            Alteração de Centro de Custo
+            </summary>
+            <param name="view">Objeto de alteração do centro de custo do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.AlteracaoV2(Manager.Views.Integration.V2.ColaboradorV2Completo)">
+            <summary>
+            Alteração de colaborador
+            </summary>
+            <param name="view">Objeto de alteração geral do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.DemissaoV2(Manager.Views.Integration.V2.ColaboradorV2Demissao)">
+            <summary>
+            Demissão de colaborador
+            </summary>
+            <param name="view">Objeto de demissão do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.GestorV2(Manager.Views.Integration.V2.ColaboradorV2Gestor)">
+            <summary>
+            Gestor de colaborador
+            </summary>
+            <param name="view">Objeto de alteração do gestor do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.SalarioV2(Manager.Views.Integration.V2.ColaboradorV2Salario)">
+            <summary>
+            Salário do colaborador
+            </summary>
+            <param name="view">Objeto de alteração do salário do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+        </member>
+        <member name="T:IntegrationServer.Program">
+            <summary>
+            Controlador de inicialização do projeto
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.Program.Main(System.String[])">
+            <summary>
+            Rotina de entrada do programa
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:IntegrationServer.Program.BuildWebHost(System.String[])">
+            <summary>
+            Configurador de servidor web
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IntegrationServer.Startup">
+            <summary>
+            Controlador de Inicialização do Projeto
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="configuration">Configurador</param>
+        </member>
+        <member name="P:IntegrationServer.Startup.Configuration">
+            <summary>
+            Propriedade publica do configurador
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.Startup.RegistreServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configurador de serviços
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:IntegrationServer.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configurador de servicos
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:IntegrationServer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Configurador de ambiente
+            </summary>
+            <param name="app">Aplicação</param>
+            <param name="env">Ambiente de hospedagem</param>
+        </member>
     </members>
 </doc>
