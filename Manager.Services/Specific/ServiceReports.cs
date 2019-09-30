@@ -53,6 +53,7 @@ namespace Manager.Services.Specific
 
     public string path;
     private readonly IQueueClient queueClient;
+    private readonly IQueueClient queueClientReturn;
 
     #region construtctor
     public ServiceReports(DataContext context, DataContext contextLog, string pathToken, IServicePerson _serviceIPerson, string serviceBusConnectionString)
@@ -82,6 +83,7 @@ namespace Manager.Services.Specific
         serviceEvent = new ServiceGeneric<Event>(context);
         serviceIPerson = _serviceIPerson;
         queueClient = new QueueClient(serviceBusConnectionString, "reports");
+        queueClientReturn = new QueueClient(serviceBusConnectionString, "reportsreturn");
         path = pathToken;
       }
       catch (Exception e)
@@ -324,7 +326,7 @@ namespace Manager.Services.Specific
           AutoComplete = false
         };
 
-        queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+        queueClientReturn.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
       }
       catch (Exception e)
       {
