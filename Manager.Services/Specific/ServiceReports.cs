@@ -308,7 +308,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(view)));
+        dynamic result = view;
+        var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(result)));
         queueClient.SendAsync(message);
       }
       catch (Exception e)
@@ -351,13 +352,13 @@ namespace Manager.Services.Specific
           report.Link = view.Link;
           serviceReport.UpdateAccount(report, null).Wait();
 
-          await queueClient.CompleteAsync(message.SystemProperties.LockToken);
+          await queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
         }
       }
       catch (Exception e)
       {
         var error = e.Message;
-        queueClient.CompleteAsync(message.SystemProperties.LockToken);
+        queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
       }
 
     }
