@@ -576,7 +576,8 @@ namespace Manager.Services.Specific
               detail.Add(monitoring);
           }
         }
-        total = detail.Count();
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
+            && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.Select(p => new ViewListMonitoring()
         {
           _id = p._id,
