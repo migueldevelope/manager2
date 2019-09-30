@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\SystemCore\Manager\IntegrationServer\IntegrationServer.xml</DocumentationFile>
+    <DocumentationFile>C:\SystemCore\Manager\IntegrationServer\IntegrationServer.xml</DocumentationFile>
     <WarningLevel>2</WarningLevel>
   </PropertyGroup>
 
@@ -36,9 +36,6 @@
 
   <ItemGroup>
     <None Update="docker-compose.yml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="IntegrationServer.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -44,5 +44,18 @@ namespace Reports.Controllers
       return await Task.Run(() => service.ListPersons());
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idevent"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listtraining/{idevent}")]
+    public async Task<string> ListTraining(string idevent)
+    {
+      return await Task.Run(() => service.ListTraining(idevent));
+    }
+
   }
 }

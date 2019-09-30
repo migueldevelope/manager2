@@ -14,5 +14,6 @@ namespace Manager.Core.Interfaces
     void SetUser(BaseUser baseUser);
     void RegisterOnMessageHandlerAndReceiveMesssages();
     string ListPersons();
+    string ListTraining(string idevent);
   }
 }

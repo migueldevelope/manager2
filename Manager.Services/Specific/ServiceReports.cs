@@ -48,6 +48,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<Reports> serviceReport;
+    private readonly ServiceGeneric<Event> serviceEvent;
     private readonly IServicePerson serviceIPerson;
 
     public string path;
@@ -78,6 +79,7 @@ namespace Manager.Services.Specific
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceArea = new ServiceGeneric<Area>(context);
         serviceReport = new ServiceGeneric<Reports>(context);
+        serviceEvent = new ServiceGeneric<Event>(context);
         serviceIPerson = _serviceIPerson;
         queueClient = new QueueClient(serviceBusConnectionString, "reports");
         path = pathToken;
@@ -108,6 +110,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceOccupation._user = _user;
       serviceArea._user = _user;
+      serviceEvent._user = _user;
       serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
     }
@@ -132,6 +135,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceOccupation._user = _user;
       serviceArea._user = _user;
+      serviceEvent._user = _user;
       serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
     }
@@ -156,14 +160,14 @@ namespace Manager.Services.Specific
         SendMessageAsync(view);
         var report = new ViewCrudReport();
 
-        while(report.StatusReport == EnumStatusReport.Open)
+        while (report.StatusReport == EnumStatusReport.Open)
         {
           var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
           report.StatusReport = rest.StatusReport;
           report.Link = rest.Link;
           //Thread.Sleep(1000);
         }
-          
+
         return report.Link;
       }
       catch (Exception e)
@@ -171,6 +175,110 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string ListTraining(string idevent)
+    {
+      try
+      {
+        var events = serviceEvent.GetNewVersion(p => p._id == idevent).Result;
+
+        List<ViewListTraining> data = new List<ViewListTraining>();
+        List<string> dates = new List<string>();
+        string instructors = "";
+
+        if (events.Instructors != null)
+        {
+          foreach (var item in events.Instructors)
+          {
+            instructors += "\n" + item.Name;
+          }
+        }
+
+        if (events.Days != null)
+        {
+          foreach (var item in events.Days)
+          {
+            dates.Add(item.Begin.ToString("dd/MM/yyyy") + "  " +
+              item.Begin.ToString("HH:mm") + item.End.ToString("HH:mm"));
+          }
+        }
+
+        if (events.Participants != null)
+        {
+          foreach (var item in events.Participants)
+          {
+            var viewEvent = new ViewListTraining()
+            {
+              NameEvent = events.Name,
+              NameCourse = events.Course?.Name,
+              Content = events.Content,
+              DateBegin = events.Begin,
+              DateEnd = events.DateEnd,
+              NameEntity = events.Entity?.Name,
+              NameParticipant = item.Name,
+              Instructor = instructors,
+            };
+            if (dates.Count >= 1)
+              viewEvent.Day1 = dates[0].ToString();
+            if (dates.Count >= 2)
+              viewEvent.Day2 = dates[1].ToString();
+            if (dates.Count >= 3)
+              viewEvent.Day3 = dates[2].ToString();
+            if (dates.Count >= 4)
+              viewEvent.Day4 = dates[3].ToString();
+            if (dates.Count >= 5)
+              viewEvent.Day5 = dates[4].ToString();
+            if (dates.Count >= 6)
+              viewEvent.Day6 = dates[5].ToString();
+            if (dates.Count >= 7)
+              viewEvent.Day7 = dates[6].ToString();
+            if (dates.Count >= 8)
+              viewEvent.Day8 = dates[7].ToString();
+            if (dates.Count >= 9)
+              viewEvent.Day9 = dates[8].ToString();
+            if (dates.Count >= 10)
+              viewEvent.Day10 = dates[9].ToString();
+            if (dates.Count >= 11)
+              viewEvent.Day11 = dates[10].ToString();
+            if (dates.Count >= 12)
+              viewEvent.Day12 = dates[11].ToString();
+            if (dates.Count >= 13)
+              viewEvent.Day13 = dates[12].ToString();
+            if (dates.Count >= 14)
+              viewEvent.Day14 = dates[13].ToString();
+            if (dates.Count >= 15)
+              viewEvent.Day15 = dates[14].ToString();
+
+            data.Add(viewEvent);
+          };
+        }
+
+        var view = new ViewReport()
+        {
+          Data = data,
+          Name = "listtraining",
+          _idReport = NewReport("listtraining"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(view);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+
+        return report.Link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region ... private ...

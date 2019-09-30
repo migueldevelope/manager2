@@ -22,6 +22,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Reports.Controllers.ReportsController.ListTraining(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idevent"></param>
+            <returns></returns>
+        </member>
         <member name="T:Reports.Controllers.ValuesController">
             <summary>
             

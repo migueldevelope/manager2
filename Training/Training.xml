@@ -516,6 +516,17 @@
             <param name="filter"></param>
             <returns></returns>
         </member>
+        <member name="T:Training.Controllers.ValuesController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Training.Controllers.ValuesController.Get">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Training.Program">
             <summary>
             
