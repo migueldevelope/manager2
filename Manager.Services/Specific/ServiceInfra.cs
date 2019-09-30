@@ -884,7 +884,6 @@ namespace Manager.Services.Specific
           }
         }
 
-
         for (var row = 0; row < maxLineSkill; row++)
         {
           col = 0;
@@ -907,8 +906,7 @@ namespace Manager.Services.Specific
           }
         }
 
-
-        for (var row = 0; row < maxLineSchooling; row++)
+        for (var row = 0; row <= maxLineSchooling; row++)
         {
           col = 0;
           foreach (var group in groups)
@@ -929,6 +927,7 @@ namespace Manager.Services.Specific
             col += 1;
           }
         }
+
 
         for (var row = 0; row < maxLine; row++)
         {
@@ -966,7 +965,7 @@ namespace Manager.Services.Specific
           rel = Export(rel, itemView);
         }
 
-        for (var row = 0; row < maxLineSchooling; row++)
+        for (var row = 0; row <= maxLineSchooling; row++)
         {
           var itemView = string.Empty;
           foreach (var item in list.Where(p => p.Type == EnumTypeLineOpportunity.Schooling & p.Line == row).OrderBy(p => p.Col).ToList())

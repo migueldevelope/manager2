@@ -199,7 +199,7 @@ namespace Manager.Services.Specific
           foreach (var item in events.Days)
           {
             dates.Add(item.Begin.ToString("dd/MM/yyyy") + "  " +
-              item.Begin.ToString("HH:mm") + item.End.ToString("HH:mm"));
+              item.Begin.ToString("HH:mm") + " - " + item.End.ToString("HH:mm"));
           }
         }
 
@@ -213,7 +213,7 @@ namespace Manager.Services.Specific
               NameCourse = events.Course?.Name,
               Content = events.Content,
               DateBegin = events.Begin,
-              DateEnd = events.DateEnd,
+              DateEnd = events.End,
               NameEntity = events.Entity?.Name,
               NameParticipant = item.Name,
               Instructor = instructors,
