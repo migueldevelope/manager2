@@ -410,24 +410,25 @@ namespace Manager.Services.Specific
                     }
 
                   }
+
+                  if (occupation.Count == 0)
+                    occupation.Add(occupationStep);
+
+                  var view = new ViewListGrade
+                  {
+                    _id = grade._id,
+                    Name = grade.Name,
+                    StepMedium = grade.StepMedium,
+                    Order = grade.Order,
+                    Wordload = grade.Workload,
+                    Steps = new List<ViewListStep>(),
+                    Occupation = occupation,
+                  };
+
+                  detail.Add(view);
                 }
                 
 
-                if (occupation.Count == 0)
-                  occupation.Add(occupationStep);
-
-                var view = new ViewListGrade
-                {
-                  _id = grade._id,
-                  Name = grade.Name,
-                  StepMedium = grade.StepMedium,
-                  Order = grade.Order,
-                  Wordload = grade.Workload,
-                  Steps = new List<ViewListStep>(),
-                  Occupation = occupation,
-                };
-
-                detail.Add(view);
               }
 
             }
