@@ -423,6 +423,24 @@ namespace IntegrationServer.InfraController
         Situacao = EnumSituacaoRetornoIntegracao.Erro
       };
     }
+    /// <summary>
+    /// Alteração da Situação do Colaborador
+    /// </summary>
+    /// <param name="view">Objeto de alteração da situação do colaborador</param>
+    /// <returns>Objeto de retorno com mensagens</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/situacao")]
+    public ColaboradorV2Retorno SituacaoV2([FromBody]ColaboradorV2Situacao view)
+    {
+      return new ColaboradorV2Retorno()
+      {
+        IdContract = string.Empty,
+        IdUser = string.Empty,
+        Mensagem = "Não implementado",
+        Situacao = EnumSituacaoRetornoIntegracao.Erro
+      };
+    }
     #endregion
 
     #region Private
