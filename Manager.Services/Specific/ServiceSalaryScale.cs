@@ -413,7 +413,11 @@ namespace Manager.Services.Specific
 
                   if (occupation.Count == 0)
                     occupation.Add(occupationStep);
-
+                  else
+                  {
+                    occupation = new List<ViewListOccupationSalaryScale>();
+                    occupation.Add(occupationStep);
+                  }
                   var view = new ViewListGrade
                   {
                     _id = grade._id,
