@@ -1247,6 +1247,7 @@ namespace Manager.Services.Specific
         var view = new ViewListMonitoringQtdManagerGeral();
         var list = new List<ViewMoninitoringQtdManager>();
 
+
         list = result.GroupBy(x => x._id.manager)
             .Select(x => new ViewMoninitoringQtdManager()
             {
@@ -1256,6 +1257,9 @@ namespace Manager.Services.Specific
               Praises = long.Parse(x.Where(y => y._id.type == 2).Sum(y => y.value).ToString()),
               Total = long.Parse(x.Sum(y => y.value).ToString())
             }).ToList();
+
+
+        total = list.Count();
 
         if (list.Count > 0)
         {
