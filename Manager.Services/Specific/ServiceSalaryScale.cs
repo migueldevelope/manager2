@@ -412,7 +412,9 @@ namespace Manager.Services.Specific
                   }
 
                   if (occupation.Count == 0)
+                  {
                     occupation.Add(occupationStep);
+                  }
                   else
                   {
                     occupation = new List<ViewListOccupationSalaryScale>();
