@@ -148,11 +148,13 @@ namespace Manager.Services.Specific
         if (managers.Count > 0)
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id));
+            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id)
+            && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-            && !onboardings.Contains(p._id));
+            && !onboardings.Contains(p._id)
+            && p.Manager != null);
 
 
 
@@ -220,11 +222,13 @@ namespace Manager.Services.Specific
         if (managers.Count > 0)
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id));
+            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id)
+            && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
           && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-          && !onboardings.Contains(p._id));
+          && !onboardings.Contains(p._id)
+          && p.Manager != null);
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
         options.OutputOptions = MapReduceOutputOptions.Inline;
@@ -289,11 +293,13 @@ namespace Manager.Services.Specific
         if (managers.Count > 0)
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id));
+            && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id)
+            && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
           && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
-          && !onboardings.Contains(p._id));
+          && !onboardings.Contains(p._id)
+          && p.Manager != null);
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -356,10 +362,12 @@ namespace Manager.Services.Specific
         if (managers.Count > 0)
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
           && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
-          && filtermanager.Contains(p.Manager._id));
+          && filtermanager.Contains(p.Manager._id)
+          && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
+          && p.Manager != null);
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -422,10 +430,12 @@ namespace Manager.Services.Specific
         if (managers.Count > 0)
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
           && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
-          && filtermanager.Contains(p.Manager._id));
+          && filtermanager.Contains(p.Manager._id)
+          && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
+          && p.Manager != null);
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -488,10 +498,12 @@ namespace Manager.Services.Specific
         if (managers.Count > 0)
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
           && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
-          && filtermanager.Contains(p.Manager._id));
+          && filtermanager.Contains(p.Manager._id)
+          && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
-          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id));
+          && p.TypeJourney == EnumTypeJourney.Checkpoint && !checkpoints.Contains(p._id)
+          && p.Manager != null);
 
         var json = filters.RenderToBsonDocument().ToJson();
         options.Filter = json;
@@ -1174,7 +1186,11 @@ namespace Manager.Services.Specific
 
         int skip = (count * (page - 1));
         List<string> persons = null;
-        persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idManager).Result.Select(p => p._id).ToList();
+        if (idManager == string.Empty)
+          persons = servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p._id).ToList();
+        else
+          persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idManager).Result.Select(p => p._id).ToList();
+
 
         string mapper = "function() { ";
         mapper += "if(this.Person != null){";
