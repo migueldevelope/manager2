@@ -12,5 +12,6 @@ namespace Manager.Views.BusinessCrud
     public string Realized { get; set; }
     public string Result { get; set; }
     public decimal Achievement { get; set; }
+    public double Points { get; set; }
   }
 }

@@ -89,6 +89,23 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
+    private double GetAchievement(decimal achievement)
+    {
+      switch (achievement)
+      {
+        case 1:
+          return 0;
+        case 2:
+          return 0.8;
+        case 3:
+          return 1;
+        case 4:
+          return 1.2;
+      }
+
+      return 0;
+    }
+
     private void LogSave(string iduser, string local)
     {
       try
@@ -1311,6 +1328,16 @@ namespace Manager.Services.Specific
             Name = p.GoalsPersonList.Goals.Name,
             Target = p.GoalsPersonList.Target
           }).ToList();
+
+        double dist = 100 / detail.Count();
+        double totalPoints = detail.Sum(p => p.Weight * dist);
+        foreach (var item in detail)
+        {
+          var value = ((dist * item.Weight) / totalPoints) * 100;
+          var achievement = GetAchievement(item.Achievement);
+          item.Points = Math.Round((value * achievement), 2);
+        };
+
 
 
         ViewListGoalsItem view = new ViewListGoalsItem()
