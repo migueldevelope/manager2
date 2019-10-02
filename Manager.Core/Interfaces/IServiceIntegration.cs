@@ -1,10 +1,10 @@
 ﻿using Manager.Core.Base;
-using Manager.Core.Business;
 using Manager.Core.Business.Integration;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Integration;
+using Manager.Views.Integration.V2;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
@@ -60,6 +60,17 @@ namespace Manager.Core.Interfaces
     List<ViewListProcessLevelTwo> ProcessLevelTwoList(ref long total);
     ViewCrudSkill IntegrationSkill(ViewCrudSkill view);
     ViewIntegrationProfileOccupation IntegrationProfile(ViewIntegrationProfileOccupation view);
+    #endregion
+
+    #region Colaborador V2
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2Completo view);
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2Admissao view);
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2Cargo view);
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2CentroCusto view);
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2Gestor view);
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2Salario view);
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2Situacao view);
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2Demissao view);
     #endregion
   }
 }

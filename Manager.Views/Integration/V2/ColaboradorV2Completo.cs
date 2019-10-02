@@ -2,8 +2,9 @@
 
 namespace Manager.Views.Integration.V2
 {
-  public class ColaboradorV2Completo : ColaboradorV2Base
+  public class ColaboradorV2Completo : ColaboradorV2Base, IColaboradorV2
   {
+    public string Acao { get; set; }
     // Usuário
     public string Nome { get; set; }
     public string Email { get; set; }
@@ -27,6 +28,8 @@ namespace Manager.Views.Integration.V2
     public DateTime? DataUltimoReajuste { get; set; }
     public string MotivoUltimoReajuste { get; set; }
     public string Situacao { get; set; }
+    public DateTime? DataRetornoFerias { get; set; }
+    public string MotivoAfastamento { get; set; }
     // Informações do Gestor
     public string CpfGestor { get; set; }
     public string EmpresaGestor { get; set; }

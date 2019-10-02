@@ -1,6 +1,6 @@
 ﻿namespace Manager.Views.Integration.V2
 {
-  public class ColaboradorV2Gestor : ColaboradorV2Base
+  public class ColaboradorV2Gestor : ColaboradorV2Base, IColaboradorV2
   {
     // Informações do Gestor
     public string CpfGestor { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Manager.Core.Business.Integration;
 using Manager.Core.Interfaces;
@@ -51,7 +52,7 @@ namespace IntegrationServer.InfraController
     }
     #endregion
 
-    #region Person
+    #region Colaborador V1
     /// <summary>
     /// Integração de funcionário
     /// </summary>
@@ -298,163 +299,228 @@ namespace IntegrationServer.InfraController
 
     #region Colaborador V2
     /// <summary>
+    /// Integração com objeto único do colaborador versão 2
+    /// </summary>
+    /// <param name="view">Objeto de integração completo do colaborador</param>
+    /// <response code="200">Informações sobre a integração do colaborador</response>
+    /// <response code="400">Problemas na integração do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/completo")]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    public ObjectResult V2Completo([FromBody]ColaboradorV2Completo view)
+    {
+      try
+      {
+        return Ok(service.IntegrationV2(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(new ColaboradorV2Retorno()
+        {
+          Mensagem = new List<string> { e.Message },
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+        });
+      }
+    }
+    /// <summary>
     /// Admissão de colaborador
     /// </summary>
-    /// <param name="view">Objeto de integração do colaborador</param>
-    /// <returns>Objeto do colaborador atualizado</returns>
+    /// <param name="view">Objeto de integração do colaborador para o processo de admissão</param>
     /// <response code="200">Informações sobre a admissão do colaborador</response>
+    /// <response code="400">Problemas na admissão do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
     [HttpPost]
     [Route("v2/admissao")]
     [Produces("application/json")]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
     public ObjectResult AdmissaoV2([FromBody]ColaboradorV2Admissao view)
     {
-      ColaboradorV2Retorno result = new ColaboradorV2Retorno()
+      try
       {
-        Situacao = EnumSituacaoRetornoIntegracao.Erro,
-        Mensagem = "Não implementado"
-      };
-      return Ok(result);
+        return Ok(service.IntegrationV2(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(new ColaboradorV2Retorno()
+        {
+          Mensagem = new List<string> { e.Message },
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+        });
+      }
     }
     /// <summary>
-    /// Alteração de Cargo
+    /// Alteração de Cargo do colaborador
     /// </summary>
     /// <param name="view">Objeto de alteração do cargo do colaborador</param>
-    /// <returns>Objeto do colaborador atualizado</returns>
+    /// <response code="200">Informações sobre o cargo do colaborador</response>
+    /// <response code="400">Problemas no cargo do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
     [HttpPut]
     [Route("v2/cargo")]
-    public ColaboradorV2Retorno CargoV2([FromBody]ColaboradorV2Cargo view)
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    public ObjectResult CargoV2([FromBody]ColaboradorV2Cargo view)
     {
-      return new ColaboradorV2Retorno()
+      try
       {
-        IdContract = string.Empty,
-        IdUser = string.Empty,
-        Mensagem = "Não implementado",
-        Situacao = EnumSituacaoRetornoIntegracao.Erro
-      };
+        return Ok(service.IntegrationV2(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(new ColaboradorV2Retorno()
+        {
+          Mensagem = new List<string> { e.Message },
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+        });
+      }
     }
     /// <summary>
-    /// Alteração de Centro de Custo
+    /// Alteração de Centro de Custo do Colaborador
     /// </summary>
     /// <param name="view">Objeto de alteração do centro de custo do colaborador</param>
-    /// <returns>Objeto do colaborador atualizado</returns>
+    /// <response code="200">Informações sobre o centro de custo do colaborador</response>
+    /// <response code="400">Problemas no centro de custo do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
     [HttpPut]
     [Route("v2/centrocusto")]
-    public ColaboradorV2Retorno CentroCustoV2([FromBody]ColaboradorV2CentroCusto view)
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    public ObjectResult CentroCustoV2([FromBody]ColaboradorV2CentroCusto view)
     {
-      return new ColaboradorV2Retorno()
+      try
       {
-        IdContract = string.Empty,
-        IdUser = string.Empty,
-        Mensagem = "Não implementado",
-        Situacao = EnumSituacaoRetornoIntegracao.Erro
-      };
+        return Ok(service.IntegrationV2(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(new ColaboradorV2Retorno()
+        {
+          Mensagem = new List<string> { e.Message },
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+        });
+      }
     }
     /// <summary>
-    /// Alteração de colaborador
-    /// </summary>
-    /// <param name="view">Objeto de alteração geral do colaborador</param>
-    /// <returns>Objeto do colaborador atualizado</returns>
-    [Authorize]
-    [HttpPut]
-    [Route("v2/completo")]
-    public ColaboradorV2Retorno AlteracaoV2([FromBody]ColaboradorV2Completo view)
-    {
-      return new ColaboradorV2Retorno()
-      {
-        Mensagem = "Não implementado",
-        Situacao = EnumSituacaoRetornoIntegracao.Erro
-      };
-    }
-    /// <summary>
-    /// Demissão de colaborador
-    /// </summary>
-    /// <param name="view">Objeto de demissão do colaborador</param>
-    /// <returns>Objeto do colaborador atualizado</returns>
-    [Authorize]
-    [HttpPut]
-    [Route("v2/demissao")]
-    public ColaboradorV2Retorno DemissaoV2([FromBody]ColaboradorV2Demissao view)
-    {
-      return new ColaboradorV2Retorno()
-      {
-        IdContract = string.Empty,
-        IdUser = string.Empty,
-        Mensagem = "Não implementado",
-        Situacao = EnumSituacaoRetornoIntegracao.Erro
-      };
-    }
-    /// <summary>
-    /// Gestor de colaborador
+    /// Alteração do gestor de colaborador
     /// </summary>
     /// <param name="view">Objeto de alteração do gestor do colaborador</param>
-    /// <returns>Objeto do colaborador atualizado</returns>
+    /// <response code="200">Informações sobre o gestor do colaborador</response>
+    /// <response code="400">Problemas no gestor do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
     [HttpPut]
     [Route("v2/gestor")]
-    public ColaboradorV2Retorno GestorV2([FromBody]ColaboradorV2Gestor view)
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    public ObjectResult GestorV2([FromBody]ColaboradorV2Gestor view)
     {
-      return new ColaboradorV2Retorno()
       {
-        IdContract = string.Empty,
-        IdUser = string.Empty,
-        Mensagem = "Não implementado",
-        Situacao = EnumSituacaoRetornoIntegracao.Erro
-      };
+        try
+        {
+          return Ok(service.IntegrationV2(view));
+        }
+        catch (Exception e)
+        {
+          return BadRequest(new ColaboradorV2Retorno()
+          {
+            Mensagem = new List<string> { e.Message },
+            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+          });
+        }
+      }
     }
     /// <summary>
-    /// Salário do colaborador
+    /// Alteração do salário do colaborador
     /// </summary>
     /// <param name="view">Objeto de alteração do salário do colaborador</param>
-    /// <returns>Objeto do colaborador atualizado</returns>
+    /// <response code="200">Informações sobre o salário do colaborador</response>
+    /// <response code="400">Problemas no salário do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
     [HttpPut]
     [Route("v2/salario")]
-    public ColaboradorV2Retorno SalarioV2([FromBody]ColaboradorV2Salario view)
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    public ObjectResult SalarioV2([FromBody]ColaboradorV2Salario view)
     {
-      return new ColaboradorV2Retorno()
       {
-        IdContract = string.Empty,
-        IdUser = string.Empty,
-        Mensagem = "Não implementado",
-        Situacao = EnumSituacaoRetornoIntegracao.Erro
-      };
+        try
+        {
+          return Ok(service.IntegrationV2(view));
+        }
+        catch (Exception e)
+        {
+          return BadRequest(new ColaboradorV2Retorno()
+          {
+            Mensagem = new List<string> { e.Message },
+            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+          });
+        }
+      }
     }
     /// <summary>
     /// Alteração da Situação do Colaborador
     /// </summary>
     /// <param name="view">Objeto de alteração da situação do colaborador</param>
-    /// <returns>Objeto de retorno com mensagens</returns>
+    /// <response code="200">Informações sobre a situação do colaborador</response>
+    /// <response code="400">Problemas na situação do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
     [HttpPut]
     [Route("v2/situacao")]
-    public ColaboradorV2Retorno SituacaoV2([FromBody]ColaboradorV2Situacao view)
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    public ObjectResult SituacaoV2([FromBody]ColaboradorV2Situacao view)
     {
-      return new ColaboradorV2Retorno()
       {
-        IdContract = string.Empty,
-        IdUser = string.Empty,
-        Mensagem = "Não implementado",
-        Situacao = EnumSituacaoRetornoIntegracao.Erro
-      };
-    }
-    #endregion
-
-    #region Private
-    private string Capitalization(string nome)
-    {
-      try
-      {
-        TextInfo myTI = new CultureInfo("pt-BR", false).TextInfo;
-        nome = myTI.ToTitleCase(nome.ToLower()).Replace(" De ", " de ").Replace(" Da ", " da ").Replace(" Dos ", " dos ").Replace(" Do ", " do ");
-        return nome;
+        try
+        {
+          return Ok(service.IntegrationV2(view));
+        }
+        catch (Exception e)
+        {
+          return BadRequest(new ColaboradorV2Retorno()
+          {
+            Mensagem = new List<string> { e.Message },
+            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+          });
+        }
       }
-      catch (Exception)
+    }
+    /// <summary>
+    /// Demissão do colaborador
+    /// </summary>
+    /// <param name="view">Objeto de demissão do colaborador</param>
+    /// <response code="200">Informações sobre a demissão do colaborador</response>
+    /// <response code="400">Problemas na demissão do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    [Authorize]
+    [HttpPut]
+    [Route("v2/demissao")]
+    public ObjectResult DemissaoV2([FromBody]ColaboradorV2Demissao view)
+    {
       {
-        throw;
+        try
+        {
+          return Ok(service.IntegrationV2(view));
+        }
+        catch (Exception e)
+        {
+          return BadRequest(new ColaboradorV2Retorno()
+          {
+            Mensagem = new List<string> { e.Message },
+            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+          });
+        }
       }
     }
     #endregion

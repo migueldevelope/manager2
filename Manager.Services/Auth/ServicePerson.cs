@@ -124,9 +124,9 @@ namespace Manager.Services.Auth
       try
       {
 
-        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = (count * (page - 1));
-        return servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
+        return servicePerson.GetAllNewVersion(p => p.TypeUser != EnumTypeUser.Employee & p.TypeUser != EnumTypeUser.HR & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
           .Result.OrderBy(p => p.User.Name)
            .Select(item => item.GetViewBaseFields()).ToList();
       }
@@ -206,7 +206,7 @@ namespace Manager.Services.Auth
         var managers = idmanagers.Select(p => p._id).ToList();
         if (managers.Count > 0)
           return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
-          && p.StatusUser != EnumStatusUser.ErrorIntegration && p.TypeUser > EnumTypeUser.Administrator
+          && p.TypeUser > EnumTypeUser.Administrator
           && p.TypeJourney != EnumTypeJourney.OutOfJourney
           && managers.Contains(p.Manager._id))
           .Result.Select(p => new ViewListIdIndicators()
@@ -221,7 +221,7 @@ namespace Manager.Services.Auth
           }).ToList();
         else
           return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
-        && p.StatusUser != EnumStatusUser.ErrorIntegration && p.TypeUser > EnumTypeUser.Administrator
+        && p.TypeUser > EnumTypeUser.Administrator
         && p.TypeJourney != EnumTypeJourney.OutOfJourney)
         .Result.Select(p => new ViewListIdIndicators()
         {
@@ -876,8 +876,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        return servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser
-       != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration
+        return servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled
        & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper()))
          .Result.Select(item => item.GetViewList()).ToList();
       }

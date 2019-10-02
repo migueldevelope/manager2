@@ -1964,7 +1964,7 @@ namespace Manager.Services.Specific
       {
         while (true)
         {
-          foreach (var person in servicePerson.GetAllFreeNewVersion(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration).Result)
+          foreach (var person in servicePerson.GetAllFreeNewVersion(p => p.Status != EnumStatus.Disabled & p.StatusUser != EnumStatusUser.Disabled).Result)
           {
             hubConnection.InvokeAsync("GetNotes", person._id, person._idAccount);
             hubConnection.InvokeAsync("GetNotesPerson", person._id, person._idAccount);

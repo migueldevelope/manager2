@@ -2,7 +2,7 @@
 
 namespace Manager.Views.Integration.V2
 {
-  public class ColaboradorV2Cargo : ColaboradorV2Base
+  public class ColaboradorV2Cargo : ColaboradorV2Base, IColaboradorV2
   {
     public string Cargo { get; set; }
     public string NomeCargo { get; set; }

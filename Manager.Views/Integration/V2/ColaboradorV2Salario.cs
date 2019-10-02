@@ -2,7 +2,7 @@
 
 namespace Manager.Views.Integration.V2
 {
-  public class ColaboradorV2Salario : ColaboradorV2Base
+  public class ColaboradorV2Salario : ColaboradorV2Base, IColaboradorV2
   {
     // Informações Contrato
     public decimal SalarioNominal { get; set; }

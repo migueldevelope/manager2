@@ -2,7 +2,7 @@
 
 namespace Manager.Views.Integration.V2
 {
-  public class ColaboradorV2Admissao : ColaboradorV2Base
+  public class ColaboradorV2Admissao : ColaboradorV2Base, IColaboradorV2
   {
     // Usuário
     public string Nome { get; set; }
