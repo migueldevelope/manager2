@@ -314,7 +314,7 @@ namespace Manager.Services.Specific
               DateEnd = events.End,
               NameEntity = events.Entity?.Name,
               NameParticipant = item.Name,
-              Workload = events.Workload,
+              Workload = Math.Round(events.Workload / 60, 2),
               Instructor = instructors,
             };
             data.Add(viewEvent);
