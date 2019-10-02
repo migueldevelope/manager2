@@ -7,6 +7,7 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -81,6 +82,62 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Event
+
+    //nome colaborador, nome cargo, nome curso, inicio, fim, carga horária
+    public List<ViewListHistoric> ListHistoric(string idperson, string idcourse, ViewFilterDate date)
+    {
+      try
+      {
+        List<EventHistoric> list = new List<EventHistoric>();
+
+        if ((idperson != string.Empty) && (idcourse != string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
+          && p.Course._id == idcourse &&
+          p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson != string.Empty) && (idcourse != string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
+          && p.Course._id == idcourse
+          && p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson != string.Empty) && (idcourse == string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
+          && p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson != string.Empty) && (idcourse != string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
+          && p.Course._id == idcourse).Result;
+        else if ((idperson != string.Empty) && (idcourse == string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result;
+        else if ((idperson == string.Empty) && (idcourse != string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == idcourse
+          && p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
+        var result = new List<ViewListHistoric>();
+
+        foreach (var item in list)
+        {
+          var view = new ViewListHistoric()
+          {
+            Person = item.Person?.Name,
+            Event = item.Name,
+            Occupation = servicePerson.GetNewVersion(p => p._id == item.Person._id).Result.Occupation?.Name,
+            Begin = item.Begin.ToString("dd/MM/yyyy"),
+            End = item.End.ToString("dd/MM/yyyy"),
+            Wordload = item.Workload / 60
+          };
+          result.Add(view);
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string RemoveDays(string idevent, string iddays)
     {
       try

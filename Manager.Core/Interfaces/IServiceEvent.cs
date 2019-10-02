@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.IO;
@@ -56,5 +57,6 @@ namespace Manager.Core.Interfaces
     List<ViewListEvent> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListEvent> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     string ImportTraning(Stream stream);
+    List<ViewListHistoric> ListHistoric(string idperson, string idcourse, ViewFilterDate date);
   }
 }

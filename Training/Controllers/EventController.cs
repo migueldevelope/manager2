@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -225,6 +226,23 @@ namespace Training.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idperson"></param>
+    /// <param name="idcourse"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listhistoric")]
+    public async Task<List<ViewListHistoric>> ListHistoric([FromBody]ViewFilterDate date, string idperson = "", string idcourse = "")
+    {
+      var result = service.ListHistoric(idperson,idcourse,date);
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Lista eventos abertos
     /// </summary>
