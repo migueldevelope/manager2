@@ -57,5 +57,19 @@ namespace Reports.Controllers
       return await Task.Run(() => service.ListTraining(idevent));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idevent"></param>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listcertificate/{idevent}")]
+    public async Task<string> ListCertificate(string idevent, string idperson = "")
+    {
+      return await Task.Run(() => service.ListCertificate(idevent, idperson));
+    }
+
   }
 }

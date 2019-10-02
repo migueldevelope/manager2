@@ -292,6 +292,13 @@
             <param name="view">Objeto de alteração do salário do colaborador</param>
             <returns>Objeto do colaborador atualizado</returns>
         </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.SituacaoV2(Manager.Views.Integration.V2.ColaboradorV2Situacao)">
+            <summary>
+            Alteração da Situação do Colaborador
+            </summary>
+            <param name="view">Objeto de alteração da situação do colaborador</param>
+            <returns>Objeto de retorno com mensagens</returns>
+        </member>
         <member name="T:IntegrationServer.Program">
             <summary>
             Controlador de inicialização do projeto

@@ -281,6 +281,82 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string ListCertificate(string idevent, string idperson)
+    {
+      try
+      {
+        var events = serviceEvent.GetNewVersion(p => p._id == idevent).Result;
+
+        List<ViewCertificate> data = new List<ViewCertificate>();
+        List<string> dates = new List<string>();
+        string instructors = "";
+
+        if (events.Instructors != null)
+        {
+          foreach (var item in events.Instructors)
+          {
+            instructors += "\n" + item.Name;
+          }
+        }
+
+        if (events.Days != null)
+        {
+          foreach (var item in events.Days)
+          {
+            dates.Add(item.Begin.ToString("dd/MM/yyyy") + "  " +
+              item.Begin.ToString("HH:mm") + " - " + item.End.ToString("HH:mm"));
+          }
+        }
+
+        if (idperson != string.Empty)
+          events.Participants = events.Participants.Where(p => p.Person._id == idperson).ToList();
+
+        if (events.Participants != null)
+        {
+          foreach (var item in events.Participants)
+          {
+            var viewEvent = new ViewCertificate()
+            {
+              NameEvent = events.Name,
+              NameCourse = events.Course?.Name,
+              Content = events.Content,
+              DateBegin = events.Begin,
+              DateEnd = events.End,
+              NameEntity = events.Entity?.Name,
+              NameParticipant = item.Name,
+              Workload = events.Workload,
+              Instructor = instructors,
+            };
+            data.Add(viewEvent);
+          };
+        }
+
+        var view = new ViewReport()
+        {
+          Data = data,
+          Name = "listcertificate",
+          _idReport = NewReport("listcertificate"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(view);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+
+        return report.Link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region ... private ...
