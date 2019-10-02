@@ -99,7 +99,8 @@ namespace Manager.Services.Specific
         {
           Name = view.NameAccount,
           Mail = view.Mail,
-          Password = EncryptServices.GetMD5Hash(view.Password)
+          Password = EncryptServices.GetMD5Hash(view.Password),
+          UserAdmin = true
         };
         user = serviceUser.InsertNewVersion(user).Result;
         // Criar a empresa nesta conta
@@ -115,6 +116,7 @@ namespace Manager.Services.Specific
         Person person = new Person()
         {
           TypeUser = EnumTypeUser.Administrator,
+          TypeJourney = EnumTypeJourney.OutOfJourney,
           StatusUser = EnumStatusUser.Enabled,
           Company = company.GetViewList(),
           User = user.GetViewCrud()
