@@ -192,7 +192,7 @@ namespace Manager.Services.Specific
         {
           foreach (var item in events.Instructors)
           {
-            instructors += "\n" + item.Name;
+            instructors += item.Name + "\n";
           }
         }
 
@@ -294,7 +294,7 @@ namespace Manager.Services.Specific
         {
           foreach (var item in events.Instructors)
           {
-            instructors += "\n" + item.Name;
+            instructors += item.Name + "\n";
           }
         }
 
