@@ -288,7 +288,6 @@ namespace Manager.Services.Specific
         var events = serviceEvent.GetNewVersion(p => p._id == idevent).Result;
 
         List<ViewCertificate> data = new List<ViewCertificate>();
-        List<string> dates = new List<string>();
         string instructors = "";
 
         if (events.Instructors != null)
@@ -296,15 +295,6 @@ namespace Manager.Services.Specific
           foreach (var item in events.Instructors)
           {
             instructors += "\n" + item.Name;
-          }
-        }
-
-        if (events.Days != null)
-        {
-          foreach (var item in events.Days)
-          {
-            dates.Add(item.Begin.ToString("dd/MM/yyyy") + "  " +
-              item.Begin.ToString("HH:mm") + " - " + item.End.ToString("HH:mm"));
           }
         }
 
