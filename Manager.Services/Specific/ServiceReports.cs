@@ -192,7 +192,7 @@ namespace Manager.Services.Specific
         {
           foreach (var item in events.Instructors)
           {
-            instructors += "\n" + item.Name;
+            instructors += item.Name + "\n";
           }
         }
 
@@ -260,6 +260,72 @@ namespace Manager.Services.Specific
           Data = data,
           Name = "listtraining",
           _idReport = NewReport("listtraining"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(view);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+
+        return report.Link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string ListCertificate(string idevent, string idperson)
+    {
+      try
+      {
+        var events = serviceEvent.GetNewVersion(p => p._id == idevent).Result;
+
+        List<ViewCertificate> data = new List<ViewCertificate>();
+        string instructors = "";
+
+        if (events.Instructors != null)
+        {
+          foreach (var item in events.Instructors)
+          {
+            instructors += item.Name + "\n";
+          }
+        }
+
+        if (idperson != string.Empty)
+          events.Participants = events.Participants.Where(p => p.Person._id == idperson).ToList();
+
+        if (events.Participants != null)
+        {
+          foreach (var item in events.Participants)
+          {
+            var viewEvent = new ViewCertificate()
+            {
+              NameEvent = events.Name,
+              NameCourse = events.Course?.Name,
+              Content = events.Content,
+              DateBegin = events.Begin,
+              DateEnd = events.End,
+              NameEntity = events.Entity?.Name,
+              NameParticipant = item.Name,
+              Workload = events.Workload,
+              Instructor = instructors,
+            };
+            data.Add(viewEvent);
+          };
+        }
+
+        var view = new ViewReport()
+        {
+          Data = data,
+          Name = "listcertificate",
+          _idReport = NewReport("listcertificate"),
           _idAccount = _user._idAccount
         };
         SendMessageAsync(view);

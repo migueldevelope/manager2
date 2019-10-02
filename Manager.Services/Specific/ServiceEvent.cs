@@ -533,7 +533,7 @@ namespace Manager.Services.Specific
         var detail = new List<ViewListPersonResume>();
         var events = serviceEvent.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
         var participants = events.Participants.Select(p => p.Person).ToList();
-        var list = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
         foreach (var item in list)
         {
           if (!participants.Contains(item.GetViewListResume()))
@@ -569,9 +569,9 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var detail = new List<ViewListPersonResume>();
-        var events = serviceEvent.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
+        var events = serviceEvent.GetNewVersion(p => p._id == idevent).Result;
         var instructors = events.Instructors.Select(p => p.Person).ToList();
-        var list = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+        var list = servicePerson.GetAllNewVersion(p => p.Company._id == idcompany & p.StatusUser != EnumStatusUser.Disabled & p.StatusUser != EnumStatusUser.ErrorIntegration & p.TypeUser != EnumTypeUser.Administrator & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         foreach (var item in list)
         {
@@ -584,9 +584,9 @@ namespace Manager.Services.Specific
               //Person = item.GetViewList(),
               Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
               {
-                _id = item.Occupation.Cbo._id,
-                Name = item.Occupation.Cbo.Name,
-                Code = item.Occupation.Cbo.Code
+                _id = item.Occupation.Cbo?._id,
+                Name = item.Occupation.Cbo?.Name,
+                Code = item.Occupation.Cbo?.Code
               }
             });
         }

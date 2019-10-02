@@ -15,5 +15,6 @@ namespace Manager.Core.Interfaces
     void RegisterOnMessageHandlerAndReceiveMesssages();
     string ListPersons();
     string ListTraining(string idevent);
+    string ListCertificate(string idevent, string idperson);
   }
 }
