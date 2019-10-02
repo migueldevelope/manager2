@@ -2701,7 +2701,7 @@ namespace Manager.Services.Specific
           {
             Person = p.User?.Name,
             Company = p.Company?.Name,
-            DateAdm = p.User?.DateAdm
+            DateAdm = p.User?.DateAdm == null ? null : p.User.DateAdm.Value.ToString("dd/MM/yyyy")
           }).OrderBy(p => p.Company).ThenBy(p => p.Person).ToList();
       }
       catch (Exception e)
