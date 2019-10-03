@@ -114,11 +114,12 @@
             <param name="view">Objeto Crud</param>
             <returns></returns>
         </member>
-        <member name="M:Training.Controllers.EventController.List(System.Int32,System.Int32,System.String)">
+        <member name="M:Training.Controllers.EventController.List(Manager.Views.Enumns.EnumTypeEvent,System.Int32,System.Int32,System.String)">
             <summary>
             Lista eventos
             </summary>
             <param name="count"></param>
+            <param name="type"></param>
             <param name="page"></param>
             <param name="filter"></param>
             <returns></returns>
@@ -141,6 +142,15 @@
             <param name="count"></param>
             <param name="page"></param>
             <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.EventController.ListHistoric(Manager.Views.BusinessView.ViewFilterDate,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idperson"></param>
+            <param name="idcourse"></param>
             <returns></returns>
         </member>
         <member name="M:Training.Controllers.EventController.ListEventOpen(System.Int32,System.Int32,System.String)">

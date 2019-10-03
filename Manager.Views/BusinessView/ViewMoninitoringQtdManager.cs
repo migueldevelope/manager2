@@ -16,5 +16,6 @@ namespace Manager.Views.BusinessView
     public bool CommentsAvg { get; set; }
     public bool PlansAvg { get; set; }
     public long Ranking { get; set; }
+    public byte Stars { get; set; }
   }
 }
