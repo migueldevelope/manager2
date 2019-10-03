@@ -1284,8 +1284,24 @@ namespace Manager.Services.Specific
           view.Praises = list.Average(p => p.Praises);
         }
 
+        foreach (var item in list)
+        {
+          byte stars = 0;
+
+          if (item.Praises > view.Praises)
+            stars += 1;
+
+          if (item.Comments > view.Comments)
+            stars += 1;
+
+          if (item.Plans > view.Plans)
+            stars += 1;
+
+          item.Stars = stars;
+        }
+
         long ranking = 1;
-        foreach (var item in list.OrderByDescending(p => p.Total))
+        foreach (var item in list.OrderByDescending(p => p.Stars).ThenByDescending(p => p.Total))
         {
           item.Ranking = ranking;
           ranking += 1;
@@ -1305,7 +1321,7 @@ namespace Manager.Services.Specific
             item.PlansAvg = false;
         }
 
-        view.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderByDescending(p => p.Total).Skip(skip).Take(count).ToList();
+        view.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderBy(p => p.Ranking).Skip(skip).Take(count).ToList();
         return view;
       }
       catch (Exception e)
