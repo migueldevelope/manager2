@@ -447,7 +447,10 @@ namespace Manager.Services.Specific
           Name = view.Name,
           ChangeCheck = view.ChangeCheck,
           DateBegin = view.DateBegin,
-          DateEnd = view.DateEnd
+          DateEnd = view.DateEnd,
+          PercentCompany =view.PercentCompany,
+          PercentTeam = view.PercentTeam,
+          PercentPerson = view.PercentPerson
         };
         serviceGoalsPeriod.InsertNewVersion(goalsPeriod).Wait();
         return "Period goals added!";
@@ -467,6 +470,10 @@ namespace Manager.Services.Specific
         goalsPeriod.ChangeCheck = view.ChangeCheck;
         goalsPeriod.DateBegin = view.DateBegin;
         goalsPeriod.DateEnd = view.DateEnd;
+        goalsPeriod.PercentCompany = view.PercentCompany;
+        goalsPeriod.PercentTeam = view.PercentTeam;
+        goalsPeriod.PercentPerson = view.PercentPerson;
+
         serviceGoalsPeriod.Update(goalsPeriod, null).Wait();
         return "Period goals altered!";
       }
@@ -512,7 +519,10 @@ namespace Manager.Services.Specific
           Name = goalsPeriod.Name,
           ChangeCheck = goalsPeriod.ChangeCheck,
           DateBegin = goalsPeriod.DateBegin,
-          DateEnd = goalsPeriod.DateEnd
+          DateEnd = goalsPeriod.DateEnd,
+          PercentCompany = goalsPeriod.PercentCompany,
+          PercentTeam = goalsPeriod.PercentTeam,
+          PercentPerson = goalsPeriod.PercentPerson
         };
       }
       catch (Exception e)
@@ -532,7 +542,10 @@ namespace Manager.Services.Specific
             Name = p.Name,
             ChangeCheck = p.ChangeCheck,
             DateBegin = p.DateBegin,
-            DateEnd = p.DateEnd
+            DateEnd = p.DateEnd,
+            PercentCompany = p.PercentCompany,
+            PercentTeam = p.PercentTeam,
+            PercentPerson = p.PercentPerson
           }).ToList();
 
         total = serviceGoalsPeriod.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
