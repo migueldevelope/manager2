@@ -4,6 +4,7 @@ using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -177,16 +178,17 @@ namespace Training.Controllers
     /// Lista eventos
     /// </summary>
     /// <param name="count"></param>
+    /// <param name="type"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("list")]
-    public async Task<List<ViewListEventDetail>> List( int count = 10, int page = 1, string filter = "")
+    [Route("list/{type}")]
+    public async Task<List<ViewListEventDetail>> List(EnumTypeEvent type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(ref total, count, page, filter);
+      var result = service.List(type,ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
     }

@@ -658,14 +658,29 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListEventDetail> List(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListEventDetail> List(EnumTypeEvent type, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
 
         int skip = (count * (page - 1));
-        var detail = serviceEvent.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
-        total = serviceEvent.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        List<Event> detail = new List<Event>();
+
+        if (type == EnumTypeEvent.All)
+        {
+          serviceEvent.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
+          total = serviceEvent.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        }
+        else if (type == EnumTypeEvent.Open)
+        {
+          serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open && p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
+          total = serviceEvent.CountNewVersion(p => p.StatusEvent == EnumStatusEvent.Open && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        }
+        else if (type == EnumTypeEvent.End)
+        {
+          serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
+          total = serviceEvent.CountNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        }
 
         return detail.Select(p => new ViewListEventDetail()
         {
