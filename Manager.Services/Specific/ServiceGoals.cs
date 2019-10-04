@@ -448,7 +448,7 @@ namespace Manager.Services.Specific
           ChangeCheck = view.ChangeCheck,
           DateBegin = view.DateBegin,
           DateEnd = view.DateEnd,
-          PercentCompany =view.PercentCompany,
+          PercentCompany = view.PercentCompany,
           PercentTeam = view.PercentTeam,
           PercentPerson = view.PercentPerson
         };
@@ -1270,6 +1270,8 @@ namespace Manager.Services.Specific
       try
       {
         var person = servicePerson.GetNewVersion(p => p._id == idPerson).Result;
+        var period = serviceGoalsPeriod.GetNewVersion(p => p._id == idGoalsPeriod).Result;
+
         List<ViewCrudGoalItem> detailCompany = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Company._id == person.Company._id && p.Company.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
                   .Select(p => new ViewCrudGoalItem()
@@ -1290,6 +1292,16 @@ namespace Manager.Services.Specific
                     Name = p.GoalsCompanyList.Goals.Name,
                     Target = p.GoalsCompanyList.Target
                   }).ToList();
+
+        double distCompany = (detailCompany.Count() == 0 ? 1 : detailCompany.Count());
+        double totalPointsCompany = detailCompany.Sum(p => p.Weight * distCompany);
+        foreach (var item in detailCompany)
+        {
+          var value = ((distCompany * item.Weight) / totalPointsCompany) * 100;
+          var achievement = GetAchievement(item.Achievement);
+          item.Points = Math.Round((value * achievement), 2);
+          item.PointsWeight = (item.Points * double.Parse(period.PercentCompany.ToString())) / 100;
+        };
 
         List<ViewCrudGoalItem> detailManager = null;
         if (person.Manager != null)
@@ -1313,11 +1325,20 @@ namespace Manager.Services.Specific
                       Target = p.GoalsManagerList.Target
                     }).ToList();
 
+          double distManager = (detailManager.Count() == 0 ? 1 : detailManager.Count());
+          double totalPointsManager = detailManager.Sum(p => p.Weight * distManager);
+
           foreach (var item in detailManager)
           {
             var goal = serviceGoals.GetAllNewVersion(p => p._id == item.Goals._id).Result.FirstOrDefault();
             item.Goals.Concept = goal.Concept;
             item.Goals.TypeGoals = goal.TypeGoals;
+
+            var value = ((distManager * item.Weight) / totalPointsManager) * 100;
+            var achievement = GetAchievement(item.Achievement);
+            item.Points = Math.Round((value * achievement), 2);
+            item.PointsWeight = (item.Points * double.Parse(period.PercentTeam.ToString())) / 100;
+
           }
         }
 
@@ -1342,13 +1363,15 @@ namespace Manager.Services.Specific
             Target = p.GoalsPersonList.Target
           }).ToList();
 
-        double dist = 100 / detail.Count();
+        double dist = 100 / (detail.Count() == 0 ? 1 : detail.Count());
         double totalPoints = detail.Sum(p => p.Weight * dist);
         foreach (var item in detail)
         {
           var value = ((dist * item.Weight) / totalPoints) * 100;
           var achievement = GetAchievement(item.Achievement);
           item.Points = Math.Round((value * achievement), 2);
+          item.PointsWeight = (item.Points * double.Parse(period.PercentPerson.ToString())) / 100;
+          item.PointsTotal = item.PointsWeight + detailManager.Sum(p => p.PointsWeight) + detailCompany.Sum(p => p.PointsWeight);
         };
 
 
@@ -1604,7 +1627,7 @@ namespace Manager.Services.Specific
       try
       {
         var viewperiod = serviceGoalsPeriod.GetNewVersion(p => p.ChangeCheck == true).Result;
-        if(viewperiod == null)
+        if (viewperiod == null)
           return null;
 
         var period = new ViewListGoalPeriod
@@ -1639,7 +1662,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        total = servicePerson.CountNewVersion(x=> x.Manager._id == idmanager).Result;
+        total = servicePerson.CountNewVersion(x => x.Manager._id == idmanager).Result;
 
         return detail;
       }
