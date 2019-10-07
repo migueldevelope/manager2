@@ -237,7 +237,7 @@ namespace Training.Controllers
     /// <param name="idcourse"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
+    [HttpPost]
     [Route("listhistoric")]
     public async Task<List<ViewListHistoric>> ListHistoric([FromBody]ViewFilterDate date, string idperson = "", string idcourse = "")
     {
