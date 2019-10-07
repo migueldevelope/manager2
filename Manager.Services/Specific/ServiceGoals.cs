@@ -1370,10 +1370,8 @@ namespace Manager.Services.Specific
           var value = ((dist * item.Weight) / totalPoints) * 100;
           var achievement = GetAchievement(item.Achievement);
           item.Points = Math.Round((value * achievement), 2);
-          item.PointsWeight = (item.Points * double.Parse(period.PercentPerson.ToString())) / 100;
-          item.PointsTotal = item.PointsWeight + detailManager.Sum(p => p.PointsWeight) + detailCompany.Sum(p => p.PointsWeight);
+          item.PointsWeight = (item.Points * double.Parse(period.PercentPerson.ToString())) / 100;  
         };
-
 
 
         ViewListGoalsItem view = new ViewListGoalsItem()
@@ -1381,7 +1379,8 @@ namespace Manager.Services.Specific
           GoalsCompany = detailCompany,
           GoalsManager = detailManager,
           GoalsPerson = detail,
-        };
+          PointTotal = detail.Sum(p => p.PointsWeight) + detailManager.Sum(p => p.PointsWeight) + detailCompany.Sum(p => p.PointsWeight)
+      };
 
         return view;
       }

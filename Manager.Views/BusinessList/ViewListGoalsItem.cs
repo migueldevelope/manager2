@@ -8,5 +8,6 @@ namespace Manager.Views.BusinessList
     public List<ViewCrudGoalItem> GoalsCompany { get; set; }
     public List<ViewCrudGoalItem> GoalsManager { get; set; }
     public List<ViewCrudGoalItem> GoalsPerson { get; set; }
+    public double PointTotal { get; set; }
   }
 }

@@ -14,6 +14,5 @@ namespace Manager.Views.BusinessCrud
     public decimal Achievement { get; set; }
     public double Points { get; set; }
     public double PointsWeight { get; set; }
-    public double PointsTotal { get; set; }
   }
 }
