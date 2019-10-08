@@ -149,6 +149,10 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var exists = serviceUser.CountFreeNewVersion(p => p.Mail == view.Mail || p.Nickname == view.Nickname).Result;
+        if (exists > 0)
+          throw new Exception("existsmailornickname");
+
         User user = new User()
         {
           DateAdm = view.DateAdm,
@@ -186,6 +190,10 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var exists = serviceUser.CountFreeNewVersion(p => p._id != view._id && (p.Mail == view.Mail || p.Nickname == view.Nickname)).Result;
+        if (exists > 0)
+          throw new Exception("existsmailornickname");
+
         User user = serviceUser.GetNewVersion(p => p._id == view._id).Result;
         user.DateAdm = view.DateAdm;
         user.DateBirth = view.DateBirth;

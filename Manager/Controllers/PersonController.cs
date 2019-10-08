@@ -157,6 +157,19 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getpersons")]
+    public async Task<List<_ViewListBase>> GetPersons()
+    {
+      return await Task.Run(() => service.GetPersons());
+    }
+
     /// <summary>
     /// Lista time de gestor
     /// </summary>

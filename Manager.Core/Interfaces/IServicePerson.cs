@@ -40,5 +40,6 @@ namespace Manager.Core.Interfaces
     ViewListTeam ListTeam_V3(string idmanager, IServiceAutoManager serviceAutoManager, string filter, int count, int page);
     List<_ViewListBase> ListOccupationManager(string idmanager, ref long total, string filter, int count, int page);
     List<ViewListOccupationProcess> ListOccupationProcess(ref long total, string filter, int count, int page);
+    List<_ViewListBase> GetPersons();
   }
 }
