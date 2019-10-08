@@ -59,11 +59,11 @@ namespace Manager.Services.Auth
 
     #region Authentication
 
-    public string AlterContract(string idperson)
+    public string AlterContract(string idperson, string _idAccount)
     {
       try
       {
-        var person = servicePerson.GetAllFreeNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        var person = servicePerson.GetAllFreeNewVersion(p => p._id == idperson && p._idAccount == _idAccount).Result.FirstOrDefault();
         var account = serviceAccount.GetAllFreeNewVersion(p => p._id == person._idAccount).Result.FirstOrDefault();
 
         // Token
@@ -221,6 +221,8 @@ namespace Manager.Services.Auth
             IdPerson = x._id,
             TypeUser = x.TypeUser,
             Registration = x.Registration,
+            _idAccount = x._idAccount,
+            NameAccount = serviceAccount.GetFreeNewVersion(p => p._id == x._idAccount).Result?.Name,
             Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name
           }).ToList();
 
@@ -302,6 +304,8 @@ namespace Manager.Services.Auth
           Logo = string.Empty,
           TypeUser = loginPerson.TypeUser,
           Registration = loginPerson.Registration,
+          _idAccount = loginPerson._idAccount,
+          NameAccount = serviceAccount.GetFreeNewVersion(p => p._id == loginPerson._idAccount).Result?.Name,
           Occupation = loginPerson.Occupation?.Name
         };
         person.Contracts = new List<ViewContract>
