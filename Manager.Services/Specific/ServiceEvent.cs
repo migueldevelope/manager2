@@ -1438,21 +1438,27 @@ namespace Manager.Services.Specific
       {
         foreach (var item in view.Participants)
         {
-          if (item.Approved & (item.Grade > view.Grade))
+          if (item.Approved & (item.Grade >= view.Grade))
           {
-            //NewEventHistoric(new EventHistoric()
-            //{
-            //  Name = view.Name,
-            //  Event = view,
-            //  Course = view.Course,
-            //  Entity = view.Entity,
-            //  Workload = view.Workload,
-            //  Person = item.Person,
-            //  Status = EnumStatus.Enabled,
-            //  Begin = DateTime.Parse(view.Begin.ToString()),
-            //  End = DateTime.Parse(view.End.ToString()),
-            //  Attachments = view.Attachments
-            //});
+            NewEventHistoric(new EventHistoric()
+            {
+              Name = view.Name,
+              Event = new ViewListEvent()
+              {
+                _id = view._id,
+                Name = view.Name,
+                NameCourse = view.Course?.Name,
+                _idCourse = view.Course?._id
+              },
+              Course = view.Course,
+              Entity = view.Entity,
+              Workload = view.Workload,
+              Person = new ViewListPersonBase() { _id = item.Person?._id, Name = item.Person?.Name },
+              Status = EnumStatus.Enabled,
+              Begin = DateTime.Parse(view.Begin.ToString()),
+              End = DateTime.Parse(view.End.ToString()),
+              Attachments = view.Attachments
+            });
           }
 
         }
