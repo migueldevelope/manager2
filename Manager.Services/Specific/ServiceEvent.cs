@@ -111,6 +111,9 @@ namespace Manager.Services.Specific
           && p.End >= date.Begin && p.End <= date.End).Result;
         else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date != null))
           list = serviceEventHistoric.GetAllNewVersion(p => p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson == string.Empty) && (idcourse != string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+          && p.Course._id == idcourse).Result;
         else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date == null))
           list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
