@@ -701,6 +701,10 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var exists = serviceUser.CountFreeNewVersion(p => p.Mail == view.User.Mail).Result;
+        if (exists > 0)
+          throw new Exception("existsmailornickname");
+
         User user = new User()
         {
           DateAdm = view.User.DateAdm,
