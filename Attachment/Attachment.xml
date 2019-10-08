@@ -89,19 +89,20 @@
             
             </summary>
         </member>
-        <member name="M:EdeskIntegration.Controllers.UploadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Manager.Core.Interfaces.IServiceCompany,Manager.Core.Interfaces.IServicePerson,Manager.Core.Interfaces.IServicePlan,Manager.Core.Interfaces.IServiceEvent,Manager.Core.Interfaces.IServiceCertification,Manager.Core.Interfaces.IServiceBaseHelp,Manager.Core.Interfaces.IServiceRecommendation,Manager.Core.Interfaces.IServiceSalaryScale,Manager.Core.Interfaces.IServiceUser)">
+        <member name="M:EdeskIntegration.Controllers.UploadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Manager.Core.Interfaces.IServiceCompany,Manager.Core.Interfaces.IServicePerson,Manager.Core.Interfaces.IServicePlan,Manager.Core.Interfaces.IServiceEvent,Manager.Core.Interfaces.IServiceCertification,Manager.Core.Interfaces.IServiceBaseHelp,Manager.Core.Interfaces.IServiceRecommendation,Manager.Core.Interfaces.IServiceSalaryScale,Manager.Core.Interfaces.IServiceUser,Manager.Core.Interfaces.IServiceOnBoarding)">
             <summary>
             
             </summary>
             <param name="contextAccessor"></param>
-            <param name="_companyService"></param>
-            <param name="_personService"></param>
-            <param name="_planService"></param>
+            <param name="_serviceCompany"></param>
+            <param name="_servicePerson"></param>
+            <param name="_servicePlan"></param>
             <param name="_serviceEvent"></param>
             <param name="_serviceCertification"></param>
             <param name="_serviceBaseHelp"></param>
             <param name="_serviceRecommendation"></param>
             <param name="_serviceSalaryScale"></param>
+            <param name="_serviceOnBoarding"></param>
             <param name="_serviceUser"></param>
         </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.Post">
@@ -121,6 +122,15 @@
             
             </summary>
             <param name="idcompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostSpeechRecognitionOnboarding(System.String,System.String,Manager.Views.Enumns.EnumUserComment)">
+            <summary>
+            
+            </summary>
+            <param name="idregister"></param>
+            <param name="iditem"></param>
+            <param name="typeuser"></param>
             <returns></returns>
         </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.PostBaseHelp(System.String)">
