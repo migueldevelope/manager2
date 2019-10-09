@@ -128,7 +128,8 @@ namespace Manager.Services.Specific
             Occupation = servicePerson.GetNewVersion(p => p._id == item.Person._id).Result.Occupation?.Name,
             Begin = item.Begin.ToString("dd/MM/yyyy"),
             End = item.End.ToString("dd/MM/yyyy"),
-            Wordload = item.Workload / 60
+            Wordload = item.Workload / 60,
+            WorkloadMin = item.Workload
           };
           result.Add(view);
         }

@@ -8,5 +8,6 @@
     public string Begin { get; set; }
     public string End { get; set; }
     public decimal Wordload { get; set; }
+    public decimal WorkloadMin { get; set; }
   }
 }
