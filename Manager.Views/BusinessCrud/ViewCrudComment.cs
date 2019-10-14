@@ -9,5 +9,6 @@ namespace Manager.Views.BusinessCrud
     public DateTime? Date { get; set; }
     public EnumStatusView StatusView { get; set; }
     public EnumUserComment UserComment { get; set; }
+    public string SpeechLink { get; set; }
   }
 }

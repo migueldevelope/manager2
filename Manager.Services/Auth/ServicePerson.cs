@@ -199,6 +199,19 @@ namespace Manager.Services.Auth
 
     #region Person
 
+    public List<_ViewListBase> GetPersons()
+    {
+      try
+      {
+        return servicePerson.GetAllNewVersion(p => p.TypeJourney != EnumTypeJourney.OutOfJourney).Result
+          .Select(p => new _ViewListBase() { _id = p._id, Name = p.User?.Name }).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListIdIndicators> GetFilterPersons(List<_ViewList> idmanagers)
     {
       try
@@ -688,6 +701,11 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var exists = serviceUser.CountFreeNewVersion(p => p.Mail == view.User.Mail).Result;
+
+        if ((exists > 0) && (view.User._id == null))
+          throw new Exception("existsmailornickname");
+
         User user = new User()
         {
           DateAdm = view.User.DateAdm,

@@ -9,5 +9,7 @@ namespace Manager.Core.Views
     public string Logo { get; set; }
     public string Occupation { get; set; }
     public string Registration { get; set; }
+    public string _idAccount { get; set; }
+    public string NameAccount { get; set; }
   }
 }

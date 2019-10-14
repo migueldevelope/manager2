@@ -56,14 +56,14 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("altercontract/{idperson}")]
+    [Route("altercontract/{idperson}/{idaccount}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<string> AlterContract(string idperson)
+    public async Task<string> AlterContract(string idperson, string idaccount)
     {
       try
       {
-        return await Task.Run(() => service.AlterContract(idperson));
+        return await Task.Run(() => service.AlterContract(idperson, idaccount));
       }
       catch (Exception e)
       {

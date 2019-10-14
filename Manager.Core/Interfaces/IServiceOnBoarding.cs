@@ -36,5 +36,6 @@ namespace Manager.Core.Interfaces
     List<ViewExportOnboardingComments> ExportOnboardingComments(List<ViewListIdIndicators> persons);
     void MailTest();
     List<OnBoarding> Load();
+    string AddCommentsSpeech(string idonboarding, string iditem, string link, EnumUserComment user, string path);
   }
 }

@@ -27,11 +27,12 @@ namespace EdeskIntegration.Controllers
   public class UploadController : Controller
   {
     private readonly ServiceGeneric<Attachments> service;
-    private readonly IServicePerson personService;
-    private readonly IServiceCompany companyService;
-    private readonly IServicePlan planService;
-    private readonly IServiceCertification certificationService;
-    private readonly IServiceEvent eventService;
+    private readonly IServicePerson servicePerson;
+    private readonly IServiceCompany serviceCompany;
+    private readonly IServicePlan servicePlan;
+    private readonly IServiceOnBoarding serviceOnBoarding;
+    private readonly IServiceCertification serviceCertification;
+    private readonly IServiceEvent serviceEvent;
     private readonly IServiceUser serviceUser;
     private readonly IServiceBaseHelp serviceBaseHelp;
     private readonly IServiceSalaryScale serviceSalaryScale;
@@ -43,18 +44,19 @@ namespace EdeskIntegration.Controllers
     /// 
     /// </summary>
     /// <param name="contextAccessor"></param>
-    /// <param name="_companyService"></param>
-    /// <param name="_personService"></param>
-    /// <param name="_planService"></param>
+    /// <param name="_serviceCompany"></param>
+    /// <param name="_servicePerson"></param>
+    /// <param name="_servicePlan"></param>
     /// <param name="_serviceEvent"></param>
     /// <param name="_serviceCertification"></param>
     /// <param name="_serviceBaseHelp"></param>
     /// <param name="_serviceRecommendation"></param>
     /// <param name="_serviceSalaryScale"></param>
+    /// <param name="_serviceOnBoarding"></param>
     /// <param name="_serviceUser"></param>
-    public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _companyService, IServicePerson _personService, IServicePlan _planService,
+    public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _serviceCompany, IServicePerson _servicePerson, IServicePlan _servicePlan,
       IServiceEvent _serviceEvent, IServiceCertification _serviceCertification, IServiceBaseHelp _serviceBaseHelp, IServiceRecommendation _serviceRecommendation,
-      IServiceSalaryScale _serviceSalaryScale, IServiceUser _serviceUser)
+      IServiceSalaryScale _serviceSalaryScale, IServiceUser _serviceUser, IServiceOnBoarding _serviceOnBoarding)
     {
       BaseUser baseUser = new BaseUser();
       var user = contextAccessor.HttpContext.User;
@@ -83,24 +85,26 @@ namespace EdeskIntegration.Controllers
       blobKey = conn.BlobKey;
       service = new ServiceGeneric<Attachments>(context);
       service.User(contextAccessor);
-      personService = _personService;
-      companyService = _companyService;
-      planService = _planService;
+      servicePerson = _servicePerson;
+      serviceCompany = _serviceCompany;
+      servicePlan = _servicePlan;
       service._user = baseUser;
-      eventService = _serviceEvent;
-      certificationService = _serviceCertification;
+      serviceEvent = _serviceEvent;
+      serviceCertification = _serviceCertification;
       serviceBaseHelp = _serviceBaseHelp;
       serviceRecommendation = _serviceRecommendation;
       serviceSalaryScale = _serviceSalaryScale;
       serviceUser = _serviceUser;
+      serviceOnBoarding = _serviceOnBoarding;
 
+      serviceOnBoarding.SetUser(contextAccessor);
       serviceSalaryScale.SetUser(contextAccessor);
-      certificationService.SetUser(contextAccessor);
-      eventService.SetUser(baseUser);
-      eventService.SetUser(contextAccessor);
-      personService.SetUser(contextAccessor);
-      companyService.SetUser(contextAccessor);
-      planService.SetUser(contextAccessor);
+      serviceCertification.SetUser(contextAccessor);
+      serviceEvent.SetUser(baseUser);
+      serviceEvent.SetUser(contextAccessor);
+      servicePerson.SetUser(contextAccessor);
+      serviceCompany.SetUser(contextAccessor);
+      servicePlan.SetUser(contextAccessor);
       serviceBaseHelp.SetUser(contextAccessor);
       serviceRecommendation.SetUser(contextAccessor);
       serviceUser.SetUser(contextAccessor);
@@ -266,11 +270,73 @@ namespace EdeskIntegration.Controllers
           throw;
         }
 
-        companyService.SetLogo(idcompany, url);
+        serviceCompany.SetLogo(idcompany, url);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
     }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idregister"></param>
+    /// <param name="iditem"></param>
+    /// <param name="typeuser"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost("{idregister}/speech/{iditem}/{typeuser}/onboarding")]
+    public async Task<ObjectResult> PostSpeechRecognitionOnboarding(string idregister, string iditem, EnumUserComment typeuser)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return BadRequest("Bad file type.");
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      var url = "";
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        await this.service.InsertNewVersion(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+          if (await cloudBlobContainer.CreateIfNotExistsAsync())
+          {
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          url = blockBlob.Uri.ToString();
+        }
+        catch (Exception)
+        {
+          attachment.Saved = false;
+          await service.Update(attachment, null);
+          throw;
+        }
+        var pathspeech = "http://10.0.0.16:5400/";
+        serviceOnBoarding.AddCommentsSpeech(idregister, iditem, url, typeuser, pathspeech);
+        listAttachments.Add(attachment);
+      }
+      return Ok(listAttachments);
+    }
+
 
     /// <summary>
     /// 
@@ -341,7 +407,7 @@ namespace EdeskIntegration.Controllers
       {
         //var ext = Path.GetExtension(file.FileName).ToLower();
         //if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
-        if(file.FileName != "SALARYSCALE.xlsx")
+        if (file.FileName != "SALARYSCALE.xlsx")
           return "bad_file_type";
       }
       foreach (var file in HttpContext.Request.Form.Files)
@@ -366,7 +432,7 @@ namespace EdeskIntegration.Controllers
       }
       foreach (var file in HttpContext.Request.Form.Files)
       {
-        var result = eventService.ImportTraning(file.OpenReadStream());
+        var result = serviceEvent.ImportTraning(file.OpenReadStream());
         return result;
       }
       return "not_file";
@@ -481,7 +547,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        eventService.SetAttachment(idevent, url, file.FileName, attachment._id);
+        serviceEvent.SetAttachment(idevent, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -539,7 +605,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        eventService.SetAttachmentHistoric(ideventhistoric, url, file.FileName, attachment._id);
+        serviceEvent.SetAttachmentHistoric(ideventhistoric, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -598,7 +664,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        planService.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
+        servicePlan.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -657,7 +723,7 @@ namespace EdeskIntegration.Controllers
           throw e;
         }
 
-        certificationService.SetAttachment(idcertification, url, file.FileName, attachment._id);
+        serviceCertification.SetAttachment(idcertification, url, file.FileName, attachment._id);
         listAttachments.Add(attachment);
       }
       return Ok(listAttachments);
@@ -733,7 +799,7 @@ namespace EdeskIntegration.Controllers
     //  await blockBlob.DeleteIfExistsAsync();
     //  attachment.Status = EnumStatus.Disabled;
     //  service.Update(attachment, null);
-    //  planService.DeleteAttachment(iddp, id);
+    //  servicePlan.DeleteAttachment(iddp, id);
 
     //  return Ok("Attachment deleted!");
     //}

@@ -111,6 +111,9 @@ namespace Manager.Services.Specific
           && p.End >= date.Begin && p.End <= date.End).Result;
         else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date != null))
           list = serviceEventHistoric.GetAllNewVersion(p => p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson == string.Empty) && (idcourse != string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+          && p.Course._id == idcourse).Result;
         else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date == null))
           list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
@@ -125,7 +128,8 @@ namespace Manager.Services.Specific
             Occupation = servicePerson.GetNewVersion(p => p._id == item.Person._id).Result.Occupation?.Name,
             Begin = item.Begin.ToString("dd/MM/yyyy"),
             End = item.End.ToString("dd/MM/yyyy"),
-            Wordload = item.Workload / 60
+            Wordload = item.Workload / 60,
+            WorkloadMin = item.Workload
           };
           result.Add(view);
         }
@@ -1438,21 +1442,27 @@ namespace Manager.Services.Specific
       {
         foreach (var item in view.Participants)
         {
-          if (item.Approved & (item.Grade > view.Grade))
+          if (item.Approved & (item.Grade >= view.Grade))
           {
-            //NewEventHistoric(new EventHistoric()
-            //{
-            //  Name = view.Name,
-            //  Event = view,
-            //  Course = view.Course,
-            //  Entity = view.Entity,
-            //  Workload = view.Workload,
-            //  Person = item.Person,
-            //  Status = EnumStatus.Enabled,
-            //  Begin = DateTime.Parse(view.Begin.ToString()),
-            //  End = DateTime.Parse(view.End.ToString()),
-            //  Attachments = view.Attachments
-            //});
+            NewEventHistoric(new EventHistoric()
+            {
+              Name = view.Name,
+              Event = new ViewListEvent()
+              {
+                _id = view._id,
+                Name = view.Name,
+                NameCourse = view.Course?.Name,
+                _idCourse = view.Course?._id
+              },
+              Course = view.Course,
+              Entity = view.Entity,
+              Workload = view.Workload,
+              Person = new ViewListPersonBase() { _id = item.Person?._id, Name = item.Person?.Name },
+              Status = EnumStatus.Enabled,
+              Begin = DateTime.Parse(view.Begin.ToString()),
+              End = DateTime.Parse(view.End.ToString()),
+              Attachments = view.Attachments
+            });
           }
 
         }
