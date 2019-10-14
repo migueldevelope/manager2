@@ -988,7 +988,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var idCompany = servicePerson.GetAllNewVersion(p => p._id == idManager).Result.FirstOrDefault().Company?._id;
+        var idCompany = servicePerson.GetNewVersion(p => p._id == idManager).Result.Company?._id;
+        var period = serviceGoalsPeriod.GetNewVersion(p => p._id == idGoalsPeriod).Result;
+
         List<ViewCrudGoalItem> detailCompany = serviceGoalsCompany.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Company._id == idCompany && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Company.Name").Result
                   .Select(p => new ViewCrudGoalItem()
@@ -1009,6 +1011,20 @@ namespace Manager.Services.Specific
                     Name = p.GoalsCompanyList.Goals.Name,
                     Target = p.GoalsCompanyList.Target
                   }).ToList();
+
+        if (detailCompany.Count > 0)
+        {
+          double distCompany = (detailCompany.Count() == 0 ? 1 : detailCompany.Count());
+          double totalPointsCompany = detailCompany.Sum(p => p.Weight * distCompany);
+          foreach (var item in detailCompany)
+          {
+            var value = ((distCompany * item.Weight) / totalPointsCompany) * 100;
+            var achievement = GetAchievement(item.Achievement);
+            item.Points = Math.Round((value * achievement), 2);
+            item.PointsWeight = (item.Points * double.Parse(period.PercentCompany.ToString())) / 100;
+          };
+        }
+
 
         List<ViewCrudGoalItem> detail = serviceGoalsManager.GetAllNewVersion(p => p.GoalsPeriod._id == idGoalsPeriod
                   && p.Manager._id == idManager && p.GoalsPeriod.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Manager.Name").Result
@@ -1031,11 +1047,32 @@ namespace Manager.Services.Specific
             Target = p.GoalsManagerList.Target
           }).ToList();
 
+        if (detail.Count > 0)
+        {
+          double distManager = (detail.Count() == 0 ? 1 : detail.Count());
+          double totalPointsManager = detail.Sum(p => p.Weight * distManager);
+
+          foreach (var item in detail)
+          {
+            var goal = serviceGoals.GetAllNewVersion(p => p._id == item.Goals._id).Result.FirstOrDefault();
+            item.Goals.Concept = goal.Concept;
+            item.Goals.TypeGoals = goal.TypeGoals;
+
+            var value = ((distManager * item.Weight) / totalPointsManager) * 100;
+            var achievement = GetAchievement(item.Achievement);
+            item.Points = Math.Round((value * achievement), 2);
+            item.PointsWeight = (item.Points * double.Parse(period.PercentTeam.ToString())) / 100;
+
+          }
+        }
+
+
 
         ViewListGoalsItem view = new ViewListGoalsItem()
         {
           GoalsCompany = detailCompany,
-          GoalsManager = detail
+          GoalsManager = detail,
+          PointTotal = detail.Sum(p => p.PointsWeight) + detailCompany.Sum(p => p.PointsWeight)
         };
 
         return view;
@@ -1370,7 +1407,7 @@ namespace Manager.Services.Specific
           var value = ((dist * item.Weight) / totalPoints) * 100;
           var achievement = GetAchievement(item.Achievement);
           item.Points = Math.Round((value * achievement), 2);
-          item.PointsWeight = (item.Points * double.Parse(period.PercentPerson.ToString())) / 100;  
+          item.PointsWeight = (item.Points * double.Parse(period.PercentPerson.ToString())) / 100;
         };
 
 
@@ -1380,7 +1417,7 @@ namespace Manager.Services.Specific
           GoalsManager = detailManager,
           GoalsPerson = detail,
           PointTotal = detail.Sum(p => p.PointsWeight) + detailManager.Sum(p => p.PointsWeight) + detailCompany.Sum(p => p.PointsWeight)
-      };
+        };
 
         return view;
       }
