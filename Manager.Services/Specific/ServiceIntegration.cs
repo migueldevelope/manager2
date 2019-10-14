@@ -1082,18 +1082,51 @@ namespace Manager.Services.Specific
           }
         }
         occupation = occupationService.InsertNewVersion(occupation).Result;
+      } else {
+        occupation.Skills = new List<ViewListSkill>();
+        occupation.SpecificRequirements = view.SpecificRequirements;
+        occupation.Activities = new List<ViewListActivitie>();
+        Skill skill;
+        foreach (string item in view.Skills)
+        {
+          skill = skillService.GetNewVersion(p => p.Name == item).Result;
+          occupation.Skills.Add(skill.GetViewList());
+        }
+        int order = 0;
+        foreach (string item in view.Activities)
+        {
+          order++;
+          occupation.Activities.Add(new ViewListActivitie()
+          {
+            _id = ObjectId.GenerateNewId().ToString(),
+            Name = item,
+            Order = order
+          });
+        }
+        for (int i = 0; i < view.Schooling.Count; i++)
+        {
+          for (int lin = 0; lin < occupation.Schooling.Count; lin++)
+          {
+            if (occupation.Schooling[lin].Name.ToUpper().Equals(view.Schooling[i].ToUpper()))
+            {
+              occupation.Schooling[lin].Complement = view.SchoolingComplement[i];
+              break;
+            }
+          }
+        }
+        Task retorno = occupationService.Update(occupation, null);
       }
       return new ViewIntegrationProfileOccupation()
       {
         _id = occupation._id,
-        IdCompany = group.Company._id,
+        IdCompany = occupation.Group.Company._id,
         IdProcessLevelTwo = occupation.Process[0]._id,
         Name = occupation.Name,
         NameGroup = occupation.Group.Name,
         Activities = occupation.Activities.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
         Skills = occupation.Skills.OrderBy(o => o.Name).Select(x => x.Name).ToList(),
         SpecificRequirements = occupation.SpecificRequirements,
-        Schooling = group.Schooling.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
+        Schooling = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
         SchoolingComplement = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Complement).ToList()
       };
     }
