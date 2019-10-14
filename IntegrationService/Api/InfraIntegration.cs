@@ -17,7 +17,12 @@ namespace IntegrationService.Api
     public InfraIntegration(ViewPersonLogin person)
     {
       Person = person;
-      string pathUrl = string.Format("{0}/", Person.Url).Replace("//", "//integrationserver.");
+      string pathUrl = string.Empty;
+      if (Person.Url.Equals("https://analisa.solutions"))
+        pathUrl = string.Format("{0}/", Person.Url).Replace("//", "//integrationserver.");
+      else
+        pathUrl = string.Format("{0}/", Person.Url).Replace("//test.", "//test_integrationserver.");
+
       if (person.Url == "https://analisa.unimednordesters.com.br")
         pathUrl = "https://analisa.unimednordesters.com.br/integrationserver/";
 

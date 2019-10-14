@@ -102,8 +102,8 @@ namespace IntegrationService.Data
         DocumentoGestor = list[(int)EnumLayoutManualCompleteV1.CpfGestor].Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
         EmpresaGestor = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor]);
         NomeEmpresaGestor = FormatedField(list[(int)EnumLayoutManualCompleteV1.NomeEmpresaGestor]);
-        EstabelecimentoGestor = "1";
-        NomeEstabelecimentoGestor = "Estabelecimento Padrão";
+        EstabelecimentoGestor = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEstabelecimentoGestor]);
+        NomeEstabelecimentoGestor = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.NomeEstabelecimentoGestor]);
         MatriculaGestor = string.Empty;
         if (!string.IsNullOrEmpty(DocumentoGestor))
           DocumentoGestor = DocumentoGestor.PadLeft(11, '0');

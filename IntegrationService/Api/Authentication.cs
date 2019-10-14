@@ -11,11 +11,14 @@ namespace IntegrationService.Api
     {
       try
       {
-        string pathUrl = string.Format("{0}/authentication", url).Replace("//", "//manager.");
+        string pathUrl = string.Empty;
+        if (url.Equals("https://analisa.solutions"))
+          pathUrl = string.Format("{0}/authentication", url).Replace("//", "//manager.");
+        else
+          pathUrl = string.Format("{0}/authentication", url).Replace("//test.", "//test_manager.");
+
         if (url == "https://analisa.unimednordesters.com.br")
           pathUrl = "https://analisa.unimednordesters.com.br/manager/authentication";
-        
-          
 
         HttpClient clientAuthentication = new HttpClient()
         {
