@@ -812,21 +812,27 @@ namespace Manager.Services.Auth
       try
       {
         Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
-        User user = serviceUser.GetNewVersion(p => p._id == view.User._id).Result;
-        user.DateAdm = view.User.DateAdm;
-        user.DateBirth = view.User.DateBirth;
-        user.Document = view.User.Document;
-        user.DocumentCTPF = view.User.DocumentCTPF;
-        user.DocumentID = view.User.DocumentID;
-        user.Mail = view.User.Mail;
-        user.Name = view.User.Name;
-        user.Nickname = view.User.Nickname;
-        user.Phone = view.User.Phone;
-        user.PhoneFixed = view.User.PhoneFixed;
-        user.PhotoUrl = view.User.PhotoUrl;
-        user.Schooling = view.User.Schooling;
-        user.Sex = view.User.Sex;
-        serviceUser.Update(user, null).Wait();
+        User user = null;
+        if (view.User != null)
+        {
+          user = serviceUser.GetNewVersion(p => p._id == view.User._id).Result;
+          user.DateAdm = view.User.DateAdm;
+          user.DateBirth = view.User.DateBirth;
+          user.Document = view.User.Document;
+          user.DocumentCTPF = view.User.DocumentCTPF;
+          user.DocumentID = view.User.DocumentID;
+          user.Mail = view.User.Mail;
+          user.Name = view.User.Name;
+          user.Nickname = view.User.Nickname;
+          user.Phone = view.User.Phone;
+          user.PhoneFixed = view.User.PhoneFixed;
+          user.PhotoUrl = view.User.PhotoUrl;
+          user.Schooling = view.User.Schooling;
+          user.Sex = view.User.Sex;
+          serviceUser.Update(user, null).Wait();
+
+        }
+          
 
         BaseFields manager = null;
         if (view.Manager != null)
