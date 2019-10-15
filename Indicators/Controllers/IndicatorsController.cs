@@ -731,5 +731,19 @@ namespace Indicators.Controllers
     {
       return await Task.Run(() => service.ListSucessFactors3());
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listschedulemanager")]
+    public async Task<List<ViewListScheduleManager>> ListScheduleManager([FromBody]ViewFilterDate date)
+    {
+      return await Task.Run(() => service.ListScheduleManager(date));
+    }
+
   }
 }
