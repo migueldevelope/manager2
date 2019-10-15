@@ -2818,6 +2818,8 @@ namespace Manager.Services.Specific
           view.QtdMonitoring = serviceMonitoring.CountNewVersion(p => p.Person._idManager == item._id
           && p.StatusMonitoring == EnumStatusMonitoring.End
           && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+
+          list.Add(view);
         }
 
         return list;
