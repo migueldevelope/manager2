@@ -1147,7 +1147,26 @@ namespace Manager.Services.Specific
           default:
             break;
         }
-        nome = nome.Trim().Replace(" Jr", " JR").Replace(" Pl", " PL").Replace(" Sr", " SR");
+        switch (nome.Substring(nome.Length - 3, 3))
+        {
+          case " Jr":
+            nome = string.Concat(nome.Substring(nome.Length - 3, 3), " JR");
+            break;
+          case " Pl":
+            nome = string.Concat(nome.Substring(nome.Length - 3, 3), " PL");
+            break;
+          case "Sr":
+            nome = string.Concat(nome.Substring(nome.Length - 3, 3), " SR");
+            break;
+          case " Ii":
+            nome = string.Concat(nome.Substring(nome.Length - 3, 3), " II");
+            break;
+          default:
+            break;
+        }
+        if (nome.Substring(nome.Length - 4, 4).Equals(" Iii"))
+          nome = string.Concat(nome.Substring(nome.Length - 4, 4), " III");
+
         return nome;
       }
       catch (Exception)

@@ -149,154 +149,164 @@ namespace IntegrationClient
           MessageBox.Show("Não tem nenhum sub-processo criado nesta conta!", "Erro de Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
           return;
         }
-        if (File.Exists(string.Format("{0}/CommandCom.txt", Program.PersonLogin.IdAccount)))
-          File.Delete(string.Format("{0}/CommandCom.txt", Program.PersonLogin.IdAccount));
-        FileClass.WriteToBinaryFile(string.Format("{0}/CommandCom.txt", Program.PersonLogin.IdAccount), txtCmdCom.Text);
-
-        if (File.Exists(string.Format("{0}/CommandCar.txt", Program.PersonLogin.IdAccount)))
-          File.Delete(string.Format("{0}/CommandCar.txt", Program.PersonLogin.IdAccount));
-        FileClass.WriteToBinaryFile(string.Format("{0}/CommandCar.txt", Program.PersonLogin.IdAccount), txtCmdCar.Text);
-
+        if (!string.IsNullOrEmpty(txtCmdCom.Text))
+        {
+          if (File.Exists(string.Format("{0}/CommandCom.txt", Program.PersonLogin.IdAccount)))
+            File.Delete(string.Format("{0}/CommandCom.txt", Program.PersonLogin.IdAccount));
+          FileClass.WriteToBinaryFile(string.Format("{0}/CommandCom.txt", Program.PersonLogin.IdAccount), txtCmdCom.Text);
+        }
+        if (!string.IsNullOrEmpty(txtCmdCar.Text))
+        {
+          if (File.Exists(string.Format("{0}/CommandCar.txt", Program.PersonLogin.IdAccount)))
+            File.Delete(string.Format("{0}/CommandCar.txt", Program.PersonLogin.IdAccount));
+          FileClass.WriteToBinaryFile(string.Format("{0}/CommandCar.txt", Program.PersonLogin.IdAccount), txtCmdCar.Text);
+        }
         if (File.Exists(string.Format("{0}/Skill.log", Program.PersonLogin.IdAccount)))
           File.Delete(string.Format("{0}/Skill.log", Program.PersonLogin.IdAccount));
-
         if (File.Exists(string.Format("{0}/Cargo.log", Program.PersonLogin.IdAccount)))
           File.Delete(string.Format("{0}/Cargo.log", Program.PersonLogin.IdAccount));
 
-        DataTable skills;
-        if (CboTipBd.Text.Equals("Oracle"))
-        {
-          OracleConnectionTool cnn = new OracleConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2]);
-          skills = cnn.ExecuteQuery(txtCmdCom.Text);
-          cnn.Close();
-        }
-        else
-        {
-          SqlConnectionTool cnn = new SqlConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2], txtCnxStr.Text.Split(';')[3]);
-          skills = cnn.ExecuteQuery(txtCmdCom.Text);
-          cnn.Close();
-        }
         InfraIntegration infraService = new InfraIntegration(Program.PersonLogin);
-        ViewCrudSkill viewSkill = null;
-        prb.Maximum = skills.Rows.Count;
-        prb.Value = 0;
-        lblPrc.Text = "Integração de Competências Comportamentais/Técnicas";
-        Refresh();
         string registro = string.Empty;
-        foreach (DataRow item in skills.Rows)
+        if (!string.IsNullOrEmpty(txtCmdCom.Text))
         {
-          viewSkill = new ViewCrudSkill
+          DataTable skills;
+          if (CboTipBd.Text.Equals("Oracle"))
           {
-            Name = item["nome"].ToString().ToUpper(),
-            Concept = item["conceito"].ToString()
-          };
-          if (item["tipo"].ToString().Equals("Soft"))
-            viewSkill.TypeSkill = EnumTypeSkill.Soft;
+            OracleConnectionTool cnn = new OracleConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2]);
+            skills = cnn.ExecuteQuery(txtCmdCom.Text);
+            cnn.Close();
+          }
           else
-            viewSkill.TypeSkill = EnumTypeSkill.Hard;
-          registro = string.Format("Erro;{0};{1};{2}", item["nome"].ToString().ToUpper(), item["codigo"].ToString(), item["tipo"].ToString());
-          try
           {
-            viewSkill = infraService.IntegrationSkill(viewSkill);
-            registro = string.Format("Ok;{0};{1};{2};{3}", item["nome"].ToString().ToUpper(), item["codigo"].ToString(), item["tipo"].ToString(), viewSkill._id);
+            SqlConnectionTool cnn = new SqlConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2], txtCnxStr.Text.Split(';')[3]);
+            skills = cnn.ExecuteQuery(txtCmdCom.Text);
+            cnn.Close();
           }
-          catch (Exception ex)
-          {
-            registro = string.Concat(registro, ";", ex.Message);
-          }
-          FileClass.SaveLog(string.Format("{0}/Skill.log", Program.PersonLogin.IdAccount), registro, EnumTypeLineOpportunityg.Register);
-          prb.Value = prb.Value + 1;
+          ViewCrudSkill viewSkill = null;
+          prb.Maximum = skills.Rows.Count;
+          prb.Value = 0;
+          lblPrc.Text = "Integração de Competências Comportamentais/Técnicas";
           Refresh();
-        }
-        lblPrc.Text = "Preparando mapa de cargos";
-        prb.Value = 0;
-        Refresh();
-        DataTable occupations;
-        if (CboTipBd.Text.Equals("Oracle"))
-        {
-          OracleConnectionTool cnn = new OracleConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2]);
-          occupations = cnn.ExecuteQuery(txtCmdCar.Text);
-          cnn.Close();
-        }
-        else
-        {
-          SqlConnectionTool cnn = new SqlConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2], txtCnxStr.Text.Split(';')[3]);
-          occupations = cnn.ExecuteQuery(txtCmdCar.Text);
-          cnn.Close();
-        }
-        lblPrc.Text = "Importando mapa de cargos";
-        prb.Maximum = occupations.Rows.Count;
-        Refresh();
-        ViewIntegrationProfileOccupation viewProfile = new ViewIntegrationProfileOccupation();
-        string nomeCargo = string.Empty;
-        string cargo = string.Empty;
-        foreach (DataRow item in occupations.Rows)
-        {
-          if (!nomeCargo.Equals(item["nome_cargo"].ToString().ToUpper()))
+          registro = string.Empty;
+          foreach (DataRow item in skills.Rows)
           {
-            if (!string.IsNullOrEmpty(nomeCargo))
+            viewSkill = new ViewCrudSkill
             {
-              // Call post
-              try
-              {
-                viewProfile = infraService.IntegrationProfile(viewProfile);
-                registro = string.Format("Ok;{0};{1}", nomeCargo, cargo, viewProfile._id);
-              }
-              catch (Exception ex)
-              {
-                registro = string.Format("Erro;{0};{1}", nomeCargo, cargo, ex.Message);
-              }
-              FileClass.SaveLog(string.Format("{0}/Cargo.log", Program.PersonLogin.IdAccount), registro, EnumTypeLineOpportunityg.Register);
-            }
-            nomeCargo = item["nome_cargo"].ToString().ToUpper();
-            cargo = item["cargo"].ToString();
-            viewProfile = new ViewIntegrationProfileOccupation
-            {
-              Name = item["nome_cargo"].ToString(),
-              NameGroup = item["nome_grupo_cargo"].ToString(),
-              Activities = new List<string>(),
-              IdProcessLevelTwo = lblIdSubProc.Text,
-              Schooling = new List<string>(),
-              SchoolingComplement = new List<string>(),
-              Skills = new List<string>(),
-              SpecificRequirements = string.Empty,
-              IdCompany = lblIdCompany.Text
+              Name = item["nome"].ToString().Trim().ToUpper(),
+              Concept = item["conceito"].ToString().Trim()
             };
+            if (item["tipo"].ToString().Equals("Soft"))
+              viewSkill.TypeSkill = EnumTypeSkill.Soft;
+            else
+              viewSkill.TypeSkill = EnumTypeSkill.Hard;
+            registro = string.Format("Erro;{0};{1};{2}", item["nome"].ToString().ToUpper(), item["codigo"].ToString(), item["tipo"].ToString());
+            try
+            {
+              viewSkill = infraService.IntegrationSkill(viewSkill);
+              registro = string.Format("Ok;{0};{1};{2};{3}", item["nome"].ToString().ToUpper(), item["codigo"].ToString(), item["tipo"].ToString(), viewSkill._id);
+            }
+            catch (Exception ex)
+            {
+              registro = string.Concat(registro, ";", ex.Message);
+            }
+            FileClass.SaveLog(string.Format("{0}/Skill.log", Program.PersonLogin.IdAccount), registro, EnumTypeLineOpportunityg.Register);
+            prb.Value = prb.Value + 1;
+            Refresh();
           }
-          switch (short.Parse(item["tipo"].ToString()))
-          {
-            case 0: // responsabilidades
-              viewProfile.Activities.Add(item["conteudo"].ToString());
-              break;
-            case 1: // comportamental
-              viewProfile.Skills.Add(item["nome_compor"].ToString().ToUpper());
-              break;
-            case 2: // tecnica
-              viewProfile.Skills.Add(item["nome_tecnica"].ToString().ToUpper());
-              break;
-            case 3: // escolaridade
-              viewProfile.Schooling.Add(item["nome_escolaridade"].ToString().Trim().ToUpper());
-              viewProfile.SchoolingComplement.Add(item["escolacompl"].ToString().Trim());
-              break;
-            default:
-              break;
-          }
-          prb.Value++;
-          Refresh();
         }
-        if (!string.IsNullOrEmpty(nomeCargo))
+        if (!string.IsNullOrEmpty(txtCmdCar.Text))
         {
-          // Call post
-          try
+          lblPrc.Text = "Preparando mapa de cargos";
+          prb.Value = 0;
+          Refresh();
+          DataTable occupations;
+          if (CboTipBd.Text.Equals("Oracle"))
           {
-            viewProfile = infraService.IntegrationProfile(viewProfile);
-            registro = string.Format("Ok;{0};{1}", nomeCargo, cargo, viewProfile._id);
+            OracleConnectionTool cnn = new OracleConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2]);
+            occupations = cnn.ExecuteQuery(txtCmdCar.Text);
+            cnn.Close();
           }
-          catch (Exception ex)
+          else
           {
-            registro = string.Format("Erro;{0};{1}", nomeCargo, cargo, ex.Message);
+            SqlConnectionTool cnn = new SqlConnectionTool(txtCnxStr.Text.Split(';')[0], txtCnxStr.Text.Split(';')[1], txtCnxStr.Text.Split(';')[2], txtCnxStr.Text.Split(';')[3]);
+            occupations = cnn.ExecuteQuery(txtCmdCar.Text);
+            cnn.Close();
           }
-          FileClass.SaveLog(string.Format("{0}/Cargo.log", Program.PersonLogin.IdAccount), registro, EnumTypeLineOpportunityg.Register);
+          lblPrc.Text = "Importando mapa de cargos";
+          prb.Maximum = occupations.Rows.Count;
+          Refresh();
+          ViewIntegrationProfileOccupation viewProfile = new ViewIntegrationProfileOccupation();
+          string nomeCargo = string.Empty;
+          string cargo = string.Empty;
+          foreach (DataRow item in occupations.Rows)
+          {
+            if (!nomeCargo.Equals(item["nome_cargo"].ToString().ToUpper()))
+            {
+              if (!string.IsNullOrEmpty(nomeCargo))
+              {
+                // Call post
+                try
+                {
+                  viewProfile = infraService.IntegrationProfile(viewProfile);
+                  registro = string.Format("Ok;{0};{1}", nomeCargo, cargo, viewProfile._id);
+                }
+                catch (Exception ex)
+                {
+                  registro = string.Format("Erro;{0};{1}", nomeCargo, cargo, ex.Message);
+                }
+                FileClass.SaveLog(string.Format("{0}/Cargo.log", Program.PersonLogin.IdAccount), registro, EnumTypeLineOpportunityg.Register);
+              }
+              nomeCargo = item["nome_cargo"].ToString().ToUpper();
+              cargo = item["cargo"].ToString();
+              viewProfile = new ViewIntegrationProfileOccupation
+              {
+                Name = item["nome_cargo"].ToString().Trim(),
+                NameGroup = item["nome_grupo_cargo"].ToString().Trim(),
+                Activities = new List<string>(),
+                IdProcessLevelTwo = lblIdSubProc.Text,
+                Schooling = new List<string>(),
+                SchoolingComplement = new List<string>(),
+                Skills = new List<string>(),
+                SpecificRequirements = string.Empty,
+                IdCompany = lblIdCompany.Text
+              };
+            }
+            switch (short.Parse(item["tipo"].ToString()))
+            {
+              case 0: // responsabilidades
+                viewProfile.Activities.Add(item["conteudo"].ToString());
+                break;
+              case 1: // comportamental
+                viewProfile.Skills.Add(item["nome_compor"].ToString().ToUpper());
+                break;
+              case 2: // tecnica
+                viewProfile.Skills.Add(item["nome_tecnica"].ToString().ToUpper());
+                break;
+              case 3: // escolaridade
+                viewProfile.Schooling.Add(item["nome_escolaridade"].ToString().Trim().ToUpper());
+                viewProfile.SchoolingComplement.Add(item["escolacompl"].ToString().Trim());
+                break;
+              default:
+                break;
+            }
+            prb.Value++;
+            Refresh();
+          }
+          if (!string.IsNullOrEmpty(nomeCargo))
+          {
+            // Call post
+            try
+            {
+              viewProfile = infraService.IntegrationProfile(viewProfile);
+              registro = string.Format("Ok;{0};{1}", nomeCargo, cargo, viewProfile._id);
+            }
+            catch (Exception ex)
+            {
+              registro = string.Format("Erro;{0};{1}", nomeCargo, cargo, ex.Message);
+            }
+            FileClass.SaveLog(string.Format("{0}/Cargo.log", Program.PersonLogin.IdAccount), registro, EnumTypeLineOpportunityg.Register);
+          }
         }
         prb.Value = 0;
         Refresh();
