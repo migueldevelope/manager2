@@ -256,15 +256,7 @@ namespace Manager.Services.Specific
         List<string> filtermanager = null;
         if (managers.Count > 0)
           filtermanager = managers.Select(p => p._id).ToList();
-
-        //setupDate
-        var parametersetup = serviceParameter.GetNewVersion(p => p.Key == "setupDate").Result;
-        var setupDate = DateTime.Now;
-        if (parametersetup != null)
-        {
-          setupDate = DateTime.Parse(parametersetup.Content);
-        }
-
+        
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
@@ -2785,7 +2777,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //setupDate
         var list = new List<ViewListScheduleManager>();
         var manager = servicePerson.GetAllNewVersion(p => (p.TypeUser == EnumTypeUser.ManagerHR ||
         p.TypeUser == EnumTypeUser.Manager) && p.StatusUser != EnumStatusUser.Disabled).Result.OrderBy(p => p.Manager?.Name).ToList();
