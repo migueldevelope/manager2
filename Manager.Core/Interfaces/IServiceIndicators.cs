@@ -74,5 +74,6 @@ namespace Manager.Core.Interfaces
     List<ViewListPending> CheckpointLateMap(List<_ViewList> managers);
     IEnumerable<ViewChartRecommendation> ChartRecommendationPersonsMap(ViewFilterManagerAndDate filters, int count, int page, ref long total, string filter);
     void UpdateStatusPlanMonitoring();
+    List<ViewListScheduleManager> ListScheduleManager(ViewFilterDate date);
   }
 }
