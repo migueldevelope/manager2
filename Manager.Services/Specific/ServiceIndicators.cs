@@ -256,15 +256,7 @@ namespace Manager.Services.Specific
         List<string> filtermanager = null;
         if (managers.Count > 0)
           filtermanager = managers.Select(p => p._id).ToList();
-
-        //setupDate
-        var parametersetup = serviceParameter.GetNewVersion(p => p.Key == "setupDate").Result;
-        var setupDate = DateTime.Now;
-        if (parametersetup != null)
-        {
-          setupDate = DateTime.Parse(parametersetup.Content);
-        }
-
+        
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
@@ -2785,7 +2777,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //setupDate
         var list = new List<ViewListScheduleManager>();
         var manager = servicePerson.GetAllNewVersion(p => (p.TypeUser == EnumTypeUser.ManagerHR ||
         p.TypeUser == EnumTypeUser.Manager) && p.StatusUser != EnumStatusUser.Disabled).Result.OrderBy(p => p.Manager?.Name).ToList();
@@ -2795,29 +2786,31 @@ namespace Manager.Services.Specific
           var team = servicePerson.GetAllNewVersion(p => p.Manager._id == item._id
             && p.StatusUser != EnumStatusUser.Disabled).Result.OrderBy(p => p.Manager?.Name).ToList();
 
+          var persons = team.Select(p => p._id).ToList();
+          
           var view = new ViewListScheduleManager();
           view.Manager = item.User?.Name;
           view.QtdTeam = team.Count();
           view.Occupation = item.Occupation?.Name;
           view.Establishment = item.Establishment?.Name;
 
-          view.QtdOnboarding = serviceOnboarding.CountNewVersion(p => p.Person._idManager == item._id
+          view.QtdOnboarding = serviceOnboarding.GetAllNewVersion(p => persons.Contains(p.Person._id)
           && p.StatusOnBoarding == EnumStatusOnBoarding.End
-          && p.Person.TypeJourney == EnumTypeJourney.OnBoarding
-          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+          && p.Person.TypeJourney != EnumTypeJourney.OnBoardingOccupation
+          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count();
 
-          view.QtdOnboardingOccupation = serviceOnboarding.CountNewVersion(p => p.Person._idManager == item._id
-          && p.StatusOnBoarding == EnumStatusOnBoarding.End 
+          view.QtdOnboardingOccupation = serviceOnboarding.GetAllNewVersion(p => persons.Contains(p.Person._id)
+          && p.StatusOnBoarding == EnumStatusOnBoarding.End
           && p.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation
-          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count();
 
-          view.QtdCheckpoint = serviceCheckpoint.CountNewVersion(p => p.Person._idManager == item._id
+          view.QtdCheckpoint = serviceCheckpoint.GetAllNewVersion(p => persons.Contains(p.Person._id)
           && p.StatusCheckpoint == EnumStatusCheckpoint.End
-          && p.DateEnd >= date.Begin && p.DateEnd <= date.End).Result;
+          && p.DateEnd >= date.Begin && p.DateEnd <= date.End).Result.Count();
 
-          view.QtdMonitoring = serviceMonitoring.CountNewVersion(p => p.Person._idManager == item._id
+          view.QtdMonitoring = serviceMonitoring.GetAllNewVersion(p => persons.Contains(p.Person._id)
           && p.StatusMonitoring == EnumStatusMonitoring.End
-          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result;
+          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count();
 
           list.Add(view);
         }
