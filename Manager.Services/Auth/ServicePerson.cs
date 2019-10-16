@@ -939,7 +939,8 @@ namespace Manager.Services.Auth
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
               _idPerson = item._id,
-              StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
+              StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
+              Photo = item.User?.PhotoUrl
             };
             if (onboarding != null)
             {
@@ -956,7 +957,8 @@ namespace Manager.Services.Auth
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
               idPerson = item._id,
-              StatusMonitoring = EnumStatusMonitoring.Open
+              StatusMonitoring = EnumStatusMonitoring.Open,
+              Photo = item.User?.PhotoUrl
             };
             if (monitoring != null)
             {
@@ -973,7 +975,8 @@ namespace Manager.Services.Auth
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
               _idPerson = item._id,
-              StatusCheckpoint = EnumStatusCheckpoint.Open
+              StatusCheckpoint = EnumStatusCheckpoint.Open,
+              Photo = item.User?.PhotoUrl
             };
             if (checkpoint != null)
             {
