@@ -661,7 +661,7 @@ namespace Manager.Services.Auth
       try
       {
         Person person = servicePerson.GetNewVersion(p => p._id == id).Result;
-        return new ViewCrudPerson()
+        var view = new ViewCrudPerson()
         {
           _id = person._id,
           Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
@@ -691,6 +691,10 @@ namespace Manager.Services.Auth
           },
           User = person.User
         };
+        if (view.User != null)
+          view.User.PhotoUrl = serviceUser.GetNewVersion(p => p._id == view.User._id).Result.PhotoUrl;
+
+        return view;
       }
       catch (Exception e)
       {
