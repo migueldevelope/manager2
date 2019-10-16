@@ -11,5 +11,6 @@ namespace Manager.Views.BusinessList
     public EnumStatusMonitoring StatusMonitoring { get; set; }
     public string OccupationName { get; set; }
     public DateTime? DateEndEnd { get; set; }
+    public string Photo { get; set; }
   }
 }

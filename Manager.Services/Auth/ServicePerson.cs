@@ -661,7 +661,7 @@ namespace Manager.Services.Auth
       try
       {
         Person person = servicePerson.GetNewVersion(p => p._id == id).Result;
-        return new ViewCrudPerson()
+        var view = new ViewCrudPerson()
         {
           _id = person._id,
           Company = new ViewListCompany() { _id = person.Company._id, Name = person.Company.Name },
@@ -691,6 +691,10 @@ namespace Manager.Services.Auth
           },
           User = person.User
         };
+        if (view.User != null)
+          view.User.PhotoUrl = serviceUser.GetNewVersion(p => p._id == view.User._id).Result.PhotoUrl;
+
+        return view;
       }
       catch (Exception e)
       {
@@ -935,7 +939,8 @@ namespace Manager.Services.Auth
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
               _idPerson = item._id,
-              StatusOnBoarding = EnumStatusOnBoarding.WaitBegin
+              StatusOnBoarding = EnumStatusOnBoarding.WaitBegin,
+              Photo = item.User?.PhotoUrl
             };
             if (onboarding != null)
             {
@@ -952,7 +957,8 @@ namespace Manager.Services.Auth
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
               idPerson = item._id,
-              StatusMonitoring = EnumStatusMonitoring.Open
+              StatusMonitoring = EnumStatusMonitoring.Open,
+              Photo = item.User?.PhotoUrl
             };
             if (monitoring != null)
             {
@@ -969,7 +975,8 @@ namespace Manager.Services.Auth
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
               _idPerson = item._id,
-              StatusCheckpoint = EnumStatusCheckpoint.Open
+              StatusCheckpoint = EnumStatusCheckpoint.Open,
+              Photo = item.User?.PhotoUrl
             };
             if (checkpoint != null)
             {

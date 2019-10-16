@@ -237,9 +237,14 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var person = serviceUser.GetNewVersion(p => p._id == idUser).Result;
-        person.PhotoUrl = url;
-        serviceUser.Update(person, null).Wait();
+        var user = serviceUser.GetNewVersion(p => p._id == idUser).Result;
+        user.PhotoUrl = url;
+        serviceUser.Update(user, null).Wait();
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.User._id == user._id).Result)
+        {
+          item.User.PhotoUrl = url;
+          var i = servicePerson.Update(item, null);
+        }
       }
       catch (Exception e)
       {

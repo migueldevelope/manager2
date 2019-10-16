@@ -8,5 +8,6 @@ namespace Manager.Views.BusinessList
     public string OccupationName { get; set; }
     public EnumStatusCheckpoint StatusCheckpoint { get; set; }
     public EnumCheckpoint TypeCheckpoint { get; set; }
+    public string Photo { get; set; }
   }
 }

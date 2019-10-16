@@ -9,5 +9,6 @@ namespace Manager.Views.BusinessList
     public string OccupationName { get; set; }
     public EnumStatusOnBoarding StatusOnBoarding { get; set; }
     public DateTime? DateEndEnd { get; set; }
+    public string Photo { get; set; }
   }
 }
