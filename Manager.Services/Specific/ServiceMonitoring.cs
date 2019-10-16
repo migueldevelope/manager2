@@ -573,7 +573,14 @@ namespace Manager.Services.Specific
               });
             else
               if (monitoring.StatusMonitoring != EnumStatusMonitoring.End)
-              detail.Add(monitoring);
+              detail.Add(new
+              {
+                Person = monitoring.Person,
+                StatusMonitoring = monitoring.StatusMonitoring,
+                Photo = item.User?.PhotoUrl,
+                _id = monitoring._id,
+                DateEndEnd = monitoring.DateEndEnd
+              });
           }
         }
         total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
