@@ -44,6 +44,20 @@ namespace IntegrationService.Api
         throw;
       }
     }
+    public ViewIntegrationColaborador PutPersonDemission(ViewIntegrationColaborador view)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
+        content.Headers.ContentType.MediaType = "application/json";
+        var result = clientSkill.PutAsync("person/demission", content).Result;
+        return JsonConvert.DeserializeObject<ViewIntegrationColaborador>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
     public void GetStatusIntegration()
     {

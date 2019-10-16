@@ -28,7 +28,7 @@ namespace IntegrationService.Service
     //    private ViewIntegrationParameter Param;
     private ConfigurationService service;
     private PersonIntegration personIntegration;
-    private readonly string LogFileName;
+    private string LogFileName;
     private readonly Version VersionProgram;
     private bool hasLogFile;
     public string testresult;
@@ -147,6 +147,61 @@ namespace IntegrationService.Service
         throw;
       }
     }
+    public void Execute(DateTime initial, DateTime final)
+    {
+      try
+      {
+        switch (service.Param.Process)
+        {
+          case EnumIntegrationProcess.Manual:
+            switch (service.Param.Mode)
+            {
+              case EnumIntegrationMode.ApplicationInterface:
+                CallApiMode(initial, final);
+                break;
+              default:
+                throw new Exception("Apenas chamadas a APIs");
+            }
+            break;
+          case EnumIntegrationProcess.System:
+            switch (service.Param.Mode)
+            {
+              case EnumIntegrationMode.ApplicationInterface:
+                CallApiMode(initial,final);
+                break;
+              default:
+                throw new Exception("Apenas chamadas a APIs");
+            }
+            break;
+          case EnumIntegrationProcess.Executable:
+            break;
+          default:
+            break;
+        }
+        LogFileName = string.Format("{0}/integration/Demissao_{1}.log", Person.IdAccount, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+        Demission();
+        service.Param.CriticalError = string.Empty;
+        service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        service.Param.StatusExecution = "Ok";
+        service.Param.CustomVersionExecution = string.Empty;
+        service.Param.UploadNextLog = false;
+        service.Param.ProgramVersionExecution = VersionProgram.ToString();
+        service.SetParameter(service.Param);
+      }
+      catch (Exception ex)
+      {
+        if (string.IsNullOrEmpty(Message))
+          Message = ex.Message;
+        service.Param.CriticalError = Message;
+        service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        service.Param.StatusExecution = "Critical Error";
+        service.Param.CustomVersionExecution = string.Empty;
+        service.Param.UploadNextLog = false;
+        service.Param.ProgramVersionExecution = VersionProgram.ToString();
+        service.SetParameter(service.Param);
+        throw;
+      }
+    }
     #endregion
 
     #region Api Region
@@ -169,7 +224,25 @@ namespace IntegrationService.Service
         throw e;
       }
     }
-
+    private void CallApiMode(DateTime initial, DateTime final)
+    {
+      try
+      {
+        if (service.Param.ApiIdentification == "UNIMEDNERS")
+        {
+          ApiUnimedNers(initial, final);
+        }
+        else
+        {
+          Message = "Identificação da API inválida";
+          throw new Exception(Message);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     private void ApiUnimedNers()
     {
       try
@@ -178,8 +251,24 @@ namespace IntegrationService.Service
 
         List<ViewIntegrationUnimedNers> colaboradoresUnimed = unimedNers.GetUnimedEmployee();
 
-
-
+        Colaboradores = new List<ColaboradorImportar>();
+        // Carregar Lista de Colaboradores
+        foreach (ViewIntegrationUnimedNers colaboradoreUnimed in colaboradoresUnimed)
+        {
+          Colaboradores.Add(new ColaboradorImportar(colaboradoreUnimed, new EnumLayoutSystemCompleteV1()));
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private void ApiUnimedNers(DateTime initial, DateTime final)
+    {
+      try
+      {
+        ApiUnimedNers unimedNers = new ApiUnimedNers();
+        List<ViewIntegrationUnimedNers> colaboradoresUnimed = unimedNers.GetUnimedEmployee(initial, final);
         Colaboradores = new List<ColaboradorImportar>();
         // Carregar Lista de Colaboradores
         foreach (ViewIntegrationUnimedNers colaboradoreUnimed in colaboradoresUnimed)
@@ -751,6 +840,44 @@ namespace IntegrationService.Service
           }
         }
         SaveLists();
+        Status = EnumStatusService.Ok;
+        Message = "Fim de integração!";
+        if (hasLogFile)
+        {
+          Message = "Fim de integração com LOG!";
+          Status = EnumStatusService.Error;
+        }
+      }
+      catch (Exception)
+      {
+        Status = EnumStatusService.CriticalError;
+        throw;
+      }
+    }
+    private void Demission()
+    {
+      try
+      {
+        ViewIntegrationColaborador viewColaborador;
+        foreach (var colaborador in Colaboradores)
+        {
+          viewColaborador = new ViewIntegrationColaborador()
+          {
+            Colaborador = colaborador,
+            Message = string.Empty
+          };
+          viewColaborador = personIntegration.PutPersonDemission(viewColaborador);
+          if (viewColaborador.Situacao == EnumColaboradorSituacao.Atualized)
+          {
+            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, viewColaborador.Message), EnumTypeLineOpportunityg.Information);
+          }
+          else
+          {
+            FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, string.Format("Pessoa não demitida. {0}", viewColaborador.Message)), EnumTypeLineOpportunityg.Warning);
+            hasLogFile = true;
+          }
+          break;
+        }
         Status = EnumStatusService.Ok;
         Message = "Fim de integração!";
         if (hasLogFile)

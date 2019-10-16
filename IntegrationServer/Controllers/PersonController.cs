@@ -295,6 +295,60 @@ namespace IntegrationServer.InfraController
       }
       return view;
     }
+
+    /// <summary>
+    /// Integração de funcionário
+    /// </summary>
+    /// <param name="view">Objeto de integração do colaborador</param>
+    /// <returns>Objeto do colaborador atualizado</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("demission")]
+    public ViewIntegrationColaborador PutPersonDemission([FromBody]ViewIntegrationColaborador view)
+    {
+      try
+      {
+        view.Situacao = EnumColaboradorSituacao.ServerError;
+        IntegrationCompany company = service.GetIntegrationCompany(view.Colaborador.ChaveEmpresa, view.Colaborador.NomeEmpresa);
+
+        IntegrationEstablishment establishment = null;
+        if (!company.IdCompany.Equals("000000000000000000000000"))
+          establishment = service.GetIntegrationEstablishment(view.Colaborador.ChaveEstabelecimento, view.Colaborador.NomeEstabelecimento, company.IdCompany);
+
+        if (company.IdCompany.Equals("000000000000000000000000"))
+        {
+          view.Message = "Falta integração da empresa!";
+          return view;
+        }
+        if (establishment.IdEstablishment.Equals("000000000000000000000000"))
+        {
+          view.Message = "Falta integração do estabelecimento!";
+          return view;
+        }
+        if (view.Colaborador.DataDemissao == null)
+          view.Colaborador.DataDemissao = DateTime.Now.Date;
+        if (view.Colaborador.DataDemissao != null)
+          view.Colaborador.DataDemissao = ((DateTime)view.Colaborador.DataDemissao).ToUniversalTime();
+
+        // Verificar se a person já existe
+        ViewCrudPerson viewPerson = service.GetPersonByKey(company.IdCompany, establishment.IdEstablishment, view.Colaborador.Documento, view.Colaborador.Matricula);
+        if (viewPerson != null)
+        {
+          viewPerson.DateResignation = view.Colaborador.DataDemissao;
+          viewPerson.StatusUser = EnumStatusUser.Disabled;
+          servicePerson.Update(viewPerson);
+          view.IdPerson = viewPerson._id;
+          view.Message = "Person demission!";
+        }
+        view.Situacao = EnumColaboradorSituacao.Atualized;
+      }
+      catch (Exception e)
+      {
+        view.Message = e.Message;
+        view.Situacao = EnumColaboradorSituacao.ServerError;
+      }
+      return view;
+    }
     #endregion
 
     #region Colaborador V2

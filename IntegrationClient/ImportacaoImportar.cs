@@ -43,5 +43,23 @@ namespace IntegrationClient
         MessageBox.Show(ex.Message, Text,MessageBoxButtons.OK,MessageBoxIcon.Error);
       }
     }
+
+    private void BtDem_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        import.Execute(DateTime.Parse(txtDatIni.Text).Date, DateTime.Parse(txtDatFin.Text).Date);
+        if (import.Status == EnumStatusService.Error)
+          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        else
+          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+
+    }
   }
 }

@@ -255,16 +255,22 @@ namespace IntegrationService.Data
         NomeGrauInstrucao = FormatedField(view.nom_grau_instrucao);
         SalarioNominal = view.val_salario_atual;
         DataUltimoReajuste = dataUltimoReajuste;
-        EmpresaGestor = FormatedFieldKey(view.cdn_empresa_chefe);
-        NomeEmpresaGestor = FormatedField(view.nom_empresa_chefe);
-        EstabelecimentoGestor = FormatedFieldKey(view.cdn_estab_chefe);
-        NomeEstabelecimentoGestor = FormatedField(view.nom_estab_chefe);
-        DocumentoGestor = view.cdn_cpf_chefe.Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
-        if (!string.IsNullOrEmpty(DocumentoGestor))
-          DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        //EmpresaGestor = FormatedFieldKey(view.cdn_empresa_chefe);
+        //NomeEmpresaGestor = FormatedField(view.nom_empresa_chefe);
+        //EstabelecimentoGestor = FormatedFieldKey(view.cdn_estab_chefe);
+        //NomeEstabelecimentoGestor = FormatedField(view.nom_estab_chefe);
+        //DocumentoGestor = view.cdn_cpf_chefe.Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
+        //if (!string.IsNullOrEmpty(DocumentoGestor))
+        //  DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        //MatriculaGestor = string.Empty;
+        //if (view.cdn_matricula_chefe != 0)
+        //  MatriculaGestor = view.cdn_matricula_chefe.ToString();
+        EmpresaGestor = string.Empty;
+        NomeEmpresaGestor = string.Empty;
+        EstabelecimentoGestor = string.Empty;
+        NomeEstabelecimentoGestor = string.Empty;
+        DocumentoGestor = string.Empty;
         MatriculaGestor = string.Empty;
-        if (view.cdn_matricula_chefe != 0)
-          MatriculaGestor = view.cdn_matricula_chefe.ToString();
         Apelido = view.cod_usuario_ad;
         ValidDataColaborator();
       }
