@@ -558,43 +558,45 @@ namespace Manager.Services.Specific
         List<Person> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
             && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "User.Name").Result.ToList();
 
-        List<dynamic> detail = new List<dynamic>();
+        List<ViewListMonitoring> detail = new List<ViewListMonitoring>();
         if (serviceMonitoring.Exists("Monitoring"))
         {
           foreach (Person item in list)
           {
             Monitoring monitoring = serviceMonitoring.GetNewVersion(x => x.Person._id == item._id && x.StatusMonitoring != EnumStatusMonitoring.End).Result;
             if (monitoring == null)
-              detail.Add(new 
+            {
+              var view = new ViewListMonitoring()
               {
-                Person = item.GetViewListPersonInfo(),
+                idPerson = item._id,
+                Name = item.User?.Name,
+                OccupationName = item.Occupation?.Name,
                 StatusMonitoring = EnumStatusMonitoring.Open,
                 Photo = item.User?.PhotoUrl
-              });
+              };
+              detail.Add(view);
+            }
+
             else
-              if (monitoring.StatusMonitoring != EnumStatusMonitoring.End)
-              detail.Add(new
+             if (monitoring.StatusMonitoring != EnumStatusMonitoring.End)
+            {
+              var view = new ViewListMonitoring()
               {
-                Person = monitoring.Person,
+                idPerson = monitoring.Person._id,
+                Name = monitoring.Person.Name,
+                OccupationName = monitoring.Person.Occupation,
                 StatusMonitoring = monitoring.StatusMonitoring,
                 Photo = item.User?.PhotoUrl,
                 _id = monitoring._id,
                 DateEndEnd = monitoring.DateEndEnd
-              });
+              };
+              detail.Add(view);
+            }
           }
         }
         total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
             && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail.Select(p => new ViewListMonitoring()
-        {
-          _id = p._id,
-          Name = p.Person.Name,
-          idPerson = p.Person._id,
-          StatusMonitoring = p.StatusMonitoring,
-          DateEndEnd = p.DateEndEnd,
-          OccupationName = p.Person.Occupation,
-          Photo = p.Photo
-        }).ToList();
+        return detail;
       }
       catch (Exception e)
       {
@@ -1674,7 +1676,7 @@ namespace Manager.Services.Specific
         monitoring.Activities = new List<MonitoringActivities>();
         foreach (var item in occupation.Activities)
         {
-          monitoring.Activities.Add(new MonitoringActivities() { TypeAtivitie  = EnumTypeAtivitie.Occupation, Activities = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
+          monitoring.Activities.Add(new MonitoringActivities() { TypeAtivitie = EnumTypeAtivitie.Occupation, Activities = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
         }
 
         foreach (var item in group.Scope)
