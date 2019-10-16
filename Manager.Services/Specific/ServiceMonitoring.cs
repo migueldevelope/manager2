@@ -558,18 +558,18 @@ namespace Manager.Services.Specific
         List<Person> list = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idmanager && p.Occupation != null && p.TypeJourney == EnumTypeJourney.Monitoring
             && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "User.Name").Result.ToList();
 
-        List<Monitoring> detail = new List<Monitoring>();
+        List<dynamic> detail = new List<dynamic>();
         if (serviceMonitoring.Exists("Monitoring"))
         {
           foreach (Person item in list)
           {
             Monitoring monitoring = serviceMonitoring.GetNewVersion(x => x.Person._id == item._id && x.StatusMonitoring != EnumStatusMonitoring.End).Result;
             if (monitoring == null)
-              detail.Add(new Monitoring
+              detail.Add(new 
               {
                 Person = item.GetViewListPersonInfo(),
-                _id = null,
-                StatusMonitoring = EnumStatusMonitoring.Open
+                StatusMonitoring = EnumStatusMonitoring.Open,
+                Photo = item.User?.PhotoUrl
               });
             else
               if (monitoring.StatusMonitoring != EnumStatusMonitoring.End)
@@ -586,7 +586,7 @@ namespace Manager.Services.Specific
           StatusMonitoring = p.StatusMonitoring,
           DateEndEnd = p.DateEndEnd,
           OccupationName = p.Person.Occupation,
-
+          Photo = p.Photo
         }).ToList();
       }
       catch (Exception e)

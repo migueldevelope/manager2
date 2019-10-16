@@ -110,7 +110,8 @@ namespace Manager.Services.Specific
                                           Name = p.User.Name,
                                           OccupationName = p.Occupation.Name,
                                           StatusCheckpoint = EnumStatusCheckpoint.Open,
-                                          TypeCheckpoint = EnumCheckpoint.None
+                                          TypeCheckpoint = EnumCheckpoint.None,
+                                          Photo = p.User?.PhotoUrl
                                         }).ToList();
         List<ViewListCheckpoint> detail = new List<ViewListCheckpoint>();
         if (serviceCheckpoint.Exists("Checkpoint"))
