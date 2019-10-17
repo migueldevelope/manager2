@@ -36,5 +36,6 @@ namespace Manager.Core.Business
         Content = Content
       };
     }
+    public bool Read { get; set; }
   }
 }

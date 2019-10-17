@@ -183,6 +183,18 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// Read
+    /// </summary>
+    /// <param name="idrecommendationperson"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [Route("readrecommendationperson/{idrecommendationperson}")]
+    public async Task<IActionResult> ReadRecommendationPerson(string idrecommendationperson)
+    {
+      return await Task.Run(() => Ok(service.ReadRecommendationPerson(idrecommendationperson)));
+    }
+
+    /// <summary>
     /// Listar pessoa 
     /// </summary>
     /// <param name="count">Quantidade de registros</param>

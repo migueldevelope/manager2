@@ -202,6 +202,21 @@ namespace Manager.Services.Specific
     #endregion
 
     #region RecommendationPerson
+    public string ReadRecommendationPerson(string idrecommendation)
+    {
+      try
+      {
+        var recommendation = serviceRecommendationPerson.GetNewVersion(p => p._id == idrecommendation).Result;
+        recommendation.Read = true;
+        var i = serviceRecommendationPerson.Update(recommendation, null);
+        return "read";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string NewRecommendationPerson(ViewCrudRecommendationPerson view)
     {
       try
@@ -232,7 +247,8 @@ namespace Manager.Services.Specific
             Person = view.Person,
             Comments = view.Comments,
             _idColleague = _user._idUser,
-            Date = DateTime.Now
+            Date = DateTime.Now,
+            Read = false
           }).Result;
 
         Task.Run(() => Mail(person, view.Recommendation.Name));
@@ -259,7 +275,8 @@ namespace Manager.Services.Specific
             NamePerson = p.Person.Name,
             _idPerson = p.Person._id,
             NameRecommendation = p.Recommendation.Name,
-            _idRecommendation = p.Recommendation._id
+            _idRecommendation = p.Recommendation._id,
+            Read = p.Read
           }).ToList();
         total = serviceRecommendationPerson.CountNewVersion(p => p.Recommendation._id == idrecommendation && p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -281,7 +298,8 @@ namespace Manager.Services.Specific
             Image = p.Recommendation.Image,
             NameRecommendation = p.Recommendation.Name,
             Content = p.Content,
-            Comments = p.Comments
+            Comments = p.Comments,
+            Read = p.Read
           }).ToList();
         total = serviceRecommendationPerson.CountNewVersion(p => p.Person._id == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -304,7 +322,8 @@ namespace Manager.Services.Specific
             NamePerson = p.Person.Name,
             _idPerson = p.Person._id,
             NameRecommendation = p.Recommendation.Name,
-            _idRecommendation = p.Recommendation._id
+            _idRecommendation = p.Recommendation._id,
+            Read = p.Read
           }).ToList();
         total = serviceRecommendationPerson.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -344,19 +363,19 @@ namespace Manager.Services.Specific
           var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Person._id == rows._id
           && p.Date >= filter.Date.Begin && p.Date <= filter.Date.End).Result;
 
-            foreach (var item in recommendations)
-            {
+          foreach (var item in recommendations)
+          {
             var colleague = servicePerson.GetFreeNewVersion(p => p.User._id == item._idColleague).Result;
-              if (filter.Persons.Where(p => p._id == item.Person._id).Count() > 0)
+            if (filter.Persons.Where(p => p._id == item.Person._id).Count() > 0)
 
-                result.Add(new ViewExportRecommendation
-                {
-                  Name = item.Person.Name,
-                  NameRecommendation = item.Recommendation.Name,
-                  Comments = item.Comments,
-                  NameColleague = colleague?.User.Name
-                });
-            }
+              result.Add(new ViewExportRecommendation
+              {
+                Name = item.Person.Name,
+                NameRecommendation = item.Recommendation.Name,
+                Comments = item.Comments,
+                NameColleague = colleague?.User.Name
+              });
+          }
         }
 
         return result;

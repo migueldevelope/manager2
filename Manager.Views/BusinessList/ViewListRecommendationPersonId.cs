@@ -10,5 +10,6 @@ namespace Manager.Views.BusinessList
     public string Content { get; set; }
     public string Image { get; set; }
     public string Comments { get; set; }
+    public bool Read { get; set; }
   }
 }

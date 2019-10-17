@@ -242,6 +242,13 @@
             <param name="view">Objeto de integração do colaborador</param>
             <returns>Objeto do colaborador atualizado</returns>
         </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.PutPersonDemission(Manager.Views.Integration.ViewIntegrationColaborador)">
+            <summary>
+            Integração de funcionário
+            </summary>
+            <param name="view">Objeto de integração do colaborador</param>
+            <returns>Objeto do colaborador atualizado</returns>
+        </member>
         <member name="M:IntegrationServer.InfraController.PersonController.V2Completo(Manager.Views.Integration.V2.ColaboradorV2Completo)">
             <summary>
             Integração com objeto único do colaborador versão 2

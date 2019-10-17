@@ -15,5 +15,6 @@ namespace Manager.Views.BusinessList
     public string _idPerson { get; set; }
     public string NamePerson { get; set; }
     public string Image { get; set; }
+    public bool Read { get; set; }
   }
 }
