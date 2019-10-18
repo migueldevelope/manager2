@@ -22,5 +22,8 @@ namespace Manager.Core.Views
     public string ViewLO { get; set; }
     public string GoalProcess { get; set; }
     public string MeritocracyProcess { get; set; }
+    public string ShowAutoManager { get; set; }
+    public string ShowSalaryScaleManager { get; set; }
+
   }
 }

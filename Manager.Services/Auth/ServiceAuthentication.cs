@@ -247,10 +247,14 @@ namespace Manager.Services.Auth
         var param1 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "viewlo").Result?.Content;
         var param2 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "goalProcess").Result?.Content;
         var param3 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result?.Content;
-
+        var param4 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showAutoManager").Result?.Content;
+        var param5 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showSalaryScaleManager").Result?.Content;
+        
         person.ViewLO = param1;
         person.GoalProcess = param2;
         person.MeritocracyProcess = param3;
+        person.ShowAutoManager = param4;
+        person.ShowSalaryScaleManager = param5;
 
         person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
         // Token
