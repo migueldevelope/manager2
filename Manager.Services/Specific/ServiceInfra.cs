@@ -1589,6 +1589,7 @@ namespace Manager.Services.Specific
             };
 
             occupation.Activities.Add(activitie.GetViewList());
+            order += 1;
           }
         }
 
