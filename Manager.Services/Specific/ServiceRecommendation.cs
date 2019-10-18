@@ -202,13 +202,17 @@ namespace Manager.Services.Specific
     #endregion
 
     #region RecommendationPerson
-    public string ReadRecommendationPerson(string idrecommendation)
+    public string ReadRecommendationPerson(string idperson)
     {
       try
       {
-        var recommendation = serviceRecommendationPerson.GetNewVersion(p => p._id == idrecommendation).Result;
-        recommendation.Read = true;
-        var i = serviceRecommendationPerson.Update(recommendation, null);
+        var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Person._id == idperson).Result;
+        foreach(var recommendation in recommendations)
+        {
+          recommendation.Read = true;
+          var i = serviceRecommendationPerson.Update(recommendation, null);
+        }
+
         return "read";
       }
       catch (Exception e)

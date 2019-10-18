@@ -24,6 +24,6 @@ namespace Manager.Core.Interfaces
     void SetImage(string idrecommendation, string url, string fileName, string attachmentid);
     List<ViewListPersonBase> ListPerson(ref long total, int count, int page, string filter);
     List<ViewExportRecommendation> ExportRecommendation(ViewFilterIdAndDate filter);
-    string ReadRecommendationPerson(string idrecommendation);
+    string ReadRecommendationPerson(string idperson);
   }
 }

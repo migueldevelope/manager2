@@ -185,13 +185,13 @@ namespace Manager.Controllers
     /// <summary>
     /// Read
     /// </summary>
-    /// <param name="idrecommendationperson"></param>
+    /// <param name="idperson"></param>
     /// <returns></returns>
     [HttpPut]
-    [Route("readrecommendationperson/{idrecommendationperson}")]
-    public async Task<IActionResult> ReadRecommendationPerson(string idrecommendationperson)
+    [Route("readrecommendationperson/{idperson}")]
+    public async Task<IActionResult> ReadRecommendationPerson(string idperson)
     {
-      return await Task.Run(() => Ok(service.ReadRecommendationPerson(idrecommendationperson)));
+      return await Task.Run(() => Ok(service.ReadRecommendationPerson(idperson)));
     }
 
     /// <summary>
