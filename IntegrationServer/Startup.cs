@@ -64,7 +64,7 @@ namespace IntegrationServer
       IServiceAudit serviceAudit = new ServiceAudit(_context);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
       IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceIntegration serviceIntegration = new ServiceIntegration(_context, _contextLog, _contextIntegration);
+      IServiceIntegration serviceIntegration = new ServiceIntegration(_context, _contextLog, _contextIntegration, serviceControlQueue, conn.SignalRService);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);

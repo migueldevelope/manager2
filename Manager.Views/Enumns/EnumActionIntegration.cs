@@ -2,6 +2,6 @@
 {
   public enum EnumActionIntegration : byte
   {
-    Admission = 0, Resignation = 1, Load = 2, Change = 3
+    Load = 0, Admission = 1, Change = 2, Demission = 3, Validation = 4
   }
 }

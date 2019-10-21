@@ -3,6 +3,7 @@ using Manager.Core.Business;
 using Manager.Core.Business.Integration;
 using Manager.Core.Interfaces;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -23,8 +24,8 @@ namespace Manager.Services.Specific
 {
   public class ServiceIntegration : Repository<Person>, IServiceIntegration
   {
-    private readonly ServiceGeneric<Person> personService;
-    private readonly ServiceGeneric<User> userService;
+    private readonly ServicePerson personService;
+    private readonly ServiceUser userService;
     private readonly ServiceGeneric<Schooling> schoolingService;
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceGeneric<Establishment> establishmentService;
@@ -47,12 +48,12 @@ namespace Manager.Services.Specific
     private ColaboradorV2Retorno resultV2;
 
     #region Constructor
-    public ServiceIntegration(DataContext context, DataContext contextLog, DataContext contextIntegration) : base(context)
+    public ServiceIntegration(DataContext context, DataContext contextLog, DataContext contextIntegration, IServiceControlQueue _seviceControlQueue, string _pathSignalr) : base(context)
     {
       try
       {
-        personService = new ServiceGeneric<Person>(context);
-        userService = new ServiceGeneric<User>(context);
+        personService = new ServicePerson(context, contextLog, _seviceControlQueue, _pathSignalr);
+        userService = new ServiceUser(context, contextLog);
         schoolingService = new ServiceGeneric<Schooling>(context);
         companyService = new ServiceGeneric<Company>(context);
         establishmentService = new ServiceGeneric<Establishment>(context);
@@ -78,8 +79,8 @@ namespace Manager.Services.Specific
     public void SetUser(IHttpContextAccessor contextAccessor)
     {
       User(contextAccessor);
-      personService._user = _user;
-      userService._user = _user;
+      personService.SetUser(_user);
+      userService.SetUser(_user);
       schoolingService._user = _user;
       companyService._user = _user;
       accountService._user = _user;
@@ -100,8 +101,8 @@ namespace Manager.Services.Specific
     public void SetUser(BaseUser user)
     {
       _user = user;
-      personService._user = user;
-      schoolingService._user = user;
+      personService.SetUser(user);
+      userService.SetUser(user);
       companyService._user = user;
       accountService._user = user;
       occupationService._user = user;
@@ -120,6 +121,168 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Commun Area
+    private PayrollEmployee UserUpdate(PayrollEmployee payrollEmployee)
+    {
+      try
+      {
+        IntegrationSchooling integrationSchooling = GetIntegrationSchooling(payrollEmployee.Schooling, payrollEmployee.SchoolingName);
+        Schooling schooling = schoolingService.GetNewVersion(p => p._id == integrationSchooling.IdSchooling).Result;
+        if (schooling == null)
+        {
+          payrollEmployee.Messages.Add("Falta integração de Escolaridade");
+          return payrollEmployee;
+        }
+        ViewCrudUser user = userService.GetNewVersion(p => p.Document == payrollEmployee.Document).Result?.GetViewCrud();
+        if (user == null)
+        {
+          user = new ViewCrudUser()
+          {
+            Name = payrollEmployee.Name,
+            Document = payrollEmployee.Document,
+            Mail = payrollEmployee.Mail,
+            Phone = payrollEmployee.CellNumber,
+            DateAdm = payrollEmployee.AdmissionDate,
+            DateBirth = payrollEmployee.BirthDate,
+            Schooling = schooling.GetViewList(),
+            PhoneFixed = null,
+            DocumentID = null,
+            DocumentCTPF = null,
+            Sex = payrollEmployee.Sex,
+            Nickname = payrollEmployee.Nickname,
+            Password = payrollEmployee.Document
+          };
+          user = userService.New(user);
+        }
+        else
+        {
+          user.Name = payrollEmployee.Name;
+          user.Document = payrollEmployee.Document;
+          user.Mail = payrollEmployee.Mail;
+          user.Phone = payrollEmployee.CellNumber;
+          user.DateAdm = payrollEmployee.AdmissionDate;
+          user.DateBirth = payrollEmployee.BirthDate;
+          user.Schooling = schooling.GetViewList();
+          user.PhoneFixed = null;
+          user.DocumentID = null;
+          user.DocumentCTPF = null;
+          user.Sex = payrollEmployee.Sex;
+          user.Nickname = payrollEmployee.Nickname;
+          user = userService.Update(user);
+        }
+        payrollEmployee.IdUser = user._id;
+        return payrollEmployee;
+      }
+      catch (Exception ex)
+      {
+        payrollEmployee.Messages.Add(ex.ToString());
+        return payrollEmployee;
+      }
+    }
+    private PayrollEmployee PersonUpdate(PayrollEmployee payrollEmployee)
+    {
+      try
+      {
+        IntegrationCompany integrationCompany = GetIntegrationCompany(payrollEmployee.Company, payrollEmployee.CompanyName);
+        Company company = companyService.GetNewVersion(p => p._id == integrationCompany.IdCompany).Result;
+        IntegrationEstablishment integrationEstablishment = null;
+        Establishment establishment = null;
+        IntegrationOccupation integrationOccupation = null;
+        Occupation occupation = null;
+        if (company == null)
+        {
+          payrollEmployee.Messages.Add("Falta integração da empresa");
+          payrollEmployee.Messages.Add("Falta integração de estabelecimento");
+          payrollEmployee.Messages.Add("Falta integração de cargo");
+        } else {
+          // Estabelecimento
+          integrationEstablishment = GetIntegrationEstablishment(payrollEmployee.Establishment, payrollEmployee.EstablishmentName, company._id);
+          establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
+          if (establishment == null)
+            payrollEmployee.Messages.Add("Falta integração de estabelecimento");
+          // Cargo
+          integrationOccupation = GetIntegrationOccupation(payrollEmployee.Occupation, payrollEmployee.OccupationName, company._id);
+          occupation = occupationService.GetNewVersion(p => p._id == integrationOccupation.IdOccupation).Result;
+          if (occupation == null)
+            payrollEmployee.Messages.Add("Falta integração de cargo");
+        }
+        if (payrollEmployee.Messages.Count() > 0)
+          return payrollEmployee;
+
+        ViewCrudPerson personManager = null;
+        if (!string.IsNullOrEmpty(payrollEmployee.ManagerDocument) && !string.IsNullOrEmpty(payrollEmployee.ManagerCompanyName)
+          && !string.IsNullOrEmpty(payrollEmployee.ManagerEstablishmentName) && !string.IsNullOrEmpty(payrollEmployee.ManagerRegistration))
+        {
+          IntegrationCompany integrationCompanyManager = GetIntegrationCompany(payrollEmployee.ManagerCompany, payrollEmployee.ManagerCompanyName);
+          Company companyManager = companyService.GetNewVersion(p => p._id == integrationCompanyManager.IdCompany).Result;
+          if (companyManager != null)
+          {
+            // Estabelecimento
+            IntegrationEstablishment integrationEstablishmentManager = GetIntegrationEstablishment(payrollEmployee.ManagerEstablishment, payrollEmployee.ManagerEstablishmentName, companyManager._id);
+            Establishment establishmentManager = establishmentService.GetNewVersion(p => p._id == integrationEstablishmentManager.IdEstablishment).Result;
+            if (establishmentManager != null)
+              personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument && p.Company._id == companyManager._id
+                  && p.Establishment._id == establishmentManager._id && p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
+          }
+        }
+        ViewCrudPerson person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
+            && p.Establishment._id == establishment._id && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+        if (person == null)
+        {
+          person = new ViewCrudPerson
+          {
+            TypeUser = EnumTypeUser.Employee,
+            Company = company.GetViewList(),
+            Establishment = establishment.GetViewList(),
+            Occupation = occupation.GetViewListResume(),
+            Registration = payrollEmployee.Registration,
+            HolidayReturn = null,
+            MotiveAside = null,
+            DateLastOccupation = payrollEmployee.OccupationChangeDate,
+            Salary = payrollEmployee.Salary,
+            DateLastReadjust = payrollEmployee.SalaryChangeDate,
+            DateResignation = payrollEmployee.DemissionDate,
+            TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
+          };
+
+          if (personManager != null)
+            person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
+
+          person.StatusUser = payrollEmployee.StatusUser;
+          person.User = userService.GetNewVersion(p => p._id == payrollEmployee.IdUser).Result?.GetViewCrud();
+          person = personService.New(person);
+          payrollEmployee.IdContract = person._id;
+          payrollEmployee.StatusIntegration = EnumStatusIntegration.Atualized;
+        }
+        else
+        {
+          person.Company = company.GetViewList();
+          person.Establishment = establishment.GetViewList();
+          person.Occupation = occupation.GetViewListResume();
+          person.Registration = payrollEmployee.Registration;
+          person.HolidayReturn = null;
+          person.MotiveAside = null;
+          person.DateLastOccupation = payrollEmployee.OccupationChangeDate;
+          person.Salary = payrollEmployee.Salary;
+          person.DateLastReadjust = payrollEmployee.SalaryChangeDate;
+          person.DateResignation = payrollEmployee.DemissionDate;
+
+          if (personManager != null)
+            person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
+
+          person.StatusUser = payrollEmployee.StatusUser;
+          person.User = userService.GetNewVersion(p => p._id == payrollEmployee.IdUser).Result?.GetViewCrud();
+          string updatePerson = personService.Update(person);
+          payrollEmployee.IdContract = person._id;
+          payrollEmployee.StatusIntegration = EnumStatusIntegration.Atualized;
+        }
+        return payrollEmployee;
+      }
+      catch (Exception ex)
+      {
+        payrollEmployee.Messages.Add(ex.ToString());
+        return payrollEmployee;
+      }
+    }
     #endregion
 
     #region Colaborador V1
@@ -1191,169 +1354,119 @@ namespace Manager.Services.Specific
           Situacao = EnumSituacaoRetornoIntegracao.Erro,
           Mensagem = new List<string>()
         };
-        // Verificação da ação
-        switch (view.Acao)
-        {
-          case "ADMISSAO":
-            acao = EnumActionIntegration.Admission;
-            break;
-          case "DEMISSAO":
-            acao = EnumActionIntegration.Resignation;
-            break;
-          case "ATUALIZACAO":
-            break;
-          case "CARGA":
-            acao = EnumActionIntegration.Load;
-            break;
-          default:
-            resultV2.Mensagem.Add("Ação inválida");
-            break;
-        }
-        // Validação de Campos chave
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        ValidKeyEmployee(view);
-        // Validação de outros campos
-        if (string.IsNullOrEmpty(view.Nome))
-          resultV2.Mensagem.Add("Nome não informado");
-        if (string.IsNullOrEmpty(view.Email))
-          view.Email = string.Format("{0}@{1}", view.Matricula.ToLower(),"mail.com.br");
-        switch (view.Sexo)
-        {
-          case "F":
-            sexo = EnumSex.Female;
-            break;
-          case "feminino":
-            sexo = EnumSex.Female;
-            view.Sexo = "F";
-            break;
-          case "M":
-            sexo = EnumSex.Male;
-            break;
-          case "masculino":
-            sexo = EnumSex.Male;
-            view.Sexo = "M";
-            break;
-          default:
-            sexo = EnumSex.Others;
-            view.Sexo = "O";
-            break;
-        };
-        if (string.IsNullOrEmpty(view.GrauInstrucao))
-          view.GrauInstrucao = "0";
-        if (string.IsNullOrEmpty(view.NomeGrauInstrucao))
-          view.NomeGrauInstrucao = "Não definida";
-        if (view.DataAdmissao == null)
-            resultV2.Mensagem.Add("Data de admissão deve ser informada");
-        if (view.DataAdmissao == DateTime.MinValue)
-            resultV2.Mensagem.Add("Data de admissão deve ser informada");
-        if (string.IsNullOrEmpty(view.Cargo))
-          resultV2.Mensagem.Add("Cargo deve ser informado.");
-        if (string.IsNullOrEmpty(view.NomeCargo))
-          resultV2.Mensagem.Add("Nome do cargo deve ser informado.");
-        // Verificar situação
-        switch (view.Situacao)
-        {
-          case "ATIVO":
-            situacao = EnumStatusUser.Enabled;
-            break;
-          case "FÉRIAS":
-            situacao = EnumStatusUser.Vacation;
-            break;
-          case "AFASTADO":
-            situacao = EnumStatusUser.Away;
-            break;
-          case "DEMITIDO":
-            situacao = EnumStatusUser.Disabled;
-            break;
-          default:
-            resultV2.Mensagem.Add("Situação invalida.");
-            break;
-        }
-        // Campos de gestor
-        if (!string.IsNullOrEmpty(view.MatriculaGestor))
-        {
-          if (string.IsNullOrEmpty(view.CpfGestor))
-            resultV2.Mensagem.Add("Cpf do gestor deve ser informado.");
-          else
-            if (!IsValidCPF(view.CpfGestor))
-              resultV2.Mensagem.Add("Cpf do gestor inválido.");
-          if (string.IsNullOrEmpty(view.EmpresaGestor))
-            resultV2.Mensagem.Add("Empresa do gestor deve ser informada.");
-          if (string.IsNullOrEmpty(view.NomeEmpresaGestor))
-            resultV2.Mensagem.Add("Nome da empresa do gestor deve ser informado.");
-          if (string.IsNullOrEmpty(view.EstabelecimentoGestor))
-            view.EstabelecimentoGestor = "1";
-          if (string.IsNullOrEmpty(view.NomeEstabelecimentoGestor))
-            view.NomeEstabelecimentoGestor = "Estabelecimento Padrão";
-        }
+        // Validação de campos especiais
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        acao = ValidAcction(view.Acao);
+        sexo = ValidSex(view.Sexo);
+        situacao = ValidSituation(view.Situacao);
+        // Validação de campos vazios obrigatórios
+        ValidEmptyString(view.Nome, "Nome deve ser informado");
+        ValidEmptyString(view.Cargo, "Cargo deve ser informado");
+        ValidEmptyString(view.NomeCargo, "Nome do cargo deve ser informado");
+        ValidEmptyDate(view.DataAdmissao, "Data de admissão deve ser informada");
+        // Preenchimento de campos opcionais, caso vazios
+        view.Email = EmptyStringDefault(view.Email, view.Colaborador.Cpf);
+        view.GrauInstrucao = EmptyStringDefault(view.GrauInstrucao, "0");
+        view.NomeGrauInstrucao = EmptyStringDefault(view.NomeGrauInstrucao, "Não definida");
+        // Validação do Gestor
+        if (view.Gestor != null && !string.IsNullOrEmpty(view.Gestor.Matricula))
+          view.Gestor = ValidKeyEmployee(view.Gestor, " do gestor ");
+        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
         if (resultV2.Mensagem.Count == 0)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.ChaveColaborador).Result.LastOrDefault();
-          if (payrollEmployee != null && (acao == EnumActionIntegration.Admission || acao == EnumActionIntegration.Load))
-            resultV2.Mensagem.Add("Colaborador já está na base de integração.");
-          if (payrollEmployee == null && (acao == EnumActionIntegration.Resignation || acao == EnumActionIntegration.Change))
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          if (payrollEmployees.Count() == 0 && (acao == EnumActionIntegration.Demission || acao == EnumActionIntegration.Change))
             resultV2.Mensagem.Add("Colaborador não está na base de integração.");
         }
-        // Gravar tabela
-        if (resultV2.Mensagem.Count == 0)
+        if (resultV2.Mensagem.Count != 0)
+          return resultV2;
+        PayrollEmployee payrollEmployeePrevious = null;
+        PayrollEmployee payrollEmployee = null;
+        if (payrollEmployees.Count() == 0)
+          payrollEmployee = new PayrollEmployee();
+        else
         {
-          PayrollEmployee payrollEmployee = new PayrollEmployee
+          // Preparar objeto para rejeição
+          payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
+          if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+            payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+          // Preparar novo objeto para encontrar o id anterior
+          payrollEmployee = payrollEmployees.FirstOrDefault();
+          for (int i = 0; i < payrollEmployees.Count(); i++)
           {
-            // Identificação
-            Key = view.ChaveColaborador,
-            DateRegister = DateTime.Now,
-            Action = acao,
-            StatusIntegration = EnumStatusIntegration.Saved,
-            // Campos
-            AdmissionDate = view.DataAdmissao,
-            BirthDate = view.DataNascimento,
-            CellNumber = view.Celular,
-            Company = view.Empresa,
-            CompanyName = view.NomeEmpresa,
-            CostCenter = view.CentroCusto,
-            CostCenterChangeDate = view.DataTrocaCentroCusto,
-            CostCenterName = view.NomeCentroCusto,
-            Document = view.Cpf,
-            Establishment = view.Estabelecimento,
-            EstablishmentName = view.NomeEstabelecimento,
-            HolidayReturn = view.DataRetornoFerias,
-            MotiveAside = view.MotivoAfastamento,
-            Mail = view.Email,
-            ManagerCompany = view.EmpresaGestor,
-            ManagerCompanyName = view.NomeEmpresaGestor,
-            ManagerDocument = view.CpfGestor,
-            ManagerEstablishment = view.EstabelecimentoGestor,
-            ManagerEstablishmentName = view.NomeEstabelecimentoGestor,
-            MatriculaGestor = view.MatriculaGestor,
-            Name = view.Nome,
-            Nickname = view.Apelido,
-            Occupation = view.Cargo,
-            OccupationChangeDate = view.DataTrocaCargo,
-            OccupationName = view.NomeCargo,
-            Registration = view.Matricula,
-            ResignationDate = view.DataDemissao,
-            Salary = view.SalarioNominal,
-            SalaryChangeDate = view.DataUltimoReajuste,
-            SalaryChangeReason = view.MotivoUltimoReajuste,
-            Schooling = view.GrauInstrucao,
-            SchoolingName = view.NomeGrauInstrucao,
-            Sex = sexo,
-            Situacao = situacao,
-            Workload = view.CargaHoraria
-          };
-          payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-          if (payrollEmployee != null)
-          {
-            // Resultado Ok
-            resultV2.IdPayrollEmployee = payrollEmployee._id;
-            resultV2.IdUser = string.Empty;
-            resultV2.IdContract = string.Empty;
-            resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+            if (payrollEmployees[i].StatusIntegration == EnumStatusIntegration.Atualized)
+            {
+              payrollEmployee._idPrevious = payrollEmployees[i]._id;
+              break;
+            }
           }
+          payrollEmployee._id = null;
         }
+        // Identificação
+        payrollEmployee.Key = view.Colaborador.Chave;
+        payrollEmployee.DateRegister = DateTime.Now;
+        payrollEmployee.Action = acao;
+        payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
+        // Campos
+        payrollEmployee.Document = view.Colaborador.Cpf;
+        payrollEmployee.Company = view.Colaborador.Empresa;
+        payrollEmployee.CompanyName = view.Colaborador.NomeEmpresa;
+        payrollEmployee.Establishment = view.Colaborador.Estabelecimento;
+        payrollEmployee.EstablishmentName = view.Colaborador.NomeEstabelecimento;
+        payrollEmployee.Registration = view.Colaborador.Matricula;
+        payrollEmployee.Name = view.Nome;
+        payrollEmployee.Mail = view.Email;
+        payrollEmployee.Sex = sexo;
+        payrollEmployee.BirthDate = view.DataNascimento;
+        payrollEmployee.CellNumber = view.Celular;
+        payrollEmployee.Schooling = view.GrauInstrucao;
+        payrollEmployee.SchoolingName = view.NomeGrauInstrucao;
+        payrollEmployee.Nickname = view.Apelido;
+        payrollEmployee.AdmissionDate = view.DataAdmissao;
+        payrollEmployee.DemissionDate = view.DataDemissao;
+        payrollEmployee.Occupation = view.Cargo;
+        payrollEmployee.OccupationName = view.NomeCargo;
+        payrollEmployee.OccupationChangeDate = view.DataTrocaCargo;
+        payrollEmployee.CostCenter = view.CentroCusto;
+        payrollEmployee.CostCenterName = view.NomeCentroCusto;
+        payrollEmployee.CostCenterChangeDate = view.DataTrocaCentroCusto;
+        payrollEmployee.Salary = view.SalarioNominal;
+        payrollEmployee.Workload = view.CargaHoraria;
+        payrollEmployee.SalaryChangeDate = view.DataUltimoReajuste;
+        payrollEmployee.SalaryChangeReason = view.MotivoUltimoReajuste;
+        payrollEmployee.StatusUser = situacao;
+        payrollEmployee.ManagerDocument = view.Gestor?.Cpf;
+        payrollEmployee.ManagerCompany = view.Gestor?.Empresa;
+        payrollEmployee.ManagerCompanyName = view.Gestor?.NomeEmpresa;
+        payrollEmployee.ManagerEstablishment = view.Gestor?.Estabelecimento;
+        payrollEmployee.ManagerEstablishmentName = view.Gestor?.NomeEstabelecimento;
+        payrollEmployee.ManagerRegistration = view.Gestor?.Matricula;
+        payrollEmployee.Messages = new List<string>();
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        if (payrollEmployee != null)
+        {
+          // Resultado Ok
+          resultV2.IdPayrollEmployee = payrollEmployee._id;
+          resultV2.IdUser = string.Empty;
+          resultV2.IdContract = string.Empty;
+          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+          if (payrollEmployeePrevious != null)
+          {
+            Task taskPrevious = payrollEmployeeService.Update(payrollEmployeePrevious, null);
+          }
+          // Atualização de usuário e devolve o id do usuário e mensagens
+          payrollEmployee = UserUpdate(payrollEmployee);
+          // Atualização da pessoa e devolve o id da pessoa e mensagens
+          resultV2.IdUser = payrollEmployee.IdUser;
+          payrollEmployee = PersonUpdate(payrollEmployee);
+          resultV2.IdContract = payrollEmployee.IdContract;
+          Task task = payrollEmployeeService.Update(payrollEmployee, null);
+        }
+        for (int i = 0; i < payrollEmployee.Messages.Count; i++)
+          resultV2.Mensagem.Add(payrollEmployee.Messages[i]);
+        if (resultV2.Mensagem.Count == 0)
+          resultV2.Mensagem.Add("Colaborador atualizado");
         return resultV2;
       }
       catch (Exception)
@@ -1371,70 +1484,25 @@ namespace Manager.Services.Specific
           Situacao = EnumSituacaoRetornoIntegracao.Erro,
           Mensagem = new List<string>()
         };
-        // Validação de Campos chave
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        ValidKeyEmployee(view);
-        // Validação de outros campos
-        if (string.IsNullOrEmpty(view.Nome))
-          resultV2.Mensagem.Add("Nome não informado");
-        if (string.IsNullOrEmpty(view.Email))
-          view.Email = string.Format("{0}@{1}", view.Matricula.ToLower(), "mail.com.br");
-        switch (view.Sexo)
-        {
-          case "F":
-            sexo = EnumSex.Female;
-            break;
-          case "feminino":
-            sexo = EnumSex.Female;
-            view.Sexo = "F";
-            break;
-          case "M":
-            sexo = EnumSex.Male;
-            break;
-          case "masculino":
-            sexo = EnumSex.Male;
-            view.Sexo = "M";
-            break;
-          default:
-            sexo = EnumSex.Others;
-            view.Sexo = "O";
-            break;
-        };
-        if (string.IsNullOrEmpty(view.GrauInstrucao))
-          view.GrauInstrucao = "0";
-        if (string.IsNullOrEmpty(view.NomeGrauInstrucao))
-          view.NomeGrauInstrucao = "Não definida";
-        if (view.DataAdmissao == null)
-          resultV2.Mensagem.Add("Data de admissão deve ser informada");
-        if (view.DataAdmissao == DateTime.MinValue)
-          resultV2.Mensagem.Add("Data de admissão deve ser informada");
-        if (string.IsNullOrEmpty(view.Cargo))
-          resultV2.Mensagem.Add("Cargo deve ser informado.");
-        if (string.IsNullOrEmpty(view.NomeCargo))
-          resultV2.Mensagem.Add("Nome do cargo deve ser informado.");
-        // Campos de gestor
-        if (!string.IsNullOrEmpty(view.MatriculaGestor))
-        {
-          if (string.IsNullOrEmpty(view.CpfGestor))
-            resultV2.Mensagem.Add("Cpf do gestor deve ser informado.");
-          else
-            if (!IsValidCPF(view.CpfGestor))
-            resultV2.Mensagem.Add("Cpf do gestor inválido.");
-          if (string.IsNullOrEmpty(view.EmpresaGestor))
-            resultV2.Mensagem.Add("Empresa do gestor deve ser informada.");
-          if (string.IsNullOrEmpty(view.NomeEmpresaGestor))
-            resultV2.Mensagem.Add("Nome da empresa do gestor deve ser informado.");
-          if (string.IsNullOrEmpty(view.EstabelecimentoGestor))
-            view.EstabelecimentoGestor = "1";
-          if (string.IsNullOrEmpty(view.NomeEstabelecimentoGestor))
-            view.NomeEstabelecimentoGestor = "Estabelecimento Padrão";
-        }
+        // Validação de campos especiais
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        sexo = ValidSex(view.Sexo);
+        // Validação de campos vazios obrigatórios
+        ValidEmptyString(view.Nome, "Nome deve ser informado");
+        ValidEmptyString(view.Cargo, "Cargo deve ser informado");
+        ValidEmptyString(view.NomeCargo, "Nome do cargo deve ser informado");
+        ValidEmptyDate(view.DataAdmissao, "Data de admissão deve ser informada");
+        // Preenchimento de campos opcionais, caso vazios
+        view.Email = EmptyStringDefault(view.Email, view.Colaborador.Cpf);
+        view.GrauInstrucao = EmptyStringDefault(view.GrauInstrucao, "0");
+        view.NomeGrauInstrucao = EmptyStringDefault(view.NomeGrauInstrucao, "Não definida");
+        // Validação do Gestor
+        if (!string.IsNullOrEmpty(view.Gestor.Matricula))
+          view.Gestor = ValidKeyEmployee(view.Gestor, " do gestor ");
+        // Atualização da base de dados
         if (resultV2.Mensagem.Count == 0)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.ChaveColaborador).Result.LastOrDefault();
+          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave).Result.LastOrDefault();
           if (payrollEmployee != null)
             resultV2.Mensagem.Add("Colaborador já está na base de integração.");
         }
@@ -1444,7 +1512,7 @@ namespace Manager.Services.Specific
           PayrollEmployee payrollEmployee = new PayrollEmployee
           {
             // Identificação
-            Key = view.ChaveColaborador,
+            Key = view.Colaborador.Chave,
             DateRegister = DateTime.Now,
             Action = EnumActionIntegration.Admission,
             StatusIntegration = EnumStatusIntegration.Saved,
@@ -1452,35 +1520,35 @@ namespace Manager.Services.Specific
             AdmissionDate = view.DataAdmissao,
             BirthDate = view.DataNascimento,
             CellNumber = view.Celular,
-            Company = view.Empresa,
-            CompanyName = view.NomeEmpresa,
+            Company = view.Colaborador.Empresa,
+            CompanyName = view.Colaborador.NomeEmpresa,
             CostCenter = view.CentroCusto,
             CostCenterChangeDate = null,
             CostCenterName = view.NomeCentroCusto,
-            Document = view.Cpf,
-            Establishment = view.Estabelecimento,
-            EstablishmentName = view.NomeEstabelecimento,
+            Document = view.Colaborador.Cpf,
+            Establishment = view.Colaborador.Estabelecimento,
+            EstablishmentName = view.Colaborador.NomeEstabelecimento,
             Mail = view.Email,
-            ManagerCompany = view.EmpresaGestor,
-            ManagerCompanyName = view.NomeEmpresaGestor,
-            ManagerDocument = view.CpfGestor,
-            ManagerEstablishment = view.EstabelecimentoGestor,
-            ManagerEstablishmentName = view.NomeEstabelecimentoGestor,
-            MatriculaGestor = view.MatriculaGestor,
+            ManagerCompany = view.Gestor.Empresa,
+            ManagerCompanyName = view.Gestor.NomeEmpresa,
+            ManagerDocument = view.Gestor.Cpf,
+            ManagerEstablishment = view.Gestor.Estabelecimento,
+            ManagerEstablishmentName = view.Gestor.NomeEstabelecimento,
+            ManagerRegistration = view.Gestor.Matricula,
             Name = view.Nome,
             Nickname = view.Apelido,
             Occupation = view.Cargo,
             OccupationChangeDate = null,
             OccupationName = view.NomeCargo,
-            Registration = view.Matricula,
-            ResignationDate = null,
+            Registration = view.Colaborador.Matricula,
+            DemissionDate = null,
             Salary = view.SalarioNominal,
             SalaryChangeDate = null,
             SalaryChangeReason = null,
             Schooling = view.GrauInstrucao,
             SchoolingName = view.NomeGrauInstrucao,
             Sex = sexo,
-            Situacao = EnumStatusUser.Enabled,
+            StatusUser = EnumStatusUser.Enabled,
             Workload = view.CargaHoraria
           };
           payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
@@ -1509,47 +1577,55 @@ namespace Manager.Services.Specific
           Situacao = EnumSituacaoRetornoIntegracao.Erro,
           Mensagem = new List<string>()
         };
-        // Validação de Campos chave
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        ValidKeyEmployee(view);
-        // Validação de outros campos
-        if (string.IsNullOrEmpty(view.Cargo))
-          resultV2.Mensagem.Add("Cargo deve ser informado.");
-        if (string.IsNullOrEmpty(view.NomeCargo))
-          resultV2.Mensagem.Add("Nome do cargo deve ser informado.");
-        if (view.DataTrocaCargo == null)
-          view.DataTrocaCargo = DateTime.Now.Date;
-        // Gravar tabela
-        if (resultV2.Mensagem.Count == 0)
+        // Validação de campos especiais
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        // Validação de campos vazios obrigatórios
+        ValidEmptyString(view.Cargo, "Cargo deve ser informado");
+        ValidEmptyString(view.NomeCargo, "Nome do cargo deve ser informado");
+        view.DataTrocaCargo = EmptyDateDefault(view.DataTrocaCargo, DateTime.Now.Date);
+        if (resultV2.Mensagem.Count != 0)
+          return resultV2;
+        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        if (payrollEmployees.Count() == 0)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.ChaveColaborador).Result.LastOrDefault();
-          if (payrollEmployee == null)
-            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          if (payrollEmployee.StatusIntegration != EnumStatusIntegration.Atualized)
+          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          return resultV2;
+        }
+        PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
+        // Preparar objeto para rejeição
+        if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+          payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+
+        PayrollEmployee payrollEmployee = payrollEmployees.FirstOrDefault();
+        payrollEmployee._idPrevious = null;
+        // Preparar novo objeto para encontrar o id anterior
+        for (int i = 0; i < payrollEmployees.Count() - 1; i++)
+        {
+          if (payrollEmployees[i].StatusIntegration == EnumStatusIntegration.Atualized)
           {
-            payrollEmployee.StatusIntegration = EnumStatusIntegration.Reject;
-            Task task = payrollEmployeeService.Update(payrollEmployee, null);
+            payrollEmployee._idPrevious = payrollEmployees[i]._id;
+            break;
           }
-          // Identificação
-          payrollEmployee._id = null;
-          payrollEmployee.DateRegister = DateTime.Now;
-          payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
-          // Campos
-          payrollEmployee.Occupation = view.Cargo;
-          payrollEmployee.OccupationChangeDate = view.DataTrocaCargo;
-          payrollEmployee.OccupationName = view.NomeCargo;
-          payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-          if (payrollEmployee != null)
-          {
-            // Resultado Ok
-            resultV2.IdPayrollEmployee = payrollEmployee._id;
-            resultV2.IdUser = string.Empty;
-            resultV2.IdContract = string.Empty;
-            resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
-          }
+        }
+        // Identificação
+        payrollEmployee._id = null;
+        payrollEmployee.DateRegister = DateTime.Now;
+        payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
+        // Campos
+        payrollEmployee.Occupation = view.Cargo;
+        payrollEmployee.OccupationChangeDate = view.DataTrocaCargo;
+        payrollEmployee.OccupationName = view.NomeCargo;
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        if (payrollEmployee != null)
+        {
+          // Resultado Ok
+          resultV2.IdPayrollEmployee = payrollEmployee._id;
+          resultV2.IdUser = string.Empty;
+          resultV2.IdContract = string.Empty;
+          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+          Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
       }
@@ -1567,47 +1643,56 @@ namespace Manager.Services.Specific
           Situacao = EnumSituacaoRetornoIntegracao.Erro,
           Mensagem = new List<string>()
         };
-        // Validação de Campos chave
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        ValidKeyEmployee(view);
-        // Validação de outros campos
-        if (string.IsNullOrEmpty(view.CentroCusto))
-          resultV2.Mensagem.Add("Centro de custo deve ser informado.");
-        if (string.IsNullOrEmpty(view.NomeCentroCusto))
-          resultV2.Mensagem.Add("Centro de custo deve ser informado.");
-        if (view.DataTrocaCentroCusto == null)
-          view.DataTrocaCentroCusto = DateTime.Now.Date;
-        // Gravar tabela
-        if (resultV2.Mensagem.Count == 0)
+        // Validação de campos especiais
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        // Validação de campos vazios obrigatórios
+        ValidEmptyString(view.CentroCusto, "Centro de Custo deve ser informado");
+        ValidEmptyString(view.NomeCentroCusto, "Nome do Centro de Custo deve ser informado");
+        view.DataTrocaCentroCusto = EmptyDateDefault(view.DataTrocaCentroCusto, DateTime.Now.Date);
+        // Atualização da base de dados
+        if (resultV2.Mensagem.Count != 0)
+          return resultV2;
+        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        if (payrollEmployees.Count() == 0)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.ChaveColaborador).Result.LastOrDefault();
-          if (payrollEmployee == null)
-            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          if (payrollEmployee.StatusIntegration != EnumStatusIntegration.Atualized)
+          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          return resultV2;
+        }
+        PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
+        // Preparar objeto para rejeição
+        if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+          payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+
+        PayrollEmployee payrollEmployee = payrollEmployees.FirstOrDefault();
+        payrollEmployee._idPrevious = null;
+        // Preparar novo objeto para encontrar o id anterior
+        for (int i = 0; i < payrollEmployees.Count() - 1; i++)
+        {
+          if (payrollEmployees[i].StatusIntegration == EnumStatusIntegration.Atualized)
           {
-            payrollEmployee.StatusIntegration = EnumStatusIntegration.Reject;
-            Task task = payrollEmployeeService.Update(payrollEmployee, null);
+            payrollEmployee._idPrevious = payrollEmployees[i]._id;
+            break;
           }
-          // Identificação
-          payrollEmployee._id = null;
-          payrollEmployee.DateRegister = DateTime.Now;
-          payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
-          // Campos
-          payrollEmployee.CostCenter = view.CentroCusto;
-          payrollEmployee.CostCenterChangeDate = view.DataTrocaCentroCusto;
-          payrollEmployee.CostCenterName = view.NomeCentroCusto;
-          payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-          if (payrollEmployee != null)
-          {
-            // Resultado Ok
-            resultV2.IdPayrollEmployee = payrollEmployee._id;
-            resultV2.IdUser = string.Empty;
-            resultV2.IdContract = string.Empty;
-            resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
-          }
+        }
+        // Identificação
+        payrollEmployee._id = null;
+        payrollEmployee.DateRegister = DateTime.Now;
+        payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
+        // Campos
+        payrollEmployee.CostCenter = view.CentroCusto;
+        payrollEmployee.CostCenterName = view.NomeCentroCusto;
+        payrollEmployee.CostCenterChangeDate = view.DataTrocaCentroCusto;
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        if (payrollEmployee != null)
+        {
+          // Resultado Ok
+          resultV2.IdPayrollEmployee = payrollEmployee._id;
+          resultV2.IdUser = string.Empty;
+          resultV2.IdContract = string.Empty;
+          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+          Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
       }
@@ -1625,60 +1710,55 @@ namespace Manager.Services.Specific
           Situacao = EnumSituacaoRetornoIntegracao.Erro,
           Mensagem = new List<string>()
         };
-        // Validação de Campos chave
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        ValidKeyEmployee(view);
-        // Campos de gestor
-        if (!string.IsNullOrEmpty(view.MatriculaGestor))
+        // Validação de campos especiais
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        // Validação do Gestor
+        if (!string.IsNullOrEmpty(view.Gestor.Matricula))
+          view.Gestor = ValidKeyEmployee(view.Gestor, " do gestor ");
+        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        if (payrollEmployees.Count() == 0)
         {
-          if (string.IsNullOrEmpty(view.CpfGestor))
-            resultV2.Mensagem.Add("Cpf do gestor deve ser informado.");
-          else
-            if (!IsValidCPF(view.CpfGestor))
-            resultV2.Mensagem.Add("Cpf do gestor inválido.");
-          if (string.IsNullOrEmpty(view.EmpresaGestor))
-            resultV2.Mensagem.Add("Empresa do gestor deve ser informada.");
-          if (string.IsNullOrEmpty(view.NomeEmpresaGestor))
-            resultV2.Mensagem.Add("Nome da empresa do gestor deve ser informado.");
-          if (string.IsNullOrEmpty(view.EstabelecimentoGestor))
-            view.EstabelecimentoGestor = "1";
-          if (string.IsNullOrEmpty(view.NomeEstabelecimentoGestor))
-            view.NomeEstabelecimentoGestor = "Estabelecimento Padrão";
+          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          return resultV2;
         }
-        // Gravar tabela
-        if (resultV2.Mensagem.Count == 0)
+        PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
+        // Preparar objeto para rejeição
+        if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+          payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+
+        PayrollEmployee payrollEmployee = payrollEmployees.FirstOrDefault();
+        payrollEmployee._idPrevious = null;
+        // Preparar novo objeto para encontrar o id anterior
+        for (int i = 0; i < payrollEmployees.Count() - 1; i++)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.ChaveColaborador).Result.LastOrDefault();
-          if (payrollEmployee == null)
-            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          if (payrollEmployee.StatusIntegration != EnumStatusIntegration.Atualized)
+          if (payrollEmployees[i].StatusIntegration == EnumStatusIntegration.Atualized)
           {
-            payrollEmployee.StatusIntegration = EnumStatusIntegration.Reject;
-            Task task = payrollEmployeeService.Update(payrollEmployee, null);
+            payrollEmployee._idPrevious = payrollEmployees[i]._id;
+            break;
           }
-          // Identificação
-          payrollEmployee._id = null;
-          payrollEmployee.DateRegister = DateTime.Now;
-          payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
-          // Campos
-          payrollEmployee.ManagerCompany = view.EmpresaGestor;
-          payrollEmployee.ManagerCompanyName = view.NomeEmpresaGestor;
-          payrollEmployee.ManagerDocument = view.CpfGestor;
-          payrollEmployee.ManagerEstablishment = view.EstabelecimentoGestor;
-          payrollEmployee.ManagerEstablishmentName = view.NomeEstabelecimentoGestor;
-          payrollEmployee.MatriculaGestor = view.MatriculaGestor;
-          payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-          if (payrollEmployee != null)
-          {
-            // Resultado Ok
-            resultV2.IdPayrollEmployee = payrollEmployee._id;
-            resultV2.IdUser = string.Empty;
-            resultV2.IdContract = string.Empty;
-            resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
-          }
+        }
+        // Identificação
+        payrollEmployee._id = null;
+        payrollEmployee.DateRegister = DateTime.Now;
+        payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
+        // Campos
+        payrollEmployee.ManagerCompany = view.Gestor.Empresa;
+        payrollEmployee.ManagerCompanyName = view.Gestor.NomeEmpresa;
+        payrollEmployee.ManagerDocument = view.Gestor.Cpf;
+        payrollEmployee.ManagerEstablishment = view.Gestor.Estabelecimento;
+        payrollEmployee.ManagerEstablishmentName = view.Gestor.NomeEstabelecimento;
+        payrollEmployee.ManagerRegistration = view.Gestor.Matricula;
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        if (payrollEmployee != null)
+        {
+          // Resultado Ok
+          resultV2.IdPayrollEmployee = payrollEmployee._id;
+          resultV2.IdUser = string.Empty;
+          resultV2.IdContract = string.Empty;
+          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+          Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
       }
@@ -1696,44 +1776,51 @@ namespace Manager.Services.Specific
           Situacao = EnumSituacaoRetornoIntegracao.Erro,
           Mensagem = new List<string>()
         };
-        // Validação de Campos chave
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        ValidKeyEmployee(view);
-        // Validação outros campos
-        if (view.DataUltimoReajuste == null)
-          view.DataUltimoReajuste = DateTime.Now.Date;
-        // Gravar tabela
-        if (resultV2.Mensagem.Count == 0)
+        // Validação de campos especiais
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        view.DataUltimoReajuste = EmptyDateDefault(view.DataUltimoReajuste, DateTime.Now.Date);
+        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        if (payrollEmployees.Count() == 0)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.ChaveColaborador).Result.LastOrDefault();
-          if (payrollEmployee == null)
-            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          if (payrollEmployee.StatusIntegration != EnumStatusIntegration.Atualized)
+          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          return resultV2;
+        }
+        PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
+        // Preparar objeto para rejeição
+        if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+          payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+
+        PayrollEmployee payrollEmployee = payrollEmployees.FirstOrDefault();
+        payrollEmployee._idPrevious = null;
+        // Preparar novo objeto para encontrar o id anterior
+        for (int i = 0; i < payrollEmployees.Count() - 1; i++)
+        {
+          if (payrollEmployees[i].StatusIntegration == EnumStatusIntegration.Atualized)
           {
-            payrollEmployee.StatusIntegration = EnumStatusIntegration.Reject;
-            Task task = payrollEmployeeService.Update(payrollEmployee, null);
+            payrollEmployee._idPrevious = payrollEmployees[i]._id;
+            break;
           }
-          // Identificação
-          payrollEmployee._id = null;
-          payrollEmployee.DateRegister = DateTime.Now;
-          payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
-          // Campos
-          payrollEmployee.Salary = view.SalarioNominal;
-          payrollEmployee.Workload = view.CargaHoraria;
-          payrollEmployee.SalaryChangeDate = view.DataUltimoReajuste;
-          payrollEmployee.SalaryChangeReason = view.MotivoUltimoReajuste;
-          payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-          if (payrollEmployee != null)
-          {
-            // Resultado Ok
-            resultV2.IdPayrollEmployee = payrollEmployee._id;
-            resultV2.IdUser = string.Empty;
-            resultV2.IdContract = string.Empty;
-            resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
-          }
+        }
+        // Identificação
+        payrollEmployee._id = null;
+        payrollEmployee.DateRegister = DateTime.Now;
+        payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
+        // Campos
+        payrollEmployee.Salary = view.SalarioNominal;
+        payrollEmployee.Workload = view.CargaHoraria;
+        payrollEmployee.SalaryChangeDate = view.DataUltimoReajuste;
+        payrollEmployee.SalaryChangeReason = view.MotivoUltimoReajuste;
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        if (payrollEmployee != null)
+        {
+          // Resultado Ok
+          resultV2.IdPayrollEmployee = payrollEmployee._id;
+          resultV2.IdUser = string.Empty;
+          resultV2.IdContract = string.Empty;
+          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+          Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
       }
@@ -1752,66 +1839,50 @@ namespace Manager.Services.Specific
           Situacao = EnumSituacaoRetornoIntegracao.Erro,
           Mensagem = new List<string>()
         };
-        // Validação de Campos chave
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        ValidKeyEmployee(view);
-        // Validação de outros campos
-        // Verificar situação
-        switch (view.Situacao)
+        // Validação de campos especiais
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        situacao = ValidSituation(view.Situacao);
+        if (situacao == EnumStatusUser.Disabled)
+          resultV2.Mensagem.Add("Não é permitida a demissão por este método.");
+        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        if (payrollEmployees.Count() == 0)
         {
-          case "ATIVO":
-            situacao = EnumStatusUser.Enabled;
-            break;
-          case "FÉRIAS":
-            if (view.DataRetornoFerias == null)
-              view.DataRetornoFerias = DateTime.Now.Date.AddDays(30);
-            situacao = EnumStatusUser.Vacation;
-            break;
-          case "AFASTADO":
-            situacao = EnumStatusUser.Away;
-            break;
-          case "DEMITIDO":
-            resultV2.Mensagem.Add("Não é permitida a demissão por este método.");
-            break;
-          default:
-            resultV2.Mensagem.Add("Situação invalida.");
-            break;
+          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          return resultV2;
         }
-        // Gravar tabela
-        if (resultV2.Mensagem.Count == 0)
+        PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
+        // Preparar objeto para rejeição
+        if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+          payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+
+        PayrollEmployee payrollEmployee = payrollEmployees.FirstOrDefault();
+        payrollEmployee._idPrevious = null;
+        // Preparar novo objeto para encontrar o id anterior
+        for (int i = 0; i < payrollEmployees.Count() - 1; i++)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.ChaveColaborador).Result.LastOrDefault();
-          if (payrollEmployee == null)
-            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          if (payrollEmployee.StatusIntegration != EnumStatusIntegration.Atualized)
+          if (payrollEmployees[i].StatusIntegration == EnumStatusIntegration.Atualized)
           {
-            payrollEmployee.StatusIntegration = EnumStatusIntegration.Reject;
-            Task task = payrollEmployeeService.Update(payrollEmployee, null);
+            payrollEmployee._idPrevious = payrollEmployees[i]._id;
+            break;
           }
-          // Identificação
-          payrollEmployee._id = null;
-          payrollEmployee.DateRegister = DateTime.Now;
-          payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
-          // Campos
-          payrollEmployee.Situacao = situacao;
-          payrollEmployee.MotiveAside = string.Empty;
-          payrollEmployee.HolidayReturn = null;
-          if (situacao == EnumStatusUser.Vacation)
-            payrollEmployee.HolidayReturn = view.DataRetornoFerias;
-          if (situacao == EnumStatusUser.Away)
-            payrollEmployee.MotiveAside = view.MotivoAfastamento;
-          payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-          if (payrollEmployee != null)
-          {
-            // Resultado Ok
-            resultV2.IdPayrollEmployee = payrollEmployee._id;
-            resultV2.IdUser = string.Empty;
-            resultV2.IdContract = string.Empty;
-            resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
-          }
+        }
+        // Identificação
+        payrollEmployee._id = null;
+        payrollEmployee.DateRegister = DateTime.Now;
+        payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
+        // Campos
+        payrollEmployee.StatusUser = situacao;
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        if (payrollEmployee != null)
+        {
+          // Resultado Ok
+          resultV2.IdPayrollEmployee = payrollEmployee._id;
+          resultV2.IdUser = string.Empty;
+          resultV2.IdContract = string.Empty;
+          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+          Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
       }
@@ -1829,43 +1900,50 @@ namespace Manager.Services.Specific
           Situacao = EnumSituacaoRetornoIntegracao.Erro,
           Mensagem = new List<string>()
         };
-        // Validação de Campos chave
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        ValidKeyEmployee(view);
-        // Validação de outros campos
-        if (view.DataDemissao == null)
-          view.DataDemissao = DateTime.Now.Date;
-        // Gravar tabela
-        if (resultV2.Mensagem.Count == 0)
+        // Validação de campos especiais
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        view.DataDemissao = EmptyDateDefault(view.DataDemissao, DateTime.Now.Date);
+        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        if (payrollEmployees.Count() == 0)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.ChaveColaborador).Result.LastOrDefault();
-          if (payrollEmployee == null)
-            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          if (payrollEmployee.StatusIntegration != EnumStatusIntegration.Atualized)
+          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          return resultV2;
+        }
+        PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
+        // Preparar objeto para rejeição
+        if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+          payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+
+        PayrollEmployee payrollEmployee = payrollEmployees.FirstOrDefault();
+        payrollEmployee._idPrevious = null;
+        // Preparar novo objeto para encontrar o id anterior
+        for (int i = 0; i < payrollEmployees.Count() - 1; i++)
+        {
+          if (payrollEmployees[i].StatusIntegration == EnumStatusIntegration.Atualized)
           {
-            payrollEmployee.StatusIntegration = EnumStatusIntegration.Reject;
-            Task task = payrollEmployeeService.Update(payrollEmployee, null);
+            payrollEmployee._idPrevious = payrollEmployees[i]._id;
+            break;
           }
-          // Identificação
-          payrollEmployee._id = null;
-          payrollEmployee.Action = EnumActionIntegration.Resignation;
-          payrollEmployee.DateRegister = DateTime.Now;
-          payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
-          // Campos
-          payrollEmployee.Situacao = EnumStatusUser.Disabled;
-          payrollEmployee.ResignationDate = view.DataDemissao;
-          payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-          if (payrollEmployee != null)
-          {
-            // Resultado Ok
-            resultV2.IdPayrollEmployee = payrollEmployee._id;
-            resultV2.IdUser = string.Empty;
-            resultV2.IdContract = string.Empty;
-            resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
-          }
+        }
+        // Identificação
+        payrollEmployee._id = null;
+        payrollEmployee.Action = EnumActionIntegration.Demission;
+        payrollEmployee.DateRegister = DateTime.Now;
+        payrollEmployee.StatusIntegration = EnumStatusIntegration.Saved;
+        // Campos
+        payrollEmployee.StatusUser = EnumStatusUser.Disabled;
+        payrollEmployee.DemissionDate = view.DataDemissao;
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        if (payrollEmployee != null)
+        {
+          // Resultado Ok
+          resultV2.IdPayrollEmployee = payrollEmployee._id;
+          resultV2.IdUser = string.Empty;
+          resultV2.IdContract = string.Empty;
+          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+          Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
       }
@@ -1876,33 +1954,6 @@ namespace Manager.Services.Specific
     }
 
     #region Private
-    private void ValidKeyEmployee(IColaboradorV2 view)
-    {
-      try
-      {
-        if (string.IsNullOrEmpty(view.Cpf))
-          resultV2.Mensagem.Add("CPF deve ser informado.");
-        else
-        {
-          if (!IsValidCPF(view.Cpf))
-            resultV2.Mensagem.Add("CPF informado inválido.");
-        }
-        if (string.IsNullOrEmpty(view.Empresa))
-          resultV2.Mensagem.Add("Empresa deve ser informado.");
-        if (string.IsNullOrEmpty(view.NomeEmpresa))
-          resultV2.Mensagem.Add("Nome da empresa deve ser informado.");
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          resultV2.Mensagem.Add("Estabelecimento deve ser informado.");
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          resultV2.Mensagem.Add("Nome do Estabelecimento deve ser informado.");
-        if (string.IsNullOrEmpty(view.Matricula))
-          resultV2.Mensagem.Add("Matricula deve ser informada.");
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
     private bool VerficarSeTodosOsDigitosSaoIdenticos(string cpf)
     {
       var previous = -1;
@@ -1933,8 +1984,6 @@ namespace Manager.Services.Specific
       string digito;
       int soma;
       int resto;
-      cpf = cpf.Trim();
-      cpf = cpf.Replace(".", "").Replace("-", "");
 
       tempCpf = cpf.Substring(0, 9);
       soma = 0;
@@ -1957,6 +2006,109 @@ namespace Manager.Services.Specific
         resto = 11 - resto;
       digito = digito + resto.ToString();
       return cpf.EndsWith(digito);
+    }
+    private ColaboradorV2Base ValidKeyEmployee(ColaboradorV2Base view, string messageComplement)
+    {
+      try
+      {
+        if (string.IsNullOrEmpty(view.Estabelecimento))
+          view.Estabelecimento = "1";
+        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
+          view.NomeEstabelecimento = "Estabelecimento Padrão";
+        if (string.IsNullOrEmpty(view.Cpf))
+          resultV2.Mensagem.Add(string.Format("CPF{0}deve ser informado",messageComplement));
+        else
+        {
+          view.Cpf = view.Cpf.Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11, '0');
+          if (!IsValidCPF(view.Cpf))
+            resultV2.Mensagem.Add(string.Format("CPF{0}inválido", messageComplement));
+        }
+        if (string.IsNullOrEmpty(view.Empresa))
+          resultV2.Mensagem.Add(string.Format("Empresa{0}deve ser informada", messageComplement));
+        if (string.IsNullOrEmpty(view.NomeEmpresa))
+          resultV2.Mensagem.Add(string.Format("Nome da empresa{0}deve ser informado", messageComplement));
+        if (string.IsNullOrEmpty(view.Matricula))
+          resultV2.Mensagem.Add(string.Format("Matrícula{0}deve ser informada", messageComplement));
+        return view;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    private EnumActionIntegration ValidAcction(string acao)
+    {
+      switch (acao.ToUpper().Trim())
+      {
+        case "ADMISSAO":
+          return EnumActionIntegration.Admission;
+        case "DEMISSAO":
+          return EnumActionIntegration.Demission;
+        case "ATUALIZACAO":
+          return EnumActionIntegration.Change;
+        case "CARGA":
+          return EnumActionIntegration.Load;
+        default:
+          resultV2.Mensagem.Add("Ação inválida");
+          return EnumActionIntegration.Load;
+      }
+    }
+    private EnumSex ValidSex(string sex)
+    {
+      switch (sex.ToLower())
+      {
+        case "f":
+        case "feminino":
+          return EnumSex.Female;
+        case "M":
+        case "masculino":
+          return EnumSex.Male;
+        default:
+          return EnumSex.Others;
+      };
+    }
+    private EnumStatusUser ValidSituation(string situacao)
+    {
+      // Verificar situação
+      switch (situacao.Trim().ToUpper())
+      {
+        case "ATIVO":
+          return EnumStatusUser.Enabled;
+        case "FERIAS":
+        case "FÉRIAS":
+          return EnumStatusUser.Vacation;
+        case "AFASTADO":
+          return EnumStatusUser.Away;
+        case "DEMITIDO":
+          return EnumStatusUser.Disabled;
+        default:
+          resultV2.Mensagem.Add("Situação invalida.");
+          return EnumStatusUser.Disabled;
+      }
+    }
+    private void ValidEmptyString(string field, string message)
+    {
+      if (string.IsNullOrEmpty(field))
+        resultV2.Mensagem.Add(message);
+    }
+    private string EmptyStringDefault(string field, string defaultValue)
+    {
+      if (string.IsNullOrEmpty(field))
+        return defaultValue;
+      else
+        return field;
+    }
+    private void ValidEmptyDate(DateTime date, string message)
+    {
+      if (date == null || date == DateTime.MinValue)
+        resultV2.Mensagem.Add(message);
+    }
+    private DateTime EmptyDateDefault(DateTime? field, DateTime defaultValue)
+    {
+      if (field == null || field == DateTime.MinValue)
+        return defaultValue;
+      else
+        return (DateTime)field;
     }
     #endregion 
 

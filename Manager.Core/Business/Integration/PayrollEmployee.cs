@@ -1,11 +1,16 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.Enumns;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace Manager.Core.Business.Integration
 {
   public class PayrollEmployee : BaseEntity
   {
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _idPrevious { get; set; }
     public string Key { get; set; }
     public DateTime DateRegister { get; set; }
     public EnumActionIntegration Action { get; set; }
@@ -41,7 +46,7 @@ namespace Manager.Core.Business.Integration
     // Data de Admissão
     public DateTime AdmissionDate { get; set; }
     // Data de Demissão
-    public DateTime? ResignationDate { get; set; }
+    public DateTime? DemissionDate { get; set; }
     // Cargo
     public string Occupation { get; set; }
     // NomeCargo
@@ -63,11 +68,7 @@ namespace Manager.Core.Business.Integration
     // MotivoUltimoReajuste
     public string SalaryChangeReason { get; set; }
     // Situacao
-    public EnumStatusUser Situacao { get; set; }
-    // DataRetornoFerias
-    public DateTime? HolidayReturn { get; set; }
-    // MotivoAfastamento
-    public string MotiveAside { get; set; }
+    public EnumStatusUser StatusUser { get; set; }
     // CpfGestor
     public string ManagerDocument { get; set; }
     // EmpresaGestor
@@ -79,6 +80,11 @@ namespace Manager.Core.Business.Integration
     // NomeEstabelecimentoGestor
     public string ManagerEstablishmentName { get; set; }
     // MatriculaGestor
-    public string MatriculaGestor { get; set; }
+    public string ManagerRegistration { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IdUser { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IdContract { get; set; }
+    public List<string> Messages { get; set; }
   }
 }

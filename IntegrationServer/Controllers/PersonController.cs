@@ -295,7 +295,6 @@ namespace IntegrationServer.InfraController
       }
       return view;
     }
-
     /// <summary>
     /// Integração de funcionário
     /// </summary>
@@ -352,6 +351,34 @@ namespace IntegrationServer.InfraController
     #endregion
 
     #region Colaborador V2
+    /// <summary>
+    /// Integração com objeto único do colaborador versão 2
+    /// </summary>
+    /// <param name="view">Objeto de integração completo do colaborador</param>
+    /// <response code="200">Informações sobre a integração do colaborador</response>
+    /// <response code="400">Problemas na integração do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
+    [Authorize]
+    [HttpPost]
+    [Route("v2/carga")]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    public ObjectResult V2Carga([FromBody]ColaboradorV2Completo view)
+    {
+      try
+      {
+        view.Acao = "CARGA";
+        return Ok(service.IntegrationV2(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(new ColaboradorV2Retorno()
+        {
+          Mensagem = new List<string> { e.Message },
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+        });
+      }
+    }
     /// <summary>
     /// Integração com objeto único do colaborador versão 2
     /// </summary>

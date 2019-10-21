@@ -2,6 +2,7 @@
 using Manager.Core.BusinessModel;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessNew;
 using Manager.Views.Enumns;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -122,6 +123,30 @@ namespace Manager.Core.Business
         Manager = Manager?.Name,
         DateAdm = User?.DateAdm,
         Schooling = User.Schooling?.Name
+      };
+    }
+    public ViewCrudPerson GetViewCrud()
+    {
+      return new ViewCrudPerson()
+      {
+        Company = Company,
+        DateLastOccupation = DateLastOccupation,
+        DateLastReadjust = DateLastReadjust,
+        DateResignation = DateResignation,
+        Establishment = Establishment,
+        HolidayReturn = HolidayReturn,
+        Manager = new ViewBaseFields() { Mail = Manager.Mail, Name = Manager.Name, _id = Manager._id },
+        MotiveAside = MotiveAside,
+        Occupation = Occupation,
+        Registration = Registration,
+        Salary = Salary,
+        SalaryScales = SalaryScales == null ? null : new ViewSalaryScalePerson() {_idSalaryScale = SalaryScales._idSalaryScale, NameSalaryScale = SalaryScales.NameSalaryScale },
+        StatusUser = StatusUser,
+        TypeJourney = TypeJourney,
+        TypeUser = TypeUser,
+        User = User,
+        Workload = Workload,
+        _id = _id
       };
     }
   }
