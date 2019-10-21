@@ -608,6 +608,20 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => service.GetMapOccupation(id));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idcompany"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listopportunityline/{idcompany}")]
+    public async Task<List<ViewListOpportunityLine>> ListOpportunityLine(string idcompany)
+    {
+      return await Task.Run(() => service.ListOpportunityLine(idcompany));
+    }
+
     /// <summary>
     /// Busca informações de cargos para editar
     /// </summary>
