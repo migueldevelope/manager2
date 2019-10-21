@@ -432,7 +432,7 @@ namespace Manager.Services.Specific
             {
               local = new TextDefault()
               {
-                Template =textDefault._id,
+                Template = textDefault._id,
                 Company = company.GetViewList(),
                 _idAccount = accountTextDefault._id,
                 Content = textDefault.Content,
@@ -481,7 +481,7 @@ namespace Manager.Services.Specific
             {
               local = new Questions()
               {
-                Template =question._id,
+                Template = question._id,
                 Content = question.Content,
                 Company = company.GetViewList(),
                 Name = question.Name,
@@ -640,7 +640,7 @@ namespace Manager.Services.Specific
           try
           {
 
-          min = occupation.Activities.Where(p => p.Order > activities.Order).Min(p => p.Order);
+            min = occupation.Activities.Where(p => p.Order > activities.Order).Min(p => p.Order);
           }
           catch
           {
@@ -2144,23 +2144,23 @@ namespace Manager.Services.Specific
         var companys = serviceCompany.GetAllNewVersion().ToList();
         foreach (var company in companys)
         {
-          if(company.Skills != null)
-          if (company.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
-            return "error_exists_register";
+          if (company.Skills != null)
+            if (company.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
+              return "error_exists_register";
         }
         var groups = serviceGroup.GetAllNewVersion().ToList();
         foreach (var group in groups)
         {
           if (group.Skills != null)
             if (group.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
-            return "error_exists_register";
+              return "error_exists_register";
         }
         var occupations = serviceOccupation.GetAllNewVersion().ToList();
         foreach (var occupation in occupations)
         {
           if (occupation.Skills != null)
             if (occupation.Skills.Select(p => new { p._id }).Where(p => p._id == idskill).Count() > 0)
-            return "error_exists_register";
+              return "error_exists_register";
         }
 
         var skill = serviceSkill.GetAllNewVersion(p => p._id == idskill).Result.FirstOrDefault();
@@ -2681,7 +2681,8 @@ namespace Manager.Services.Specific
                 _id = row.ProcessLevelOne._id,
                 Name = row.ProcessLevelOne.Name,
                 Order = row.Order,
-                Area = row.ProcessLevelOne.Area              }
+                Area = row.ProcessLevelOne.Area
+              }
             });
           }
         }
@@ -2797,7 +2798,7 @@ namespace Manager.Services.Specific
               Name = s.NameSalaryScale,
               NameGrade = s.NameGrade,
               _idGrade = s._idGrade,
-              Workload= s.Workload
+              Workload = s.Workload
             }).ToList(),
             Group = p.Group,
             Line = p.Line,
@@ -3636,6 +3637,42 @@ namespace Manager.Services.Specific
             Area = p.ProcessLevelOne.Area
           }
         }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListOpportunityLine> ListOpportunityLine(string idcompany)
+    {
+      try
+      {
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result;
+        var list = new List<ViewListOpportunityLine>();
+
+        foreach (var item in occupations)
+        {
+          var view = new ViewListOpportunityLine();
+          var group = serviceGroup.GetNewVersion(p => p._id == item.Group._id).Result;
+
+          view.Occupation = item.Name;
+          view.Group = item.Group.Name;
+          view.Shepre = group.Sphere.Name;
+          view.Axis = group.Axis.Name;
+          foreach (var proc in item.Process)
+          {
+            view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
+            view.Area = proc.ProcessLevelOne?.Area?.Name;
+            view.ProcessLevelTwo = proc.Name;
+          }
+
+          list.Add(view);
+        }
+
+        return list.OrderBy(p => p.Area).ThenBy(p => p.Shepre).ThenBy(p => p.Axis)
+          .ThenBy(p => p.Group).ThenBy(p => p.ProcessLevelOne)
+          .ThenBy(p => p.ProcessLevelTwo).ThenBy(p => p.Occupation).ToList();
       }
       catch (Exception e)
       {
