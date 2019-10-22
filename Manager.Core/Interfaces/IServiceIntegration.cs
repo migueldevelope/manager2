@@ -71,6 +71,8 @@ namespace Manager.Core.Interfaces
     ColaboradorV2Retorno IntegrationV2(ColaboradorV2Salario view);
     ColaboradorV2Retorno IntegrationV2(ColaboradorV2Situacao view);
     ColaboradorV2Retorno IntegrationV2(ColaboradorV2Demissao view);
+    ColaboradorV2 GetV2(ColaboradorV2Base view);
+    ColaboradorV2 GetV2(string id);
     #endregion
   }
 }

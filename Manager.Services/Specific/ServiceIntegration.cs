@@ -1444,29 +1444,7 @@ namespace Manager.Services.Specific
         payrollEmployee.ManagerRegistration = view.Gestor?.Matricula;
         payrollEmployee.Messages = new List<string>();
         payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-        if (payrollEmployee != null)
-        {
-          // Resultado Ok
-          resultV2.IdPayrollEmployee = payrollEmployee._id;
-          resultV2.IdUser = string.Empty;
-          resultV2.IdContract = string.Empty;
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
-          if (payrollEmployeePrevious != null)
-          {
-            Task taskPrevious = payrollEmployeeService.Update(payrollEmployeePrevious, null);
-          }
-          // Atualização de usuário e devolve o id do usuário e mensagens
-          payrollEmployee = UserUpdate(payrollEmployee);
-          // Atualização da pessoa e devolve o id da pessoa e mensagens
-          resultV2.IdUser = payrollEmployee.IdUser;
-          payrollEmployee = PersonUpdate(payrollEmployee);
-          resultV2.IdContract = payrollEmployee.IdContract;
-          Task task = payrollEmployeeService.Update(payrollEmployee, null);
-        }
-        for (int i = 0; i < payrollEmployee.Messages.Count; i++)
-          resultV2.Mensagem.Add(payrollEmployee.Messages[i]);
-        if (resultV2.Mensagem.Count == 0)
-          resultV2.Mensagem.Add("Colaborador atualizado");
+        ConclusionV2(payrollEmployee, payrollEmployeePrevious);
         return resultV2;
       }
       catch (Exception)
@@ -1502,65 +1480,59 @@ namespace Manager.Services.Specific
         // Atualização da base de dados
         if (resultV2.Mensagem.Count == 0)
         {
-          PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave).Result.LastOrDefault();
-          if (payrollEmployee != null)
+          PayrollEmployee payrollEmployeeValid = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).FirstOrDefault();
+          if (payrollEmployeeValid != null)
             resultV2.Mensagem.Add("Colaborador já está na base de integração.");
         }
         // Gravar tabela
-        if (resultV2.Mensagem.Count == 0)
+        if (resultV2.Mensagem.Count != 0)
+          return resultV2;
+
+        PayrollEmployee payrollEmployee = new PayrollEmployee
         {
-          PayrollEmployee payrollEmployee = new PayrollEmployee
-          {
-            // Identificação
-            Key = view.Colaborador.Chave,
-            DateRegister = DateTime.Now,
-            Action = EnumActionIntegration.Admission,
-            StatusIntegration = EnumStatusIntegration.Saved,
-            // Campos
-            AdmissionDate = view.DataAdmissao,
-            BirthDate = view.DataNascimento,
-            CellNumber = view.Celular,
-            Company = view.Colaborador.Empresa,
-            CompanyName = view.Colaborador.NomeEmpresa,
-            CostCenter = view.CentroCusto,
-            CostCenterChangeDate = null,
-            CostCenterName = view.NomeCentroCusto,
-            Document = view.Colaborador.Cpf,
-            Establishment = view.Colaborador.Estabelecimento,
-            EstablishmentName = view.Colaborador.NomeEstabelecimento,
-            Mail = view.Email,
-            ManagerCompany = view.Gestor.Empresa,
-            ManagerCompanyName = view.Gestor.NomeEmpresa,
-            ManagerDocument = view.Gestor.Cpf,
-            ManagerEstablishment = view.Gestor.Estabelecimento,
-            ManagerEstablishmentName = view.Gestor.NomeEstabelecimento,
-            ManagerRegistration = view.Gestor.Matricula,
-            Name = view.Nome,
-            Nickname = view.Apelido,
-            Occupation = view.Cargo,
-            OccupationChangeDate = null,
-            OccupationName = view.NomeCargo,
-            Registration = view.Colaborador.Matricula,
-            DemissionDate = null,
-            Salary = view.SalarioNominal,
-            SalaryChangeDate = null,
-            SalaryChangeReason = null,
-            Schooling = view.GrauInstrucao,
-            SchoolingName = view.NomeGrauInstrucao,
-            Sex = sexo,
-            StatusUser = EnumStatusUser.Enabled,
-            Workload = view.CargaHoraria
-          };
-          payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
-          if (payrollEmployee != null)
-          {
-            // Resultado Ok
-            resultV2.IdPayrollEmployee = payrollEmployee._id;
-            resultV2.IdUser = string.Empty;
-            resultV2.IdContract = string.Empty;
-            resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
-          }
-        }
+          // Identificação
+          Key = view.Colaborador.Chave,
+          DateRegister = DateTime.Now,
+          Action = EnumActionIntegration.Admission,
+          StatusIntegration = EnumStatusIntegration.Saved,
+          // Campos
+          AdmissionDate = view.DataAdmissao,
+          BirthDate = view.DataNascimento,
+          CellNumber = view.Celular,
+          Company = view.Colaborador.Empresa,
+          CompanyName = view.Colaborador.NomeEmpresa,
+          CostCenter = view.CentroCusto,
+          CostCenterChangeDate = null,
+          CostCenterName = view.NomeCentroCusto,
+          Document = view.Colaborador.Cpf,
+          Establishment = view.Colaborador.Estabelecimento,
+          EstablishmentName = view.Colaborador.NomeEstabelecimento,
+          Mail = view.Email,
+          ManagerCompany = view.Gestor.Empresa,
+          ManagerCompanyName = view.Gestor.NomeEmpresa,
+          ManagerDocument = view.Gestor.Cpf,
+          ManagerEstablishment = view.Gestor.Estabelecimento,
+          ManagerEstablishmentName = view.Gestor.NomeEstabelecimento,
+          ManagerRegistration = view.Gestor.Matricula,
+          Name = view.Nome,
+          Nickname = view.Apelido,
+          Occupation = view.Cargo,
+          OccupationChangeDate = null,
+          OccupationName = view.NomeCargo,
+          Registration = view.Colaborador.Matricula,
+          DemissionDate = null,
+          Salary = view.SalarioNominal,
+          SalaryChangeDate = null,
+          SalaryChangeReason = null,
+          Schooling = view.GrauInstrucao,
+          SchoolingName = view.NomeGrauInstrucao,
+          Sex = sexo,
+          StatusUser = EnumStatusUser.Enabled,
+          Workload = view.CargaHoraria,
+          Messages = new List<string>()
+        };
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        ConclusionV2(payrollEmployee, null);
         return resultV2;
       }
       catch (Exception)
@@ -1952,8 +1924,36 @@ namespace Manager.Services.Specific
         throw;
       }
     }
+    public ColaboradorV2 GetV2(ColaboradorV2Base view)
+    {
+      try
+      {
+        PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Chave).Result.OrderBy(o => o.DateRegister).LastOrDefault();
+        if (payrollEmployee == null)
+          throw new Exception("Colaborador não encontrado na integração");
+        return payrollEmployee.GetColaboradorV2();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public ColaboradorV2 GetV2(string id)
+    {
+      try
+      {
+        PayrollEmployee payrollEmployee = payrollEmployeeService.GetNewVersion(p => p._id == id).Result;
+        if (payrollEmployee == null)
+          throw new Exception("Colaborador não encontrado na integração");
+        return payrollEmployee.GetColaboradorV2();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
-    #region Private
+    #region Valid CPF
     private bool VerficarSeTodosOsDigitosSaoIdenticos(string cpf)
     {
       var previous = -1;
@@ -2007,6 +2007,9 @@ namespace Manager.Services.Specific
       digito = digito + resto.ToString();
       return cpf.EndsWith(digito);
     }
+    #endregion
+
+    #region Valid Fields
     private ColaboradorV2Base ValidKeyEmployee(ColaboradorV2Base view, string messageComplement)
     {
       try
@@ -2060,7 +2063,7 @@ namespace Manager.Services.Specific
         case "f":
         case "feminino":
           return EnumSex.Female;
-        case "M":
+        case "m":
         case "masculino":
           return EnumSex.Male;
         default:
@@ -2109,6 +2112,44 @@ namespace Manager.Services.Specific
         return defaultValue;
       else
         return (DateTime)field;
+    }
+    #endregion
+
+    #region Conclusion PayrollEmployee
+    private void ConclusionV2(PayrollEmployee payrollEmployee, PayrollEmployee payrollEmployeePrevious)
+    {
+      try
+      {
+        if (payrollEmployee != null)
+        {
+          // Resultado Ok
+          resultV2.IdPayrollEmployee = payrollEmployee._id;
+          resultV2.IdUser = string.Empty;
+          resultV2.IdContract = string.Empty;
+          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok;
+          // Atualização de usuário e devolve o id do usuário e mensagens
+          payrollEmployee = UserUpdate(payrollEmployee);
+          // Atualização da pessoa e devolve o id da pessoa e mensagens
+          resultV2.IdUser = payrollEmployee.IdUser;
+          payrollEmployee = PersonUpdate(payrollEmployee);
+          resultV2.IdContract = payrollEmployee.IdContract;
+          if (payrollEmployeePrevious != null)
+          {
+            Task taskPrevious = payrollEmployeeService.Update(payrollEmployeePrevious, null);
+            if (payrollEmployee.Equal(payrollEmployeePrevious))
+              payrollEmployee.StatusIntegration = EnumStatusIntegration.Reject;
+          }
+          Task task = payrollEmployeeService.Update(payrollEmployee, null);
+        }
+        for (int i = 0; i < payrollEmployee.Messages.Count; i++)
+          resultV2.Mensagem.Add(payrollEmployee.Messages[i]);
+        if (resultV2.Mensagem.Count == 0)
+          resultV2.Mensagem.Add("Colaborador atualizado");
+      }
+      catch (Exception)
+      {
+        throw;
+      }
     }
     #endregion 
 

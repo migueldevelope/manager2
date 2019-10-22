@@ -360,34 +360,6 @@ namespace IntegrationServer.InfraController
     /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
     [HttpPost]
-    [Route("v2/carga")]
-    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
-    public ObjectResult V2Carga([FromBody]ColaboradorV2Completo view)
-    {
-      try
-      {
-        view.Acao = "CARGA";
-        return Ok(service.IntegrationV2(view));
-      }
-      catch (Exception e)
-      {
-        return BadRequest(new ColaboradorV2Retorno()
-        {
-          Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
-        });
-      }
-    }
-    /// <summary>
-    /// Integração com objeto único do colaborador versão 2
-    /// </summary>
-    /// <param name="view">Objeto de integração completo do colaborador</param>
-    /// <response code="200">Informações sobre a integração do colaborador</response>
-    /// <response code="400">Problemas na integração do colaborador</response>
-    /// <returns>Objeto de retorno da integração </returns>
-    [Authorize]
-    [HttpPut]
     [Route("v2/completo")]
     [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
@@ -407,6 +379,52 @@ namespace IntegrationServer.InfraController
       }
     }
     /// <summary>
+    /// Consulta última posição de integração do colaborador
+    /// </summary>
+    /// <param name="view">Objeto de identificação do colaborador</param>
+    /// <response code="200">Informações sobre a integração do colaborador</response>
+    /// <response code="400">Problemas na integração do colaborador</response>
+    /// <returns>Objeto de retorno da integração do colaborador</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("v2/consulta")]
+    [ProducesResponseType(typeof(ColaboradorV2), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    public ObjectResult V2Consulta([FromBody]ColaboradorV2Base view)
+    {
+      try
+      {
+        return Ok(service.GetV2(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+    /// <summary>
+    /// Consulta posição de integração do colaborador por identificador
+    /// </summary>
+    /// <param name="id">Identificação do registro de integração do colaborador</param>
+    /// <response code="200">Informações sobre a integração do colaborador</response>
+    /// <response code="400">Problemas na integração do colaborador</response>
+    /// <returns>Objeto de retorno da integração do colaborador</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("v2/consulta/{id}")]
+    [ProducesResponseType(typeof(ColaboradorV2), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    public ObjectResult V2ConsultaId(string id)
+    {
+      try
+      {
+        return Ok(service.GetV2(id));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+    /// <summary>
     /// Admissão de colaborador
     /// </summary>
     /// <param name="view">Objeto de integração do colaborador para o processo de admissão</param>
@@ -414,7 +432,7 @@ namespace IntegrationServer.InfraController
     /// <response code="400">Problemas na admissão do colaborador</response>
     /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
-    [HttpPost]
+    [HttpPut]
     [Route("v2/admissao")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
