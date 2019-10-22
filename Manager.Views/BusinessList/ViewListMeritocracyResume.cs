@@ -6,6 +6,7 @@
     public string Name { get; set; }
     public string Manager { get; set; }
     public string Occupation { get; set; }
+    public string Photo { get; set; }
 
   }
 }
