@@ -814,7 +814,8 @@ namespace Manager.Services.Specific
                     Name = item.User?.Name,
                     Manager = item.Manager?.Name,
                     Occupation = item.Occupation?.Name,
-                    ResultEnd = result
+                    ResultEnd = result,
+                    Photo = item.User?.PhotoUrl
                   });
                 }
               }
@@ -836,7 +837,8 @@ namespace Manager.Services.Specific
                 Name = item.User?.Name,
                 Manager = item.Manager?.Name,
                 Occupation = item.Occupation?.Name,
-                ResultEnd = result
+                ResultEnd = result,
+                Photo = item.User?.PhotoUrl
               });
             }
           }
