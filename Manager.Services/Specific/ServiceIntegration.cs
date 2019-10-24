@@ -196,15 +196,20 @@ namespace Manager.Services.Specific
           payrollEmployee.Messages.Add("Falta integração de cargo");
         } else {
           // Estabelecimento
+          payrollEmployee._idCompany = company._id;
           integrationEstablishment = GetIntegrationEstablishment(payrollEmployee.Establishment, payrollEmployee.EstablishmentName, company._id);
           establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
           if (establishment == null)
             payrollEmployee.Messages.Add("Falta integração de estabelecimento");
+          else
+            payrollEmployee._idEstablishment = establishment._id;
           // Cargo
           integrationOccupation = GetIntegrationOccupation(payrollEmployee.Occupation, payrollEmployee.OccupationName, company._id);
           occupation = occupationService.GetNewVersion(p => p._id == integrationOccupation.IdOccupation).Result;
           if (occupation == null)
             payrollEmployee.Messages.Add("Falta integração de cargo");
+          else
+            payrollEmployee._idOccupation = occupation._id;
         }
         if (payrollEmployee.Messages.Count() > 0)
           return payrollEmployee;
@@ -247,7 +252,6 @@ namespace Manager.Services.Specific
 
           if (personManager != null)
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
-
           person.StatusUser = payrollEmployee.StatusUser;
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
           person = personService.New(person);
@@ -274,9 +278,6 @@ namespace Manager.Services.Specific
         }
         payrollEmployee._idContract = person._id;
         payrollEmployee.StatusIntegration = EnumStatusIntegration.Atualized;
-        payrollEmployee._idCompany = company._id;
-        payrollEmployee._idEstablishment = establishment._id;
-        payrollEmployee._idOccupation = occupation._id;
         return payrollEmployee;
       }
       catch (Exception ex)
@@ -2194,10 +2195,12 @@ namespace Manager.Services.Specific
       PayrollEmployee payrollEmployee = null;
       foreach (var payrollEmployeeItem in payrollEmployees)
       {
+        payrollEmployeeItem.Messages = new List<string>();
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployeeItem);
         // Atualização da pessoa e devolve o id da pessoa e mensagens
         payrollEmployee = PersonUpdate(payrollEmployee);
+        Task task = payrollEmployeeService.Update(payrollEmployee, null);
       }
     }
     private void ValidPayrollEmployee(IntegrationEstablishment item)
@@ -2206,10 +2209,12 @@ namespace Manager.Services.Specific
       PayrollEmployee payrollEmployee = null;
       foreach (var payrollEmployeeItem in payrollEmployees)
       {
+        payrollEmployeeItem.Messages = new List<string>();
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployeeItem);
         // Atualização da pessoa e devolve o id da pessoa e mensagens
         payrollEmployee = PersonUpdate(payrollEmployee);
+        Task task = payrollEmployeeService.Update(payrollEmployee, null);
       }
     }
     private void ValidPayrollEmployee(IntegrationSchooling item)
@@ -2218,10 +2223,12 @@ namespace Manager.Services.Specific
       PayrollEmployee payrollEmployee = null;
       foreach (var payrollEmployeeItem in payrollEmployees)
       {
+        payrollEmployeeItem.Messages = new List<string>();
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployeeItem);
         // Atualização da pessoa e devolve o id da pessoa e mensagens
         payrollEmployee = PersonUpdate(payrollEmployee);
+        Task task = payrollEmployeeService.Update(payrollEmployee, null);
       }
     }
     private void ValidPayrollEmployee(IntegrationOccupation item)
@@ -2230,13 +2237,14 @@ namespace Manager.Services.Specific
       PayrollEmployee payrollEmployee = null;
       foreach (var payrollEmployeeItem in payrollEmployees)
       {
+        payrollEmployeeItem.Messages = new List<string>();
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployeeItem);
         // Atualização da pessoa e devolve o id da pessoa e mensagens
         payrollEmployee = PersonUpdate(payrollEmployee);
+        Task task = payrollEmployeeService.Update(payrollEmployee, null);
       }
     }
-
     public ColaboradorV2Retorno IntegrationPayroll(string id)
     {
       try
