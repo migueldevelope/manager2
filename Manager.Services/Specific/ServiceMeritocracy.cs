@@ -732,7 +732,8 @@ namespace Manager.Services.Specific
                     Name = item.User?.Name,
                     Manager = item.Manager?.Name,
                     Occupation = item.Occupation?.Name,
-                    ResultEnd = result
+                    ResultEnd = result,
+                    Photo = item.User?.PhotoUrl
                   });
                 }
               }
@@ -754,7 +755,8 @@ namespace Manager.Services.Specific
                 Name = item.User?.Name,
                 Manager = item.Manager?.Name,
                 Occupation = item.Occupation?.Name,
-                ResultEnd = result
+                ResultEnd = result,
+                Photo = item.User?.PhotoUrl
               });
             }
           }
@@ -1096,7 +1098,8 @@ namespace Manager.Services.Specific
             Name = person.User.Name,
             CurrentSchooling = meritocracy.Person.CurrentSchooling ?? person.User.Schooling?.Name,
             Salary = person.Salary,
-            OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name
+            OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name,
+            Photo = person.User?.PhotoUrl
           },
           WeightCompanyDate = meritocracy.WeightCompanyDate,
           WeightOccupationDate = meritocracy.WeightOccupationDate,

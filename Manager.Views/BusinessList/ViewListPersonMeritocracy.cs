@@ -10,5 +10,6 @@ namespace Manager.Views.BusinessList
     public string OccupationSchooling { get; set; }
     public string OccupationName { get; set; }
     public decimal Salary { get; set; }
+    public string Photo { get; set; }
   }
 }

@@ -258,6 +258,24 @@
             <response code="400">Problemas na integração do colaborador</response>
             <returns>Objeto de retorno da integração </returns>
         </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.V2Consulta(Manager.Views.Integration.V2.ColaboradorV2Base)">
+            <summary>
+            Consulta última posição de integração do colaborador
+            </summary>
+            <param name="view">Objeto de identificação do colaborador</param>
+            <response code="200">Informações sobre a integração do colaborador</response>
+            <response code="400">Problemas na integração do colaborador</response>
+            <returns>Objeto de retorno da integração do colaborador</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.V2ConsultaId(System.String)">
+            <summary>
+            Consulta posição de integração do colaborador por identificador
+            </summary>
+            <param name="id">Identificação do registro de integração do colaborador</param>
+            <response code="200">Informações sobre a integração do colaborador</response>
+            <response code="400">Problemas na integração do colaborador</response>
+            <returns>Objeto de retorno da integração do colaborador</returns>
+        </member>
         <member name="M:IntegrationServer.InfraController.PersonController.AdmissaoV2(Manager.Views.Integration.V2.ColaboradorV2Admissao)">
             <summary>
             Admissão de colaborador
