@@ -2126,7 +2126,7 @@ namespace Manager.Services.Specific
       {
         if (!equals)
         {
-          if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+          if (payrollEmployeePrevious?.StatusIntegration == EnumStatusIntegration.Saved)
           {
             payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
             payrollEmployee._idPrevious = payrollEmployeePrevious._idPrevious;
