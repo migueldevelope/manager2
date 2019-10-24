@@ -374,7 +374,7 @@ namespace IntegrationServer.InfraController
         return BadRequest(new ColaboradorV2Retorno()
         {
           Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
+          Situacao = "Erro"
         });
       }
     }
@@ -448,7 +448,7 @@ namespace IntegrationServer.InfraController
         return BadRequest(new ColaboradorV2Retorno()
         {
           Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
+          Situacao = "Erro"
         });
       }
     }
@@ -475,7 +475,7 @@ namespace IntegrationServer.InfraController
         return BadRequest(new ColaboradorV2Retorno()
         {
           Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
+          Situacao = "Erro"
         });
       }
     }
@@ -502,7 +502,7 @@ namespace IntegrationServer.InfraController
         return BadRequest(new ColaboradorV2Retorno()
         {
           Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
+          Situacao = "Erro"
         });
       }
     }
@@ -530,7 +530,7 @@ namespace IntegrationServer.InfraController
           return BadRequest(new ColaboradorV2Retorno()
           {
             Mensagem = new List<string> { e.Message },
-            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
+            Situacao = "Erro"
           });
         }
       }
@@ -559,7 +559,7 @@ namespace IntegrationServer.InfraController
           return BadRequest(new ColaboradorV2Retorno()
           {
             Mensagem = new List<string> { e.Message },
-            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
+            Situacao = "Erro"
           });
         }
       }
@@ -588,7 +588,7 @@ namespace IntegrationServer.InfraController
           return BadRequest(new ColaboradorV2Retorno()
           {
             Mensagem = new List<string> { e.Message },
-            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
+            Situacao = "Erro"
           });
         }
       }
@@ -617,7 +617,7 @@ namespace IntegrationServer.InfraController
           return BadRequest(new ColaboradorV2Retorno()
           {
             Mensagem = new List<string> { e.Message },
-            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
+            Situacao = "Erro"
           });
         }
       }

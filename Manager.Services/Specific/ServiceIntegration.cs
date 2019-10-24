@@ -387,7 +387,6 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-
     public List<ViewListIntegrationCompany> CompanyList(ref long total, int count = 10, int page = 1, string filter = "", bool all = false)
     {
       try
@@ -433,6 +432,10 @@ namespace Manager.Services.Specific
         item.IdCompany = idCompany;
         item.NameCompany = companyService.GetAllNewVersion(p => p._id == idCompany).Result.FirstOrDefault().Name;
         var i = integrationCompanyService.Update(item, null);
+
+        // Validar PayrollEmployee
+        Task.Run(() => ValidPayrollEmployee(item));
+
         return new ViewListIntegrationCompany()
         {
           _id = item._id,
@@ -570,6 +573,9 @@ namespace Manager.Services.Specific
         item.NameEstablishment = establishment.Name;
         item._idCompany = establishment.Company._id;
         var i = integrationEstablishmentService.Update(item, null);
+        // Validar PayrollEmployee
+        Task.Run(() => ValidPayrollEmployee(item));
+
         return new ViewListIntegrationEstablishment()
         {
           _id = item._id,
@@ -691,6 +697,8 @@ namespace Manager.Services.Specific
         item.NameOccupation = occupation.Name;
         item._idCompany = occupation.Group.Company._id;
         var i = integrationOccupationService.Update(item, null);
+        // Validar PayrollEmployee
+        Task.Run(() => ValidPayrollEmployee(item));
         return new ViewListIntegrationOccupation()
         {
           _id = item._id,
@@ -807,6 +815,8 @@ namespace Manager.Services.Specific
         item.IdSchooling = idSchooling;
         item.NameSchooling = schoolingService.GetAllNewVersion(p => p._id == idSchooling).Result.FirstOrDefault().Name;
         var i = integrationSchoolingService.Update(item, null);
+        // Validar PayrollEmployee
+        Task.Run( () => ValidPayrollEmployee(item));
         return new ViewListIntegrationSchooling()
         {
           _id = item._id,
@@ -1353,7 +1363,7 @@ namespace Manager.Services.Specific
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         // Validação de campos especiais
@@ -1443,10 +1453,7 @@ namespace Manager.Services.Specific
         ConclusionV2(payrollEmployee, payrollEmployeePrevious, true);
         // Anterior e novo são iguais, não gravar o novo e retornar mensagens do antigo.
         if (payrollEmployeePrevious.Messages.Count == 0)
-        {
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok.ToString();
           resultV2.Mensagem.Add("Colaborador atualizado!");
-        }
         else
           resultV2.Mensagem = payrollEmployeePrevious.Messages;
         return resultV2;
@@ -1463,7 +1470,7 @@ namespace Manager.Services.Specific
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         // Validação de campos especiais
@@ -1550,7 +1557,7 @@ namespace Manager.Services.Specific
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         // Validação de campos especiais
@@ -1600,7 +1607,7 @@ namespace Manager.Services.Specific
           resultV2.IdPayrollEmployee = payrollEmployee._id;
           resultV2.IdUser = string.Empty;
           resultV2.IdContract = string.Empty;
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok.ToString();
+          resultV2.Situacao = "Ok";
           Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
@@ -1616,7 +1623,7 @@ namespace Manager.Services.Specific
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         // Validação de campos especiais
@@ -1667,7 +1674,7 @@ namespace Manager.Services.Specific
           resultV2.IdPayrollEmployee = payrollEmployee._id;
           resultV2.IdUser = string.Empty;
           resultV2.IdContract = string.Empty;
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok.ToString();
+          resultV2.Situacao = "Ok";
           Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
@@ -1683,7 +1690,7 @@ namespace Manager.Services.Specific
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         // Validação de campos especiais
@@ -1733,7 +1740,7 @@ namespace Manager.Services.Specific
           resultV2.IdPayrollEmployee = payrollEmployee._id;
           resultV2.IdUser = string.Empty;
           resultV2.IdContract = string.Empty;
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok.ToString();
+          resultV2.Situacao = "Ok";
           Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
@@ -1749,7 +1756,7 @@ namespace Manager.Services.Specific
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         // Validação de campos especiais
@@ -1795,7 +1802,7 @@ namespace Manager.Services.Specific
           resultV2.IdPayrollEmployee = payrollEmployee._id;
           resultV2.IdUser = string.Empty;
           resultV2.IdContract = string.Empty;
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok.ToString();
+          resultV2.Situacao = "Ok";
           Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
@@ -1812,7 +1819,7 @@ namespace Manager.Services.Specific
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         // Validação de campos especiais
@@ -1857,7 +1864,7 @@ namespace Manager.Services.Specific
           resultV2.IdPayrollEmployee = payrollEmployee._id;
           resultV2.IdUser = string.Empty;
           resultV2.IdContract = string.Empty;
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok.ToString();
+          resultV2.Situacao = "Ok";
           Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
@@ -1873,7 +1880,7 @@ namespace Manager.Services.Specific
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         // Validação de campos especiais
@@ -1918,7 +1925,7 @@ namespace Manager.Services.Specific
           resultV2.IdPayrollEmployee = payrollEmployee._id;
           resultV2.IdUser = string.Empty;
           resultV2.IdContract = string.Empty;
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok.ToString();
+          resultV2.Situacao = "Ok";
           Task task = payrollEmployeeService.Update(payrollEmployeePrevious, null);
         }
         return resultV2;
@@ -2166,7 +2173,7 @@ namespace Manager.Services.Specific
           resultV2.Mensagem.Add(payrollEmployee.Messages[i]);
         if (resultV2.Mensagem.Count == 0)
         {
-          resultV2.Situacao = EnumSituacaoRetornoIntegracao.Ok.ToString();
+          resultV2.Situacao = "Ok";
           resultV2.Mensagem.Add("Colaborador atualizado");
         }
       }
@@ -2180,13 +2187,63 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Atualização de Integração
+    // Validar PayrollEmployee
+    private void ValidPayrollEmployee(IntegrationCompany item)
+    {
+      List<PayrollEmployee> payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.StatusIntegration == EnumStatusIntegration.Saved && p._idCompany == null && p.CompanyName == item.Name).Result;
+      PayrollEmployee payrollEmployee = null;
+      foreach (var payrollEmployeeItem in payrollEmployees)
+      {
+        // Atualização de usuário e devolve o id do usuário e mensagens
+        payrollEmployee = UserUpdate(payrollEmployeeItem);
+        // Atualização da pessoa e devolve o id da pessoa e mensagens
+        payrollEmployee = PersonUpdate(payrollEmployee);
+      }
+    }
+    private void ValidPayrollEmployee(IntegrationEstablishment item)
+    {
+      List<PayrollEmployee> payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.StatusIntegration == EnumStatusIntegration.Saved && p._idEstablishment == null && p.EstablishmentName == item.Name).Result;
+      PayrollEmployee payrollEmployee = null;
+      foreach (var payrollEmployeeItem in payrollEmployees)
+      {
+        // Atualização de usuário e devolve o id do usuário e mensagens
+        payrollEmployee = UserUpdate(payrollEmployeeItem);
+        // Atualização da pessoa e devolve o id da pessoa e mensagens
+        payrollEmployee = PersonUpdate(payrollEmployee);
+      }
+    }
+    private void ValidPayrollEmployee(IntegrationSchooling item)
+    {
+      List<PayrollEmployee> payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.StatusIntegration == EnumStatusIntegration.Saved && p._idSchooling == null && p.SchoolingName == item.Name).Result;
+      PayrollEmployee payrollEmployee = null;
+      foreach (var payrollEmployeeItem in payrollEmployees)
+      {
+        // Atualização de usuário e devolve o id do usuário e mensagens
+        payrollEmployee = UserUpdate(payrollEmployeeItem);
+        // Atualização da pessoa e devolve o id da pessoa e mensagens
+        payrollEmployee = PersonUpdate(payrollEmployee);
+      }
+    }
+    private void ValidPayrollEmployee(IntegrationOccupation item)
+    {
+      List<PayrollEmployee> payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.StatusIntegration == EnumStatusIntegration.Saved && p._idOccupation == null && p.OccupationName == item.Name).Result;
+      PayrollEmployee payrollEmployee = null;
+      foreach (var payrollEmployeeItem in payrollEmployees)
+      {
+        // Atualização de usuário e devolve o id do usuário e mensagens
+        payrollEmployee = UserUpdate(payrollEmployeeItem);
+        // Atualização da pessoa e devolve o id da pessoa e mensagens
+        payrollEmployee = PersonUpdate(payrollEmployee);
+      }
+    }
+
     public ColaboradorV2Retorno IntegrationPayroll(string id)
     {
       try
       {
         resultV2 = new ColaboradorV2Retorno
         {
-          Situacao = EnumSituacaoRetornoIntegracao.Erro.ToString(),
+          Situacao = "Ok",
           Mensagem = new List<string>()
         };
         PayrollEmployee payrollEmployee = payrollEmployeeService.GetNewVersion(p => p._id == id).Result;
