@@ -2139,6 +2139,8 @@ namespace Manager.Services.Specific
             payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
             payrollEmployee._idPrevious = payrollEmployeePrevious._idPrevious;
           }
+          else
+            payrollEmployee._idPrevious = payrollEmployeePrevious._id;
         }
         else
         {
