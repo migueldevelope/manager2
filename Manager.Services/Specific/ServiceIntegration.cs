@@ -179,7 +179,7 @@ namespace Manager.Services.Specific
         return payrollEmployee;
       }
     }
-    private PayrollEmployee PersonUpdate(PayrollEmployee payrollEmployee)
+    private PayrollEmployee PersonUpdate(PayrollEmployee payrollEmployee, bool equalOccupation)
     {
       try
       {
@@ -230,6 +230,11 @@ namespace Manager.Services.Specific
                   && p.Establishment._id == establishmentManager._id && p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
           }
         }
+        if (personManager != null && ( personManager.TypeUser != EnumTypeUser.Manager || personManager.TypeUser != EnumTypeUser.ManagerHR ))
+        {
+          personManager.TypeUser = EnumTypeUser.Manager;
+          string updatePerson = personService.Update(personManager);
+        }
         ViewCrudPerson person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
             && p.Establishment._id == establishment._id && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
         if (person == null)
@@ -252,6 +257,7 @@ namespace Manager.Services.Specific
 
           if (personManager != null)
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
+
           person.StatusUser = payrollEmployee.StatusUser;
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
           person = personService.New(person);
@@ -260,7 +266,9 @@ namespace Manager.Services.Specific
         {
           person.Company = company.GetViewList();
           person.Establishment = establishment.GetViewList();
-          person.Occupation = occupation.GetViewListResume();
+          // Apenas mudar de cargo se mudou na folha de pagamento em relação a última carga
+          if (!equalOccupation)
+            person.Occupation = occupation.GetViewListResume();
           person.Registration = payrollEmployee.Registration;
           person.HolidayReturn = null;
           person.MotiveAside = null;
@@ -2134,13 +2142,16 @@ namespace Manager.Services.Specific
       {
         if (!equals)
         {
-          if (payrollEmployeePrevious?.StatusIntegration == EnumStatusIntegration.Saved)
+          if (payrollEmployeePrevious != null)
           {
-            payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
-            payrollEmployee._idPrevious = payrollEmployeePrevious._idPrevious;
+            if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Saved)
+            {
+              payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+              payrollEmployee._idPrevious = payrollEmployeePrevious._idPrevious;
+            }
+            else
+              payrollEmployee._idPrevious = payrollEmployeePrevious._id;
           }
-          else
-            payrollEmployee._idPrevious = payrollEmployeePrevious._id;
         }
         else
         {
@@ -2157,8 +2168,8 @@ namespace Manager.Services.Specific
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployee);
         resultV2.IdUser = payrollEmployee._idUser;
-        // Atualização da pessoa e devolve o id da pessoa e mensagens
-        payrollEmployee = PersonUpdate(payrollEmployee);
+        payrollEmployee = PersonUpdate(payrollEmployee, payrollEmployeePrevious?.OccupationName == payrollEmployee.OccupationName);
+
         resultV2.IdContract = payrollEmployee._idContract;
         // Atualizar registro anterior
         if (!equals)
@@ -2201,7 +2212,15 @@ namespace Manager.Services.Specific
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployeeItem);
         // Atualização da pessoa e devolve o id da pessoa e mensagens
-        payrollEmployee = PersonUpdate(payrollEmployee);
+        if (payrollEmployee._idPrevious == null)
+          payrollEmployee = PersonUpdate(payrollEmployee, false);
+        else
+        {
+          if (payrollEmployee.OccupationName == payrollEmployeeService.GetNewVersion(p => p._id == payrollEmployee._idPrevious).Result.OccupationName)
+            payrollEmployee = PersonUpdate(payrollEmployee, true);
+          else
+            payrollEmployee = PersonUpdate(payrollEmployee, false);
+        }
         Task task = payrollEmployeeService.Update(payrollEmployee, null);
       }
     }
@@ -2215,7 +2234,15 @@ namespace Manager.Services.Specific
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployeeItem);
         // Atualização da pessoa e devolve o id da pessoa e mensagens
-        payrollEmployee = PersonUpdate(payrollEmployee);
+        if (payrollEmployee._idPrevious == null)
+          payrollEmployee = PersonUpdate(payrollEmployee, false);
+        else
+        {
+          if (payrollEmployee.OccupationName == payrollEmployeeService.GetNewVersion(p => p._id == payrollEmployee._idPrevious).Result.OccupationName)
+            payrollEmployee = PersonUpdate(payrollEmployee, true);
+          else
+            payrollEmployee = PersonUpdate(payrollEmployee, false);
+        }
         Task task = payrollEmployeeService.Update(payrollEmployee, null);
       }
     }
@@ -2229,7 +2256,15 @@ namespace Manager.Services.Specific
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployeeItem);
         // Atualização da pessoa e devolve o id da pessoa e mensagens
-        payrollEmployee = PersonUpdate(payrollEmployee);
+        if (payrollEmployee._idPrevious == null)
+          payrollEmployee = PersonUpdate(payrollEmployee, false);
+        else
+        {
+          if (payrollEmployee.OccupationName == payrollEmployeeService.GetNewVersion(p => p._id == payrollEmployee._idPrevious).Result.OccupationName)
+            payrollEmployee = PersonUpdate(payrollEmployee, true);
+          else
+            payrollEmployee = PersonUpdate(payrollEmployee, false);
+        }
         Task task = payrollEmployeeService.Update(payrollEmployee, null);
       }
     }
@@ -2243,7 +2278,15 @@ namespace Manager.Services.Specific
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployeeItem);
         // Atualização da pessoa e devolve o id da pessoa e mensagens
-        payrollEmployee = PersonUpdate(payrollEmployee);
+        if (payrollEmployee._idPrevious == null)
+          payrollEmployee = PersonUpdate(payrollEmployee, false);
+        else
+        {
+          if (payrollEmployee.OccupationName == payrollEmployeeService.GetNewVersion(p => p._id == payrollEmployee._idPrevious).Result.OccupationName)
+            payrollEmployee = PersonUpdate(payrollEmployee, true);
+          else
+            payrollEmployee = PersonUpdate(payrollEmployee, false);
+        }
         Task task = payrollEmployeeService.Update(payrollEmployee, null);
       }
     }
@@ -2271,5 +2314,6 @@ namespace Manager.Services.Specific
       }
     }
     #endregion
+
   }
 }
