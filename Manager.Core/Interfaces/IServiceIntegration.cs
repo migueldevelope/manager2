@@ -74,5 +74,9 @@ namespace Manager.Core.Interfaces
     ColaboradorV2 GetV2(ColaboradorV2Base view);
     ColaboradorV2 GetV2(string id);
     #endregion
+
+    #region Atualização de Integração Incompleta
+    ColaboradorV2Retorno IntegrationPayroll(string id);
+    #endregion
   }
 }

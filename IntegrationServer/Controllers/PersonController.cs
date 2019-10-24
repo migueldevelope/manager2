@@ -374,7 +374,7 @@ namespace IntegrationServer.InfraController
         return BadRequest(new ColaboradorV2Retorno()
         {
           Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
         });
       }
     }
@@ -448,7 +448,7 @@ namespace IntegrationServer.InfraController
         return BadRequest(new ColaboradorV2Retorno()
         {
           Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
         });
       }
     }
@@ -475,7 +475,7 @@ namespace IntegrationServer.InfraController
         return BadRequest(new ColaboradorV2Retorno()
         {
           Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
         });
       }
     }
@@ -502,7 +502,7 @@ namespace IntegrationServer.InfraController
         return BadRequest(new ColaboradorV2Retorno()
         {
           Mensagem = new List<string> { e.Message },
-          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+          Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
         });
       }
     }
@@ -530,7 +530,7 @@ namespace IntegrationServer.InfraController
           return BadRequest(new ColaboradorV2Retorno()
           {
             Mensagem = new List<string> { e.Message },
-            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
           });
         }
       }
@@ -559,7 +559,7 @@ namespace IntegrationServer.InfraController
           return BadRequest(new ColaboradorV2Retorno()
           {
             Mensagem = new List<string> { e.Message },
-            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
           });
         }
       }
@@ -588,7 +588,7 @@ namespace IntegrationServer.InfraController
           return BadRequest(new ColaboradorV2Retorno()
           {
             Mensagem = new List<string> { e.Message },
-            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
           });
         }
       }
@@ -617,9 +617,35 @@ namespace IntegrationServer.InfraController
           return BadRequest(new ColaboradorV2Retorno()
           {
             Mensagem = new List<string> { e.Message },
-            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado
+            Situacao = EnumSituacaoRetornoIntegracao.ErroInesperado.ToString()
           });
         }
+      }
+    }
+    #endregion
+
+    #region PayrollEmployee
+    /// <summary>
+    /// Atualizar integração de colaborador pendente
+    /// </summary>
+    /// <param name="id">Identificador do registro de integração do colaborador pendente</param>
+    /// <response code="200">Informações sobre a integração do colaborador</response>
+    /// <response code="400">Problemas na integração do colaborador</response>
+    /// <returns>Mensagem de sucesso ou erro</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("payroll/{id}")]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    public ObjectResult Payroll(string id)
+    {
+      try
+      {
+        return Ok(service.IntegrationPayroll(id));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
       }
     }
     #endregion

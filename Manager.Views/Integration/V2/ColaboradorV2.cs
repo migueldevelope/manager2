@@ -11,6 +11,10 @@ namespace Manager.Views.Integration.V2
     public string SituacaoIntegracao { get; set; }
     public string _idUser { get; set; }
     public string _idContract { get; set; }
+    public string _idSchooling { get; set; }
+    public string _idCompany { get; set; }
+    public string _idEstablishment { get; set; }
+    public string _idOccupation { get; set; }
     public List<string> Mensagens { get; set; }
   }
 }

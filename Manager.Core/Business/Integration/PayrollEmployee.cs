@@ -83,63 +83,20 @@ namespace Manager.Core.Business.Integration
     // MatriculaGestor
     public string ManagerRegistration { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
-    public string IdUser { get; set; }
+    public string _idUser { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
-    public string IdContract { get; set; }
+    public string _idContract { get; set; }
     public List<string> Messages { get; set; }
-    public ColaboradorV2 GetColaboradorV2()
-    {
-      return new ColaboradorV2()
-      {
-        Acao = ActionToString(),
-        Apelido = Nickname,
-        CargaHoraria = Workload,
-        Cargo = Occupation,
-        Celular = CellNumber,
-        CentroCusto = CostCenter,
-        Colaborador = new ColaboradorV2Base()
-        {
-          Cpf = Document,
-          Empresa = Company,
-          Estabelecimento = Establishment,
-          Matricula = Registration,
-          NomeEmpresa = CompanyName,
-          NomeEstabelecimento = EstablishmentName
-        },
-        DataAdmissao = AdmissionDate,
-        DataDemissao = DemissionDate,
-        DataNascimento = BirthDate,
-        DataTrocaCargo = OccupationChangeDate,
-        DataTrocaCentroCusto = CostCenterChangeDate,
-        DataUltimoReajuste = SalaryChangeDate,
-        Email = Mail,
-        Gestor = string.IsNullOrEmpty(ManagerRegistration) ? null : new ColaboradorV2Base()
-        {
-          Cpf = ManagerDocument,
-          Empresa = ManagerCompany,
-          Estabelecimento = ManagerEstablishment,
-          Matricula = ManagerRegistration,
-          NomeEmpresa = ManagerCompanyName,
-          NomeEstabelecimento = ManagerEstablishmentName
-        },
-        GrauInstrucao = Schooling,
-        Mensagens = Messages,
-        MotivoUltimoReajuste = SalaryChangeReason,
-        Nome = Name,
-        NomeCargo = OccupationName,
-        NomeCentroCusto = CostCenterName,
-        NomeGrauInstrucao = SchoolingName,
-        Registro = DateRegister,
-        SalarioNominal = Salary,
-        Sexo = SexToString(),
-        Situacao = StatusUserToString(),
-        SituacaoIntegracao = StatusIntegrationToString(),
-        _idContract = IdContract,
-        _idPayrollEmployee = _id,
-        _idPrevious = _idPrevious,
-        _idUser = IdUser
-      };
-    }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _idSchooling { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _idCompany { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _idEstablishment { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _idOccupation { get; set; }
+
+    #region Private
     private string ActionToString()
     {
       switch (Action)
@@ -203,6 +160,66 @@ namespace Manager.Core.Business.Integration
           return "NÃO DEFINIDO";
       }
     }
+    #endregion
+
+    #region Methods
+    public ColaboradorV2 GetColaboradorV2()
+    {
+      return new ColaboradorV2()
+      {
+        Acao = ActionToString(),
+        Apelido = Nickname,
+        CargaHoraria = Workload,
+        Cargo = Occupation,
+        Celular = CellNumber,
+        CentroCusto = CostCenter,
+        Colaborador = new ColaboradorV2Base()
+        {
+          Cpf = Document,
+          Empresa = Company,
+          Estabelecimento = Establishment,
+          Matricula = Registration,
+          NomeEmpresa = CompanyName,
+          NomeEstabelecimento = EstablishmentName
+        },
+        DataAdmissao = AdmissionDate,
+        DataDemissao = DemissionDate,
+        DataNascimento = BirthDate,
+        DataTrocaCargo = OccupationChangeDate,
+        DataTrocaCentroCusto = CostCenterChangeDate,
+        DataUltimoReajuste = SalaryChangeDate,
+        Email = Mail,
+        Gestor = string.IsNullOrEmpty(ManagerRegistration) ? null : new ColaboradorV2Base()
+        {
+          Cpf = ManagerDocument,
+          Empresa = ManagerCompany,
+          Estabelecimento = ManagerEstablishment,
+          Matricula = ManagerRegistration,
+          NomeEmpresa = ManagerCompanyName,
+          NomeEstabelecimento = ManagerEstablishmentName
+        },
+        GrauInstrucao = Schooling,
+        Mensagens = Messages,
+        MotivoUltimoReajuste = SalaryChangeReason,
+        Nome = Name,
+        NomeCargo = OccupationName,
+        NomeCentroCusto = CostCenterName,
+        NomeGrauInstrucao = SchoolingName,
+        Registro = DateRegister,
+        SalarioNominal = Salary,
+        Sexo = SexToString(),
+        Situacao = StatusUserToString(),
+        SituacaoIntegracao = StatusIntegrationToString(),
+        _idContract = _idContract,
+        _idPayrollEmployee = _id,
+        _idPrevious = _idPrevious,
+        _idUser = _idUser,
+        _idCompany = _idCompany,
+        _idEstablishment = _idEstablishment,
+        _idOccupation = _idOccupation,
+        _idSchooling = _idSchooling
+      };
+    }
     public bool Equal(PayrollEmployee payrollEmployee)
     {
       try
@@ -212,7 +229,7 @@ namespace Manager.Core.Business.Integration
         if (Document != payrollEmployee.Document)
           return false;
         if (Company != payrollEmployee.Company)
-            return false;
+          return false;
         if (CompanyName != payrollEmployee.CompanyName)
           return false;
         if (Establishment != payrollEmployee.Establishment)
@@ -227,7 +244,7 @@ namespace Manager.Core.Business.Integration
           return false;
         if (Sex != payrollEmployee.Sex)
           return false;
-        if (BirthDate != payrollEmployee.BirthDate)
+        if (BirthDate?.Date != payrollEmployee.BirthDate?.Date)
           return false;
         if (CellNumber != payrollEmployee.CellNumber)
           return false;
@@ -237,27 +254,27 @@ namespace Manager.Core.Business.Integration
           return false;
         if (Nickname != payrollEmployee.Nickname)
           return false;
-        if (AdmissionDate != payrollEmployee.AdmissionDate)
+        if (AdmissionDate.Date != payrollEmployee.AdmissionDate.Date)
           return false;
-        if (DemissionDate != payrollEmployee.DemissionDate)
+        if (DemissionDate?.Date != payrollEmployee.DemissionDate?.Date)
           return false;
         if (Occupation != payrollEmployee.Occupation)
           return false;
         if (OccupationName != payrollEmployee.OccupationName)
           return false;
-        if (OccupationChangeDate != payrollEmployee.OccupationChangeDate)
+        if (OccupationChangeDate?.Date != payrollEmployee.OccupationChangeDate?.Date)
           return false;
         if (CostCenter != payrollEmployee.CostCenter)
           return false;
         if (CostCenterName != payrollEmployee.CostCenterName)
           return false;
-        if (CostCenterChangeDate != payrollEmployee.CostCenterChangeDate)
+        if (CostCenterChangeDate?.Date != payrollEmployee.CostCenterChangeDate?.Date)
           return false;
         if (Salary != payrollEmployee.Salary)
           return false;
         if (Workload != payrollEmployee.Workload)
           return false;
-        if (SalaryChangeDate != payrollEmployee.SalaryChangeDate)
+        if (SalaryChangeDate?.Date != payrollEmployee.SalaryChangeDate?.Date)
           return false;
         if (SalaryChangeReason != payrollEmployee.SalaryChangeReason)
           return false;
@@ -282,5 +299,7 @@ namespace Manager.Core.Business.Integration
         throw;
       }
     }
+    #endregion
+
   }
 }
