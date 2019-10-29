@@ -204,7 +204,7 @@ namespace Manager.Services.Specific
       var list = new List<ViewListStructManager>();
       if (it != null)
       {
-        var i = 0;
+        //var i = 0;
         var directteam = serviceDirectTeam.GetAllNewVersion(p => p._idManager == it._idPerson).Result;
         foreach (var person in directteam)
         {
@@ -215,8 +215,8 @@ namespace Manager.Services.Specific
             Team = new List<ViewListStructManager>()
           };
           team.Team = GetTeam(team);
-          list[i] = team;
-          i += 1;
+          list.Add(team);
+          //i += 1;
         }
       }
       return list;
