@@ -181,9 +181,16 @@ namespace Manager.Services.Specific
                 var accuracy = (total * 100) / 55;
                 viewOccupation.Accuracy = accuracy;
               }
+              viewOccupation.Color = EnumOccupationColor.None;
+              if ((viewOccupation.Accuracy >= decimal.Parse("33.33")) && (viewOccupation.Accuracy < decimal.Parse("66.66")))
+                viewOccupation.Color = EnumOccupationColor.Yellow;
+              else if (viewOccupation.Accuracy >= decimal.Parse("66.66"))
+                viewOccupation.Color = EnumOccupationColor.Orange;
+
               viewGroup.Occupation.Add(viewOccupation);
             }
-            viewSphere.Group.Add(viewGroup);
+            if (viewGroup.Occupation.Count > 0)
+              viewSphere.Group.Add(viewGroup);
           }
           view.Sphere.Add(viewSphere);
         }
