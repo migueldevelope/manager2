@@ -104,10 +104,12 @@ namespace Manager
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
       IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
+      IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
+      services.AddSingleton(_ => serviceFluidCareers);
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);
       services.AddSingleton(_ => serviceMaturity);
