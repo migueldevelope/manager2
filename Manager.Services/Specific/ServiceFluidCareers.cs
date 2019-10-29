@@ -136,6 +136,25 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewCrudSkillsCareers> GetSkills(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+          .Select(p => new ViewCrudSkillsCareers()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Order = 0
+          }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public ViewFluidCareers Calc(string idperson, List<ViewCrudSkillsCareers> skills)
     {
