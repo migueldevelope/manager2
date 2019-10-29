@@ -106,9 +106,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("calc/{idperson}")]
-    public async Task<IActionResult> Calc([FromBody]List<ViewCrudSkillsCareers> skills,string idperson)
+    public  ViewFluidCareers Calc([FromBody]List<ViewCrudSkillsCareers> skills,string idperson)
     {
-      return await Task.Run(() => Ok(service.Calc(idperson, skills)));
+      return service.Calc(idperson, skills);
     }
 
     /// <summary>
@@ -121,12 +121,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getskills")]
-    public async Task<List<ViewCrudSkillsCareers>> GetSkills(int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudSkillsCareers> GetSkills(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetSkills(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() => result);
+      return result;
     }
 
     #endregion
