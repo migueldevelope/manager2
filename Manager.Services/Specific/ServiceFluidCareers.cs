@@ -171,9 +171,9 @@ namespace Manager.Services.Specific
               if (skillsOccupation != null && skillsGroup != null && skills != null)
               {
                 var total = 0;
-                foreach(var item in skills)
+                foreach (var item in skills)
                 {
-                  if ((skillsOccupation.Where(p => p._id == item._id).Count() > 0 ) || (skillsGroup.Where(p => p._id == item._id).Count() > 0))
+                  if ((skillsOccupation.Where(p => p._id == item._id).Count() > 0) || (skillsGroup.Where(p => p._id == item._id).Count() > 0))
                   {
                     total += item.Order;
                   }
@@ -181,8 +181,7 @@ namespace Manager.Services.Specific
                 var accuracy = (total * 100) / 55;
                 viewOccupation.Accuracy = accuracy;
               }
-              if (viewOccupation.Accuracy > 0)
-                viewGroup.Occupation.Add(viewOccupation);
+              viewGroup.Occupation.Add(viewOccupation);
             }
             viewSphere.Group.Add(viewGroup);
           }
