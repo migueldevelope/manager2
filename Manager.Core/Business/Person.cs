@@ -135,7 +135,7 @@ namespace Manager.Core.Business
         DateResignation = DateResignation,
         Establishment = Establishment,
         HolidayReturn = HolidayReturn,
-        Manager = new ViewBaseFields() { Mail = Manager.Mail, Name = Manager.Name, _id = Manager._id },
+        Manager = Manager == null ? null : new ViewBaseFields() { Mail = Manager.Mail, Name = Manager.Name, _id = Manager._id },
         MotiveAside = MotiveAside,
         Occupation = Occupation,
         Registration = Registration,
