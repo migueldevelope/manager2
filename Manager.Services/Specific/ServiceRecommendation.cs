@@ -344,9 +344,11 @@ namespace Manager.Services.Specific
       {
         total = servicePerson.CountNewVersion(p => p.TypeUser > EnumTypeUser.Administrator
         & p.StatusUser != EnumStatusUser.Disabled
+        & p.User._id != _user._idUser
         & p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return servicePerson.GetAllNewVersion(p => p.TypeUser > EnumTypeUser.Administrator
         & p.StatusUser != EnumStatusUser.Disabled
+        & p.User._id != _user._idUser
         & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
         .Select(x => x.GetViewListBase()).ToList();
       }
