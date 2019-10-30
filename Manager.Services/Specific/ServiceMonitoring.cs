@@ -99,7 +99,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
         foreach (var item in monitoring.Activities)
         {
           if (item._id == idactivitie)
@@ -760,6 +760,7 @@ namespace Manager.Services.Specific
               StatusView = x.StatusView,
               UserComment = x.UserComment
             }).ToList(),
+            Status = p.Status,
             StatusViewManager = p.StatusViewManager,
             StatusViewPerson = p.StatusViewPerson,
             TypeAtivitie = p.TypeAtivitie,
