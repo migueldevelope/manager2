@@ -22,6 +22,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Sphere> serviceSphere;
     private readonly ServiceGeneric<Group> serviceGroup;
     private readonly ServiceGeneric<Skill> serviceSkill;
+    private readonly ServiceGeneric<Company> serviceCompany;
 
     #region Constructor
     public ServiceFluidCareers(DataContext context) : base(context)
@@ -34,6 +35,7 @@ namespace Manager.Services.Specific
         serviceSphere = new ServiceGeneric<Sphere>(context);
         serviceGroup = new ServiceGeneric<Group>(context);
         serviceSkill = new ServiceGeneric<Skill>(context);
+        serviceCompany = new ServiceGeneric<Company>(context);
       }
       catch (Exception e)
       {
@@ -49,6 +51,7 @@ namespace Manager.Services.Specific
       serviceGroup._user = _user;
       serviceSkill._user = _user;
       serviceSphere._user = _user;
+      serviceCompany._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -59,6 +62,7 @@ namespace Manager.Services.Specific
       serviceGroup._user = user;
       serviceSkill._user = user;
       serviceSphere._user = user;
+      serviceCompany._user = user;
     }
     #endregion
 
@@ -161,6 +165,7 @@ namespace Manager.Services.Specific
       try
       {
         var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+        var company = serviceCompany.GetNewVersion(p => p._id == person.Company._id).Result;
         var spheres = serviceSphere.GetAllNewVersion(p => p.Company._id == person.Company._id).Result;
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == person.Company._id).Result;
         var groups = serviceGroup.GetAllNewVersion(p => p.Company._id == person.Company._id).Result;
@@ -186,13 +191,15 @@ namespace Manager.Services.Specific
               viewOccupation._id = occupation._id;
               viewOccupation.Name = occupation.Name;
               var skillsOccupation = occupation.Skills;
-              var skillsGroup = group.Skills.ToList();
+              var skillsGroup = group.Skills;
+              var skillsCompany = company.Skills;
               if (skillsOccupation != null && skillsGroup != null && skills != null)
               {
                 var total = 0;
                 foreach (var item in skills)
                 {
-                  if ((skillsOccupation.Where(p => p._id == item._id).Count() > 0) || (skillsGroup.Where(p => p._id == item._id).Count() > 0))
+                  if ((skillsOccupation.Where(p => p._id == item._id).Count() > 0) || (skillsGroup.Where(p => p._id == item._id).Count() > 0)
+                    || skillsCompany.Where(p => p._id == item._id).Count() > 0)
                   {
                     total += item.Order;
                   }
