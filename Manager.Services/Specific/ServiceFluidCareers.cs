@@ -85,9 +85,14 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var person = servicePerson.GetNewVersion(p => p._id == view._idPerson).Result;
         FluidCareers fluidcareers = serviceFluidCareers.InsertNewVersion(new FluidCareers()
         {
-          _id = view._id
+          _id = view._id,
+          Person = person.GetViewListPersonInfo(),
+          Date = DateTime.Now,
+          FluidCareersView = view.FluidCareersView,
+          SkillsCareers = view.SkillsCareers
         }).Result;
         return "FluidCareers added!";
       }
