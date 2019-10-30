@@ -1433,7 +1433,7 @@ namespace Manager.Services.Specific
           CostCenterName = view.NomeCentroCusto,
           CostCenterChangeDate = view.DataTrocaCentroCusto,
           Salary = view.SalarioNominal,
-          Workload = view.CargaHoraria,
+          Workload = Convert.ToInt32(view.CargaHoraria),
           SalaryChangeDate = view.DataUltimoReajuste,
           SalaryChangeReason = view.MotivoUltimoReajuste,
           StatusUser = situacao,

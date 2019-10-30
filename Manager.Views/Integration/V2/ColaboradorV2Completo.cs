@@ -27,7 +27,7 @@ namespace Manager.Views.Integration.V2
     public string NomeCentroCusto { get; set; }
     public DateTime? DataTrocaCentroCusto { get; set; }
     public decimal SalarioNominal { get; set; }
-    public int CargaHoraria { get; set; }
+    public decimal CargaHoraria { get; set; }
     public DateTime? DataUltimoReajuste { get; set; }
     public string MotivoUltimoReajuste { get; set; }
     // Chaves de cálculo interno
