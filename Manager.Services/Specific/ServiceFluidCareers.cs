@@ -198,7 +198,7 @@ namespace Manager.Services.Specific
                 var total = 0;
                 foreach (var item in skills)
                 {
-                  if ((skillsOccupation.Where(p => p._id == item._id).Count() > 0) || (skillsGroup.Where(p => p._id == item._id).Count() > 0)
+                  if ((skillsOccupation.Where(p => p._id == item._id).Count() > 0) || (skillsGroup.Where(p => p.Name == item.Name).Count() > 0)
                     || skillsCompany.Where(p => p._id == item._id).Count() > 0)
                   {
                     total += item.Order;
