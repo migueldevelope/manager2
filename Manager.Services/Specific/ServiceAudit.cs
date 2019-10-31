@@ -93,17 +93,17 @@ namespace Manager.Services.Specific
             return servicePerson.GetAllFreeNewVersion(p => p._idAccount == serviceUser._user._idAccount).Result
               .Select(p => new ViewAuditPerson()
               {
-                IdUser = p.User._id,
-                Document = p.User.Document,
-                Mail = p.User.Mail,
-                NameUser = p.User.Name,
+                IdUser = p.User?._id,
+                Document = p.User?.Document,
+                Mail = p.User?.Mail,
+                NameUser = p.User?.Name,
                 DisabledUser = p.Status.ToString(),
                 IdPerson = p._id,
                 DisabledPerson = p.Status.ToString(),
                 IdEstablishment = p.Establishment?._id,
                 NameEstablishment = p.Establishment?.Name,
-                IdCompany = p.Company._id,
-                NameCompany = p.Company.Name,
+                IdCompany = p.Company?._id,
+                NameCompany = p.Company?.Name,
                 Registration = p.Registration,
                 StatusUser = p.StatusUser.ToString(),
                 IdManager = p.Manager?._id,

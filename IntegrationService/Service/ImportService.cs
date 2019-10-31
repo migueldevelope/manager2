@@ -876,7 +876,6 @@ namespace IntegrationService.Service
             FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", colaborador.ChaveColaborador, colaborador.Nome, string.Format("Pessoa não demitida. {0}", viewColaborador.Message)), EnumTypeLineOpportunityg.Warning);
             hasLogFile = true;
           }
-          break;
         }
         Status = EnumStatusService.Ok;
         Message = "Fim de integração!";
