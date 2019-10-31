@@ -212,6 +212,17 @@ namespace Manager
         c.IncludeXmlComments(caminhoXmlDoc);
       });
 
+      //      Configuration.GetConnectionString("10.0.0.16,port: 6379,password=bti9010");
+
+      //services.AddMemoryCache();
+      //services.AddDistributedRedisCache(options =>
+      //{
+      //  options.Configuration =
+      //      Configuration.GetConnectionString("redis://10.0.0.16:6379?password=bti9010");
+
+      //  options.InstanceName = "analisa";
+      //});
+
       RegistreServices(services);
 
     }

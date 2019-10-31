@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
@@ -8,6 +9,7 @@ using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Manager.Controllers
 {
@@ -45,10 +47,24 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idmanager}")]
-    public async Task<List<ViewListOnBoarding>> List(string idmanager,  int count = 10, int page = 1, string filter = "")
+    //public async Task<List<ViewListOnBoarding>> List([FromServices]IDistributedCache cache,string idmanager,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListOnBoarding>> List(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      List<ViewListOnBoarding> result = service.List(idmanager, ref total, filter, count, page);
+      //dynamic result = null;
+      //result = cache.GetString("Onboardings");
+      //if (result == null)
+      //{
+      //  result = service.List(idmanager, ref total, filter, count, page);
+      //  DistributedCacheEntryOptions opcoesCache =
+      //             new DistributedCacheEntryOptions();
+      //  opcoesCache.SetAbsoluteExpiration(
+      //      TimeSpan.FromMinutes(2));
+
+      //  //cache.SetString("Onboardings", result, opcoesCache);
+      //  cache.Set("Onboardings", result, opcoesCache);
+      //}
+      var result = service.List(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
