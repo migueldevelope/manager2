@@ -9,7 +9,7 @@ namespace Manager.Core.Business
   public class FluidCareers: BaseEntity
   {
     public ViewListPersonInfo Person { get; set; }
-    public List<ViewCrudOccupationCareers> OccupationCareers { get; set; }
+    public ViewFluidCareers FluidCareersView { get; set; }
     public List<ViewCrudSkillsCareers> SkillsCareers { get; set; }
     public DateTime? Date { get; set; }
   }
