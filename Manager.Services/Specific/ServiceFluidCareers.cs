@@ -171,7 +171,7 @@ namespace Manager.Services.Specific
       {
         var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
         var company = serviceCompany.GetNewVersion(p => p._id == person.Company._id).Result;
-        var spheres = serviceSphere.GetAllNewVersion(p => p.Company._id == person.Company._id).Result;
+        var spheres = serviceSphere.GetAllNewVersion(p => p.Company._id == person.Company._id).Result.OrderBy(p => p.TypeSphere);
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == person.Company._id).Result;
         var groups = serviceGroup.GetAllNewVersion(p => p.Company._id == person.Company._id).Result;
 
@@ -184,7 +184,7 @@ namespace Manager.Services.Specific
           viewSphere._id = sphere._id;
           viewSphere.Name = sphere.Name;
           viewSphere.Group = new List<ViewFluidCareersGroup>();
-          foreach (var group in groups.Where(p => p.Sphere._id == sphere._id))
+          foreach (var group in groups.Where(p => p.Sphere._id == sphere._id).OrderBy(p => p.Line))
           {
             var viewGroup = new ViewFluidCareersGroup();
             viewGroup._id = group._id;
@@ -220,12 +220,13 @@ namespace Manager.Services.Specific
 
               viewGroup.Occupation.Add(viewOccupation);
             }
+            viewGroup.Occupation = viewGroup.Occupation.OrderByDescending(p => p.Accuracy).ToList();
             if (viewGroup.Occupation.Count > 0)
               viewSphere.Group.Add(viewGroup);
           }
           view.Sphere.Add(viewSphere);
         }
-
+        
         return view;
       }
       catch (Exception e)
