@@ -424,6 +424,8 @@ namespace Manager.Services.Auth
         person.SalaryScales = salaryScale;
         person.Workload = view.Person.Workload;
         person.User = user.GetViewCrud();
+        if (person.StatusUser == EnumStatusUser.Disabled)
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.Occupation == null)
@@ -867,6 +869,8 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user.GetViewCrud();
         person.SalaryScales = salaryScale;
+        if (person.StatusUser == EnumStatusUser.Disabled)
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.Occupation == null)
