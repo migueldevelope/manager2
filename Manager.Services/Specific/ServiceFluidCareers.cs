@@ -226,7 +226,7 @@ namespace Manager.Services.Specific
           }
           view.Sphere.Add(viewSphere);
         }
-        
+
         return view;
       }
       catch (Exception e)
@@ -234,6 +234,46 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewFluidCareersPerson> GetPerson(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        var list = new List<ViewFluidCareersPerson>();
+        total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var groups = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var company = serviceOccupation.GetFreeNewVersion(p => p._id == persons.FirstOrDefault().Company._id).Result;
+
+        foreach (var item in persons)
+        {
+          var view = new ViewFluidCareersPerson()
+          {
+            _id = item._id,
+            Name = item.User.Name,
+            Occupation = item.Occupation?.Name,
+            Group = item.Occupation?.NameGroup
+          };
+          view.SkillsCompany = company.Skills;
+
+          if(view.Occupation != null){
+            var occupation = occupations.Where(p => p._id == item.Occupation._id).FirstOrDefault();
+            var group = groups.Where(p => p._id == occupation.Group._id).FirstOrDefault();
+            view.SkillsGroup = group.Skills;
+            view.SkillsOccupation = occupation.Skills;
+            view.Sphere = occupation.Group.Sphere.Name;
+          }
+          list.Add(view);
+        }
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region private

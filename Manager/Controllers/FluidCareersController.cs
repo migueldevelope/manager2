@@ -106,7 +106,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("calc/{idperson}")]
-    public  ViewFluidCareers Calc([FromBody]List<ViewCrudSkillsCareers> skills,string idperson)
+    public ViewFluidCareers Calc([FromBody]List<ViewCrudSkillsCareers> skills, string idperson)
     {
       return service.Calc(idperson, skills);
     }
@@ -125,6 +125,24 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.GetSkills(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return result;
+    }
+
+    /// <summary>
+    /// Lista as skill's
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getperson")]
+    public List<ViewFluidCareersPerson> GetPerson(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetPerson(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }
