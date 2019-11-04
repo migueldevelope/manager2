@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
-  public class StructManager:BaseEntity
+  public class StructManager : BaseEntity
   {
 
     [BsonRepresentation(BsonType.ObjectId)]

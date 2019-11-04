@@ -12,21 +12,25 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace Manager.Services.Specific
 {
   public class ServiceManager : Repository<Person>, IServiceManager
   {
     private readonly ServiceGeneric<DirectTeam> serviceDirectTeam;
+    private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<ListManager> serviceListManager;
     private readonly ServiceGeneric<StructManager> serviceStructManager;
     private readonly IQueueClient queueClient;
     private readonly IServiceControlQueue serviceControlQueue;
-    public ServiceManager(DataContext contextStruct, IServiceControlQueue _serviceControlQueue, string serviceBusConnectionString) : base(contextStruct)
+    public ServiceManager(DataContext contextStruct, DataContext context, IServiceControlQueue _serviceControlQueue, string serviceBusConnectionString) : base(contextStruct)
     {
       try
       {
         serviceDirectTeam = new ServiceGeneric<DirectTeam>(contextStruct);
+        servicePerson = new ServiceGeneric<Person>(context);
         serviceListManager = new ServiceGeneric<ListManager>(contextStruct);
         serviceStructManager = new ServiceGeneric<StructManager>(contextStruct);
         serviceControlQueue = _serviceControlQueue;
@@ -46,6 +50,18 @@ namespace Manager.Services.Specific
       serviceListManager._user = user;
       serviceStructManager._user = user;
       serviceDirectTeam._user = user;
+      servicePerson._user = user;
+    }
+
+    public void SetUser(IHttpContextAccessor contextAccessor)
+    {
+
+      User(contextAccessor);
+      var user = _user;
+      serviceListManager._user = user;
+      serviceStructManager._user = user;
+      serviceDirectTeam._user = user;
+      servicePerson._user = user;
     }
 
     public void UpdateStructManager()
@@ -68,9 +84,31 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListStructManager> GetHierarchy(string idmanager)
+    {
+      try
+      {
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+
+        var list = serviceStructManager.GetAllNewVersion(p => p._idManager == idmanager).Result
+          .Select(p => new ViewListStructManager()
+          {
+            _idManager = p._idManager,
+            _id = p._id,
+            _idPerson = p._idPerson,
+            Name= persons.Where(x => x._id == p._idManager).FirstOrDefault()?.User?.Name,
+            Team = p.Team
+          }).ToList();
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     #endregion
-
 
     #region private
 
@@ -186,6 +224,8 @@ namespace Manager.Services.Specific
             };
 
             structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = it._idPerson, _idManager = it._idManager });
+            if (structmanager.Team.Count > 0)
+              Console.Write("ok");
 
             var add = serviceStructManager.InsertNewVersion(structmanager);
           }
@@ -215,6 +255,9 @@ namespace Manager.Services.Specific
             Team = new List<ViewListStructManager>()
           };
           team.Team = GetTeam(team);
+          if (team.Team.Count > 0)
+            Console.Write("add ma");
+
           list.Add(team);
           //i += 1;
         }
@@ -255,5 +298,6 @@ namespace Manager.Services.Specific
     }
 
     #endregion
+
   }
 }

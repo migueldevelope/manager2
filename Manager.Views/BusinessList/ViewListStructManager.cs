@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Manager.Views.BusinessList
 {
-  public class ViewListStructManager: _ViewListBase
+  public class ViewListStructManager : _ViewListBase
   {
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idManager { get; set; }
