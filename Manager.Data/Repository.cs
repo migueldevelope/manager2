@@ -503,9 +503,9 @@ namespace Manager.Data
         IAsyncCursor<T> result = await _collection.FindAsync(lambda, findOptions);
         return result.ToList();
       }
-      catch
+      catch(Exception e)
       {
-        throw;
+        throw e;
       }
     }
     //public List<T> GetAll()
