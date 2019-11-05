@@ -208,6 +208,8 @@ namespace Manager.Services.Specific
 
         var listmanager = serviceListManager.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
+        var managers = new List<string>();
+
         foreach (var manager in listmanager)
         {
           //Filter Team Manger
@@ -223,7 +225,6 @@ namespace Manager.Services.Specific
               Team = new List<ViewListStructManager>()
             };
 
-            var managers = new List<string>();
             structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = it._idPerson, _idManager = it._idManager }, managers);
         
             var add = serviceStructManager.InsertNewVersion(structmanager);
