@@ -243,8 +243,8 @@ namespace Manager.Services.Specific
         total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var groups = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var company = serviceOccupation.GetFreeNewVersion(p => p._id == persons.FirstOrDefault().Company._id).Result;
+        var groups = serviceGroup.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var company = serviceCompany.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
 
         foreach (var item in persons)
         {
@@ -260,7 +260,7 @@ namespace Manager.Services.Specific
           if(view.Occupation != null){
             var occupation = occupations.Where(p => p._id == item.Occupation._id).FirstOrDefault();
             var group = groups.Where(p => p._id == occupation.Group._id).FirstOrDefault();
-            view.SkillsGroup = group.Skills;
+            view.SkillsGroup = group?.Skills;
             view.SkillsOccupation = occupation.Skills;
             view.Sphere = occupation.Group.Sphere.Name;
           }
