@@ -78,6 +78,7 @@ namespace Indicators
 
       serviceManager.UpdateStructManager();
 
+      services.AddSingleton(_ => serviceManager);
       services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceAuthentication);
