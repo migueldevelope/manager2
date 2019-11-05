@@ -132,18 +132,14 @@ namespace Manager.Controllers
     /// <summary>
     /// Lista as skill's
     /// </summary>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
+    /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("getperson")]
-    public List<ViewFluidCareersPerson> GetPerson(int count = 10, int page = 1, string filter = "")
+    [Route("getperson/{idperson}")]
+    public ViewFluidCareersPerson GetPerson(string idperson)
     {
-      long total = 0;
-      var result = service.GetPerson(ref total, filter, count, page);
-      Response.Headers.Add("x-total-count", total.ToString());
+      var result = service.GetPerson(idperson);
       return result;
     }
 

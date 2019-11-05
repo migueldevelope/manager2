@@ -235,38 +235,36 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewFluidCareersPerson> GetPerson(ref long total, string filter, int count, int page)
+    public ViewFluidCareersPerson GetPerson(string idperson)
     {
       try
       {
-        var list = new List<ViewFluidCareersPerson>();
-        total = servicePerson.CountNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        var persons = servicePerson.GetAllNewVersion(p => p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result;
+        //total = servicePerson.CountNewVersion(p => p._id == idperson && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var item = servicePerson.GetNewVersion(p => p._id == idperson).Result;
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var groups = serviceGroup.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var company = serviceCompany.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
 
-        foreach (var item in persons)
+        var view = new ViewFluidCareersPerson()
         {
-          var view = new ViewFluidCareersPerson()
-          {
-            _id = item._id,
-            Name = item.User.Name,
-            Occupation = item.Occupation?.Name,
-            Group = item.Occupation?.NameGroup
-          };
-          view.SkillsCompany = company.Skills;
+          _id = item._id,
+          Name = item.User.Name,
+          Occupation = item.Occupation?.Name,
+          Group = item.Occupation?.NameGroup
+        };
+        view.SkillsCompany = company.Skills;
 
-          if(view.Occupation != null){
-            var occupation = occupations.Where(p => p._id == item.Occupation._id).FirstOrDefault();
-            var group = groups.Where(p => p._id == occupation.Group._id).FirstOrDefault();
-            view.SkillsGroup = group?.Skills;
-            view.SkillsOccupation = occupation.Skills;
-            view.Sphere = occupation.Group.Sphere.Name;
-          }
-          list.Add(view);
+        if (view.Occupation != null)
+        {
+          var occupation = occupations.Where(p => p._id == item.Occupation._id).FirstOrDefault();
+          var group = groups.Where(p => p._id == occupation.Group._id).FirstOrDefault();
+          view.SkillsGroup = group?.Skills;
+          view.SkillsOccupation = occupation.Skills;
+          view.Sphere = occupation.Group.Sphere.Name;
         }
-        return list;
+        //list.Add(view);
+        //}
+        return view;
       }
       catch (Exception e)
       {
