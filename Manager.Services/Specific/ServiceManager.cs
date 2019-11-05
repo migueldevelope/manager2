@@ -223,10 +223,9 @@ namespace Manager.Services.Specific
               Team = new List<ViewListStructManager>()
             };
 
-            structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = it._idPerson, _idManager = it._idManager });
-            if (structmanager.Team.Count > 0)
-              Console.Write("ok");
-
+            var managers = new List<string>();
+            structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = it._idPerson, _idManager = it._idManager }, managers);
+        
             var add = serviceStructManager.InsertNewVersion(structmanager);
           }
 
@@ -239,8 +238,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    private List<ViewListStructManager> GetTeam(ViewListStructManager it)
+    private List<ViewListStructManager> GetTeam(ViewListStructManager it, List<string> managers)
     {
+      if (managers.Contains(it._idPerson))
+        return null;
+
       var list = new List<ViewListStructManager>();
       if (it != null)
       {
@@ -254,13 +256,12 @@ namespace Manager.Services.Specific
             _idPerson = person._idPerson,
             Team = new List<ViewListStructManager>()
           };
-          team.Team = GetTeam(team);
-          if (team.Team.Count > 0)
-            Console.Write("add ma");
+          team.Team = GetTeam(team, managers);
 
           list.Add(team);
           //i += 1;
         }
+        managers.Add(it._idPerson);
       }
       return list;
     }
