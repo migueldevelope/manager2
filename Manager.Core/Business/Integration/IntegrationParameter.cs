@@ -38,5 +38,9 @@ namespace Manager.Core.Business.Integration
     public string LinkLogExecution { get; set; }
     // Identificação da API customizada do cliente
     public string ApiIdentification { get; set; }
+    // Identificação da chave de colaborador (documento+empresa+estabelecimento+matricula)
+    // ou (documento+empresa+matricula)
+    public EnumIntegrationKey IntegrationKey { get; set; }
+
   }
 }

@@ -32,10 +32,12 @@ namespace IntegrationClient
         CboProc.DataSource = Enum.GetValues(typeof(EnumIntegrationProcess));
         CboType.DataSource = Enum.GetValues(typeof(EnumIntegrationType));
         CboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
+        CboChave.DataSource = Enum.GetValues(typeof(EnumIntegrationKey));
 
         CboProc.SelectedIndex = CboProc.FindStringExact(serviceConfiguration.Param.Process.ToString());
         CboType.SelectedIndex = CboType.FindStringExact(serviceConfiguration.Param.Type.ToString());
         CboMode.SelectedIndex = CboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
+        CboChave.SelectedIndex = CboChave.FindStringExact(serviceConfiguration.Param.IntegrationKey.ToString());
       }
       catch (Exception ex)
       {
@@ -200,6 +202,7 @@ namespace IntegrationClient
         serviceConfiguration.Param.Process = (EnumIntegrationProcess)CboProc.SelectedItem;
         serviceConfiguration.Param.Mode = (EnumIntegrationMode)CboMode.SelectedItem;
         serviceConfiguration.Param.Type = (EnumIntegrationType)CboType.SelectedItem;
+        serviceConfiguration.Param.IntegrationKey = (EnumIntegrationKey)CboChave.SelectedItem;
         serviceConfiguration.SetParameter(serviceConfiguration.Param);
         MessageBox.Show("Parâmetro atualizado!",Text,MessageBoxButtons.OK,MessageBoxIcon.Information);
       }
@@ -233,6 +236,7 @@ namespace IntegrationClient
         serviceConfiguration.Param.Process = (EnumIntegrationProcess)CboProc.SelectedItem;
         serviceConfiguration.Param.Mode = (EnumIntegrationMode)CboMode.SelectedItem;
         serviceConfiguration.Param.Type = (EnumIntegrationType)CboType.SelectedItem;
+        serviceConfiguration.Param.IntegrationKey = (EnumIntegrationKey)CboChave.SelectedItem;
         serviceConfiguration.Param.SqlCommand = string.Empty;
         serviceConfiguration.Param.SheetName = txtSheetName.Text;
         serviceConfiguration.SetParameter(serviceConfiguration.Param);
@@ -322,6 +326,7 @@ namespace IntegrationClient
         serviceConfiguration.Param.Process = (EnumIntegrationProcess)CboProc.SelectedItem;
         serviceConfiguration.Param.Mode = (EnumIntegrationMode)CboMode.SelectedItem;
         serviceConfiguration.Param.Type = (EnumIntegrationType)CboType.SelectedItem;
+        serviceConfiguration.Param.IntegrationKey = (EnumIntegrationKey)CboChave.SelectedItem;
         serviceConfiguration.Param.SqlCommand = string.Empty;
         serviceConfiguration.Param.SheetName = string.Empty;
         serviceConfiguration.Param.ApiIdentification = txtIdApi.Text;
@@ -332,16 +337,6 @@ namespace IntegrationClient
       {
         MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
-    }
-
-    private void label12_Click(object sender, EventArgs e)
-    {
-
-    }
-
-    private void grpApi_Enter(object sender, EventArgs e)
-    {
-
     }
   }
 }

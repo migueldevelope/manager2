@@ -13,6 +13,7 @@
     // Chaves de cálculo interno
     public string ChaveEmpresa { get { return Empresa; } }
     public string ChaveEstabelecimento => string.Format("{0};{1}", Empresa, Estabelecimento);
-    public string Chave => string.Format("{0};{1};{2};{3}", Cpf, Empresa, Estabelecimento, Matricula);
+    public string Chave1 => string.Format("{0};{1};{2};{3}", Cpf, Empresa, Estabelecimento, Matricula);
+    public string Chave2 => string.Format("{0};{1};{2}", Cpf, Empresa, Estabelecimento, Matricula);
   }
 }

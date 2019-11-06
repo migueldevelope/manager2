@@ -37,5 +37,6 @@ namespace Manager.Views.BusinessCrud
     public string LinkLogExecution { get; set; }
     // Identificação da API personalizada
     public string ApiIdentification { get; set; }
+    public EnumIntegrationKey IntegrationKey { get; set; }
   }
 }

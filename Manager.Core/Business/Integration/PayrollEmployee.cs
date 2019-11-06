@@ -12,7 +12,8 @@ namespace Manager.Core.Business.Integration
   {
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idPrevious { get; set; }
-    public string Key { get; set; }
+    public string Key1 { get; set; }
+    public string Key2 { get; set; }
     public DateTime DateRegister { get; set; }
     public EnumActionIntegration Action { get; set; }
     public EnumStatusIntegration StatusIntegration { get; set; }
@@ -224,7 +225,9 @@ namespace Manager.Core.Business.Integration
     {
       try
       {
-        if (Key != payrollEmployee.Key)
+        if (Key1 != payrollEmployee.Key1)
+          return false;
+        if (Key2 != payrollEmployee.Key2)
           return false;
         if (Document != payrollEmployee.Document)
           return false;

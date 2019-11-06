@@ -899,6 +899,7 @@ namespace Manager.Services.Specific
           VersionPackCustom = param.VersionPackCustom,
           VersionPackProgram = param.VersionPackProgram,
           ApiIdentification = param.ApiIdentification,
+          IntegrationKey = param.IntegrationKey,
           _id = param._id
         };
       }
@@ -939,6 +940,7 @@ namespace Manager.Services.Specific
         param.UploadNextLog = view.UploadNextLog;
         param.LinkLogExecution = view.LinkLogExecution;
         param.ApiIdentification = view.ApiIdentification;
+        param.IntegrationKey = view.IntegrationKey;
         parameterService.Update(param, null).Wait();
         return new ViewCrudIntegrationParameter()
         {
@@ -1121,10 +1123,15 @@ namespace Manager.Services.Specific
     {
       try
       {
+        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
         IQueryable<Person> personsDocument = personService.GetAllNewVersion(p => p.User.Document == document).Result.AsQueryable();
         if (personsDocument.Count() == 0)
           return null;
-        Person person = personsDocument.Where(p => p.Company._id == idcompany && p.Establishment._id == idestablishment && p.Registration == registration).FirstOrDefault();
+        Person person = null;
+        if (viewCrudIntegrationParameter.IntegrationKey == EnumIntegrationKey.Company)
+          person = personsDocument.Where(p => p.Company._id == idcompany && p.Registration == registration).FirstOrDefault();
+        else
+          person = personsDocument.Where(p => p.Company._id == idcompany && p.Establishment._id == idestablishment && p.Registration == registration).FirstOrDefault();
         return person == null
           ? null
           : new ViewCrudPerson()
@@ -1396,16 +1403,22 @@ namespace Manager.Services.Specific
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
         if (resultV2.Mensagem.Count == 0)
         {
-          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          // TODO: Revisar buscar por duas chaves
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
           if (payrollEmployees.Count() == 0 && (acao == EnumActionIntegration.Demission || acao == EnumActionIntegration.Change))
-            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          {
+            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+            if (payrollEmployees.Count() == 0 && (acao == EnumActionIntegration.Demission || acao == EnumActionIntegration.Change))
+              resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          }
         }
         if (resultV2.Mensagem.Count != 0)
           return resultV2;
         PayrollEmployee payrollEmployee = new PayrollEmployee
         {
           // Identificação
-          Key = view.Colaborador.Chave,
+          Key1 = view.Colaborador.Chave1,
+          Key2 = view.Colaborador.Chave2,
           DateRegister = DateTime.Now,
           Action = acao,
           StatusIntegration = EnumStatusIntegration.Saved,
@@ -1500,9 +1513,14 @@ namespace Manager.Services.Specific
         // Atualização da base de dados
         if (resultV2.Mensagem.Count == 0)
         {
-          PayrollEmployee payrollEmployeeValid = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).FirstOrDefault();
+          // TODO: revisar a busca por duas chaves
+          PayrollEmployee payrollEmployeeValid = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).FirstOrDefault();
           if (payrollEmployeeValid != null)
-            resultV2.Mensagem.Add("Colaborador já está na base de integração.");
+          {
+            payrollEmployeeValid = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).FirstOrDefault();
+            if (payrollEmployeeValid != null)
+              resultV2.Mensagem.Add("Colaborador já está na base de integração.");
+          }
         }
         // Gravar tabela
         if (resultV2.Mensagem.Count != 0)
@@ -1511,7 +1529,8 @@ namespace Manager.Services.Specific
         PayrollEmployee payrollEmployee = new PayrollEmployee
         {
           // Identificação
-          Key = view.Colaborador.Chave,
+          Key1 = view.Colaborador.Chave1,
+          Key2 = view.Colaborador.Chave2,
           DateRegister = DateTime.Now,
           Action = EnumActionIntegration.Admission,
           StatusIntegration = EnumStatusIntegration.Saved,
@@ -1579,11 +1598,16 @@ namespace Manager.Services.Specific
           return resultV2;
         // Atualização da base de dados
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        // TODO: validar pesquisa por duas chaves
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
         if (payrollEmployees.Count() == 0)
         {
-          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          return resultV2;
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          if (payrollEmployees.Count() == 0)
+          {
+            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+            return resultV2;
+          }
         }
         PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
         // Preparar objeto para rejeição
@@ -1646,11 +1670,16 @@ namespace Manager.Services.Specific
           return resultV2;
         // Atualização da base de dados
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        // TODO: validar pesquisa por duas chaves
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
         if (payrollEmployees.Count() == 0)
         {
-          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          return resultV2;
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          if (payrollEmployees.Count() == 0)
+          {
+            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+            return resultV2;
+          }
         }
         PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
         // Preparar objeto para rejeição
@@ -1709,11 +1738,16 @@ namespace Manager.Services.Specific
           view.Gestor = ValidKeyEmployee(view.Gestor, " do gestor ");
         // Atualização da base de dados
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        // TODO: validar pesquisa por duas chaves
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
         if (payrollEmployees.Count() == 0)
         {
-          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          return resultV2;
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          if (payrollEmployees.Count() == 0)
+          {
+            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+            return resultV2;
+          }
         }
         PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
         // Preparar objeto para rejeição
@@ -1773,11 +1807,16 @@ namespace Manager.Services.Specific
         view.DataUltimoReajuste = EmptyDateDefault(view.DataUltimoReajuste, DateTime.Now.Date);
         // Atualização da base de dados
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        // TODO: validar pesquisa por duas chaves
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
         if (payrollEmployees.Count() == 0)
         {
-          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          return resultV2;
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          if (payrollEmployees.Count() == 0)
+          {
+            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+            return resultV2;
+          }
         }
         PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
         // Preparar objeto para rejeição
@@ -1838,11 +1877,16 @@ namespace Manager.Services.Specific
           resultV2.Mensagem.Add("Não é permitida a demissão por este método.");
         // Atualização da base de dados
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        // TODO: validar pesquisa por duas chaves
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
         if (payrollEmployees.Count() == 0)
         {
-          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          return resultV2;
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          if (payrollEmployees.Count() == 0)
+          {
+            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+            return resultV2;
+          }
         }
         PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
         // Preparar objeto para rejeição
@@ -1897,11 +1941,16 @@ namespace Manager.Services.Specific
         view.DataDemissao = EmptyDateDefault(view.DataDemissao, DateTime.Now.Date);
         // Atualização da base de dados
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Colaborador.Chave && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        // TODO: validar pesquisa por duas chaves
+        payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
         if (payrollEmployees.Count() == 0)
         {
-          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          return resultV2;
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          if (payrollEmployees.Count() == 0)
+          {
+            resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+            return resultV2;
+          }
         }
         PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
         // Preparar objeto para rejeição
@@ -1948,9 +1997,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key == view.Chave).Result.OrderBy(o => o.DateRegister).LastOrDefault();
+        // TODO: validar pesquisa por duas chaves
+        PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Chave1).Result.OrderBy(o => o.DateRegister).LastOrDefault();
         if (payrollEmployee == null)
-          throw new Exception("Colaborador não encontrado na integração");
+          payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Chave2).Result.OrderBy(o => o.DateRegister).LastOrDefault();
+          if (payrollEmployee == null)
+            throw new Exception("Colaborador não encontrado na integração");
         return payrollEmployee.GetColaboradorV2();
       }
       catch (Exception)
