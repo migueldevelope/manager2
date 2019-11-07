@@ -423,7 +423,13 @@ namespace Manager.Services.Auth
             throw new Exception(result.ReasonPhrase);
             // throw new Exception("User/Password invalid!");
           }
+
+          Console.Write(result.Content.ReadAsStringAsync().Result);
+          Console.Write(result.Content.ReadAsStringAsync());
+          Console.Write(result.Content);
+
           ViewUnimedStatusAuthentication status = JsonConvert.DeserializeObject<ViewUnimedStatusAuthentication>(result.Content.ReadAsStringAsync().Result);
+
           if (status.Status == false)
           {
             throw new Exception("User/Password invalid!");
