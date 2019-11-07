@@ -185,6 +185,10 @@ namespace Manager.Services.Specific
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == person.Company._id).Result;
         var groups = serviceGroup.GetAllNewVersion(p => p.Company._id == person.Company._id).Result;
 
+        var totalpoints = skills.Count() * 5;
+        if (totalpoints == 0)
+          totalpoints = 1;
+
         var view = new ViewFluidCareers();
         view.Sphere = new List<ViewFluidCareersSphere>();
 
@@ -219,7 +223,7 @@ namespace Manager.Services.Specific
                     total += item.Order;
                   }
                 }
-                var accuracy = (total * 100) / 55;
+                var accuracy = (total * 100) / totalpoints;
                 viewOccupation.Accuracy = accuracy;
               }
               viewOccupation.Color = EnumOccupationColor.None;
