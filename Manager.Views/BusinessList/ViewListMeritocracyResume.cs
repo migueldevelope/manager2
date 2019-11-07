@@ -1,6 +1,6 @@
 ﻿namespace Manager.Views.BusinessList
 {
-  public class ViewListMeritocracyResume
+  public class ViewListMeritocracyResume: _ViewList
   {
     public decimal ResultEnd { get; set; }
     public string Name { get; set; }

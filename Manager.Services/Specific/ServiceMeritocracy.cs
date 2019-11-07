@@ -721,6 +721,7 @@ namespace Manager.Services.Specific
           {
             list.Add(new ViewListMeritocracyResume()
             {
+              _id = result._id,
               Name = item.User?.Name,
               Manager = item.Manager?.Name,
               Occupation = item.Occupation?.Name,
@@ -765,6 +766,7 @@ namespace Manager.Services.Specific
                   var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault();
                   list.Add(new ViewListMeritocracyResume()
                   {
+                    _id = result._id,
                     Name = item.User?.Name,
                     Manager = item.Manager?.Name,
                     Occupation = item.Occupation?.Name,
@@ -789,6 +791,7 @@ namespace Manager.Services.Specific
               var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault();
               list.Add(new ViewListMeritocracyResume()
               {
+                _id = result._id,
                 Name = item.User?.Name,
                 Manager = item.Manager?.Name,
                 Occupation = item.Occupation?.Name,
