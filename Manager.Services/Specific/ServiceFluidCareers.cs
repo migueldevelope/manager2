@@ -166,7 +166,7 @@ namespace Manager.Services.Specific
           foreach (var skill in item)
             occupations.Add(skill._id);
 
-        total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        //total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         var list = new List<Skill>();
         if (type == 2)
           list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
@@ -177,6 +177,8 @@ namespace Manager.Services.Specific
 
         list = list.Where(p => company.Contains(p._id)|| groups.Contains(p.Name)
         || occupations.Contains(p._id)).ToList();
+
+        total = list.Count();
 
         return list.Select(p => new ViewCrudSkillsCareers()
         {
