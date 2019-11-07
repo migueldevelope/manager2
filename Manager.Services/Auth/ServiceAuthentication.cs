@@ -393,6 +393,7 @@ namespace Manager.Services.Auth
       {
         string username = "apiadv";
         string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.AddHours(-3).ToString("ddMMyyyyHHmm");
+        //string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
         string password2 = EncryptServices.GetMD5HashTypeTwo(password).ToLower();
 
         using (HttpClient client = new HttpClient())

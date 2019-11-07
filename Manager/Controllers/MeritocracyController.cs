@@ -152,6 +152,20 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmeritocracy"></param>
+    /// <param name="showperson"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateshow/{idmeritocracy}/{showperson}")]
+    public async Task<IActionResult> UpdateShow(string idmeritocracy, bool showperson)
+    {
+      return await Task.Run(() => Ok(service.UpdateShow(idmeritocracy,showperson)));
+    }
+
+    /// <summary>
     /// Alterar a meritocracia
     /// </summary>
     /// <param name="id">Identificador da meritocracia</param>

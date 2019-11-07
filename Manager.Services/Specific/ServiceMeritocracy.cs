@@ -1004,7 +1004,6 @@ namespace Manager.Services.Specific
         Task.Run(() => LogSave(_user._idPerson, string.Format("Update process | {0}", meritocracy._id)));
 
         meritocracy.ShowPerson = view.ShowPerson;
-        meritocracy.StatusMeritocracy = view.StatusMeritocracy;
         if (meritocracy.StatusMeritocracy == EnumStatusMeritocracy.End)
           meritocracy.DateEnd = DateTime.Now;
 
@@ -1018,6 +1017,25 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateShow(string idmeritocracy, bool showperson)
+    {
+      try
+      {
+        Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == idmeritocracy).Result;
+
+        meritocracy.ShowPerson = showperson;
+
+        serviceMeritocracy.Update(meritocracy, null).Wait();
+
+        return "Meritocracy altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public string UpdateSchooling(string id, string idschooling)
     {

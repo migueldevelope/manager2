@@ -34,6 +34,7 @@ namespace Manager.Core.Interfaces
     ViewCrudSalaryScaleScore GetSalaryScaleScore(string id);
     List<ViewCrudSalaryScaleScore> ListSalaryScaleScore(ref long total, int count = 10, int page = 1, string filter = "");
     string End(string id);
+    string UpdateShow(string idmeritocracy, bool showperson);
     string UpdateSchooling(string id, string idschooling);
     List<ViewListMeritocracyResume> ListMeritocracy(string idmanager, List<_ViewList> occupations, ref long total, int count, int page, string filter);
     List<ViewListMeritocracyResume> ListMeritocracyRH(ViewFilterOccupationsAndManagers view, ref long total, int count, int page, string filter);
