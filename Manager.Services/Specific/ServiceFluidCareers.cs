@@ -149,16 +149,34 @@ namespace Manager.Services.Specific
     {
       try
       {
+        int skip = (count * (page - 1));
+
         var typeskill = (EnumTypeSkill)type;
+        var company = serviceCompany.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result?.Skills.Select(p => p._id);
+        var listoccupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
+        var listgroups = serviceGroup.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
+
+        List<string> groups = new List<string>();
+        foreach (var item in listgroups)
+          foreach (var skill in item)
+            groups.Add(skill.Name);
+
+        List<string> occupations = new List<string>();
+        foreach (var item in listoccupations)
+          foreach (var skill in item)
+            occupations.Add(skill._id);
 
         total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         var list = new List<Skill>();
         if (type == 2)
-          list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result;
+          list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         else
           list = serviceSkill.GetAllNewVersion(p => p.TypeSkill == typeskill
-          && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result;
+          && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
+
+        list = list.Where(p => company.Contains(p._id)|| groups.Contains(p.Name)
+        || occupations.Contains(p._id)).ToList();
 
         return list.Select(p => new ViewCrudSkillsCareers()
         {
@@ -166,7 +184,7 @@ namespace Manager.Services.Specific
           Name = p.Name,
           TypeSkill = p.TypeSkill,
           Order = 0
-        }).OrderBy(p => p.TypeSkill).ToList();
+        }).Skip(skip).Take(count).OrderBy(p => p.TypeSkill).ThenBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -231,6 +249,8 @@ namespace Manager.Services.Specific
                 viewOccupation.Color = EnumOccupationColor.Yellow;
               else if (viewOccupation.Accuracy >= decimal.Parse("66.66"))
                 viewOccupation.Color = EnumOccupationColor.Orange;
+
+              viewOccupation.Activities = occupation.Activities;
 
               viewGroup.Occupation.Add(viewOccupation);
             }
