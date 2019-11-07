@@ -117,14 +117,15 @@ namespace Manager.Controllers
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
+    /// <param name="type"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getskills")]
-    public List<ViewCrudSkillsCareers> GetSkills(int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudSkillsCareers> GetSkills(byte type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetSkills(ref total, filter, count, page);
+      var result = service.GetSkills(type, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return result;
     }

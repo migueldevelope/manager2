@@ -145,18 +145,28 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCrudSkillsCareers> GetSkills(ref long total, string filter, int count, int page)
+    public List<ViewCrudSkillsCareers> GetSkills(byte type, ref long total, string filter, int count, int page)
     {
       try
       {
+        var typeskill = (EnumTypeSkill)type;
+
         total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
-          .Select(p => new ViewCrudSkillsCareers()
-          {
-            _id = p._id,
-            Name = p.Name,
-            Order = 0
-          }).ToList();
+        var list = new List<Skill>();
+        if (type == 2)
+          list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result;
+        else
+          list = serviceSkill.GetAllNewVersion(p => p.TypeSkill == typeskill
+          && p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result;
+
+
+        return list.Select(p => new ViewCrudSkillsCareers()
+        {
+          _id = p._id,
+          Name = p.Name,
+          TypeSkill = p.TypeSkill,
+          Order = 0
+        }).OrderBy(p => p.TypeSkill).ToList();
       }
       catch (Exception e)
       {
