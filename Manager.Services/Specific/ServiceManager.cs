@@ -241,6 +241,7 @@ namespace Manager.Services.Specific
 
     private List<ViewListStructManager> GetTeam(ViewListStructManager it, List<string> managers)
     {
+
       if (managers.Contains(it._idPerson))
         return null;
 
@@ -251,6 +252,7 @@ namespace Manager.Services.Specific
         var directteam = serviceDirectTeam.GetAllNewVersion(p => p._idManager == it._idPerson).Result;
         foreach (var person in directteam)
         {
+
           var team = new ViewListStructManager
           {
             _idManager = it._idPerson,
