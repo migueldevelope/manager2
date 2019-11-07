@@ -705,6 +705,42 @@ namespace Manager.Services.Specific
 
     #region Meritocracy
 
+    public List<ViewListMeritocracyResume> ListMeritocracyPerson(string iduser, ref long total, int count, int page, string filter)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var persons = servicePerson.GetAllNewVersion(p => p.User._id == iduser && p.StatusUser != EnumStatusUser.Disabled).Result;
+        var list = new List<ViewListMeritocracyResume>();
+
+        foreach (var item in persons)
+        {
+          var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id
+          && p.StatusMeritocracy == EnumStatusMeritocracy.End).Result;
+          foreach (var result in meritocracy)
+          {
+            list.Add(new ViewListMeritocracyResume()
+            {
+              Name = item.User?.Name,
+              Manager = item.Manager?.Name,
+              Occupation = item.Occupation?.Name,
+              ResultEnd = result.ResultEnd,
+              Photo = item.User?.PhotoUrl,
+              ShowPerson = result.ShowPerson
+            });
+          }
+        }
+
+        total = list.Count();
+        list = list.Where(p => p.Name.Contains(filter)).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListMeritocracyResume> ListMeritocracy(string idmanager, List<_ViewList> occupations, ref long total, int count, int page, string filter)
     {
       try
@@ -726,14 +762,15 @@ namespace Manager.Services.Specific
                 if (meritocracy.Count() > 0)
                 {
                   var date = meritocracy.Max(p => p.DateEnd);
-                  var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault().ResultEnd;
+                  var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault();
                   list.Add(new ViewListMeritocracyResume()
                   {
                     Name = item.User?.Name,
                     Manager = item.Manager?.Name,
                     Occupation = item.Occupation?.Name,
-                    ResultEnd = result,
-                    Photo = item.User?.PhotoUrl
+                    ResultEnd = result.ResultEnd,
+                    Photo = item.User?.PhotoUrl,
+                    ShowPerson = result.ShowPerson
                   });
                 }
               }
@@ -749,14 +786,15 @@ namespace Manager.Services.Specific
             if (meritocracy.Count() > 0)
             {
               var date = meritocracy.Max(p => p.DateEnd);
-              var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault().ResultEnd;
+              var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault();
               list.Add(new ViewListMeritocracyResume()
               {
                 Name = item.User?.Name,
                 Manager = item.Manager?.Name,
                 Occupation = item.Occupation?.Name,
-                ResultEnd = result,
-                Photo = item.User?.PhotoUrl
+                ResultEnd = result.ResultEnd,
+                Photo = item.User?.PhotoUrl,
+                ShowPerson = result.ShowPerson
               });
             }
           }
@@ -891,8 +929,10 @@ namespace Manager.Services.Specific
         {
           Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", meritocracy._id)));
 
+
           meritocracy = serviceMeritocracy.InsertNewVersion(new Meritocracy()
           {
+            ShowPerson = false,
             ActivitiesExcellence = 0,
             Maturity = 0,
             DateBegin = DateTime.Now,
@@ -963,6 +1003,7 @@ namespace Manager.Services.Specific
 
         Task.Run(() => LogSave(_user._idPerson, string.Format("Update process | {0}", meritocracy._id)));
 
+        meritocracy.ShowPerson = view.ShowPerson;
         meritocracy.StatusMeritocracy = view.StatusMeritocracy;
         if (meritocracy.StatusMeritocracy == EnumStatusMeritocracy.End)
           meritocracy.DateEnd = DateTime.Now;
@@ -1087,6 +1128,7 @@ namespace Manager.Services.Specific
         return new ViewCrudMeritocracy()
         {
           _id = meritocracy._id,
+          ShowPerson = meritocracy.ShowPerson,
           ActivitiesExcellence = meritocracy.ActivitiesExcellence,
           Maturity = meritocracy.Maturity,
           Person = new ViewListPersonMeritocracy()
@@ -1159,7 +1201,8 @@ namespace Manager.Services.Specific
           .Select(x => new ViewListMeritocracy()
           {
             _id = x._id,
-            Name = x.Person.Name
+            Name = x.Person.Name,
+
           }).ToList();
         total = serviceMeritocracy.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;

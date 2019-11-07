@@ -7,6 +7,7 @@
     public string Manager { get; set; }
     public string Occupation { get; set; }
     public string Photo { get; set; }
+    public bool ShowPerson { get; set; }
 
   }
 }

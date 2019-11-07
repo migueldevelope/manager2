@@ -292,6 +292,24 @@ namespace Manager.Controllers
       return await Task.Run(() => result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listmeritocracyperson/{idperson}")]
+    public async Task<List<ViewListMeritocracyResume>> ListMeritocracyPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListMeritocracyPerson(iduser, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
 
     /// <summary>
     /// 

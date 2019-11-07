@@ -42,5 +42,6 @@ namespace Manager.Views.BusinessCrud
     public decimal SalaryDifference { get; set; }
     public decimal PercentSalary { get; set; }
 
+    public bool ShowPerson { get; set; }
   }
 }
