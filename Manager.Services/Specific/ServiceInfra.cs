@@ -598,7 +598,6 @@ namespace Manager.Services.Specific
           }
         }
 
-
         foreach (var sphere in listspheres.Where(p => p._idArea == idarea))
         {
           var viewSphere = new ViewListInfraSphere()
@@ -645,18 +644,18 @@ namespace Manager.Services.Specific
 
                   viewLvlTwo.Occupations.Add(viewOccupation);
                 }
-
-                viewLvlOne.ProcessLevelTwos.Add(viewLvlTwo);
+                if (viewLvlOne.ProcessLevelTwos.Where(p => p._id == viewLvlTwo._id).Count() == 0)
+                  viewLvlOne.ProcessLevelTwos.Add(viewLvlTwo);
               }
-
-              viewGroup.ProcessLevelOnes.Add(viewLvlOne);
+              if (viewGroup.ProcessLevelOnes.Where(p => p._id == viewLvlOne._id).Count() == 0)
+                viewGroup.ProcessLevelOnes.Add(viewLvlOne);
             }
 
-
-            viewSphere.Groups.Add(viewGroup);
+            if (viewSphere.Groups.Where(p => p._id == viewGroup._id).Count() == 0)
+              viewSphere.Groups.Add(viewGroup);
           }
-
-          spheres.Add(viewSphere);
+          if (spheres.Where(p => p._id == viewSphere._id).Count() == 0)
+            spheres.Add(viewSphere);
         }
 
 
