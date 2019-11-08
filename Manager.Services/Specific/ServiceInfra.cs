@@ -638,8 +638,8 @@ namespace Manager.Services.Specific
                 {
                   var viewOccupation = new ViewListInfraOccupation()
                   {
-                    _id = lvltwo._id,
-                    Name = lvltwo.Name
+                    _id = occupation._id,
+                    Name = occupation.Name
                   };
 
                   viewLvlTwo.Occupations.Add(viewOccupation);
