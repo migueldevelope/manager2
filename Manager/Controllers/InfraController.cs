@@ -596,6 +596,20 @@ namespace Manager.Controllers
     #endregion
 
     #region Occupation
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idarea"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getlineopportunity/{idarea}")]
+    public async Task<List<ViewListInfraArea>> GetLineOpportunity(string idarea)
+    {
+      return await Task.Run(() => service.GetLineOpportunity(idarea));
+    }
+
     /// <summary>
     /// Retorna o mapa do cargo
     /// </summary>
