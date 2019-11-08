@@ -605,7 +605,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlineopportunity/{idarea}")]
-    public async Task<List<ViewListInfraArea>> GetLineOpportunity(string idarea)
+    public async Task<List<ViewListInfraSphere>> GetLineOpportunity(string idarea)
     {
       return await Task.Run(() => service.GetLineOpportunity(idarea));
     }

@@ -531,11 +531,11 @@ namespace Manager.Services.Specific
 
     #region Infra
 
-    public List<ViewListInfraArea> GetLineOpportunity(string idarea)
+    public List<ViewListInfraSphere> GetLineOpportunity(string idarea)
     {
       try
       {
-        var areas = new List<ViewListInfraArea>();
+        var spheres = new List<ViewListInfraSphere>();
         var listareas = new List<ViewListInfraAreaQuery>();
         var listspheres = new List<ViewListInfraSphereQuery>();
         var listgroups = new List<ViewListInfraGroupQuery>();
@@ -598,79 +598,69 @@ namespace Manager.Services.Specific
           }
         }
 
-        foreach (var area in listareas)
+
+        foreach (var sphere in listspheres.Where(p => p._idArea == idarea))
         {
-          var viewArea = new ViewListInfraArea()
+          var viewSphere = new ViewListInfraSphere()
           {
-            _id = area._id,
-            Name = area.Name,
-            Spheres = new List<ViewListInfraSphere>()
+            _id = sphere._id,
+            Name = sphere.Name,
+            Groups = new List<ViewListInfraGroup>()
           };
-
-
-          foreach (var sphere in listspheres.Where(p => p._idArea == area._id))
+          foreach (var group in listgroups.Where(p => p._idSphere == sphere._id))
           {
-            var viewSphere = new ViewListInfraSphere()
+            var viewGroup = new ViewListInfraGroup()
             {
-              _id = sphere._id,
-              Name = sphere.Name,
-              Groups = new List<ViewListInfraGroup>()
+              _id = group._id,
+              Name = group.Name,
+              ProcessLevelOnes = new List<ViewListInfraProcessLevelOne>()
             };
-            foreach (var group in listgroups.Where(p => p._idSphere == sphere._id))
+
+
+            foreach (var lvlone in listlvlones.Where(p => p._idGroup == group._id))
             {
-              var viewGroup = new ViewListInfraGroup()
+              var viewLvlOne = new ViewListInfraProcessLevelOne()
               {
-                _id = group._id,
-                Name = group.Name,
-                ProcessLevelOnes = new List<ViewListInfraProcessLevelOne>()
+                _id = lvlone._id,
+                Name = lvlone.Name,
+                ProcessLevelTwos = new List<ViewListInfraProcessLevelTwo>()
               };
 
-
-              foreach (var lvlone in listlvlones.Where(p => p._idGroup == group._id))
+              foreach (var lvltwo in listlvltwos.Where(p => p._idProcessLevelOne == lvlone._id))
               {
-                var viewLvlOne = new ViewListInfraProcessLevelOne()
+                var viewLvlTwo = new ViewListInfraProcessLevelTwo()
                 {
-                  _id = lvlone._id,
-                  Name = lvlone.Name,
-                  ProcessLevelTwos = new List<ViewListInfraProcessLevelTwo>()
+                  _id = lvltwo._id,
+                  Name = lvltwo.Name,
+                  Occupations = new List<ViewListInfraOccupation>()
                 };
 
-                foreach (var lvltwo in listlvltwos.Where(p => p._idProcessLevelOne == lvlone._id))
+                foreach (var occupation in listoccupations.Where(p => p._idProcessLevelTwo == lvltwo._id))
                 {
-                  var viewLvlTwo = new ViewListInfraProcessLevelTwo()
+                  var viewOccupation = new ViewListInfraOccupation()
                   {
                     _id = lvltwo._id,
-                    Name = lvltwo.Name,
-                    Occupations = new List<ViewListInfraOccupation>()
+                    Name = lvltwo.Name
                   };
 
-                  foreach (var occupation in listoccupations.Where(p => p._idProcessLevelTwo == lvltwo._id))
-                  {
-                    var viewOccupation = new ViewListInfraOccupation()
-                    {
-                      _id = lvltwo._id,
-                      Name = lvltwo.Name
-                    };
-
-                    viewLvlTwo.Occupations.Add(viewOccupation);
-                  }
-
-                  viewLvlOne.ProcessLevelTwos.Add(viewLvlTwo);
+                  viewLvlTwo.Occupations.Add(viewOccupation);
                 }
 
-                viewGroup.ProcessLevelOnes.Add(viewLvlOne);
+                viewLvlOne.ProcessLevelTwos.Add(viewLvlTwo);
               }
 
-
-              viewSphere.Groups.Add(viewGroup);
+              viewGroup.ProcessLevelOnes.Add(viewLvlOne);
             }
 
-            viewArea.Spheres.Add(viewSphere);
+
+            viewSphere.Groups.Add(viewGroup);
           }
-          areas.Add(viewArea);
+
+          spheres.Add(viewSphere);
         }
 
-        return areas;
+
+        return spheres;
       }
       catch (Exception e)
       {
