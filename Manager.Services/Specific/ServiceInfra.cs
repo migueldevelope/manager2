@@ -573,7 +573,7 @@ namespace Manager.Services.Specific
             {
               _id = pc.ProcessLevelOne._id,
               Name = pc.ProcessLevelOne.Name,
-              _idGroup = viewGroup.Name
+              _idGroup = viewGroup._id
             };
 
             var viewProcessLevelTwo = new ViewListInfraProcessLevelTwoQuery
@@ -586,7 +586,8 @@ namespace Manager.Services.Specific
             {
               _id = occupation._id,
               Name = occupation.Name,
-              _idProcessLevelTwo = viewProcessLevelTwo._id
+              _idProcessLevelTwo = viewProcessLevelTwo._id,
+              _idGroup = viewGroup._id
             };
 
             listareas.Add(viewArea);
@@ -616,7 +617,7 @@ namespace Manager.Services.Specific
             };
 
 
-            foreach (var lvlone in listlvlones.Where(p => p._idGroup == group.Name))
+            foreach (var lvlone in listlvlones.Where(p => p._idGroup == group._id))
             {
               var viewLvlOne = new ViewListInfraProcessLevelOne()
               {
@@ -634,7 +635,8 @@ namespace Manager.Services.Specific
                   Occupations = new List<ViewListInfraOccupation>()
                 };
 
-                foreach (var occupation in listoccupations.Where(p => p._idProcessLevelTwo == lvltwo._id))
+                foreach (var occupation in listoccupations.Where(p => p._idProcessLevelTwo == lvltwo._id
+                && p._idGroup == viewGroup._id))
                 {
                   var viewOccupation = new ViewListInfraOccupation()
                   {
