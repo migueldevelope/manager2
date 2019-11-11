@@ -167,7 +167,7 @@ namespace Manager.Services.Specific
             list.Add(skill);
 
         //total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        
+
         //if (type == 2)
         //list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         //else
@@ -194,8 +194,10 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-
-        return result.Skip(skip).Take(count).OrderByDescending(p => p.Count).ThenBy(p => p.Name).ToList();
+        if (type == 2)
+          return result.Skip(skip).Take(count).OrderByDescending(p => p.Count).ThenBy(p => p.Name).ToList();
+        else
+          return result.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
