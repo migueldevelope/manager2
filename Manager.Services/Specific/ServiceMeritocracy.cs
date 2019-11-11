@@ -716,7 +716,8 @@ namespace Manager.Services.Specific
         foreach (var item in persons)
         {
           var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id
-          && p.StatusMeritocracy == EnumStatusMeritocracy.End).Result;
+          && p.StatusMeritocracy == EnumStatusMeritocracy.End
+          && p.ShowPerson == true).Result;
           foreach (var result in meritocracy)
           {
             list.Add(new ViewListMeritocracyResume()
