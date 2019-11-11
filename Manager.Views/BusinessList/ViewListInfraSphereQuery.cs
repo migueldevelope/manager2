@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Manager.Views.Enumns;
+using System.Collections.Generic;
 
 namespace Manager.Views.BusinessList
 {
@@ -6,5 +7,6 @@ namespace Manager.Views.BusinessList
   {
     public List<ViewListInfraGroupQuery> Groups { get; set; }
     public string _idArea { get; set; }
+    public EnumTypeSphere TypeSphere { get; set; }
   }
 }

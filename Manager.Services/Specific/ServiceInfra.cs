@@ -559,7 +559,8 @@ namespace Manager.Services.Specific
             {
               _id = occupation.Group.Sphere._id,
               Name = occupation.Group.Sphere.Name,
-              _idArea = viewArea._id
+              _idArea = viewArea._id,
+              TypeSphere = occupation.Group.Sphere.TypeSphere
             };
 
             var viewGroup = new ViewListInfraGroupQuery
@@ -599,7 +600,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        foreach (var sphere in listspheres.Where(p => p._idArea == idarea))
+        foreach (var sphere in listspheres.Where(p => p._idArea == idarea).OrderBy(p => p.TypeSphere))
         {
           var viewSphere = new ViewListInfraSphere()
           {
