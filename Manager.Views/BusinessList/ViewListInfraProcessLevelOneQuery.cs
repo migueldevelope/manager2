@@ -6,5 +6,6 @@ namespace Manager.Views.BusinessList
   {
     public List<ViewListInfraProcessLevelTwoQuery> ProcessLevelTwos { get; set; }
     public string _idGroup { get; set; }
+    public long? Order { get; set; }
   }
 }

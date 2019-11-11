@@ -6,5 +6,6 @@ namespace Manager.Views.BusinessList
   {
     public List<ViewListInfraProcessLevelOneQuery> ProcessLevelOnes { get; set; }
     public string _idSphere { get; set; }
+    public long Line { get; set; }
   }
 }

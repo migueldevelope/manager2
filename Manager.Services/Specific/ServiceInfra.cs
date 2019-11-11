@@ -567,21 +567,24 @@ namespace Manager.Services.Specific
             {
               _id = occupation.Group._id,
               Name = occupation.Group.Name,
-              _idSphere = viewSphere._id
+              _idSphere = viewSphere._id,
+              Line = occupation.Group.Line
             };
 
             var viewProcessLevelOne = new ViewListInfraProcessLevelOneQuery
             {
               _id = pc.ProcessLevelOne._id,
               Name = pc.ProcessLevelOne.Name,
-              _idGroup = viewGroup._id
+              _idGroup = viewGroup._id,
+              Order = pc.ProcessLevelOne.Order
             };
 
             var viewProcessLevelTwo = new ViewListInfraProcessLevelTwoQuery
             {
               _id = pc._id,
               Name = pc.Name,
-              _idProcessLevelOne = viewProcessLevelOne._id
+              _idProcessLevelOne = viewProcessLevelOne._id,
+              Order = pc.Order
             };
             var viewOccupation = new ViewListInfraOccupationQuery
             {
@@ -608,7 +611,7 @@ namespace Manager.Services.Specific
             Name = sphere.Name,
             Groups = new List<ViewListInfraGroup>()
           };
-          foreach (var group in listgroups.Where(p => p._idSphere == sphere._id))
+          foreach (var group in listgroups.Where(p => p._idSphere == sphere._id).OrderBy(p => p.Line))
           {
             var viewGroup = new ViewListInfraGroup()
             {
@@ -617,7 +620,7 @@ namespace Manager.Services.Specific
               ProcessLevelOnes = new List<ViewListInfraProcessLevelOne>()
             };
 
-            foreach (var lvlone in listlvlones.Where(p => p._idGroup == group._id))
+            foreach (var lvlone in listlvlones.Where(p => p._idGroup == group._id).OrderBy(p => p.Order))
             {
               var viewLvlOne = new ViewListInfraProcessLevelOne()
               {
@@ -626,7 +629,7 @@ namespace Manager.Services.Specific
                 ProcessLevelTwos = new List<ViewListInfraProcessLevelTwo>()
               };
 
-              foreach (var lvltwo in listlvltwos.Where(p => p._idProcessLevelOne == lvlone._id))
+              foreach (var lvltwo in listlvltwos.Where(p => p._idProcessLevelOne == lvlone._id).OrderBy(p => p.Order))
               {
                 var viewLvlTwo = new ViewListInfraProcessLevelTwo()
                 {

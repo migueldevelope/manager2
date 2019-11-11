@@ -6,5 +6,6 @@ namespace Manager.Views.BusinessList
   {
     public List<ViewListInfraOccupationQuery> Occupations { get; set; }
     public string _idProcessLevelOne { get; set; }
+    public long? Order { get; set; }
   }
 }
