@@ -167,25 +167,34 @@ namespace Manager.Services.Specific
 
         //total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         var list = new List<Skill>();
-        if (type == 2)
-          list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        else
-          list = serviceSkill.GetAllNewVersion(p => p.TypeSkill == typeskill
-          && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        //if (type == 2)
+        //list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        //else
+        //list = serviceSkill.GetAllNewVersion(p => p.TypeSkill == typeskill
+        //&& p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
 
-        list = list.Where(p => company.Contains(p._id)|| groups.Contains(p.Name)
-        || occupations.Contains(p._id)).ToList();
+        /*list = list.Where(p => company.Contains(p._id)|| groups.Contains(p.Name)
+        || occupations.Contains(p._id)).ToList();*/
 
-        total = list.Count();
-
-        return list.Select(p => new ViewCrudSkillsCareers()
+        var result = new List<ViewCrudSkillsCareers>();
+        result = list.GroupBy(p => new { p._id, p.Name, p.TypeSkill }).Select(p => new ViewCrudSkillsCareers()
         {
-          _id = p._id,
-          Name = p.Name,
-          TypeSkill = p.TypeSkill,
+          _id = p.Key._id,
+          Name = p.Key.Name,
+          TypeSkill = p.Key.TypeSkill,
+          Count = p.Count(),
           Order = 0
-        }).Skip(skip).Take(count).OrderBy(p => p.TypeSkill).ThenBy(p => p.Name).ToList();
+        }).ToList();
+        if (type == 0)
+          result = result.Where(p => p.TypeSkill == EnumTypeSkill.Soft).ToList();
+        else if (type == 1)
+          result = result.Where(p => p.TypeSkill == EnumTypeSkill.Hard).ToList();
+
+        total = result.Count();
+
+
+        return result.Skip(skip).Take(count).OrderByDescending(p => p.Count).ThenBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -212,7 +221,7 @@ namespace Manager.Services.Specific
         if (totalpoints == 0)
           totalpoints = 1;
 
-        
+
         var fluidcareers = new List<ViewFluidCareers>();
         var view = new List<ViewFluidCareersSphere>();
 
