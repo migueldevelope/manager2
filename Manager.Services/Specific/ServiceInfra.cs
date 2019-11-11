@@ -573,7 +573,7 @@ namespace Manager.Services.Specific
             {
               _id = pc.ProcessLevelOne._id,
               Name = pc.ProcessLevelOne.Name,
-              _idGroup = viewGroup._id
+              _idGroup = viewGroup.Name
             };
 
             var viewProcessLevelTwo = new ViewListInfraProcessLevelTwoQuery
@@ -616,7 +616,7 @@ namespace Manager.Services.Specific
             };
 
 
-            foreach (var lvlone in listlvlones.Where(p => p._idGroup == group._id))
+            foreach (var lvlone in listlvlones.Where(p => p._idGroup == group.Name))
             {
               var viewLvlOne = new ViewListInfraProcessLevelOne()
               {
@@ -651,7 +651,7 @@ namespace Manager.Services.Specific
                 viewGroup.ProcessLevelOnes.Add(viewLvlOne);
             }
 
-            if (viewSphere.Groups.Where(p => p._id == viewGroup._id).Count() == 0)
+            if (viewSphere.Groups.Where(p => p.Name == viewGroup.Name).Count() == 0)
               viewSphere.Groups.Add(viewGroup);
           }
           if (spheres.Where(p => p._id == viewSphere._id).Count() == 0)
