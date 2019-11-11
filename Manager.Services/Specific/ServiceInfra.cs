@@ -616,7 +616,6 @@ namespace Manager.Services.Specific
               ProcessLevelOnes = new List<ViewListInfraProcessLevelOne>()
             };
 
-
             foreach (var lvlone in listlvlones.Where(p => p._idGroup == group._id))
             {
               var viewLvlOne = new ViewListInfraProcessLevelOne()
