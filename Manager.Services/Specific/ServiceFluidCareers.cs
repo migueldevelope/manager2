@@ -91,8 +91,7 @@ namespace Manager.Services.Specific
           _id = view._id,
           Person = person.GetViewListPersonInfo(),
           Date = DateTime.Now,
-          FluidCareersView = view.FluidCareersView,
-          SkillsCareers = view.SkillsCareers
+          FluidCareersView = view.FluidCareersView
         }).Result;
         return "FluidCareers added!";
       }
@@ -195,11 +194,15 @@ namespace Manager.Services.Specific
     }
 
 
-    public ViewFluidCareers Calc(string idperson, List<ViewCrudSkillsCareers> skills)
+    public ViewFluidCareerPerson Calc(string idperson, List<ViewCrudSkillsCareers> skills)
     {
       try
       {
         var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+        if (person.Occupation == null)
+          return null;
+
+        var occupationPerson = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result;
         var company = serviceCompany.GetNewVersion(p => p._id == person.Company._id).Result;
         var spheres = serviceSphere.GetAllNewVersion(p => p.Company._id == person.Company._id).Result.OrderBy(p => p.TypeSphere);
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == person.Company._id).Result;
@@ -209,8 +212,9 @@ namespace Manager.Services.Specific
         if (totalpoints == 0)
           totalpoints = 1;
 
-        var view = new ViewFluidCareers();
-        view.Sphere = new List<ViewFluidCareersSphere>();
+        
+        var fluidcareers = new List<ViewFluidCareers>();
+        var view = new List<ViewFluidCareersSphere>();
 
         foreach (var sphere in spheres)
         {
@@ -255,15 +259,31 @@ namespace Manager.Services.Specific
               viewOccupation.Activities = occupation.Activities;
 
               viewGroup.Occupation.Add(viewOccupation);
+
+              if (sphere.TypeSphere >= occupationPerson.Group.Sphere.TypeSphere)
+                fluidcareers.Add(new ViewFluidCareers()
+                {
+                  Occupation = viewOccupation.Name,
+                  Accuracy = viewOccupation.Accuracy,
+                  Color = viewOccupation.Color,
+                  Group = viewGroup.Name,
+                  Sphere = viewSphere.Name,
+                  Order = 0
+                });
             }
             viewGroup.Occupation = viewGroup.Occupation.OrderByDescending(p => p.Accuracy).ToList();
             if (viewGroup.Occupation.Count > 0)
               viewSphere.Group.Add(viewGroup);
           }
-          view.Sphere.Add(viewSphere);
+          view.Add(viewSphere);
         }
+        var result = new ViewFluidCareerPerson()
+        {
+          FluidCareerSphere = view,
+          FluidCareer = fluidcareers
+        };
 
-        return view;
+        return result;
       }
       catch (Exception e)
       {
