@@ -154,19 +154,20 @@ namespace Manager.Services.Specific
         var company = serviceCompany.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result?.Skills.Select(p => p._id);
         var listoccupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
         var listgroups = serviceGroup.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
+        var list = new List<ViewListSkill>();
 
-        List<string> groups = new List<string>();
+        //List<string> groups = new List<string>();
         foreach (var item in listgroups)
           foreach (var skill in item)
-            groups.Add(skill.Name);
+            list.Add(skill);
 
         List<string> occupations = new List<string>();
         foreach (var item in listoccupations)
           foreach (var skill in item)
-            occupations.Add(skill._id);
+            list.Add(skill);
 
         //total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        var list = new List<Skill>();
+        
         //if (type == 2)
         //list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         //else
