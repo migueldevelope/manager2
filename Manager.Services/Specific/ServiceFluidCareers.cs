@@ -283,7 +283,7 @@ namespace Manager.Services.Specific
                   Order = 0
                 });
             }
-            viewGroup.Occupation = viewGroup.Occupation.OrderBy(p => p.Accuracy).ToList();
+            viewGroup.Occupation = viewGroup.Occupation.ToList();
             if (viewGroup.Occupation.Count > 0)
               viewSphere.Group.Add(viewGroup);
           }
@@ -292,7 +292,7 @@ namespace Manager.Services.Specific
         var result = new ViewFluidCareerPerson()
         {
           FluidCareerSphere = view,
-          FluidCareer = fluidcareers
+          FluidCareer = fluidcareers.OrderByDescending(p => p.Accuracy).ToList()
         };
 
         return result;
