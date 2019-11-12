@@ -309,7 +309,7 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="idperson"></param>
+    /// <param name="iduser"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
