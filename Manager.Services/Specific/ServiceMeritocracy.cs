@@ -711,7 +711,7 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         var item = servicePerson.GetNewVersion(p => p._id == idperson && p.StatusUser != EnumStatusUser.Disabled).Result;
-        
+
         //var list = new List<ViewListMeritocracyResume>();
 
         //foreach (var item in persons)
@@ -719,6 +719,8 @@ namespace Manager.Services.Specific
         var result = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == idperson
         && p.StatusMeritocracy == EnumStatusMeritocracy.End
         && p.ShowPerson == true).Result.LastOrDefault();
+        if (result == null)
+          return null;
         //foreach (var result in meritocracy)
         //{
         //list.Add(
