@@ -272,7 +272,7 @@ namespace Manager.Services.Specific
 
               viewGroup.Occupation.Add(viewOccupation);
 
-              if (sphere.TypeSphere >= occupationPerson.Group.Sphere.TypeSphere)
+              if (occupationPerson.Group.Sphere.TypeSphere >= sphere.TypeSphere)
                 fluidcareers.Add(new ViewFluidCareers()
                 {
                   Occupation = viewOccupation.Name,
@@ -283,7 +283,7 @@ namespace Manager.Services.Specific
                   Order = 0
                 });
             }
-            viewGroup.Occupation = viewGroup.Occupation.OrderByDescending(p => p.Accuracy).ToList();
+            viewGroup.Occupation = viewGroup.Occupation.OrderBy(p => p.Accuracy).ToList();
             if (viewGroup.Occupation.Count > 0)
               viewSphere.Group.Add(viewGroup);
           }
