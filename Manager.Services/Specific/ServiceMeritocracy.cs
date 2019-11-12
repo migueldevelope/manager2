@@ -710,7 +710,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        var persons = servicePerson.GetAllNewVersion(p => p._id == iduser && p.StatusUser != EnumStatusUser.Disabled).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.User._id == iduser && p.StatusUser != EnumStatusUser.Disabled).Result;
         var list = new List<ViewListMeritocracyResume>();
 
         foreach (var item in persons)

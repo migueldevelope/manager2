@@ -316,7 +316,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("listmeritocracyperson/{idperson}")]
+    [Route("listmeritocracyperson/{iduser}")]
     public async Task<List<ViewListMeritocracyResume>> ListMeritocracyPerson(string iduser, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
