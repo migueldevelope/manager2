@@ -316,8 +316,8 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("listmeritocracyperson/{iduser}")]
-    public async Task<List<ViewListMeritocracyResume>> ListMeritocracyPerson(string iduser, int count = 10, int page = 1, string filter = "")
+    [Route("listmeritocracyperson/{idperson}")]
+    public async Task<ViewListMeritocracyResume> ListMeritocracyPerson(string idperson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListMeritocracyPerson(iduser, ref total, count, page, filter);
