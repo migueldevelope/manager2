@@ -531,10 +531,11 @@ namespace Manager.Services.Specific
 
     #region Infra
 
-    public List<ViewListInfraSphere> GetLineOpportunity(string idarea)
+    public List<ViewListInfraSphere> GetLineOpportunity(string idarea, ref long total, string filter, int count, int page)
     {
       try
       {
+        int skip = (count * (page - 1));
         var spheres = new List<ViewListInfraSphere>();
         var listareas = new List<ViewListInfraAreaQuery>();
         var listspheres = new List<ViewListInfraSphereQuery>();
@@ -543,7 +544,8 @@ namespace Manager.Services.Specific
         var listlvltwos = new List<ViewListInfraProcessLevelTwoQuery>();
         var listoccupations = new List<ViewListInfraOccupationQuery>();
 
-        var listoccupation = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var listoccupation = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Skip(skip).Take(count).ToList();
+        total = serviceOccupation.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         foreach (var occupation in listoccupation)
         {
@@ -664,7 +666,7 @@ namespace Manager.Services.Specific
         }
 
 
-        return spheres;
+        return spheres.ToList();
       }
       catch (Exception e)
       {

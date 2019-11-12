@@ -605,9 +605,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlineopportunity/{idarea}")]
-    public async Task<List<ViewListInfraSphere>> GetLineOpportunity(string idarea)
+    public async Task<List<ViewListInfraSphere>> GetLineOpportunity(string idarea,int count = 10, int page = 1, string filter = "")
     {
-      return await Task.Run(() => service.GetLineOpportunity(idarea));
+      long total = 0;
+      var result = service.GetLineOpportunity(idarea, ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
     /// <summary>

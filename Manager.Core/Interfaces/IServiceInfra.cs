@@ -125,6 +125,6 @@ namespace Manager.Core.Interfaces
     ViewCrudProcessLevelOne GetListProcessLevelOneById(string id);
     List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup);
     List<ViewListOpportunityLine> ListOpportunityLine(string idcompany);
-    List<ViewListInfraSphere> GetLineOpportunity(string idarea);
+    List<ViewListInfraSphere> GetLineOpportunity(string idarea, ref long total, string filter, int count, int page);
   }
 }
