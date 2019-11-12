@@ -253,9 +253,10 @@ namespace IntegrationService.Service
 
         Colaboradores = new List<ColaboradorImportar>();
         // Carregar Lista de Colaboradores
-        foreach (ViewIntegrationUnimedNers colaboradoreUnimed in colaboradoresUnimed)
+        foreach (ViewIntegrationUnimedNers colaboradorUnimed in colaboradoresUnimed)
         {
-          Colaboradores.Add(new ColaboradorImportar(colaboradoreUnimed, new EnumLayoutSystemCompleteV1()));
+          Colaboradores.Add(new ColaboradorImportar(colaboradorUnimed, new EnumLayoutSystemCompleteV1()));
+          FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaboradorUnimed.cdn_cpf, colaboradorUnimed.nom_empresa, colaboradorUnimed.nom_estab, colaboradorUnimed.cdn_matricula, colaboradorUnimed.nom_pessoa, colaboradorUnimed.des_cargo), EnumTypeLineOpportunityg.Information);
         }
       }
       catch (Exception e)

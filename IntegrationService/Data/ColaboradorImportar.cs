@@ -28,6 +28,8 @@ namespace IntegrationService.Data
         Matricula = list[(int)EnumLayoutManualBasicV1.Matricula].Trim();
         Nome = FormatedField(list[(int)EnumLayoutManualBasicV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutManualBasicV1.Email]);
+        if (string.IsNullOrEmpty(Email))
+          Email = Documento;
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutManualBasicV1.Celular].Trim();
         Telefone = list[(int)EnumLayoutManualBasicV1.Telefone].Trim();
@@ -81,6 +83,8 @@ namespace IntegrationService.Data
         Matricula = list[(int)EnumLayoutManualCompleteV1.Matricula].Trim();
         Nome = FormatedField(list[(int)EnumLayoutManualCompleteV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutManualCompleteV1.Email]);
+        if (string.IsNullOrEmpty(Email))
+          Email = Documento;
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutManualCompleteV1.Celular].Trim();
         Telefone = list[(int)EnumLayoutManualCompleteV1.Telefone].Trim();
@@ -131,6 +135,8 @@ namespace IntegrationService.Data
         Matricula = list[(int)EnumLayoutSystemBasicV1.Matricula].Trim();
         Nome = FormatedField(list[(int)EnumLayoutSystemBasicV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutSystemBasicV1.Email]);
+        if (string.IsNullOrEmpty(Email))
+          Email = Documento;
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutSystemBasicV1.Celular].Trim();
         Telefone = list[(int)EnumLayoutSystemBasicV1.Telefone].Trim();
@@ -184,6 +190,8 @@ namespace IntegrationService.Data
         Matricula = list[(int)EnumLayoutSystemCompleteV1.Matricula].Trim();
         Nome = FormatedField(list[(int)EnumLayoutSystemCompleteV1.Nome]);
         Email = FormatedFieldKey(list[(int)EnumLayoutSystemCompleteV1.Email]);
+        if (string.IsNullOrEmpty(Email))
+          Email = Documento;
         DataNascimento = dataNascimento;
         Celular = list[(int)EnumLayoutSystemCompleteV1.Celular].Trim();
         Telefone = list[(int)EnumLayoutSystemCompleteV1.Telefone].Trim();
