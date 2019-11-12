@@ -195,9 +195,9 @@ namespace Manager.Services.Specific
         total = result.Count();
 
         if (type == 2)
-          return result.Skip(skip).Take(count).OrderByDescending(p => p.Count).ThenBy(p => p.Name).ToList();
+          return result.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderByDescending(p => p.Count).ThenBy(p => p.Name).ToList();
         else
-          return result.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+          return result.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
