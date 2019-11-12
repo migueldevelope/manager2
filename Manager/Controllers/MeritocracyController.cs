@@ -309,7 +309,7 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="iduser"></param>
+    /// <param name="idperson"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
@@ -320,7 +320,7 @@ namespace Manager.Controllers
     public async Task<ViewListMeritocracyResume> ListMeritocracyPerson(string idperson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListMeritocracyPerson(iduser, ref total, count, page, filter);
+      var result = service.ListMeritocracyPerson(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
