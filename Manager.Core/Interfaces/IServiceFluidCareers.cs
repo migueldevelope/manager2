@@ -16,7 +16,7 @@ namespace Manager.Core.Interfaces
     string Update(ViewCrudFluidCareers view);
     ViewCrudFluidCareers Get(string id);
     List<ViewListFluidCareers> List(ref long total, int count = 10, int page = 1, string filter = "");
-    ViewFluidCareers Calc(string idperson, List<ViewCrudSkillsCareers> skills);
+    ViewFluidCareerPerson Calc(string idperson, List<ViewCrudSkillsCareers> skills);
     List<ViewCrudSkillsCareers> GetSkills(byte type, ref long total, string filter, int count, int page);
     ViewFluidCareersPerson GetPerson(string idperson);
   }

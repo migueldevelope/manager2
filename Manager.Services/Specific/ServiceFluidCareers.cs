@@ -91,8 +91,7 @@ namespace Manager.Services.Specific
           _id = view._id,
           Person = person.GetViewListPersonInfo(),
           Date = DateTime.Now,
-          FluidCareersView = view.FluidCareersView,
-          SkillsCareers = view.SkillsCareers
+          FluidCareersView = view.FluidCareersView
         }).Result;
         return "FluidCareers added!";
       }
@@ -155,38 +154,50 @@ namespace Manager.Services.Specific
         var company = serviceCompany.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result?.Skills.Select(p => p._id);
         var listoccupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
         var listgroups = serviceGroup.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
+        var list = new List<ViewListSkill>();
 
-        List<string> groups = new List<string>();
+        //List<string> groups = new List<string>();
         foreach (var item in listgroups)
           foreach (var skill in item)
-            groups.Add(skill.Name);
+            list.Add(skill);
 
         List<string> occupations = new List<string>();
         foreach (var item in listoccupations)
           foreach (var skill in item)
-            occupations.Add(skill._id);
+            list.Add(skill);
 
         //total = serviceSkill.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        var list = new List<Skill>();
-        if (type == 2)
-          list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        else
-          list = serviceSkill.GetAllNewVersion(p => p.TypeSkill == typeskill
-          && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        //if (type == 2)
+        //list = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        //else
+        //list = serviceSkill.GetAllNewVersion(p => p.TypeSkill == typeskill
+        //&& p.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
 
-        list = list.Where(p => company.Contains(p._id)|| groups.Contains(p.Name)
-        || occupations.Contains(p._id)).ToList();
+        /*list = list.Where(p => company.Contains(p._id)|| groups.Contains(p.Name)
+        || occupations.Contains(p._id)).ToList();*/
 
-        total = list.Count();
-
-        return list.Select(p => new ViewCrudSkillsCareers()
+        var result = new List<ViewCrudSkillsCareers>();
+        result = list.GroupBy(p => new { p._id, p.Name, p.TypeSkill }).Select(p => new ViewCrudSkillsCareers()
         {
-          _id = p._id,
-          Name = p.Name,
-          TypeSkill = p.TypeSkill,
+          _id = p.Key._id,
+          Name = p.Key.Name,
+          TypeSkill = p.Key.TypeSkill,
+          Count = p.Count(),
           Order = 0
-        }).Skip(skip).Take(count).OrderBy(p => p.TypeSkill).ThenBy(p => p.Name).ToList();
+        }).ToList();
+        if (type == 0)
+          result = result.Where(p => p.TypeSkill == EnumTypeSkill.Soft).ToList();
+        else if (type == 1)
+          result = result.Where(p => p.TypeSkill == EnumTypeSkill.Hard).ToList();
+
+        total = result.Count();
+
+        if (type == 2)
+          return result.Skip(skip).Take(count).OrderByDescending(p => p.Count).ThenBy(p => p.Name).ToList();
+        else
+          return result.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -195,11 +206,15 @@ namespace Manager.Services.Specific
     }
 
 
-    public ViewFluidCareers Calc(string idperson, List<ViewCrudSkillsCareers> skills)
+    public ViewFluidCareerPerson Calc(string idperson, List<ViewCrudSkillsCareers> skills)
     {
       try
       {
         var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+        if (person.Occupation == null)
+          return null;
+
+        var occupationPerson = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result;
         var company = serviceCompany.GetNewVersion(p => p._id == person.Company._id).Result;
         var spheres = serviceSphere.GetAllNewVersion(p => p.Company._id == person.Company._id).Result.OrderBy(p => p.TypeSphere);
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == person.Company._id).Result;
@@ -209,8 +224,9 @@ namespace Manager.Services.Specific
         if (totalpoints == 0)
           totalpoints = 1;
 
-        var view = new ViewFluidCareers();
-        view.Sphere = new List<ViewFluidCareersSphere>();
+
+        var fluidcareers = new List<ViewFluidCareers>();
+        var view = new List<ViewFluidCareersSphere>();
 
         foreach (var sphere in spheres)
         {
@@ -255,15 +271,31 @@ namespace Manager.Services.Specific
               viewOccupation.Activities = occupation.Activities;
 
               viewGroup.Occupation.Add(viewOccupation);
+
+              if (sphere.TypeSphere >= occupationPerson.Group.Sphere.TypeSphere)
+                fluidcareers.Add(new ViewFluidCareers()
+                {
+                  Occupation = viewOccupation.Name,
+                  Accuracy = viewOccupation.Accuracy,
+                  Color = viewOccupation.Color,
+                  Group = viewGroup.Name,
+                  Sphere = viewSphere.Name,
+                  Order = 0
+                });
             }
             viewGroup.Occupation = viewGroup.Occupation.OrderByDescending(p => p.Accuracy).ToList();
             if (viewGroup.Occupation.Count > 0)
               viewSphere.Group.Add(viewGroup);
           }
-          view.Sphere.Add(viewSphere);
+          view.Add(viewSphere);
         }
+        var result = new ViewFluidCareerPerson()
+        {
+          FluidCareerSphere = view,
+          FluidCareer = fluidcareers
+        };
 
-        return view;
+        return result;
       }
       catch (Exception e)
       {
