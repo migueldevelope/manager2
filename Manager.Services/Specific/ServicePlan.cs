@@ -1098,7 +1098,7 @@ namespace Manager.Services.Specific
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
         var plan = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == id).Result.Select(p => p._id).ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == id && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.Select(p => p._id).ToList();
         foreach (var item in plan)
         {
           if (persons.Where(p => p == item.Person?._id).Count() == 0)
