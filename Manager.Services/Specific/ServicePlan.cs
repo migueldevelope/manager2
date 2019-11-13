@@ -758,6 +758,37 @@ namespace Manager.Services.Specific
 
     #region Plan
 
+    public List<ViewGetPersonPlan> GetPersonPlan(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        var ids = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
+          .Select(p => p._id).ToList();
+
+        total = servicePerson.CountNewVersion(p => ids.Contains(p._id)
+        && p.TypeJourney != EnumTypeJourney.OutOfJourney
+        && p.StatusUser != EnumStatusUser.Disabled).Result;
+
+        return servicePerson.GetAllNewVersion(p => ids.Contains(p._id)
+        && p.TypeJourney != EnumTypeJourney.OutOfJourney
+        && p.StatusUser != EnumStatusUser.Disabled
+        && p.User.Name.Contains(filter)
+        ).Result.
+          Select(p => new ViewGetPersonPlan()
+          {
+            _id = p._id,
+            Name = p.User?.Name
+          }).Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string UpdatePlan(string idmonitoring, ViewCrudPlan viewPlan)
     {
       try
@@ -1903,7 +1934,7 @@ namespace Manager.Services.Specific
           foreach (var p in result)
           {
             var count = monitorings.Where(x => x._id == p._idMonitoring).Count();
-            if(count > 0)
+            if (count > 0)
             {
               list.Add(new ViewExportStatusPlan()
               {
