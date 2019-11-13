@@ -765,7 +765,7 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
 
         var ids = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
-          .Select(p => p._id).ToList();
+          .Select(p => p.Person?._id).ToList();
 
         total = servicePerson.CountNewVersion(p => ids.Contains(p._id)
         && p.TypeJourney != EnumTypeJourney.OutOfJourney
