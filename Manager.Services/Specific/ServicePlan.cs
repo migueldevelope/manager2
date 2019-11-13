@@ -758,7 +758,7 @@ namespace Manager.Services.Specific
 
     #region Plan
 
-    public List<ViewGetPersonPlan> GetPersonPlan(ref long total, string filter, int count, int page)
+    public List<ViewGetPersonPlan> GetPersonPlan(string idmanager, ref long total, string filter, int count, int page)
     {
       try
       {
@@ -769,11 +769,13 @@ namespace Manager.Services.Specific
 
         total = servicePerson.CountNewVersion(p => ids.Contains(p._id)
         && p.TypeJourney != EnumTypeJourney.OutOfJourney
+        && p.Manager._id == idmanager
         && p.StatusUser != EnumStatusUser.Disabled).Result;
 
         return servicePerson.GetAllNewVersion(p => ids.Contains(p._id)
         && p.TypeJourney != EnumTypeJourney.OutOfJourney
         && p.StatusUser != EnumStatusUser.Disabled
+        && p.Manager._id == idmanager
         && p.User.Name.Contains(filter)
         ).Result.
           Select(p => new ViewGetPersonPlan()

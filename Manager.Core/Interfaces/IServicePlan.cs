@@ -41,7 +41,7 @@ namespace Manager.Core.Interfaces
     string UpdatePlanActivity(ViewPlanActivity model);
     ViewListPlanStruct GetPlanStruct(string idmonitoring, string idplan);
     List<ViewExportStatusPlan> ExportStatusPlan(ViewFilterIdAndDate filter);
-    List<ViewGetPersonPlan> GetPersonPlan(ref long total, string filter, int count, int page);
+    List<ViewGetPersonPlan> GetPersonPlan(string idmanager, ref long total, string filter, int count, int page);
     #endregion
 
 
