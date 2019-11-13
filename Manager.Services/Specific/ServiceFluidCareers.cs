@@ -269,10 +269,13 @@ namespace Manager.Services.Specific
                 viewOccupation.Color = EnumOccupationColor.Orange;
 
               viewOccupation.Activities = occupation.Activities;
+              viewOccupation.Scopes = group.Scope;
 
-              viewGroup.Occupation.Add(viewOccupation);
+              
 
               if (occupationPerson.Group.Sphere.TypeSphere >= sphere.TypeSphere)
+              {
+                viewGroup.Occupation.Add(viewOccupation);
                 fluidcareers.Add(new ViewFluidCareers()
                 {
                   Occupation = viewOccupation.Name,
@@ -282,6 +285,8 @@ namespace Manager.Services.Specific
                   Sphere = viewSphere.Name,
                   Order = 0
                 });
+              }
+                
             }
             viewGroup.Occupation = viewGroup.Occupation.ToList();
             if (viewGroup.Occupation.Count > 0)

@@ -9,5 +9,6 @@ namespace Manager.Views.BusinessCrud
     public decimal Accuracy { get; set; }
     public EnumOccupationColor Color {get;set;}
     public List<ViewListActivitie> Activities { get; set; }
+    public List<ViewListScope> Scopes { get; set; }
   }
 }
