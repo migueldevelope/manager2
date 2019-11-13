@@ -764,7 +764,8 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
 
-        var ids = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result.Select(p => p._id).ToList();
+        var ids = servicePlan.GetAllNewVersion(p => monitorings.Contains(p._idMonitoring)).Result
           .Select(p => p.Person?._id).ToList();
 
         total = servicePerson.CountNewVersion(p => ids.Contains(p._id)
