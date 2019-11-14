@@ -43,7 +43,7 @@ namespace Manager.Core.Interfaces
     IntegrationCompany GetIntegrationCompany(string key, string name);
     IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany);
     IntegrationSchooling GetIntegrationSchooling(string key, string name);
-    IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany);
+    IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenterName);
     ViewCrudPerson GetPersonByKey(string idcompany, string idestablishment, string document, string registration);
     ViewCrudUser GetUserByKey(string document);
     ViewListSchooling GetSchooling(string id);

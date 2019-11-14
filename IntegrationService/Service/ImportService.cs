@@ -4,6 +4,7 @@ using IntegrationService.Enumns;
 using IntegrationService.Tools;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
+using Manager.Views.Integration.V2;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,15 @@ namespace IntegrationService.Service
     public string Message { get; set; }
     public EnumStatusService Status { get; private set; }
 
+    #region Private V1
     private List<ColaboradorImportar> Colaboradores;
     private List<ControleColaborador> ControleColaboradores;
+    #endregion
+
+    #region Private V2
+    private List<ColaboradorV2Completo> ColaboradoresV2;
+    #endregion
+
     private readonly ViewPersonLogin Person;
     //    private ViewIntegrationParameter Param;
     private ConfigurationService service;
@@ -65,7 +73,79 @@ namespace IntegrationService.Service
     }
     #endregion
 
-    #region Ponto de Entrada para Importação de Colaboradores
+    #region Shared
+    private DataTable ReadData()
+    {
+      try
+      {
+        bool oracle = false;
+        ConnectionString conn;
+        if (service.Param.ConnectionString.StartsWith("ODBC"))
+        {
+          conn = new ConnectionString(service.Param.ConnectionString.Split('|')[1])
+          {
+            Sql = service.Param.SqlCommand
+          };
+        }
+        else
+        {
+          oracle = service.Param.ConnectionString.Split(';')[0].Equals("Oracle");
+          string hostname = service.Param.ConnectionString.Split(';')[1];
+          string user = service.Param.ConnectionString.Split(';')[2];
+          string password = service.Param.ConnectionString.Split(';')[3];
+          string baseDefault = service.Param.ConnectionString.Split(';')[4];
+          if (oracle)
+            conn = new ConnectionString(hostname, user, password)
+            {
+              Sql = service.Param.SqlCommand
+            };
+          else
+            conn = new ConnectionString(hostname, user, password, baseDefault)
+            {
+              Sql = service.Param.SqlCommand
+            };
+        }
+        GetPersonSystem gps = new GetPersonSystem(conn);
+        return gps.GetPerson();
+      }
+      catch (Exception)
+      {
+        Status = EnumStatusService.CriticalError;
+        throw;
+      }
+    }
+    private string ValidColumns(List<string> validColumns, List<string> columns)
+    {
+      try
+      {
+        if (columns.Count != validColumns.Count)
+          return string.Format("Número de colunas inválida. Deveria ter {0} e tem {1}.", validColumns.Count, columns.Count);
+
+        MemberInfo[] mebers = null;
+        DescriptionAttribute[] attribs = null;
+
+        string message = string.Empty;
+        int pos = 0;
+        foreach (string item in validColumns)
+        {
+          mebers = item.GetType().GetMember(item.ToString());
+          attribs = (mebers != null && mebers.Length > 0) ? (DescriptionAttribute[])mebers[0].GetCustomAttributes(typeof(DescriptionAttribute), false) : null;
+          if (!attribs[0].Description.ToLower().Contains(item.ToLower()))
+            message = string.Format("{0}{1} Coluna {2} não encontrada na posição {3}", message, Environment.NewLine, item, pos);
+          pos++;
+        }
+        return message;
+      }
+      catch (Exception ex)
+      {
+        return ex.ToString();
+      }
+    }
+    #endregion
+
+    #region V1
+
+    #region Ponto de Entrada para Importação de Colaboradores V1
     public void Execute()
     {
       try
@@ -204,7 +284,7 @@ namespace IntegrationService.Service
     }
     #endregion
 
-    #region Api Region
+    #region Api Region V1
     private void CallApiMode()
     {
       try
@@ -285,7 +365,7 @@ namespace IntegrationService.Service
 
     #endregion
 
-    #region Listas
+    #region Listas V1
     private void LoadLists()
     {
       try
@@ -319,47 +399,36 @@ namespace IntegrationService.Service
       try
       {
         if (service.Param.Type == EnumIntegrationType.Custom)
-        {
-          Message = "Rotina deve ser do tipo customizada!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Rotina deve ser do tipo customizada.");
+
         if (service.Param.Process != EnumIntegrationProcess.System)
-        {
-          Message = "Apenas processo de sistema pode utilizar banco de dados!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Apenas processo de sistema pode utilizar banco de dados.");
+
         // Validar parâmetros
         if (string.IsNullOrEmpty(service.Param.ConnectionString))
-        {
-          Message = "Sem string de conexão!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Sem string de conexão.");
+
         if (string.IsNullOrEmpty(service.Param.SqlCommand))
-        {
-          Message = "Sem comando de leitura do banco de dados!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Sem comando de leitura do banco de dados.");
+
         // Ler banco de dados
         DataTable readData = ReadData();
         if (readData.Rows.Count == 0)
-        {
-          Message = "Não tem nenhum colaborador como retorno da consulta!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Não tem nenhum colaborador como retorno da consulta.");
+
         // Tratar os dados
         switch (service.Param.Type)
         {
           case EnumIntegrationType.Basic:
-            Message = ValidColumnSystemBasicV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+            Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutSystemBasicV1)).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
             break;
           case EnumIntegrationType.Complete:
-            Message = ValidColumnSystemCompleteV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+            Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutSystemCompleteV1)).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
             break;
         }
         if (!string.IsNullOrEmpty(Message))
-        {
           throw new Exception(Message);
-        }
+
         Colaboradores = new List<ColaboradorImportar>();
         // Carregar Lista de Colaboradores
         foreach (DataRow row in readData.Rows)
@@ -376,50 +445,10 @@ namespace IntegrationService.Service
           }
         }
       }
-      catch (Exception)
+      catch (Exception ex)
       {
         Status = EnumStatusService.CriticalError;
-        throw;
-      }
-    }
-    private DataTable ReadData()
-    {
-      try
-      {
-        bool oracle = false;
-        ConnectionString conn;
-        if (service.Param.ConnectionString.StartsWith("ODBC"))
-        {
-          conn = new ConnectionString(service.Param.ConnectionString.Split('|')[1])
-          {
-            Sql = service.Param.SqlCommand
-          };
-        }
-        else
-        {
-          oracle = service.Param.ConnectionString.Split(';')[0].Equals("Oracle");
-          string hostname = service.Param.ConnectionString.Split(';')[1];
-          string user = service.Param.ConnectionString.Split(';')[2];
-          string password = service.Param.ConnectionString.Split(';')[3];
-          string baseDefault = service.Param.ConnectionString.Split(';')[4];
-          if (oracle)
-            conn = new ConnectionString(hostname, user, password)
-            {
-              Sql = service.Param.SqlCommand
-            };
-          else
-            conn = new ConnectionString(hostname, user, password, baseDefault)
-            {
-              Sql = service.Param.SqlCommand
-            };
-        }
-        GetPersonSystem gps = new GetPersonSystem(conn);
-        return gps.GetPerson();
-      }
-      catch (Exception)
-      {
-        Status = EnumStatusService.CriticalError;
-        throw;
+        throw ex;
       }
     }
     #endregion
@@ -430,29 +459,17 @@ namespace IntegrationService.Service
       try
       {
         if (service.Param.Process == EnumIntegrationProcess.Executable)
-        {
-          Message = "Processo deve ser do tipo executável!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Processo deve ser do tipo executável.");
 
         if (service.Param.Type == EnumIntegrationType.Custom)
-        {
-          Message = "Rotina deve ser do tipo customizada!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Rotina deve ser do tipo customizada.");
 
         // Validar parâmetros
         if (string.IsNullOrEmpty(service.Param.FilePathLocal))
-        {
-          Message = "Sem arquivo de importação definido!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Sem arquivo de importação definido.");
 
         if (!File.Exists(service.Param.FilePathLocal))
-        {
-          Message = string.Format("Arquivo {0} não encontrado!!!", service.Param.FilePathLocal);
-          throw new Exception(Message);
-        }
+          throw new Exception(string.Format("Arquivo {0} não encontrado.", service.Param.FilePathLocal));
 
         // Tratar os dados
         StreamReader rd = new StreamReader(service.Param.FilePathLocal, Encoding.Default, true);
@@ -465,10 +482,10 @@ namespace IntegrationService.Service
             switch (service.Param.Type)
             {
               case EnumIntegrationType.Basic:
-                Message = ValidColumnManualBasicV1(readLine);
+                Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutManualBasicV1)).ToList(), readLine);
                 break;
               case EnumIntegrationType.Complete:
-                Message = ValidColumnManualCompleteV1(readLine);
+                Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutManualCompleteV1)).ToList(), readLine);
                 break;
             }
             break;
@@ -476,10 +493,10 @@ namespace IntegrationService.Service
             switch (service.Param.Type)
             {
               case EnumIntegrationType.Basic:
-                Message = ValidColumnSystemBasicV1(readLine);
+                Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutSystemBasicV1)).ToList(), readLine);
                 break;
               case EnumIntegrationType.Complete:
-                Message = ValidColumnSystemCompleteV1(readLine);
+                Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutSystemCompleteV1)).ToList(),readLine);
                 break;
             }
             break;
@@ -539,33 +556,23 @@ namespace IntegrationService.Service
       try
       {
         if (service.Param.Process == EnumIntegrationProcess.Executable)
-        {
-          Message = "Processo deve ser do tipo executável!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Processo deve ser do tipo executável.");
+
         if (service.Param.Type == EnumIntegrationType.Custom)
-        {
-          Message = "Rotina deve ser do tipo customizada!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Rotina deve ser do tipo customizada.");
+
         // Validar parâmetros
         if (string.IsNullOrEmpty(service.Param.FilePathLocal))
-        {
-          Message = "Sem arquivo de importação definido!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Sem arquivo de importação definido.");
+
         if (!File.Exists(service.Param.FilePathLocal))
-        {
-          Message = string.Format("Arquivo {0} não encontrado!!!", service.Param.FilePathLocal);
-          throw new Exception(Message);
-        }
+          throw new Exception(string.Format("Arquivo {0} não encontrado.", service.Param.FilePathLocal));
+
         // Ler banco de dados
         DataTable readData = ReadDataXls();
         if (readData.Rows.Count == 0)
-        {
-          Message = "Não tem nenhum colaborador como retorno da consulta!!!";
-          throw new Exception(Message);
-        }
+          throw new Exception("Não tem nenhum colaborador como retorno da consulta.");
+
         // Tratar os dados
         switch (service.Param.Process)
         {
@@ -573,10 +580,10 @@ namespace IntegrationService.Service
             switch (service.Param.Type)
             {
               case EnumIntegrationType.Basic:
-                Message = ValidColumnManualBasicV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutManualBasicV1)).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
                 break;
               case EnumIntegrationType.Complete:
-                Message = ValidColumnManualCompleteV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutManualCompleteV1)).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
                 break;
             }
             break;
@@ -584,10 +591,10 @@ namespace IntegrationService.Service
             switch (service.Param.Type)
             {
               case EnumIntegrationType.Basic:
-                Message = ValidColumnSystemBasicV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutSystemBasicV1)).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
                 break;
               case EnumIntegrationType.Complete:
-                Message = ValidColumnSystemCompleteV1(readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
+                Message = ValidColumns(Enum.GetNames(typeof(EnumLayoutSystemCompleteV1)).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
                 break;
             }
             break;
@@ -661,110 +668,7 @@ namespace IntegrationService.Service
     }
     #endregion
 
-    #region Validação de Colunas
-    private string ValidColumnManualBasicV1(List<string> columns)
-    {
-      try
-      {
-        if (columns.Count != Enum.GetNames(typeof(EnumLayoutManualBasicV1)).Length)
-          return string.Format("Número de colunas inválida. Deveria ter {0} e tem {1}.", Enum.GetNames(typeof(EnumLayoutManualBasicV1)).Length,columns.Count);
-
-        MemberInfo[] mebers = null;
-        DescriptionAttribute[] attribs = null;
-
-        string message = string.Empty;
-        foreach (EnumLayoutManualBasicV1 item in Enum.GetValues(typeof(EnumLayoutManualBasicV1)))
-        {
-          mebers = item.GetType().GetMember(item.ToString());
-          attribs = (mebers != null && mebers.Length > 0) ? (System.ComponentModel.DescriptionAttribute[])mebers[0].GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false) : null;
-          if (!attribs[0].Description.ToLower().Contains(columns[(int)item].ToLower()))
-            message = string.Format("{0}{1} Coluna {2} não encontrada na posição {3}", message, Environment.NewLine, attribs[0].Description, (int)item+1);
-        }
-        return message;
-      }
-      catch (Exception ex)
-      {
-        return ex.ToString();
-      }
-    }
-    private string ValidColumnManualCompleteV1(List<string> columns)
-    {
-      try
-      {
-        if (columns.Count != Enum.GetNames(typeof(EnumLayoutManualCompleteV1)).Length)
-          return string.Format("Número de colunas inválida. Deveria ter {0} e tem {1}.", Enum.GetNames(typeof(EnumLayoutManualCompleteV1)).Length, columns.Count);
-
-        MemberInfo[] mia = null;
-        DescriptionAttribute[] atribs = null;
-
-        string message = string.Empty;
-        foreach (EnumLayoutManualCompleteV1 item in Enum.GetValues(typeof(EnumLayoutManualCompleteV1)))
-        {
-          mia = item.GetType().GetMember(item.ToString());
-          atribs = (mia != null && mia.Length > 0) ? (System.ComponentModel.DescriptionAttribute[])mia[0].GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false) : null;
-          if (!atribs[0].Description.ToLower().Contains(columns[(int)item].ToLower()))
-            message = string.Format("{0}{1} Coluna {2} não encontrada na posição {3}", message, Environment.NewLine, atribs[0].Description, (int)item + 1);
-        }
-        return message;
-      }
-      catch (Exception ex)
-      {
-        return ex.ToString();
-      }
-    }
-    private string ValidColumnSystemBasicV1(List<string> columns)
-    {
-      try
-      {
-        if (columns.Count != Enum.GetNames(typeof(EnumLayoutSystemBasicV1)).Length)
-          return string.Format("Número de colunas inválida. Deveria ter {0} e tem {1}.", Enum.GetNames(typeof(EnumLayoutSystemBasicV1)).Length, columns.Count);
-
-        MemberInfo[] mia = null;
-        DescriptionAttribute[] atribs = null;
-
-        string message = string.Empty;
-        foreach (EnumLayoutSystemBasicV1 item in Enum.GetValues(typeof(EnumLayoutSystemBasicV1)))
-        {
-          mia = item.GetType().GetMember(item.ToString());
-          atribs = (mia != null && mia.Length > 0) ? (System.ComponentModel.DescriptionAttribute[])mia[0].GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false) : null;
-          if (!atribs[0].Description.ToLower().Contains(columns[(int)item].ToLower()))
-            message = string.Format("{0}{1} Coluna {2} não encontrada na posição {3}", message, Environment.NewLine, atribs[0].Description, (int)item + 1);
-        }
-        return message;
-      }
-      catch (Exception ex)
-      {
-        return ex.ToString();
-      }
-    }
-    private string ValidColumnSystemCompleteV1(List<string> columns)
-    {
-      try
-      {
-        if (columns.Count != Enum.GetNames(typeof(EnumLayoutSystemCompleteV1)).Length)
-          return string.Format("Número de colunas inválida. Deveria ter {0} e tem {1}.", Enum.GetNames(typeof(EnumLayoutSystemCompleteV1)).Length, columns.Count);
-
-        MemberInfo[] mia = null;
-        DescriptionAttribute[] atribs = null;
-
-        string message = string.Empty;
-        foreach (EnumLayoutSystemCompleteV1 item in Enum.GetValues(typeof(EnumLayoutSystemCompleteV1)))
-        {
-          mia = item.GetType().GetMember(item.ToString());
-          atribs = (mia != null && mia.Length > 0) ? (System.ComponentModel.DescriptionAttribute[])mia[0].GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false) : null;
-          if (!atribs[0].Description.ToLower().Contains(columns[(int)item].ToLower()))
-            message = string.Format("{0}{1} Coluna {2} não encontrada na posição {3}", message, Environment.NewLine, atribs[0].Description, (int)item + 1);
-        }
-        return message;
-      }
-      catch (Exception ex)
-      {
-        return ex.ToString();
-      }
-    }
-    #endregion
-
-    #region Carregar Lista de Controle
+    #region Carregar Lista de Controle V1
     private void FinalImport()
     {
       try
@@ -892,6 +796,167 @@ namespace IntegrationService.Service
         throw;
       }
     }
+    #endregion
+
+    #endregion
+
+    #region V2
+
+    #region Inicio da integração
+    public void ExecuteV2()
+    {
+      try
+      {
+        FileClass.SaveLog(LogFileName, string.Format("Iniciando o processo de integração."), EnumTypeLineOpportunityg.Information);
+        switch (service.Param.Process)
+        {
+          case EnumIntegrationProcess.Manual:
+            switch (service.Param.Mode)
+            {
+              case EnumIntegrationMode.DataBaseV1:
+                throw new Exception("Modo banco de dados não suportado no processo manual.");
+              case EnumIntegrationMode.FileCsvV1:
+                throw new Exception("Modo CSV não implementado no processo manual.");
+              case EnumIntegrationMode.FileExcelV1:
+                throw new Exception("Modo Excel não implementado no processo manual.");
+              case EnumIntegrationMode.ApplicationInterface:
+                throw new Exception("Modo API não implementado no processo manual.");
+            }
+            break;
+          case EnumIntegrationProcess.System:
+            switch (service.Param.Mode)
+            {
+              case EnumIntegrationMode.DataBaseV1:
+                DatabaseV2();
+                break;
+              case EnumIntegrationMode.FileCsvV1:
+                throw new Exception("Modo CSV não implementado no processo de sistema.");
+              case EnumIntegrationMode.FileExcelV1:
+                throw new Exception("Modo Excel não implementado no processo de sistema.");
+              case EnumIntegrationMode.ApplicationInterface:
+                throw new Exception("Modo API não implementado no processo de sistema.");
+            }
+            break;
+          case EnumIntegrationProcess.Executable:
+            break;
+          default:
+            break;
+        }
+        if (Status == EnumStatusService.CriticalError)
+          throw new Exception(Message);
+
+        if (ColaboradoresV2.Count == 0)
+          throw new Exception("Lista de colaboradores vazia.");
+
+        FinalImportV2();
+        service.Param.CriticalError = string.Empty;
+        service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        service.Param.StatusExecution = "Ok v2";
+        service.Param.CustomVersionExecution = string.Empty;
+        service.Param.UploadNextLog = false;
+        service.Param.ProgramVersionExecution = VersionProgram.ToString();
+        service.SetParameter(service.Param);
+        FileClass.SaveLog(LogFileName, string.Format("Finalizando o processo de integração."), EnumTypeLineOpportunityg.Information);
+      }
+      catch (Exception ex)
+      {
+        Status = EnumStatusService.CriticalError;
+        Message = ex.Message;
+        FileClass.SaveLog(LogFileName, string.Format("Erro de integração critico: {0}", ex.Message), EnumTypeLineOpportunityg.Error);
+        service.Param.CriticalError = ex.Message;
+        service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        service.Param.StatusExecution = "Critical Error";
+        service.Param.CustomVersionExecution = string.Empty;
+        service.Param.UploadNextLog = false;
+        service.Param.ProgramVersionExecution = VersionProgram.ToString();
+        service.SetParameter(service.Param);
+        throw ex;
+      }
+    }
+
+    #region Leitura de Benco de Dados
+    private void DatabaseV2()
+    {
+      try
+      {
+        if (service.Param.Type == EnumIntegrationType.Custom)
+          throw new Exception("Rotina deve ser do tipo customizada.");
+
+        if (service.Param.Process != EnumIntegrationProcess.System)
+          throw new Exception("Apenas processo de sistema pode utilizar banco de dados.");
+
+        // Validar parâmetros
+        if (string.IsNullOrEmpty(service.Param.ConnectionString))
+          throw new Exception("Sem string de conexão.");
+
+        if (string.IsNullOrEmpty(service.Param.SqlCommand))
+          throw new Exception("Sem comando de leitura do banco de dados.");
+
+        // Ler banco de dados
+        DataTable readData = ReadData();
+        if (readData.Rows.Count == 0)
+          throw new Exception("Não tem nenhum colaborador para integração.");
+
+        ColaboradoresV2 = new List<ColaboradorV2Completo>();
+        // Carregar Lista de Colaboradores
+        foreach (DataRow row in readData.Rows)
+        {
+          List<string> teste = row.ItemArray.Select(x => x.ToString()).ToList();
+          switch (service.Param.Type)
+          {
+            case EnumIntegrationType.Complete:
+              ColaboradoresV2.Add(new ColaboradorV2Completo(row.ItemArray.Select(x => x.ToString()).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList()));
+              break;
+            default:
+              throw new Exception(string.Format("{0} não foi implementado.", service.Param.Type));
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    #endregion
+
+    #region Atualizar Base de Colaboradores
+    private void FinalImportV2()
+    {
+      try
+      {
+        ColaboradorV2Retorno viewRetorno;
+        foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
+        {
+          viewRetorno = personIntegration.PostV2Completo(colaborador);
+          if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
+          {
+            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
+            hasLogFile = true;
+          }
+          else
+            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Register);
+
+        }
+        Status = EnumStatusService.Ok;
+        Message = "Fim de integração!";
+        if (hasLogFile)
+        {
+          Message = "Fim de integração com LOG!";
+          Status = EnumStatusService.Error;
+        }
+      }
+      catch (Exception)
+      {
+        Status = EnumStatusService.CriticalError;
+        throw;
+      }
+    }
+    #endregion
+
+    #endregion
+
     #endregion
 
   }

@@ -2,6 +2,7 @@
 using System.Net.Http;
 using Newtonsoft.Json;
 using Manager.Views.Integration;
+using Manager.Views.Integration.V2;
 
 namespace IntegrationService.Api
 {
@@ -10,6 +11,7 @@ namespace IntegrationService.Api
     private HttpClient clientSkill;
     private readonly ViewPersonLogin Person;
 
+    #region Constructor
     public PersonIntegration(ViewPersonLogin person)
     {
       Person = person;
@@ -30,6 +32,9 @@ namespace IntegrationService.Api
       clientSkill.DefaultRequestHeaders.Add("ContentType", "application/json");
       clientSkill.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", Person.Token));
     }
+    #endregion
+
+    #region V1
     public ViewIntegrationColaborador PutPerson(ViewIntegrationColaborador view)
     {
       try
@@ -58,6 +63,24 @@ namespace IntegrationService.Api
         throw;
       }
     }
+    #endregion
+
+    #region V2
+    public ColaboradorV2Retorno PostV2Completo(ColaboradorV2Completo view)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
+        content.Headers.ContentType.MediaType = "application/json";
+        HttpResponseMessage result = clientSkill.PostAsync("person/v2/completo", content).Result;
+        return JsonConvert.DeserializeObject<ColaboradorV2Retorno>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    #endregion
 
     public void GetStatusIntegration()
     {

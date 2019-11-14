@@ -34,6 +34,7 @@
       this.txtDatIni = new System.Windows.Forms.TextBox();
       this.txtDatFin = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
+      this.btnImpV2 = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
       // btImp
@@ -90,11 +91,23 @@
       this.label2.TabIndex = 4;
       this.label2.Text = "Data Final";
       // 
+      // btnImpV2
+      // 
+      this.btnImpV2.Location = new System.Drawing.Point(347, 12);
+      this.btnImpV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.btnImpV2.Name = "btnImpV2";
+      this.btnImpV2.Size = new System.Drawing.Size(251, 23);
+      this.btnImpV2.TabIndex = 6;
+      this.btnImpV2.Text = "Executar Importação V2";
+      this.btnImpV2.UseVisualStyleBackColor = true;
+      this.btnImpV2.Click += new System.EventHandler(this.BtnImpV2_Click);
+      // 
       // ImportacaoImportar
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 450);
+      this.Controls.Add(this.btnImpV2);
       this.Controls.Add(this.txtDatFin);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.txtDatIni);
@@ -121,5 +134,6 @@
     private System.Windows.Forms.TextBox txtDatIni;
     private System.Windows.Forms.TextBox txtDatFin;
     private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Button btnImpV2;
   }
 }

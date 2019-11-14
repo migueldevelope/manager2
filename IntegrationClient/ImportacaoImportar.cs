@@ -61,5 +61,22 @@ namespace IntegrationClient
       }
 
     }
+
+    private void BtnImpV2_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        import.ExecuteV2();
+        if (import.Status == EnumStatusService.Error)
+          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        else
+          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
   }
 }

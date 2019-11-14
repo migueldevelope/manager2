@@ -204,7 +204,7 @@ namespace Manager.Services.Specific
           else
             payrollEmployee._idEstablishment = establishment._id;
           // Cargo
-          integrationOccupation = GetIntegrationOccupation(payrollEmployee.Occupation, payrollEmployee.OccupationName, company._id);
+          integrationOccupation = GetIntegrationOccupation(payrollEmployee.Occupation, payrollEmployee.OccupationName, company._id, payrollEmployee.CostCenterName);
           occupation = occupationService.GetNewVersion(p => p._id == integrationOccupation.IdOccupation).Result;
           if (occupation == null)
             payrollEmployee.Messages.Add("Falta integração de cargo");
@@ -620,7 +620,7 @@ namespace Manager.Services.Specific
 
     // Ok
     #region IntegrationOccupation
-    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany)
+    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenterName)
     {
       try
       {
@@ -642,12 +642,22 @@ namespace Manager.Services.Specific
         {
           item.Name = name;
           item._idCompany = idcompany;
-          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).Result.ToList<Occupation>();
+          // Ajuste para cargos com centro de custo
+          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && string.Format("{0}{1}", p.Name.Trim().ToLower(), p.Description.Trim().ToLower()) == string.Format("{0}{1}", name.Trim().ToLower(), costCenterName.Trim().ToLower())).Result.ToList();
           if (occupations.Count == 1)
           {
             item.IdOccupation = occupations[0]._id;
             item.NameOccupation = occupations[0].Name;
             var i = integrationOccupationService.Update(item, null);
+          } else
+          {
+            occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.Trim().ToLower() == name.Trim().ToLower() && p.Description == null).Result.ToList();
+            if (occupations.Count == 1)
+            {
+              item.IdOccupation = occupations[0]._id;
+              item.NameOccupation = occupations[0].Name;
+              var i = integrationOccupationService.Update(item, null);
+            }
           }
         }
         return item;
@@ -1389,31 +1399,46 @@ namespace Manager.Services.Specific
         situacao = ValidSituation(view.Situacao);
         // Validação de campos vazios obrigatórios
         ValidEmptyString(view.Nome, "Nome deve ser informado");
+        view.Nome = CapitalizeName(view.Nome);
         ValidEmptyString(view.Cargo, "Cargo deve ser informado");
         ValidEmptyString(view.NomeCargo, "Nome do cargo deve ser informado");
+        view.NomeCargo = CapitalizeOccupation(view.NomeCargo);
         ValidEmptyDate(view.DataAdmissao, "Data de admissão deve ser informada");
         // Preenchimento de campos opcionais, caso vazios
         view.Email = EmptyStringDefault(view.Email, view.Colaborador.Cpf);
         view.GrauInstrucao = EmptyStringDefault(view.GrauInstrucao, "0");
         view.NomeGrauInstrucao = EmptyStringDefault(view.NomeGrauInstrucao, "Não definida");
+        view.NomeGrauInstrucao = CapitalizeName(view.NomeGrauInstrucao);
         // Validação do Gestor
         if (view.Gestor != null && !string.IsNullOrEmpty(view.Gestor.Matricula))
-          view.Gestor = ValidKeyEmployee(view.Gestor, " do gestor ");
-        // Atualização da base de dados
-        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        if (resultV2.Mensagem.Count == 0)
         {
-          // TODO: Revisar buscar por duas chaves
-          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
-          if (payrollEmployees.Count() == 0 && (acao == EnumActionIntegration.Demission || acao == EnumActionIntegration.Change))
-          {
-            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
-            if (payrollEmployees.Count() == 0 && (acao == EnumActionIntegration.Demission || acao == EnumActionIntegration.Change))
-              resultV2.Mensagem.Add("Colaborador não está na base de integração.");
-          }
+          view.Gestor = ValidKeyEmployee(view.Gestor, " do gestor ");
         }
         if (resultV2.Mensagem.Count != 0)
+        {
           return resultV2;
+        }
+        IntegrationParameter param = parameterService.GetAllNewVersion().FirstOrDefault();
+        if (param == null)
+        {
+          resultV2.Mensagem.Add("Não existe parâmetro de integração.");
+          return resultV2;
+        }
+        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
+        if (param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
+        {
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        }
+        else
+        {
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+        }
+        if (payrollEmployees.Count() == 0 && (acao == EnumActionIntegration.Demission || acao == EnumActionIntegration.Change))
+        {
+          resultV2.Mensagem.Add("Colaborador não está na base de integração.");
+          return resultV2;
+        }
         PayrollEmployee payrollEmployee = new PayrollEmployee
         {
           // Identificação
@@ -1467,22 +1492,19 @@ namespace Manager.Services.Specific
         // Tem registro anterior, trazer o último
         PayrollEmployee payrollEmployeePrevious = null;
         payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
-        if (!payrollEmployee.Equal(payrollEmployeePrevious)) // Anterior e novo são diferentes
+        if (!payrollEmployee.Equal(payrollEmployeePrevious))
         {
+          // Anterior e novo são diferentes
           ConclusionV2(payrollEmployee, payrollEmployeePrevious, false);
           return resultV2;
         }
-        ConclusionV2(payrollEmployee, payrollEmployeePrevious, true);
         // Anterior e novo são iguais, não gravar o novo e retornar mensagens do antigo.
-        if (payrollEmployeePrevious.Messages.Count == 0)
-          resultV2.Mensagem.Add("Colaborador atualizado!");
-        else
-          resultV2.Mensagem = payrollEmployeePrevious.Messages;
+        ConclusionV2(payrollEmployee, payrollEmployeePrevious, true);
         return resultV2;
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        throw;
+        throw ex;
       }
     }
     public ColaboradorV2Retorno IntegrationV2(ColaboradorV2Admissao view)
@@ -2187,6 +2209,39 @@ namespace Manager.Services.Specific
     }
     #endregion
 
+    #region FormatField
+    private string CapitalizeName(string param)
+    {
+      try
+      {
+        string result = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param.Trim().ToLower());
+        result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ");
+        return result;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+    private string CapitalizeOccupation(string param)
+    {
+      try
+      {
+        string result = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param.Trim().ToLower());
+        result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ")
+          .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ").Replace(" Ti", " TI")
+          .Replace(" Pl", " PL").Replace(" Jr", " JR").Replace(" Sr", " SR");
+        return result;
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+    #endregion
+
     #region Conclusion PayrollEmployee
     private void ConclusionV2(PayrollEmployee payrollEmployee, PayrollEmployee payrollEmployeePrevious, bool equals)
     {
@@ -2202,7 +2257,9 @@ namespace Manager.Services.Specific
               payrollEmployee._idPrevious = payrollEmployeePrevious._idPrevious;
             }
             else
+            {
               payrollEmployee._idPrevious = payrollEmployeePrevious._id;
+            }
           }
         }
         else
@@ -2220,8 +2277,8 @@ namespace Manager.Services.Specific
         // Atualização de usuário e devolve o id do usuário e mensagens
         payrollEmployee = UserUpdate(payrollEmployee);
         resultV2.IdUser = payrollEmployee._idUser;
+        // Atualização de contratos do usuário
         payrollEmployee = PersonUpdate(payrollEmployee, payrollEmployeePrevious?.OccupationName == payrollEmployee.OccupationName);
-
         resultV2.IdContract = payrollEmployee._idContract;
         // Atualizar registro anterior
         if (!equals)
@@ -2236,19 +2293,22 @@ namespace Manager.Services.Specific
         }
         resultV2.IdPayrollEmployee = payrollEmployee._id;
         for (int i = 0; i < payrollEmployee.Messages.Count; i++)
+        {
           resultV2.Mensagem.Add(payrollEmployee.Messages[i]);
+        }
         if (resultV2.Mensagem.Count == 0)
         {
           resultV2.Situacao = "Ok";
           resultV2.Mensagem.Add("Colaborador atualizado");
         }
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        throw;
+        throw ex;
       }
     }
     #endregion
+
 
     #endregion
 
