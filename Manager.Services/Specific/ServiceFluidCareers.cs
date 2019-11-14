@@ -195,9 +195,9 @@ namespace Manager.Services.Specific
         total = result.Count();
 
         if (type == 2)
-          return result.Skip(skip).Take(count).OrderByDescending(p => p.Count).ThenBy(p => p.Name).ToList();
+          return result.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderByDescending(p => p.Count).ThenBy(p => p.Name).ToList();
         else
-          return result.Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
+          return result.Where(p => p.Name.ToUpper().Contains(filter.ToUpper())).Skip(skip).Take(count).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -269,10 +269,13 @@ namespace Manager.Services.Specific
                 viewOccupation.Color = EnumOccupationColor.Orange;
 
               viewOccupation.Activities = occupation.Activities;
+              viewOccupation.Scopes = group.Scope;
 
-              viewGroup.Occupation.Add(viewOccupation);
+              
 
-              if (sphere.TypeSphere >= occupationPerson.Group.Sphere.TypeSphere)
+              if (occupationPerson.Group.Sphere.TypeSphere >= sphere.TypeSphere)
+              {
+                viewGroup.Occupation.Add(viewOccupation);
                 fluidcareers.Add(new ViewFluidCareers()
                 {
                   Occupation = viewOccupation.Name,
@@ -282,8 +285,10 @@ namespace Manager.Services.Specific
                   Sphere = viewSphere.Name,
                   Order = 0
                 });
+              }
+                
             }
-            viewGroup.Occupation = viewGroup.Occupation.OrderByDescending(p => p.Accuracy).ToList();
+            viewGroup.Occupation = viewGroup.Occupation.ToList();
             if (viewGroup.Occupation.Count > 0)
               viewSphere.Group.Add(viewGroup);
           }
@@ -292,7 +297,7 @@ namespace Manager.Services.Specific
         var result = new ViewFluidCareerPerson()
         {
           FluidCareerSphere = view,
-          FluidCareer = fluidcareers
+          FluidCareer = fluidcareers.OrderByDescending(p => p.Accuracy).ToList()
         };
 
         return result;

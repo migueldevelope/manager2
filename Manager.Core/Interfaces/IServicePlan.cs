@@ -21,7 +21,7 @@ namespace Manager.Core.Interfaces
     string RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan);
     string RemovePlanActivity(string id);
 
-    List<ViewGetPlan> ListPlans(string id, ref long total, string filter, int count,
+    List<ViewGetPlan> ListPlans(string id, string idperson, ref long total, string filter, int count,
      int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
     List<ViewGetPlan> ListPlansPerson(string id, ref long total, string filter, int count,
      int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait);
@@ -41,6 +41,7 @@ namespace Manager.Core.Interfaces
     string UpdatePlanActivity(ViewPlanActivity model);
     ViewListPlanStruct GetPlanStruct(string idmonitoring, string idplan);
     List<ViewExportStatusPlan> ExportStatusPlan(ViewFilterIdAndDate filter);
+    List<ViewGetPersonPlan> GetPersonPlan(string idmanager, ref long total, string filter, int count, int page);
     #endregion
 
 

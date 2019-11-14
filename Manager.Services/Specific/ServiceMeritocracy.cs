@@ -705,37 +705,37 @@ namespace Manager.Services.Specific
 
     #region Meritocracy
 
-    public List<ViewListMeritocracyResume> ListMeritocracyPerson(string iduser, ref long total, int count, int page, string filter)
+    public ViewListMeritocracyResume ListMeritocracyPerson(string idperson, ref long total, int count, int page, string filter)
     {
       try
       {
         int skip = (count * (page - 1));
-        var persons = servicePerson.GetAllNewVersion(p => p._id == iduser && p.StatusUser != EnumStatusUser.Disabled).Result;
-        var list = new List<ViewListMeritocracyResume>();
+        var item = servicePerson.GetNewVersion(p => p._id == idperson && p.StatusUser != EnumStatusUser.Disabled).Result;
 
-        foreach (var item in persons)
+        //var list = new List<ViewListMeritocracyResume>();
+
+        //foreach (var item in persons)
+        //{
+        var result = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == idperson
+        && p.StatusMeritocracy == EnumStatusMeritocracy.End
+        && p.ShowPerson == true).Result.LastOrDefault();
+        if (result == null)
+          return null;
+        //foreach (var result in meritocracy)
+        //{
+        //list.Add(
+        var view = new ViewListMeritocracyResume()
         {
-          var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == item._id
-          && p.StatusMeritocracy == EnumStatusMeritocracy.End
-          && p.ShowPerson == true).Result;
-          foreach (var result in meritocracy)
-          {
-            list.Add(new ViewListMeritocracyResume()
-            {
-              _id = result._id,
-              Name = item.User?.Name,
-              Manager = item.Manager?.Name,
-              Occupation = item.Occupation?.Name,
-              ResultEnd = result.ResultEnd,
-              Photo = item.User?.PhotoUrl,
-              ShowPerson = result.ShowPerson
-            });
-          }
-        }
+          _id = result._id,
+          Name = item.User?.Name,
+          Manager = item.Manager?.Name,
+          Occupation = item.Occupation?.Name,
+          ResultEnd = result.ResultEnd,
+          Photo = item.User?.PhotoUrl,
+          ShowPerson = result.ShowPerson
+        };
 
-        total = list.Count();
-        list = list.Where(p => p.Name.Contains(filter)).OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        return list;
+        return view;
       }
       catch (Exception e)
       {
