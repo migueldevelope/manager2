@@ -1701,12 +1701,16 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager)
+    public List<ViewTagsCloud> ListTagsCloudCompany(string idmanager, string idperson)
     {
       try
       {
         var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
         var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
+
+        if (idperson != "")
+          list = list.Where(p => p.Person._id == idperson).ToList();
+
         foreach (var item in list)
         {
           if (persons.Where(p => p == item.Person?._id).Count() == 0)
@@ -1740,12 +1744,16 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTagsCloud> ListTagsCloud(string idmanager)
+    public List<ViewTagsCloud> ListTagsCloud(string idmanager, string idperson)
     {
       try
       {
         var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
         var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
+
+        if (idperson != "")
+          list = list.Where(p => p.Person._id == idperson).ToList();
+
         foreach (var item in list)
         {
           if (persons.Where(p => p == item.Person?._id).Count() == 0)

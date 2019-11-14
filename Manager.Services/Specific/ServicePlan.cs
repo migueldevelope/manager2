@@ -765,7 +765,8 @@ namespace Manager.Services.Specific
         int skip = (count * (page - 1));
 
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result.Select(p => p._id).ToList();
-        var ids = servicePlan.GetAllNewVersion(p => monitorings.Contains(p._idMonitoring)).Result
+        var ids = servicePlan.GetAllNewVersion(p => monitorings.Contains(p._idMonitoring)
+        && p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).Result
           .Select(p => p.Person?._id).ToList();
 
         total = servicePerson.CountNewVersion(p => ids.Contains(p._id)
@@ -1091,7 +1092,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewGetPlan> ListPlans(string id, ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
+    public List<ViewGetPlan> ListPlans(string id, string idperson, ref long total, string filter, int count, int page, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait)
     {
       try
       {
@@ -1100,6 +1101,13 @@ namespace Manager.Services.Specific
 
         var plan = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == id && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.Select(p => p._id).ToList();
+        if (idperson != "")
+        {
+          persons = new List<string>();
+          persons.Add(idperson);
+        }
+          
+
         foreach (var item in plan)
         {
           if (persons.Where(p => p == item.Person?._id).Count() == 0)

@@ -83,10 +83,10 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listplans/{id}/{activities}/{skillcompany}/{schooling}/{open}/{expired}/{end}/{wait}")]
-    public async Task<List<ViewGetPlan>> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewGetPlan>> ListPlans(string id, byte activities, byte skillcompany, byte schooling, byte open, byte expired, byte end, byte wait, int count = 10, int page = 1, string filter = "", string idperson = "")
     {
       long total = 0;
-      var result = service.ListPlans(id, ref total, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
+      var result = service.ListPlans(id, idperson, ref total, filter, count, page, activities, skillcompany, schooling, open, expired, end, wait);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }

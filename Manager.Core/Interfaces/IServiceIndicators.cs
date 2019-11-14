@@ -16,8 +16,8 @@ namespace Manager.Core.Interfaces
     bool VerifyAccount(string id);
     void SetUser(BaseUser baseUser);
     void SendMessages(string link);
-    List<ViewTagsCloud> ListTagsCloud(string idmanager);
-    List<ViewTagsCloud> ListTagsCloudCompany(string idmanager);
+    List<ViewTagsCloud> ListTagsCloud(string idmanager, string idperson);
+    List<ViewTagsCloud> ListTagsCloudCompany(string idmanager, string idperson);
     List<ViewTagsCloud> ListTagsCloudPerson(string idperson);
     List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
     //string[] ExportStatusOnboarding(ref  long total,  string filter, int count, int page);

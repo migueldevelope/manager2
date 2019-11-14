@@ -84,9 +84,9 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpGet]
     [Route("listtagscloud/{idmanager}")]
-    public async Task<List<ViewTagsCloud>> ListTagsCloud(string idmanager)
+    public async Task<List<ViewTagsCloud>> ListTagsCloud(string idmanager, string idperson = "")
     {
-      return await Task.Run(() => service.ListTagsCloud(idmanager));
+      return await Task.Run(() => service.ListTagsCloud(idmanager, idperson));
     }
 
     /// <summary>
@@ -292,9 +292,9 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpGet]
     [Route("listtagscloudcompany/{idmanager}")]
-    public async Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager)
+    public async Task<List<ViewTagsCloud>> ListTagsCloudCompany(string idmanager, string idperson = "")
     {
-      return await Task.Run(() => service.ListTagsCloudCompany(idmanager));
+      return await Task.Run(() => service.ListTagsCloudCompany(idmanager, idperson));
     }
 
 
