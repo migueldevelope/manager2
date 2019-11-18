@@ -172,7 +172,9 @@ namespace Manager.Services.Specific
           {
             int countarea = 1;
             if (idarea != "")
-              countarea = item.Process.Where(p => p.ProcessLevelOne.Area._id == idarea).Count();
+              if (idarea != proc.ProcessLevelOne?.Area?._id)
+                countarea = 0;
+
             if (countarea > 0)
             {
               view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
