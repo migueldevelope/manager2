@@ -170,9 +170,16 @@ namespace Manager.Services.Specific
           view.Axis = group.Axis.Name;
           foreach (var proc in item.Process)
           {
-            view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
-            view.Area = proc.ProcessLevelOne?.Area?.Name;
-            view.ProcessLevelTwo = proc.Name;
+            int countarea = 1;
+            if (idarea != "")
+              countarea = item.Process.Where(p => p.ProcessLevelOne.Area._id == idarea).Count();
+            if (countarea > 0)
+            {
+              view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
+              view.Area = proc.ProcessLevelOne?.Area?.Name;
+              view.ProcessLevelTwo = proc.Name;
+            }
+              
           }
           int count = 1;
           if (idarea != "")
