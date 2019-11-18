@@ -16,5 +16,6 @@ namespace Manager.Core.Interfaces
     string ListPersons();
     string ListTraining(string idevent);
     string ListCertificate(string idevent, string idperson);
+    string ListOpportunityLine(string idcompany);
   }
 }
