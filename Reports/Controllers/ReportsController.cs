@@ -52,9 +52,9 @@ namespace Reports.Controllers
     [Authorize]
     [HttpGet]
     [Route("listopportunityline/{idcompany}")]
-    public async Task<string> ListOpportunityLine(string idcompany)
+    public async Task<string> ListOpportunityLine(string idcompany, string idarea = "")
     {
-      return await Task.Run(() => service.ListOpportunityLine(idcompany));
+      return await Task.Run(() => service.ListOpportunityLine(idcompany, idarea));
     }
 
 

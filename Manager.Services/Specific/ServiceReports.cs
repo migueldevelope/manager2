@@ -151,11 +151,12 @@ namespace Manager.Services.Specific
     #region reports
 
 
-    public string ListOpportunityLine(string idcompany)
+    public string ListOpportunityLine(string idcompany, string idarea)
     {
       try
       {
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result;
+
         var list = new List<ViewListOpportunityLine>();
 
         foreach (var item in occupations)
@@ -173,8 +174,12 @@ namespace Manager.Services.Specific
             view.Area = proc.ProcessLevelOne?.Area?.Name;
             view.ProcessLevelTwo = proc.Name;
           }
+          int count = 1;
+          if (idarea != "")
+            count = item.Process.Where(p => p.ProcessLevelOne.Area._id == idarea).Count();
 
-          list.Add(view);
+          if (count > 0)
+            list.Add(view);
         }
 
         var data = list.OrderBy(p => p.Area).ThenBy(p => p.Shepre).ThenBy(p => p.Axis)
