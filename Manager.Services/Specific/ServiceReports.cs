@@ -184,8 +184,8 @@ namespace Manager.Services.Specific
         var viewReport = new ViewReport()
         {
           Data = data,
-          Name = "listtraining",
-          _idReport = NewReport("listtraining"),
+          Name = "listopportunityline",
+          _idReport = NewReport("listopportunityline"),
           _idAccount = _user._idAccount
         };
         SendMessageAsync(viewReport);
