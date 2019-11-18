@@ -181,14 +181,14 @@ namespace Manager.Services.Specific
               view.Area = proc.ProcessLevelOne?.Area?.Name;
               view.ProcessLevelTwo = proc.Name;
             }
-              
-          }
-          int count = 1;
-          if (idarea != "")
-            count = item.Process.Where(p => p.ProcessLevelOne.Area._id == idarea).Count();
+            int count = 1;
+            if (idarea != "")
+              count = item.Process.Where(p => p.ProcessLevelOne.Area._id == idarea).Count();
 
-          if (count > 0)
-            list.Add(view);
+            if (count > 0)
+              list.Add(view);
+
+          }
         }
 
         var data = list.OrderBy(p => p.Area).ThenBy(p => p.Shepre).ThenBy(p => p.Axis)

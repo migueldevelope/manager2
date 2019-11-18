@@ -3809,9 +3809,10 @@ namespace Manager.Services.Specific
             view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
             view.Area = proc.ProcessLevelOne?.Area?.Name;
             view.ProcessLevelTwo = proc.Name;
+
+            list.Add(view);
           }
 
-          list.Add(view);
         }
 
         return list.OrderBy(p => p.Area).ThenBy(p => p.Shepre).ThenBy(p => p.Axis)
