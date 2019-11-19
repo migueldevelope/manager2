@@ -180,13 +180,8 @@ namespace Manager.Services.Specific
               view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
               view.Area = proc.ProcessLevelOne?.Area?.Name;
               view.ProcessLevelTwo = proc.Name;
-            }
-            int count = 1;
-            if (idarea != "")
-              count = item.Process.Where(p => p.ProcessLevelOne.Area._id == idarea).Count();
-
-            if (count > 0)
               list.Add(view);
+            }
 
           }
         }
