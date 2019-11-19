@@ -49,6 +49,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<Reports> serviceReport;
     private readonly ServiceGeneric<Event> serviceEvent;
+    private readonly ServiceGeneric<Group> serviceGroup;
     private readonly IServicePerson serviceIPerson;
 
     public string path;
@@ -67,6 +68,7 @@ namespace Manager.Services.Specific
         servicePlan = new ServiceGeneric<Plan>(context);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
         serviceLog = new ServiceLog(context, contextLog);
+        serviceGroup = new ServiceGeneric<Group>(context);
         serviceMailModel = new ServiceMailModel(context);
         serviceMail = new ServiceGeneric<MailLog>(contextLog);
         serviceWorkflow = new ServiceGeneric<Workflow>(context);
@@ -113,6 +115,7 @@ namespace Manager.Services.Specific
       serviceOccupation._user = _user;
       serviceArea._user = _user;
       serviceEvent._user = _user;
+      serviceGroup._user = _user;
       serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
     }
@@ -137,6 +140,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceOccupation._user = _user;
       serviceArea._user = _user;
+      serviceGroup._user = _user;
       serviceEvent._user = _user;
       serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
@@ -145,6 +149,73 @@ namespace Manager.Services.Specific
 
 
     #region reports
+
+
+    public string ListOpportunityLine(string idcompany, string idarea)
+    {
+      try
+      {
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result;
+
+        var list = new List<ViewListOpportunityLine>();
+
+        foreach (var item in occupations)
+        {
+          var view = new ViewListOpportunityLine();
+          var group = serviceGroup.GetNewVersion(p => p._id == item.Group._id).Result;
+
+          view.Occupation = item.Name;
+          view.Group = item.Group.Name;
+          view.Shepre = group.Sphere.Name;
+          view.Axis = group.Axis.Name;
+          foreach (var proc in item.Process)
+          {
+            int countarea = 1;
+            if (idarea != "")
+              if (idarea != proc.ProcessLevelOne?.Area?._id)
+                countarea = 0;
+
+            if (countarea > 0)
+            {
+              view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
+              view.Area = proc.ProcessLevelOne?.Area?.Name;
+              view.ProcessLevelTwo = proc.Name;
+              list.Add(view);
+            }
+
+          }
+        }
+
+        var data = list.OrderBy(p => p.Area).ThenBy(p => p.Shepre).ThenBy(p => p.Axis)
+          .ThenBy(p => p.Group).ThenBy(p => p.ProcessLevelOne)
+          .ThenBy(p => p.ProcessLevelTwo).ThenBy(p => p.Occupation).ToList();
+
+        var viewReport = new ViewReport()
+        {
+          Data = data,
+          Name = "listopportunityline",
+          _idReport = NewReport("listopportunityline"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(viewReport);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == viewReport._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+
+        return report.Link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string ListPersons()
     {
       try

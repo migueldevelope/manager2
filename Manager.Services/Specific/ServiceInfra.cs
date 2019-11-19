@@ -3797,21 +3797,24 @@ namespace Manager.Services.Specific
 
         foreach (var item in occupations)
         {
-          var view = new ViewListOpportunityLine();
+          
           var group = serviceGroup.GetNewVersion(p => p._id == item.Group._id).Result;
 
-          view.Occupation = item.Name;
-          view.Group = item.Group.Name;
-          view.Shepre = group.Sphere.Name;
-          view.Axis = group.Axis.Name;
+          
           foreach (var proc in item.Process)
           {
+            var view = new ViewListOpportunityLine();
+            view.Occupation = item.Name;
+            view.Group = item.Group.Name;
+            view.Shepre = group.Sphere.Name;
+            view.Axis = group.Axis.Name;
             view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
             view.Area = proc.ProcessLevelOne?.Area?.Name;
             view.ProcessLevelTwo = proc.Name;
+
+            list.Add(view);
           }
 
-          list.Add(view);
         }
 
         return list.OrderBy(p => p.Area).ThenBy(p => p.Shepre).ThenBy(p => p.Axis)

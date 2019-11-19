@@ -47,6 +47,20 @@ namespace Reports.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idcompany"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listopportunityline/{idcompany}")]
+    public async Task<string> ListOpportunityLine(string idcompany, string idarea = "")
+    {
+      return await Task.Run(() => service.ListOpportunityLine(idcompany, idarea));
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="idevent"></param>
     /// <returns></returns>
     [Authorize]
