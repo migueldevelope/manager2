@@ -958,7 +958,6 @@ namespace IntegrationService.Service
         ColaboradorV2Retorno viewRetorno;
         foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
         {
-          FileClass.SaveLog(LogFileName.Replace(".log", "clas.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Information);
           viewRetorno = personIntegration.PostV2Completo(colaborador);
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
           {

@@ -268,6 +268,7 @@ namespace Manager.Services.Specific
             DateLastReadjust = payrollEmployee.SalaryChangeDate,
             DateResignation = payrollEmployee.DemissionDate,
             TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
+            Workload = payrollEmployee.Workload
           };
 
           if (personManager != null)
@@ -291,6 +292,7 @@ namespace Manager.Services.Specific
           person.Salary = payrollEmployee.Salary;
           person.DateLastReadjust = payrollEmployee.SalaryChangeDate;
           person.DateResignation = payrollEmployee.DemissionDate;
+          person.Workload = payrollEmployee.Workload;
 
           if (personManager != null)
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
@@ -672,69 +674,6 @@ namespace Manager.Services.Specific
               item.IdOccupation = occupations[0]._id;
               item.NameOccupation = occupations[0].Name;
               var i = integrationOccupationService.Update(item, null);
-            }
-          }
-        }
-        return item;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenterKey, string costCenterName)
-    {
-      try
-      {
-        PayrollOccupation payrollOccupation = payrollOccupationService.GetNewVersion(p => p.Key == key).Result;
-        string localKey = key;
-        string localName = name;
-        bool split = false;
-        if (payrollOccupation != null && payrollOccupation.Split)
-        {
-          localKey = string.Format("{0};{1}",key, costCenterKey);
-          localName = string.Format("{0} - {1}", name, costCenterName);
-          split = true;
-        }
-        IntegrationOccupation item = integrationOccupationService.GetAllNewVersion(p => p.Key == localKey).Result.FirstOrDefault();
-        if (item == null)
-        {
-          item = new IntegrationOccupation()
-          {
-            Key = localKey,
-            Name = localName,
-            _idCompany = idcompany,
-            IdOccupation = "000000000000000000000000",
-            NameOccupation = string.Empty,
-            Status = EnumStatus.Enabled,
-            _idPayrollOccupation = payrollOccupation == null ? "000000000000000000000000" : payrollOccupation._id
-          };
-          Task<IntegrationOccupation> i = integrationOccupationService.InsertNewVersion(item);
-        }
-        if (item.IdOccupation.Equals("000000000000000000000000"))
-        {
-          item.Name = localName;
-          item._idCompany = idcompany;
-          if (split)
-          {
-            item._idPayrollOccupation = payrollOccupation?._id;
-            List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name == name && p.Description == costCenterName).Result.ToList();
-            if (occupations.Count == 1)
-            {
-              item.IdOccupation = occupations[0]._id;
-              item.NameOccupation = occupations[0].Name;
-              Task i = integrationOccupationService.Update(item, null);
-            }
-          }
-          else
-          {
-            item._idPayrollOccupation = "000000000000000000000000";
-            List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name == name && p.Description == null).Result.ToList();
-            if (occupations.Count == 1)
-            {
-              item.IdOccupation = occupations[0]._id;
-              item.NameOccupation = occupations[0].Name;
-              Task i = integrationOccupationService.Update(item, null);
             }
           }
         }
@@ -1517,6 +1456,73 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Colaborador V2
+
+    #region IntegrationOccupation
+    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenterKey, string costCenterName)
+    {
+      try
+      {
+        PayrollOccupation payrollOccupation = payrollOccupationService.GetNewVersion(p => p.Key == key).Result;
+        string localKey = key;
+        string localName = name;
+        bool split = false;
+        if (payrollOccupation != null && payrollOccupation.Split)
+        {
+          localKey = string.Format("{0};{1}", key, costCenterKey);
+          localName = string.Format("{0} - {1}", name, costCenterName);
+          split = true;
+        }
+        IntegrationOccupation item = integrationOccupationService.GetAllNewVersion(p => p.Key == localKey).Result.FirstOrDefault();
+        if (item == null)
+        {
+          item = new IntegrationOccupation()
+          {
+            Key = localKey,
+            Name = localName,
+            _idCompany = idcompany,
+            IdOccupation = "000000000000000000000000",
+            NameOccupation = string.Empty,
+            Status = EnumStatus.Enabled,
+            _idPayrollOccupation = payrollOccupation == null ? "000000000000000000000000" : payrollOccupation._id
+          };
+          Task<IntegrationOccupation> i = integrationOccupationService.InsertNewVersion(item);
+        }
+        if (item.IdOccupation.Equals("000000000000000000000000"))
+        {
+          item.Name = localName;
+          item._idCompany = idcompany;
+          if (split)
+          {
+            item._idPayrollOccupation = payrollOccupation?._id;
+            List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name == name && p.Description == costCenterName).Result.ToList();
+            if (occupations.Count == 1)
+            {
+              item.IdOccupation = occupations[0]._id;
+              item.NameOccupation = occupations[0].Name;
+              Task i = integrationOccupationService.Update(item, null);
+            }
+          }
+          else
+          {
+            item._idPayrollOccupation = "000000000000000000000000";
+            List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name == name && p.Description == null).Result.ToList();
+            if (occupations.Count == 1)
+            {
+              item.IdOccupation = occupations[0]._id;
+              item.NameOccupation = occupations[0].Name;
+              Task i = integrationOccupationService.Update(item, null);
+            }
+          }
+        }
+        return item;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    #endregion
+
     public ColaboradorV2Retorno IntegrationV2(ColaboradorV2Completo view)
     {
       EnumSex sexo = EnumSex.Others;
