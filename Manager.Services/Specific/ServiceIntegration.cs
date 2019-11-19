@@ -1541,7 +1541,7 @@ namespace Manager.Services.Specific
         view.Cargo = EmptyStringDefault(view.Cargo, view.NomeCargo);
         ValidEmptyDate(view.DataAdmissao, "Data de admissão deve ser informada");
         // Preenchimento de campos opcionais, caso vazios
-        view.Email = EmptyStringDefault(view.Email, view.Colaborador.Cpf);
+        view.Email = EmptyStringDefault(view.Email, view.Colaborador.Cpf).ToLower();
         view.NomeGrauInstrucao = EmptyStringDefault(view.NomeGrauInstrucao, "Não definida");
         view.GrauInstrucao = EmptyStringDefault(view.GrauInstrucao, view.NomeGrauInstrucao);
         view.NomeGrauInstrucao = CapitalizeName(view.NomeGrauInstrucao);
@@ -2365,7 +2365,7 @@ namespace Manager.Services.Specific
       {
         string result = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param.Trim().ToLower());
         result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ")
-          .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ");
+          .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ").Replace(" A ", " a ").Replace(" À ", " à ");
         if (result.IndexOf(" Ti") + 3 == result.Length)
         {
           result = string.Concat(result.Substring(0, result.Length - 2),"TI");
@@ -2458,7 +2458,6 @@ namespace Manager.Services.Specific
       }
     }
     #endregion
-
 
     #endregion
 

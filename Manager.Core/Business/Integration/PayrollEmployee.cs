@@ -97,10 +97,10 @@ namespace Manager.Core.Business.Integration
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idOccupation { get; set; }
     // Identificação do estabelecimento
-    public string EstablishmentKey => string.Format("{0},{1}", Company, Establishment);
+    public string EstablishmentKey => string.Format("{0};{1}", Company, Establishment);
     // Identificação do cargo
-    public string OccupationKey => string.Format("{0},{1}", Company, Occupation);
-    public string CostCenterKey => string.Format("{0},{1}", Company, CostCenter);
+    public string OccupationKey => string.Format("{0};{1}", Company, Occupation);
+    public string CostCenterKey => string.Format("{0};{1}", Company, CostCenter);
 
     #region Private
     private string ActionToString()

@@ -15,8 +15,8 @@ namespace IntegrationService.Api
         if (url.Equals("https://analisa.solutions"))
           pathUrl = string.Format("{0}/authentication", url).Replace("//", "//manager.");
         else
-          //pathUrl = string.Format("{0}/authentication", "http://10.0.0.16:5200").Replace("//test.", "//test_manager.");
-          pathUrl = string.Format("{0}/authentication", "http://10.0.0.16:5200");
+          pathUrl = string.Format("{0}/authentication", url).Replace("//test.", "//test_manager.");
+          //pathUrl = string.Format("{0}/authentication", "http://10.0.0.16:5200");
 
         if (url == "https://analisa.unimednordesters.com.br")
           pathUrl = "https://analisa.unimednordesters.com.br/manager/authentication";

@@ -821,8 +821,9 @@ namespace IntegrationService.Service
                 throw new Exception("Modo Excel não implementado no processo manual.");
               case EnumIntegrationMode.ApplicationInterface:
                 throw new Exception("Modo API não implementado no processo manual.");
+              default:
+                throw new Exception("Nenhum modo implementado no processo de sistema.");
             }
-            break;
           case EnumIntegrationProcess.System:
             switch (service.Param.Mode)
             {
@@ -835,6 +836,8 @@ namespace IntegrationService.Service
                 throw new Exception("Modo Excel não implementado no processo de sistema.");
               case EnumIntegrationMode.ApplicationInterface:
                 throw new Exception("Modo API não implementado no processo de sistema.");
+              default:
+                throw new Exception("Nenhum modo implementado no processo de sistema.");
             }
             break;
           case EnumIntegrationProcess.Executable:
@@ -843,11 +846,13 @@ namespace IntegrationService.Service
             break;
         }
         if (Status == EnumStatusService.CriticalError)
+        {
           throw new Exception(Message);
-
+        }
         if (ColaboradoresV2.Count == 0)
+        {
           throw new Exception("Lista de colaboradores vazia.");
-
+        }
         FinalImportV2();
         service.Param.CriticalError = string.Empty;
         service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
@@ -880,33 +885,59 @@ namespace IntegrationService.Service
       try
       {
         if (service.Param.Type == EnumIntegrationType.Custom)
+        {
           throw new Exception("Rotina deve ser do tipo customizada.");
-
+        }
         if (service.Param.Process != EnumIntegrationProcess.System)
+        {
           throw new Exception("Apenas processo de sistema pode utilizar banco de dados.");
-
+        }
         // Validar parâmetros
         if (string.IsNullOrEmpty(service.Param.ConnectionString))
+        {
           throw new Exception("Sem string de conexão.");
-
+        }
         if (string.IsNullOrEmpty(service.Param.SqlCommand))
+        {
           throw new Exception("Sem comando de leitura do banco de dados.");
-
+        }
         // Ler banco de dados
         DataTable readData = ReadData();
         if (readData.Rows.Count == 0)
+        {
           throw new Exception("Não tem nenhum colaborador para integração.");
-
+        }
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
         // Carregar Lista de Colaboradores
+        bool validColumn = true;
+        List<string> columnsValidV2 = new List<string>
+        {
+          "cpf", "empresa", "nome_empresa", "estabelecimento", "nome_estabelecimento", "matricula", "nome", "email", "sexo",
+          "data_nascimento", "celular", "grau_instrucao", "nome_grau_instrucao", "apelido", "situacao", "data_admissao",
+          "data_demissao", "cargo", "nome_cargo", "data_ultima_troca_cargo", "cpf_gestor", "empresa_gestor", "nome_empresa_gestor",
+          "estabelecimento_gestor", "nome_estabelecimento_gestor", "matricula_gestor", "nome_gestor", "centro_custo", "nome_centro_custo",
+          "data_troca_centro_custo", "salario_nominal", "carga_horaria", "data_ultimo_reajuste", "motivo_ultimo_reajuste"
+        };
         foreach (DataRow row in readData.Rows)
         {
-          List<string> teste = row.ItemArray.Select(x => x.ToString()).ToList();
+          if (validColumn)
+          {
+            foreach (string columnName in readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList())
+            {
+              if (columnsValidV2.FindIndex(p => p.Equals(columnName.ToLower())) == -1)
+              {
+                throw new Exception(string.Format("Coluna {0} está na lista mas não será utilizada. Verifique o nome ou retire da lista!", columnName));
+              }
+            }
+            validColumn = false;
+          }
           switch (service.Param.Type)
           {
             case EnumIntegrationType.Complete:
               ColaboradoresV2.Add(new ColaboradorV2Completo(row.ItemArray.Select(x => x.ToString()).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList()));
               break;
+            case EnumIntegrationType.Basic:
+            case EnumIntegrationType.Custom:
             default:
               throw new Exception(string.Format("{0} não foi implementado.", service.Param.Type));
           }
@@ -928,6 +959,7 @@ namespace IntegrationService.Service
         foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
         {
           viewRetorno = personIntegration.PostV2Completo(colaborador);
+          FileClass.SaveLog(LogFileName.Replace(".log", "retapi.log"), viewRetorno.ToString(), EnumTypeLineOpportunityg.Information);
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
           {
             FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
@@ -935,9 +967,10 @@ namespace IntegrationService.Service
             hasLogFile = true;
           }
           else
+          {
             FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Register);
-
+          }
         }
         Status = EnumStatusService.Ok;
         Message = "Fim de integração!";

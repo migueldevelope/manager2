@@ -85,6 +85,10 @@ namespace Manager.Views.Integration.V2
           NomeEstabelecimento = FieldString(list, title, "nome_estabelecimento_gestor", null),
           Matricula = FieldString(list, title, "matricula_gestor", null)
         };
+        if (Gestor.Cpf == null || Gestor.Matricula == null)
+        {
+          Gestor = null;
+        }
       }
       catch (Exception ex)
       {

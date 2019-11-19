@@ -21,8 +21,8 @@ namespace IntegrationService.Api
       if (Person.Url.Equals("https://analisa.solutions"))
         pathUrl = string.Format("{0}/", Person.Url).Replace("//", "//integrationserver.");
       else
-        //pathUrl = string.Format("{0}/", Person.Url).Replace("//test.", "//test_integrationserver.");
-        pathUrl = string.Format("{0}/", "http://10.0.0.16:5203");
+        pathUrl = string.Format("{0}/", Person.Url).Replace("//test.", "//test_integrationserver.");
+        //pathUrl = string.Format("{0}/", "http://10.0.0.16:5203");
 
       if (person.Url == "https://analisa.unimednordesters.com.br")
         pathUrl = "https://analisa.unimednordesters.com.br/integrationserver/";
