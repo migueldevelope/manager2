@@ -2372,7 +2372,8 @@ namespace Manager.Services.Specific
       {
         string result = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param.Trim().ToLower());
         result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ")
-          .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ").Replace(" A ", " a ").Replace(" À ", " à ");
+          .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ").Replace(" A ", " a ").Replace(" À ", " à ")
+          .Replace(" Ao ", " ao ").Replace(" E ", " e ");
         if (result.IndexOf(" Ti") + 3 == result.Length)
         {
           result = string.Concat(result.Substring(0, result.Length - 2),"TI");
