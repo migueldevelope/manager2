@@ -45,6 +45,7 @@ namespace Manager.Services.Specific
 
     // Colaborador V2
     private readonly ServiceGeneric<PayrollEmployee> payrollEmployeeService;
+    private readonly ServiceGeneric<PayrollOccupation> payrollOccupationService;
     private ColaboradorV2Retorno resultV2;
 
     #region Constructor
@@ -70,6 +71,7 @@ namespace Manager.Services.Specific
         skillService = new ServiceGeneric<Skill>(context);
         groupService = new ServiceGeneric<Group>(context);
         payrollEmployeeService = new ServiceGeneric<PayrollEmployee>(contextIntegration);
+        payrollOccupationService = new ServiceGeneric<PayrollOccupation>(contextIntegration);
       }
       catch (Exception)
       {
@@ -97,6 +99,7 @@ namespace Manager.Services.Specific
       groupService._user = _user;
       logService.SetUser(contextAccessor);
       payrollEmployeeService._user = _user;
+      payrollOccupationService._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -117,6 +120,7 @@ namespace Manager.Services.Specific
       skillService._user = user;
       groupService._user = user;
       payrollEmployeeService._user = user;
+      payrollOccupationService._user = user;
     }
     #endregion
 
@@ -197,14 +201,14 @@ namespace Manager.Services.Specific
         } else {
           // Estabelecimento
           payrollEmployee._idCompany = company._id;
-          integrationEstablishment = GetIntegrationEstablishment(payrollEmployee.Establishment, payrollEmployee.EstablishmentName, company._id);
+          integrationEstablishment = GetIntegrationEstablishment(payrollEmployee.EstablishmentKey, payrollEmployee.EstablishmentName, company._id);
           establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
           if (establishment == null)
             payrollEmployee.Messages.Add("Falta integração de estabelecimento");
           else
             payrollEmployee._idEstablishment = establishment._id;
           // Cargo
-          integrationOccupation = GetIntegrationOccupation(payrollEmployee.Occupation, payrollEmployee.OccupationName, company._id, payrollEmployee.CostCenterName);
+          integrationOccupation = GetIntegrationOccupation(payrollEmployee.OccupationKey, payrollEmployee.OccupationName, company._id, payrollEmployee.CostCenter, payrollEmployee.CostCenterName);
           occupation = occupationService.GetNewVersion(p => p._id == integrationOccupation.IdOccupation).Result;
           if (occupation == null)
             payrollEmployee.Messages.Add("Falta integração de cargo");
@@ -620,7 +624,7 @@ namespace Manager.Services.Specific
 
     // Ok
     #region IntegrationOccupation
-    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenterName)
+    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany)
     {
       try
       {
@@ -643,7 +647,7 @@ namespace Manager.Services.Specific
           item.Name = name;
           item._idCompany = idcompany;
           // Ajuste para cargos com centro de custo
-          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && string.Format("{0}{1}", p.Name.Trim().ToLower(), p.Description.Trim().ToLower()) == string.Format("{0}{1}", name.Trim().ToLower(), costCenterName.Trim().ToLower())).Result.ToList();
+          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.Trim().ToLower() == name.Trim().ToLower()).Result.ToList();
           if (occupations.Count == 1)
           {
             item.IdOccupation = occupations[0]._id;
@@ -657,6 +661,69 @@ namespace Manager.Services.Specific
               item.IdOccupation = occupations[0]._id;
               item.NameOccupation = occupations[0].Name;
               var i = integrationOccupationService.Update(item, null);
+            }
+          }
+        }
+        return item;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenter, string costCenterName)
+    {
+      try
+      {
+        PayrollOccupation payrollOccupation = payrollOccupationService.GetNewVersion(p => p.Key == key).Result;
+        string localKey = key;
+        string localName = name;
+        bool split = false;
+        if (payrollOccupation != null && payrollOccupation.Split)
+        {
+          localKey = string.Format("{0},{1}",key, costCenter);
+          localName = string.Format("{0} - {1}", name, costCenterName);
+          split = true;
+        }
+        IntegrationOccupation item = integrationOccupationService.GetAllNewVersion(p => p.Key == localKey).Result.FirstOrDefault();
+        if (item == null)
+        {
+          item = new IntegrationOccupation()
+          {
+            Key = localKey,
+            Name = name,
+            _idCompany = idcompany,
+            IdOccupation = "000000000000000000000000",
+            NameOccupation = string.Empty,
+            Status = EnumStatus.Enabled,
+            _idPayrollOccupation = payrollOccupation == null ? "000000000000000000000000" : payrollOccupation._id
+          };
+          Task<IntegrationOccupation> i = integrationOccupationService.InsertNewVersion(item);
+        }
+        if (item.IdOccupation.Equals("000000000000000000000000"))
+        {
+          item.Name = name;
+          item._idCompany = idcompany;
+          if (split)
+          {
+            item._idPayrollOccupation = payrollOccupation?._id;
+            List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name == name && p.Description == costCenterName).Result.ToList();
+            if (occupations.Count == 1)
+            {
+              item.IdOccupation = occupations[0]._id;
+              item.NameOccupation = occupations[0].Name;
+              Task i = integrationOccupationService.Update(item, null);
+            }
+          }
+          else
+          {
+            item._idPayrollOccupation = "000000000000000000000000";
+            List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name == name && p.Description == null).Result.ToList();
+            if (occupations.Count == 1)
+            {
+              item.IdOccupation = occupations[0]._id;
+              item.NameOccupation = occupations[0].Name;
+              Task i = integrationOccupationService.Update(item, null);
             }
           }
         }
@@ -728,6 +795,37 @@ namespace Manager.Services.Specific
           IdOccupation = item.IdOccupation.Equals("000000000000000000000000") ? string.Empty : item.IdOccupation,
           NameOccupation = item.NameOccupation
         };
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public string OccupationSplit(string idIntegration)
+    {
+      try
+      {
+        IntegrationOccupation item = integrationOccupationService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
+        if (item == null)
+          throw new Exception("Id integration not found!");
+        PayrollOccupation payrollOccupation = payrollOccupationService.GetNewVersion(p => p.Key == item.Key).Result;
+        if (payrollOccupation == null)
+        {
+          payrollOccupation = new PayrollOccupation()
+          {
+            Key = item.Key,
+            Name = item.Name,
+            Split = true
+          };
+          payrollOccupation = payrollOccupationService.InsertNewVersion(payrollOccupation).Result;
+        }
+        else
+        {
+          payrollOccupation.Split = true;
+          Task i = payrollOccupationService.Update(payrollOccupation, null);
+        }
+        integrationOccupationService.Delete(item._id, false);
+        return "Ok";
       }
       catch (Exception)
       {

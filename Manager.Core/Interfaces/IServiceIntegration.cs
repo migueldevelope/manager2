@@ -33,6 +33,7 @@ namespace Manager.Core.Interfaces
     string EstablishmentDelete(string idIntegration);
     List<ViewListIntegrationOccupation> OccupationList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation);
+    string OccupationSplit(string idIntegration);
     string OccupationDelete(string idIntegration);
     List<ViewListIntegrationSchooling> SchoolingList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling);
@@ -43,7 +44,8 @@ namespace Manager.Core.Interfaces
     IntegrationCompany GetIntegrationCompany(string key, string name);
     IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany);
     IntegrationSchooling GetIntegrationSchooling(string key, string name);
-    IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenterName);
+    IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany);
+    IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenter, string costCenterName);
     ViewCrudPerson GetPersonByKey(string idcompany, string idestablishment, string document, string registration);
     ViewCrudUser GetUserByKey(string document);
     ViewListSchooling GetSchooling(string id);

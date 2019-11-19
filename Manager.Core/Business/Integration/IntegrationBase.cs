@@ -1,9 +1,6 @@
 ﻿using Manager.Core.Base;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Manager.Core.Business.Integration
 {

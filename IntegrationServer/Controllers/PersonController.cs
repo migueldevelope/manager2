@@ -76,7 +76,7 @@ namespace IntegrationServer.InfraController
 
         IntegrationOccupation occupation = null;
         if (!company.IdCompany.Equals("000000000000000000000000"))
-          occupation = service.GetIntegrationOccupation(view.Colaborador.ChaveCargo, view.Colaborador.NomeCargo, company.IdCompany, "");
+          occupation = service.GetIntegrationOccupation(view.Colaborador.ChaveCargo, view.Colaborador.NomeCargo, company.IdCompany);
 
         ViewCrudPerson personManager = null;
         if (!string.IsNullOrEmpty(view.Colaborador.NomeEmpresaGestor) && !string.IsNullOrEmpty(view.Colaborador.NomeEstabelecimentoGestor) && !string.IsNullOrEmpty(view.Colaborador.DocumentoGestor))

@@ -208,9 +208,21 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpPost]
     [Route("occupation/update/{idintegration}/{idoccupation}")]
-    public ViewListIntegrationOccupation PostOccupation(string idintegration, string idoccupation)
+    public ViewListIntegrationOccupation PostOccupationUpdate(string idintegration, string idoccupation)
     {
       return service.OccupationUpdate(idintegration, idoccupation);
+    }
+    /// <summary>
+    /// Dividir os cargos da folha por centro de custo
+    /// </summary>
+    /// <param name="idintegration">Identificador do registro de integração do cargo da folha de pagamento</param>
+    /// <returns>Objeto atualizado</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("occupation/split/{idintegration}")]
+    public string PostOccupationSplit(string idintegration)
+    {
+      return service.OccupationSplit(idintegration);
     }
     /// <summary>
     /// Excluir um cargo da integração de funcionários
@@ -220,7 +232,7 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpDelete]
     [Route("occupation/delete/{idintegration}")]
-    public string OccupationCompany(string idintegration)
+    public string DeleteOccupation(string idintegration)
     {
       return service.OccupationDelete(idintegration);
     }
