@@ -170,6 +170,7 @@ namespace Manager.Services.Specific
         CheckpointManagerDeadline(sendTest);
         MonitoringManagerDeadline(sendTest);
         PlanManagerDeadline(sendTest);
+        BirthCompany(sendTest);
       }
       catch (Exception)
       {
@@ -408,7 +409,7 @@ namespace Manager.Services.Specific
               new List<MailLogAddress>()
                 {
                   new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
-                }:
+                } :
               new List<MailLogAddress>()
                 {
                   new MailLogAddress(item.Manager.Mail, item.Manager.Name)
@@ -1334,10 +1335,76 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    private void BirthCompany(Person person, bool sendTest)
+    {
+      try
+      {
+        //searsh model mail database
+        MailModel model = serviceMailModel.BirthCompany(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        string body = model.Message.Replace("{Link}", model.Link)
+                                    .Replace("{Person}", person.User.Name);
+
+        MailLog sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
+          To = sendTest ?
+            new List<MailLogAddress>()
+            {
+                new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+            } :
+            new List<MailLogAddress>()
+            {
+                new MailLogAddress(person.User.Mail, person.User.Name)
+            },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+        string token = SendMailApi(path, person, sendMail._id);
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
+    #region Sucess Factory
+    private void BirthCompany(bool sendTest)
+    {
+      try
+      {
+        var date = DateTime.Now;
+
+        List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
+        && p.User.DateAdm != null).Result;
+
+        foreach (Person person in persons)
+        {
+          if(person.User?.DateAdm?.Day == date.Day && person.User?.DateAdm?.Month == date.Month)
+            BirthCompany(person, sendTest);
+        }
+      }
+      catch (Exception e)
+      {
+        var message = e;
+      }
+    }
+
     #endregion
 
     #region SendMail Api
-    private  string SendMailApi(string link, Person person, string idmail)
+    private string SendMailApi(string link, Person person, string idmail)
     {
       try
       {
@@ -1346,7 +1413,7 @@ namespace Manager.Services.Specific
         {
           client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5201/");
           client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
-          HttpResponseMessage resultMail =  client.PostAsync(string.Format("sendmail/{0}", idmail), null).Result;
+          HttpResponseMessage resultMail = client.PostAsync(string.Format("sendmail/{0}", idmail), null).Result;
           return "Ok!";
         }
       }

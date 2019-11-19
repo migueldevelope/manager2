@@ -44,7 +44,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region MailModel
-    public List<ViewListMailModel> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListMailModel> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -65,7 +65,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string New(ViewCrudMailModel view)
+    public string New(ViewCrudMailModel view)
     {
       try
       {
@@ -85,7 +85,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string Update(ViewCrudMailModel view)
+    public string Update(ViewCrudMailModel view)
     {
       try
       {
@@ -96,7 +96,7 @@ namespace Manager.Services.Specific
         mailModel.Message = view.Message;
         mailModel.StatusMail = view.StatusMail;
         mailModel.Subject = view.Subject;
-         serviceMailModel.Update(mailModel, null).Wait();
+        serviceMailModel.Update(mailModel, null).Wait();
         return "Mail model altered!";
       }
       catch (Exception e)
@@ -104,13 +104,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string Remove(string id)
+    public string Remove(string id)
     {
       try
       {
         MailModel item = serviceMailModel.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-         serviceMailModel.Update(item, null).Wait();
+        serviceMailModel.Update(item, null).Wait();
         return "Mail model deleted!";
       }
       catch (Exception e)
@@ -118,11 +118,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudMailModel Get(string id)
+    public ViewCrudMailModel Get(string id)
     {
       try
       {
-        var mailModel =   serviceMailModel.GetNewVersion(p => p._id == id).Result;
+        var mailModel = serviceMailModel.GetNewVersion(p => p._id == id).Result;
         return new ViewCrudMailModel()
         {
           _id = mailModel._id,
@@ -1133,6 +1133,20 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public MailModel BirthCompany(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "congratulatecompanyanniversary").Result;
+        return model ?? BirthCompanyDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private MailModel PlanDeadlineDefault(string path)
     {
       try
@@ -1148,6 +1162,28 @@ namespace Manager.Services.Specific
                                   "#VamosSerMaisFluidos<br>"),
           Subject = "Notificação de Ação de Desenvolvimento | Action Plans do colaborador",
           Name = "actionplandeadline",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private MailModel BirthCompanyDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = string.Concat(@"<p style=""text-align: center; margin: 10px 0px; padding: 0px; text-size-adjust: 100%; color: rgb(32, 32, 32); font-family: Helvetica; font-size: 16px; line-height: 24px;""><img src=""https://analisafluid.blob.core.windows.net/5b7b01c0d6869299519ddf13/5dd3e0aea388c4000175f5af.png""><br></p><p style=""text-align: center; margin: 10px 0px; padding: 0px; text-size-adjust: 100%; color: rgb(32, 32, 32); font-family: Helvetica; font-size: 16px; line-height: 24px;""><strong style=""background-color: transparent;""></strong></p><font face=""Helvetica""><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 12px;""></span><span style=""font-size: 16px;"">Olá!&nbsp;</span></div><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 16px;"">Parabéns pelo seu aniversário de empresa/instituição! Foi um ano de muita dedicação, superação de desafios e novas conquistas :)</span></div><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 16px;""><br></span></div><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 16px;"">Desejamos ainda mais&nbsp;sucesso na sua jornada fluída de carreira.</span></div><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 16px;""><br></span></div><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 16px;"">Grande abraço,</span></div><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 16px;"">Equipe de Sucesso do Cliente | Analisa fluid careers</span><span style=""font-size: 16px; background-color: transparent;""><br></span></div><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 16px;""><br></span></div><div style=""color: rgb(32, 32, 32); text-align: center;""><span style=""font-size: 16px;""><br></span></div><div style=""text-align: center;""><b style=""""><a href=""https://www.facebook.com/analisa.fluid.careers/"" target=""_blank"" style=""""><font color=""#537bbe""></font></a><font color=""#137bb8"" style=""font-size: 0.875rem;""><a href=""https://www.linkedin.com/company/analisa-fluid-careers/"" target=""_blank"" style=""font-size: 0.875rem;""></a></font></b></div><div style=""text-align: center;"">Facebook&nbsp; |&nbsp;&nbsp;Analisa&nbsp; |&nbsp;&nbsp;Instagram&nbsp; |&nbsp;&nbsp;YouTube&nbsp; |&nbsp;&nbsp;Linkedin<b style=""""><br></b></div><div style=""text-align: center;""><br></div><div style=""text-align: center;""><br></div><div style=""text-align: center;""><span style=""font-size: 12px;"">Este e-mail foi enviado pela equipe de Sucesso do Cliente | Analisa</span></div><div style=""text-align: center;""><span style=""font-size: 12px;"">SucessoCliente@analisa.solutions</span></div><div style=""text-align: center;""><span style=""font-size: 12px;"">Rua 24 de Outubro,1299 - Cj 401 | Bairro Moinhos de Vento | Porto Alegre / RS | CEP: 90510-003&nbsp;</span></div><div style=""text-align: center;""><span style=""font-size: 12px;"">Copyright © 2019 Analisa fluid careers. Todos os direitos reservados.</span><b style=""""><br></b></div></font><p></p><div style=""text-align: center;""></div><div style=""text-align: center;""><span style=""font-size: 16px; background-color: transparent;""><div></div></span></div>"),
+          Subject = "Estamos juntos nessa conquista",
+          Name = "congratulatecompanyanniversary",
           Link = path
         };
         // Insert
