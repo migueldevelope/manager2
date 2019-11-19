@@ -34,6 +34,7 @@ namespace Manager.Core.Interfaces
     List<ViewListIntegrationOccupation> OccupationList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationOccupation OccupationUpdate(string idIntegration, string idOccupation);
     string OccupationSplit(string idIntegration);
+    string OccupationJoin(string idIntegration);
     string OccupationDelete(string idIntegration);
     List<ViewListIntegrationSchooling> SchoolingList( ref long total, int count = 10, int page = 1, string filter = "", bool all = false);
     ViewListIntegrationSchooling SchoolingUpdate(string idIntegration, string idSchooling);

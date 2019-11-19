@@ -843,6 +843,33 @@ namespace Manager.Services.Specific
         throw;
       }
     }
+    public string OccupationJoin(string idIntegration)
+    {
+      try
+      {
+        IntegrationOccupation item = integrationOccupationService.GetAllNewVersion(p => p._id == idIntegration).Result.FirstOrDefault();
+        if (item == null)
+        {
+          throw new Exception("Id integration not found!");
+        }
+        PayrollOccupation payrollOccupation = payrollOccupationService.GetNewVersion(p => p._id == item._idPayrollOccupation).Result;
+        if (payrollOccupation == null)
+        {
+          throw new Exception("Id integration not split!");
+        }
+        List<IntegrationOccupation> integrationOccupations = integrationOccupationService.GetAllNewVersion(p => p._idPayrollOccupation == payrollOccupation._id).Result;
+        foreach (IntegrationOccupation integrationOccupation in integrationOccupations)
+        {
+          integrationOccupationService.Delete(integrationOccupation._id, false);
+        }
+        payrollOccupationService.Delete(payrollOccupation._id, false);
+        return "Ok";
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     public string OccupationDelete(string idIntegration)
     {
       try

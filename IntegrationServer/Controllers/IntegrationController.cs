@@ -213,7 +213,7 @@ namespace IntegrationServer.InfraController
       return service.OccupationUpdate(idintegration, idoccupation);
     }
     /// <summary>
-    /// Dividir os cargos da folha por centro de custo
+    /// Dividir o cargo da folha por centro de custo
     /// </summary>
     /// <param name="idintegration">Identificador do registro de integração do cargo da folha de pagamento</param>
     /// <returns>Objeto atualizado</returns>
@@ -223,6 +223,18 @@ namespace IntegrationServer.InfraController
     public string PostOccupationSplit(string idintegration)
     {
       return service.OccupationSplit(idintegration);
+    }
+    /// <summary>
+    /// Juntar o cargo da folha que estava separado
+    /// </summary>
+    /// <param name="idintegration">Identificador do registro de integração do cargo da folha de pagamento</param>
+    /// <returns>Objeto atualizado</returns>
+    [Authorize]
+    [HttpPost]
+    [Route("occupation/join/{idintegration}")]
+    public string PostOccupationJoin(string idintegration)
+    {
+      return service.OccupationJoin(idintegration);
     }
     /// <summary>
     /// Excluir um cargo da integração de funcionários
