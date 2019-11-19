@@ -1350,7 +1350,7 @@ namespace Manager.Services.Specific
 
         MailLog sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
+          From = new MailLogAddress("SucessoCliente@analisa.solutions", "Sucesso do Cliente | Analisa fluid careers"),
           To = sendTest ?
             new List<MailLogAddress>()
             {
