@@ -215,6 +215,7 @@ namespace Manager.Services.Specific
           }
           // Cargo
           integrationOccupation = GetIntegrationOccupation(payrollEmployee.OccupationKey, payrollEmployee.OccupationName, company._id, payrollEmployee.CostCenterKey, payrollEmployee.CostCenterName);
+          payrollEmployee._idIntegrationOccupation = integrationOccupation._id;
           occupation = occupationService.GetNewVersion(p => p._id == integrationOccupation.IdOccupation).Result;
           if (occupation == null)
           {
@@ -691,7 +692,7 @@ namespace Manager.Services.Specific
         bool split = false;
         if (payrollOccupation != null && payrollOccupation.Split)
         {
-          localKey = string.Format("{0},{1}",key, costCenterKey);
+          localKey = string.Format("{0};{1}",key, costCenterKey);
           localName = string.Format("{0} - {1}", name, costCenterName);
           split = true;
         }
@@ -2531,7 +2532,7 @@ namespace Manager.Services.Specific
     }
     private void ValidPayrollEmployee(IntegrationOccupation item)
     {
-      List<PayrollEmployee> payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.StatusIntegration == EnumStatusIntegration.Saved && p._idOccupation == null && p.OccupationName == item.Name).Result;
+      List<PayrollEmployee> payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.StatusIntegration == EnumStatusIntegration.Saved && p._idIntegrationOccupation == item._id).Result;
       PayrollEmployee payrollEmployee = null;
       foreach (var payrollEmployeeItem in payrollEmployees)
       {

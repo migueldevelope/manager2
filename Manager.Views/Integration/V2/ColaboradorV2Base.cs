@@ -14,6 +14,6 @@
     public string ChaveEmpresa { get { return Empresa.Trim().ToLower(); } }
     public string ChaveEstabelecimento => string.Format("{0};{1}", Empresa.Trim().ToLower(), Estabelecimento.Trim().ToLower());
     public string Chave1 => string.Format("{0};{1};{2};{3}", Cpf.Trim().ToLower(), Empresa.Trim().ToLower(), Estabelecimento.Trim().ToLower(), Matricula.Trim().ToLower());
-    public string Chave2 => string.Format("{0};{1};{2}", Cpf.Trim().ToLower(), Empresa.Trim().ToLower(), Estabelecimento.Trim().ToLower(), Matricula.Trim().ToLower());
+    public string Chave2 => string.Format("{0};{1};{2}", Cpf.Trim().ToLower(), Empresa.Trim().ToLower(), Matricula.Trim().ToLower());
   }
 }

@@ -256,7 +256,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListOccupationResume>> ListOccupation(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListOccupation(ref total, filter, count, page);
+      List<ViewListOccupationResume> result = service.ListOccupation(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
@@ -275,7 +275,7 @@ namespace Manager.Controllers
     public async Task<List<_ViewListBase>> ListOccupationManager(string idmanager, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListOccupationManager(idmanager, ref total, filter, count, page);
+      List<_ViewListBase> result = service.ListOccupationManager(idmanager, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
@@ -293,7 +293,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListOccupationProcess>> ListOccupationProcess(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListOccupationProcess(ref total, filter, count, page);
+      List<ViewListOccupationProcess> result = service.ListOccupationProcess(ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }

@@ -142,7 +142,7 @@ namespace Manager.Services.Auth
     {
       total = serviceOccupation.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
       int skip = count * (page - 1);
-      return serviceOccupation.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name)
+      return serviceOccupation.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).OrderBy(o => o.Description)
         .Skip(skip).Take(count).Select(p => p.GetViewListResume()).ToList();
 
     }

@@ -958,17 +958,17 @@ namespace IntegrationService.Service
         ColaboradorV2Retorno viewRetorno;
         foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
         {
+          FileClass.SaveLog(LogFileName.Replace(".log", "clas.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Information);
           viewRetorno = personIntegration.PostV2Completo(colaborador);
-          FileClass.SaveLog(LogFileName.Replace(".log", "retapi.log"), viewRetorno.ToString(), EnumTypeLineOpportunityg.Information);
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
           {
-            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
             hasLogFile = true;
           }
           else
           {
-            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Register);
           }
         }
