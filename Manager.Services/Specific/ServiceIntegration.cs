@@ -198,22 +198,32 @@ namespace Manager.Services.Specific
           payrollEmployee.Messages.Add("Falta integração da empresa");
           payrollEmployee.Messages.Add("Falta integração de estabelecimento");
           payrollEmployee.Messages.Add("Falta integração de cargo");
-        } else {
+        }
+        else
+        {
           // Estabelecimento
           payrollEmployee._idCompany = company._id;
           integrationEstablishment = GetIntegrationEstablishment(payrollEmployee.EstablishmentKey, payrollEmployee.EstablishmentName, company._id);
           establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
           if (establishment == null)
+          {
             payrollEmployee.Messages.Add("Falta integração de estabelecimento");
+          }
           else
+          {
             payrollEmployee._idEstablishment = establishment._id;
+          }
           // Cargo
-          integrationOccupation = GetIntegrationOccupation(payrollEmployee.OccupationKey, payrollEmployee.OccupationName, company._id, payrollEmployee.CostCenter, payrollEmployee.CostCenterName);
+          integrationOccupation = GetIntegrationOccupation(payrollEmployee.OccupationKey, payrollEmployee.OccupationName, company._id, payrollEmployee.CostCenterKey, payrollEmployee.CostCenterName);
           occupation = occupationService.GetNewVersion(p => p._id == integrationOccupation.IdOccupation).Result;
           if (occupation == null)
+          {
             payrollEmployee.Messages.Add("Falta integração de cargo");
+          }
           else
+          {
             payrollEmployee._idOccupation = occupation._id;
+          }
         }
         if (payrollEmployee.Messages.Count() > 0)
           return payrollEmployee;
@@ -671,7 +681,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenter, string costCenterName)
+    public IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenterKey, string costCenterName)
     {
       try
       {
@@ -681,7 +691,7 @@ namespace Manager.Services.Specific
         bool split = false;
         if (payrollOccupation != null && payrollOccupation.Split)
         {
-          localKey = string.Format("{0},{1}",key, costCenter);
+          localKey = string.Format("{0},{1}",key, costCenterKey);
           localName = string.Format("{0} - {1}", name, costCenterName);
           split = true;
         }
@@ -691,7 +701,7 @@ namespace Manager.Services.Specific
           item = new IntegrationOccupation()
           {
             Key = localKey,
-            Name = name,
+            Name = localName,
             _idCompany = idcompany,
             IdOccupation = "000000000000000000000000",
             NameOccupation = string.Empty,
@@ -702,7 +712,7 @@ namespace Manager.Services.Specific
         }
         if (item.IdOccupation.Equals("000000000000000000000000"))
         {
-          item.Name = name;
+          item.Name = localName;
           item._idCompany = idcompany;
           if (split)
           {
@@ -761,7 +771,8 @@ namespace Manager.Services.Specific
             IdCompany = item._idCompany,
             NameCompany = companyService.GetAllNewVersion(p => p._id == item._idCompany).Result.FirstOrDefault().Name,
             IdOccupation = item.IdOccupation.Equals("000000000000000000000000") ? string.Empty : item.IdOccupation,
-            NameOccupation = item.NameOccupation
+            NameOccupation = item.NameOccupation,
+            Split = ! item._idPayrollOccupation.Equals("000000000000000000000000")
           });
         }
         return result;
@@ -1498,19 +1509,24 @@ namespace Manager.Services.Specific
         // Validação de campos vazios obrigatórios
         ValidEmptyString(view.Nome, "Nome deve ser informado");
         view.Nome = CapitalizeName(view.Nome);
-        ValidEmptyString(view.Cargo, "Cargo deve ser informado");
         ValidEmptyString(view.NomeCargo, "Nome do cargo deve ser informado");
         view.NomeCargo = CapitalizeOccupation(view.NomeCargo);
+        view.Cargo = EmptyStringDefault(view.Cargo, view.NomeCargo);
         ValidEmptyDate(view.DataAdmissao, "Data de admissão deve ser informada");
         // Preenchimento de campos opcionais, caso vazios
         view.Email = EmptyStringDefault(view.Email, view.Colaborador.Cpf);
-        view.GrauInstrucao = EmptyStringDefault(view.GrauInstrucao, "0");
         view.NomeGrauInstrucao = EmptyStringDefault(view.NomeGrauInstrucao, "Não definida");
+        view.GrauInstrucao = EmptyStringDefault(view.GrauInstrucao, view.NomeGrauInstrucao);
         view.NomeGrauInstrucao = CapitalizeName(view.NomeGrauInstrucao);
+        view.CentroCusto = EmptyStringDefault(view.CentroCusto, view.NomeCentroCusto);
         // Validação do Gestor
         if (view.Gestor != null && !string.IsNullOrEmpty(view.Gestor.Matricula))
         {
           view.Gestor = ValidKeyEmployee(view.Gestor, " do gestor ");
+        }
+        else
+        {
+          view.Gestor = null;
         }
         if (resultV2.Mensagem.Count != 0)
         {
@@ -2206,24 +2222,18 @@ namespace Manager.Services.Specific
     {
       try
       {
-        if (string.IsNullOrEmpty(view.Estabelecimento))
-          view.Estabelecimento = "1";
-        if (string.IsNullOrEmpty(view.NomeEstabelecimento))
-          view.NomeEstabelecimento = "Estabelecimento Padrão";
-        if (string.IsNullOrEmpty(view.Cpf))
-          resultV2.Mensagem.Add(string.Format("CPF{0}deve ser informado",messageComplement));
-        else
+        ValidEmptyString(view.Cpf, string.Format("CPF{0}deve ser informado", messageComplement));
+        if (resultV2.Mensagem.Count == 0)
         {
           view.Cpf = view.Cpf.Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11, '0');
           if (!IsValidCPF(view.Cpf))
             resultV2.Mensagem.Add(string.Format("CPF{0}inválido", messageComplement));
         }
-        if (string.IsNullOrEmpty(view.Empresa))
-          resultV2.Mensagem.Add(string.Format("Empresa{0}deve ser informada", messageComplement));
-        if (string.IsNullOrEmpty(view.NomeEmpresa))
-          resultV2.Mensagem.Add(string.Format("Nome da empresa{0}deve ser informado", messageComplement));
-        if (string.IsNullOrEmpty(view.Matricula))
-          resultV2.Mensagem.Add(string.Format("Matrícula{0}deve ser informada", messageComplement));
+        ValidEmptyString(view.NomeEmpresa, string.Format("Nome da Empresa{0}deve ser informada", messageComplement));
+        view.Empresa = EmptyStringDefault(view.Empresa, view.NomeEmpresa);
+        view.NomeEstabelecimento = EmptyStringDefault(view.NomeEstabelecimento, "Estabelecimento Padrão");
+        view.Estabelecimento = EmptyStringDefault(view.Estabelecimento, view.NomeEstabelecimento);
+        ValidEmptyString(view.Matricula, string.Format("Matrícula{0}deve ser informada", messageComplement));
         return view;
       }
       catch (Exception)
@@ -2328,8 +2338,23 @@ namespace Manager.Services.Specific
       {
         string result = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param.Trim().ToLower());
         result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ")
-          .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ").Replace(" Ti", " TI")
-          .Replace(" Pl", " PL").Replace(" Jr", " JR").Replace(" Sr", " SR");
+          .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ");
+        if (result.IndexOf(" Ti") + 3 == result.Length)
+        {
+          result = string.Concat(result.Substring(0, result.Length - 2),"TI");
+        }
+        if (result.IndexOf(" Jr") + 3 == result.Length)
+        {
+          result = string.Concat(result.Substring(0, result.Length - 2), "JR");
+        }
+        if (result.IndexOf(" Pl") + 3 == result.Length)
+        {
+          result = string.Concat(result.Substring(0, result.Length - 2), "PL");
+        }
+        if (result.IndexOf(" Sr") + 3 == result.Length)
+        {
+          result = string.Concat(result.Substring(0, result.Length - 2), "SR");
+        }
         return result;
       }
       catch (Exception)

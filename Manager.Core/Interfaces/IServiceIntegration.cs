@@ -45,7 +45,7 @@ namespace Manager.Core.Interfaces
     IntegrationEstablishment GetIntegrationEstablishment(string key, string name, string idcompany);
     IntegrationSchooling GetIntegrationSchooling(string key, string name);
     IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany);
-    IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenter, string costCenterName);
+    IntegrationOccupation GetIntegrationOccupation(string key, string name, string idcompany, string costCenterKey, string costCenterName);
     ViewCrudPerson GetPersonByKey(string idcompany, string idestablishment, string document, string registration);
     ViewCrudUser GetUserByKey(string document);
     ViewListSchooling GetSchooling(string id);

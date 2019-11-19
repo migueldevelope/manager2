@@ -33,8 +33,8 @@ namespace Manager.Views.Integration.V2
     public DateTime? DataUltimoReajuste { get; set; }
     public string MotivoUltimoReajuste { get; set; }
     // Chaves de cálculo interno
-    public string ChaveCargo => string.Format("{0};{1}", Colaborador.Empresa, Cargo);
-    public string ChaveCentroCusto => string.Format("{0};{1}", Colaborador.Empresa, CentroCusto);
+    public string ChaveCargo => string.Format("{0};{1}", Colaborador.ChaveEmpresa, Cargo.Trim().ToLower());
+    public string ChaveCentroCusto => string.Format("{0};{1}", Colaborador.ChaveEmpresa, CentroCusto.Trim().ToLower());
 
     #region Constructor
     public ColaboradorV2Completo()

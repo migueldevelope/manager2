@@ -100,6 +100,7 @@ namespace Manager.Core.Business.Integration
     public string EstablishmentKey => string.Format("{0},{1}", Company, Establishment);
     // Identificação do cargo
     public string OccupationKey => string.Format("{0},{1}", Company, Occupation);
+    public string CostCenterKey => string.Format("{0},{1}", Company, CostCenter);
 
     #region Private
     private string ActionToString()
