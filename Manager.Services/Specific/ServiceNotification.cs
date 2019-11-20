@@ -136,21 +136,24 @@ namespace Manager.Services.Specific
         foreach (Account account in accounts)
         {
           SetUser(new BaseUser() { _idAccount = account._id });
-          Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
-          if (parameter != null)
+
+          DateTime dateStart = DateTime.Now.Date;
+          DateTime dateEnd = dateStart.AddDays(1);
+          Log logExits = serviceLog.GetNewVersion(p => p.Local == "ManagerMessages" && p.DataLog >= dateStart && p.DataLog < dateEnd).Result;
+
+          if (logExits == null)
           {
-            DateTime dateStart = DateTime.Now.Date;
-            DateTime dateEnd = dateStart.AddDays(1);
-            Log logExits = serviceLog.GetNewVersion(p => p.Local == "ManagerMessages" && p.DataLog >= dateStart && p.DataLog < dateEnd).Result;
-            if (logExits == null)
+            Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
+            ViewLog log = new ViewLog
             {
-              ViewLog log = new ViewLog
-              {
-                Description = "Service Notification",
-                _idPerson = null,
-                Local = "ManagerMessages"
-              };
-              serviceLog.NewLogService(log);
+              Description = "Service Notification",
+              _idPerson = null,
+              Local = "ManagerMessages"
+            };
+            serviceLog.NewLogService(log);
+            SendMessageSuccessFactory(sendTest);
+            if (parameter != null) 
+            {
               SendMessageAccount(sendTest);
             }
           }
@@ -165,11 +168,22 @@ namespace Manager.Services.Specific
     {
       try
       {
-        OnboardingAdmission(sendTest);
+        //OnboardingAdmission(sendTest);
         OnboardingManagerDeadline(sendTest);
-        CheckpointManagerDeadline(sendTest);
-        MonitoringManagerDeadline(sendTest);
-        PlanManagerDeadline(sendTest);
+        //CheckpointManagerDeadline(sendTest);
+        //MonitoringManagerDeadline(sendTest);
+        //PlanManagerDeadline(sendTest);
+      }
+      catch (Exception)
+      {
+
+      }
+    }
+
+    private void SendMessageSuccessFactory(bool sendTest)
+    {
+      try
+      {
         BirthCompany(sendTest);
       }
       catch (Exception)
@@ -177,6 +191,7 @@ namespace Manager.Services.Specific
 
       }
     }
+
     #endregion
 
     #region Checkpoint
