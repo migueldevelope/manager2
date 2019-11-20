@@ -70,7 +70,9 @@ namespace IntegrationServer
       IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
+      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
 
+      services.AddSingleton(_ => serviceAuthentication);
       services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceAudit);

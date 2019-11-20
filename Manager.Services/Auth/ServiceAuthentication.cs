@@ -279,8 +279,7 @@ namespace Manager.Services.Auth
         serviceIPerson.SetUser(_user);
         serviceTermsOfService.SetUser(_user);
         serviceTermsOfService._user = _user;
-
-        var account = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result;
+        Account account = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result;
         ViewPerson person = new ViewPerson()
         {
           IdUser = user._id,
@@ -301,7 +300,7 @@ namespace Manager.Services.Auth
         new Claim(ClaimTypes.Email, user.Mail),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
         new Claim(ClaimTypes.UserData, person.IdUser),
-        new Claim(ClaimTypes.Actor, person.Contracts.FirstOrDefault().IdPerson)
+        new Claim(ClaimTypes.Actor, person.IdUser)
         };
         JwtSecurityToken token = new JwtSecurityToken(
             issuer: "localhost",
