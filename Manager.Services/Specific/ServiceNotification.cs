@@ -136,13 +136,14 @@ namespace Manager.Services.Specific
         foreach (Account account in accounts)
         {
           SetUser(new BaseUser() { _idAccount = account._id });
-          Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
-          if (parameter != null)
-          {
-            DateTime dateStart = DateTime.Now.Date;
-            DateTime dateEnd = dateStart.AddDays(1);
-            Log logExits = serviceLog.GetNewVersion(p => p.Local == "ManagerMessages" && p.DataLog >= dateStart && p.DataLog < dateEnd).Result;
 
+          DateTime dateStart = DateTime.Now.Date;
+          DateTime dateEnd = dateStart.AddDays(1);
+          Log logExits = serviceLog.GetNewVersion(p => p.Local == "ManagerMessages" && p.DataLog >= dateStart && p.DataLog < dateEnd).Result;
+
+          if (logExits == null)
+          {
+            Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
             ViewLog log = new ViewLog
             {
               Description = "Service Notification",
@@ -151,7 +152,7 @@ namespace Manager.Services.Specific
             };
             serviceLog.NewLogService(log);
             SendMessageSuccessFactory(sendTest);
-            if (logExits == null)
+            if (parameter != null) 
             {
               SendMessageAccount(sendTest);
             }
