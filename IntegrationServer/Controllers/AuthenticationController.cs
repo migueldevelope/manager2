@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Manager.Controllers
+namespace IntegrationServer.Controllers
 {
   /// <summary>
   /// Controle de Autenticação
   /// </summary>
   [Produces("application/json")]
-  [Route("authentication")]
+  [Route("auth")]
   public class AuthenticationController : Controller
   {
     private readonly IServiceAuthentication service;
@@ -42,32 +42,11 @@ namespace Manager.Controllers
     {
       try
       {
-        return await Task.Run(() =>Ok(service.Authentication(userLogin, true)));
+        return await Task.Run(() => Ok(service.Authentication(userLogin, false)));
       }
       catch (Exception e)
       {
-        return await Task.Run(() =>BadRequest(e.Message));
-      }
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="idperson"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPost]
-    [Route("altercontract/{idperson}/{idaccount}")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<string> AlterContract(string idperson, string idaccount)
-    {
-      try
-      {
-        return await Task.Run(() => service.AlterContract(idperson, idaccount));
-      }
-      catch (Exception e)
-      {
-        return await Task.Run(() => e.Message);
+        return await Task.Run(() => BadRequest(e.Message));
       }
     }
     #endregion

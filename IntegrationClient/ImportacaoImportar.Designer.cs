@@ -35,7 +35,6 @@
       this.txtDatFin = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.btnImpV2 = new System.Windows.Forms.Button();
-      this.prb = new System.Windows.Forms.ProgressBar();
       this.SuspendLayout();
       // 
       // btImp
@@ -103,19 +102,11 @@
       this.btnImpV2.UseVisualStyleBackColor = true;
       this.btnImpV2.Click += new System.EventHandler(this.BtnImpV2_Click);
       // 
-      // prb
-      // 
-      this.prb.Location = new System.Drawing.Point(12, 304);
-      this.prb.Name = "prb";
-      this.prb.Size = new System.Drawing.Size(596, 23);
-      this.prb.TabIndex = 7;
-      // 
       // ImportacaoImportar
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(620, 335);
-      this.Controls.Add(this.prb);
       this.Controls.Add(this.btnImpV2);
       this.Controls.Add(this.txtDatFin);
       this.Controls.Add(this.label2);
@@ -144,6 +135,5 @@
     private System.Windows.Forms.TextBox txtDatFin;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Button btnImpV2;
-    private System.Windows.Forms.ProgressBar prb;
   }
 }

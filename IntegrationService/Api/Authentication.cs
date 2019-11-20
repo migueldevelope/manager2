@@ -13,13 +13,10 @@ namespace IntegrationService.Api
       {
         string pathUrl = string.Empty;
         if (url.Equals("https://analisa.solutions"))
-          pathUrl = string.Format("{0}/authentication", url).Replace("//", "//manager.");
+          pathUrl = string.Format("{0}/authentication", url).Replace("//", "//integrationserver.");
         else
-          pathUrl = string.Format("{0}/authentication", url).Replace("//test.", "//test_manager.");
+          pathUrl = string.Format("{0}/authentication", url).Replace("//test.", "//test_integrationserver.");
           //pathUrl = string.Format("{0}/authentication", "http://10.0.0.16:5200");
-
-        if (url == "https://analisa.unimednordesters.com.br")
-          pathUrl = "https://analisa.unimednordesters.com.br/manager/authentication";
 
         HttpClient clientAuthentication = new HttpClient()
         {
@@ -33,7 +30,7 @@ namespace IntegrationService.Api
         StringContent content = new StringContent(JsonConvert.SerializeObject(data));
         content.Headers.ContentType.MediaType = "application/json";
         clientAuthentication.DefaultRequestHeaders.Add("ContentType", "application/json");
-        var result = clientAuthentication.PostAsync("authentication", content).Result;
+        var result = clientAuthentication.PostAsync("auth", content).Result;
         if (result.StatusCode != System.Net.HttpStatusCode.OK )
         {
           throw new Exception("Usuário inválido!");

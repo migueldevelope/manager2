@@ -35,6 +35,7 @@ namespace Manager.Services.Auth
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly IServicePerson serviceIPerson;
     private readonly string pathSignalr;
+
     #region Constructor
     public ServiceAuthentication(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, string _pathSignalr)
     {
@@ -57,8 +58,7 @@ namespace Manager.Services.Auth
     }
     #endregion
 
-    #region Authentication
-
+    #region Authentication Controller
     public string AlterContract(string idperson, string _idAccount)
     {
       try
@@ -90,18 +90,18 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
-
-
-    public ViewPerson Authentication(ViewAuthentication userLogin)
+    public ViewPerson Authentication(ViewAuthentication userLogin, bool manager)
     {
       try
       {
-
         if (string.IsNullOrEmpty(userLogin.Mail))
+        {
           throw new Exception("MSG1");
+        }
         if (string.IsNullOrEmpty(userLogin.Password))
+        {
           throw new Exception("MSG2");
-
+        }
         User user = null;
         if (userLogin.Mail.IndexOf("@maristas.org.br") != -1 || userLogin.Mail.IndexOf("@pucrs.br") != -1)
         {
@@ -110,50 +110,54 @@ namespace Manager.Services.Auth
           if (user == null)
             throw new Exception("User not authorized!");
         }
-
-        //else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1)
-        //{
-        //  GetUnimedAsync(userLogin.Mail, userLogin.Password);
-        //  // Localizar pelo apelido
-        //  user = serviceUser.GetFreeNewVersion(p => p.Nickname == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
-        //  if (user == null)
-        //    // Localizar pelo e-mail
-        //    user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail & p.Status == EnumStatus.Enabled).Result;
-        //  if (user == null)
-        //    throw new Exception("User not authorized!");
-        //}
-        else if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1 || userLogin.Mail.IndexOf("@") == -1)
+        else
         {
-          // Localizar usuário por e-mail
-          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail).Result;
-          if (user == null)
+          if (userLogin.Mail.IndexOf("@unimednordesters.com.br") != -1 || userLogin.Mail.IndexOf("@") == -1)
           {
-            // Localizar usuário por apelido
-            user = serviceUser.GetFreeNewVersion(p => p.Nickname == userLogin.Mail.Replace("@unimednordesters.com.br", string.Empty)).Result;
+            // Localizar usuário por e-mail
+            user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail).Result;
             if (user == null)
             {
-              throw new Exception("User not found!");
+              // Localizar usuário por apelido
+              user = serviceUser.GetFreeNewVersion(p => p.Nickname == userLogin.Mail.Replace("@unimednordesters.com.br", string.Empty)).Result;
+              if (user == null)
+              {
+                throw new Exception("User not found!");
+              }
+            }
+            if (user.Status == EnumStatus.Disabled)
+            {
+              throw new Exception("User disabled!");
+            }
+            GetUnimedAsync(user.Nickname, userLogin.Password);
+          }
+          else
+          {
+            user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
+            if (user == null)
+            {
+              throw new Exception("User/Password invalid!");
             }
           }
-          if (user.Status == EnumStatus.Disabled)
-          {
-            throw new Exception("User disabled!");
-          }
-          GetUnimedAsync(user.Nickname, userLogin.Password);
+        }
+        if (manager)
+        {
+          return Authentication(user, true);
         }
         else
         {
-          user = serviceUser.GetFreeNewVersion(p => p.Mail == userLogin.Mail && p.Password == EncryptServices.GetMD5Hash(userLogin.Password)).Result;
-          if (user == null)
-            throw new Exception("User/Password invalid!");
+          return Authentication(user);
         }
-        return Authentication(user, true);
       }
       catch (Exception e)
       {
         throw e;
       }
     }
+    #endregion
+
+    #region Authentication Internal
+    // Valida autenticação para Manager
     public ViewPerson Authentication(User user, bool registerLog)
     {
       try
@@ -165,16 +169,15 @@ namespace Manager.Services.Auth
         serviceIPerson.SetUser(_user);
         serviceTermsOfService.SetUser(_user);
         serviceTermsOfService._user = _user;
-
-        var date = serviceTermsOfService.GetTerm();
-        var countterm = 0;
-        var account = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result;
+        ViewListTermsOfService date = serviceTermsOfService.GetTerm();
+        int countterm = 0;
+        Account account = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result;
         if ((account.InfoClient != null) && (account?.InfoClient != string.Empty))
+        {
           countterm = 1;
-
+        }
         UserTermOfService term = null;
         UserTermOfService viewDate = null;
-
         if (date != null)
         {
           viewDate = new UserTermOfService()
@@ -182,7 +185,6 @@ namespace Manager.Services.Auth
             Date = date?.Date,
             _idTermOfService = date?._id
           };
-
           if (user.UserTermOfServices != null)
           {
             foreach (var item in user.UserTermOfServices)
@@ -194,11 +196,6 @@ namespace Manager.Services.Auth
             }
           }
         }
-
-
-
-
-
         serviceDictionarySystem.SetUser(_user);
         ViewPerson person = new ViewPerson()
         {
@@ -209,13 +206,15 @@ namespace Manager.Services.Auth
           Photo = user.PhotoUrl,
           NameAccount = account?.Name,
           TermOfService = date == null ? true : term == null ? false : true,
-          DictionarySystem = null
+          ExistsTermOfService = countterm == 0 ? false : true,
+          ViewLO = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "viewlo").Result?.Content,
+          GoalProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "goalProcess").Result?.Content,
+          MeritocracyProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result?.Content,
+          ShowAutoManager = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showAutoManager").Result?.Content,
+          ShowSalaryScaleManager = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showSalaryScaleManager").Result?.Content,
+          DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result,
         };
-
-        person.ExistsTermOfService = countterm == 0 ? false : true;
-
-        person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id
-        && p.StatusUser != EnumStatusUser.Disabled).Result
+        person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id && p.StatusUser != EnumStatusUser.Disabled).Result
           .Select(x => new ViewContract()
           {
             IdPerson = x._id,
@@ -225,38 +224,24 @@ namespace Manager.Services.Auth
             NameAccount = serviceAccount.GetFreeNewVersion(p => p._id == x._idAccount).Result?.Name,
             Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name
           }).ToList();
-
         if (registerLog)
         {
           serviceLog.SetUser(_user);
           Task.Run(() => LogSave(person.Contracts[0].IdPerson));
         }
-
-
-        var per = person?.Contracts;
+        List<ViewContract> per = person?.Contracts;
         if (per.Count() > 0)
         {
-          var perT = per.FirstOrDefault();
+          ViewContract perT = per.FirstOrDefault();
           if ((perT.TypeUser == EnumTypeUser.Manager) || (perT.TypeUser == EnumTypeUser.ManagerHR))
           {
-            var idmanagers = new List<_ViewList>();
-            idmanagers.Add(new _ViewList() { _id = perT.IdPerson });
+            List<_ViewList> idmanagers = new List<_ViewList>
+            {
+              new _ViewList() { _id = perT.IdPerson }
+            };
             person.Team = serviceIPerson.GetFilterPersons(idmanagers);
           }
         }
-        var param1 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "viewlo").Result?.Content;
-        var param2 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "goalProcess").Result?.Content;
-        var param3 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result?.Content;
-        var param4 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showAutoManager").Result?.Content;
-        var param5 = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showSalaryScaleManager").Result?.Content;
-        
-        person.ViewLO = param1;
-        person.GoalProcess = param2;
-        person.MeritocracyProcess = param3;
-        person.ShowAutoManager = param4;
-        person.ShowSalaryScaleManager = param5;
-
-        person.DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result;
         // Token
         Claim[] claims = new[]
         {
@@ -275,7 +260,57 @@ namespace Manager.Services.Auth
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
         );
         person.Token = new JwtSecurityTokenHandler().WriteToken(token);
-        //
+        return person;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    // Valida autenticação para IntegrationServer
+    public ViewPerson Authentication(User user)
+    {
+      try
+      {
+        BaseUser _user = new BaseUser()
+        {
+          _idAccount = user._idAccount
+        };
+        serviceIPerson.SetUser(_user);
+        serviceTermsOfService.SetUser(_user);
+        serviceTermsOfService._user = _user;
+
+        var account = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result;
+        ViewPerson person = new ViewPerson()
+        {
+          IdUser = user._id,
+          Name = user.Name,
+          IdAccount = user._idAccount,
+          ChangePassword = user.ChangePassword,
+          Photo = user.PhotoUrl,
+          NameAccount = account?.Name,
+          TermOfService = false,
+          DictionarySystem = null,
+          ExistsTermOfService = false
+        };
+        // Token
+        Claim[] claims = new[]
+        {
+        new Claim(ClaimTypes.Name, person.Name),
+        new Claim(ClaimTypes.Hash, person.IdAccount),
+        new Claim(ClaimTypes.Email, user.Mail),
+        new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
+        new Claim(ClaimTypes.UserData, person.IdUser),
+        new Claim(ClaimTypes.Actor, person.Contracts.FirstOrDefault().IdPerson)
+        };
+        JwtSecurityToken token = new JwtSecurityToken(
+            issuer: "localhost",
+            audience: "localhost",
+            claims: claims,
+            expires: DateTime.Now.AddYears(10),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
+        );
+        person.Token = new JwtSecurityTokenHandler().WriteToken(token);
         return person;
       }
       catch (Exception e)
@@ -345,28 +380,7 @@ namespace Manager.Services.Auth
     }
     #endregion
 
-    #region private
-    public void GetMaristasAsyncTest(string login, string password)
-    {
-      try
-      {
-        using (var client = new HttpClient())
-        {
-          client.BaseAddress = new Uri("http://localhost:59500/");
-          var content = new StringContent("login=" + login + "&senha=" + password);
-          content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
-          client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
-          HttpResponseMessage result = client.PostAsync("validationapi/test", content).Result;
-          if (result.StatusCode != System.Net.HttpStatusCode.OK)
-            throw new Exception("User/Password invalid!");
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
+    #region Private
     private void GetMaristasAsync(string login, string password)
     {
       try
@@ -379,12 +393,14 @@ namespace Manager.Services.Auth
           client.DefaultRequestHeaders.Add("ContentType", "application/x-www-form-urlencoded");
           HttpResponseMessage result = client.PostAsync("wspucsede/WService.asmx/ValidateUser", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
+          {
             throw new Exception("User/Password invalid!");
+          }
         }
       }
-      catch (Exception e)
+      catch (Exception ex)
       {
-        throw e;
+        throw ex;
       }
     }
     private void GetUnimedAsync(string login, string passwordClient)
@@ -395,15 +411,12 @@ namespace Manager.Services.Auth
         string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.AddHours(-3).ToString("ddMMyyyyHHmm");
         //string password = "ad6072616b467db08f60918070e03622" + DateTime.Now.ToString("ddMMyyyyHHmm");
         string password2 = EncryptServices.GetMD5HashTypeTwo(password).ToLower();
-
         using (HttpClient client = new HttpClient())
         {
-
           client.DefaultRequestHeaders.Add("Autorization", "Basic " + password);
           client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(new UTF8Encoding().GetBytes(username + ":" + password2)));
           //client.BaseAddress = new Uri("https://apip1.unimednordesters.com.br");
           client.BaseAddress = new Uri("https://api.unimednordesters.com.br");
-
           var data = new
           {
             channel = "apiadv",
@@ -421,32 +434,26 @@ namespace Manager.Services.Auth
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
           {
             throw new Exception(result.ReasonPhrase);
-            // throw new Exception("User/Password invalid!");
           }
-
-          Console.Write(result.Content.ReadAsStringAsync().Result);
-          Console.Write(result.Content.ReadAsStringAsync());
-          Console.Write(result.Content);
-
+          //Console.Write(result.Content.ReadAsStringAsync().Result);
+          //Console.Write(result.Content.ReadAsStringAsync());
+          //Console.Write(result.Content);
           ViewUnimedStatusAuthentication status = JsonConvert.DeserializeObject<ViewUnimedStatusAuthentication>(result.Content.ReadAsStringAsync().Result);
-
           if (status.Status == false)
           {
             throw new Exception("User/Password invalid!");
           }
         }
       }
-      catch (Exception e)
+      catch (Exception ex)
       {
-        throw e;
+        throw ex;
       }
     }
     private void LogSave(string idPerson)
     {
       try
       {
-        var message = pathSignalr;
-
         serviceLog.NewLog(new ViewLog()
         {
           Description = "Login",

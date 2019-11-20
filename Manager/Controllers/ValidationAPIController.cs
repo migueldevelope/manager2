@@ -40,20 +40,5 @@ namespace Manager.Controllers
     {
       return view;
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="view"></param>
-    /// <returns></returns>
-    /// application/x-www-form-urlencoded
-    [HttpPost]
-    [Route("maristas")]
-    public string Maristas([FromBody]ViewAuthentication view)
-    {
-      serviceAuthentication.GetMaristasAsyncTest(view.Mail, view.Password);
-      return "ok";
-    }
-
   }
 }

@@ -4,9 +4,7 @@ namespace Manager.Core.Interfaces
 {
   public interface IServiceAuthentication
   {
-    ViewPerson Authentication(ViewAuthentication userLogin);
+    ViewPerson Authentication(ViewAuthentication userLogin, bool manager);
     string AlterContract(string idperson, string _idAccount);
-    // test
-    void GetMaristasAsyncTest(string login, string password);
   }
 }

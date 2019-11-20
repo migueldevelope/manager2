@@ -1480,7 +1480,7 @@ namespace Manager.Test.Commons
           Mail = "analisa@jmsoft.com.br",
           Password = "1234"
         };
-        ViewPerson viewPerson = service.Authentication(view);
+        ViewPerson viewPerson = service.Authentication(view, true);
         if (viewPerson.Contracts.Count != 1)
           throw new Exception("Problema na autenticação do usuário, contrato não encontrado!");
 
@@ -1529,7 +1529,7 @@ namespace Manager.Test.Commons
         {
           try
           {
-            viewPerson = service.Authentication(view);
+            viewPerson = service.Authentication(view, true);
             break;
           }
           catch (Exception)

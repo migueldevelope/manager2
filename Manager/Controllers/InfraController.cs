@@ -608,7 +608,7 @@ namespace Manager.Controllers
     public async Task<List<ViewListInfraSphere>> GetLineOpportunity(string idarea,int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.GetLineOpportunity(idarea, ref total, filter, count, page);
+      List<ViewListInfraSphere> result = service.GetLineOpportunity(idarea, ref total, filter, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
@@ -678,7 +678,7 @@ namespace Manager.Controllers
     public async Task<List<ViewOccupationListEdit>> ListOccupationEdit(string idcompany, string idarea, int count = 10, int page = 1, string filter = "", string filterGroup = "")
     {
       long total = 0;
-      var result = service.ListOccupationsEdit(idcompany, idarea, ref total, filter, count, page, filterGroup);
+      List<ViewOccupationListEdit> result = service.ListOccupationsEdit(idcompany, idarea, ref total, filter, count, page, filterGroup);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
@@ -697,7 +697,7 @@ namespace Manager.Controllers
     public async Task<List<ViewOccupationListEdit>> ListOccupationEdit(string idcompany, int count = 10, int page = 1, string filter = "", string filterGroup = "")
     {
       long total = 0;
-      var result = service.ListOccupationsEdit(idcompany, ref total, filter, count, page, filterGroup);
+      List<ViewOccupationListEdit> result = service.ListOccupationsEdit(idcompany, ref total, filter, count, page, filterGroup);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
