@@ -142,15 +142,17 @@ namespace Manager.Services.Specific
             DateTime dateStart = DateTime.Now.Date;
             DateTime dateEnd = dateStart.AddDays(1);
             Log logExits = serviceLog.GetNewVersion(p => p.Local == "ManagerMessages" && p.DataLog >= dateStart && p.DataLog < dateEnd).Result;
+
+            ViewLog log = new ViewLog
+            {
+              Description = "Service Notification",
+              _idPerson = null,
+              Local = "ManagerMessages"
+            };
+            serviceLog.NewLogService(log);
+            SendMessageSuccessFactory(sendTest);
             if (logExits == null)
             {
-              ViewLog log = new ViewLog
-              {
-                Description = "Service Notification",
-                _idPerson = null,
-                Local = "ManagerMessages"
-              };
-              serviceLog.NewLogService(log);
               SendMessageAccount(sendTest);
             }
           }
@@ -167,9 +169,20 @@ namespace Manager.Services.Specific
       {
         OnboardingAdmission(sendTest);
         OnboardingManagerDeadline(sendTest);
-        CheckpointManagerDeadline(sendTest);
-        MonitoringManagerDeadline(sendTest);
-        PlanManagerDeadline(sendTest);
+        //CheckpointManagerDeadline(sendTest);
+        //MonitoringManagerDeadline(sendTest);
+        //PlanManagerDeadline(sendTest);
+      }
+      catch (Exception)
+      {
+
+      }
+    }
+
+    private void SendMessageSuccessFactory(bool sendTest)
+    {
+      try
+      {
         BirthCompany(sendTest);
       }
       catch (Exception)
@@ -177,6 +190,7 @@ namespace Manager.Services.Specific
 
       }
     }
+
     #endregion
 
     #region Checkpoint
