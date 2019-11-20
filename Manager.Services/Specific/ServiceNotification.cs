@@ -168,7 +168,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        OnboardingAdmission(sendTest);
+        //OnboardingAdmission(sendTest);
         OnboardingManagerDeadline(sendTest);
         //CheckpointManagerDeadline(sendTest);
         //MonitoringManagerDeadline(sendTest);
