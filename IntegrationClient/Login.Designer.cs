@@ -60,6 +60,7 @@
       // 
       this.txtSen.Location = new System.Drawing.Point(189, 106);
       this.txtSen.Name = "txtSen";
+      this.txtSen.PasswordChar = '*';
       this.txtSen.Size = new System.Drawing.Size(254, 22);
       this.txtSen.TabIndex = 2;
       // 

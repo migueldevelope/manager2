@@ -2472,10 +2472,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var area = serviceArea.GetNewVersion(p => p._id == idarea).Result;
-        var itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
+        Area area = serviceArea.GetNewVersion(p => p._id == idarea).Result;
+        List<Occupation> itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ThenBy(o => o.Description).ToList();
         List<Occupation> list = new List<Occupation>();
-        foreach (var item in itens)
+        foreach (Occupation item in itens)
         {
           if (item.Process != null)
           {
@@ -2498,22 +2498,17 @@ namespace Manager.Services.Specific
                   _id = item._id,
                   Description = item.Description,
                   _idAccount = item._idAccount,
-                  Status = item.Status,
-                  //Areas = item.Areas
+                  Status = item.Status
                 });
               }
-
             }
           }
         }
         list.OrderBy(p => p.Name).ToList();
-
         int skip = (count * (page - 1));
-
-        var itensResult = list.Where(p => p.Group.Company._id == idcompany
-        & p.Name.ToUpper().Contains(filter.ToUpper())
-        & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).
-          Skip(skip).Take(count)
+        List<ViewOccupationListEdit> itensResult = list.Where(p => p.Group.Company._id == idcompany
+          & p.Name.ToUpper().Contains(filter.ToUpper())
+          & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).Skip(skip).Take(count)
           .OrderBy(p => p.Name).ToList().Select(p => new ViewOccupationListEdit
           {
             _id = p._id,
@@ -2524,9 +2519,8 @@ namespace Manager.Services.Specific
             Description = p.Description,
             Schooling = p.Schooling.Where(x => x.Complement != null).Count()
           }).ToList();
-
-        total = list.Count();
-
+        total = list.Where(p => p.Group.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper())
+          & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).Count();
         return itensResult;
       }
       catch (Exception e)
@@ -2534,17 +2528,15 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup)
     {
       try
       {
-        var itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
+        List<Occupation> itens = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result.OrderBy(p => p.Name).ToList();
         int skip = (count * (page - 1));
-
-        var itensResult = itens.Where(p => p.Group.Company._id == idcompany
-        & p.Name.ToUpper().Contains(filter.ToUpper())
-        & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).
+        List<ViewOccupationListEdit> itensResult = itens.Where(p => p.Group.Company._id == idcompany
+          & p.Name.ToUpper().Contains(filter.ToUpper())
+          & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).
           Skip(skip).Take(count)
           .OrderBy(p => p.Name).ToList().Select(p => new ViewOccupationListEdit
           {
@@ -2556,9 +2548,9 @@ namespace Manager.Services.Specific
             Description = p.Description,
             Schooling = p.Schooling.Where(x => x.Complement != null).Count()
           }).ToList();
-
-        total = itens.Count();
-
+        total = itens.Where(p => p.Group.Company._id == idcompany
+          & p.Name.ToUpper().Contains(filter.ToUpper())
+          & p.Group.Name.ToUpper().Contains(filterGroup.ToUpper())).Count();
         return itensResult;
       }
       catch (Exception e)
@@ -2566,21 +2558,26 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public ViewCrudSkill GetSkill(string filterName)
     {
       try
       {
-        var detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper() == filterName.ToUpper()).Result
+        List<ViewCrudSkill> detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper() == filterName.ToUpper()).Result
           .Select(p => p.GetViewCrud())
           .ToList();
         if (detail.Count == 1)
+        {
           return detail[0];
+        }
         detail = serviceSkill.GetAllNewVersion(p => p.Name.ToUpper().Contains(filterName.ToUpper())).Result.Select(p => p.GetViewCrud()).ToList();
         if (detail.Count == 1)
+        {
           return detail[0];
+        }
         if (detail.Count > 1)
+        {
           throw new Exception("Mais de uma skill!");
+        }
         return null;
       }
       catch (Exception e)
@@ -2588,7 +2585,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public List<ViewListSkill> GetSkills(ref long total, string filter, int count, int page)
     {
       try
