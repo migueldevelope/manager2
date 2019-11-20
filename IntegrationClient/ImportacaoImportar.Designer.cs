@@ -35,6 +35,10 @@
       this.txtDatFin = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.btnImpV2 = new System.Windows.Forms.Button();
+      this.btnDemUltV2 = new System.Windows.Forms.Button();
+      this.btnDemV2 = new System.Windows.Forms.Button();
+      this.prb = new System.Windows.Forms.ProgressBar();
+      this.lblPrb = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // btImp
@@ -102,11 +106,53 @@
       this.btnImpV2.UseVisualStyleBackColor = true;
       this.btnImpV2.Click += new System.EventHandler(this.BtnImpV2_Click);
       // 
+      // btnDemUltV2
+      // 
+      this.btnDemUltV2.Location = new System.Drawing.Point(326, 127);
+      this.btnDemUltV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.btnDemUltV2.Name = "btnDemUltV2";
+      this.btnDemUltV2.Size = new System.Drawing.Size(254, 23);
+      this.btnDemUltV2.TabIndex = 7;
+      this.btnDemUltV2.Text = "Demissões Última Importação V2";
+      this.btnDemUltV2.UseVisualStyleBackColor = true;
+      this.btnDemUltV2.Click += new System.EventHandler(this.BtnDemUltV2_Click);
+      // 
+      // btnDemV2
+      // 
+      this.btnDemV2.Enabled = false;
+      this.btnDemV2.Location = new System.Drawing.Point(326, 100);
+      this.btnDemV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.btnDemV2.Name = "btnDemV2";
+      this.btnDemV2.Size = new System.Drawing.Size(254, 23);
+      this.btnDemV2.TabIndex = 8;
+      this.btnDemV2.Text = "Demissões V2";
+      this.btnDemV2.UseVisualStyleBackColor = true;
+      // 
+      // prb
+      // 
+      this.prb.Location = new System.Drawing.Point(9, 300);
+      this.prb.Name = "prb";
+      this.prb.Size = new System.Drawing.Size(571, 23);
+      this.prb.TabIndex = 9;
+      // 
+      // lblPrb
+      // 
+      this.lblPrb.AutoSize = true;
+      this.lblPrb.Location = new System.Drawing.Point(10, 280);
+      this.lblPrb.Name = "lblPrb";
+      this.lblPrb.Size = new System.Drawing.Size(77, 17);
+      this.lblPrb.TabIndex = 10;
+      this.lblPrb.Text = "Data Inicial";
+      // 
       // ImportacaoImportar
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(620, 335);
+      this.ClientSize = new System.Drawing.Size(591, 335);
+      this.Controls.Add(this.lblPrb);
+      this.Controls.Add(this.prb);
+      this.Controls.Add(this.btnDemV2);
+      this.Controls.Add(this.btnDemUltV2);
       this.Controls.Add(this.btnImpV2);
       this.Controls.Add(this.txtDatFin);
       this.Controls.Add(this.label2);
@@ -135,5 +181,9 @@
     private System.Windows.Forms.TextBox txtDatFin;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Button btnImpV2;
+    private System.Windows.Forms.Button btnDemUltV2;
+    private System.Windows.Forms.Button btnDemV2;
+    private System.Windows.Forms.ProgressBar prb;
+    private System.Windows.Forms.Label lblPrb;
   }
 }

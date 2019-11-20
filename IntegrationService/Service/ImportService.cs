@@ -919,6 +919,10 @@ namespace IntegrationService.Service
           "estabelecimento_gestor", "nome_estabelecimento_gestor", "matricula_gestor", "nome_gestor", "centro_custo", "nome_centro_custo",
           "data_troca_centro_custo", "salario_nominal", "carga_horaria", "data_ultimo_reajuste", "motivo_ultimo_reajuste"
         };
+        ProgressBarMaximun = readData.Rows.Count;
+        ProgressBarValue = 0;
+        ProgressMessage = "Carregando colaboradores 1/2...";
+        OnRefreshProgressBar(EventArgs.Empty);
         foreach (DataRow row in readData.Rows)
         {
           if (validColumn)
@@ -942,6 +946,8 @@ namespace IntegrationService.Service
             default:
               throw new Exception(string.Format("{0} não foi implementado.", service.Param.Type));
           }
+          //ProgressBarValue++;
+          //OnRefreshProgressBar(EventArgs.Empty);
         }
       }
       catch (Exception ex)
@@ -957,8 +963,13 @@ namespace IntegrationService.Service
       try
       {
         ColaboradorV2Retorno viewRetorno;
+        ProgressBarMaximun = ColaboradoresV2.Count;
+        ProgressBarValue = 0;
+        ProgressMessage = "Atualizando colaboradores 2/2...";
+        OnRefreshProgressBar(EventArgs.Empty);
         foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
         {
+          FileClass.SaveLog(LogFileName.Replace(".txt", "api.txt"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
           viewRetorno = personIntegration.PostV2Completo(colaborador);
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
           {
@@ -971,6 +982,8 @@ namespace IntegrationService.Service
             FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
           }
+          //ProgressBarValue++;
+          //OnRefreshProgressBar(EventArgs.Empty);
         }
         Status = EnumStatusService.Ok;
         Message = "Fim de integração!";
@@ -992,5 +1005,19 @@ namespace IntegrationService.Service
 
     #endregion
 
+    #region ToolBar
+    public int ProgressBarMaximun;
+    public int ProgressBarValue;
+    public string ProgressMessage;
+
+    public event EventHandler RefreshProgressBar;
+
+    protected virtual void OnRefreshProgressBar(EventArgs e)
+    {
+      EventHandler handler = RefreshProgressBar;
+      handler(this, e);
+    }
+
+    #endregion
   }
 }
