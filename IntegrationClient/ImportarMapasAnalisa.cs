@@ -8,13 +8,8 @@ using OracleTools;
 using SqlServerTools;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IntegrationClient
@@ -32,16 +27,20 @@ namespace IntegrationClient
 
     private void BtImp_Click(object sender, EventArgs e)
     {
-      FileClass.WriteToBinaryFile<string>(string.Format("{0}/Occupation_cmd.txt", this.Person.IdAccount), txtCmd.Text, false);
-
-      string file = string.Format("{0}/SyncOccupation.csv", this.Person.IdAccount);
+      if (!Directory.Exists(string.Format("{0}_{1}", Person.NameAccount, Person.IdAccount)))
+      {
+        Directory.CreateDirectory(string.Format("{0}_{1}", Person.NameAccount, Person.IdAccount));
+      }
+      FileClass.WriteToBinaryFile(string.Format("{0}_{1}/Occupation_cmd.txt", Person.NameAccount, Person.IdAccount), txtCmd.Text, false);
+      string file = string.Format("{0}_{1}/SyncOccupation.csv", Person.NameAccount, Person.IdAccount);
       if (File.Exists(file))
+      {
         File.Delete(file);
-
+      }
       txtLog.Text = string.Format("Status;Occupation;Code;IdOccupation or Message{0}",Environment.NewLine);
       FileClass.SaveLog(file, txtLog.Text, EnumTypeLineOpportunityg.Register);
       DataTable occupations;
-      if (Boolean.Parse(Conn.Split(';')[0]))
+      if (bool.Parse(Conn.Split(';')[0]))
       {
         OracleConnectionTool cnn = new OracleConnectionTool(Conn.Split(';')[1], Conn.Split(';')[2], Conn.Split(';')[3]);
         occupations = cnn.ExecuteQuery(txtCmd.Text);
@@ -54,11 +53,10 @@ namespace IntegrationClient
         cnn.Close();
       }
       InfraIntegration infraIntegration = new InfraIntegration(Person);
-
       prb.Maximum = occupations.Rows.Count;
       prb.Minimum = 0;
       prb.Value = 0;
-      this.Refresh();
+      Refresh();
       string salvaGrupoCargo = string.Empty;
       string salvaCargo = string.Empty;
       string salvaCargoCodigo = string.Empty;
@@ -182,10 +180,17 @@ namespace IntegrationClient
 
     private void ImportarCargoAnalisa_Load(object sender, EventArgs e)
     {
-      if (File.Exists(string.Format("{0}/Occupation_cmd.txt", this.Person.IdAccount)))
-        txtCmd.Text = FileClass.ReadFromBinaryFile<string>(string.Format("{0}/Occupation_cmd.txt", this.Person.IdAccount));
-      if (File.Exists(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount))){
-        ProcessLevelTwo = JsonConvert.DeserializeObject<ViewListProcessLevelTwo>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount)));
+      if (!Directory.Exists(string.Format("{0}_{1}", Person.NameAccount, Person.IdAccount)))
+      {
+        Directory.CreateDirectory(string.Format("{0}_{1}", Person.NameAccount, Person.IdAccount));
+      }
+      if (File.Exists(string.Format("{0}_{1}/Occupation_cmd.txt", Person.NameAccount, Person.IdAccount)))
+      {
+        txtCmd.Text = FileClass.ReadFromBinaryFile<string>(string.Format("{0}_{1}/Occupation_cmd.txt", Person.NameAccount, Person.IdAccount));
+      }
+      if (File.Exists(string.Format("{0}_{1}/SubProcess_cmd.txt", Person.NameAccount, Person.IdAccount)))
+      {
+        ProcessLevelTwo = JsonConvert.DeserializeObject<ViewListProcessLevelTwo>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}_{1}/SubProcess_cmd.txt", Person.NameAccount, Person.IdAccount)));
         btImp.Enabled = true;
         txtSubProc.Text = ProcessLevelTwo.Name;
       }
@@ -195,19 +200,25 @@ namespace IntegrationClient
     {
       try
       {
+        if (!Directory.Exists(string.Format("{0}_{1}", Person.NameAccount, Person.IdAccount)))
+        {
+          Directory.CreateDirectory(string.Format("{0}_{1}", Person.NameAccount, Person.IdAccount));
+        }
         txtLog.Text = string.Empty;
         btImp.Enabled = false;
         ProcessLevelTwo = null;
         InfraIntegration process = new InfraIntegration(Person);
 //        ProcessLevelTwo = process.GetProcessByName(txtSubProc.Text);
-        FileClass.WriteToBinaryFile<string>(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount), JsonConvert.SerializeObject(ProcessLevelTwo), false);
+        FileClass.WriteToBinaryFile(string.Format("{0}_{1}/SubProcess_cmd.txt", Person.NameAccount, Person.IdAccount), JsonConvert.SerializeObject(ProcessLevelTwo), false);
         btImp.Enabled = true;
         txtSubProc.Text = ProcessLevelTwo.Name;
       }
       catch (Exception ex)
       {
-        if (File.Exists(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount)))
-          File.Delete(string.Format("{0}/SubProcess_cmd.txt", this.Person.IdAccount));
+        if (File.Exists(string.Format("{0}_{1}/SubProcess_cmd.txt", Person.NameAccount, Person.IdAccount)))
+        {
+          File.Delete(string.Format("{0}_{1}/SubProcess_cmd.txt", Person.NameAccount, Person.IdAccount));
+        }
         MessageBox.Show(ex.ToString(),"Erro",MessageBoxButtons.OK,MessageBoxIcon.Error);
       }
     }

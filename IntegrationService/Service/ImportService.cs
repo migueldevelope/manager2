@@ -20,6 +20,7 @@ namespace IntegrationService.Service
 {
   public class ImportService
   {
+    private readonly string pathLogs;
     public string Message { get; set; }
     public EnumStatusService Status { get; private set; }
 
@@ -50,17 +51,19 @@ namespace IntegrationService.Service
         service = serviceConfiguration;
         Message = string.Empty;
         Status = EnumStatusService.Ok;
-        if (!Directory.Exists(string.Format("{0}/integration", Person.IdAccount)))
-          Directory.CreateDirectory(string.Format("{0}/integration", Person.IdAccount));
+        pathLogs = string.Format("{0}_{1}/integration", Person.NameAccount, Person.IdAccount);
+        if (!Directory.Exists(pathLogs))
+        {
+          Directory.CreateDirectory(pathLogs);
+        }
         // Limpeza de arquivos LOG
-
-        DirectoryInfo diretorio = new DirectoryInfo(string.Format("{0}/integration", Person.IdAccount));
+        DirectoryInfo diretorio = new DirectoryInfo(pathLogs);
         List<FileInfo> Arquivos = diretorio.GetFiles("*.log").Where(p => p.CreationTime.Date < DateTime.Now.Date).ToList();
         //Comea a listar o(s) arquivo(s)
         foreach (FileInfo fileinfo in Arquivos)
           File.Delete(fileinfo.FullName);
 
-        LogFileName = string.Format("{0}/integration/{1}.log", Person.IdAccount, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+        LogFileName = string.Format("{0}/{1}.log", pathLogs, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
         Assembly assem = Assembly.GetEntryAssembly();
         AssemblyName assemName = assem.GetName();
         VersionProgram = assemName.Version;
@@ -258,7 +261,7 @@ namespace IntegrationService.Service
           default:
             break;
         }
-        LogFileName = string.Format("{0}/integration/Demissao_{1}.log", Person.IdAccount, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+        LogFileName = string.Format("{0}/Demissao_{1}.log", pathLogs, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
         Demission();
         service.Param.CriticalError = string.Empty;
         service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
@@ -336,7 +339,6 @@ namespace IntegrationService.Service
         foreach (ViewIntegrationUnimedNers colaboradorUnimed in colaboradoresUnimed)
         {
           Colaboradores.Add(new ColaboradorImportar(colaboradorUnimed, new EnumLayoutSystemCompleteV1()));
-          FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaboradorUnimed.cdn_cpf, colaboradorUnimed.nom_empresa, colaboradorUnimed.nom_estab, colaboradorUnimed.cdn_matricula, colaboradorUnimed.nom_pessoa, colaboradorUnimed.des_cargo), EnumTypeLineOpportunityg.Information);
         }
       }
       catch (Exception e)
@@ -362,7 +364,6 @@ namespace IntegrationService.Service
         throw e;
       }
     }
-
     #endregion
 
     #region Listas V1
@@ -371,8 +372,8 @@ namespace IntegrationService.Service
       try
       {
         ControleColaboradores = new List<ControleColaborador>();
-        if (File.Exists(string.Format("{0}/integration/colaborador.txt", Person.IdAccount)))
-          ControleColaboradores = JsonConvert.DeserializeObject<List<ControleColaborador>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount)));
+        if (File.Exists(string.Format("{0}/colaborador.txt", pathLogs)))
+          ControleColaboradores = JsonConvert.DeserializeObject<List<ControleColaborador>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/colaborador.txt", pathLogs)));
       }
       catch (Exception)
       {
@@ -384,7 +385,7 @@ namespace IntegrationService.Service
       try
       {
         string saveObject = JsonConvert.SerializeObject(ControleColaboradores);
-        FileClass.WriteToBinaryFile<string>(string.Format("{0}/integration/colaborador.txt", Person.IdAccount), saveObject, false);
+        FileClass.WriteToBinaryFile(string.Format("{0}/colaborador.txt", pathLogs), saveObject, false);
       }
       catch (Exception)
       {

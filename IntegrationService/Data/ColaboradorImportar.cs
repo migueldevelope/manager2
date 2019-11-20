@@ -245,6 +245,14 @@ namespace IntegrationService.Data
         Matricula = view.cdn_matricula.ToString();
         Nome = FormatedField(view.nom_pessoa);
         Email = FormatedFieldKey(view.nom_email);
+        if (string.IsNullOrEmpty(Email))
+        {
+          Email = Documento;
+        }
+        if (Email.Contains("@unimed-ners.net"))
+        {
+          Email = Documento;
+        }
         DataNascimento = dataNascimento;
         Celular = view.num_celular.Trim();
         Telefone = view.num_telefone.Trim();

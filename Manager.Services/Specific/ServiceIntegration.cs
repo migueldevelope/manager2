@@ -712,7 +712,7 @@ namespace Manager.Services.Specific
             NameCompany = companyService.GetAllNewVersion(p => p._id == item._idCompany).Result.FirstOrDefault().Name,
             IdOccupation = item.IdOccupation.Equals("000000000000000000000000") ? string.Empty : item.IdOccupation,
             NameOccupation = item.NameOccupation,
-            Split = ! item._idPayrollOccupation.Equals("000000000000000000000000")
+            Split = item._idPayrollOccupation == null ? false : !item._idPayrollOccupation.Equals("000000000000000000000000")
           });
         }
         return result;
