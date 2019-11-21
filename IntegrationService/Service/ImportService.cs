@@ -803,8 +803,85 @@ namespace IntegrationService.Service
 
     #region V2
 
+    #region Api Region
+    private void CallApiModeV2()
+    {
+      try
+      {
+        switch (service.Param.ApiIdentification)
+        {
+          case "METADADOS":
+            ApiMetadadosAtivos();
+            break;
+          default:
+            Message = "Identificação da API inválida";
+            throw new Exception(Message);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private void CallApiModeV2(DateTime dateRef)
+    {
+      try
+      {
+        switch (service.Param.ApiIdentification)
+        {
+          case "METADADOS":
+            ApiMetadadosDemitidos(dateRef);
+            break;
+          default:
+            Message = "Identificação da API inválida";
+            throw new Exception(Message);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private void ApiMetadadosAtivos()
+    {
+      try
+      {
+        ApiMetadados apiMetadados= new ApiMetadados();
+        List<ViewIntegrationMetadados> colaboradores = apiMetadados.GetEmployee("xyz");
+        Colaboradores = new List<ColaboradorImportar>();
+        // Carregar Lista de Colaboradores
+        foreach (ViewIntegrationMetadados colaborador in colaboradores)
+        {
+          Colaboradores.Add(new ColaboradorImportar(colaborador, new EnumLayoutSystemCompleteV1()));
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private void ApiMetadadosDemitidos(DateTime dateRef)
+    {
+      try
+      {
+        ApiMetadados apiMetadados = new ApiMetadados();
+        List<ViewIntegrationMetadados> colaboradores = apiMetadados.GetDemissionEmployee("xyz", dateRef);
+        Colaboradores = new List<ColaboradorImportar>();
+        // Carregar Lista de Colaboradores
+        foreach (ViewIntegrationMetadados colaborador in colaboradores)
+        {
+          Colaboradores.Add(new ColaboradorImportar(colaborador, new EnumLayoutSystemCompleteV1()));
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    #endregion
+
     #region Inicio da integração
-    public void ExecuteV2()
+    public void ExecuteV2(bool jsonLog)
     {
       try
       {
@@ -836,7 +913,8 @@ namespace IntegrationService.Service
               case EnumIntegrationMode.FileExcelV1:
                 throw new Exception("Modo Excel não implementado no processo de sistema.");
               case EnumIntegrationMode.ApplicationInterface:
-                throw new Exception("Modo API não implementado no processo de sistema.");
+                CallApiModeV2();
+                break;
               default:
                 throw new Exception("Nenhum modo implementado no processo de sistema.");
             }
@@ -854,7 +932,41 @@ namespace IntegrationService.Service
         {
           throw new Exception("Lista de colaboradores vazia.");
         }
-        FinalImportV2();
+        // Rotina de Importação
+        ColaboradorV2Retorno viewRetorno;
+        ProgressBarMaximun = ColaboradoresV2.Count;
+        ProgressBarValue = 0;
+        ProgressMessage = "Atualizando colaboradores 2/2...";
+        OnRefreshProgressBar(EventArgs.Empty);
+        foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
+        {
+          if (jsonLog)
+          {
+            FileClass.SaveLog(LogFileName.Replace(".log", "api.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
+          }
+          viewRetorno = personIntegration.PostV2Completo(colaborador);
+          if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
+          {
+            FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
+            hasLogFile = true;
+          }
+          else
+          {
+            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
+          }
+          ProgressBarValue++;
+          OnRefreshProgressBar(EventArgs.Empty);
+        }
+        Status = EnumStatusService.Ok;
+        Message = "Fim de integração!";
+        if (hasLogFile)
+        {
+          Message = "Fim de integração com LOG!";
+          Status = EnumStatusService.Error;
+        }
+        // até aqui
         service.Param.CriticalError = string.Empty;
         service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
         service.Param.StatusExecution = "Ok v2";
@@ -880,7 +992,7 @@ namespace IntegrationService.Service
       }
     }
 
-    #region Leitura de Benco de Dados
+    #region Leitura de Banco de Dados
     private void DatabaseV2()
     {
       try
@@ -939,64 +1051,21 @@ namespace IntegrationService.Service
           switch (service.Param.Type)
           {
             case EnumIntegrationType.Complete:
-              ColaboradoresV2.Add(new ColaboradorV2Completo(row.ItemArray.Select(x => x.ToString()).ToList(), readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList()));
+              ColaboradoresV2.Add(new ColaboradorV2Completo(row.ItemArray.Select(x => x.ToString()).ToList(),
+                readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList(), service.Param.CultureDate));
               break;
             case EnumIntegrationType.Basic:
             case EnumIntegrationType.Custom:
             default:
               throw new Exception(string.Format("{0} não foi implementado.", service.Param.Type));
           }
-          //ProgressBarValue++;
-          //OnRefreshProgressBar(EventArgs.Empty);
+          ProgressBarValue++;
+          OnRefreshProgressBar(EventArgs.Empty);
         }
       }
       catch (Exception ex)
       {
         throw ex;
-      }
-    }
-    #endregion
-
-    #region Atualizar Base de Colaboradores
-    private void FinalImportV2()
-    {
-      try
-      {
-        ColaboradorV2Retorno viewRetorno;
-        ProgressBarMaximun = ColaboradoresV2.Count;
-        ProgressBarValue = 0;
-        ProgressMessage = "Atualizando colaboradores 2/2...";
-        OnRefreshProgressBar(EventArgs.Empty);
-        foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
-        {
-          FileClass.SaveLog(LogFileName.Replace(".txt", "api.txt"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
-          viewRetorno = personIntegration.PostV2Completo(colaborador);
-          if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
-          {
-            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
-              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
-            hasLogFile = true;
-          }
-          else
-          {
-            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
-              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
-          }
-          //ProgressBarValue++;
-          //OnRefreshProgressBar(EventArgs.Empty);
-        }
-        Status = EnumStatusService.Ok;
-        Message = "Fim de integração!";
-        if (hasLogFile)
-        {
-          Message = "Fim de integração com LOG!";
-          Status = EnumStatusService.Error;
-        }
-      }
-      catch (Exception)
-      {
-        Status = EnumStatusService.CriticalError;
-        throw;
       }
     }
     #endregion

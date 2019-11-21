@@ -22,22 +22,17 @@ namespace IntegrationClient
       try
       {
         Text = "Configuração da Importãção de Colaboradores";
-
         serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-
-        //MessageBox.Show(serviceConfiguration.test1, "RETORNO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //MessageBox.Show(serviceConfiguration.test2, "RETORNO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
         CboDatabaseType.DataSource = Enum.GetValues(typeof(EnumDatabaseType));
         CboProc.DataSource = Enum.GetValues(typeof(EnumIntegrationProcess));
         CboType.DataSource = Enum.GetValues(typeof(EnumIntegrationType));
         CboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
         CboChave.DataSource = Enum.GetValues(typeof(EnumIntegrationKey));
-
         CboProc.SelectedIndex = CboProc.FindStringExact(serviceConfiguration.Param.Process.ToString());
         CboType.SelectedIndex = CboType.FindStringExact(serviceConfiguration.Param.Type.ToString());
         CboMode.SelectedIndex = CboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
         CboChave.SelectedIndex = CboChave.FindStringExact(serviceConfiguration.Param.IntegrationKey.ToString());
+        txtDatCul.Text = string.IsNullOrEmpty(serviceConfiguration.Param.CultureDate) ? "en-US" : serviceConfiguration.Param.CultureDate;
       }
       catch (Exception ex)
       {
@@ -155,99 +150,6 @@ namespace IntegrationClient
       }
     }
 
-    private void BtSave_Click(object sender, EventArgs e)
-    {
-      try
-      {
-        if (CboDatabaseType.SelectedItem.ToString().StartsWith("ODBC"))
-        {
-          if (string.IsNullOrEmpty(txtStr.Text))
-          {
-            txtStr.Focus();
-            throw new Exception("String de conexão ODBC deve ser informada!!");
-          }
-        }
-        else
-        {
-          if (string.IsNullOrEmpty(txtHostName.Text))
-          {
-            txtHostName.Focus();
-            throw new Exception("Informe o nome do servidor!!");
-          }
-          if (string.IsNullOrEmpty(txtUser.Text))
-          {
-            txtUser.Focus();
-            throw new Exception("Informe o usuário de conexão!!");
-          }
-          if (string.IsNullOrEmpty(txtPassword.Text))
-          {
-            txtPassword.Focus();
-            throw new Exception("Informe a senha de conexão!!");
-          }
-          if (string.IsNullOrEmpty(txtDefault.Text) && (EnumDatabaseType)CboDatabaseType.SelectedItem == EnumDatabaseType.SqlServer)
-          {
-            txtDefault.Focus();
-            throw new Exception("Informe o nome do banco de dados padrão!!");
-          }
-          if (string.IsNullOrEmpty(txtSql.Text))
-          {
-            txtSql.Focus();
-            throw new Exception("Informe o comando para retornar a lista de colaboradores!!");
-          }
-        }
-        serviceConfiguration.Param.ConnectionString = CboDatabaseType.SelectedItem.ToString().Equals("ODBC") ? string.Format("{0}|{1}", CboDatabaseType.SelectedItem, txtStr.Text) : string.Format("{0};{1};{2};{3};{4}", CboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text);
-        serviceConfiguration.Param.FilePathLocal = txtFileName.Text;
-        serviceConfiguration.Param.SqlCommand = txtSql.Text;
-        serviceConfiguration.Param.SheetName = string.Empty;
-        serviceConfiguration.Param.Process = (EnumIntegrationProcess)CboProc.SelectedItem;
-        serviceConfiguration.Param.Mode = (EnumIntegrationMode)CboMode.SelectedItem;
-        serviceConfiguration.Param.Type = (EnumIntegrationType)CboType.SelectedItem;
-        serviceConfiguration.Param.IntegrationKey = (EnumIntegrationKey)CboChave.SelectedItem;
-        serviceConfiguration.SetParameter(serviceConfiguration.Param);
-        MessageBox.Show("Parâmetro atualizado!",Text,MessageBoxButtons.OK,MessageBoxIcon.Information);
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(ex.Message,Text,MessageBoxButtons.OK,MessageBoxIcon.Error);
-      }
-    }
-
-    private void BtSaveFile_Click(object sender, EventArgs e)
-    {
-      try
-      {
-        if (string.IsNullOrEmpty(txtFileName.Text))
-        {
-          txtFileName.Focus();
-          throw new Exception("O nome do arquivo deve ser informado.");
-        }
-        if (!File.Exists(txtFileName.Text))
-        {
-          txtFileName.Focus();
-          throw new Exception("O arquivo informado deve existir.");
-        }
-        if ((EnumIntegrationMode)CboMode.SelectedItem == EnumIntegrationMode.FileExcelV1 && string.IsNullOrEmpty(txtSheetName.Text))
-        {
-          txtSheetName.Focus();
-          throw new Exception("Informe o nome da planilha de colaboradores.");
-        }
-        serviceConfiguration.Param.ConnectionString = string.Empty;
-        serviceConfiguration.Param.FilePathLocal = txtFileName.Text;
-        serviceConfiguration.Param.Process = (EnumIntegrationProcess)CboProc.SelectedItem;
-        serviceConfiguration.Param.Mode = (EnumIntegrationMode)CboMode.SelectedItem;
-        serviceConfiguration.Param.Type = (EnumIntegrationType)CboType.SelectedItem;
-        serviceConfiguration.Param.IntegrationKey = (EnumIntegrationKey)CboChave.SelectedItem;
-        serviceConfiguration.Param.SqlCommand = string.Empty;
-        serviceConfiguration.Param.SheetName = txtSheetName.Text;
-        serviceConfiguration.SetParameter(serviceConfiguration.Param);
-        MessageBox.Show("Parâmetro atualizado!",Text, MessageBoxButtons.OK,MessageBoxIcon.Information);
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(ex.Message,Text, MessageBoxButtons.OK,MessageBoxIcon.Error);
-      }
-    }
-
     private void CboDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
     {
       lblHostName.Visible = true;
@@ -307,6 +209,89 @@ namespace IntegrationClient
       }
     }
 
+    private void BtSave_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (CboDatabaseType.SelectedItem.ToString().StartsWith("ODBC"))
+        {
+          if (string.IsNullOrEmpty(txtStr.Text))
+          {
+            txtStr.Focus();
+            throw new Exception("String de conexão ODBC deve ser informada!!");
+          }
+        }
+        else
+        {
+          if (string.IsNullOrEmpty(txtHostName.Text))
+          {
+            txtHostName.Focus();
+            throw new Exception("Informe o nome do servidor!!");
+          }
+          if (string.IsNullOrEmpty(txtUser.Text))
+          {
+            txtUser.Focus();
+            throw new Exception("Informe o usuário de conexão!!");
+          }
+          if (string.IsNullOrEmpty(txtPassword.Text))
+          {
+            txtPassword.Focus();
+            throw new Exception("Informe a senha de conexão!!");
+          }
+          if (string.IsNullOrEmpty(txtDefault.Text) && (EnumDatabaseType)CboDatabaseType.SelectedItem == EnumDatabaseType.SqlServer)
+          {
+            txtDefault.Focus();
+            throw new Exception("Informe o nome do banco de dados padrão!!");
+          }
+          if (string.IsNullOrEmpty(txtSql.Text))
+          {
+            txtSql.Focus();
+            throw new Exception("Informe o comando para retornar a lista de colaboradores!!");
+          }
+        }
+        SetParameters();
+        serviceConfiguration.Param.ConnectionString = CboDatabaseType.SelectedItem.ToString().Equals("ODBC") ? string.Format("{0}|{1}", CboDatabaseType.SelectedItem, txtStr.Text) : string.Format("{0};{1};{2};{3};{4}", CboDatabaseType.SelectedItem, txtHostName.Text, txtUser.Text, txtPassword.Text, txtDefault.Text);
+        serviceConfiguration.Param.SqlCommand = txtSql.Text;
+        serviceConfiguration.SetParameter(serviceConfiguration.Param);
+        MessageBox.Show("Parâmetro atualizado!",Text,MessageBoxButtons.OK,MessageBoxIcon.Information);
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message,Text,MessageBoxButtons.OK,MessageBoxIcon.Error);
+      }
+    }
+
+    private void BtSaveFile_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (string.IsNullOrEmpty(txtFileName.Text))
+        {
+          txtFileName.Focus();
+          throw new Exception("O nome do arquivo deve ser informado.");
+        }
+        if (!File.Exists(txtFileName.Text))
+        {
+          txtFileName.Focus();
+          throw new Exception("O arquivo informado deve existir.");
+        }
+        if ((EnumIntegrationMode)CboMode.SelectedItem == EnumIntegrationMode.FileExcelV1 && string.IsNullOrEmpty(txtSheetName.Text))
+        {
+          txtSheetName.Focus();
+          throw new Exception("Informe o nome da planilha de colaboradores.");
+        }
+        SetParameters();
+        serviceConfiguration.Param.FilePathLocal = txtFileName.Text;
+        serviceConfiguration.Param.SheetName = txtSheetName.Text;
+        serviceConfiguration.SetParameter(serviceConfiguration.Param);
+        MessageBox.Show("Parâmetro atualizado!",Text, MessageBoxButtons.OK,MessageBoxIcon.Information);
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message,Text, MessageBoxButtons.OK,MessageBoxIcon.Error);
+      }
+    }
+
     private void BtSaveApi_Click(object sender, EventArgs e)
     {
       try
@@ -321,14 +306,7 @@ namespace IntegrationClient
           txtIdApi.Focus();
           throw new Exception("Identificação inválida, entre em contato com o suporte e solicite um ID de aplicação correto.");
         }
-        serviceConfiguration.Param.ConnectionString = string.Empty;
-        serviceConfiguration.Param.FilePathLocal = string.Empty;
-        serviceConfiguration.Param.Process = (EnumIntegrationProcess)CboProc.SelectedItem;
-        serviceConfiguration.Param.Mode = (EnumIntegrationMode)CboMode.SelectedItem;
-        serviceConfiguration.Param.Type = (EnumIntegrationType)CboType.SelectedItem;
-        serviceConfiguration.Param.IntegrationKey = (EnumIntegrationKey)CboChave.SelectedItem;
-        serviceConfiguration.Param.SqlCommand = string.Empty;
-        serviceConfiguration.Param.SheetName = string.Empty;
+        SetParameters();
         serviceConfiguration.Param.ApiIdentification = txtIdApi.Text;
         serviceConfiguration.SetParameter(serviceConfiguration.Param);
         MessageBox.Show("Parâmetro atualizado!", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -337,6 +315,24 @@ namespace IntegrationClient
       {
         MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
+    }
+
+    private void SetParameters()
+    {
+      // Banco de Dados
+      serviceConfiguration.Param.ConnectionString = string.Empty;
+      serviceConfiguration.Param.SqlCommand = string.Empty;
+      // File
+      serviceConfiguration.Param.FilePathLocal = string.Empty;
+      serviceConfiguration.Param.SheetName = string.Empty;
+      // API
+      serviceConfiguration.Param.ApiIdentification = string.Empty;
+      // Commun fields
+      serviceConfiguration.Param.Process = (EnumIntegrationProcess)CboProc.SelectedItem;
+      serviceConfiguration.Param.Type = (EnumIntegrationType)CboType.SelectedItem;
+      serviceConfiguration.Param.Mode = (EnumIntegrationMode)CboMode.SelectedItem;
+      serviceConfiguration.Param.IntegrationKey = (EnumIntegrationKey)CboChave.SelectedItem;
+      serviceConfiguration.Param.CultureDate = txtDatCul.Text;
     }
   }
 }

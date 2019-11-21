@@ -295,6 +295,71 @@ namespace IntegrationService.Data
         throw;
       }
     }
+    public ColaboradorImportar(ViewIntegrationMetadados view, EnumLayoutSystemCompleteV1 enumeration)
+    {
+      try
+      {
+        DateTime? dataNascimento = null;
+        DateTime? dataAdmissao = FieldDate(view.DataAdmissao);
+        DateTime? dataDemissao = FieldDate(view.DataDemissao);
+        DateTime? dataUltimaTrocaCargo = FieldDate(view.DataTrocaCargo);
+        DateTime? dataUltimoReajuste = FieldDate(view.DataUltimoReajuste);
+        Empresa = FormatedFieldKey(view.Empresa);
+        NomeEmpresa = FormatedField(view.NomeEmpresa);
+        Estabelecimento = FormatedFieldKey(view.Estabelecimento);
+        NomeEstabelecimento = FormatedField(view.NomeEstabelecimento);
+        Documento = view.Cpf.Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11, '0');
+        Matricula = view.Matricula.ToString();
+        Nome = FormatedField(view.Nome);
+        Email = FormatedFieldKey(view.Email);
+        if (string.IsNullOrEmpty(Email))
+        {
+          Email = Documento;
+        }
+        if (Email.Contains("@unimed-ners.net"))
+        {
+          Email = Documento;
+        }
+        Celular = null;
+        Telefone = null;
+        DataNascimento = dataNascimento;
+        Sexo = view.Sexo.Trim();
+        DataAdmissao = dataAdmissao;
+        Situacao = view.Situacao.Trim();
+        DataRetornoFerias = null;
+        MotivoAfastamento = null;
+        DataDemissao = dataDemissao;
+        Cargo = FormatedFieldKey(view.Cargo.ToString());
+        NomeCargo = FormatedField(view.NomeCargo);
+        DataUltimaTrocaCargo = dataUltimaTrocaCargo;
+        GrauInstrucao = FormatedFieldKey(view.GrauInstrucao.ToString());
+        NomeGrauInstrucao = FormatedField(view.NomeGrauInstrucao);
+        SalarioNominal = view.SalarioNominal;
+        DataUltimoReajuste = dataUltimoReajuste;
+        //EmpresaGestor = FormatedFieldKey(view.cdn_empresa_chefe);
+        //NomeEmpresaGestor = FormatedField(view.nom_empresa_chefe);
+        //EstabelecimentoGestor = FormatedFieldKey(view.cdn_estab_chefe);
+        //NomeEstabelecimentoGestor = FormatedField(view.nom_estab_chefe);
+        //DocumentoGestor = view.cdn_cpf_chefe.Trim().ToLower().Replace(".", string.Empty).Replace("-", string.Empty);
+        //if (!string.IsNullOrEmpty(DocumentoGestor))
+        //  DocumentoGestor = DocumentoGestor.PadLeft(11, '0');
+        //MatriculaGestor = string.Empty;
+        //if (view.cdn_matricula_chefe != 0)
+        //  MatriculaGestor = view.cdn_matricula_chefe.ToString();
+        EmpresaGestor = string.Empty;
+        NomeEmpresaGestor = string.Empty;
+        EstabelecimentoGestor = string.Empty;
+        NomeEstabelecimentoGestor = string.Empty;
+        DocumentoGestor = string.Empty;
+        MatriculaGestor = string.Empty;
+        Apelido = view.UsuarioAD;
+        ValidDataColaborator();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     #endregion
 
     #region Formatação de String

@@ -41,6 +41,7 @@ namespace Manager.Core.Business.Integration
     // Identificação da chave de colaborador (documento+empresa+estabelecimento+matricula)
     // ou (documento+empresa+matricula)
     public EnumIntegrationKey IntegrationKey { get; set; }
+    public string CultureDate { get; set; }
 
   }
 }

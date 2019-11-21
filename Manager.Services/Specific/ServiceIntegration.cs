@@ -986,6 +986,7 @@ namespace Manager.Services.Specific
           VersionPackProgram = param.VersionPackProgram,
           ApiIdentification = param.ApiIdentification,
           IntegrationKey = param.IntegrationKey,
+          CultureDate = param.CultureDate,
           _id = param._id
         };
       }
@@ -1027,6 +1028,7 @@ namespace Manager.Services.Specific
         param.LinkLogExecution = view.LinkLogExecution;
         param.ApiIdentification = view.ApiIdentification;
         param.IntegrationKey = view.IntegrationKey;
+        param.CultureDate = view.CultureDate;
         parameterService.Update(param, null).Wait();
         return new ViewCrudIntegrationParameter()
         {

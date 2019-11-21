@@ -41,7 +41,7 @@ namespace Manager.Views.Integration.V2
     {
 
     }
-    public ColaboradorV2Completo(List<string> list, List<string> title)
+    public ColaboradorV2Completo(List<string> list, List<string> title, string cultureDate)
     {
       try
       {
@@ -58,23 +58,23 @@ namespace Manager.Views.Integration.V2
         Nome = FieldString(list, title, "nome", null);
         Email = FieldString(list, title, "email", null);
         Sexo = FieldString(list, title, "sexo", null);
-        DataNascimento = FieldDate(list, title, "data_nascimento", null);
+        DataNascimento = FieldDate(list, title, "data_nascimento", null, cultureDate);
         Celular = FieldString(list, title, "celular", null);
         GrauInstrucao = FieldString(list, title, "grau_instrucao", null);
         NomeGrauInstrucao = FieldString(list, title, "nome_grau_instrucao", null);
         Apelido = FieldString(list, title, "apelido", null);
         Situacao = FieldString(list, title, "situacao", null);
-        DataAdmissao = (DateTime)FieldDate(list, title, "data_admissao", DateTime.MinValue);
-        DataDemissao = FieldDate(list, title, "data_demissao", null);
+        DataAdmissao = (DateTime)FieldDate(list, title, "data_admissao", DateTime.MinValue, cultureDate);
+        DataDemissao = FieldDate(list, title, "data_demissao", null, cultureDate);
         Cargo = FieldString(list, title, "cargo", null);
         NomeCargo = FieldString(list, title, "nome_cargo", null);
-        DataTrocaCargo = FieldDate(list, title, "data_ultima_troca_cargo", null);
+        DataTrocaCargo = FieldDate(list, title, "data_ultima_troca_cargo", null, cultureDate);
         CentroCusto = FieldString(list, title, "centro_custo", null);
         NomeCentroCusto = FieldString(list, title, "nome_centro_custo", null);
-        DataTrocaCentroCusto = FieldDate(list, title, "data_troca_centro_custo", null);
+        DataTrocaCentroCusto = FieldDate(list, title, "data_troca_centro_custo", null, cultureDate);
         SalarioNominal = FieldDecimal(list, title, "salario_nominal", 0);
         CargaHoraria = FieldDecimal(list, title, "carga_horaria", 0);
-        DataUltimoReajuste = FieldDate(list, title, "data_ultimo_reajuste", null);
+        DataUltimoReajuste = FieldDate(list, title, "data_ultimo_reajuste", null, cultureDate);
         MotivoUltimoReajuste = FieldString(list, title, "motivo_ultimo_reajuste", null);
         Gestor = new ColaboradorV2Base
         {
@@ -110,14 +110,14 @@ namespace Manager.Views.Integration.V2
         throw ex;
       }
     }
-    private DateTime? FieldDate(List<string> list, List<string> title, string field, DateTime? defaultValue)
+    private DateTime? FieldDate(List<string> list, List<string> title, string field, DateTime? defaultValue, string culture)
     {
       try
       {
         int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
         if (index == -1)
           return null;
-        DateTime.TryParse(list[index].Substring(0, 10), CultureInfo.CreateSpecificCulture("pt-BR"), DateTimeStyles.AdjustToUniversal, out DateTime resultParse);
+        DateTime.TryParse(list[index].Substring(0, 10), CultureInfo.CreateSpecificCulture(culture), DateTimeStyles.AdjustToUniversal, out DateTime resultParse);
         DateTime? result = defaultValue;
         if (!string.IsNullOrEmpty(list[index]))
           result = resultParse.ToUniversalTime();

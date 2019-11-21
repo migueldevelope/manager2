@@ -39,6 +39,7 @@
       this.btnDemV2 = new System.Windows.Forms.Button();
       this.prb = new System.Windows.Forms.ProgressBar();
       this.lblPrb = new System.Windows.Forms.Label();
+      this.chkLjo = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // btImp
@@ -144,11 +145,22 @@
       this.lblPrb.TabIndex = 10;
       this.lblPrb.Text = "Data Inicial";
       // 
+      // chkLjo
+      // 
+      this.chkLjo.AutoSize = true;
+      this.chkLjo.Location = new System.Drawing.Point(326, 43);
+      this.chkLjo.Name = "chkLjo";
+      this.chkLjo.Size = new System.Drawing.Size(88, 21);
+      this.chkLjo.TabIndex = 11;
+      this.chkLjo.Text = "Log Json";
+      this.chkLjo.UseVisualStyleBackColor = true;
+      // 
       // ImportacaoImportar
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(591, 335);
+      this.Controls.Add(this.chkLjo);
       this.Controls.Add(this.lblPrb);
       this.Controls.Add(this.prb);
       this.Controls.Add(this.btnDemV2);
@@ -185,5 +197,6 @@
     private System.Windows.Forms.Button btnDemV2;
     private System.Windows.Forms.ProgressBar prb;
     private System.Windows.Forms.Label lblPrb;
+    private System.Windows.Forms.CheckBox chkLjo;
   }
 }

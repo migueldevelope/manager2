@@ -63,6 +63,8 @@
       this.label4 = new System.Windows.Forms.Label();
       this.CboChave = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
+      this.lblDatCul = new System.Windows.Forms.Label();
+      this.txtDatCul = new System.Windows.Forms.TextBox();
       this.grpBD.SuspendLayout();
       this.grpArq.SuspendLayout();
       this.grpApi.SuspendLayout();
@@ -141,7 +143,7 @@
       this.grpBD.Controls.Add(this.lblHostName);
       this.grpBD.Controls.Add(this.lblUser);
       this.grpBD.Controls.Add(this.txtUser);
-      this.grpBD.Location = new System.Drawing.Point(11, 71);
+      this.grpBD.Location = new System.Drawing.Point(9, 106);
       this.grpBD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.grpBD.Name = "grpBD";
       this.grpBD.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -297,7 +299,7 @@
       this.grpArq.Controls.Add(this.btSearchFile);
       this.grpArq.Controls.Add(this.txtFileName);
       this.grpArq.Controls.Add(this.label10);
-      this.grpArq.Location = new System.Drawing.Point(11, 71);
+      this.grpArq.Location = new System.Drawing.Point(9, 106);
       this.grpArq.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.grpArq.Name = "grpArq";
       this.grpArq.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -367,7 +369,7 @@
       this.grpApi.Controls.Add(this.btSaveApi);
       this.grpApi.Controls.Add(this.txtIdApi);
       this.grpApi.Controls.Add(this.label4);
-      this.grpApi.Location = new System.Drawing.Point(11, 71);
+      this.grpApi.Location = new System.Drawing.Point(9, 106);
       this.grpApi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.grpApi.Name = "grpApi";
       this.grpApi.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -417,17 +419,36 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(429, 46);
+      this.label1.Location = new System.Drawing.Point(456, 47);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(100, 17);
       this.label1.TabIndex = 45;
       this.label1.Text = "Tipo de Chave";
       // 
+      // lblDatCul
+      // 
+      this.lblDatCul.AutoSize = true;
+      this.lblDatCul.Location = new System.Drawing.Point(372, 78);
+      this.lblDatCul.Name = "lblDatCul";
+      this.lblDatCul.Size = new System.Drawing.Size(184, 17);
+      this.lblDatCul.TabIndex = 46;
+      this.lblDatCul.Text = "Cultura da Origem de Datas";
+      // 
+      // txtDatCul
+      // 
+      this.txtDatCul.Location = new System.Drawing.Point(562, 75);
+      this.txtDatCul.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.txtDatCul.Name = "txtDatCul";
+      this.txtDatCul.Size = new System.Drawing.Size(250, 22);
+      this.txtDatCul.TabIndex = 6;
+      // 
       // ImportacaoConfigurar
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(819, 481);
+      this.ClientSize = new System.Drawing.Size(819, 517);
+      this.Controls.Add(this.txtDatCul);
+      this.Controls.Add(this.lblDatCul);
       this.Controls.Add(this.CboChave);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.CboProc);
@@ -436,8 +457,8 @@
       this.Controls.Add(this.label3);
       this.Controls.Add(this.CboMode);
       this.Controls.Add(this.label2);
-      this.Controls.Add(this.grpArq);
       this.Controls.Add(this.grpBD);
+      this.Controls.Add(this.grpArq);
       this.Controls.Add(this.grpApi);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -493,5 +514,7 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.ComboBox CboChave;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label lblDatCul;
+    private System.Windows.Forms.TextBox txtDatCul;
   }
 }

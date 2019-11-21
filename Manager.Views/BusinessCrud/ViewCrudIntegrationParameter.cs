@@ -38,5 +38,6 @@ namespace Manager.Views.BusinessCrud
     // Identificação da API personalizada
     public string ApiIdentification { get; set; }
     public EnumIntegrationKey IntegrationKey { get; set; }
+    public string CultureDate { get; set; }
   }
 }
