@@ -709,8 +709,8 @@ namespace Manager.Services.Auth
       {
         var exists = serviceUser.CountFreeNewVersion(p => p.Mail == view.User.Mail).Result;
 
-        if ((exists > 0) && (view.User._id == null))
-          throw new Exception("existsmailornickname");
+        //if ((exists > 0) && (view.User._id == null))
+        //  throw new Exception("existsmailornickname");
 
         User user = new User()
         {
