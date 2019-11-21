@@ -958,9 +958,11 @@ namespace Manager.Services.Specific
         {
           param = parameterService.InsertNewVersion(new IntegrationParameter()
           {
-            Mode = EnumIntegrationMode.DataBaseV1,
+            Process = EnumIntegrationProcess.System,
             Type = EnumIntegrationType.Complete,
-            Status = EnumStatus.Enabled
+            Mode = EnumIntegrationMode.DataBaseV1,
+            Status = EnumStatus.Enabled,
+            CultureDate = "pt-BR"
           }).Result;
         }
         return new ViewCrudIntegrationParameter()
