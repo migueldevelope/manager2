@@ -152,7 +152,7 @@ namespace Manager.Services.Specific
             };
             serviceLog.NewLogService(log);
             SendMessageSuccessFactory(sendTest);
-            if (parameter != null) 
+            if (parameter != null)
             {
               SendMessageAccount(sendTest);
             }
@@ -1406,8 +1406,12 @@ namespace Manager.Services.Specific
 
         foreach (Person person in persons)
         {
-          if(person.User?.DateAdm?.Day == date.Day && person.User?.DateAdm?.Month == date.Month)
-            BirthCompany(person, sendTest);
+          if (person.User != null)
+            if (person.User.DateAdm != null)
+              if (person.User?.DateAdm?.Day == date.Day && person.User?.DateAdm?.Month == date.Month)
+                BirthCompany(person, sendTest);
+
+
         }
       }
       catch (Exception e)
