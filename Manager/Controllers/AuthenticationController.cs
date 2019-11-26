@@ -49,6 +49,30 @@ namespace Manager.Controllers
         return await Task.Run(() =>BadRequest(e.Message));
       }
     }
+
+    /// <summary>
+    /// Authentication version 2
+    /// </summary>
+    /// <param name="userLogin"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
+    [HttpPost]
+    [Route("v2")]
+    [ProducesResponseType(typeof(ViewPerson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    public async Task<ObjectResult> PostV2([FromBody]ViewAuthentication userLogin)
+    {
+      try
+      {
+        return await Task.Run(() => Ok(service.AuthenticationV2(userLogin, true)));
+      }
+      catch (Exception e)
+      {
+        return await Task.Run(() => BadRequest(e.Message));
+      }
+    }
+
+
     /// <summary>
     /// 
     /// </summary>

@@ -154,6 +154,65 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+
+
+    public ViewPerson AuthenticationV2(ViewAuthentication userLogin, bool manager)
+    {
+      try
+      {
+        if (string.IsNullOrEmpty(userLogin.Mail))
+        {
+          throw new Exception("mail_empty");
+        }
+        if (string.IsNullOrEmpty(userLogin.Password))
+        {
+          throw new Exception("password_empty");
+        }
+        User user = null;
+        var list = serviceUser.GetAllFreeNewVersion(p => p.Mail == userLogin.Mail).Result;
+        if (list.Count > 1)
+          throw new Exception("mailmany");
+        else if (list.Count == 1)
+          user = list.FirstOrDefault();
+        else
+        {
+          user = serviceUser.GetAllFreeNewVersion(p => p.Document == userLogin.Mail).Result.FirstOrDefault();
+          if (user == null)
+          {
+            user = serviceUser.GetAllFreeNewVersion(p => p.Nickname == userLogin.Mail).Result.FirstOrDefault();
+            if (user == null)
+              throw new Exception("user_notfound");
+          }
+        }
+
+        if (user.Status == EnumStatus.Disabled)
+          throw new Exception("user_disabled");
+
+        if (user.Nickname != null && (user._idAccount == "5b7c752468e3f81bb876dcdb") || (user._idAccount == "5be5db1f14dc3fb08f5e5ccf"))
+          GetMaristasAsync(user.Nickname, userLogin.Password);
+        else if (user.Nickname != null && user._idAccount == "5b91299a17858f95ffdb79f6")
+          GetUnimedAsync(user.Nickname, userLogin.Password);
+        else
+        {
+          if (user.Password != EncryptServices.GetMD5Hash(userLogin.Password))
+            throw new Exception("password_invalid");
+        }
+        
+        if (manager)
+        {
+          return Authentication(user, true);
+        }
+        else
+        {
+          return Authentication(user);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region Authentication Internal
@@ -393,7 +452,7 @@ namespace Manager.Services.Auth
           HttpResponseMessage result = client.PostAsync("wspucsede/WService.asmx/ValidateUser", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
           {
-            throw new Exception("User/Password invalid!");
+            throw new Exception("api_invalid");
           }
         }
       }
@@ -440,7 +499,7 @@ namespace Manager.Services.Auth
           ViewUnimedStatusAuthentication status = JsonConvert.DeserializeObject<ViewUnimedStatusAuthentication>(result.Content.ReadAsStringAsync().Result);
           if (status.Status == false)
           {
-            throw new Exception("User/Password invalid!");
+            throw new Exception("api_invalid");
           }
         }
       }

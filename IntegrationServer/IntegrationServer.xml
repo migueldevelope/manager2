@@ -34,6 +34,24 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:IntegrationServer.Controllers.AuthenticationController">
+            <summary>
+            Controle de Autenticação
+            </summary>
+        </member>
+        <member name="M:IntegrationServer.Controllers.AuthenticationController.#ctor(Manager.Core.Interfaces.IServiceAuthentication)">
+            <summary>
+            Contrutor do controle
+            </summary>
+            <param name="_service">Serviço de autenticação</param>
+        </member>
+        <member name="M:IntegrationServer.Controllers.AuthenticationController.Post(Manager.Core.Views.ViewAuthentication)">
+            <summary>
+            Autenticação de usuário
+            </summary>
+            <param name="userLogin">Objeto de autenticação de usuário</param>
+            <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
+        </member>
         <member name="T:IntegrationServer.Controllers.ConfigurationController">
             <summary>
             Controlador de Configuração da Integração
@@ -160,7 +178,7 @@
             <param name="all">Opcional: trazer todos os registros ou só registros com problema</param>
             <returns>Lista de cargos na integração</returns>
         </member>
-        <member name="M:IntegrationServer.InfraController.IntegrationController.PostOccupation(System.String,System.String)">
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostOccupationUpdate(System.String,System.String)">
             <summary>
             Atualizar o registro de integração do cargo do ANALISA para com o da FOLHA
             </summary>
@@ -168,7 +186,21 @@
             <param name="idoccupation">Identificador do cargo no ANALISA</param>
             <returns>Objeto atualizado</returns>
         </member>
-        <member name="M:IntegrationServer.InfraController.IntegrationController.OccupationCompany(System.String)">
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostOccupationSplit(System.String)">
+            <summary>
+            Dividir o cargo da folha por centro de custo
+            </summary>
+            <param name="idintegration">Identificador do registro de integração do cargo da folha de pagamento</param>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.PostOccupationJoin(System.String)">
+            <summary>
+            Juntar o cargo da folha que estava separado
+            </summary>
+            <param name="idintegration">Identificador do registro de integração do cargo da folha de pagamento</param>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.DeleteOccupation(System.String)">
             <summary>
             Excluir um cargo da integração de funcionários
             </summary>

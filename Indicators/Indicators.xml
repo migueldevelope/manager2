@@ -49,7 +49,7 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloud(System.String)">
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloud(System.String,System.String)">
             <summary>
             
             </summary>
@@ -160,7 +160,7 @@
             <param name="persons"></param>
             <returns></returns>
         </member>
-        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompany(System.String)">
+        <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompany(System.String,System.String)">
             <summary>
             
             </summary>
