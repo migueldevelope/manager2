@@ -188,7 +188,7 @@ namespace Manager.Services.Auth
         if (user.Status == EnumStatus.Disabled)
           throw new Exception("user_disabled");
 
-        if (user.Nickname != null && (user._idAccount == "5b7c752468e3f81bb876dcdb") || (user._idAccount == "5be5db1f14dc3fb08f5e5ccf"))
+        if (user.Mail != null && (user._idAccount == "5b7c752468e3f81bb876dcdb") || (user._idAccount == "5be5db1f14dc3fb08f5e5ccf"))
           GetMaristasAsync(user.Nickname, userLogin.Password);
         else if (user.Nickname != null && user._idAccount == "5b91299a17858f95ffdb79f6")
           GetUnimedAsync(user.Nickname, userLogin.Password);
