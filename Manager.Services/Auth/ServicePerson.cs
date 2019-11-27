@@ -379,6 +379,10 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var exists = serviceUser.CountFreeNewVersion(p => p._id != view.User._id && (p.Document == view.User.Document)).Result;
+        if (exists > 0)
+          throw new Exception("existsdocument");
+
         Person person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
         User user = serviceUser.GetNewVersion(p => p._id == view.User._id).Result;
 
@@ -819,6 +823,10 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var exists = serviceUser.CountFreeNewVersion(p => p._id != view._id && (p.Document == view.User.Document)).Result;
+        if (exists > 0)
+          throw new Exception("existsdocument");
+
         Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
         User user = null;
         if (view.User != null)
