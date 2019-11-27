@@ -823,7 +823,7 @@ namespace Manager.Services.Auth
     {
       try
       {
-        var exists = serviceUser.CountFreeNewVersion(p => p._id != view._id && (p.Document == view.User.Document)).Result;
+        var exists = serviceUser.CountFreeNewVersion(p => p._id != view.User._id && (p.Document == view.User.Document)).Result;
         if (exists > 0)
           throw new Exception("existsdocument");
 
