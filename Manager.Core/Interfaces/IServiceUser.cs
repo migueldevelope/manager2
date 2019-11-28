@@ -25,5 +25,6 @@ namespace Manager.Core.Interfaces
     string AlterPasswordForgot(ViewAlterPass resetPass, string foreign);
     string ForgotPassword(string mail, ViewForgotPassword forgotPassword, string pathSendGrid);
     List<ViewListPersonInfo> ListPerson(string iduser, ref long total, string filter, int count, int page);
+    string Delete(string iduser);
   }
 }

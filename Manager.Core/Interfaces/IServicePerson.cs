@@ -41,5 +41,6 @@ namespace Manager.Core.Interfaces
     List<_ViewListBase> ListOccupationManager(string idmanager, ref long total, string filter, int count, int page);
     List<ViewListOccupationProcess> ListOccupationProcess(ref long total, string filter, int count, int page);
     List<_ViewListBase> GetPersons();
+    string Delete(string idperson);
   }
 }

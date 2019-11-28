@@ -662,6 +662,22 @@ namespace Manager.Services.Auth
       }
     }
 
+
+    public string Delete(string idperson)
+    {
+      try
+      {
+        var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+        person.Status = EnumStatus.Disabled;
+        var i = servicePerson.Update(person, null);
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewCrudPerson Get(string id)
     {
       try
@@ -848,7 +864,7 @@ namespace Manager.Services.Auth
           serviceUser.Update(user, null).Wait();
 
         }
-          
+
 
         BaseFields manager = null;
         if (view.Manager != null)

@@ -68,6 +68,20 @@ namespace Manager.Controllers
       return await Task.Run(() => result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("delete/{id}")]
+    public async Task<string> Delete(string id)
+    {
+      var result = service.Delete(id);
+      return await Task.Run(() => result);
+    }
+
 
     /// <summary>
     /// 

@@ -91,6 +91,27 @@ namespace Manager.Services.Auth
     #region User
 
 
+    public string Delete(string iduser)
+    {
+      try
+      {
+        var user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
+        user.Status = EnumStatus.Disabled;
+        var i = serviceUser.Update(user, null);
+
+        foreach (var person in servicePerson.GetAllNewVersion(p => p.User._id == iduser).Result)
+        {
+          person.Status = EnumStatus.Disabled;
+          var x = servicePerson.Update(person, null);
+        }
+
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public void CheckTermOfService(string iduser)
     {
       try
