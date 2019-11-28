@@ -176,6 +176,9 @@ namespace Manager.Services.Auth
           user = list.FirstOrDefault();
         else
         {
+          if (userLogin.Mail != null)
+            userLogin.Mail = userLogin.Mail.Replace(".", "").Replace("-", "").Trim();
+          
           user = serviceUser.GetAllFreeNewVersion(p => p.Document == userLogin.Mail).Result.FirstOrDefault();
           if (user == null)
           {
@@ -197,7 +200,7 @@ namespace Manager.Services.Auth
           if (user.Password != EncryptServices.GetMD5Hash(userLogin.Password))
             throw new Exception("password_invalid");
         }
-        
+
         if (manager)
         {
           return Authentication(user, true);
