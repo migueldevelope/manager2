@@ -360,7 +360,7 @@ namespace Manager.Services.Specific
         var occupation = new List<ViewListOccupationSalaryScale>();
         foreach (var occ in occupations)
         {
-          
+
           if (occ.SalaryScales != null)
           {
             var occOri = serviceOccupation.GetNewVersion(p => p._id == occ._id).Result.SalaryScales?.Select(p => p._idGrade).ToList();
@@ -391,7 +391,7 @@ namespace Manager.Services.Specific
 
               foreach (var grade in item.Grades)
               {
-                if(occOri.Contains(grade._id) == true)
+                if (occOri.Contains(grade._id) == true)
                 {
                   if (occupationStep.Steps.Count == 0)
                   {
@@ -433,7 +433,7 @@ namespace Manager.Services.Specific
 
                   detail.Add(view);
                 }
-                
+
 
               }
 
@@ -717,7 +717,10 @@ namespace Manager.Services.Specific
         if (salaryScale.Grades.Count > 0)
         {
           long count = salaryScale.Grades.Count;
+          string[] occupationsname = new string[count];
           string[] grades = new string[count];
+          string[] groups = new string[count];
+          string[] spheres = new string[count];
           int[] workloads = new int[count];
           double[][] matriz = new double[count][];
           for (int i = 0; i < count; i++)
@@ -733,8 +736,12 @@ namespace Manager.Services.Specific
               {
                 if (occ.SalaryScales.Where(p => p._idGrade == item._id).Count() > 0)
                 {
-                  grades[row] = occ.Name;
+                  occupationsname[row] = occ.Name;
+                  grades[row] = item.Name;
+                  groups[row] = occ.Group?.Name;
+                  spheres[row] = occ.Group.Sphere.Name;
                   workloads[row] = occ.SalaryScales.FirstOrDefault().Workload;
+
                   foreach (var step in item.ListSteps)
                   {
 
@@ -751,7 +758,7 @@ namespace Manager.Services.Specific
 
           }
 
-          var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], int[], long>(matriz, grades, workloads, row + 1));
+          var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1));
           return export;
         }
 

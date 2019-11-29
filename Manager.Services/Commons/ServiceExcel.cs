@@ -81,7 +81,7 @@ namespace Manager.Services.Commons
 
 
     }
-    public string ExportSalaryScale(Tuple<double[][], string[], int[], long> tuple)
+    public string ExportSalaryScale(Tuple<double[][], string[], string[], string[], string[], int[], long> tuple)
     {
       try
       {
@@ -93,25 +93,31 @@ namespace Manager.Services.Commons
 
         sheet = hssfwb.CreateSheet("salaryscale"); //get first sheet from workbook   
 
-        long count = tuple.Item4;
-        string[] grades = tuple.Item2;
-        int[] workloads = tuple.Item3;
+        long count = tuple.Item7;
+        string[] occupations = tuple.Item2;
+        string[] grades = tuple.Item3;
+        string[] groups = tuple.Item4;
+        string[] spheres = tuple.Item5;
+        int[] workloads = tuple.Item6;
 
         // col i = 9 lin = 50
         double[][] matriz = tuple.Item1;
 
         IRow headerRow = sheet.CreateRow(0); //Get Header Row
         headerRow.CreateCell(0).SetCellValue("CARGOS");
-        headerRow.CreateCell(1).SetCellValue("CARGA HORÁRIA");
-        headerRow.CreateCell(2).SetCellValue("A");
-        headerRow.CreateCell(3).SetCellValue("B");
-        headerRow.CreateCell(4).SetCellValue("C");
-        headerRow.CreateCell(5).SetCellValue("D");
-        headerRow.CreateCell(6).SetCellValue("E");
-        headerRow.CreateCell(7).SetCellValue("F");
-        headerRow.CreateCell(8).SetCellValue("G");
-        headerRow.CreateCell(9).SetCellValue("H");
-        headerRow.CreateCell(10).SetCellValue("I");
+        headerRow.CreateCell(1).SetCellValue("GRADES");
+        headerRow.CreateCell(2).SetCellValue("GRUPOS");
+        headerRow.CreateCell(3).SetCellValue("ESFERAS");
+        headerRow.CreateCell(4).SetCellValue("CARGA HORÁRIA");
+        headerRow.CreateCell(5).SetCellValue("A");
+        headerRow.CreateCell(6).SetCellValue("B");
+        headerRow.CreateCell(7).SetCellValue("C");
+        headerRow.CreateCell(8).SetCellValue("D");
+        headerRow.CreateCell(9).SetCellValue("E");
+        headerRow.CreateCell(10).SetCellValue("F");
+        headerRow.CreateCell(11).SetCellValue("G");
+        headerRow.CreateCell(12).SetCellValue("H");
+        headerRow.CreateCell(13).SetCellValue("I");
 
         var font = hssfwb.CreateFont();
         font.Boldweight = (short)FontBoldWeight.Bold;
@@ -129,12 +135,15 @@ namespace Manager.Services.Commons
         {
           IRow row = sheet.CreateRow(i);
 
-          row.CreateCell(0).SetCellValue(grades[i - 1]);
-          row.CreateCell(1).SetCellValue(workloads[i - 1]);
+          row.CreateCell(0).SetCellValue(occupations[i - 1]);
+          row.CreateCell(1).SetCellValue(grades[i - 1]);
+          row.CreateCell(2).SetCellValue(groups[i - 1]);
+          row.CreateCell(3).SetCellValue(spheres[i - 1]);
+          row.CreateCell(4).SetCellValue(workloads[i - 1]);
 
-          for (int j = 2; j < 10; j++)
+          for (int j = 5; j < 13; j++)
           {
-            row.CreateCell(j).SetCellValue(matriz[i - 1][j - 2]);
+            row.CreateCell(j).SetCellValue(matriz[i - 1][j - 5]);
           }
         }
         //FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");
