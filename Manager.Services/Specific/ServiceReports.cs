@@ -161,18 +161,17 @@ namespace Manager.Services.Specific
 
         foreach (var item in occupations)
         {
-          var view = new ViewListOpportunityLine();
           var group = serviceGroup.GetNewVersion(p => p._id == item.Group._id).Result;
-
-          view.Occupation = item.Name;
-          view.Group = item.Group.Name;
-          view.LineGroup = item.Group.Line;
-          view.Shepre = group.Sphere.Name;
-          view.TypeShepre = group.Sphere.TypeSphere;
-          view.Axis = group.Axis.Name;
-          view.TypeAxis = group.Axis.TypeAxis;
           foreach (var proc in item.Process)
           {
+            var view = new ViewListOpportunityLine();
+            view.Occupation = item.Name;
+            view.Group = item.Group.Name;
+            view.LineGroup = item.Group.Line;
+            view.Shepre = group.Sphere.Name;
+            view.TypeShepre = group.Sphere.TypeSphere;
+            view.Axis = group.Axis.Name;
+            view.TypeAxis = group.Axis.TypeAxis;
             int countarea = 1;
             if (idarea != "")
               if (idarea != proc.ProcessLevelOne?.Area?._id)
