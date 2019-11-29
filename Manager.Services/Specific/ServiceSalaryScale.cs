@@ -716,7 +716,8 @@ namespace Manager.Services.Specific
         var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
         if (salaryScale.Grades.Count > 0)
         {
-          long count = salaryScale.Grades.Count;
+          //long count = salaryScale.Grades.Count;
+          long count = occupations.Count;
           string[] occupationsname = new string[count];
           string[] grades = new string[count];
           string[] groups = new string[count];
@@ -740,7 +741,9 @@ namespace Manager.Services.Specific
                   grades[row] = item.Name;
                   groups[row] = occ.Group?.Name;
                   spheres[row] = occ.Group.Sphere.Name;
-                  workloads[row] = occ.SalaryScales.FirstOrDefault().Workload;
+                  var salaryscale = occ.SalaryScales.FirstOrDefault();
+                  if (salaryscale != null)
+                    workloads[row] = salaryscale.Workload;
 
                   foreach (var step in item.ListSteps)
                   {
