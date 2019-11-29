@@ -3802,8 +3802,11 @@ namespace Manager.Services.Specific
             var view = new ViewListOpportunityLine();
             view.Occupation = item.Name;
             view.Group = item.Group.Name;
+            view.LineGroup = item.Group.Line;
             view.Shepre = group.Sphere.Name;
+            view.TypeShepre = group.Sphere.TypeSphere;
             view.Axis = group.Axis.Name;
+            view.TypeAxis = group.Axis.TypeAxis;
             view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
             view.Area = proc.ProcessLevelOne?.Area?.Name;
             view.ProcessLevelTwo = proc.Name;
@@ -3813,8 +3816,8 @@ namespace Manager.Services.Specific
 
         }
 
-        return list.OrderBy(p => p.Area).ThenBy(p => p.Shepre).ThenBy(p => p.Axis)
-          .ThenBy(p => p.Group).ThenBy(p => p.ProcessLevelOne)
+        return list.OrderBy(p => p.Area).ThenBy(p => p.TypeShepre).ThenBy(p => p.TypeAxis)
+          .ThenBy(p => p.LineGroup).ThenBy(p => p.ProcessLevelOne)
           .ThenBy(p => p.ProcessLevelTwo).ThenBy(p => p.Occupation).ToList();
       }
       catch (Exception e)

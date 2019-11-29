@@ -166,8 +166,11 @@ namespace Manager.Services.Specific
 
           view.Occupation = item.Name;
           view.Group = item.Group.Name;
+          view.LineGroup = item.Group.Line;
           view.Shepre = group.Sphere.Name;
+          view.TypeShepre = group.Sphere.TypeSphere;
           view.Axis = group.Axis.Name;
+          view.TypeAxis = group.Axis.TypeAxis;
           foreach (var proc in item.Process)
           {
             int countarea = 1;
@@ -186,8 +189,8 @@ namespace Manager.Services.Specific
           }
         }
 
-        var data = list.OrderBy(p => p.Area).ThenBy(p => p.Shepre).ThenBy(p => p.Axis)
-          .ThenBy(p => p.Group).ThenBy(p => p.ProcessLevelOne)
+        var data = list.OrderBy(p => p.Area).ThenBy(p => p.TypeShepre).ThenBy(p => p.TypeAxis)
+          .ThenBy(p => p.LineGroup).ThenBy(p => p.ProcessLevelOne)
           .ThenBy(p => p.ProcessLevelTwo).ThenBy(p => p.Occupation).ToList();
 
         var viewReport = new ViewReport()
