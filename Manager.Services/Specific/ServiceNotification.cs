@@ -855,7 +855,7 @@ namespace Manager.Services.Specific
       catch (Exception)
       {
 
-      }
+      } 
     }
     private void MailOnboardingManagerDeadline(List<ManagerNotification> listManager, bool sendTest)
     {
