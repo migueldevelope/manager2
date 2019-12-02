@@ -14,5 +14,7 @@ namespace Manager.Views.Integration
     public List<string> Schooling { get; set; }
     public List<string> SchoolingComplement { get; set; }
     public string SpecificRequirements { get; set; }
+    public List<string> Messages { get; set; }
+    public bool Update { get; set; }
   }
 }

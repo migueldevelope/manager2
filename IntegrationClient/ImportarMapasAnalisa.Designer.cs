@@ -143,6 +143,7 @@
       this.Controls.Add(this.btImp);
       this.Controls.Add(this.txtCmd);
       this.Controls.Add(this.lblCmd);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.Name = "ImportarMapasAnalisa";
       this.Text = "ImportarCargoAnalisa";
       this.Load += new System.EventHandler(this.ImportarCargoAnalisa_Load);

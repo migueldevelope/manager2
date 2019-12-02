@@ -30,10 +30,11 @@
     {
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.impCol = new System.Windows.Forms.ToolStripMenuItem();
-      this.impColConfig = new System.Windows.Forms.ToolStripMenuItem();
-      this.impColImport = new System.Windows.Forms.ToolStripMenuItem();
-      this.impAna = new System.Windows.Forms.ToolStripMenuItem();
-      this.impAnaCar = new System.Windows.Forms.ToolStripMenuItem();
+      this.impColCfg = new System.Windows.Forms.ToolStripMenuItem();
+      this.impColPrc = new System.Windows.Forms.ToolStripMenuItem();
+      this.impCar = new System.Windows.Forms.ToolStripMenuItem();
+      this.impCarAna = new System.Windows.Forms.ToolStripMenuItem();
+      this.impCarExl = new System.Windows.Forms.ToolStripMenuItem();
       this.perfil = new System.Windows.Forms.ToolStripMenuItem();
       this.perfilTrocar = new System.Windows.Forms.ToolStripMenuItem();
       this.perfilSair = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +55,7 @@
       this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.impCol,
-            this.impAna,
+            this.impCar,
             this.perfil,
             this.testeDeLeituraEmExcelToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -66,41 +67,49 @@
       // impCol
       // 
       this.impCol.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.impColConfig,
-            this.impColImport});
+            this.impColCfg,
+            this.impColPrc});
       this.impCol.Name = "impCol";
       this.impCol.Size = new System.Drawing.Size(221, 24);
       this.impCol.Text = "&Importação de Colaboradores";
       // 
-      // impColConfig
+      // impColCfg
       // 
-      this.impColConfig.Name = "impColConfig";
-      this.impColConfig.Size = new System.Drawing.Size(207, 26);
-      this.impColConfig.Text = "&Configuração";
-      this.impColConfig.Click += new System.EventHandler(this.ImpColConfig_Click);
+      this.impColCfg.Name = "impColCfg";
+      this.impColCfg.Size = new System.Drawing.Size(207, 26);
+      this.impColCfg.Text = "&Configuração";
+      this.impColCfg.Click += new System.EventHandler(this.ImpColCfg_Click);
       // 
-      // impColImport
+      // impColPrc
       // 
-      this.impColImport.Name = "impColImport";
-      this.impColImport.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-      this.impColImport.Size = new System.Drawing.Size(207, 26);
-      this.impColImport.Text = "&Importação";
-      this.impColImport.Click += new System.EventHandler(this.ImpColImport_Click);
+      this.impColPrc.Name = "impColPrc";
+      this.impColPrc.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+      this.impColPrc.Size = new System.Drawing.Size(207, 26);
+      this.impColPrc.Text = "&Importação";
+      this.impColPrc.Click += new System.EventHandler(this.ImpColImp_Click);
       // 
-      // impAna
+      // impCar
       // 
-      this.impAna.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.impAnaCar});
-      this.impAna.Name = "impAna";
-      this.impAna.Size = new System.Drawing.Size(150, 24);
-      this.impAna.Text = "Importação &Analisa";
+      this.impCar.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.impCarAna,
+            this.impCarExl});
+      this.impCar.Name = "impCar";
+      this.impCar.Size = new System.Drawing.Size(167, 24);
+      this.impCar.Text = "Importação de &Mapas";
       // 
-      // impAnaCar
+      // impCarAna
       // 
-      this.impAnaCar.Name = "impAnaCar";
-      this.impAnaCar.Size = new System.Drawing.Size(216, 26);
-      this.impAnaCar.Text = "&Cargos e Mapas";
-      this.impAnaCar.Click += new System.EventHandler(this.ImpAnaCar_Click);
+      this.impCarAna.Name = "impCarAna";
+      this.impCarAna.Size = new System.Drawing.Size(216, 26);
+      this.impCarAna.Text = "&Analisa";
+      this.impCarAna.Click += new System.EventHandler(this.ImpCarAna_Click);
+      // 
+      // impCarExl
+      // 
+      this.impCarExl.Name = "impCarExl";
+      this.impCarExl.Size = new System.Drawing.Size(216, 26);
+      this.impCarExl.Text = "&Excel";
+      this.impCarExl.Click += new System.EventHandler(this.ImpCarExl_Click);
       // 
       // perfil
       // 
@@ -130,10 +139,7 @@
       // testeDeLeituraEmExcelToolStripMenuItem
       // 
       this.testeDeLeituraEmExcelToolStripMenuItem.Name = "testeDeLeituraEmExcelToolStripMenuItem";
-      this.testeDeLeituraEmExcelToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
-      this.testeDeLeituraEmExcelToolStripMenuItem.Text = "Teste de Leitura em Excel";
-      this.testeDeLeituraEmExcelToolStripMenuItem.Visible = false;
-      this.testeDeLeituraEmExcelToolStripMenuItem.Click += new System.EventHandler(this.testeDeLeituraEmExcelToolStripMenuItem_Click);
+      this.testeDeLeituraEmExcelToolStripMenuItem.Size = new System.Drawing.Size(12, 24);
       // 
       // toolStrip1
       // 
@@ -210,7 +216,7 @@
 
     private System.Windows.Forms.MenuStrip menuStrip1;
     private System.Windows.Forms.ToolStripMenuItem impCol;
-    private System.Windows.Forms.ToolStripMenuItem impColConfig;
+    private System.Windows.Forms.ToolStripMenuItem impColCfg;
     private System.Windows.Forms.ToolStripMenuItem perfil;
     private System.Windows.Forms.ToolStripMenuItem perfilTrocar;
     private System.Windows.Forms.ToolStripMenuItem perfilSair;
@@ -221,9 +227,10 @@
     private System.Windows.Forms.ToolStripLabel tbarPerson;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripLabel tbarAccount;
-    private System.Windows.Forms.ToolStripMenuItem impColImport;
+    private System.Windows.Forms.ToolStripMenuItem impColPrc;
     private System.Windows.Forms.ToolStripMenuItem testeDeLeituraEmExcelToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem impAna;
-    private System.Windows.Forms.ToolStripMenuItem impAnaCar;
+    private System.Windows.Forms.ToolStripMenuItem impCar;
+    private System.Windows.Forms.ToolStripMenuItem impCarAna;
+    private System.Windows.Forms.ToolStripMenuItem impCarExl;
   }
 }

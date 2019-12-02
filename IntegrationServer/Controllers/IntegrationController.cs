@@ -328,7 +328,7 @@ namespace IntegrationServer.InfraController
     }
     #endregion
 
-    #region Occupation
+    #region Occupation Profile
     /// <summary>
     /// Atualizar o cargo e o mapa do cargo através de integração com o ANALISA
     /// </summary>
@@ -341,6 +341,7 @@ namespace IntegrationServer.InfraController
     {
       return service.IntegrationProfile(view);
     }
+
     #endregion
 
   }

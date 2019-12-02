@@ -245,7 +245,7 @@ namespace Manager.Services.Specific
                   && p.Establishment._id == establishmentManager._id && p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
           }
         }
-        if (personManager != null && ( personManager.TypeUser != EnumTypeUser.Manager || personManager.TypeUser != EnumTypeUser.ManagerHR ))
+        if (personManager != null && (personManager.TypeUser != EnumTypeUser.Manager || personManager.TypeUser != EnumTypeUser.ManagerHR))
         {
           personManager.TypeUser = EnumTypeUser.Manager;
           string updatePerson = personService.Update(personManager);
@@ -911,7 +911,7 @@ namespace Manager.Services.Specific
         item.NameSchooling = schoolingService.GetAllNewVersion(p => p._id == idSchooling).Result.FirstOrDefault().Name;
         var i = integrationSchoolingService.Update(item, null);
         // Validar PayrollEmployee
-        Task.Run( () => ValidPayrollEmployee(item));
+        Task.Run(() => ValidPayrollEmployee(item));
         return new ViewListIntegrationSchooling()
         {
           _id = item._id,
@@ -1311,19 +1311,30 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    #region Occupation
+    #region Occupation Profile
     public ViewIntegrationProfileOccupation IntegrationProfile(ViewIntegrationProfileOccupation view)
     {
-      Occupation occupation = occupationService.GetNewVersion(p => p.Name == view.Name).Result;
       Group group = groupService.GetNewVersion(p => p.Name == view.NameGroup).Result;
-
+      if (group == null)
+      {
+        view.Messages.Add("Grupo de cargo não encontrado!!!");
+        return view;
+      }
+      ProcessLevelTwo processLevelTwo = processLevelTwoService.GetNewVersion(p => p.Name == "Integração").Result;
+      if (processLevelTwo == null)
+      {
+        view.Messages.Add("Subprocesso de integração não localizado!!!");
+        return view;
+      }
+      Occupation occupation = occupationService.GetNewVersion(p => p.Name == view.Name).Result;
+      string itemAux;
       if (occupation == null)
       {
         occupation = new Occupation()
         {
           Group = group.GetViewList(),
           Cbo = null,
-          Name = Capitalization(view.Name),
+          Name = CapitalizeOccupation(view.Name),
           SpecificRequirements = view.SpecificRequirements,
           SalaryScales = null,
           Process = new List<ViewListProcessLevelTwo>(),
@@ -1332,12 +1343,20 @@ namespace Manager.Services.Specific
           Schooling = new List<ViewCrudSchooling>(),
           Line = 0
         };
-        occupation.Process.Add(processLevelTwoService.GetNewVersion(p => p._id == view.IdProcessLevelTwo).Result.GetViewList());
+        occupation.Process.Add(processLevelTwo.GetViewList());
         Skill skill;
         foreach (string item in view.Skills)
         {
-          skill = skillService.GetNewVersion(p => p.Name == item).Result;
-          occupation.Skills.Add(skill.GetViewList());
+          itemAux = DictionarySkill(item);
+          skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
+          if (skill == null)
+          {
+            view.Messages.Add(string.Format("Competência {0} não localizada", itemAux));
+          }
+          else
+          {
+            occupation.Skills.Add(skill.GetViewList());
+          }
         }
         int order = 0;
         foreach (string item in view.Activities)
@@ -1353,25 +1372,45 @@ namespace Manager.Services.Specific
         occupation.Schooling = group.Schooling;
         for (int i = 0; i < view.Schooling.Count; i++)
         {
+          itemAux = DictionarySchooling(view.Schooling[i]);
+          bool achou = false;
           for (int lin = 0; lin < occupation.Schooling.Count; lin++)
           {
-            if (occupation.Schooling[lin].Name.ToUpper().Equals(view.Schooling[i].ToUpper()))
+            if (occupation.Schooling[lin].Name.ToUpper().Equals(itemAux))
             {
               occupation.Schooling[lin].Complement = view.SchoolingComplement[i];
+              achou = true;
               break;
             }
           }
+          if (!achou)
+          {
+            view.Messages.Add(string.Format("Escolaridade {0} não localizada no grupo do cargo", itemAux));
+          }
         }
-        occupation = occupationService.InsertNewVersion(occupation).Result;
-      } else {
+        if (view.Messages.Count == 0 && view.Update)
+        {
+          occupation = occupationService.InsertNewVersion(occupation).Result;
+        }
+      }
+      else
+      {
         occupation.Skills = new List<ViewListSkill>();
         occupation.SpecificRequirements = view.SpecificRequirements;
         occupation.Activities = new List<ViewListActivitie>();
         Skill skill;
         foreach (string item in view.Skills)
         {
-          skill = skillService.GetNewVersion(p => p.Name == item).Result;
-          occupation.Skills.Add(skill.GetViewList());
+          itemAux = DictionarySkill(item);
+          skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
+          if (skill == null)
+          {
+            view.Messages.Add(string.Format("Competência {0} não localizada", itemAux));
+          }
+          else
+          {
+            occupation.Skills.Add(skill.GetViewList());
+          }
         }
         int order = 0;
         foreach (string item in view.Activities)
@@ -1386,16 +1425,26 @@ namespace Manager.Services.Specific
         }
         for (int i = 0; i < view.Schooling.Count; i++)
         {
+          itemAux = DictionarySchooling(view.Schooling[i]);
+          bool achou = false;
           for (int lin = 0; lin < occupation.Schooling.Count; lin++)
           {
-            if (occupation.Schooling[lin].Name.ToUpper().Equals(view.Schooling[i].ToUpper()))
+            if (occupation.Schooling[lin].Name.ToUpper().Equals(itemAux))
             {
               occupation.Schooling[lin].Complement = view.SchoolingComplement[i];
+              achou = true;
               break;
+            }
+            if (!achou)
+            {
+              view.Messages.Add(string.Format("Escolaridade {0} não localizada no grupo do cargo", itemAux));
             }
           }
         }
-        Task retorno = occupationService.Update(occupation, null);
+        if (view.Messages.Count == 0 && view.Update)
+        {
+          Task retorno = occupationService.Update(occupation, null);
+        }
       }
       return new ViewIntegrationProfileOccupation()
       {
@@ -1408,52 +1457,37 @@ namespace Manager.Services.Specific
         Skills = occupation.Skills.OrderBy(o => o.Name).Select(x => x.Name).ToList(),
         SpecificRequirements = occupation.SpecificRequirements,
         Schooling = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
-        SchoolingComplement = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Complement).ToList()
+        SchoolingComplement = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Complement).ToList(),
+        Messages = view.Messages,
+        Update = view.Update
       };
     }
-    private string Capitalization(string nome)
-    {
-      try
-      {
-        TextInfo myTI = new CultureInfo("pt-BR", false).TextInfo;
-        nome = myTI.ToTitleCase(nome.Trim().ToLower()).Replace(" Por ", " por ").Replace(" Com ", " com ").Replace(" E ", " e ").Replace(" De ", " de ").Replace(" Da ", " da ").Replace(" Dos ", " dos ").Replace(" Do ", " do ");
-        switch (nome.Substring(nome.Length - 2, 2))
-        {
-          case "Jr":
-          case "Pl":
-          case "Sr":
-          case "II":
-            nome = string.Concat(nome.Substring(0, nome.Length - 1), nome.Substring(nome.Length - 1).ToUpper());
-            break;
-          default:
-            break;
-        }
-        switch (nome.Substring(nome.Length - 3, 3))
-        {
-          case " Jr":
-            nome = string.Concat(nome.Substring(nome.Length - 3, 3), " JR");
-            break;
-          case " Pl":
-            nome = string.Concat(nome.Substring(nome.Length - 3, 3), " PL");
-            break;
-          case "Sr":
-            nome = string.Concat(nome.Substring(nome.Length - 3, 3), " SR");
-            break;
-          case " Ii":
-            nome = string.Concat(nome.Substring(nome.Length - 3, 3), " II");
-            break;
-          default:
-            break;
-        }
-        if (nome.Substring(nome.Length - 4, 4).Equals(" Iii"))
-          nome = string.Concat(nome.Substring(nome.Length - 4, 4), " III");
 
-        return nome;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
+    private string DictionarySkill(string item)
+    {
+      item = item.Replace((char)10, ' ').Replace((char)13, ' ').Trim().ToUpper();
+      item = item.Replace("POLITICA", "POLÍTICA");
+      item = item.Replace("LEGISLACAO", "LEGISLAÇÃO");
+      item = item.Replace("TRIBUTARIA", "TRIBUTÁRIA");
+      item = item.Replace("GESTAO", "GESTÃO");
+      item = item.Replace("INSTRUÇÕES/ PROCEDIMENTOS E / OU ROTINAS DE TRABALHO", "INSTRUÇÕES, PROCEDIMENTOS E/OU ROTINAS DE TRABALHO");
+      item = item.Replace("LEGISLAÇÃO TRIBUTÁRIA FISCAL", "LEGISLAÇÃO FISCAL E TRIBUTÁRIA");
+      item = item.Replace("PACOTE DE APLICATIVOS OFFICE", "APLICATIVOS OFFICE");
+      item = item.Replace("SISTEMAS  E FERRAMENTAS DE GESTÃO", "SISTEMAS E FERRAMENTAS DE GESTÃO");
+      item = item.Replace("TÉCNICAS E CONTROLE DE ESTOQUES", "TÉCNICAS DE CONTROLE E GESTÃO DE ESTOQUES");
+      return item;
+    }
+    private string DictionarySchooling(string item)
+    {
+      item = item.Replace((char)10, ' ').Replace((char)13, ' ').Trim().ToUpper();
+      item = item.Replace("TECNICO", "TÉCNICO");
+      item = item.Replace("MEDIO", "MÉDIO");
+      item = item.Replace("ENSINO MÉDIO EM ANDAMENTO", "ENSINO MÉDIO INCOMPLETO");
+      item = item.Replace("ENSINO SUPERIOR EM ANDAMENTO", "ENSINO SUPERIOR INCOMPLETO");
+      item = item.Replace("ENSINO TÉCNICO EM ANDAMENTO", "TÉCNICO INCOMPLETO");
+      item = item.Replace("ENSINO TÉCNICO COMPLETO", "TÉCNICO COMPLETO");
+      item = item.Replace("PÓS-GRADUAÇÃO COMPLETA", "PÓS GRADUAÇÃO COMPLETA");
+      return item;
     }
     #endregion
 
@@ -2377,7 +2411,8 @@ namespace Manager.Services.Specific
         string result = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param.Trim().ToLower());
         result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ")
           .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ").Replace(" A ", " a ").Replace(" À ", " à ")
-          .Replace(" Ao ", " ao ").Replace(" E ", " e ");
+          .Replace(" Ao ", " ao ").Replace(" E ", " e ").Replace(" Com ", " com ").Replace(" Por ", " por ");
+
         if (result.IndexOf(" Ti") + 3 == result.Length)
         {
           result = string.Concat(result.Substring(0, result.Length - 2),"TI");
@@ -2393,6 +2428,14 @@ namespace Manager.Services.Specific
         if (result.IndexOf(" Sr") + 3 == result.Length)
         {
           result = string.Concat(result.Substring(0, result.Length - 2), "SR");
+        }
+        if (result.IndexOf(" Iii") + 4 == result.Length)
+        {
+          result = string.Concat(result.Substring(0, result.Length - 3), "III");
+        }
+        if (result.IndexOf(" Ii") + 3 == result.Length)
+        {
+          result = string.Concat(result.Substring(0, result.Length - 2), "II");
         }
         return result;
       }
