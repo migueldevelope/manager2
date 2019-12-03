@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       this.btImp = new System.Windows.Forms.Button();
       this.btDem = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
@@ -35,11 +36,12 @@
       this.txtDatFin = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.btnImpV2 = new System.Windows.Forms.Button();
-      this.btnDemUltV2 = new System.Windows.Forms.Button();
-      this.btnDemV2 = new System.Windows.Forms.Button();
+      this.btnDemIndV2 = new System.Windows.Forms.Button();
+      this.btnDemAusV2 = new System.Windows.Forms.Button();
       this.prb = new System.Windows.Forms.ProgressBar();
       this.lblPrb = new System.Windows.Forms.Label();
       this.chkLjo = new System.Windows.Forms.CheckBox();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.SuspendLayout();
       // 
       // btImp
@@ -107,27 +109,29 @@
       this.btnImpV2.UseVisualStyleBackColor = true;
       this.btnImpV2.Click += new System.EventHandler(this.BtnImpV2_Click);
       // 
-      // btnDemUltV2
+      // btnDemIndV2
       // 
-      this.btnDemUltV2.Location = new System.Drawing.Point(326, 127);
-      this.btnDemUltV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-      this.btnDemUltV2.Name = "btnDemUltV2";
-      this.btnDemUltV2.Size = new System.Drawing.Size(254, 23);
-      this.btnDemUltV2.TabIndex = 7;
-      this.btnDemUltV2.Text = "Demissões Última Importação V2";
-      this.btnDemUltV2.UseVisualStyleBackColor = true;
-      this.btnDemUltV2.Click += new System.EventHandler(this.BtnDemUltV2_Click);
+      this.btnDemIndV2.Location = new System.Drawing.Point(326, 127);
+      this.btnDemIndV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.btnDemIndV2.Name = "btnDemIndV2";
+      this.btnDemIndV2.Size = new System.Drawing.Size(254, 23);
+      this.btnDemIndV2.TabIndex = 7;
+      this.btnDemIndV2.Text = "Demissões por Indicação V2";
+      this.toolTip1.SetToolTip(this.btnDemIndV2, "Demite os colaboradores executando carga de colaboradores demitidos.");
+      this.btnDemIndV2.UseVisualStyleBackColor = true;
+      this.btnDemIndV2.Click += new System.EventHandler(this.BtnDemIndV2_Click);
       // 
-      // btnDemV2
+      // btnDemAusV2
       // 
-      this.btnDemV2.Enabled = false;
-      this.btnDemV2.Location = new System.Drawing.Point(326, 100);
-      this.btnDemV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-      this.btnDemV2.Name = "btnDemV2";
-      this.btnDemV2.Size = new System.Drawing.Size(254, 23);
-      this.btnDemV2.TabIndex = 8;
-      this.btnDemV2.Text = "Demissões V2";
-      this.btnDemV2.UseVisualStyleBackColor = true;
+      this.btnDemAusV2.Location = new System.Drawing.Point(326, 100);
+      this.btnDemAusV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.btnDemAusV2.Name = "btnDemAusV2";
+      this.btnDemAusV2.Size = new System.Drawing.Size(254, 23);
+      this.btnDemAusV2.TabIndex = 8;
+      this.btnDemAusV2.Text = "Demissões por Ausência V2";
+      this.toolTip1.SetToolTip(this.btnDemAusV2, "Demite os colaboradores que não aparecerem na lista de colaboradores ativos.");
+      this.btnDemAusV2.UseVisualStyleBackColor = true;
+      this.btnDemAusV2.Click += new System.EventHandler(this.BtnDemAusV2_Click);
       // 
       // prb
       // 
@@ -163,8 +167,8 @@
       this.Controls.Add(this.chkLjo);
       this.Controls.Add(this.lblPrb);
       this.Controls.Add(this.prb);
-      this.Controls.Add(this.btnDemV2);
-      this.Controls.Add(this.btnDemUltV2);
+      this.Controls.Add(this.btnDemAusV2);
+      this.Controls.Add(this.btnDemIndV2);
       this.Controls.Add(this.btnImpV2);
       this.Controls.Add(this.txtDatFin);
       this.Controls.Add(this.label2);
@@ -193,10 +197,11 @@
     private System.Windows.Forms.TextBox txtDatFin;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Button btnImpV2;
-    private System.Windows.Forms.Button btnDemUltV2;
-    private System.Windows.Forms.Button btnDemV2;
+    private System.Windows.Forms.Button btnDemIndV2;
+    private System.Windows.Forms.Button btnDemAusV2;
     private System.Windows.Forms.ProgressBar prb;
     private System.Windows.Forms.Label lblPrb;
     private System.Windows.Forms.CheckBox chkLjo;
+    private System.Windows.Forms.ToolTip toolTip1;
   }
 }

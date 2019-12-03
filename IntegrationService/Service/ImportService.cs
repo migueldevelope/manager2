@@ -693,6 +693,10 @@ namespace IntegrationService.Service
         ViewIntegrationColaborador viewColaborador;
         foreach (var colaborador in Colaboradores.Where(p => string.IsNullOrEmpty(p.Message)))
         {
+          if (colaborador.Documento == "03275112066")
+          {
+            var a = 0;
+          }
           search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
           if (search == -1)
           {
@@ -882,6 +886,117 @@ namespace IntegrationService.Service
 
     #region Inicio da integração
     public void ExecuteV2(bool jsonLog)
+    {
+      try
+      {
+        FileClass.SaveLog(LogFileName, string.Format("Iniciando o processo de integração."), EnumTypeLineOpportunityg.Information);
+        switch (service.Param.Process)
+        {
+          case EnumIntegrationProcess.Manual:
+            switch (service.Param.Mode)
+            {
+              case EnumIntegrationMode.DataBaseV1:
+                throw new Exception("Modo banco de dados não suportado no processo manual.");
+              case EnumIntegrationMode.FileCsvV1:
+                throw new Exception("Modo CSV não implementado no processo manual.");
+              case EnumIntegrationMode.FileExcelV1:
+                throw new Exception("Modo Excel não implementado no processo manual.");
+              case EnumIntegrationMode.ApplicationInterface:
+                throw new Exception("Modo API não implementado no processo manual.");
+              default:
+                throw new Exception("Nenhum modo implementado no processo de sistema.");
+            }
+          case EnumIntegrationProcess.System:
+            switch (service.Param.Mode)
+            {
+              case EnumIntegrationMode.DataBaseV1:
+                DatabaseV2();
+                break;
+              case EnumIntegrationMode.FileCsvV1:
+                throw new Exception("Modo CSV não implementado no processo de sistema.");
+              case EnumIntegrationMode.FileExcelV1:
+                throw new Exception("Modo Excel não implementado no processo de sistema.");
+              case EnumIntegrationMode.ApplicationInterface:
+                CallApiModeV2();
+                break;
+              default:
+                throw new Exception("Nenhum modo implementado no processo de sistema.");
+            }
+            break;
+          case EnumIntegrationProcess.Executable:
+            break;
+          default:
+            break;
+        }
+        if (Status == EnumStatusService.CriticalError)
+        {
+          throw new Exception(Message);
+        }
+        if (ColaboradoresV2.Count == 0)
+        {
+          throw new Exception("Lista de colaboradores vazia.");
+        }
+        // Rotina de Importação
+        ColaboradorV2Retorno viewRetorno;
+        ProgressBarMaximun = ColaboradoresV2.Count;
+        ProgressBarValue = 0;
+        ProgressMessage = "Atualizando colaboradores 2/2...";
+        OnRefreshProgressBar(EventArgs.Empty);
+        foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
+        {
+          if (jsonLog)
+          {
+            FileClass.SaveLog(LogFileName.Replace(".log", "api.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
+          }
+          viewRetorno = personIntegration.PostV2Completo(colaborador);
+          if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
+          {
+            FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
+            hasLogFile = true;
+          }
+          else
+          {
+            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
+          }
+          ProgressBarValue++;
+          OnRefreshProgressBar(EventArgs.Empty);
+        }
+        Status = EnumStatusService.Ok;
+        Message = "Fim de integração!";
+        if (hasLogFile)
+        {
+          Message = "Fim de integração com LOG!";
+          Status = EnumStatusService.Error;
+        }
+        // até aqui
+        service.Param.CriticalError = string.Empty;
+        service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        service.Param.StatusExecution = "Ok v2";
+        service.Param.CustomVersionExecution = string.Empty;
+        service.Param.UploadNextLog = false;
+        service.Param.ProgramVersionExecution = VersionProgram.ToString();
+        service.SetParameter(service.Param);
+        FileClass.SaveLog(LogFileName, string.Format("Finalizando o processo de integração."), EnumTypeLineOpportunityg.Information);
+      }
+      catch (Exception ex)
+      {
+        Status = EnumStatusService.CriticalError;
+        Message = ex.Message;
+        FileClass.SaveLog(LogFileName, string.Format("Erro de integração critico: {0}", ex.Message), EnumTypeLineOpportunityg.Error);
+        service.Param.CriticalError = ex.Message;
+        service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        service.Param.StatusExecution = "Critical Error";
+        service.Param.CustomVersionExecution = string.Empty;
+        service.Param.UploadNextLog = false;
+        service.Param.ProgramVersionExecution = VersionProgram.ToString();
+        service.SetParameter(service.Param);
+        throw ex;
+      }
+    }
+
+    public void ExecuteDemissionAbsenceV2(bool jsonLog)
     {
       try
       {

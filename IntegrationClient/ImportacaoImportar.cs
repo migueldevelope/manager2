@@ -91,12 +91,33 @@ namespace IntegrationClient
       lblPrb.Text = string.Format("{0} - Registros {1} de {2}",((ImportService)sender).ProgressMessage, prb.Value, prb.Maximum);
       Application.DoEvents();
     }
-    private void BtnDemUltV2_Click(object sender, EventArgs e)
+    private void BtnDemIndV2_Click(object sender, EventArgs e)
     {
       try
       {
         ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
         //import.ExecuteDemissionLastImportV2();
+        if (import.Status == EnumStatusService.Error)
+        {
+          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        else
+        {
+          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private void BtnDemAusV2_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        import.ExecuteDemissionAbsenceV2(chkLjo.Checked);
         if (import.Status == EnumStatusService.Error)
         {
           MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);

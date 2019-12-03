@@ -333,7 +333,7 @@ namespace Manager.Services.Specific
           SchoolingError = integrationSchoolingService.GetAllNewVersion(p => p.IdSchooling == "000000000000000000000000").Result.Count(),
           CriticalError = param.CriticalError,
           ProgramVersionExecution = param.ProgramVersionExecution,
-          StatusExecution = param.StatusExecution
+          StatusExecution = param.StatusExecution          
         };
         return view;
       }
@@ -660,7 +660,7 @@ namespace Manager.Services.Specific
           item.Name = name;
           item._idCompany = idcompany;
           // Ajuste para cargos com centro de custo
-          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.Trim().ToLower() == name.Trim().ToLower()).Result.ToList();
+          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.Trim().ToLower()).Result.ToList();
           if (occupations.Count == 1)
           {
             item.IdOccupation = occupations[0]._id;
@@ -668,7 +668,7 @@ namespace Manager.Services.Specific
             var i = integrationOccupationService.Update(item, null);
           } else
           {
-            occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.Trim().ToLower() == name.Trim().ToLower() && p.Description == null).Result.ToList();
+            occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.Trim().ToLower() && p.Description == null).Result.ToList();
             if (occupations.Count == 1)
             {
               item.IdOccupation = occupations[0]._id;
@@ -962,7 +962,8 @@ namespace Manager.Services.Specific
             Type = EnumIntegrationType.Complete,
             Mode = EnumIntegrationMode.DataBaseV1,
             Status = EnumStatus.Enabled,
-            CultureDate = "pt-BR"
+            CultureDate = "pt-BR",
+            IntegrationKey = EnumIntegrationKey.Company
           }).Result;
         }
         return new ViewCrudIntegrationParameter()
@@ -1054,6 +1055,9 @@ namespace Manager.Services.Specific
           VersionPackCustom = param.VersionPackCustom,
           VersionPackProgram = param.VersionPackProgram,
           ApiIdentification = param.ApiIdentification,
+          IntegrationKey = param.IntegrationKey,
+          CultureDate = param.CultureDate,
+          LinkLogExecution = param.LinkLogExecution,
           _id = param._id
         };
       }

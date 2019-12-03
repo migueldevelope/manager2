@@ -179,8 +179,7 @@ namespace IntegrationServer.InfraController
         {
           userView.Name = view.Colaborador.Nome;
           userView.Document = view.Colaborador.Documento;
-          if (!string.IsNullOrEmpty(view.Colaborador.Email))
-            userView.Mail = view.Colaborador.Email;
+          userView.Mail = view.Colaborador.Email;
           userView.Phone = view.Colaborador.Celular;
           userView.DateAdm = view.Colaborador.DataAdmissao;
           userView.DateBirth = view.Colaborador.DataNascimento;
