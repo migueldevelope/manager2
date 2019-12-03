@@ -693,10 +693,6 @@ namespace IntegrationService.Service
         ViewIntegrationColaborador viewColaborador;
         foreach (var colaborador in Colaboradores.Where(p => string.IsNullOrEmpty(p.Message)))
         {
-          if (colaborador.Documento == "03275112066")
-          {
-            var a = 0;
-          }
           search = ControleColaboradores.FindIndex(p => p.ChaveColaborador == colaborador.ChaveColaborador);
           if (search == -1)
           {
@@ -736,6 +732,9 @@ namespace IntegrationService.Service
               {
                 ControleColaboradores[search].Message = viewColaborador.Message;
                 FileClass.SaveLog(LogFileName, string.Format("{0},{1},{2}", ControleColaboradores[search].Colaborador.ChaveColaborador, ControleColaboradores[search].Colaborador.Nome, string.Format("Pessoa não atualizada. {0}", viewColaborador.Message)), EnumTypeLineOpportunityg.Warning);
+                FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", viewColaborador.Colaborador.Matricula)), string.Format("Token: {0}", Person.Token),EnumTypeLineOpportunityg.Register);
+                FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", viewColaborador.Colaborador.Matricula)), "Json PutPerson", EnumTypeLineOpportunityg.Register);
+                FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", viewColaborador.Colaborador.Matricula)), JsonConvert.SerializeObject(viewColaborador), EnumTypeLineOpportunityg.Register);
                 hasLogFile = true;
               }
               break;
@@ -953,6 +952,9 @@ namespace IntegrationService.Service
           {
             FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
+            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Colaborador.Matricula)), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
+            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Colaborador.Matricula)), "Json Post integrationserver/person/v2/completo", EnumTypeLineOpportunityg.Register);
+            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Colaborador.Matricula)), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
             hasLogFile = true;
           }
           else
