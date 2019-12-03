@@ -1586,7 +1586,7 @@ namespace Manager.Services.Specific
         view.Cargo = EmptyStringDefault(view.Cargo, view.NomeCargo);
         ValidEmptyDate(view.DataAdmissao, "Data de admissão deve ser informada");
         // Preenchimento de campos opcionais, caso vazios
-        view.Email = EmptyStringDefault(view.Email, view.Colaborador.Cpf).ToLower();
+        view.Email = view.Email?.ToLower();
         view.NomeGrauInstrucao = EmptyStringDefault(view.NomeGrauInstrucao, "Não definida");
         view.GrauInstrucao = EmptyStringDefault(view.GrauInstrucao, view.NomeGrauInstrucao);
         view.NomeGrauInstrucao = CapitalizeName(view.NomeGrauInstrucao);
