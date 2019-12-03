@@ -169,7 +169,8 @@ namespace Manager.Services.Auth
           throw new Exception("password_empty");
         }
         User user = null;
-        var list = serviceUser.GetAllFreeNewVersion(p => p.Mail == userLogin.Mail).Result;
+        var list = serviceUser.GetAllFreeNewVersion(p => p.Mail == userLogin.Mail
+        && p.Status == EnumStatus.Enabled).Result;
         if (list.Count > 1)
           throw new Exception("mailmany");
         else if (list.Count == 1)
@@ -179,10 +180,10 @@ namespace Manager.Services.Auth
           if (userLogin.Mail != null)
             userLogin.Mail = userLogin.Mail.Replace(".", "").Replace("-", "").Trim();
           
-          user = serviceUser.GetAllFreeNewVersion(p => p.Document == userLogin.Mail).Result.FirstOrDefault();
+          user = serviceUser.GetAllFreeNewVersion(p => p.Document == userLogin.Mail && p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
           if (user == null)
           {
-            user = serviceUser.GetAllFreeNewVersion(p => p.Nickname == userLogin.Mail).Result.FirstOrDefault();
+            user = serviceUser.GetAllFreeNewVersion(p => p.Nickname == userLogin.Mail && p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
             if (user == null)
               throw new Exception("user_notfound");
           }
