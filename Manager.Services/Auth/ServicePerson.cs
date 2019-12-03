@@ -730,9 +730,13 @@ namespace Manager.Services.Auth
         //var exists = serviceUser.CountFreeNewVersion(p => p.Mail == view.User.Mail).Result;
         //if ((exists > 0) && (view.User._id == null))
         //  throw new Exception("existsmailornickname");
-        var exists = serviceUser.CountFreeNewVersion(p => p.Document == view.User.Document).Result;
-        if (exists > 0)
-          throw new Exception("existsdocument");
+        if (view.User._id == null)
+        {
+          var exists = serviceUser.CountFreeNewVersion(p => p.Document == view.User.Document).Result;
+          if (exists > 0)
+            throw new Exception("existsdocument");
+        }
+          
 
         User user = new User()
         {
