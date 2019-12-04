@@ -622,7 +622,7 @@ namespace IntegrationServer.InfraController
       }
     }
     /// <summary>
-    /// Lista de colaboradores ativos para demissão por ausência
+    /// Lista de colaboradores ativos para demissão por ausência uso exclusivo da FLUID STATE
     /// </summary>
     /// <response code="200">Lista de colaboradores ativos</response>
     /// <response code="400">Problemas na geração da lista</response>

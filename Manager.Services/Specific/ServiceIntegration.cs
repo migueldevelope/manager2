@@ -2393,10 +2393,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var integrationCompanies = integrationCompanyService.GetAllNewVersion().ToList();
-        var integrationEstablishments = integrationEstablishmentService.GetAllNewVersion().ToList();
-        var integrationOccupations = integrationOccupationService.GetAllNewVersion().ToList();
-        List<Person> persons = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support && p.Company != null && p.Establishment != null).Result;
+        List<IntegrationCompany> integrationCompanies = integrationCompanyService.GetAllNewVersion().ToList();
+        List<IntegrationEstablishment> integrationEstablishments = integrationEstablishmentService.GetAllNewVersion().ToList();
+        List<IntegrationOccupation> integrationOccupations = integrationOccupationService.GetAllNewVersion().ToList();
+        List<Person> persons = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator && p.Company != null && p.Establishment != null).Result;
         return persons.Select(p => new ColaboradorV2Base()
           {
             Cpf = p.User.Document,
