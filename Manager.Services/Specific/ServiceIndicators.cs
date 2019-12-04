@@ -1655,8 +1655,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
-        && p.TypeJourney != EnumTypeJourney.OutOfJourney)
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled)
           .Result.Select(p => new ViewAccountEnableds()
           {
             Person = p.User?.Name,
