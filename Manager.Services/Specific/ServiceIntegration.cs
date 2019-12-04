@@ -1490,7 +1490,7 @@ namespace Manager.Services.Specific
           skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
           if (skill == null)
           {
-            view.Messages.Add(string.Format("Competência {0} não localizada", itemAux));
+            view.Messages.Add(string.Format("{0}: competência não localizada", itemAux));
           }
           else
           {
@@ -1524,7 +1524,7 @@ namespace Manager.Services.Specific
           }
           if (!achou)
           {
-            view.Messages.Add(string.Format("Escolaridade {0} não localizada no grupo do cargo", itemAux));
+            view.Messages.Add(string.Format("{0}: escolaridade não localizada", itemAux));
           }
         }
         if (view.Messages.Count == 0 && view.Update)
@@ -1544,7 +1544,7 @@ namespace Manager.Services.Specific
           skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
           if (skill == null)
           {
-            view.Messages.Add(string.Format("Competência {0} não localizada", itemAux));
+            view.Messages.Add(string.Format("{0}: competência não localizada", itemAux));
           }
           else
           {
@@ -1576,7 +1576,7 @@ namespace Manager.Services.Specific
             }
             if (!achou)
             {
-              view.Messages.Add(string.Format("Escolaridade {0} não localizada no grupo do cargo", itemAux));
+              view.Messages.Add(string.Format("{0}: escolaridade não localizada", itemAux));
             }
           }
         }

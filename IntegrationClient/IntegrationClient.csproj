@@ -138,6 +138,11 @@
     <Compile Include="Menu.Designer.cs">
       <DependentUpon>Menu.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModelTools\OccupationSchoolingStatistic.cs" />
+    <Compile Include="ModelTools\OccupationSkillStatistic.cs" />
+    <Compile Include="ModelTools\OccupationStatistic.cs" />
+    <Compile Include="ModelTools\SchoolingStatistic.cs" />
+    <Compile Include="ModelTools\SkillStatistic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ImportacaoAnalisaCargosMapas.resx">

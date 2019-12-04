@@ -84,8 +84,7 @@ namespace IntegrationService.Api
       {
         StringContent content = new StringContent(JsonConvert.SerializeObject(view));
         content.Headers.ContentType.MediaType = "application/json";
-
-        var result = clientSkill.PostAsync("integration/profile", content).Result;
+        HttpResponseMessage result = clientSkill.PostAsync("integration/profile", content).Result;
         if (result.IsSuccessStatusCode == false)
         {
           throw new Exception("Cargo não atualizado!");

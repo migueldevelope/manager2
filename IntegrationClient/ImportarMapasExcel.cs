@@ -1,4 +1,6 @@
-﻿using IntegrationService.Enumns;
+﻿using IntegrationClient.ModelTools;
+using IntegrationService.Api;
+using IntegrationService.Enumns;
 using IntegrationService.Tools;
 using Manager.Views.Integration;
 using Newtonsoft.Json;
@@ -27,6 +29,12 @@ namespace IntegrationClient
     private Excel.Worksheet excelPln;
     private Excel.Workbook excelPst;
 
+    private List<OccupationStatistic> occupations;
+    private List<SkillStatistic> skills;
+    private List<SchoolingStatistic> schoolings;
+    private List<OccupationSkillStatistic> occupationSkills;
+    private List<OccupationSchoolingStatistic> occupationSchoolings;
+
     #region Constructor
     public ImportarMapasExcel()
     {
@@ -43,6 +51,8 @@ namespace IntegrationClient
         {
           throw new Exception("Informe a pasta de origem");
         }
+        InfraIntegration infraIntegration = new InfraIntegration(Program.PersonLogin);
+
         IEnumerable<string> files;
         if (chkEppPlus.Checked)
         {
@@ -61,15 +71,20 @@ namespace IntegrationClient
         {
           if (chkEppPlus.Checked)
           {
-            ImportFileEppPlus(file);
+            ImportFileEppPlus(file, infraIntegration);
           }
           else
           {
-            ImportFileExcel(file);
+            ImportFileExcel(file, infraIntegration);
           }
         }
-        if (!chkEppPlus.Checked)
+        if (chkEppPlus.Checked)
         {
+          //FinalTabEppPlus();
+        }
+        else
+        {
+          FinalTabExcel();
           excelApp.Quit();
         }
         MessageBox.Show("Fim da importação!", "Importação de Mapas", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -97,7 +112,7 @@ namespace IntegrationClient
     #endregion
 
     #region Excel
-    private void ImportFileExcel(string file)
+    private void ImportFileExcel(string file, InfraIntegration infraIntegration)
     {
       string cellName = "C5";
       string cellGroup = "C6";
@@ -121,12 +136,13 @@ namespace IntegrationClient
       // Linha de controle de leitura
       int line = 0;
       string work;
-      // TODO: inicialização de idCompany e Level Two
-      ViewIntegrationProfileOccupation occupation = new ViewIntegrationProfileOccupation
+      // Contabilização da importação
+      ViewIntegrationProfileOccupation viewOccupation = new ViewIntegrationProfileOccupation
       {
         Messages = new List<string>(),
-        IdProcessLevelTwo = "",
+        // TODO: inicialização de idCompany e Level Two
         IdCompany = "",
+        IdProcessLevelTwo = "",
         Activities = new List<string>(),
         Schooling = new List<string>(),
         SchoolingComplement = new List<string>(),
@@ -135,11 +151,11 @@ namespace IntegrationClient
       };
       try
       {
-        excelPst = excelApp.Workbooks.Open(file,false);
+        excelPst = excelApp.Workbooks.Open(file, false);
         excelPln = excelPst.Worksheets[1];
         excelPln.Activate();
-        occupation.Name = excelPln.Range[cellName].Value.ToString();
-        occupation.NameGroup = excelPln.Range[cellGroup].Value.ToString();
+        viewOccupation.Name = excelPln.Range[cellName].Value.ToString();
+        viewOccupation.NameGroup = excelPln.Range[cellGroup].Value.ToString();
         if (!(excelPln.Range[string.Format("{0}{1}", responsibilityCellColumn, responsibilityCellLine)].Value).ToString().Trim().ToUpper().Equals(responsibilityTextCheck.ToUpper()))
         {
           throw new Exception("Não encontrei a primeira linha das entregas");
@@ -156,7 +172,7 @@ namespace IntegrationClient
           work = CellValue(responsibilityCellColumn, line);
           if (!string.IsNullOrEmpty(work))
           {
-            occupation.Activities.Add(work);
+            viewOccupation.Activities.Add(work);
           }
           line++;
         }
@@ -170,7 +186,7 @@ namespace IntegrationClient
             break;
           }
           line++;
-          if (line>200)
+          if (line > 200)
           {
             throw new Exception("Não encontrei as competências específicas");
           }
@@ -187,7 +203,7 @@ namespace IntegrationClient
           work = CellValue(hardSkillCellColumn, line);
           if (!string.IsNullOrEmpty(work))
           {
-            occupation.Skills.Add(work);
+            viewOccupation.Skills.Add(work);
           }
           line++;
         }
@@ -213,8 +229,8 @@ namespace IntegrationClient
           work = CellValue(formationCellColumn, line);
           if (!string.IsNullOrEmpty(work))
           {
-            occupation.Schooling.Add(work);
-            occupation.SchoolingComplement.Add(CellValue(formationCellColumnComplement, line));
+            viewOccupation.Schooling.Add(work);
+            viewOccupation.SchoolingComplement.Add(CellValue(formationCellColumnComplement, line));
           }
           line++;
         }
@@ -231,11 +247,180 @@ namespace IntegrationClient
           requirement = string.Concat(requirement, work);
           line++;
         }
-        occupation.SpecificRequirements = requirement;
+        viewOccupation.SpecificRequirements = requirement;
+        //occupation = infraIntegration.IntegrationProfile(occupation);
+        var occupation = new OccupationStatistic()
+        {
+          FileName = file,
+          GroupName = viewOccupation.NameGroup,
+          Name = viewOccupation.Name,
+          Status = string.IsNullOrEmpty(viewOccupation._id) ? "Erro" : "Ok"
+        };
         excelPst.Close(false);
-        // TODO: Chamar API do servidor
-        string jj = JsonConvert.SerializeObject(occupation);
+        if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name) == null)
+        {
+          occupations.Add(occupation);
+        }
+        foreach (var item in viewOccupation.Skills)
+        {
+          var index = skills.FindIndex(p => p.Name.Equals(item));
+          if (index == -1)
+          {
+            skills.Add(new SkillStatistic()
+            {
+              Name = item,
+              Found = true
+            });
+          }
+          occupationSkills.Add(new OccupationSkillStatistic()
+          {
+            FileName = file,
+            SkillName = item
+          });
+        }
+        foreach (var item in viewOccupation.Schooling)
+        {
+          var index = schoolings.FindIndex(p => p.Name.Equals(item));
+          if (index == -1)
+          {
+            schoolings.Add(new SchoolingStatistic()
+            {
+              Name = item,
+              Found = true
+            });
+          }
+          occupationSchoolings.Add(new OccupationSchoolingStatistic()
+          {
+            FileName = file,
+            SchollingName = item
+          });
+        }
+        foreach (var item in viewOccupation.Messages)
+        {
+          var itemAux = item.Split(':');
+          if (itemAux[1].IndexOf("competência") != -1)
+          {
+            var index = skills.FindIndex(p => p.Name.Equals(itemAux[0]));
+            if (index == -1)
+            {
+              skills.Add(new SkillStatistic()
+              {
+                Name = itemAux[0],
+                Found = false
+              });
+            }
+            occupationSkills.Add(new OccupationSkillStatistic()
+            {
+              FileName = file,
+              SkillName = itemAux[0]
+            });
+          }
+          else
+          {
+            var index = schoolings.FindIndex(p => p.Name.Equals(itemAux[0]));
+            if (index == -1)
+            {
+              schoolings.Add(new SchoolingStatistic()
+              {
+                Name = itemAux[0],
+                Found = false
+              });
+            }
+            occupationSchoolings.Add(new OccupationSchoolingStatistic()
+            {
+              FileName = file,
+              SchollingName = itemAux[0]
+            });
+          }
+        }
+        string jj = JsonConvert.SerializeObject(viewOccupation);
         FileClass.SaveLog("aqui.txt", jj, EnumTypeLineOpportunityg.Register);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    private void FinalTabExcel()
+    {
+      try
+      {
+        excelPst = excelApp.Workbooks.Add();
+        for (int i = excelPst.Worksheets.Count; i < 6; i++)
+        {
+          excelPst.Worksheets.Add();
+        }
+        // Planilha de Competências
+        excelPln = excelPst.Worksheets[1];
+        excelPln.Activate();
+        excelPln.Name = "Competências";
+        excelPln.Range["A1"].Value = "Competência";
+        excelPln.Range["B1"].Value = "Cadastrada";
+        int line = 2;
+        foreach (SkillStatistic item in skills)
+        {
+          excelPln.Range[string.Format("A{0}", line)].Value = item.Name;
+          excelPln.Range[string.Format("B{0}", line)].Value = item.Found ? "Sim" : "Não";
+          line++;
+        }
+        // Planilha de Escolaridades
+        excelPln = excelPst.Worksheets[2];
+        excelPln.Activate();
+        excelPln.Name = "Escolaridades";
+        excelPln.Range["A1"].Value = "Competência";
+        excelPln.Range["B1"].Value = "Cadastrada";
+        line = 2;
+        foreach (SchoolingStatistic item in schoolings)
+        {
+          excelPln.Range[string.Format("A{0}", line)].Value = item.Name;
+          excelPln.Range[string.Format("B{0}", line)].Value = item.Found ? "Sim" : "Não";
+          line++;
+        }
+        // Planilha de Cargos
+        excelPln = excelPst.Worksheets[3];
+        excelPln.Activate();
+        excelPln.Name = "Cargos";
+        excelPln.Range["A1"].Value = "Arquivo";
+        excelPln.Range["B1"].Value = "Grupo";
+        excelPln.Range["C1"].Value = "Cargo";
+        excelPln.Range["D1"].Value = "Status";
+        line = 2;
+        foreach (OccupationStatistic item in occupations)
+        {
+          excelPln.Range[string.Format("A{0}", line)].Value = item.FileName;
+          excelPln.Range[string.Format("B{0}", line)].Value = item.GroupName;
+          excelPln.Range[string.Format("C{0}", line)].Value = item.Name;
+          excelPln.Range[string.Format("D{0}", line)].Value = item.Status;
+          line++;
+        }
+        // Planilha de Competências por cargo
+        excelPln = excelPst.Worksheets[4];
+        excelPln.Activate();
+        excelPln.Name = "CargosCompetencias";
+        excelPln.Range["A1"].Value = "Cargo";
+        excelPln.Range["B1"].Value = "Competência";
+        line = 2;
+        foreach (OccupationSkillStatistic item in occupationSkills)
+        {
+          excelPln.Range[string.Format("A{0}", line)].Value = item.FileName;
+          excelPln.Range[string.Format("B{0}", line)].Value = item.SkillName;
+          line++;
+        }
+        // Planilha de Competências por cargo
+        excelPln = excelPst.Worksheets[5];
+        excelPln.Activate();
+        excelPln.Name = "CargosEscolaridades";
+        excelPln.Range["A1"].Value = "Cargo";
+        excelPln.Range["B1"].Value = "Escolaridade";
+        line = 2;
+        foreach (OccupationSchoolingStatistic item in occupationSchoolings)
+        {
+          excelPln.Range[string.Format("A{0}", line)].Value = item.FileName;
+          excelPln.Range[string.Format("B{0}", line)].Value = item.SchollingName;
+          line++;
+        }
+        excelPst.SaveAs("Tabulacao.xlsx");
+        excelPst.Close();
       }
       catch (Exception ex)
       {
@@ -245,7 +430,7 @@ namespace IntegrationClient
     #endregion
 
     #region EppPlus
-    private void ImportFileEppPlus(string file)
+    private void ImportFileEppPlus(string file, InfraIntegration infraIntegration)
     {
       string cellName = "C5";
       string cellGroup = "C6";
