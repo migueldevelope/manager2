@@ -117,6 +117,7 @@ namespace IntegrationClient
       try
       {
         ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        import.RefreshProgressBar += Import_RefreshProgressBar;
         import.ExecuteDemissionAbsenceV2(chkLjo.Checked);
         if (import.Status == EnumStatusService.Error)
         {

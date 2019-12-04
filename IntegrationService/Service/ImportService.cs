@@ -1028,27 +1028,39 @@ namespace IntegrationService.Service
         OnRefreshProgressBar(EventArgs.Empty);
         ColaboradorV2Demissao demissao;
         ColaboradorV2Retorno viewRetorno;
+        ColaboradorV2Completo view;
         foreach (ColaboradorV2Base colaborador in colaboradores)
         {
-          demissao = new ColaboradorV2Demissao()
+          if (service.Param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
           {
-            Colaborador = colaborador,
-            DataDemissao = DateTime.Now.Date
-          };
-          viewRetorno = personIntegration.PostV2Demissao(demissao);
-          if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
-          {
-            FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4}", colaborador.Cpf, colaborador.NomeEmpresa,
-              colaborador.NomeEstabelecimento, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
-            hasLogFile = true;
-            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Matricula)), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
-            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Matricula)), "Json Post integrationserver/person/v2/demissao", EnumTypeLineOpportunityg.Register);
-            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Matricula)), JsonConvert.SerializeObject(demissao), EnumTypeLineOpportunityg.Register);
+            view = ColaboradoresV2.Find(p => p.Colaborador.Chave1 == colaborador.Chave1);
           }
           else
           {
-            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Cpf, colaborador.NomeEmpresa,
-              colaborador.NomeEstabelecimento, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
+            view = ColaboradoresV2.Find(p => p.Colaborador.Chave2 == colaborador.Chave2);
+          };
+          if (view == null)
+          {
+            demissao = new ColaboradorV2Demissao()
+            {
+              Colaborador = colaborador,
+              DataDemissao = DateTime.Now.Date
+            };
+            viewRetorno = personIntegration.PostV2Demissao(demissao);
+            if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
+            {
+              FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4}", colaborador.Cpf, colaborador.NomeEmpresa,
+                colaborador.NomeEstabelecimento, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
+              hasLogFile = true;
+              FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Matricula)), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
+              FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Matricula)), "Json Post integrationserver/person/v2/demissao", EnumTypeLineOpportunityg.Register);
+              FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Matricula)), JsonConvert.SerializeObject(demissao), EnumTypeLineOpportunityg.Register);
+            }
+            else
+            {
+              FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Cpf, colaborador.NomeEmpresa,
+                colaborador.NomeEstabelecimento, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
+            }
           }
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);

@@ -321,7 +321,7 @@ namespace Manager.Services.Specific
         return payrollEmployee;
       }
     }
-    private PayrollEmployee PersonDemission(PayrollEmployee payrollEmployee, PayrollEmployee payrollEmployeePrevious)
+    private PayrollEmployee PersonDemission(PayrollEmployee payrollEmployee, PayrollEmployee payrollEmployeePrevious, EnumIntegrationKey integrationKey)
     {
       try
       {
@@ -352,9 +352,8 @@ namespace Manager.Services.Specific
         if (payrollEmployee.Messages.Count() > 0)
           return payrollEmployee;
 
-        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
         ViewCrudPerson person;
-        if (viewCrudIntegrationParameter.IntegrationKey == EnumIntegrationKey.Company)
+        if (integrationKey == EnumIntegrationKey.Company)
         {
           person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
               && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
@@ -366,8 +365,6 @@ namespace Manager.Services.Specific
         }
         if (person != null)
         {
-          person.Company = company.GetViewList();
-          person.Establishment = establishment.GetViewList();
           // Apenas mudar de cargo se mudou na folha de pagamento em relação a última carga
           person.DateResignation = payrollEmployee.DemissionDate;
           person.StatusUser = payrollEmployee.StatusUser;
@@ -376,6 +373,8 @@ namespace Manager.Services.Specific
           payrollEmployee._idContract = person._id;
           payrollEmployee._idUser = person.User._id;
           payrollEmployee.StatusIntegration = EnumStatusIntegration.Atualized;
+          resultV2.IdContract = person._id;
+          resultV2.IdUser = person.User._id;
         }
         else
         {
@@ -389,7 +388,7 @@ namespace Manager.Services.Specific
         return payrollEmployee;
       }
     }
-    private void PersonDemission(ColaboradorV2Demissao view)
+    private void PersonDemission(ColaboradorV2Demissao view, EnumIntegrationKey integrationKey)
     {
       try
       {
@@ -415,9 +414,8 @@ namespace Manager.Services.Specific
         if (resultV2.Mensagem.Count() > 0)
           return;
 
-        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
         ViewCrudPerson person;
-        if (viewCrudIntegrationParameter.IntegrationKey == EnumIntegrationKey.Company)
+        if (integrationKey == EnumIntegrationKey.Company)
         {
           person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
               && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
@@ -2308,11 +2306,11 @@ namespace Manager.Services.Specific
         if (payrollEmployees.Count == 0)
         {
           // Sem histórico na PayrollEmployee
-          PersonDemission(view);
+          PersonDemission(view, param.IntegrationKey);
           if (resultV2.Mensagem.Count == 0)
           {
             resultV2.Situacao = "Ok";
-            resultV2.Mensagem.Add("Colaborador atualizado");
+            resultV2.Mensagem.Add("Colaborador demitido");
           }
         }
         else
@@ -2336,9 +2334,11 @@ namespace Manager.Services.Specific
             payrollEmployee.DateRegister = DateTime.Now.Date;
             payrollEmployee._idPrevious = payrollEmployeePrevious._id;
             payrollEmployee._id = null;
+            payrollEmployee.StatusUser = EnumStatusUser.Disabled;
+            payrollEmployee.DemissionDate = view.DataDemissao;
             payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
           }
-          payrollEmployee = PersonDemission(payrollEmployee, payrollEmployeePrevious);
+          payrollEmployee = PersonDemission(payrollEmployee, payrollEmployeePrevious, param.IntegrationKey);
           Task task = payrollEmployeeService.Update(payrollEmployee, null);
           resultV2.IdPayrollEmployee = payrollEmployee._id;
           for (int i = 0; i < payrollEmployee.Messages.Count; i++)
@@ -2396,13 +2396,13 @@ namespace Manager.Services.Specific
         var integrationCompanies = integrationCompanyService.GetAllNewVersion().ToList();
         var integrationEstablishments = integrationEstablishmentService.GetAllNewVersion().ToList();
         var integrationOccupations = integrationOccupationService.GetAllNewVersion().ToList();
-        List<Person> persons = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Company != null && p.Establishment != null).Result;
+        List<Person> persons = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator && p.TypeUser != EnumTypeUser.Support && p.Company != null && p.Establishment != null).Result;
         return persons.Select(p => new ColaboradorV2Base()
           {
             Cpf = p.User.Document,
             Empresa = integrationCompanies.FirstOrDefault(c => c.IdCompany == p.Company._id).Key,
             NomeEmpresa = integrationCompanies.FirstOrDefault(c => c.IdCompany == p.Company._id).Name,
-            Estabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Key,
+            Estabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Key.Split(";")[1],
             NomeEstabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Name,
             Matricula = p.Registration
           }).ToList();
