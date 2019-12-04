@@ -621,6 +621,30 @@ namespace IntegrationServer.InfraController
         }
       }
     }
+    /// <summary>
+    /// Lista de colaboradores ativos para demissão por ausência
+    /// </summary>
+    /// <response code="200">Lista de colaboradores ativos</response>
+    /// <response code="400">Problemas na geração da lista</response>
+    /// <returns>Objeto de retorno da integração </returns>
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<ColaboradorV2Base>), StatusCodes.Status200OK)]
+    [Authorize]
+    [HttpGet]
+    [Route("v2/ativos")]
+    public ObjectResult ActiveV2()
+    {
+      {
+        try
+        {
+          return Ok(service.GetActiveV2());
+        }
+        catch (Exception e)
+        {
+          return BadRequest(e.Message);
+        }
+      }
+    }
     #endregion
 
     #region PayrollEmployee

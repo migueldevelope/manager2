@@ -111,6 +111,7 @@
       // 
       // btnDemIndV2
       // 
+      this.btnDemIndV2.Enabled = false;
       this.btnDemIndV2.Location = new System.Drawing.Point(326, 127);
       this.btnDemIndV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.btnDemIndV2.Name = "btnDemIndV2";

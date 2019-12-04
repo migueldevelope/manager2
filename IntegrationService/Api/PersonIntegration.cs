@@ -3,6 +3,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using Manager.Views.Integration;
 using Manager.Views.Integration.V2;
+using System.Collections.Generic;
 
 namespace IntegrationService.Api
 {
@@ -78,6 +79,34 @@ namespace IntegrationService.Api
       catch (Exception ex)
       {
         throw ex;
+      }
+    }
+    public ColaboradorV2Retorno PostV2Demissao(ColaboradorV2Demissao view)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
+        content.Headers.ContentType.MediaType = "application/json";
+        HttpResponseMessage result = clientSkill.PostAsync("person/v2/demissao", content).Result;
+        return JsonConvert.DeserializeObject<ColaboradorV2Retorno>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    public List<ColaboradorV2Base> GetActiveV2()
+    {
+      try
+      {
+        HttpResponseMessage result = clientSkill.GetAsync("person/v2/ativos").Result;
+        return result.IsSuccessStatusCode == false
+          ? null
+          : JsonConvert.DeserializeObject<List<ColaboradorV2Base>>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception)
+      {
+        throw;
       }
     }
     #endregion
