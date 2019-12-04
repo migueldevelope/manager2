@@ -1024,7 +1024,7 @@ namespace IntegrationService.Service
         List<ColaboradorV2Base> colaboradores = personIntegration.GetActiveV2();
         ProgressBarMaximun = colaboradores.Count;
         ProgressBarValue = 0;
-        ProgressMessage = "Demitindo colaboradores 2/2...";
+        ProgressMessage = "Verificando demissão de colaboradores 2/2...";
         OnRefreshProgressBar(EventArgs.Empty);
         ColaboradorV2Demissao demissao;
         ColaboradorV2Retorno viewRetorno;
@@ -1046,7 +1046,7 @@ namespace IntegrationService.Service
               Colaborador = colaborador,
               DataDemissao = DateTime.Now.Date
             };
-            viewRetorno = personIntegration.PostV2Demissao(demissao);
+            viewRetorno = personIntegration.PutV2Demissao(demissao);
             if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
             {
               FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4}", colaborador.Cpf, colaborador.NomeEmpresa,

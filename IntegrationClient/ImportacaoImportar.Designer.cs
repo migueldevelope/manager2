@@ -64,7 +64,7 @@
       this.btDem.TabIndex = 1;
       this.btDem.Text = "Demissões V1";
       this.btDem.UseVisualStyleBackColor = true;
-      this.btDem.Click += new System.EventHandler(this.BtDem_Click);
+      this.btDem.Click += new System.EventHandler(this.BtDemInd_Click);
       // 
       // label1
       // 

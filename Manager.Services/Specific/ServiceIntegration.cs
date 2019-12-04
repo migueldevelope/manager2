@@ -2348,7 +2348,7 @@ namespace Manager.Services.Specific
           if (resultV2.Mensagem.Count == 0)
           {
             resultV2.Situacao = "Ok";
-            resultV2.Mensagem.Add("Colaborador atualizado");
+            resultV2.Mensagem.Add("Colaborador demitido");
           }
         }
         return resultV2;

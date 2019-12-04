@@ -81,13 +81,13 @@ namespace IntegrationService.Api
         throw ex;
       }
     }
-    public ColaboradorV2Retorno PostV2Demissao(ColaboradorV2Demissao view)
+    public ColaboradorV2Retorno PutV2Demissao(ColaboradorV2Demissao view)
     {
       try
       {
         StringContent content = new StringContent(JsonConvert.SerializeObject(view));
         content.Headers.ContentType.MediaType = "application/json";
-        HttpResponseMessage result = clientSkill.PostAsync("person/v2/demissao", content).Result;
+        HttpResponseMessage result = clientSkill.PutAsync("person/v2/demissao", content).Result;
         return JsonConvert.DeserializeObject<ColaboradorV2Retorno>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception ex)

@@ -39,7 +39,7 @@ namespace IntegrationClient
         MessageBox.Show(ex.Message, Text,MessageBoxButtons.OK,MessageBoxIcon.Error);
       }
     }
-    private void BtDem_Click(object sender, EventArgs e)
+    private void BtDemInd_Click(object sender, EventArgs e)
     {
       try
       {
@@ -84,13 +84,6 @@ namespace IntegrationClient
         MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
-    private void Import_RefreshProgressBar(object sender, EventArgs e)
-    {
-      prb.Maximum = ((ImportService)sender).ProgressBarMaximun;
-      prb.Value = ((ImportService)sender).ProgressBarValue;
-      lblPrb.Text = string.Format("{0} - Registros {1} de {2}",((ImportService)sender).ProgressMessage, prb.Value, prb.Maximum);
-      Application.DoEvents();
-    }
     private void BtnDemIndV2_Click(object sender, EventArgs e)
     {
       try
@@ -111,7 +104,6 @@ namespace IntegrationClient
         MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
-
     private void BtnDemAusV2_Click(object sender, EventArgs e)
     {
       try
@@ -131,6 +123,20 @@ namespace IntegrationClient
       catch (Exception ex)
       {
         MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+    private void Import_RefreshProgressBar(object sender, EventArgs e)
+    {
+      try
+      {
+        prb.Maximum = ((ImportService)sender).ProgressBarMaximun;
+        prb.Value = ((ImportService)sender).ProgressBarValue;
+        lblPrb.Text = string.Format("{0} - Registros {1} de {2}", ((ImportService)sender).ProgressMessage, prb.Value, prb.Maximum);
+        Application.DoEvents();
+      }
+      catch (Exception)
+      {
+
       }
     }
   }
