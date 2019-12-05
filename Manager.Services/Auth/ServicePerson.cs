@@ -429,7 +429,17 @@ namespace Manager.Services.Auth
         person.Workload = view.Person.Workload;
         person.User = user.GetViewCrud();
         if (person.StatusUser == EnumStatusUser.Disabled)
+        {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
+          var persons = servicePerson.CountNewVersion(p => p.User._id == person.User._id &&
+          p.StatusUser != EnumStatusUser.Disabled).Result;
+          if(persons == 0)
+          {
+            user.Status = EnumStatus.Disabled;
+            var i = serviceUser.Update(user, null);
+          }
+        }
+          
         if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.Occupation == null)
@@ -900,7 +910,17 @@ namespace Manager.Services.Auth
         person.User = user.GetViewCrud();
         person.SalaryScales = salaryScale;
         if (person.StatusUser == EnumStatusUser.Disabled)
+        {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
+          var persons = servicePerson.CountNewVersion(p => p.User._id == person.User._id &&
+          p.StatusUser != EnumStatusUser.Disabled).Result;
+          if (persons == 0)
+          {
+            user.Status = EnumStatus.Disabled;
+            var i = serviceUser.Update(user, null);
+          }
+        }
+          
         if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.Occupation == null)
