@@ -825,7 +825,8 @@ namespace Manager.Services.Specific
 
         serviceOccupation.Update(occupation, null);
 
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
         return "ok";
       }
       catch (Exception e)
@@ -871,7 +872,8 @@ namespace Manager.Services.Specific
         }
         serviceOccupation.Update(occupation, null);
 
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
         return "ok";
       }
       catch (Exception e)
@@ -1695,7 +1697,8 @@ namespace Manager.Services.Specific
 
         occupation.Activities.Add(activitie.GetViewList());
         serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
         return "ok";
       }
       catch (Exception e)
@@ -1757,7 +1760,8 @@ namespace Manager.Services.Specific
         var occupation = serviceOccupation.GetAllNewVersion(p => p._id == idoccupation).Result.FirstOrDefault();
         occupation.SpecificRequirements = view.Name;
         serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
 
         return "ok";
       }
@@ -1786,7 +1790,8 @@ namespace Manager.Services.Specific
 
         occupation.Skills.Add(skill.GetViewList());
         serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
         return "ok";
       }
       catch (Exception e)
@@ -2281,7 +2286,8 @@ namespace Manager.Services.Specific
         var activitie = occupation.Activities.Where(p => p._id == idactivitie).FirstOrDefault();
         occupation.Activities.Remove(activitie);
         serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
 
         return "delete";
       }
@@ -2299,7 +2305,8 @@ namespace Manager.Services.Specific
         var skill = occupation.Skills.Where(p => p._id == id).FirstOrDefault();
         occupation.Skills.Remove(skill);
         serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
 
         return "delete";
       }
@@ -3172,7 +3179,8 @@ namespace Manager.Services.Specific
         occupation.Schooling.Add(schooling);
 
         serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
         return "update";
       }
       catch (Exception e)
@@ -3200,7 +3208,8 @@ namespace Manager.Services.Specific
         occupation.Activities.Add(activitie.GetViewList());
 
         serviceOccupation.Update(occupation, null);
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
         return "update";
       }
       catch (Exception e)
@@ -3457,40 +3466,8 @@ namespace Manager.Services.Specific
 
         serviceOccupation.Update(occupation, null);
 
-        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
-        bool exists = false;
-        var occupationLog = serviceOccupationLog.GetNewVersion(p =>
-        p._idOccupationPrevious == occupation._id
-        && p.Date == datenow).Result;
-
-        if (occupationLog == null)
-        {
-          occupationLog = new OccupationLog();
-          exists = true;
-        }
-        occupationLog.Name = occupation.Name;
-        occupationLog.Group = occupation.Group;
-        occupationLog.Line = occupation.Line;
-        occupationLog.Skills = occupation.Skills;
-        occupationLog.Schooling = occupation.Schooling;
-        occupationLog.Activities = occupation.Activities;
-        occupationLog.Template = occupation.Template;
-        occupationLog.Cbo = occupation.Cbo;
-        occupationLog.SpecificRequirements = occupation.SpecificRequirements;
-        occupationLog.Process = occupation.Process;
-        occupationLog.SalaryScales = occupation.SalaryScales;
-        occupationLog.Description = occupation.Description;
-        occupationLog.Status = occupation.Status;
-        occupationLog._idAccount = occupation._idAccount;
-        occupationLog._idOccupationPrevious = occupation._id;
-        occupationLog.Date = datenow;
-
-        if (exists)
-          serviceOccupationLog.Update(occupationLog, null);
-        else
-          serviceOccupationLog.InsertNewVersion(occupationLog);
-
-        UpdateOccupationAll(occupation);
+        Task.Run(() => UpdateOccupationAll(occupation));
+        Task.Run(() => UpdateOccupationLog(occupation));
         return "update";
       }
 
@@ -3893,6 +3870,48 @@ namespace Manager.Services.Specific
 
     #region private 
 
+    private void UpdateOccupationLog(Occupation occupation)
+    {
+      try
+      {
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+        bool exists = false;
+        var occupationLog = serviceOccupationLog.GetNewVersion(p =>
+        p._idOccupationPrevious == occupation._id
+        && p.Date == datenow).Result;
+
+        if (occupationLog == null)
+        {
+          occupationLog = new OccupationLog();
+          exists = true;
+        }
+        occupationLog.Name = occupation.Name;
+        occupationLog.Group = occupation.Group;
+        occupationLog.Line = occupation.Line;
+        occupationLog.Skills = occupation.Skills;
+        occupationLog.Schooling = occupation.Schooling;
+        occupationLog.Activities = occupation.Activities;
+        occupationLog.Template = occupation.Template;
+        occupationLog.Cbo = occupation.Cbo;
+        occupationLog.SpecificRequirements = occupation.SpecificRequirements;
+        occupationLog.Process = occupation.Process;
+        occupationLog.SalaryScales = occupation.SalaryScales;
+        occupationLog.Description = occupation.Description;
+        occupationLog.Status = occupation.Status;
+        occupationLog._idAccount = occupation._idAccount;
+        occupationLog._idOccupationPrevious = occupation._id;
+        occupationLog.Date = datenow;
+
+        if (exists)
+          serviceOccupationLog.Update(occupationLog, null);
+        else
+          serviceOccupationLog.InsertNewVersion(occupationLog);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     private Group AddGroupInternal(ViewAddGroup view)
     {
@@ -3959,7 +3978,8 @@ namespace Manager.Services.Specific
               }
             }
             serviceOccupation.Update(occupation, null);
-            UpdateOccupationAll(occupation);
+            Task.Run(() => UpdateOccupationAll(occupation));
+            Task.Run(() => UpdateOccupationLog(occupation));
           }
         }
       }
@@ -4086,7 +4106,8 @@ namespace Manager.Services.Specific
           }
           item.Schooling = group.Schooling;
           serviceOccupation.Update(item, null);
-          UpdateOccupationAll(item);
+          Task.Run(() => UpdateOccupationAll(item));
+          Task.Run(() => UpdateOccupationLog(item));
         }
 
 
@@ -4122,7 +4143,8 @@ namespace Manager.Services.Specific
         {
           item.Cbo = Cbo.GetViewList();
           serviceOccupation.UpdateAccount(item, null);
-          UpdateOccupationAllCbo(item);
+          Task.Run(() => UpdateOccupationAll(item));
+          Task.Run(() => UpdateOccupationLog(item));
         }
 
       }
@@ -4174,7 +4196,8 @@ namespace Manager.Services.Specific
         {
           item.Group = groupnew.GetViewList();
           serviceOccupation.Update(item, null);
-          UpdateOccupationAll(item);
+          Task.Run(() => UpdateOccupationAll(item));
+          Task.Run(() => UpdateOccupationLog(item));
         }
 
       }
@@ -4299,7 +4322,8 @@ namespace Manager.Services.Specific
                 {
                   proc.ProcessLevelOne.Area = area.GetViewList();
                   this.serviceOccupation.Update(item, null);
-                  UpdateOccupationAll(item);
+                  Task.Run(() => UpdateOccupationAll(item));
+                  Task.Run(() => UpdateOccupationLog(item));
                 }
               }
             }
@@ -4333,7 +4357,8 @@ namespace Manager.Services.Specific
                 item.Process.Remove(proc);
                 item.Process.Add(processLevelTwo.GetViewList());
                 this.serviceOccupation.Update(item, null);
-                UpdateOccupationAll(item);
+                Task.Run(() => UpdateOccupationAll(item));
+                Task.Run(() => UpdateOccupationLog(item));
                 break;
               }
             }
