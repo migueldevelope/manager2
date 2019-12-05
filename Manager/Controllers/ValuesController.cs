@@ -67,6 +67,8 @@ namespace Manager.Controllers
       //serviceCertification.ListPersons(ObjectId.GenerateNewId().ToString(), ref total, "", 1, 1);
       //servicePerson.ListCompany(ref total, "", 1, 1);
       //CallAPIColdStart();
+      //var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
       return new string[] { "version", "0.000000039" };
     }
 

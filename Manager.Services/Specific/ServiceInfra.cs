@@ -36,6 +36,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Group> serviceGroup;
     private readonly ServiceGeneric<MailModel> serviceMailModel;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
+    private readonly ServiceGeneric<OccupationLog> serviceOccupationLog;
     private readonly ServiceGeneric<OccupationMandatory> serviceOccupationMandatory;
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<Person> servicePerson;
@@ -65,6 +66,7 @@ namespace Manager.Services.Specific
         serviceGroup = new ServiceGeneric<Group>(context);
         serviceMailModel = new ServiceGeneric<MailModel>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceOccupationLog = new ServiceGeneric<OccupationLog>(context);
         serviceOccupationMandatory = new ServiceGeneric<OccupationMandatory>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         servicePerson = new ServiceGeneric<Person>(context);
@@ -96,6 +98,7 @@ namespace Manager.Services.Specific
       serviceGroup._user = _user;
       serviceMailModel._user = _user;
       serviceOccupation._user = _user;
+      serviceOccupationLog._user = _user;
       serviceOccupationMandatory._user = _user;
       serviceParameter._user = _user;
       servicePerson._user = _user;
@@ -122,6 +125,7 @@ namespace Manager.Services.Specific
       serviceGroup._user = user;
       serviceMailModel._user = user;
       serviceOccupation._user = user;
+      serviceOccupationLog._user = user;
       serviceOccupationMandatory._user = user;
       serviceParameter._user = user;
       servicePerson._user = user;
@@ -1919,6 +1923,30 @@ namespace Manager.Services.Specific
           occupation.Schooling = group.Schooling;
 
         serviceOccupation.InsertNewVersion(occupation);
+
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        // Save occupation version
+        var occupationLog = new OccupationLog()
+        {
+          Name = occupation.Name,
+          Group = occupation.Group,
+          Line = occupation.Line,
+          Skills = occupation.Skills,
+          Schooling = occupation.Schooling,
+          Activities = occupation.Activities,
+          Template = occupation.Template,
+          Cbo = occupation.Cbo,
+          SpecificRequirements = occupation.SpecificRequirements,
+          Process = occupation.Process,
+          SalaryScales = occupation.SalaryScales,
+          Description = occupation.Description,
+          Status = occupation.Status,
+          _idAccount = occupation._idAccount
+        };
+        occupationLog._idOccupationPrevious = occupation._id;
+        occupationLog.Date = datenow;
+        serviceOccupationLog.InsertNewVersion(occupationLog);
         return "ok";
       }
       catch (Exception)
@@ -3428,6 +3456,40 @@ namespace Manager.Services.Specific
         }
 
         serviceOccupation.Update(occupation, null);
+
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+        bool exists = false;
+        var occupationLog = serviceOccupationLog.GetNewVersion(p =>
+        p._idOccupationPrevious == occupation._id
+        && p.Date == datenow).Result;
+
+        if (occupationLog == null)
+        {
+          occupationLog = new OccupationLog();
+          exists = true;
+        }
+        occupationLog.Name = occupation.Name;
+        occupationLog.Group = occupation.Group;
+        occupationLog.Line = occupation.Line;
+        occupationLog.Skills = occupation.Skills;
+        occupationLog.Schooling = occupation.Schooling;
+        occupationLog.Activities = occupation.Activities;
+        occupationLog.Template = occupation.Template;
+        occupationLog.Cbo = occupation.Cbo;
+        occupationLog.SpecificRequirements = occupation.SpecificRequirements;
+        occupationLog.Process = occupation.Process;
+        occupationLog.SalaryScales = occupation.SalaryScales;
+        occupationLog.Description = occupation.Description;
+        occupationLog.Status = occupation.Status;
+        occupationLog._idAccount = occupation._idAccount;
+        occupationLog._idOccupationPrevious = occupation._id;
+        occupationLog.Date = datenow;
+
+        if (exists)
+          serviceOccupationLog.Update(occupationLog, null);
+        else
+          serviceOccupationLog.InsertNewVersion(occupationLog);
+
         UpdateOccupationAll(occupation);
         return "update";
       }
@@ -3793,10 +3855,10 @@ namespace Manager.Services.Specific
 
         foreach (var item in occupations)
         {
-          
+
           var group = serviceGroup.GetNewVersion(p => p._id == item.Group._id).Result;
 
-          
+
           foreach (var proc in item.Process)
           {
             var view = new ViewListOpportunityLine();
