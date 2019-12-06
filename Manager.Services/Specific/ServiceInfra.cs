@@ -31,9 +31,11 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Axis> serviceAxis;
     private readonly ServiceGeneric<Cbo> serviceCbo;
     private readonly ServiceGeneric<Company> serviceCompany;
+    private readonly ServiceGeneric<CompanyLog> serviceCompanyLog;
     private readonly ServiceGeneric<CompanyMandatory> serviceCompanyMandatory;
     private readonly ServiceGeneric<DictionarySphere> serviceDictionarySphere;
     private readonly ServiceGeneric<Group> serviceGroup;
+    private readonly ServiceGeneric<GroupLog> serviceGroupLog;
     private readonly ServiceGeneric<MailModel> serviceMailModel;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<OccupationLog> serviceOccupationLog;
@@ -61,9 +63,11 @@ namespace Manager.Services.Specific
         serviceAxis = new ServiceGeneric<Axis>(context);
         serviceCbo = new ServiceGeneric<Cbo>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
+        serviceCompanyLog = new ServiceGeneric<CompanyLog>(context);
         serviceCompanyMandatory = new ServiceGeneric<CompanyMandatory>(context);
         serviceDictionarySphere = new ServiceGeneric<DictionarySphere>(context);
         serviceGroup = new ServiceGeneric<Group>(context);
+        serviceGroupLog = new ServiceGeneric<GroupLog>(context);
         serviceMailModel = new ServiceGeneric<MailModel>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceOccupationLog = new ServiceGeneric<OccupationLog>(context);
@@ -93,9 +97,11 @@ namespace Manager.Services.Specific
       serviceAxis._user = _user;
       serviceCbo._user = _user;
       serviceCompany._user = _user;
+      serviceCompanyLog._user = _user;
       serviceCompanyMandatory._user = _user;
       serviceDictionarySphere._user = _user;
       serviceGroup._user = _user;
+      serviceGroupLog._user = _user;
       serviceMailModel._user = _user;
       serviceOccupation._user = _user;
       serviceOccupationLog._user = _user;
@@ -120,9 +126,11 @@ namespace Manager.Services.Specific
       serviceAxis._user = user;
       serviceCbo._user = user;
       serviceCompany._user = user;
+      serviceCompanyLog._user = user;
       serviceCompanyMandatory._user = user;
       serviceDictionarySphere._user = user;
       serviceGroup._user = user;
+      serviceGroupLog._user = user;
       serviceMailModel._user = user;
       serviceOccupation._user = user;
       serviceOccupationLog._user = user;
@@ -764,7 +772,8 @@ namespace Manager.Services.Specific
         }
 
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
         return "ok";
       }
       catch (Exception e)
@@ -849,7 +858,8 @@ namespace Manager.Services.Specific
         }
 
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
         return "ok";
       }
       catch (Exception e)
@@ -1525,7 +1535,8 @@ namespace Manager.Services.Specific
         company.Skills.Add(skill.GetViewList());
         serviceCompany.Update(company, null);
 
-        UpdateCompanyAll(company);
+        Task.Run(() => UpdateCompanyAll(company));
+        Task.Run(() => UpdateCompanyLog(company));
         return "ok";
       }
       catch (Exception e)
@@ -1565,7 +1576,32 @@ namespace Manager.Services.Specific
           Company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result.GetViewList(),
           Scope = new List<ViewListScope>()
         };
-        return serviceGroup.InsertNewVersion(group).Result.GetViewCrud();
+        var result = serviceGroup.InsertNewVersion(group).Result.GetViewCrud();
+
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        // Save group version
+        var groupLog = new GroupLog()
+        {
+          Name = group.Name,
+          Company = group.Company,
+          Line = group.Line,
+          Skills = group.Skills,
+          Schooling = group.Schooling,
+          Scope = group.Scope,
+          Template = group.Template,
+          Status = group.Status,
+          _idAccount = group._idAccount,
+          Axis = group.Axis,
+          Sphere = group.Sphere
+        };
+        groupLog._idGroupPrevious = result._id;
+        groupLog.Date = datenow;
+        groupLog.DateLog = DateTime.Now;
+
+        serviceGroupLog.InsertNewVersion(groupLog);
+
+        return result;
       }
       catch (Exception e)
       {
@@ -1590,7 +1626,8 @@ namespace Manager.Services.Specific
         //view.Group.Schooling.Add(AddSchooling(view.Schooling));
         group.Schooling.Add(schooling.GetViewCrud());
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
         return "ok";
       }
       catch (Exception e)
@@ -1631,7 +1668,8 @@ namespace Manager.Services.Specific
 
         group.Scope.Add(scope.GetViewList());
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
         return "ok";
       }
       catch (Exception e)
@@ -1659,7 +1697,8 @@ namespace Manager.Services.Specific
 
         group.Skills.Add(skill.GetViewList());
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
         return "ok";
       }
       catch (Exception e)
@@ -1951,6 +1990,8 @@ namespace Manager.Services.Specific
         };
         occupationLog._idOccupationPrevious = occupation._id;
         occupationLog.Date = datenow;
+        occupationLog.DateLog = DateTime.Now;
+
         serviceOccupationLog.InsertNewVersion(occupationLog);
         return "ok";
       }
@@ -2163,7 +2204,8 @@ namespace Manager.Services.Specific
           {
             company.Skills.Remove(item);
             this.serviceCompany.Update(company, null);
-            UpdateCompanyAll(company);
+            Task.Run(() => UpdateCompanyAll(company));
+            Task.Run(() => UpdateCompanyLog(company));
             return "delete";
           }
         }
@@ -2211,7 +2253,8 @@ namespace Manager.Services.Specific
         var schooling = group.Schooling.Where(p => p._id == id).FirstOrDefault();
         group.Schooling.Remove(schooling);
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
 
         return "delete";
       }
@@ -2229,7 +2272,8 @@ namespace Manager.Services.Specific
         var skill = group.Skills.Where(p => p._id == id).FirstOrDefault();
         group.Skills.Remove(skill);
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
 
         return "delete";
       }
@@ -2247,7 +2291,8 @@ namespace Manager.Services.Specific
         var scope = group.Scope.Where(p => p._id == idscope).FirstOrDefault();
         group.Scope.Remove(scope);
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
 
         return "delete";
       }
@@ -3237,7 +3282,8 @@ namespace Manager.Services.Specific
         group.Scope.Add(scope.GetViewList());
 
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
         return "update";
       }
       catch (Exception e)
@@ -3261,7 +3307,8 @@ namespace Manager.Services.Specific
         group.Schooling.Add(schooling.GetViewCrud());
 
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
         return "update";
       }
       catch (Exception e)
@@ -3293,7 +3340,8 @@ namespace Manager.Services.Specific
 
         serviceGroup.Update(groupnew, null);
 
-        UpdateGroupAll(groupnew);
+        Task.Run(() => UpdateGroupAll(groupnew));
+        Task.Run(() => UpdateGroupLog(groupnew));
         UpdateGroupOccupationAll(groupnew, groupOld);
         return "update";
       }
@@ -3381,7 +3429,8 @@ namespace Manager.Services.Specific
 
 
         serviceGroup.Update(group, null);
-        UpdateGroupAll(group);
+        Task.Run(() => UpdateGroupAll(group));
+        Task.Run(() => UpdateGroupLog(group));
         return "update";
       }
       catch (Exception e)
@@ -3870,6 +3919,83 @@ namespace Manager.Services.Specific
 
     #region private 
 
+    private void UpdateCompanyLog(Company company)
+    {
+      try
+      {
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+        bool exists = false;
+        var companyLog = serviceCompanyLog.GetNewVersion(p =>
+        p._idCompanyPrevious == company._id
+        && p.Date == datenow).Result;
+
+        if (companyLog == null)
+        {
+          companyLog = new CompanyLog();
+          exists = true;
+        }
+        companyLog.Name = company.Name;
+        companyLog.Skills = company.Skills;
+        companyLog.Template = company.Template;
+        companyLog.Status = company.Status;
+        companyLog._idAccount = company._idAccount;
+        companyLog._idCompanyPrevious = company._id;
+        companyLog.Logo = company.Logo;
+        companyLog.Date = datenow;
+        companyLog.DateLog = DateTime.Now;
+
+        if (exists)
+          serviceCompanyLog.Update(companyLog, null);
+        else
+          serviceCompanyLog.InsertNewVersion(companyLog);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    private void UpdateGroupLog(Group group)
+    {
+      try
+      {
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+        bool exists = false;
+        var groupLog = serviceGroupLog.GetNewVersion(p =>
+        p._idGroupPrevious == group._id
+        && p.Date == datenow).Result;
+
+        if (groupLog == null)
+        {
+          groupLog = new GroupLog();
+          exists = true;
+        }
+        groupLog.Name = group.Name;
+        groupLog.Company = group.Company;
+        groupLog.Line = group.Line;
+        groupLog.Skills = group.Skills;
+        groupLog.Schooling = group.Schooling;
+        groupLog.Scope = group.Scope;
+        groupLog.Sphere = group.Sphere;
+        groupLog.Axis = group.Axis;
+        groupLog.Template = group.Template;
+        groupLog.Status = group.Status;
+        groupLog._idAccount = group._idAccount;
+        groupLog._idGroupPrevious = group._id;
+        groupLog.Date = datenow;
+        groupLog.DateLog = DateTime.Now;
+
+        if (exists)
+          serviceGroupLog.Update(groupLog, null);
+        else
+          serviceGroupLog.InsertNewVersion(groupLog);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private void UpdateOccupationLog(Occupation occupation)
     {
       try
@@ -3901,6 +4027,7 @@ namespace Manager.Services.Specific
         occupationLog._idAccount = occupation._idAccount;
         occupationLog._idOccupationPrevious = occupation._id;
         occupationLog.Date = datenow;
+        occupationLog.DateLog = DateTime.Now;
 
         if (exists)
           serviceOccupationLog.Update(occupationLog, null);
@@ -3945,7 +4072,8 @@ namespace Manager.Services.Specific
           }
 
           serviceCompany.Update(company, null);
-          UpdateCompanyAll(company);
+          Task.Run(() => UpdateCompanyAll(company));
+          Task.Run(() => UpdateCompanyLog(company));
 
           foreach (var group in serviceGroup.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList())
           {
@@ -3961,7 +4089,8 @@ namespace Manager.Services.Specific
               }
             }
             serviceGroup.Update(group, null);
-            UpdateGroupAll(group);
+            Task.Run(() => UpdateGroupAll(group));
+            Task.Run(() => UpdateGroupLog(group));
           }
 
           foreach (var occupation in serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == company._id).Result.ToList())
@@ -4227,7 +4356,8 @@ namespace Manager.Services.Specific
           item.Sphere = sphere.GetViewList();
 
         this.serviceGroup.Update(item, null);
-        UpdateGroupAll(item);
+        Task.Run(() => UpdateGroupAll(item));
+        Task.Run(() => UpdateGroupLog(item));
       }
 
     }
@@ -4242,7 +4372,8 @@ namespace Manager.Services.Specific
           item.Axis = axis.GetViewList();
 
         this.serviceGroup.Update(item, null);
-        UpdateGroupAll(item);
+        Task.Run(() => UpdateGroupAll(item));
+        Task.Run(() => UpdateGroupLog(item));
       }
 
     }
@@ -4386,7 +4517,8 @@ namespace Manager.Services.Specific
             }
           }
           this.serviceGroup.Update(item, null);
-          UpdateGroupAll(item);
+          Task.Run(() => UpdateGroupAll(item));
+          Task.Run(() => UpdateGroupLog(item));
         }
 
       }

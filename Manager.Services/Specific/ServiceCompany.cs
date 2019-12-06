@@ -17,6 +17,7 @@ namespace Manager.Services.Specific
   public class ServiceCompany : Repository<Company>, IServiceCompany
   {
     private readonly ServiceGeneric<Company> serviceCompany;
+    private readonly ServiceGeneric<CompanyLog> serviceCompanyLog;
     private readonly ServiceGeneric<Establishment> serviceEstablishment;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
@@ -27,6 +28,7 @@ namespace Manager.Services.Specific
       try
       {
         serviceCompany = new ServiceGeneric<Company>(context);
+        serviceCompanyLog = new ServiceGeneric<CompanyLog>(context);
         serviceEstablishment = new ServiceGeneric<Establishment>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
@@ -40,6 +42,7 @@ namespace Manager.Services.Specific
     {
       User(contextAccessor);
       serviceCompany._user = _user;
+      serviceCompanyLog._user = _user;
       serviceEstablishment._user = _user;
       servicePerson._user = _user;
       serviceSalaryScale._user = _user;
@@ -48,6 +51,7 @@ namespace Manager.Services.Specific
     {
       _user = user;
       serviceCompany._user = user;
+      serviceCompanyLog._user = user;
       serviceEstablishment._user = user;
       servicePerson._user = user;
       serviceSalaryScale._user = user;
@@ -55,13 +59,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Company
-    public  string Delete(string id)
+    public string Delete(string id)
     {
       try
       {
         Company item = serviceCompany.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-         serviceCompany.Update(item, null).Wait();
+        serviceCompany.Update(item, null).Wait();
         return "Company deleted!";
       }
       catch (Exception e)
@@ -75,34 +79,53 @@ namespace Manager.Services.Specific
       {
         Company company = serviceCompany.GetNewVersion(p => p._id == idCompany).Result;
         company.Logo = url;
-         serviceCompany.Update(company, null).Wait();
+        serviceCompany.Update(company, null).Wait();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public  string GetLogo(string idCompany)
+    public string GetLogo(string idCompany)
     {
       try
       {
-        return  serviceCompany.GetNewVersion(p => p._id == idCompany).Result.Logo;
+        return serviceCompany.GetNewVersion(p => p._id == idCompany).Result.Logo;
       }
       catch (Exception)
       {
         return string.Empty;
       }
     }
-    public  string New(ViewCrudCompany view)
+    public string New(ViewCrudCompany view)
     {
       try
       {
-        Company company =  serviceCompany.InsertNewVersion(new Company()
-          {
-            _id = view._id,
-            Name = view.Name,
-            Logo = view.Logo
-          }).Result;
+        Company company = serviceCompany.InsertNewVersion(new Company()
+        {
+          _id = view._id,
+          Name = view.Name,
+          Logo = view.Logo
+        }).Result;
+
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        // Save company version
+        var companyLog = new CompanyLog()
+        {
+          Name = company.Name,
+          Skills = company.Skills,
+          Logo = company.Logo,
+          Template = company.Template,
+          Status = company.Status,
+          _idAccount = company._idAccount
+        };
+        companyLog._idCompanyPrevious = company._id;
+        companyLog.Date = datenow;
+        companyLog.DateLog = DateTime.Now;
+
+        var i = serviceCompanyLog.InsertNewVersion(companyLog);
+
         return "Company added!";
       }
       catch (Exception e)
@@ -110,7 +133,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string Update(ViewCrudCompany view)
+    public string Update(ViewCrudCompany view)
     {
       try
       {
@@ -120,7 +143,7 @@ namespace Manager.Services.Specific
           propag = true;
         company.Name = view.Name;
         company.Logo = view.Logo;
-         serviceCompany.Update(company, null).Wait();
+        serviceCompany.Update(company, null).Wait();
 
         if (propag)
         {
@@ -134,7 +157,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudCompany Get(string id)
+    public ViewCrudCompany Get(string id)
     {
       try
       {
@@ -145,7 +168,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudCompany GetByName(string name)
+    public ViewCrudCompany GetByName(string name)
     {
       try
       {
@@ -156,7 +179,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListCompany> List( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCompany> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -164,7 +187,7 @@ namespace Manager.Services.Specific
           .Select(x => new ViewListCompany()
           {
             _id = x._id,
-            Name = x.Name            
+            Name = x.Name
           }).ToList();
         total = serviceCompany.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -183,13 +206,13 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Establishment
-    public  string RemoveEstablishment(string id)
+    public string RemoveEstablishment(string id)
     {
       try
       {
         Establishment item = serviceEstablishment.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-         serviceEstablishment.Update(item, null).Wait();
+        serviceEstablishment.Update(item, null).Wait();
         return "Establishment deleted!";
       }
       catch (Exception e)
@@ -197,11 +220,11 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string NewEstablishment(ViewCrudEstablishment view)
+    public string NewEstablishment(ViewCrudEstablishment view)
     {
       try
       {
-        Company company =  serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
+        Company company = serviceCompany.GetNewVersion(p => p._id == view.Company._id).Result;
         Establishment establishment = serviceEstablishment.InsertNewVersion(
           new Establishment()
           {
@@ -216,7 +239,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  string UpdateEstablishment(ViewCrudEstablishment view)
+    public string UpdateEstablishment(ViewCrudEstablishment view)
     {
       try
       {
@@ -224,7 +247,7 @@ namespace Manager.Services.Specific
         Establishment establishment = serviceEstablishment.GetNewVersion(p => p._id == view._id).Result;
         establishment.Name = view.Name;
         establishment.Company = company.GetViewList();
-         serviceEstablishment.Update(establishment, null).Wait();
+        serviceEstablishment.Update(establishment, null).Wait();
         return "Establishment altered!";
       }
       catch (Exception e)
@@ -232,7 +255,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudEstablishment GetEstablishment(string id)
+    public ViewCrudEstablishment GetEstablishment(string id)
     {
       try
       {
@@ -243,7 +266,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public  ViewCrudEstablishment GetEstablishmentByName(string idCompany, string name)
+    public ViewCrudEstablishment GetEstablishmentByName(string idCompany, string name)
     {
       try
       {
@@ -254,7 +277,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListEstablishment> ListEstablishment(string idcompany,  ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListEstablishment> ListEstablishment(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -272,7 +295,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewListEstablishment> ListEstablishment( ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListEstablishment> ListEstablishment(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
