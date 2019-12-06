@@ -3828,6 +3828,90 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+    public List<ViewListOccupationLog> ListOccupationLog(ref long total, string filter, int count, int page)
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+
+        var list = serviceOccupationLog.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
+          .Result.Select(p => new ViewListOccupationLog()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Date = p.DateLog
+          }).ToList();
+
+        total = list.Count();
+        return list.Skip(skip).Take(count).OrderBy(p => p.Name).ThenBy(p => p.Date).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewMapOccupation GetMapOccupationLog(string id)
+    {
+      try
+      {
+        var occupation = serviceOccupationLog.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+
+        var group = serviceGroupLog.GetAllNewVersion(p => p._idGroupPrevious == occupation.Group._id
+        && p.Date <= occupation.Date).Result.LastOrDefault();
+        var company = serviceCompanyLog.GetAllNewVersion(p => p._idCompanyPrevious == group.Company._id
+        && p.Date <= occupation.Date).Result.LastOrDefault();
+
+        var map = new ViewMapOccupation()
+        {
+          _id = occupation._id,
+          Name = occupation.Name,
+          SpecificRequirements = occupation.SpecificRequirements,
+          Company = new ViewListCompany() { _id = company._id, Name = company.Name },
+          Group = group.GetViewList(),
+          Activities = occupation.Activities?.OrderBy(o => o.Order).ToList(),
+          Process = occupation.Process.Select(x => new ViewListProcessLevelTwo()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Order = x.Order,
+            ProcessLevelOne = new ViewListProcessLevelOne()
+            {
+              _id = x.ProcessLevelOne._id,
+              Name = x.ProcessLevelOne.Name,
+              Order = x.ProcessLevelOne.Order,
+              Area = x.ProcessLevelOne?.Area
+            }
+          }).ToList(),
+          Schooling = occupation.Schooling?.OrderBy(o => o.Order).Select(x => new ViewCrudSchooling()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Complement = x.Complement,
+            Type = x.Type,
+            Order = x.Order
+          }).ToList(),
+          Skills = occupation.Skills?.OrderBy(o => o?.Name).ToList(),
+          SkillsCompany = company.Skills?.OrderBy(o => o.Name).ToList(),
+          SkillsGroup = group.Skills?.OrderBy(o => o.Name).ToList(),
+          ScopeGroup = group.Scope?.OrderBy(o => o.Order).Select(x => new ViewListScope()
+          {
+            _id = x._id,
+            Name = x.Name,
+            Order = x.Order
+          }).ToList()
+        };
+
+        return map;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public ViewCrudProcessLevelOne GetListProcessLevelOneById(string id)
     {
       try

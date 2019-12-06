@@ -605,7 +605,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getlineopportunity/{idarea}")]
-    public async Task<List<ViewListInfraSphere>> GetLineOpportunity(string idarea,int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListInfraSphere>> GetLineOpportunity(string idarea, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       List<ViewListInfraSphere> result = service.GetLineOpportunity(idarea, ref total, filter, count, page);
@@ -624,6 +624,37 @@ namespace Manager.Controllers
     public async Task<ViewMapOccupation> GetMapOccupation(string id)
     {
       return await Task.Run(() => service.GetMapOccupation(id));
+    }
+
+    /// <summary>
+    /// Retorna o mapa do cargo conforme versão
+    /// </summary>
+    /// <param name="id">Identificador do mapa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getmapoccupationlog/{id}")]
+    public async Task<ViewMapOccupation> GetMapOccupationLog(string id)
+    {
+      return await Task.Run(() => service.GetMapOccupationLog(id));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listoccupationlog")]
+    public async Task<List<ViewListOccupationLog>> ListOccupationLog(int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    {
+      long total = 0;
+      var result = service.ListOccupationLog(ref total, filter, count, page);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
     /// <summary>
