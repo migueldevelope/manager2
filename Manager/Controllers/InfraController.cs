@@ -650,7 +650,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupationlog")]
-    public async Task<List<ViewListOccupationLog>> ListOccupationLog(int count = 10, int page = 1, string filter = "", string filterGroup = "")
+    public async Task<List<ViewListOccupationLog>> ListOccupationLog(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListOccupationLog(ref total, filter, count, page);
