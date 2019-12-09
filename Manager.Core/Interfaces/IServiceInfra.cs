@@ -127,6 +127,6 @@ namespace Manager.Core.Interfaces
     List<ViewListOpportunityLine> ListOpportunityLine(string idcompany);
     List<ViewListInfraSphere> GetLineOpportunity(string idarea, ref long total, string filter, int count, int page);
     ViewMapOccupation GetMapOccupationLog(ViewFilterDateOne date, string id);
-    List<ViewListOccupationLog> ListOccupationLog(ref long total, string filter, int count, int page);
+    List<ViewListOccupationLog> ListOccupationLog(ref long total, string id, int count, int page);
   }
 }

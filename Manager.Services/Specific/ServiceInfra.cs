@@ -3830,13 +3830,14 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewListOccupationLog> ListOccupationLog(ref long total, string filter, int count, int page)
+    public List<ViewListOccupationLog> ListOccupationLog(ref long total, string id, int count, int page)
     {
       try
       {
         int skip = (count * (page - 1));
 
-        var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+        && p._id == id).Result;
 
         var listCompany = serviceCompanyLog.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
           .Result.Select(p => new ViewListOccupationLog()
@@ -3857,7 +3858,8 @@ namespace Manager.Services.Specific
           }).ToList();
 
 
-        var list = serviceOccupationLog.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
+        var list = serviceOccupationLog.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+        && p._idOccupationPrevious == id)
           .Result.Select(p => new ViewListOccupationLog()
           {
             _id = p._idOccupationPrevious,

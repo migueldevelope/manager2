@@ -645,15 +645,15 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="count"></param>
     /// <param name="page"></param>
-    /// <param name="filter"></param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("listoccupationlog")]
-    public async Task<List<ViewListOccupationLog>> ListOccupationLog(int count = 10, int page = 1, string filter = "")
+    [Route("listoccupationlog/{id}")]
+    public async Task<List<ViewListOccupationLog>> ListOccupationLog(string id, int count = 10, int page = 1)
     {
       long total = 0;
-      var result = service.ListOccupationLog(ref total, filter, count, page);
+      var result = service.ListOccupationLog(ref total, id, count, page);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
