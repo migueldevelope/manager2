@@ -4091,7 +4091,7 @@ namespace Manager.Services.Specific
       try
       {
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
-        bool exists = false;
+        bool exists = true;
         var groupLog = serviceGroupLog.GetNewVersion(p =>
         p._idGroupPrevious == group._id
         && p.Date == datenow).Result;
@@ -4099,7 +4099,7 @@ namespace Manager.Services.Specific
         if (groupLog == null)
         {
           groupLog = new GroupLog();
-          exists = true;
+          exists = false;
         }
         groupLog.Name = group.Name;
         groupLog.Company = group.Company;
@@ -4132,7 +4132,7 @@ namespace Manager.Services.Specific
       try
       {
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
-        bool exists = false;
+        bool exists = true;
         var occupationLog = serviceOccupationLog.GetNewVersion(p =>
         p._idOccupationPrevious == occupation._id
         && p.Date == datenow).Result;
@@ -4140,7 +4140,7 @@ namespace Manager.Services.Specific
         if (occupationLog == null)
         {
           occupationLog = new OccupationLog();
-          exists = true;
+          exists = false;
         }
         occupationLog.Name = occupation.Name;
         occupationLog.Group = occupation.Group;
