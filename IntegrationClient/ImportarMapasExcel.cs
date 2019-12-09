@@ -67,6 +67,11 @@ namespace IntegrationClient
           };
           files = Directory.EnumerateFiles(txtPst.Text, "*.xls*", SearchOption.TopDirectoryOnly);
         }
+        occupations = new List<OccupationStatistic>();
+        skills = new List<SkillStatistic>();
+        schoolings = new List<SchoolingStatistic>();
+        occupationSkills = new List<OccupationSkillStatistic>();
+        occupationSchoolings = new List<OccupationSchoolingStatistic>();
         foreach (string file in files)
         {
           if (chkEppPlus.Checked)
@@ -143,11 +148,16 @@ namespace IntegrationClient
         // TODO: inicialização de idCompany e Level Two
         IdCompany = "",
         IdProcessLevelTwo = "",
+        // TODO
         Activities = new List<string>(),
         Schooling = new List<string>(),
         SchoolingComplement = new List<string>(),
         Skills = new List<string>(),
-        Update = chkAtu.Checked
+        Update = chkAtu.Checked,
+        Name = string.Empty,
+        NameGroup = string.Empty,
+        SpecificRequirements = string.Empty,
+        _id = string.Empty
       };
       try
       {
@@ -248,8 +258,8 @@ namespace IntegrationClient
           line++;
         }
         viewOccupation.SpecificRequirements = requirement;
-        //occupation = infraIntegration.IntegrationProfile(occupation);
-        var occupation = new OccupationStatistic()
+        viewOccupation = infraIntegration.IntegrationProfile(viewOccupation);
+        OccupationStatistic occupation = new OccupationStatistic()
         {
           FileName = file,
           GroupName = viewOccupation.NameGroup,
@@ -261,7 +271,7 @@ namespace IntegrationClient
         {
           occupations.Add(occupation);
         }
-        foreach (var item in viewOccupation.Skills)
+        foreach (string item in viewOccupation.Skills)
         {
           var index = skills.FindIndex(p => p.Name.Equals(item));
           if (index == -1)
@@ -278,7 +288,7 @@ namespace IntegrationClient
             SkillName = item
           });
         }
-        foreach (var item in viewOccupation.Schooling)
+        foreach (string item in viewOccupation.Schooling)
         {
           var index = schoolings.FindIndex(p => p.Name.Equals(item));
           if (index == -1)
@@ -295,7 +305,7 @@ namespace IntegrationClient
             SchollingName = item
           });
         }
-        foreach (var item in viewOccupation.Messages)
+        foreach (string item in viewOccupation.Messages)
         {
           var itemAux = item.Split(':');
           if (itemAux[1].IndexOf("competência") != -1)
@@ -333,8 +343,6 @@ namespace IntegrationClient
             });
           }
         }
-        string jj = JsonConvert.SerializeObject(viewOccupation);
-        FileClass.SaveLog("aqui.txt", jj, EnumTypeLineOpportunityg.Register);
       }
       catch (Exception ex)
       {
@@ -346,7 +354,8 @@ namespace IntegrationClient
       try
       {
         excelPst = excelApp.Workbooks.Add();
-        for (int i = excelPst.Worksheets.Count; i < 6; i++)
+        int qtdFinal = 6 - excelPst.Worksheets.Count;
+        for (int i = excelPst.Worksheets.Count; i < qtdFinal; i++)
         {
           excelPst.Worksheets.Add();
         }
@@ -419,6 +428,7 @@ namespace IntegrationClient
           excelPln.Range[string.Format("B{0}", line)].Value = item.SchollingName;
           line++;
         }
+        excelPst.Worksheets[1].Activate();
         excelPst.SaveAs("Tabulacao.xlsx");
         excelPst.Close();
       }

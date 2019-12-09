@@ -6,6 +6,7 @@ namespace Manager.Core.Business
 {
   public class OccupationLog: Occupation
   {
+    [BsonDateTimeOptions(DateOnly = true)]
     public DateTime? Date { get; set; }
     public DateTime? DateLog { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
