@@ -3836,16 +3836,62 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
 
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
+        var listCompany = serviceCompanyLog.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
+          .Result.Select(p => new ViewListOccupationLog()
+          {
+            _id = p._idCompanyPrevious,
+            Name = p.Name,
+            DateLog = p.DateLog,
+            Date = p.Date
+          }).ToList();
+
+        var listGroup = serviceGroupLog.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
+          .Result.Select(p => new ViewListOccupationLog()
+          {
+            _id = p._idGroupPrevious,
+            Name = p.Name,
+            DateLog = p.DateLog,
+            Date = p.Date
+          }).ToList();
+
+
         var list = serviceOccupationLog.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
           .Result.Select(p => new ViewListOccupationLog()
           {
-            _id = p._id,
+            _id = p._idOccupationPrevious,
             Name = p.Name,
-            Date = p.DateLog
+            DateLog = p.DateLog,
+            Date = p.Date
           }).ToList();
 
+        foreach(var item in occupations)
+        {
+          foreach(var company in listCompany.Where(p => p._id == item.Group.Company._id))
+          {
+            list.Add(new ViewListOccupationLog()
+            {
+              _id = item._id,
+              Name = item.Name,
+              Date = company.Date,
+              DateLog = company.DateLog
+            });
+          }
+          foreach (var group in listGroup.Where(p => p._id == item.Group._id))
+          {
+            list.Add(new ViewListOccupationLog()
+            {
+              _id = item._id,
+              Name = item.Name,
+              Date = group.Date,
+              DateLog = group.DateLog
+            });
+          }
+        }
+
         total = list.Count();
-        return list.Skip(skip).Take(count).OrderBy(p => p.Name).ThenBy(p => p.Date).ToList();
+        return list.Skip(skip).Take(count).OrderBy(p => p.Name).ThenBy(p => p.DateLog).ToList();
       }
       catch (Exception e)
       {
@@ -3853,11 +3899,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewMapOccupation GetMapOccupationLog(string id)
+    public ViewMapOccupation GetMapOccupationLog(ViewFilterDateOne date, string id)
     {
       try
       {
-        var occupation = serviceOccupationLog.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+        var occupation = serviceOccupationLog.GetAllNewVersion(p => p._idOccupationPrevious == id
+        && p.Date <= date.Date).Result.FirstOrDefault();
 
         var group = serviceGroupLog.GetAllNewVersion(p => p._idGroupPrevious == occupation.Group._id
         && p.Date <= occupation.Date).Result.LastOrDefault();

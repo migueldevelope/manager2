@@ -6,5 +6,6 @@ namespace Manager.Views.BusinessView
   public class ViewListOccupationLog: _ViewListBase
   {
     public DateTime? Date { get; set; }
+    public DateTime? DateLog { get; set; }
   }
 }

@@ -630,13 +630,14 @@ namespace Manager.Controllers
     /// Retorna o mapa do cargo conforme versão
     /// </summary>
     /// <param name="id">Identificador do mapa</param>
+    /// <param name="date">Data do mapa</param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getmapoccupationlog/{id}")]
-    public async Task<ViewMapOccupation> GetMapOccupationLog(string id)
+    public async Task<ViewMapOccupation> GetMapOccupationLog([FromBody]ViewFilterDateOne date, string id)
     {
-      return await Task.Run(() => service.GetMapOccupationLog(id));
+      return await Task.Run(() => service.GetMapOccupationLog(date, id));
     }
 
     /// <summary>
