@@ -633,7 +633,7 @@ namespace Manager.Controllers
     /// <param name="date">Data do mapa</param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
+    [HttpPost]
     [Route("getmapoccupationlog/{id}")]
     public async Task<ViewMapOccupation> GetMapOccupationLog([FromBody]ViewFilterDateOne date, string id)
     {
