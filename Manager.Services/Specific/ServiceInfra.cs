@@ -3866,9 +3866,9 @@ namespace Manager.Services.Specific
             Date = p.Date
           }).ToList();
 
-        foreach(var item in occupations)
+        foreach (var item in occupations)
         {
-          foreach(var company in listCompany.Where(p => p._id == item.Group.Company._id))
+          foreach (var company in listCompany.Where(p => p._id == item.Group.Company._id))
           {
             list.Add(new ViewListOccupationLog()
             {
@@ -3908,7 +3908,7 @@ namespace Manager.Services.Specific
 
         var group = serviceGroupLog.GetAllNewVersion(p => p._idGroupPrevious == occupation.Group._id
         && p.Date <= occupation.Date).Result.LastOrDefault();
-        var company = serviceCompanyLog.GetAllNewVersion(p => p._idCompanyPrevious == group.Company._id
+        var company = serviceCompanyLog.GetAllNewVersion(p => p._idCompanyPrevious == occupation.Group.Company._id
         && p.Date <= occupation.Date).Result.LastOrDefault();
 
         var map = new ViewMapOccupation()
@@ -3916,10 +3916,10 @@ namespace Manager.Services.Specific
           _id = occupation._id,
           Name = occupation.Name,
           SpecificRequirements = occupation.SpecificRequirements,
-          Company = new ViewListCompany() { _id = company._id, Name = company.Name },
-          Group = group.GetViewList(),
+          Company = company == null ? null : new ViewListCompany() { _id = company._id, Name = company.Name },
+          Group = group?.GetViewList(),
           Activities = occupation.Activities?.OrderBy(o => o.Order).ToList(),
-          Process = occupation.Process.Select(x => new ViewListProcessLevelTwo()
+          Process = occupation.Process?.Select(x => new ViewListProcessLevelTwo()
           {
             _id = x._id,
             Name = x.Name,
@@ -3941,9 +3941,9 @@ namespace Manager.Services.Specific
             Order = x.Order
           }).ToList(),
           Skills = occupation.Skills?.OrderBy(o => o?.Name).ToList(),
-          SkillsCompany = company.Skills?.OrderBy(o => o.Name).ToList(),
-          SkillsGroup = group.Skills?.OrderBy(o => o.Name).ToList(),
-          ScopeGroup = group.Scope?.OrderBy(o => o.Order).Select(x => new ViewListScope()
+          SkillsCompany = company?.Skills?.OrderBy(o => o.Name).ToList(),
+          SkillsGroup = group?.Skills?.OrderBy(o => o.Name).ToList(),
+          ScopeGroup = group?.Scope?.OrderBy(o => o.Order).Select(x => new ViewListScope()
           {
             _id = x._id,
             Name = x.Name,
