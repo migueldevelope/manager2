@@ -3911,9 +3911,9 @@ namespace Manager.Services.Specific
         && p.Date <= date.Date).Result.FirstOrDefault();
 
         var group = serviceGroupLog.GetAllNewVersion(p => p._idGroupPrevious == occupation.Group._id
-        && p.Date <= occupation.Date).Result.LastOrDefault();
+        && p.Date <= date.Date).Result.LastOrDefault();
         var company = serviceCompanyLog.GetAllNewVersion(p => p._idCompanyPrevious == occupation.Group.Company._id
-        && p.Date <= occupation.Date).Result.LastOrDefault();
+        && p.Date <= date.Date).Result.LastOrDefault();
 
         var map = new ViewMapOccupation()
         {
