@@ -3910,6 +3910,9 @@ namespace Manager.Services.Specific
         var occupation = serviceOccupationLog.GetAllNewVersion(p => p._idOccupationPrevious == id
         && p.Date <= date.Date).Result.FirstOrDefault();
 
+        if (occupation == null)
+          return null;
+
         var group = serviceGroupLog.GetAllNewVersion(p => p._idGroupPrevious == occupation.Group._id
         && p.Date <= date.Date).Result.LastOrDefault();
         var company = serviceCompanyLog.GetAllNewVersion(p => p._idCompanyPrevious == occupation.Group.Company._id
