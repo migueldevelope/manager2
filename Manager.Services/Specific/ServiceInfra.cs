@@ -4059,7 +4059,7 @@ namespace Manager.Services.Specific
       try
       {
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
-        bool exists = false;
+        bool exists = true;
         var companyLog = serviceCompanyLog.GetNewVersion(p =>
         p._idCompanyPrevious == company._id
         && p.Date == datenow).Result;
@@ -4067,7 +4067,7 @@ namespace Manager.Services.Specific
         if (companyLog == null)
         {
           companyLog = new CompanyLog();
-          exists = true;
+          exists = false;
         }
         companyLog.Name = company.Name;
         companyLog.Skills = company.Skills;
