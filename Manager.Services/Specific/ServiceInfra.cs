@@ -3895,7 +3895,7 @@ namespace Manager.Services.Specific
         }
 
         total = list.Count();
-        return list.Skip(skip).Take(count).OrderBy(p => p.Name).ThenBy(p => p.DateLog).ToList();
+        return list.Skip(skip).Take(count).OrderBy(p => p.Name).ThenByDescending(p => p.DateLog).ToList();
       }
       catch (Exception e)
       {
