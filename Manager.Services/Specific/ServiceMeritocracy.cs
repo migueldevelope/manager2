@@ -484,7 +484,7 @@ namespace Manager.Services.Specific
           var scores = serviceSalaryScaleScore.GetAllFreeNewVersion(p => p.CountSteps == count).Result.ToList();
 
           var max = scores.Where(p => p.Value > 0).Max(p => p.Value);
-          var min = scores.Where(p => p.Value > 70).Min(p => p.Value);
+          var min = scores.Where(p => p.Value > 0).Min(p => p.Value);
           var diff = max - min;
           resultEnd = ((resultEnd * diff) / 100) + min;
 
