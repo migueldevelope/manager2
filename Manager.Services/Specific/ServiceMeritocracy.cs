@@ -349,8 +349,10 @@ namespace Manager.Services.Specific
         var goals = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == person._id & p.StatusGoalsPerson == EnumStatusGoalsPerson.End).Result.LastOrDefault();
         if (goals != null)
         {
-          if (goals.AchievementEnd < 100)
+          if (goals.AchievementEnd == 0)
             goalsWeight = EnumMeritocracyGoals.NotReach;
+          else if (goals.AchievementEnd < 100)
+            goalsWeight = EnumMeritocracyGoals.Partial;
           else if ((goals.AchievementEnd >= 100) & (goals.AchievementEnd < 120))
             goalsWeight = EnumMeritocracyGoals.Reached;
           else
