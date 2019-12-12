@@ -483,6 +483,12 @@ namespace Manager.Services.Specific
           var count = steps.Count();
           var scores = serviceSalaryScaleScore.GetAllFreeNewVersion(p => p.CountSteps == count).Result.ToList();
 
+          var max = scores.Max(p => p.Value);
+          var min = scores.Min(p => p.Value);
+          var diff = max - min;
+          resultEnd = ((resultEnd * diff) / 100) + min;
+
+
           meritocracy.Grade = grade;
 
           if (count == 2)
