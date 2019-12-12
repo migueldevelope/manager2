@@ -380,25 +380,42 @@ namespace Manager.Services.Specific
       }
     }
 
+    //private decimal ResultLevel(byte level, decimal point)
+    //{
+    //  try
+    //  {
+    //    switch (level)
+    //    {
+    //      case 1:
+    //        return 0;
+    //      case 2:
+    //        return decimal.Parse((double.Parse(point.ToString()) * 0.8).ToString());
+    //      case 3:
+    //        return decimal.Parse((double.Parse(point.ToString()) * 0.9333).ToString());
+    //      case 4:
+    //        return decimal.Parse((double.Parse(point.ToString()) * 1.066).ToString());
+    //      case 5:
+    //        return decimal.Parse((double.Parse(point.ToString()) * 1.2).ToString());
+    //    }
+
+    //    return 0;
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    throw e;
+    //  }
+    //}
+
     private decimal ResultLevel(byte level, decimal point)
     {
       try
       {
-        switch (level)
-        {
-          case 1:
-            return 0;
-          case 2:
-            return decimal.Parse((double.Parse(point.ToString()) * 0.8).ToString());
-          case 3:
-            return decimal.Parse((double.Parse(point.ToString()) * 0.9333).ToString());
-          case 4:
-            return decimal.Parse((double.Parse(point.ToString()) * 1.066).ToString());
-          case 5:
-            return decimal.Parse((double.Parse(point.ToString()) * 1.2).ToString());
-        }
+        if (point == 0)
+          return 0;
 
-        return 0;
+        decimal result = (level * 100) / 5;
+        result = decimal.Parse(((result * point) / 100).ToString());
+        return result;
       }
       catch (Exception e)
       {
