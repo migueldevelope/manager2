@@ -111,11 +111,11 @@ namespace Manager.Controllers
     /// <returns>Lista de tabelas salariais</returns>
     [Authorize]
     [HttpGet]
-    [Route("listsalaryscalelog/{idcompany}")]
-    public async Task<List<ViewListSalaryScaleLog>> ListSalaryScaleLog(string idcompany, int count = 10, int page = 1, string filter = "")
+    [Route("listsalaryscalelog/{idsalaryscale}")]
+    public async Task<List<ViewListSalaryScaleLog>> ListSalaryScaleLog(string idsalaryscale, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.ListSalaryScaleLog(idcompany, ref total, count, page, filter);
+      var result = service.ListSalaryScaleLog(idsalaryscale, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }

@@ -170,11 +170,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListSalaryScaleLog> ListSalaryScaleLog(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListSalaryScaleLog> ListSalaryScaleLog(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
-        List<ViewListSalaryScaleLog> detail = serviceSalaryScaleLog.GetAllNewVersion(p => p.Company._id == idcompany & p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
+        List<ViewListSalaryScaleLog> detail = serviceSalaryScaleLog.GetAllNewVersion(p => p._idSalaryScalePrevious == idsalaryscale & p.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Name").Result
           .Select(x => new ViewListSalaryScaleLog()
           {
             _id = x._id,
@@ -182,7 +182,7 @@ namespace Manager.Services.Specific
             Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
             Date = x.Date
           }).ToList();
-        total = serviceSalaryScale.CountNewVersion(p => p.Company._id == idcompany && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceSalaryScaleLog.CountNewVersion(p => p._idSalaryScalePrevious == idsalaryscale && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -202,6 +202,19 @@ namespace Manager.Services.Specific
           Name = item.Name,
           _id = item._id,
           Date = item.Date,
+          Grades = item.Grades?.Select(p => new ViewListGrade()
+          {
+            _id = p._id,
+            Name = p.Name,
+            Order = p.Order,
+            StepMedium = p.StepMedium,
+            Steps = p.ListSteps?.Select(x => new ViewListStep()
+            {
+              Salary = x.Salary,
+              Step = x.Step
+            }).ToList(),
+            Wordload = p.Workload
+          }).ToList(),
           _idSalaryScalePrevious = item._idSalaryScalePrevious
         };
       }
