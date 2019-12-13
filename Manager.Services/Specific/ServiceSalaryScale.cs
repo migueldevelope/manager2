@@ -775,7 +775,7 @@ namespace Manager.Services.Specific
         if (salaryScale.Grades.Count > 0)
         {
           //long count = salaryScale.Grades.Count;
-          long count = occupations.Count;
+          long count = (occupations.Count + salaryScale.Grades.Count);
           string[] occupationsname = new string[count];
           string[] descriptionname = new string[count];
           string[] grades = new string[count];
@@ -810,6 +810,7 @@ namespace Manager.Services.Specific
               {
                 if (occ.SalaryScales.Where(p => p._idGrade == item._id).Count() > 0)
                 {
+                  grades[row] = item.Name;
                   occupationsname[row] = occ.Name;
                   descriptionname[row] = occ.Description;
                   groups[row] = occ.Group?.Name;
