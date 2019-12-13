@@ -421,6 +421,29 @@ namespace EdeskIntegration.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idsalaryscale"></param>
+    /// <returns></returns>
+    [HttpPost("{idsalaryscale}/salaryscale/update")]
+    public string PostSalaryScaleUpdate(string idsalaryscale)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        //var ext = Path.GetExtension(file.FileName).ToLower();
+        //if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+        if (file.FileName != "SALARYSCALE.xlsx")
+          return "bad_file_type";
+      }
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var result = serviceSalaryScale.ImportUpdateSalaryScale(idsalaryscale, file.OpenReadStream());
+        return result;
+      }
+      return "not_file";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <returns></returns>
     [HttpPost("training")]
     public string PostTraining()

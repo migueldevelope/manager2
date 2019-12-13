@@ -14,6 +14,7 @@ namespace Manager.Services.Commons
   {
 
     #region SalaryScale
+
     public Tuple<double[][], string[], long, int[]> ImportSalaryScale(Stream stream)
     {
       //string fullPath = @"c:/jms/SALARYSCALE4.xlsx";

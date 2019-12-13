@@ -706,6 +706,64 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string ImportUpdateSalaryScale(string idsalaryscale, Stream stream)
+    {
+      try
+      {
+        var serviceExcel = new ServiceExcel();
+        var tuple = serviceExcel.ImportSalaryScale(stream);
+        var import = tuple.Item1;
+        var gradename = tuple.Item2;
+        var workload = tuple.Item4;
+        var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+
+        var gradesnew = new List<Grade>();
+
+        //salaryScale.Grades = new List<Grade>();
+
+        for (int row = 0; row < tuple.Item3; row++)
+        {
+          if (import[row][0].ToString() != string.Empty)
+          {
+            var grade = salaryScale.Grades.Where(p => p.Name == gradename[row].ToString()).FirstOrDefault();
+            //grade.Order = row + 1;
+            //grade._id = ObjectId.GenerateNewId().ToString();
+            //grade.Name = gradename[row].ToString();
+            grade.ListSteps = new List<ListSteps>();
+            grade.Workload = workload[row];
+
+            for (int col = 0; col < 8; col++)
+            {
+              if (import[row][col].ToString() != string.Empty)
+              {
+                var step = new ListSteps();
+                step.Step = (EnumSteps)col;
+                step.Salary = Math.Round(decimal.Parse(import[row][col].ToString()), 2);
+                grade.ListSteps.Add(step);
+              }
+            }
+
+            //salaryScale.Grades.Add(grade);
+            gradesnew.Add(grade);
+          }
+        }
+        salaryScale.Grades = gradesnew;
+
+        var scale = serviceSalaryScale.Update(salaryScale, null);
+
+        return "import_ok";
+      }
+      catch (Exception e)
+      {
+        if (e.Message == "not_numeric")
+          return e.Message;
+        else if (e.Message == "not_numeric_workload")
+          return e.Message;
+        else
+          throw e;
+      }
+    }
+
     public string ExportSalaryScale(string idsalaryscale)
     {
       try
