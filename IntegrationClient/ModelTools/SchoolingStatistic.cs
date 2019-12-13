@@ -7,5 +7,6 @@ namespace IntegrationClient.ModelTools
     public string Name { get; set; }
     public bool Register { get; set; }
     public bool Found { get; set; }
+    public bool Profile { get; set; }
   }
 }

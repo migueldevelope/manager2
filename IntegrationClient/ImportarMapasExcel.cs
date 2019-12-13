@@ -289,7 +289,7 @@ namespace IntegrationClient
         }
         foreach (string item in viewOccupation.Skills)
         {
-          var index = skills.FindIndex(p => p.Name.Equals(item));
+          int index = skills.FindIndex(p => p.Name.Equals(item));
           if (index == -1)
           {
             skills.Add(new SkillStatistic()
@@ -306,25 +306,27 @@ namespace IntegrationClient
         }
         foreach (string item in viewOccupation.Schooling)
         {
-          var index = schoolings.FindIndex(p => p.Name.ToUpper().Equals(item.ToUpper()));
+          int index = schoolings.FindIndex(p => p.Name.ToUpper().Equals(item.ToUpper()));
           if (index == -1)
           {
             schoolings.Add(new SchoolingStatistic()
             {
               Name = item,
               Register = true,
-              Found = true
+              Found = true,
+              Profile = true
             });
           }
           occupationSchoolings.Add(new OccupationSchoolingStatistic()
           {
             FileName = file,
-            SchollingName = item
+            SchollingName = item,
+            Profile = true
           });
         }
         foreach (string item in viewOccupation.Messages)
         {
-          var itemAux = item.Split('@');
+          string[] itemAux = item.Split('@');
           if (itemAux[1].IndexOf("competência") != -1)
           {
             var index = skills.FindIndex(p => p.Name.Equals(itemAux[0]));
@@ -350,7 +352,8 @@ namespace IntegrationClient
               {
                 Name = itemAux[0],
                 Register = false,
-                Found = false
+                Found = false,
+                Profile = false
               });
             }
             else
@@ -359,13 +362,15 @@ namespace IntegrationClient
               {
                 Name = itemAux[0],
                 Register = true,
-                Found = false
+                Found = false,
+                Profile = false
               });
             }
             occupationSchoolings.Add(new OccupationSchoolingStatistic()
             {
               FileName = file,
-              SchollingName = itemAux[0]
+              SchollingName = itemAux[0],
+              Profile = false
             });
           }
         }
@@ -405,12 +410,14 @@ namespace IntegrationClient
         excelPln.Range["A1"].Value = "Escolaridade";
         excelPln.Range["B1"].Value = "Cadastrada";
         excelPln.Range["C1"].Value = "Localizada";
+        excelPln.Range["D1"].Value = "Perfil";
         line = 2;
         foreach (SchoolingStatistic item in schoolings)
         {
           excelPln.Range[string.Format("A{0}", line)].Value = item.Name;
           excelPln.Range[string.Format("B{0}", line)].Value = item.Register ? "Sim" : "Não";
           excelPln.Range[string.Format("C{0}", line)].Value = item.Found ? "Sim" : "Não";
+          excelPln.Range[string.Format("D{0}", line)].Value = item.Profile ? "Sim" : "Não";
           line++;
         }
         // Planilha de Cargos
@@ -449,11 +456,13 @@ namespace IntegrationClient
         excelPln.Name = "CargosEscolaridades";
         excelPln.Range["A1"].Value = "Cargo";
         excelPln.Range["B1"].Value = "Escolaridade";
+        excelPln.Range["C1"].Value = "Perfil";
         line = 2;
         foreach (OccupationSchoolingStatistic item in occupationSchoolings)
         {
           excelPln.Range[string.Format("A{0}", line)].Value = item.FileName;
           excelPln.Range[string.Format("B{0}", line)].Value = item.SchollingName;
+          excelPln.Range[string.Format("C{0}", line)].Value = item.Profile ? "Sim" : "Não";
           line++;
         }
         excelPst.Worksheets[1].Activate();
