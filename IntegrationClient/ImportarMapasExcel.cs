@@ -72,6 +72,10 @@ namespace IntegrationClient
         schoolings = new List<SchoolingStatistic>();
         occupationSkills = new List<OccupationSkillStatistic>();
         occupationSchoolings = new List<OccupationSchoolingStatistic>();
+        if (File.Exists(Path.Combine(txtPst.Text, "Tabulacao.xlsx")))
+        {
+          File.Delete(Path.Combine(txtPst.Text, "Tabulacao.xlsx"));
+        }
         foreach (string file in files)
         {
           if (chkEppPlus.Checked)
@@ -320,7 +324,7 @@ namespace IntegrationClient
         }
         foreach (string item in viewOccupation.Messages)
         {
-          var itemAux = item.Split(':');
+          var itemAux = item.Split('@');
           if (itemAux[1].IndexOf("competência") != -1)
           {
             var index = skills.FindIndex(p => p.Name.Equals(itemAux[0]));

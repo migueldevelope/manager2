@@ -1478,8 +1478,8 @@ namespace Manager.Services.Specific
           Process = new List<ViewListProcessLevelTwo>(),
           Skills = new List<ViewListSkill>(),
           Activities = new List<ViewListActivitie>(),
-          Schooling = new List<ViewCrudSchooling>(),
-          Line = 0
+          Schooling = group.Schooling,
+        Line = 0
         };
         occupation.Process.Add(processLevelTwo.GetViewList());
       }
@@ -1488,6 +1488,7 @@ namespace Manager.Services.Specific
         occupation.Skills = new List<ViewListSkill>();
         occupation.SpecificRequirements = view.SpecificRequirements;
         occupation.Activities = new List<ViewListActivitie>();
+        occupation.Schooling = group.Schooling;
       }
       string itemAux;
       Skill skill;
@@ -1497,7 +1498,7 @@ namespace Manager.Services.Specific
         skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
         if (skill == null)
         {
-          view.Messages.Add(string.Format("{0}: competência não cadastrada", itemAux));
+          view.Messages.Add(string.Format("{0}@ competência não cadastrada", itemAux));
         }
         else
         {
@@ -1515,7 +1516,6 @@ namespace Manager.Services.Specific
           Order = order
         });
       }
-      occupation.Schooling = group.Schooling;
       Schooling schooling;
       for (int i = 0; i < view.Schooling.Count; i++)
       {
@@ -1523,7 +1523,7 @@ namespace Manager.Services.Specific
         schooling = schoolingService.GetNewVersion(p => p.Name == itemAux).Result;
         if (schooling == null)
         {
-          view.Messages.Add(string.Format("{0}: escolaridade não cadastrada", itemAux));
+          view.Messages.Add(string.Format("{0}@ escolaridade não cadastrada", itemAux));
         }
         else
         {
@@ -1539,7 +1539,7 @@ namespace Manager.Services.Specific
           }
           if (!achou)
           {
-            view.Messages.Add(string.Format("{0}: escolaridade não localizada", itemAux));
+            view.Messages.Add(string.Format("{0}@ escolaridade não localizada", itemAux));
           }
         }
       }
@@ -1593,13 +1593,17 @@ namespace Manager.Services.Specific
       item = item.Replace("ENSINO MÉDIO EM ANDAMENTO", "ENSINO MÉDIO INCOMPLETO");
       item = item.Replace("ENSINO SUPERIOR EM ANDAMENTO", "ENSINO SUPERIOR INCOMPLETO");
       item = item.Replace("ENSINO SUPERIOR COMPLETO OU EM ANDAMENTO", "ENSINO SUPERIOR INCOMPLETO");
+      item = item.Replace("ENSINO SUPERIOR COMPLETO OU FALTANDO MENOS DE DOIS ANOS", "ENSINO SUPERIOR INCOMPLETO");
+      item = item.Replace("ENSINO SUPERIOR COMPLETO NAS ÁREAS DE ENGENHARIA", "ENSINO SUPERIOR COMPLETO");
       item = item.Replace("ENSINO TÉCNICO EM ANDAMENTO", "TÉCNICO INCOMPLETO");
       item = item.Replace("ENSINO TÉCNICO COMPLETO", "TÉCNICO COMPLETO");
       item = item.Replace("PÓS-GRADUAÇÃO COMPLETA", "PÓS GRADUAÇÃO COMPLETA");
+      item = item.Replace("PÓS-GRADUAÇÃO COMPLETO", "PÓS GRADUAÇÃO COMPLETA");
       item = item.Replace("PÓS-GRADUAÇÃO EM ANDAMENTO", "PÓS GRADUAÇÃO INCOMPLETA");
       item = item.Replace("PÓS - GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
       item = item.Replace("PÓS GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
       item = item.Replace("ADM: PÓS - GRADUAÇÃO EM ANDAMENTO | OPERAÇÃO: ENSINO SUPERIOR COMPLETO", "PÓS GRADUAÇÃO INCOMPLETA");
+      item = item.Replace("ADM: PÓS GRADUAÇÃO INCOMPLETA | OPERAÇÃO: ENSINO SUPERIOR COMPLETO", "PÓS GRADUAÇÃO INCOMPLETA");
       return item;
     }
     #endregion
