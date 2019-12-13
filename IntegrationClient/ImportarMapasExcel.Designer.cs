@@ -34,6 +34,7 @@
       this.chkEppPlus = new System.Windows.Forms.CheckBox();
       this.chkAtu = new System.Windows.Forms.CheckBox();
       this.folder = new System.Windows.Forms.FolderBrowserDialog();
+      this.chkLjo = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // txtPst
@@ -83,11 +84,22 @@
       this.chkAtu.Text = "Atualizar Cargos?";
       this.chkAtu.UseVisualStyleBackColor = true;
       // 
+      // chkLjo
+      // 
+      this.chkLjo.AutoSize = true;
+      this.chkLjo.Location = new System.Drawing.Point(114, 87);
+      this.chkLjo.Name = "chkLjo";
+      this.chkLjo.Size = new System.Drawing.Size(88, 21);
+      this.chkLjo.TabIndex = 29;
+      this.chkLjo.Text = "Log Json";
+      this.chkLjo.UseVisualStyleBackColor = true;
+      // 
       // ImportarMapasExcel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 450);
+      this.Controls.Add(this.chkLjo);
       this.Controls.Add(this.chkAtu);
       this.Controls.Add(this.chkEppPlus);
       this.Controls.Add(this.btnImpV2);
@@ -110,5 +122,6 @@
     private System.Windows.Forms.CheckBox chkEppPlus;
     private System.Windows.Forms.CheckBox chkAtu;
     private System.Windows.Forms.FolderBrowserDialog folder;
+    private System.Windows.Forms.CheckBox chkLjo;
   }
 }

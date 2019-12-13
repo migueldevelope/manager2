@@ -1,6 +1,9 @@
 ﻿using IntegrationClient.ModelTools;
 using IntegrationService.Api;
+using IntegrationService.Enumns;
+using IntegrationService.Tools;
 using Manager.Views.Integration;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -255,7 +258,19 @@ namespace IntegrationClient
           line++;
         }
         viewOccupation.SpecificRequirements = requirement;
-        viewOccupation = infraIntegration.IntegrationProfile(viewOccupation);
+        if (chkLjo.Checked)
+        {
+          string fileName = file.ToLower().Replace(".xlsx", ".log").Replace(".xls", ".log");
+          FileClass.SaveLog(fileName, Program.PersonLogin.Token, EnumTypeLineOpportunityg.Register);
+          FileClass.SaveLog(fileName, JsonConvert.SerializeObject(viewOccupation), EnumTypeLineOpportunityg.Register);
+          viewOccupation = infraIntegration.IntegrationProfile(viewOccupation);
+          FileClass.SaveLog(fileName, "Retorno", EnumTypeLineOpportunityg.Register);
+          FileClass.SaveLog(fileName, JsonConvert.SerializeObject(viewOccupation), EnumTypeLineOpportunityg.Register);
+        }
+        else
+        {
+          viewOccupation = infraIntegration.IntegrationProfile(viewOccupation);
+        }
         OccupationStatistic occupation = new OccupationStatistic()
         {
           FileName = file,
@@ -287,12 +302,13 @@ namespace IntegrationClient
         }
         foreach (string item in viewOccupation.Schooling)
         {
-          var index = schoolings.FindIndex(p => p.Name.Equals(item));
+          var index = schoolings.FindIndex(p => p.Name.ToUpper().Equals(item.ToUpper()));
           if (index == -1)
           {
             schoolings.Add(new SchoolingStatistic()
             {
               Name = item,
+              Register = true,
               Found = true
             });
           }
@@ -324,12 +340,21 @@ namespace IntegrationClient
           }
           else
           {
-            var index = schoolings.FindIndex(p => p.Name.Equals(itemAux[0]));
-            if (index == -1)
+            if (itemAux[1].IndexOf("cadastrada") != -1)
             {
               schoolings.Add(new SchoolingStatistic()
               {
                 Name = itemAux[0],
+                Register = false,
+                Found = false
+              });
+            }
+            else
+            {
+              schoolings.Add(new SchoolingStatistic()
+              {
+                Name = itemAux[0],
+                Register = true,
                 Found = false
               });
             }
@@ -375,11 +400,13 @@ namespace IntegrationClient
         excelPln.Name = "Escolaridades";
         excelPln.Range["A1"].Value = "Escolaridade";
         excelPln.Range["B1"].Value = "Cadastrada";
+        excelPln.Range["C1"].Value = "Localizada";
         line = 2;
         foreach (SchoolingStatistic item in schoolings)
         {
           excelPln.Range[string.Format("A{0}", line)].Value = item.Name;
-          excelPln.Range[string.Format("B{0}", line)].Value = item.Found ? "Sim" : "Não";
+          excelPln.Range[string.Format("B{0}", line)].Value = item.Register ? "Sim" : "Não";
+          excelPln.Range[string.Format("C{0}", line)].Value = item.Found ? "Sim" : "Não";
           line++;
         }
         // Planilha de Cargos
@@ -426,7 +453,7 @@ namespace IntegrationClient
           line++;
         }
         excelPst.Worksheets[1].Activate();
-        excelPst.SaveAs("Tabulacao.xlsx");
+        excelPst.SaveAs(Path.Combine(txtPst.Text,"Tabulacao.xlsx"));
         excelPst.Close();
       }
       catch (Exception ex)

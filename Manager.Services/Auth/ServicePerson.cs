@@ -770,8 +770,11 @@ namespace Manager.Services.Auth
           UserAdmin = false
         };
 
-        if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
-          user.ChangePassword = EnumChangePassword.No;
+        if (string.IsNullOrEmpty(user.Mail))
+        {
+          if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
+            user.ChangePassword = EnumChangePassword.No;
+        }
 
         if (view.User._id == null)
           user = serviceUser.InsertNewVersion(user).Result;

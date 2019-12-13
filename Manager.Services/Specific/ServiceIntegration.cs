@@ -1466,7 +1466,6 @@ namespace Manager.Services.Specific
         return view;
       }
       Occupation occupation = occupationService.GetNewVersion(p => p.Name == view.Name).Result;
-      string itemAux;
       if (occupation == null)
       {
         occupation = new Occupation()
@@ -1483,35 +1482,51 @@ namespace Manager.Services.Specific
           Line = 0
         };
         occupation.Process.Add(processLevelTwo.GetViewList());
-        Skill skill;
-        foreach (string item in view.Skills)
+      }
+      else
+      {
+        occupation.Skills = new List<ViewListSkill>();
+        occupation.SpecificRequirements = view.SpecificRequirements;
+        occupation.Activities = new List<ViewListActivitie>();
+      }
+      string itemAux;
+      Skill skill;
+      foreach (string item in view.Skills)
+      {
+        itemAux = DictionarySkill(item);
+        skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
+        if (skill == null)
         {
-          itemAux = DictionarySkill(item);
-          skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
-          if (skill == null)
-          {
-            view.Messages.Add(string.Format("{0}: competência não localizada", itemAux));
-          }
-          else
-          {
-            occupation.Skills.Add(skill.GetViewList());
-          }
+          view.Messages.Add(string.Format("{0}: competência não cadastrada", itemAux));
         }
-        int order = 0;
-        foreach (string item in view.Activities)
+        else
         {
-          order++;
-          occupation.Activities.Add(new ViewListActivitie()
-          {
-            _id = ObjectId.GenerateNewId().ToString(),
-            Name = item,
-            Order = order
-          });
+          occupation.Skills.Add(skill.GetViewList());
         }
-        occupation.Schooling = group.Schooling;
-        for (int i = 0; i < view.Schooling.Count; i++)
+      }
+      int order = 0;
+      foreach (string item in view.Activities)
+      {
+        order++;
+        occupation.Activities.Add(new ViewListActivitie()
         {
-          itemAux = DictionarySchooling(view.Schooling[i]);
+          _id = ObjectId.GenerateNewId().ToString(),
+          Name = item,
+          Order = order
+        });
+      }
+      occupation.Schooling = group.Schooling;
+      Schooling schooling;
+      for (int i = 0; i < view.Schooling.Count; i++)
+      {
+        itemAux = DictionarySchooling(view.Schooling[i]);
+        schooling = schoolingService.GetNewVersion(p => p.Name == itemAux).Result;
+        if (schooling == null)
+        {
+          view.Messages.Add(string.Format("{0}: escolaridade não cadastrada", itemAux));
+        }
+        else
+        {
           bool achou = false;
           for (int lin = 0; lin < occupation.Schooling.Count; lin++)
           {
@@ -1527,69 +1542,14 @@ namespace Manager.Services.Specific
             view.Messages.Add(string.Format("{0}: escolaridade não localizada", itemAux));
           }
         }
-        if (view.Messages.Count == 0 && view.Update)
+      }
+      if (view.Messages.Count == 0 && view.Update)
+      {
+        if (occupation._id == null)
         {
           occupation = occupationService.InsertNewVersion(occupation).Result;
         }
-      }
-      else
-      {
-        occupation.Skills = new List<ViewListSkill>();
-        occupation.SpecificRequirements = view.SpecificRequirements;
-        occupation.Activities = new List<ViewListActivitie>();
-        Skill skill;
-        foreach (string item in view.Skills)
-        {
-          itemAux = DictionarySkill(item);
-          skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
-          if (skill == null)
-          {
-            view.Messages.Add(string.Format("{0}: competência não localizada", itemAux));
-          }
-          else
-          {
-            occupation.Skills.Add(skill.GetViewList());
-          }
-        }
-        int order = 0;
-        foreach (string item in view.Activities)
-        {
-          order++;
-          occupation.Activities.Add(new ViewListActivitie()
-          {
-            _id = ObjectId.GenerateNewId().ToString(),
-            Name = item,
-            Order = order
-          });
-        }
-        Schooling schooling;
-        for (int i = 0; i < view.Schooling.Count; i++)
-        {
-          itemAux = DictionarySchooling(view.Schooling[i]);
-          schooling = schoolingService.GetNewVersion(p => p.Name == itemAux).Result;
-          if (schooling == null)
-          {
-            view.Messages.Add(string.Format("{0}: escolaridade não cadastrada", itemAux));
-          }
-          else
-          {
-            bool achou = false;
-            for (int lin = 0; lin < occupation.Schooling.Count; lin++)
-            {
-              if (occupation.Schooling[lin].Name.ToUpper().Equals(itemAux))
-              {
-                occupation.Schooling[lin].Complement = view.SchoolingComplement[i];
-                achou = true;
-                break;
-              }
-              if (!achou)
-              {
-                view.Messages.Add(string.Format("{0}: escolaridade não localizada", itemAux));
-              }
-            }
-          }
-        }
-        if (view.Messages.Count == 0 && view.Update)
+        else
         {
           Task retorno = occupationService.Update(occupation, null);
         }
@@ -1632,10 +1592,13 @@ namespace Manager.Services.Specific
       item = item.Replace("MEDIO", "MÉDIO");
       item = item.Replace("ENSINO MÉDIO EM ANDAMENTO", "ENSINO MÉDIO INCOMPLETO");
       item = item.Replace("ENSINO SUPERIOR EM ANDAMENTO", "ENSINO SUPERIOR INCOMPLETO");
+      item = item.Replace("ENSINO SUPERIOR COMPLETO OU EM ANDAMENTO", "ENSINO SUPERIOR INCOMPLETO");
       item = item.Replace("ENSINO TÉCNICO EM ANDAMENTO", "TÉCNICO INCOMPLETO");
       item = item.Replace("ENSINO TÉCNICO COMPLETO", "TÉCNICO COMPLETO");
       item = item.Replace("PÓS-GRADUAÇÃO COMPLETA", "PÓS GRADUAÇÃO COMPLETA");
       item = item.Replace("PÓS-GRADUAÇÃO EM ANDAMENTO", "PÓS GRADUAÇÃO INCOMPLETA");
+      item = item.Replace("PÓS - GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
+      item = item.Replace("ADM: PÓS - GRADUAÇÃO EM ANDAMENTO | OPERAÇÃO: ENSINO SUPERIOR COMPLETO", "PÓS GRADUAÇÃO INCOMPLETA");
       return item;
     }
     #endregion
