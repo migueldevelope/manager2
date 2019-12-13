@@ -777,6 +777,7 @@ namespace Manager.Services.Specific
           //long count = salaryScale.Grades.Count;
           long count = occupations.Count;
           string[] occupationsname = new string[count];
+          string[] descriptionname = new string[count];
           string[] grades = new string[count];
           string[] groups = new string[count];
           string[] spheres = new string[count];
@@ -796,6 +797,7 @@ namespace Manager.Services.Specific
                 if (occ.SalaryScales.Where(p => p._idGrade == item._id).Count() > 0)
                 {
                   occupationsname[row] = occ.Name;
+                  descriptionname[row] = occ.Description;
                   grades[row] = item.Name;
                   groups[row] = occ.Group?.Name;
                   spheres[row] = occ.Group.Sphere.Name;
@@ -819,7 +821,7 @@ namespace Manager.Services.Specific
 
           }
 
-          var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1));
+          var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1), descriptionname);
           return export;
         }
 
