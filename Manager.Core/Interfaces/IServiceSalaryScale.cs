@@ -28,6 +28,7 @@ namespace Manager.Core.Interfaces
     string UpdateGradePosition(string idsalaryscale, string idgrade, int position);
     string UpdateStep(ViewCrudStep view);
     string ImportSalaryScale(string idsalaryscale, Stream stream);
+    string ImportUpdateSalaryScale(string idsalaryscale, Stream stream);
     string RemoveOccupationSalaryScale(string idoccupation, string idgrade);
     string AddOccupationSalaryScale(ViewCrudOccupationSalaryScale view);
     string ExportSalaryScale(string idsalaryscale);
