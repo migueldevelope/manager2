@@ -1562,21 +1562,30 @@ namespace Manager.Services.Specific
             Order = order
           });
         }
+        Schooling schooling;
         for (int i = 0; i < view.Schooling.Count; i++)
         {
           itemAux = DictionarySchooling(view.Schooling[i]);
-          bool achou = false;
-          for (int lin = 0; lin < occupation.Schooling.Count; lin++)
+          schooling = schoolingService.GetNewVersion(p => p.Name == itemAux).Result;
+          if (schooling == null)
           {
-            if (occupation.Schooling[lin].Name.ToUpper().Equals(itemAux))
+            view.Messages.Add(string.Format("{0}: escolaridade não cadastrada", itemAux));
+          }
+          else
+          {
+            bool achou = false;
+            for (int lin = 0; lin < occupation.Schooling.Count; lin++)
             {
-              occupation.Schooling[lin].Complement = view.SchoolingComplement[i];
-              achou = true;
-              break;
-            }
-            if (!achou)
-            {
-              view.Messages.Add(string.Format("{0}: escolaridade não localizada", itemAux));
+              if (occupation.Schooling[lin].Name.ToUpper().Equals(itemAux))
+              {
+                occupation.Schooling[lin].Complement = view.SchoolingComplement[i];
+                achou = true;
+                break;
+              }
+              if (!achou)
+              {
+                view.Messages.Add(string.Format("{0}: escolaridade não localizada", itemAux));
+              }
             }
           }
         }
@@ -1626,6 +1635,7 @@ namespace Manager.Services.Specific
       item = item.Replace("ENSINO TÉCNICO EM ANDAMENTO", "TÉCNICO INCOMPLETO");
       item = item.Replace("ENSINO TÉCNICO COMPLETO", "TÉCNICO COMPLETO");
       item = item.Replace("PÓS-GRADUAÇÃO COMPLETA", "PÓS GRADUAÇÃO COMPLETA");
+      item = item.Replace("PÓS-GRADUAÇÃO EM ANDAMENTO", "PÓS GRADUAÇÃO INCOMPLETA");
       return item;
     }
     #endregion

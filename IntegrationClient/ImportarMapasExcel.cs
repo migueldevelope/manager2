@@ -1,19 +1,11 @@
 ﻿using IntegrationClient.ModelTools;
 using IntegrationService.Api;
-using IntegrationService.Enumns;
-using IntegrationService.Tools;
 using Manager.Views.Integration;
-using Newtonsoft.Json;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -40,6 +32,10 @@ namespace IntegrationClient
     {
       InitializeComponent();
     }
+    private void ImportarMapasExcel_Load(object sender, EventArgs e)
+    {
+      txtPst.Text = Properties.Settings.Default["MapExcelPath"].ToString();
+    }
     #endregion
 
     #region Import
@@ -51,8 +47,9 @@ namespace IntegrationClient
         {
           throw new Exception("Informe a pasta de origem");
         }
+        Properties.Settings.Default["MapExcelPath"] = txtPst.Text;
+        Properties.Settings.Default.Save();
         InfraIntegration infraIntegration = new InfraIntegration(Program.PersonLogin);
-
         IEnumerable<string> files;
         if (chkEppPlus.Checked)
         {
@@ -376,7 +373,7 @@ namespace IntegrationClient
         excelPln = excelPst.Worksheets[2];
         excelPln.Activate();
         excelPln.Name = "Escolaridades";
-        excelPln.Range["A1"].Value = "Competência";
+        excelPln.Range["A1"].Value = "Escolaridade";
         excelPln.Range["B1"].Value = "Cadastrada";
         line = 2;
         foreach (SchoolingStatistic item in schoolings)

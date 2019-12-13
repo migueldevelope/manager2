@@ -33,6 +33,7 @@
       this.btnImpV2 = new System.Windows.Forms.Button();
       this.chkEppPlus = new System.Windows.Forms.CheckBox();
       this.chkAtu = new System.Windows.Forms.CheckBox();
+      this.folder = new System.Windows.Forms.FolderBrowserDialog();
       this.SuspendLayout();
       // 
       // txtPst
@@ -95,6 +96,7 @@
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.Name = "ImportarMapasExcel";
       this.Text = "Importação de Mapas de Competência do Microsoft Excel";
+      this.Load += new System.EventHandler(this.ImportarMapasExcel_Load);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -107,5 +109,6 @@
     private System.Windows.Forms.Button btnImpV2;
     private System.Windows.Forms.CheckBox chkEppPlus;
     private System.Windows.Forms.CheckBox chkAtu;
+    private System.Windows.Forms.FolderBrowserDialog folder;
   }
 }
