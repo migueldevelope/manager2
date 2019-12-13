@@ -1598,6 +1598,7 @@ namespace Manager.Services.Specific
       item = item.Replace("PÓS-GRADUAÇÃO COMPLETA", "PÓS GRADUAÇÃO COMPLETA");
       item = item.Replace("PÓS-GRADUAÇÃO EM ANDAMENTO", "PÓS GRADUAÇÃO INCOMPLETA");
       item = item.Replace("PÓS - GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
+      item = item.Replace("PÓS GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
       item = item.Replace("ADM: PÓS - GRADUAÇÃO EM ANDAMENTO | OPERAÇÃO: ENSINO SUPERIOR COMPLETO", "PÓS GRADUAÇÃO INCOMPLETA");
       return item;
     }
