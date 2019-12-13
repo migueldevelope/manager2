@@ -788,8 +788,22 @@ namespace Manager.Services.Specific
 
           int row = 0;
 
+
           foreach (var item in salaryScale.Grades)
           {
+            grades[row] = item.Name;
+            long countgrade = 0;
+
+            foreach (var step in item.ListSteps)
+            {
+              matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+            }
+
+            workloads[row] = item.Workload;
+            descriptionname[row] = "";
+            groups[row] = "";
+            spheres[row] = "";
+
             foreach (var occ in occupations)
             {
               if (occ.SalaryScales != null)
@@ -798,7 +812,6 @@ namespace Manager.Services.Specific
                 {
                   occupationsname[row] = occ.Name;
                   descriptionname[row] = occ.Description;
-                  grades[row] = item.Name;
                   groups[row] = occ.Group?.Name;
                   spheres[row] = occ.Group.Sphere.Name;
                   var salaryscale = occ.SalaryScales.FirstOrDefault();
@@ -810,15 +823,15 @@ namespace Manager.Services.Specific
 
                     if (occ.SalaryScales.FirstOrDefault().Workload != item.Workload)
                       matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.FirstOrDefault().Workload) / (item.Workload == 0 ? 1 : item.Workload), 2).ToString());
-                    else
-                      matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
                   }
-
                   row += 1;
+                  countgrade += 1;
                 }
               }
-            }
 
+            }
+            if (countgrade == 0)
+              row += 1;
           }
 
           var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1), descriptionname);

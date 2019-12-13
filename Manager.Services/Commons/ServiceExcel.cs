@@ -146,7 +146,7 @@ namespace Manager.Services.Commons
           row.CreateCell(4).SetCellValue(spheres[i - 1]);
           row.CreateCell(5).SetCellValue(workloads[i - 1]);
 
-          for (int j = 6; j < 13; j++)
+          for (int j = 6; j < 14; j++)
           {
             row.CreateCell(j).SetCellValue(matriz[i - 1][j - 6]);
           }
