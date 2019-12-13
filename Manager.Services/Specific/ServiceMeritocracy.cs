@@ -231,11 +231,11 @@ namespace Manager.Services.Specific
           if (meritocracy.MeritocracyActivities.Count == 0)
             return false;
 
-          foreach (var item in meritocracy.MeritocracyActivities)
-          {
-            if (item.Mark == 0)
-              return false;
-          }
+          //foreach (var item in meritocracy.MeritocracyActivities)
+          //{
+          //  if (item.Mark == 0)
+          //    return false;
+          //}
         }
 
         return true;
@@ -1332,6 +1332,7 @@ namespace Manager.Services.Specific
       {
         Meritocracy meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == idmeritocracy).Result;
         decimal averageActivities = 0;
+        var counttotal = 0;
 
         foreach (var item in meritocracy.MeritocracyActivities)
         {
@@ -1339,9 +1340,11 @@ namespace Manager.Services.Specific
             item.Mark = mark;
 
           averageActivities += item.Mark;
+          if (item.Mark > 0)
+            counttotal = +1;
         }
 
-        meritocracy.ActivitiesExcellence = ((averageActivities) / (meritocracy.MeritocracyActivities.Count() == 0 ? 1 : meritocracy.MeritocracyActivities.Count()));
+        meritocracy.ActivitiesExcellence = ((averageActivities) / (counttotal == 0 ? 1 : counttotal));
 
         meritocracy.WeightActivitiesExcellence = byte.Parse(Math.Truncate(meritocracy.ActivitiesExcellence).ToString());
         serviceMeritocracy.Update(meritocracy, null).Wait();
