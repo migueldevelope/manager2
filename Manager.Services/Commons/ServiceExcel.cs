@@ -82,7 +82,8 @@ namespace Manager.Services.Commons
 
 
     }
-    public string ExportSalaryScale(Tuple<double[][], string[], string[], string[], string[], int[], long> tuple)
+    //public string ExportSalaryScale(Tuple<double[][], string[], string[], string[], string[], string[], int[], long> tuple)
+    public string ExportSalaryScale(Tuple<double[][], string[], string[], string[], string[], int[], long> tuple, string[] descriptionnameT)
     {
       try
       {
@@ -96,6 +97,7 @@ namespace Manager.Services.Commons
 
         long count = tuple.Item7;
         string[] occupations = tuple.Item2;
+        string[] descritionoccupations = descriptionnameT;
         string[] grades = tuple.Item3;
         string[] groups = tuple.Item4;
         string[] spheres = tuple.Item5;
@@ -106,19 +108,20 @@ namespace Manager.Services.Commons
 
         IRow headerRow = sheet.CreateRow(0); //Get Header Row
         headerRow.CreateCell(0).SetCellValue("CARGOS");
-        headerRow.CreateCell(1).SetCellValue("GRADES");
-        headerRow.CreateCell(2).SetCellValue("GRUPOS");
-        headerRow.CreateCell(3).SetCellValue("ESFERAS");
-        headerRow.CreateCell(4).SetCellValue("CARGA HORÁRIA");
-        headerRow.CreateCell(5).SetCellValue("A");
-        headerRow.CreateCell(6).SetCellValue("B");
-        headerRow.CreateCell(7).SetCellValue("C");
-        headerRow.CreateCell(8).SetCellValue("D");
-        headerRow.CreateCell(9).SetCellValue("E");
-        headerRow.CreateCell(10).SetCellValue("F");
-        headerRow.CreateCell(11).SetCellValue("G");
-        headerRow.CreateCell(12).SetCellValue("H");
-        headerRow.CreateCell(13).SetCellValue("I");
+        headerRow.CreateCell(1).SetCellValue("FUNÇÃO");
+        headerRow.CreateCell(2).SetCellValue("GRADES");
+        headerRow.CreateCell(3).SetCellValue("GRUPOS");
+        headerRow.CreateCell(4).SetCellValue("ESFERAS");
+        headerRow.CreateCell(5).SetCellValue("CARGA HORÁRIA");
+        headerRow.CreateCell(6).SetCellValue("A");
+        headerRow.CreateCell(7).SetCellValue("B");
+        headerRow.CreateCell(8).SetCellValue("C");
+        headerRow.CreateCell(9).SetCellValue("D");
+        headerRow.CreateCell(10).SetCellValue("E");
+        headerRow.CreateCell(11).SetCellValue("F");
+        headerRow.CreateCell(12).SetCellValue("G");
+        headerRow.CreateCell(13).SetCellValue("H");
+        //headerRow.CreateCell(14).SetCellValue("I");
 
         var font = hssfwb.CreateFont();
         font.Boldweight = (short)FontBoldWeight.Bold;
@@ -137,14 +140,15 @@ namespace Manager.Services.Commons
           IRow row = sheet.CreateRow(i);
 
           row.CreateCell(0).SetCellValue(occupations[i - 1]);
-          row.CreateCell(1).SetCellValue(grades[i - 1]);
-          row.CreateCell(2).SetCellValue(groups[i - 1]);
-          row.CreateCell(3).SetCellValue(spheres[i - 1]);
-          row.CreateCell(4).SetCellValue(workloads[i - 1]);
+          row.CreateCell(1).SetCellValue(descritionoccupations[i - 1]);
+          row.CreateCell(2).SetCellValue(grades[i - 1]);
+          row.CreateCell(3).SetCellValue(groups[i - 1]);
+          row.CreateCell(4).SetCellValue(spheres[i - 1]);
+          row.CreateCell(5).SetCellValue(workloads[i - 1]);
 
-          for (int j = 5; j < 13; j++)
+          for (int j = 6; j < 13; j++)
           {
-            row.CreateCell(j).SetCellValue(matriz[i - 1][j - 5]);
+            row.CreateCell(j).SetCellValue(matriz[i - 1][j - 6]);
           }
         }
         //FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");

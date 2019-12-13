@@ -231,11 +231,15 @@ namespace Manager.Services.Specific
           if (meritocracy.MeritocracyActivities.Count == 0)
             return false;
 
-          //foreach (var item in meritocracy.MeritocracyActivities)
-          //{
-          //  if (item.Mark == 0)
-          //    return false;
-          //}
+          var count = 0;
+          foreach (var item in meritocracy.MeritocracyActivities)
+          {
+            if (item.Mark > 0)
+              count += 1;
+          }
+          if (count == 0)
+            return false;
+
         }
 
         return true;
