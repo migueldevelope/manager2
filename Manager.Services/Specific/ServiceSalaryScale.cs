@@ -824,6 +824,8 @@ namespace Manager.Services.Specific
 
                     if (occ.SalaryScales.FirstOrDefault().Workload != item.Workload)
                       matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.FirstOrDefault().Workload) / (item.Workload == 0 ? 1 : item.Workload), 2).ToString());
+                    else
+                      matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
                   }
                   row += 1;
                   countgrade += 1;

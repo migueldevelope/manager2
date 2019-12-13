@@ -35,7 +35,7 @@ namespace Manager.Services.Commons
 
 
         long count = CountLines(sheet);
-        5string[] grades = new string[count];
+        string[] grades = new string[count];
         int[] workloads = new int[count];
 
         // col i = 9 lin = 50
