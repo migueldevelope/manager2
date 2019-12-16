@@ -11,6 +11,7 @@
     <None Remove="Specific\ServiceIndicators.cs~RF27e086c0.TMP" />
     <None Remove="Specific\ServiceInfra.cs~RF43790d5.TMP" />
     <None Remove="Specific\ServiceManager.cs~RF1bab5d7d.TMP" />
+    <None Remove="Specific\ServiceNotification.cs~RF189d1b8e.TMP" />
     <None Remove="Specific\ServiceNotification.cs~RF243ca8e3.TMP" />
     <None Remove="Specific\ServicePlan.cs~RF23f4828d.TMP" />
     <None Remove="Specific\ServicePlan.cs~RF76bcba.TMP" />

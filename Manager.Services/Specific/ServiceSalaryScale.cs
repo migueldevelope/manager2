@@ -183,7 +183,7 @@ namespace Manager.Services.Specific
             Date = x.Date
           }).ToList();
         total = serviceSalaryScaleLog.CountNewVersion(p => p._idSalaryScalePrevious == idsalaryscale && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        return detail.OrderByDescending(p => p.Date).ToList();
       }
       catch (Exception e)
       {

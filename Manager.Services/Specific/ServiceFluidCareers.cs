@@ -179,11 +179,12 @@ namespace Manager.Services.Specific
         || occupations.Contains(p._id)).ToList();*/
 
         var result = new List<ViewCrudSkillsCareers>();
-        result = list.GroupBy(p => new { p._id, p.Name, p.TypeSkill }).Select(p => new ViewCrudSkillsCareers()
+        result = list.GroupBy(p => new { p._id, p.Name, p.TypeSkill, p.Concept }).Select(p => new ViewCrudSkillsCareers()
         {
           _id = p.Key._id,
           Name = p.Key.Name,
           TypeSkill = p.Key.TypeSkill,
+          Concept = p.Key.Concept,
           Count = p.Count(),
           Order = 0
         }).ToList();

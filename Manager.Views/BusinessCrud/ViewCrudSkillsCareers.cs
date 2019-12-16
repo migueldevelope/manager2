@@ -6,6 +6,7 @@ namespace Manager.Views.BusinessCrud
   {
     public long Count { get; set; }
     public byte Order { get; set; }
+    public string Concept { get; set; }
     public EnumTypeSkill TypeSkill { get; set; }
   }
 }

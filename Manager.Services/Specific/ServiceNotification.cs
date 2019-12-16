@@ -857,6 +857,160 @@ namespace Manager.Services.Specific
 
       } 
     }
+
+    private void OnboardingManagerDeadlineV2(bool sendTest)
+    {
+      try
+      {
+        Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
+        //int daysOnboarding = -30;
+        int daysOnboarding = int.Parse(parameter.Content) * -1;
+        List<ManagerWorkNotification> listManager = new List<ManagerWorkNotification>();
+        // Onboarding vencidos (sem data de admissão)
+        List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == null && p.Manager != null).Result;
+        foreach (Person item in persons)
+        {
+          if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+            listManager.Add(new ManagerWorkNotification()
+            {
+              Manager = item.Manager,
+              Person = item,
+              Type = ManagerListType.Defeated
+            });
+        }
+        // Onboarding vencidos
+        DateTime nowLimit = DateTime.Now.AddDays(daysOnboarding - 1).Date;
+        persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm <= nowLimit && p.Manager != null).Result;
+        foreach (Person item in persons)
+        {
+          if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+            listManager.Add(new ManagerWorkNotification()
+            {
+              Manager = item.Manager,
+              Person = item,
+              Type = ManagerListType.Defeated
+            });
+        }
+        // Onboarding vencendo hoje
+        nowLimit = DateTime.Now.AddDays(daysOnboarding).Date;
+        persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == nowLimit && p.Manager != null).Result;
+        foreach (Person item in persons)
+        {
+          if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+            listManager.Add(new ManagerWorkNotification()
+            {
+              Manager = item.Manager,
+              Person = item,
+              Type = ManagerListType.DefeatedNow
+            });
+        }
+        // Onboarding vencendo até 10 dias
+        var nowFirst = DateTime.Now.AddDays(daysOnboarding + 10).Date;
+        var nowLast = DateTime.Now.AddDays(daysOnboarding + 10).Date;
+        persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm >= nowFirst && p.User.DateAdm <= nowLast && p.Manager != null).Result;
+        foreach (Person item in persons)
+        {
+          if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+            listManager.Add(new ManagerWorkNotification()
+            {
+              Manager = item.Manager,
+              Person = item,
+              Type = ManagerListType.LastSevenDays
+            });
+        }
+        //// Onboarding vencendo até 7 dias
+        //var nowFirst = DateTime.Now.AddDays(daysOnboarding + 7).Date;
+        //var nowLast = DateTime.Now.AddDays(daysOnboarding + 1).Date;
+        //persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm >= nowFirst && p.User.DateAdm <= nowLast && p.Manager != null).Result;
+        //foreach (Person item in persons)
+        //{
+        //  if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+        //    listManager.Add(new ManagerWorkNotification()
+        //    {
+        //      Manager = item.Manager,
+        //      Person = item,
+        //      Type = ManagerListType.LastSevenDays
+        //    });
+        //}
+        //// Onboarding vencendo em 15 dias
+        //nowLimit = DateTime.Now.AddDays(daysOnboarding + 15).Date;
+        //persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == nowLimit && p.Manager != null).Result;
+        //foreach (Person item in persons)
+        //{
+        //  listManager.Add(new ManagerWorkNotification()
+        //  {
+        //    Manager = item.Manager,
+        //    Person = item,
+        //    Type = ManagerListType.FifteenDays
+        //  });
+        //}
+        if (listManager.Count > 0)
+        {
+          // Emitir e-mails
+          List<ManagerNotification> listManagerNotification = new List<ManagerNotification>();
+          listManager = listManager.OrderBy(o => o.Type).OrderBy(o => o.Manager.Name).ToList();
+          ManagerNotification managerNotification = new ManagerNotification()
+          {
+            Manager = listManager[0].Manager,
+            Defeated = new List<Person>(),
+            DefeatedNow = new List<Person>(),
+            LastSevenDays = new List<Person>(),
+            FifteenDays = new List<Person>(),
+            ThirtyDays = new List<Person>(),
+          };
+          foreach (var item in listManager)
+          {
+            if (managerNotification.Manager.Name != item.Manager.Name)
+            {
+              managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.User.Name).ToList();
+              managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.User.Name).ToList();
+              managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
+              managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
+              listManagerNotification.Add(managerNotification);
+              managerNotification = new ManagerNotification()
+              {
+                Manager = item.Manager,
+                Defeated = new List<Person>(),
+                DefeatedNow = new List<Person>(),
+                LastSevenDays = new List<Person>(),
+                FifteenDays = new List<Person>(),
+                ThirtyDays = new List<Person>(),
+              };
+            }
+            switch (item.Type)
+            {
+              case ManagerListType.Defeated:
+                managerNotification.Defeated.Add(item.Person);
+                break;
+              case ManagerListType.DefeatedNow:
+                managerNotification.DefeatedNow.Add(item.Person);
+                break;
+              case ManagerListType.LastSevenDays:
+                managerNotification.LastSevenDays.Add(item.Person);
+                break;
+              case ManagerListType.FifteenDays:
+                managerNotification.FifteenDays.Add(item.Person);
+                break;
+              case ManagerListType.ThirtyDays:
+                break;
+              default:
+                break;
+            }
+          }
+          managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.User.Name).ToList();
+          managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.User.Name).ToList();
+          managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
+          managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
+          listManagerNotification.Add(managerNotification);
+          MailOnboardingManagerDeadline(listManagerNotification, sendTest);
+        }
+      }
+      catch (Exception)
+      {
+
+      }
+    }
+
     private void MailOnboardingManagerDeadline(List<ManagerNotification> listManager, bool sendTest)
     {
       try
