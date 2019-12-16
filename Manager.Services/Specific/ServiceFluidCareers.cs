@@ -149,6 +149,7 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
+        List<string> myskills = null;
 
         var typeskill = (EnumTypeSkill)type;
         var company = serviceCompany.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result?.Skills.Select(p => p._id);
@@ -188,10 +189,13 @@ namespace Manager.Services.Specific
           Count = p.Count(),
           Order = 0
         }).ToList();
+
         if (type == 0)
           result = result.Where(p => p.TypeSkill == EnumTypeSkill.Soft).ToList();
         else if (type == 1)
           result = result.Where(p => p.TypeSkill == EnumTypeSkill.Hard).ToList();
+        else if(type == 2)
+          result = result.Where(p => myskills.Contains(p._id)).ToList();
 
         total = result.Count();
 

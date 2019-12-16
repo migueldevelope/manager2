@@ -128,10 +128,77 @@ namespace Manager.Services.Specific
         {
           Name = old.Name,
           Company = old.Company,
-          Grades = old.Grades,
+          Grades = null,
           _idSalaryScalePrevious = old._id,
           Date = DateTime.Now
         };
+
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var detail = new List<ViewListGrade>();
+        foreach (var grade in old.Grades)
+        {
+          var occupation = new List<ViewListOccupationSalaryScale>();
+          foreach (var occ in occupations)
+          {
+            if (occ.SalaryScales != null)
+            {
+              if (occ.SalaryScales.Where(p => p._idGrade == grade._id).Count() > 0)
+              {
+                var occupationStep = new ViewListOccupationSalaryScale()
+                {
+                  _id = occ._id,
+                  Name = occ.Name,
+                  Description = occ.Description,
+                  Wordload = occ.SalaryScales.FirstOrDefault().Workload,
+                  Process = occ.Process == null ? null : occ.Process.Select(
+                  x => new ViewListProcessLevelTwo()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Order = x.Order,
+                    ProcessLevelOne = x.ProcessLevelOne
+                  }).ToList()
+                };
+                occupationStep.Steps = new List<ViewListStep>();
+                foreach (var step in grade.ListSteps)
+                {
+                  var newStep = new ViewListStep()
+                  {
+                    Step = step.Step,
+                    Salary = step.Salary
+                  };
+                  if (occupationStep.Wordload != grade.Workload)
+                  {
+                    newStep.Salary = Math.Round((step.Salary * occupationStep.Wordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
+                  }
+                  occupationStep.Steps.Add(newStep);
+                }
+                occupation.Add(occupationStep);
+              }
+            }
+          }
+          var view = new ViewListGrade
+          {
+            _id = grade._id,
+            Name = grade.Name,
+            StepMedium = grade.StepMedium,
+            Order = grade.Order,
+            Wordload = grade.Workload,
+            Steps = new List<ViewListStep>(),
+            Occupation = occupation,
+          };
+          foreach (var step in grade.ListSteps)
+          {
+            var newStep = new ViewListStep()
+            {
+              Step = step.Step,
+              Salary = step.Salary
+            };
+            view.Steps.Add(newStep);
+          }
+          detail.Add(view);
+        }
+        salaryScale.Grades = detail;
         serviceSalaryScaleLog.InsertNewVersion(salaryScale).Wait();
         return "Salary scale added!";
       }
@@ -202,19 +269,7 @@ namespace Manager.Services.Specific
           Name = item.Name,
           _id = item._id,
           Date = item.Date,
-          Grades = item.Grades?.Select(p => new ViewListGrade()
-          {
-            _id = p._id,
-            Name = p.Name,
-            Order = p.Order,
-            StepMedium = p.StepMedium,
-            Steps = p.ListSteps?.Select(x => new ViewListStep()
-            {
-              Salary = x.Salary,
-              Step = x.Step
-            }).ToList(),
-            Wordload = p.Workload
-          }).ToList(),
+          Grades = item.Grades,
           _idSalaryScalePrevious = item._idSalaryScalePrevious
         };
       }
@@ -763,6 +818,7 @@ namespace Manager.Services.Specific
         salaryScale.Grades = gradesnew;
 
         var scale = serviceSalaryScale.Update(salaryScale, null);
+        Task.Run(() => NewVersion(idsalaryscale));
 
         return "import_ok";
       }
