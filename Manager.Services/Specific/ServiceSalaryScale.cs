@@ -884,14 +884,14 @@ namespace Manager.Services.Specific
                   descriptionname[row] = occ.Description;
                   groups[row] = occ.Group?.Name;
                   spheres[row] = occ.Group.Sphere.Name;
-                  var salaryscale = occ.SalaryScales.FirstOrDefault();
+                  var salaryscale = occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault();
                   if (salaryscale != null)
                     workloads[row] = salaryscale.Workload;
 
                   foreach (var step in item.ListSteps)
                   {
 
-                    if (occ.SalaryScales.FirstOrDefault().Workload != item.Workload)
+                    if (salaryscale.Workload != item.Workload)
                       matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.FirstOrDefault().Workload) / (item.Workload == 0 ? 1 : item.Workload), 2).ToString());
                     else
                       matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
