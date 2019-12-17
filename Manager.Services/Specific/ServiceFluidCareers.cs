@@ -205,7 +205,7 @@ namespace Manager.Services.Specific
           result = result.Where(p => p.TypeSkill == EnumTypeSkill.Soft).ToList();
         else if (type == 1)
           result = result.Where(p => p.TypeSkill == EnumTypeSkill.Hard).ToList();
-        else if(type == 3)
+        else if(type == 2)
           result = result.Where(p => myskills.Contains(p._id)).ToList();
 
         total = result.Count();
