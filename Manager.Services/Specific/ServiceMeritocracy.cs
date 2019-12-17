@@ -884,14 +884,15 @@ namespace Manager.Services.Specific
                 if (meritocracy.Count() > 0)
                 {
                   var date = meritocracy.Max(p => p.DateEnd);
-                  var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault().ResultEnd;
+                  var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault();
                   list.Add(new ViewListMeritocracyResume()
                   {
                     Name = item.User?.Name,
                     Manager = item.Manager?.Name,
                     Occupation = item.Occupation?.Name,
-                    ResultEnd = result,
-                    Photo = item.User?.PhotoUrl
+                    ResultEnd = result.ResultEnd,
+                    Photo = item.User?.PhotoUrl,
+                    DateEnd = result.DateEnd,
                   });
                 }
               }
@@ -907,14 +908,15 @@ namespace Manager.Services.Specific
             if (meritocracy.Count() > 0)
             {
               var date = meritocracy.Max(p => p.DateEnd);
-              var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault().ResultEnd;
+              var result = meritocracy.Where(p => p.DateEnd == date).LastOrDefault();
               list.Add(new ViewListMeritocracyResume()
               {
                 Name = item.User?.Name,
                 Manager = item.Manager?.Name,
                 Occupation = item.Occupation?.Name,
-                ResultEnd = result,
-                Photo = item.User?.PhotoUrl
+                ResultEnd = result.ResultEnd,
+                Photo = item.User?.PhotoUrl,
+                DateEnd = result.DateEnd,
               });
             }
           }
