@@ -152,7 +152,7 @@ namespace Manager.Services.Specific
         var myskills = new List<string>();
 
         var typeskill = (EnumTypeSkill)type;
-        var person = servicePerson.GetNewVersion(p => p._id == _user._idUser).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == _user._idPerson).Result;
 
         var company = serviceCompany.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result?.Skills.Select(p => p._id);
         var listoccupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
