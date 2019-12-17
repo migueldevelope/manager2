@@ -1348,7 +1348,7 @@ namespace Manager.Services.Specific
 
           averageActivities += item.Mark;
           if (item.Mark > 0)
-            counttotal = +1;
+            counttotal += 1;
         }
 
         meritocracy.ActivitiesExcellence = ((averageActivities) / (counttotal == 0 ? 1 : counttotal));
