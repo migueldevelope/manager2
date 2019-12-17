@@ -101,6 +101,32 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="meritocracynamelevel"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatemeritocracynamelevel")]
+    public async Task<IActionResult> UpdateActivitieMark([FromBody]ViewCrudMeritocracyNameLevel meritocracynamelevel)
+    {
+      return await Task.Run(() => Ok(service.UpdateMeritocracyNameLevel(meritocracynamelevel)));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getmeritocracynamelevel")]
+    public async Task<ViewCrudMeritocracyNameLevel> Get()
+    {
+      return await Task.Run(() => service.GetMeritocracyNameLevel());
+    }
+
+
+    /// <summary>
     /// Atualiza informações de avaliação das entregas
     /// </summary>
     /// <param name="id"></param>

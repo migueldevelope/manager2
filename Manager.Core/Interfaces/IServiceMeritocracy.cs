@@ -39,5 +39,7 @@ namespace Manager.Core.Interfaces
     List<ViewListMeritocracyResume> ListMeritocracy(string idmanager, List<_ViewList> occupations, ref long total, int count, int page, string filter);
     List<ViewListMeritocracyResume> ListMeritocracyRH(ViewFilterOccupationsAndManagers view, ref long total, int count, int page, string filter);
     ViewListMeritocracyResume ListMeritocracyPerson(string idperson, ref long total, int count, int page, string filter);
+    ViewCrudMeritocracyNameLevel GetMeritocracyNameLevel();
+    string UpdateMeritocracyNameLevel(ViewCrudMeritocracyNameLevel meritocracyNameLevel);
   }
 }

@@ -43,5 +43,6 @@ namespace Manager.Views.BusinessCrud
     public decimal PercentSalary { get; set; }
 
     public bool ShowPerson { get; set; }
+    public ViewCrudMeritocracyScore Score { get;set;}
   }
 }

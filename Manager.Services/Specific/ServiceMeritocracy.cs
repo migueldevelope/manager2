@@ -32,6 +32,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<MailLog> serviceMail;
     private readonly ServiceMailModel serviceMailModel;
     private readonly ServiceGeneric<User> serviceUser;
+    private readonly ServiceGeneric<MeritocracyNameLevel> serviceMeritocracyNameLevel;
+
 
     #region Constructor
     public ServiceMeritocracy(DataContext context, DataContext contextLog) : base(context)
@@ -52,6 +54,7 @@ namespace Manager.Services.Specific
         serviceMailModel = new ServiceMailModel(context);
         serviceSchooling = new ServiceGeneric<Schooling>(context);
         serviceUser = new ServiceGeneric<User>(context);
+        serviceMeritocracyNameLevel = new ServiceGeneric<MeritocracyNameLevel>(context);
       }
       catch (Exception e)
       {
@@ -74,6 +77,7 @@ namespace Manager.Services.Specific
       serviceMail._user = _user;
       serviceSchooling._user = _user;
       serviceUser._user = _user;
+      serviceMeritocracyNameLevel._user = _user;
       serviceMailModel.SetUser(_user);
     }
     public void SetUser(BaseUser user)
@@ -92,6 +96,7 @@ namespace Manager.Services.Specific
       serviceMail._user = user;
       serviceSchooling._user = _user;
       serviceUser._user = _user;
+      serviceMeritocracyNameLevel._user = _user;
       serviceMailModel.SetUser(_user);
     }
 
@@ -376,6 +381,7 @@ namespace Manager.Services.Specific
         meritocracy.WeightMaturity = maturityWeight;
         meritocracy.WeightGoals = goalsWeight;
 
+
         serviceMeritocracy.Update(meritocracy, null).Wait();
 
         Task.Run(() => EndMath(meritocracy));
@@ -455,6 +461,9 @@ namespace Manager.Services.Specific
 
         meritocracy.ResultEnd = percCompanyDate + percOccupationDate + percSchooling
           + percMaturity + percGoals + percActivitie;
+
+
+        meritocracy.Score = score;
 
         serviceMeritocracy.Update(meritocracy, null).Wait();
 
@@ -730,6 +739,84 @@ namespace Manager.Services.Specific
       }
     }
 
+    #endregion
+
+    #region Name Level
+    public string UpdateMeritocracyNameLevel(ViewCrudMeritocracyNameLevel meritocracyNameLevel)
+    {
+      try
+      {
+        var meritocracyname = serviceMeritocracyNameLevel.GetFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        if (meritocracyname == null)
+          meritocracyname = serviceMeritocracyNameLevel.InsertNewVersion(new MeritocracyNameLevel()
+          {
+            NameLevel1 = meritocracyNameLevel.NameLevel1,
+            NameLevel2 = meritocracyNameLevel.NameLevel2,
+            NameLevel3 = meritocracyNameLevel.NameLevel3,
+            NameLevel4 = meritocracyNameLevel.NameLevel4,
+            NameLevel5 = meritocracyNameLevel.NameLevel5,
+            NameLevel6 = meritocracyNameLevel.NameLevel6,
+            NameLevel7 = meritocracyNameLevel.NameLevel7,
+            NameLevel8 = meritocracyNameLevel.NameLevel8,
+            NameLevel9 = meritocracyNameLevel.NameLevel9,
+            NameLevel10 = meritocracyNameLevel.NameLevel10
+          }).Result;
+
+        var i = serviceMeritocracyNameLevel.Update(meritocracyname, null);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+
+    }
+
+    public ViewCrudMeritocracyNameLevel GetMeritocracyNameLevel()
+    {
+      try
+      {
+        var result = new ViewCrudMeritocracyNameLevel();
+
+        var meritocracyname = serviceMeritocracyNameLevel.GetFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        if (meritocracyname == null)
+          meritocracyname = serviceMeritocracyNameLevel.InsertNewVersion(new MeritocracyNameLevel()
+          {
+            NameLevel1 = "Sol",
+            NameLevel2 = "Mercúrio",
+            NameLevel3 = "Vênus",
+            NameLevel4 = "Terra",
+            NameLevel5 = "Marte",
+            NameLevel6 = "Júpiter",
+            NameLevel7 = "Saturno",
+            NameLevel8 = "Urano",
+            NameLevel9 = "Netuno",
+            NameLevel10 = "Plutão"
+          }).Result;
+        else
+          result = new ViewCrudMeritocracyNameLevel()
+          {
+            NameLevel1 = meritocracyname.NameLevel1,
+            NameLevel2 = meritocracyname.NameLevel2,
+            NameLevel3 = meritocracyname.NameLevel3,
+            NameLevel4 = meritocracyname.NameLevel4,
+            NameLevel5 = meritocracyname.NameLevel5,
+            NameLevel6 = meritocracyname.NameLevel6,
+            NameLevel7 = meritocracyname.NameLevel7,
+            NameLevel8 = meritocracyname.NameLevel8,
+            NameLevel9 = meritocracyname.NameLevel9,
+            NameLevel10 = meritocracyname.NameLevel10
+          };
+
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+
+    }
     #endregion
 
     #region Meritocracy
@@ -1222,6 +1309,22 @@ namespace Manager.Services.Specific
           PercentSalary = meritocracy.PercentSalary,
           SalaryDifference = meritocracy.SalaryDifference,
           SalaryNew = meritocracy.SalaryNew,
+          Score = meritocracy.Score == null ? null : new ViewCrudMeritocracyScore()
+          {
+            _id = meritocracy.Score._id,
+            EnabledCompanyDate = meritocracy.Score.EnabledCompanyDate,
+            EnabledOccupationDate = meritocracy.Score.EnabledOccupationDate,
+            EnabledSchooling = meritocracy.Score.EnabledSchooling,
+            EnabledActivitiesExcellence = meritocracy.Score.EnabledActivitiesExcellence,
+            EnabledMaturity = meritocracy.Score.EnabledMaturity,
+            EnabledGoals = meritocracy.Score.EnabledGoals,
+            WeightCompanyDate = meritocracy.Score.WeightCompanyDate,
+            WeightOccupationDate = meritocracy.Score.WeightOccupationDate,
+            WeightSchooling = meritocracy.Score.WeightSchooling,
+            WeightActivitiesExcellence = meritocracy.Score.WeightActivitiesExcellence,
+            WeightMaturity = meritocracy.Score.WeightMaturity,
+            WeightGoals = meritocracy.Score.WeightGoals
+          },
           Grade = meritocracy.Grade == null ? null : new ViewListGrade()
           {
             _id = meritocracy.Grade._id,
@@ -1229,7 +1332,7 @@ namespace Manager.Services.Specific
             Order = meritocracy.Grade.Order,
             StepMedium = meritocracy.Grade.StepMedium,
             Steps = meritocracy.Grade.ListSteps.Select
-          (x => new ViewListStep() { Step = x.Step, Salary = x.Salary }).ToList()
+        (x => new ViewListStep() { Step = x.Step, Salary = x.Salary }).ToList()
           },
           GradeScale = meritocracy.GradeScale == null ? null : new ViewListGrade()
           {

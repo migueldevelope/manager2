@@ -41,6 +41,7 @@ namespace Manager.Core.Business
     public Grade Grade { get; set; }
     public Grade GradeScale { get; set; }
     public bool ShowPerson { get; set; }
+    public MeritocracyScore Score { get; set; }
 
   }
 }
