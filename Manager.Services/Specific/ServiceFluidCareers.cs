@@ -149,13 +149,24 @@ namespace Manager.Services.Specific
       try
       {
         int skip = (count * (page - 1));
-        List<string> myskills = null;
+        var myskills = new List<string>();
 
         var typeskill = (EnumTypeSkill)type;
+        var person = servicePerson.GetNewVersion(p => p._id == _user._idUser).Result;
+
         var company = serviceCompany.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result?.Skills.Select(p => p._id);
         var listoccupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
         var listgroups = serviceGroup.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Select(p => p.Skills).ToList();
         var list = new List<ViewListSkill>();
+
+        if (person.Occupation == null)
+          return null;
+
+        var occupatinperson = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result.Skills.Select(p => p._id);
+        var groupperson = serviceGroup.GetNewVersion(p => p._id == person.Occupation._idGroup).Result.Skills.Select(p => p._id);
+        var companyperson = serviceCompany.GetNewVersion(p => p._id == person.Company._id).Result.Skills.Select(p => p._id);
+        myskills = myskills.Concat(occupatinperson).Concat(companyperson).
+          Concat(groupperson).ToList();
 
         //List<string> groups = new List<string>();
         foreach (var item in listgroups)
@@ -194,7 +205,7 @@ namespace Manager.Services.Specific
           result = result.Where(p => p.TypeSkill == EnumTypeSkill.Soft).ToList();
         else if (type == 1)
           result = result.Where(p => p.TypeSkill == EnumTypeSkill.Hard).ToList();
-        else if(type == 2)
+        else if(type == 3)
           result = result.Where(p => myskills.Contains(p._id)).ToList();
 
         total = result.Count();
