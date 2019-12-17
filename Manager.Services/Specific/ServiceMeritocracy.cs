@@ -761,7 +761,8 @@ namespace Manager.Services.Specific
           Occupation = item.Occupation?.Name,
           ResultEnd = result.ResultEnd,
           Photo = item.User?.PhotoUrl,
-          ShowPerson = result.ShowPerson
+          ShowPerson = result.ShowPerson,
+          DateEnd = result.DateEnd
         };
 
         return view;
@@ -802,7 +803,8 @@ namespace Manager.Services.Specific
                     Occupation = item.Occupation?.Name,
                     ResultEnd = result.ResultEnd,
                     Photo = item.User?.PhotoUrl,
-                    ShowPerson = result.ShowPerson
+                    ShowPerson = result.ShowPerson,
+                    DateEnd = result.DateEnd
                   });
                 }
               }
@@ -827,7 +829,8 @@ namespace Manager.Services.Specific
                 Occupation = item.Occupation?.Name,
                 ResultEnd = result.ResultEnd,
                 Photo = item.User?.PhotoUrl,
-                ShowPerson = result.ShowPerson
+                ShowPerson = result.ShowPerson,
+                DateEnd = result.DateEnd
               });
             }
           }

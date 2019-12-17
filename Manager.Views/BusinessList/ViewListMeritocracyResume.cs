@@ -1,4 +1,6 @@
-﻿namespace Manager.Views.BusinessList
+﻿using System;
+
+namespace Manager.Views.BusinessList
 {
   public class ViewListMeritocracyResume: _ViewList
   {
@@ -8,6 +10,7 @@
     public string Occupation { get; set; }
     public string Photo { get; set; }
     public bool ShowPerson { get; set; }
+    public DateTime? DateEnd { get; set; }
 
   }
 }
