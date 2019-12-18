@@ -952,7 +952,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments)
+    public ViewCrudComment UpdateComments(string idonboarding, string iditem, ViewCrudComment comments)
     {
       try
       {
@@ -970,7 +970,7 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return "ok";
+                return comments;
               }
             }
           }
@@ -990,7 +990,7 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return "ok";
+                return comments;
               }
             }
           }
@@ -1009,7 +1009,7 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return "ok";
+                return comments;
               }
             }
           }
@@ -1028,7 +1028,7 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return "ok";
+                return comments;
               }
             }
           }
@@ -1047,7 +1047,7 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return "ok";
+                return comments;
               }
             }
           }
@@ -1066,12 +1066,12 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return "ok";
+                return comments;
               }
             }
           }
         }
-        return "not found";
+        return null;
       }
       catch (Exception e)
       {
