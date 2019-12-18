@@ -133,7 +133,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de Sucesso</returns>
     [Authorize]
     [HttpDelete]
-    [Route("deletecomments/{idonboarding}/{iditem}/{idcomments}")]
+    [Route("deletecomments/{idonboarding}/{iditem}/{idcomment}")]
     public async Task<IActionResult> DeleteComments(string idonboarding, string iditem, string idcomment)
     {
       return await Task.Run(() => Ok(service.DeleteComments(idonboarding, iditem, idcomment)));
