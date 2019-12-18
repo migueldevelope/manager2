@@ -805,7 +805,8 @@ namespace Manager.Services.Specific
             NameLevel7 = meritocracyname.NameLevel7,
             NameLevel8 = meritocracyname.NameLevel8,
             NameLevel9 = meritocracyname.NameLevel9,
-            NameLevel10 = meritocracyname.NameLevel10
+            NameLevel10 = meritocracyname.NameLevel10,
+            _id = meritocracyname._id
           };
 
 
