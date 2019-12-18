@@ -38,7 +38,7 @@ namespace Manager.Core.Interfaces
     string UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view);
     string AddMonitoringActivities(string idmonitoring, ViewCrudActivities view);
     List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments);
-    string UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments);
+    List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments);
     List<ViewCrudComment> GetListComments(string idmonitoring, string iditem);
     List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan);
     List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan plan);

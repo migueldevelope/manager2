@@ -239,7 +239,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecomments/{idonboarding}/{iditem}")]
-    public async Task<ViewCrudComment> UpdateComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
+    public async Task<List<ViewCrudComment>> UpdateComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
     {
       return await Task.Run(() =>service.UpdateComments(idonboarding, iditem, comments));
     }

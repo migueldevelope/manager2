@@ -348,7 +348,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecomments/{idmonitoring}/{iditem}")]
-    public async Task<string> UpdateComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
+    public async Task<List<ViewCrudComment>> UpdateComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
     {
       return await Task.Run(() =>service.UpdateComments(idmonitoring, iditem, comments));
     }

@@ -952,7 +952,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudComment UpdateComments(string idonboarding, string iditem, ViewCrudComment comments)
+    public List<ViewCrudComment> UpdateComments(string idonboarding, string iditem, ViewCrudComment comments)
     {
       try
       {
@@ -970,7 +970,15 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return comments;
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment,
+                  SpeechLink = p.SpeechLink
+                }).ToList();
               }
             }
           }
@@ -990,7 +998,15 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return comments;
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment,
+                  SpeechLink = p.SpeechLink
+                }).ToList();
               }
             }
           }
@@ -1009,7 +1025,15 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return comments;
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment,
+                  SpeechLink = p.SpeechLink
+                }).ToList();
               }
             }
           }
@@ -1028,7 +1052,15 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return comments;
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment,
+                  SpeechLink = p.SpeechLink
+                }).ToList();
               }
             }
           }
@@ -1047,7 +1079,15 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return comments;
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment,
+                  SpeechLink = p.SpeechLink
+                }).ToList();
               }
             }
           }
@@ -1066,7 +1106,15 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
-                return comments;
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment,
+                  SpeechLink = p.SpeechLink
+                }).ToList();
               }
             }
           }

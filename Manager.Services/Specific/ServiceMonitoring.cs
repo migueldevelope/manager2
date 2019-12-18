@@ -1341,7 +1341,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
+    public List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
     {
       try
       {
@@ -1359,7 +1359,14 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceMonitoring.Update(monitoring, null).Wait();
-                return "Comment altered!";
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment
+                }).ToList();
               }
             }
           }
@@ -1377,7 +1384,14 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceMonitoring.Update(monitoring, null).Wait();
-                return "Comment altered!";
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment
+                }).ToList();
               }
             }
           }
@@ -1397,12 +1411,19 @@ namespace Manager.Services.Specific
                 comment.Date = comment.Date;
 
                 serviceMonitoring.Update(monitoring, null).Wait();
-                return "Comment altered!";
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment
+                }).ToList();
               }
             }
           }
         }
-        return "Comment not found!";
+        return null;
       }
       catch (Exception e)
       {
