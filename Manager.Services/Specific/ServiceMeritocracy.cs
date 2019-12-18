@@ -747,22 +747,25 @@ namespace Manager.Services.Specific
       try
       {
         var meritocracyname = serviceMeritocracyNameLevel.GetFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        if (meritocracyname == null)
-          meritocracyname = serviceMeritocracyNameLevel.InsertNewVersion(new MeritocracyNameLevel()
-          {
-            NameLevel1 = meritocracyNameLevel.NameLevel1,
-            NameLevel2 = meritocracyNameLevel.NameLevel2,
-            NameLevel3 = meritocracyNameLevel.NameLevel3,
-            NameLevel4 = meritocracyNameLevel.NameLevel4,
-            NameLevel5 = meritocracyNameLevel.NameLevel5,
-            NameLevel6 = meritocracyNameLevel.NameLevel6,
-            NameLevel7 = meritocracyNameLevel.NameLevel7,
-            NameLevel8 = meritocracyNameLevel.NameLevel8,
-            NameLevel9 = meritocracyNameLevel.NameLevel9,
-            NameLevel10 = meritocracyNameLevel.NameLevel10
-          }).Result;
+        var names = new MeritocracyNameLevel()
+        {
+          _id = meritocracyname._id,
+          NameLevel1 = meritocracyNameLevel.NameLevel1,
+          NameLevel2 = meritocracyNameLevel.NameLevel2,
+          NameLevel3 = meritocracyNameLevel.NameLevel3,
+          NameLevel4 = meritocracyNameLevel.NameLevel4,
+          NameLevel5 = meritocracyNameLevel.NameLevel5,
+          NameLevel6 = meritocracyNameLevel.NameLevel6,
+          NameLevel7 = meritocracyNameLevel.NameLevel7,
+          NameLevel8 = meritocracyNameLevel.NameLevel8,
+          NameLevel9 = meritocracyNameLevel.NameLevel9,
+          NameLevel10 = meritocracyNameLevel.NameLevel10
+        };
 
-        var i = serviceMeritocracyNameLevel.Update(meritocracyname, null);
+        if (meritocracyname == null)
+          meritocracyname = serviceMeritocracyNameLevel.InsertNewVersion(names).Result;
+
+        var i = serviceMeritocracyNameLevel.Update(names, null);
         return "update";
       }
       catch (Exception e)
