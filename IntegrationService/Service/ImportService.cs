@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace IntegrationService.Service
 {
@@ -913,7 +914,8 @@ namespace IntegrationService.Service
               case EnumIntegrationMode.FileCsvV1:
                 throw new Exception("Modo CSV não implementado no processo de sistema.");
               case EnumIntegrationMode.FileExcelV1:
-                throw new Exception("Modo Excel não implementado no processo de sistema.");
+                ExcelV2();
+                break;
               case EnumIntegrationMode.ApplicationInterface:
                 CallApiModeV2();
                 break;
@@ -1166,6 +1168,123 @@ namespace IntegrationService.Service
         throw ex;
       }
     }
+    private void ExcelV2()
+    {
+      try
+      {
+        if (service.Param.Type == EnumIntegrationType.Custom)
+        {
+          throw new Exception("Rotina deve ser do tipo customizada.");
+        }
+        if (service.Param.Process != EnumIntegrationProcess.System)
+        {
+          throw new Exception("Apenas processo de sistema pode utilizar banco de dados.");
+        }
+        // Validar parâmetros
+        if (string.IsNullOrEmpty(service.Param.FilePathLocal))
+        {
+          throw new Exception("Sem nome de pasta Excel informada.");
+        }
+        if (string.IsNullOrEmpty(service.Param.SheetName))
+        {
+          throw new Exception("Sem nome de planilha informada.");
+        }
+        if (!File.Exists(service.Param.FilePathLocal))
+        {
+          throw new Exception("Pasta Microsoft Excel não localizada.");
+        }
+        // Ler planilha de dados
+        Excel.Application excelApp = new Excel.Application
+        {
+          DisplayAlerts = false,
+          Visible = true
+        };
+        Excel.Workbook excelPst = excelApp.Workbooks.Open(service.Param.FilePathLocal, false);
+        Excel.Worksheet excelPln = excelPst.Worksheets[service.Param.SheetName];
+        excelPln.Activate();
+        excelPln.Range["A1"].Select();
+        excelApp.Selection.End[Excel.XlDirection.xlDown].Select();
+        int rowCount = excelApp.ActiveCell.Row + 1;
+        excelPln.Range["A1"].Select();
+        excelApp.Selection.End[Excel.XlDirection.xlToRight].Select();
+        int collumnCount = excelApp.ActiveCell.Column + 1;
+        excelPln.Range["A1"].Select();
+        ColaboradoresV2 = new List<ColaboradorV2Completo>();
+        // Carregar Lista de Colaboradores
+        List<string> columnsValidV2 = new List<string>
+        {
+          "cpf", "empresa", "nome_empresa", "estabelecimento", "nome_estabelecimento", "matricula", "nome", "email", "sexo",
+          "data_nascimento", "celular", "grau_instrucao", "nome_grau_instrucao", "apelido", "situacao", "data_admissao",
+          "data_demissao", "cargo", "nome_cargo", "data_ultima_troca_cargo", "cpf_gestor", "empresa_gestor", "nome_empresa_gestor",
+          "estabelecimento_gestor", "nome_estabelecimento_gestor", "matricula_gestor", "nome_gestor", "centro_custo", "nome_centro_custo",
+          "data_troca_centro_custo", "salario_nominal", "carga_horaria", "data_ultimo_reajuste", "motivo_ultimo_reajuste", "acao"
+        };
+        ProgressBarMaximun = rowCount;
+        ProgressBarValue = 0;
+        ProgressMessage = "Carregando colaboradores 1/2...";
+        OnRefreshProgressBar(EventArgs.Empty);
+        List<string> headers = new List<string>();
+        string work;
+        for (int collumn = 1; collumn < collumnCount; collumn++)
+        {
+          work = excelPln.Cells[1, collumn].Value.Trim().ToLower();
+          if (columnsValidV2.FindIndex(p => p.Equals(work)) == -1)
+          {
+            throw new Exception(string.Format("Coluna {0} está na lista mas não será utilizada. Verifique o nome ou retire da lista!", work));
+          }
+          headers.Add(work);
+        }
+        ProgressBarValue++;
+        OnRefreshProgressBar(EventArgs.Empty);
+        List<string> rowData;
+        string collumName;
+        dynamic workData;
+        for (int row = 2; row < rowCount; row++)
+        {
+          switch (service.Param.Type)
+          {
+            case EnumIntegrationType.Complete:
+              rowData = new List<string>();
+
+              for (int collumn = 1; collumn < collumnCount; collumn++)
+              {
+                collumName = GetStandardExcelColumnName(collumn);
+                workData = excelPln.Range[string.Format("{0}{1}", collumName, row)].Value;
+                rowData.Add(workData == null ? string.Empty : workData.ToString().Trim());
+              }
+              ColaboradoresV2.Add(new ColaboradorV2Completo(rowData, headers, service.Param.CultureDate));
+              break;
+            case EnumIntegrationType.Basic:
+            case EnumIntegrationType.Custom:
+            default:
+              throw new Exception(string.Format("{0} não foi implementado.", service.Param.Type));
+          }
+          ProgressBarValue++;
+          OnRefreshProgressBar(EventArgs.Empty);
+        }
+        excelPst.Close(false);
+        excelApp.Workbooks.Close();
+        excelApp.Quit();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    public static string GetStandardExcelColumnName(int columnNumberOneBased)
+    {
+      int baseValue = Convert.ToInt32('A');
+      int columnNumberZeroBased = columnNumberOneBased - 1;
+
+      string ret = "";
+
+      if (columnNumberOneBased > 26)
+      {
+        ret = GetStandardExcelColumnName(columnNumberZeroBased / 26);
+      }
+      return ret + Convert.ToChar(baseValue + (columnNumberZeroBased % 26));
+    }
+
     #endregion
 
     #endregion

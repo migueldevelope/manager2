@@ -1494,7 +1494,7 @@ namespace Manager.Services.Specific
       Skill skill;
       foreach (string item in view.Skills)
       {
-        itemAux = DictionarySkill(item);
+        itemAux = item;
         skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
         if (skill == null)
         {
@@ -1519,7 +1519,7 @@ namespace Manager.Services.Specific
       Schooling schooling;
       for (int i = 0; i < view.Schooling.Count; i++)
       {
-        itemAux = DictionarySchooling(view.Schooling[i]);
+        itemAux = view.Schooling[i];
         schooling = schoolingService.GetNewVersion(p => p.Name == itemAux).Result;
         if (schooling == null)
         {
@@ -1569,42 +1569,6 @@ namespace Manager.Services.Specific
         Messages = view.Messages,
         Update = view.Update
       };
-    }
-
-    private string DictionarySkill(string item)
-    {
-      item = item.Replace((char)10, ' ').Replace((char)13, ' ').Trim().ToUpper();
-      item = item.Replace("POLITICA", "POLÍTICA");
-      item = item.Replace("LEGISLACAO", "LEGISLAÇÃO");
-      item = item.Replace("TRIBUTARIA", "TRIBUTÁRIA");
-      item = item.Replace("GESTAO", "GESTÃO");
-      item = item.Replace("INSTRUÇÕES/ PROCEDIMENTOS E / OU ROTINAS DE TRABALHO", "INSTRUÇÕES, PROCEDIMENTOS E/OU ROTINAS DE TRABALHO");
-      item = item.Replace("LEGISLAÇÃO TRIBUTÁRIA FISCAL", "LEGISLAÇÃO FISCAL E TRIBUTÁRIA");
-      item = item.Replace("PACOTE DE APLICATIVOS OFFICE", "APLICATIVOS OFFICE");
-      item = item.Replace("SISTEMAS  E FERRAMENTAS DE GESTÃO", "SISTEMAS E FERRAMENTAS DE GESTÃO");
-      item = item.Replace("TÉCNICAS E CONTROLE DE ESTOQUES", "TÉCNICAS DE CONTROLE E GESTÃO DE ESTOQUES");
-      return item;
-    }
-    private string DictionarySchooling(string item)
-    {
-      item = item.Replace((char)10, ' ').Replace((char)13, ' ').Trim().ToUpper();
-      item = item.Replace("TECNICO", "TÉCNICO");
-      item = item.Replace("MEDIO", "MÉDIO");
-      item = item.Replace("ENSINO MÉDIO EM ANDAMENTO", "ENSINO MÉDIO INCOMPLETO");
-      item = item.Replace("ENSINO SUPERIOR EM ANDAMENTO", "ENSINO SUPERIOR INCOMPLETO");
-      item = item.Replace("ENSINO SUPERIOR COMPLETO OU EM ANDAMENTO", "ENSINO SUPERIOR INCOMPLETO");
-      item = item.Replace("ENSINO SUPERIOR COMPLETO OU FALTANDO MENOS DE DOIS ANOS", "ENSINO SUPERIOR INCOMPLETO");
-      item = item.Replace("ENSINO SUPERIOR COMPLETO NAS ÁREAS DE ENGENHARIA", "ENSINO SUPERIOR COMPLETO");
-      item = item.Replace("ENSINO TÉCNICO EM ANDAMENTO", "TÉCNICO INCOMPLETO");
-      item = item.Replace("ENSINO TÉCNICO COMPLETO", "TÉCNICO COMPLETO");
-      item = item.Replace("PÓS-GRADUAÇÃO COMPLETA", "PÓS GRADUAÇÃO COMPLETA");
-      item = item.Replace("PÓS-GRADUAÇÃO COMPLETO", "PÓS GRADUAÇÃO COMPLETA");
-      item = item.Replace("PÓS-GRADUAÇÃO EM ANDAMENTO", "PÓS GRADUAÇÃO INCOMPLETA");
-      item = item.Replace("PÓS - GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
-      item = item.Replace("PÓS GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
-      item = item.Replace("ADM: PÓS - GRADUAÇÃO EM ANDAMENTO | OPERAÇÃO: ENSINO SUPERIOR COMPLETO", "PÓS GRADUAÇÃO INCOMPLETA");
-      item = item.Replace("ADM: PÓS GRADUAÇÃO INCOMPLETA | OPERAÇÃO: ENSINO SUPERIOR COMPLETO", "PÓS GRADUAÇÃO INCOMPLETA");
-      return item;
     }
     #endregion
 

@@ -47,7 +47,7 @@ namespace Manager.Views.Integration.V2
       {
         Colaborador = new ColaboradorV2Base
         {
-          Cpf = FieldString(list, title, "cpf", null),
+          Cpf = FieldStringCpf(list, title, "cpf", null),
           Empresa = FieldString(list, title, "empresa", null),
           NomeEmpresa = FieldString(list, title, "nome_empresa", null),
           Estabelecimento = FieldString(list, title, "estabelecimento", null),
@@ -78,7 +78,7 @@ namespace Manager.Views.Integration.V2
         MotivoUltimoReajuste = FieldString(list, title, "motivo_ultimo_reajuste", null);
         Gestor = new ColaboradorV2Base
         {
-          Cpf = FieldString(list, title, "cpf_gestor", null),
+          Cpf = FieldStringCpf(list, title, "cpf_gestor", null),
           Empresa = FieldString(list, title, "empresa_gestor", null),
           NomeEmpresa = FieldString(list, title, "nome_empresa_gestor", null),
           Estabelecimento = FieldString(list, title, "estabelecimento_gestor", null),
@@ -104,6 +104,18 @@ namespace Manager.Views.Integration.V2
       {
         int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
         return index == -1 ? defaultValue : list[index];
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    private string FieldStringCpf(List<string> list, List<string> title, string field, string defaultValue)
+    {
+      try
+      {
+        int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
+        return index == -1 ? defaultValue : list[index].Replace(".",string.Empty).Replace("-",string.Empty).PadLeft(11,'0');
       }
       catch (Exception ex)
       {
