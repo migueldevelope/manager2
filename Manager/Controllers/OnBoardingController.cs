@@ -133,7 +133,7 @@ namespace Manager.Controllers
     /// <returns>Mensagem de Sucesso</returns>
     [Authorize]
     [HttpDelete]
-    [Route("deletecomments/{idonboarding}/{iditem}/{idcomments}")]
+    [Route("deletecomments/{idonboarding}/{iditem}/{idcomment}")]
     public async Task<IActionResult> DeleteComments(string idonboarding, string iditem, string idcomment)
     {
       return await Task.Run(() => Ok(service.DeleteComments(idonboarding, iditem, idcomment)));
@@ -239,7 +239,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatecomments/{idonboarding}/{iditem}")]
-    public async Task<string> UpdateComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
+    public async Task<ViewCrudComment> UpdateComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
     {
       return await Task.Run(() =>service.UpdateComments(idonboarding, iditem, comments));
     }

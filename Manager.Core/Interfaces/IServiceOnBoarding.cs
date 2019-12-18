@@ -28,7 +28,7 @@ namespace Manager.Core.Interfaces
     string Update(ViewCrudOnboarding onboarding);
     List<ViewListOnBoarding> ListExcluded(ref long total, string filter, int count, int page);
     List<ViewCrudComment> AddComments(string idonboarding, string iditem, ViewCrudComment comments);
-    string UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
+    ViewCrudComment UpdateComments(string idonboarding, string iditem, ViewCrudComment comments);
     List<ViewCrudComment> ListComments(string idonboarding, string iditem);
     List<ViewListOnBoarding> ListOnBoardingsWait(string idmanager, ref long total, string filter, int count, int page);
     List<ViewExportStatusOnboardingGeral> ExportStatusOnboarding(List<ViewListIdIndicators> persons);
