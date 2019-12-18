@@ -418,7 +418,7 @@ namespace Manager.Services.Specific
     //  }
     //}
 
-    private decimal ResultLevel(byte level, decimal point)
+    private decimal ResultLevel(decimal level, decimal point)
     {
       try
       {

@@ -21,7 +21,7 @@ namespace Manager.Core.Business
     public byte WeightOccupationDate { get; set; }
     public byte WeightSchooling { get; set; }
     public byte WeightMaturity { get; set; }
-    public byte WeightActivitiesExcellence { get; set; }
+    public decimal WeightActivitiesExcellence { get; set; }
     public EnumMeritocracyGoals WeightGoals { get; set; }
 
 
