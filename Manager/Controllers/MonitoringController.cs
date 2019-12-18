@@ -381,6 +381,21 @@ namespace Manager.Controllers
       return await Task.Run(() =>service.UpdatePlan(idmonitoring, iditem, plan));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmonitoring"></param>
+    /// <param name="iditem"></param>
+    /// <param name="idplan"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteplan/{idmonitoring}/{iditem}/{idplan}")]
+    public async Task<string> DeletePlan(string idmonitoring, string iditem, string idplan)
+    {
+      return await Task.Run(() => service.DeletePlan(idmonitoring, iditem, idplan));
+    }
+
 
     /// <summary>
     /// 

@@ -529,6 +529,84 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string DeletePlan(string idmonitoring, string iditem, string idplan)
+    {
+      try
+      {
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
+        Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação removida" + monitoring.Person.Name, person));
+        var plan = servicePlan.GetNewVersion(p => p._id == idplan).Result;
+        plan.Status = EnumStatus.Disabled;
+
+        if (plan.SourcePlan == EnumSourcePlan.Activite)
+        {
+          foreach (var item in monitoring.Activities)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
+                  return "remove";
+                }
+              }
+            }
+          }
+        }
+        if (plan.SourcePlan == EnumSourcePlan.Schooling)
+        {
+          foreach (var item in monitoring.Schoolings)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
+                  return "remove";
+                }
+              }
+            }
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.Skill)
+        {
+          foreach (var item in monitoring.SkillsCompany)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
+                  return "remove";
+                }
+              }
+            }
+          }
+        }
+        serviceMonitoring.Update(monitoring, null).Wait();
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public List<ViewListMonitoring> ListMonitoringsEnd(string idmanager, ref long total, string filter, int count, int page)
     {
       try
