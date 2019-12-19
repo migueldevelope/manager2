@@ -202,7 +202,7 @@ namespace Manager.Services.Specific
       try
       {
         Task.Run(() => LogSave(_user._idPerson, string.Format("Query process | {0}", _user._idPerson)));
-        return serviceMyAwareness.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.LastOrDefault()?.GetViewCrud();
+        return serviceMyAwareness.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result.LastOrDefault()?.GetViewCrud();
       }
       catch (Exception e)
       {
