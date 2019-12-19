@@ -49,6 +49,27 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listperson/{idperson}")]
+    public async Task<List<ViewListMyAwareness>> ListPerson(string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      List<ViewListMyAwareness> result = service.ListPerson(idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Cadastrar uma nova empresa
     /// </summary>

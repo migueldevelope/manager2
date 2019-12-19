@@ -14,6 +14,7 @@ namespace Manager.Core.Interfaces
     string New(ViewCrudMyAwareness view);
     string Update(ViewCrudMyAwareness view);
     ViewCrudMyAwareness Get(string id);
+    List<ViewListMyAwareness> ListPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListMyAwareness> List(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }
