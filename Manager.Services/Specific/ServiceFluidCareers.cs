@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
@@ -23,6 +24,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Group> serviceGroup;
     private readonly ServiceGeneric<Skill> serviceSkill;
     private readonly ServiceGeneric<Company> serviceCompany;
+    private readonly ServiceLog serviceLog;
 
     #region Constructor
     public ServiceFluidCareers(DataContext context) : base(context)
@@ -35,6 +37,7 @@ namespace Manager.Services.Specific
         serviceSphere = new ServiceGeneric<Sphere>(context);
         serviceGroup = new ServiceGeneric<Group>(context);
         serviceSkill = new ServiceGeneric<Skill>(context);
+        serviceLog = new ServiceLog(context, context);
         serviceCompany = new ServiceGeneric<Company>(context);
       }
       catch (Exception e)
@@ -51,6 +54,7 @@ namespace Manager.Services.Specific
       serviceGroup._user = _user;
       serviceSkill._user = _user;
       serviceSphere._user = _user;
+      serviceLog.SetUser(_user);
       serviceCompany._user = _user;
     }
     public void SetUser(BaseUser user)
@@ -61,6 +65,7 @@ namespace Manager.Services.Specific
       servicePerson._user = user;
       serviceGroup._user = user;
       serviceSkill._user = user;
+      serviceLog.SetUser(_user);
       serviceSphere._user = user;
       serviceCompany._user = user;
     }
@@ -133,7 +138,31 @@ namespace Manager.Services.Specific
         List<ViewListFluidCareers> detail = serviceFluidCareers.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Person.Name").Result
           .Select(x => new ViewListFluidCareers()
           {
-            _id = x._id
+            _id = x._id,
+            Person = x.Person,
+            Date = x.Date
+          }).ToList();
+        total = serviceFluidCareers.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListFluidCareers> ListPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListFluidCareers> detail = serviceFluidCareers.GetAllNewVersion(p =>
+        p.Person._id == idperson &&
+        p.Person.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Person.Name").Result
+          .Select(x => new ViewListFluidCareers()
+          {
+            _id = x._id,
+            Person = x.Person,
+            Date = x.Date
           }).ToList();
         total = serviceFluidCareers.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -226,6 +255,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", idperson)));
+
         var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
         if (person.Occupation == null)
           return null;
@@ -377,6 +408,25 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
+
+    private void LogSave(string idperson, string local)
+    {
+      try
+      {
+        var user = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "FluidCareers",
+          Local = local,
+          _idPerson = user._id
+        };
+        serviceLog.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     #endregion
 

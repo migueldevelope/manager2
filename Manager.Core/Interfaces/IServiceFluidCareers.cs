@@ -20,5 +20,6 @@ namespace Manager.Core.Interfaces
     ViewFluidCareerPerson Calc(string idperson, List<ViewCrudSkillsCareers> skills, EnumFilterCalcFluidCareers filterCalcFluidCareers);
     List<ViewCrudSkillsCareers> GetSkills(byte type, ref long total, string filter, int count, int page);
     ViewFluidCareersPerson GetPerson(string idperson);
+    List<ViewListFluidCareers> ListPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }
