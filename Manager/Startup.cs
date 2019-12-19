@@ -79,20 +79,21 @@ namespace Manager
 
       IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
       IServiceCompany serviceCompany = new ServiceCompany(_context);
+      IServiceMyAwareness serviceMyAwareness = new ServiceMyAwareness(_context);
       IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
       IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson, conn.TokenServer);
       IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      
+
       IServiceInfra serviceInfra = new ServiceInfra(_context);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson);
-      
+
       IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
-      
+
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
@@ -109,6 +110,7 @@ namespace Manager
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
+      services.AddSingleton(_ => serviceMyAwareness);
       services.AddSingleton(_ => serviceFluidCareers);
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);
