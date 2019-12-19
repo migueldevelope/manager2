@@ -205,7 +205,7 @@ namespace Manager.Services.Specific
           result = result.Where(p => p.TypeSkill == EnumTypeSkill.Soft).ToList();
         else if (type == 1)
           result = result.Where(p => p.TypeSkill == EnumTypeSkill.Hard).ToList();
-        else if(type == 3)
+        else if (type == 3)
           result = result.Where(p => myskills.Contains(p._id)).ToList();
 
         total = result.Count();
@@ -222,7 +222,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public ViewFluidCareerPerson Calc(string idperson, List<ViewCrudSkillsCareers> skills)
+    public ViewFluidCareerPerson Calc(string idperson, List<ViewCrudSkillsCareers> skills, EnumFilterCalcFluidCareers filterCalcFluidCareers)
     {
       try
       {
@@ -232,9 +232,18 @@ namespace Manager.Services.Specific
 
         var occupationPerson = serviceOccupation.GetNewVersion(p => p._id == person.Occupation._id).Result;
         var company = serviceCompany.GetNewVersion(p => p._id == person.Company._id).Result;
-        var spheres = serviceSphere.GetAllNewVersion(p => p.Company._id == person.Company._id).Result.OrderBy(p => p.TypeSphere);
+        var spheres = serviceSphere.GetAllNewVersion(p => p.Company._id == person.Company._id).Result.OrderBy(p => p.TypeSphere).ToList();
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == person.Company._id).Result;
         var groups = serviceGroup.GetAllNewVersion(p => p.Company._id == person.Company._id).Result;
+
+
+
+        if (filterCalcFluidCareers == EnumFilterCalcFluidCareers.Operational)
+          spheres = spheres.Where(p => p.TypeSphere == EnumTypeSphere.Operational).ToList();
+        else if (filterCalcFluidCareers == EnumFilterCalcFluidCareers.Tactical)
+          spheres = spheres.Where(p => p.TypeSphere == EnumTypeSphere.Tactical).ToList();
+        else if (filterCalcFluidCareers == EnumFilterCalcFluidCareers.Strategic)
+          spheres = spheres.Where(p => p.TypeSphere == EnumTypeSphere.Strategic).ToList();
 
         var totalpoints = skills.Count() * 5;
         if (totalpoints == 0)
@@ -287,7 +296,7 @@ namespace Manager.Services.Specific
               viewOccupation.Activities = occupation.Activities;
               viewOccupation.Scopes = group.Scope;
 
-              
+
 
               if (occupationPerson.Group.Sphere.TypeSphere >= sphere.TypeSphere)
               {
@@ -302,7 +311,7 @@ namespace Manager.Services.Specific
                   Order = 0
                 });
               }
-                
+
             }
             viewGroup.Occupation = viewGroup.Occupation.ToList();
             if (viewGroup.Occupation.Count > 0)
@@ -310,6 +319,10 @@ namespace Manager.Services.Specific
           }
           view.Add(viewSphere);
         }
+
+
+
+
         var result = new ViewFluidCareerPerson()
         {
           FluidCareerSphere = view,

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -102,13 +103,14 @@ namespace Manager.Controllers
     /// </summary>
     /// <param name="idperson"></param>
     /// <param name="skills"></param>
+    /// <param name="filterCalcFluidCareers"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("calc/{idperson}")]
-    public ViewFluidCareerPerson Calc([FromBody]List<ViewCrudSkillsCareers> skills, string idperson)
+    public ViewFluidCareerPerson Calc([FromBody]List<ViewCrudSkillsCareers> skills, string idperson, EnumFilterCalcFluidCareers filterCalcFluidCareers)
     {
-      return service.Calc(idperson, skills);
+      return service.Calc(idperson, skills, filterCalcFluidCareers);
     }
 
     /// <summary>
