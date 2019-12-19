@@ -124,7 +124,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return null;
+        return serviceFluidCareers.GetNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
