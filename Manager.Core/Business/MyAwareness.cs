@@ -23,6 +23,7 @@ namespace Manager.Core.Business
     {
       return new ViewCrudMyAwareness()
       {
+        _id = _id,
         _idPerson = _idPerson,
         NamePerson = NamePerson,
         Date = Date,
@@ -37,6 +38,7 @@ namespace Manager.Core.Business
     {
       return new ViewListMyAwareness()
       {
+        _id = _id,
         _idPerson = _idPerson,
         NamePerson = NamePerson,
         Date = Date
