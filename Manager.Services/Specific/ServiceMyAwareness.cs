@@ -196,6 +196,20 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public ViewCrudMyAwareness GetNow()
+    {
+      try
+      {
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Query process | {0}", _user._idPerson)));
+        return serviceMyAwareness.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.LastOrDefault()?.GetViewCrud();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListMyAwareness> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try

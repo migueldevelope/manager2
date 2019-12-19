@@ -93,6 +93,19 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => service.Get(id));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getnow")]
+    public async Task<ViewCrudMyAwareness> GetNow()
+    {
+      return await Task.Run(() => service.GetNow());
+    }
+
     /// <summary>
     /// Alterar a empresa
     /// </summary>
