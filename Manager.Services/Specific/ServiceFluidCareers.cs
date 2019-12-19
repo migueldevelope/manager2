@@ -165,7 +165,7 @@ namespace Manager.Services.Specific
             Date = x.Date
           }).ToList();
         total = serviceFluidCareers.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        return detail;
+        return detail.OrderByDescending(p => p.Date).ToList();
       }
       catch (Exception e)
       {
