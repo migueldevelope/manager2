@@ -107,7 +107,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("calc/{idperson}")]
+    [Route("calc/{idperson}/{filterCalcFluidCareers}")]
     public ViewFluidCareerPerson Calc([FromBody]List<ViewCrudSkillsCareers> skills, string idperson, EnumFilterCalcFluidCareers filterCalcFluidCareers)
     {
       return service.Calc(idperson, skills, filterCalcFluidCareers);
