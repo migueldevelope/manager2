@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Mobile</name>
+    </assembly>
+    <members>
+        <member name="T:Mobile.Controllers.AuthenticationController">
+            <summary>
+            Controle de Autenticação
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.AuthenticationController.#ctor(Manager.Core.Interfaces.IServiceAuthentication)">
+            <summary>
+            Contrutor do controle
+            </summary>
+            <param name="_service">Serviço de autenticação</param>
+        </member>
+        <member name="M:Mobile.Controllers.AuthenticationController.Post(Manager.Core.Views.ViewAuthentication)">
+            <summary>
+            Autenticação de usuário
+            </summary>
+            <param name="userLogin">Objeto de autenticação de usuário</param>
+            <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
+        </member>
+        <member name="M:Mobile.Controllers.AuthenticationController.PostV2(Manager.Core.Views.ViewAuthentication)">
+            <summary>
+            Authentication version 2
+            </summary>
+            <param name="userLogin"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.AuthenticationController.AlterContract(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Mobile.Controllers.DefaultController">
+            <summary>
+            controller padrão
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.DefaultController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            
+            </summary>
+            <param name="contextAccessor"></param>
+        </member>
+        <member name="T:Mobile.Controllers.OnBoardingController">
+            <summary>
+            Controlador do Onboarding
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.#ctor(Manager.Core.Interfaces.IServiceOnBoarding,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Serviço de Onboarding</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.List(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as pendências de Onboarding para o gestor
+            </summary>
+            <param name="idmanager">Identificação do gestor</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do colaborador</param>
+            <returns>Lista com pendências de Onboarding</returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.List_V2(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators},System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.PersonWait(System.String)">
+            <summary>
+            Consulta a situação do colaborador no Onboarding
+            </summary>
+            <param name="idperson">Identificador do colaborador</param>
+            <returns>Situação do Onboarding do cloaborador</returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.New(System.String)">
+            <summary>
+            Inclusão de novo OnBoarding
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns>Objeto de listagem do OnBoarding</returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.Get(System.String)">
+            <summary>
+            Iniciar o processo de onboarding do colaborador
+            </summary>
+            <param name="id">Identificador do colaborador</param>
+            <returns>Objeto de listagem do OnBoarding</returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.DeleteComments(System.String,System.String,System.String)">
+            <summary>
+            Apagar comentários
+            </summary>
+            <param name="idonboarding">Identificador do onboarding</param>
+            <param name="iditem">Identificador do item</param>
+            <param name="idcomment">Identificador do comentário</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.UpdateCommentsView(System.String,System.String,Manager.Views.Enumns.EnumUserComment)">
+            <summary>
+            Alteração de leitura de comentário
+            </summary>
+            <param name="idonboarding">Identificador do onboarding</param>
+            <param name="iditem">Identificador do item</param>
+            <param name="usercomment">Marcação de leitura</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.Delete(System.String)">
+            <summary>
+            Apagar onboarding
+            </summary>
+            <param name="id">Identificador do Onboarding</param>
+            <returns>Mensagem de Sucesso</returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.Update(Manager.Views.BusinessCrud.ViewCrudOnboarding)">
+            <summary>
+            Atualiza informações do onboarding
+            </summary>
+            <param name="onboarding">Objeto Crud</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.ListEnded(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista onboarding finalizados
+            </summary>
+            <param name="idmanager">Identificador contrato gestor</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.ListPersonEnd(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista onboarding finalizado
+            </summary>
+            <param name="idmanager">Identificador contrato</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.ListExcluded(System.Int32,System.Int32,System.String)">
+            <summary>
+            List onboarding para exclusão
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.UpdateComments(Manager.Views.BusinessCrud.ViewCrudComment,System.String,System.String)">
+            <summary>
+            Atualização informações de comentarios
+            </summary>
+            <param name="comments">Objeto Crud</param>
+            <param name="idonboarding">Identificador onboarding</param>
+            <param name="iditem">Indetificador item do onboarding</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.ListComments(System.String,System.String)">
+            <summary>
+            Lista comentarios onboarding
+            </summary>
+            <param name="idonboarding">Identificador onboarding</param>
+            <param name="iditem">Identificador item onboarding</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.AddComments(Manager.Views.BusinessCrud.ViewCrudComment,System.String,System.String)">
+            <summary>
+            Inclusão comentario no item do onboarding
+            </summary>
+            <param name="comments">Objeto Crud</param>
+            <param name="idonboarding">Identificador onboarding</param>
+            <param name="iditem">Identificador item do onboarding</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.ExportStatusOnboarding(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.ExportOnboardingComments(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.ExportStatusOnboarding(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Mobile.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Mobile.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Mobile.Program.BuildWebHost(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Mobile.Startup">
+            <summary>
+            Controle de inicialização da API
+            </summary>
+        </member>
+        <member name="M:Mobile.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:Mobile.Startup.Configuration">
+            <summary>
+            Propriedade de configuração
+            </summary>
+        </member>
+        <member name="M:Mobile.Startup.RegistreServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registrador de serviços
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Mobile.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configurador de servicos
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Mobile.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Configuração de aplicação
+            </summary>
+            <param name="app">Aplicação</param>
+            <param name="env">Ambiente de hospedagem</param>
+        </member>
+    </members>
+</doc>
