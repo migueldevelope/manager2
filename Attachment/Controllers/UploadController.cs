@@ -17,6 +17,8 @@ using Manager.Core.Base;
 using Manager.Core.Interfaces;
 using Manager.Views.Enumns;
 using Tools.Data;
+using Manager.Views.BusinessCrud;
+using Manager.Core.BusinessModel;
 
 namespace EdeskIntegration.Controllers
 {
@@ -36,6 +38,7 @@ namespace EdeskIntegration.Controllers
     private readonly IServiceUser serviceUser;
     private readonly IServiceBaseHelp serviceBaseHelp;
     private readonly IServiceSalaryScale serviceSalaryScale;
+    private readonly IServiceHRDrive serviceHRDrive;
     private readonly IServiceRecommendation serviceRecommendation;
     private readonly DataContext context;
     private readonly string blobKey;
@@ -54,9 +57,11 @@ namespace EdeskIntegration.Controllers
     /// <param name="_serviceSalaryScale"></param>
     /// <param name="_serviceOnBoarding"></param>
     /// <param name="_serviceUser"></param>
+    ///  <param name="_serviceHRDrive"></param>
     public UploadController(IHttpContextAccessor contextAccessor, IServiceCompany _serviceCompany, IServicePerson _servicePerson, IServicePlan _servicePlan,
       IServiceEvent _serviceEvent, IServiceCertification _serviceCertification, IServiceBaseHelp _serviceBaseHelp, IServiceRecommendation _serviceRecommendation,
-      IServiceSalaryScale _serviceSalaryScale, IServiceUser _serviceUser, IServiceOnBoarding _serviceOnBoarding)
+      IServiceSalaryScale _serviceSalaryScale, IServiceUser _serviceUser, IServiceOnBoarding _serviceOnBoarding,
+      IServiceHRDrive _serviceHRDrive)
     {
       BaseUser baseUser = new BaseUser();
       var user = contextAccessor.HttpContext.User;
@@ -96,7 +101,9 @@ namespace EdeskIntegration.Controllers
       serviceSalaryScale = _serviceSalaryScale;
       serviceUser = _serviceUser;
       serviceOnBoarding = _serviceOnBoarding;
+      serviceHRDrive = _serviceHRDrive;
 
+      serviceHRDrive.SetUser(contextAccessor);
       serviceOnBoarding.SetUser(contextAccessor);
       serviceSalaryScale.SetUser(contextAccessor);
       serviceCertification.SetUser(contextAccessor);
@@ -337,6 +344,71 @@ namespace EdeskIntegration.Controllers
       return Ok(listAttachments);
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idcompany"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost("addhrdrive")]
+    public async Task<ObjectResult> AddHRDrive(string idcompany)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return BadRequest("Bad file type.");
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      var url = "";
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        await this.service.InsertNewVersion(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+          if (await cloudBlobContainer.CreateIfNotExistsAsync())
+          {
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          url = blockBlob.Uri.ToString();
+        }
+        catch (Exception)
+        {
+          attachment.Saved = false;
+          await service.Update(attachment, null);
+          throw;
+        }
+
+        var view = new AttachmentDrive()
+        {
+          _idAttachment = attachment._id,
+          Date = DateTime.Now,
+          Name = attachment.LocalName,
+          Url = url
+        };
+        serviceHRDrive.Add(view);
+        listAttachments.Add(attachment);
+      }
+      return Ok(listAttachments);
+    }
 
     /// <summary>
     /// 

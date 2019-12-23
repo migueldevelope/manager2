@@ -67,9 +67,6 @@ namespace Mobile
 
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
-      new MigrationHandle(_context._db).Migrate();
-
-
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
@@ -107,8 +104,6 @@ namespace Mobile
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
       IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
 
-      serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
-      serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
       services.AddSingleton(_ => serviceMyAwareness);
       services.AddSingleton(_ => serviceFluidCareers);

@@ -1,16 +1,15 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 
-namespace Manager.Core.BusinessModel
+namespace Manager.Views.BusinessCrud
 {
-  /// <summary>
-  /// Coleção para lista de anexos utilizado em todas os locais de lista de anexos
-  /// </summary>
-  public class AttachmentField
+  public class ViewCrudAttachmentDrive
   {
     public string Url { get; set; }
     public string Name { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idAttachment { get; set; }
+    public DateTime? Date { get; set; }
   }
 }

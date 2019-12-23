@@ -86,6 +86,8 @@ namespace Manager
       IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
 
       IServiceInfra serviceInfra = new ServiceInfra(_context);
+      IServiceHRDrive serviceHRDrive = new ServiceHRDrive(_context);
+
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson);
@@ -110,6 +112,7 @@ namespace Manager
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
+      services.AddSingleton(_ => serviceHRDrive);
       services.AddSingleton(_ => serviceMyAwareness);
       services.AddSingleton(_ => serviceFluidCareers);
       services.AddSingleton(_ => serviceRecommendation);

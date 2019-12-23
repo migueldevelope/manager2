@@ -75,7 +75,9 @@ namespace Attachment
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
+      IServiceHRDrive serviceHRDrive = new ServiceHRDrive(_context);
 
+      services.AddSingleton(_ => serviceHRDrive);
       services.AddSingleton(_ => serviceSalaryScale);
       services.AddSingleton(_ => serviceRecommendation);
       services.AddSingleton(_ => serviceBaseHelp);

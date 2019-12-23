@@ -89,7 +89,7 @@
             
             </summary>
         </member>
-        <member name="M:EdeskIntegration.Controllers.UploadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Manager.Core.Interfaces.IServiceCompany,Manager.Core.Interfaces.IServicePerson,Manager.Core.Interfaces.IServicePlan,Manager.Core.Interfaces.IServiceEvent,Manager.Core.Interfaces.IServiceCertification,Manager.Core.Interfaces.IServiceBaseHelp,Manager.Core.Interfaces.IServiceRecommendation,Manager.Core.Interfaces.IServiceSalaryScale,Manager.Core.Interfaces.IServiceUser,Manager.Core.Interfaces.IServiceOnBoarding)">
+        <member name="M:EdeskIntegration.Controllers.UploadController.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Manager.Core.Interfaces.IServiceCompany,Manager.Core.Interfaces.IServicePerson,Manager.Core.Interfaces.IServicePlan,Manager.Core.Interfaces.IServiceEvent,Manager.Core.Interfaces.IServiceCertification,Manager.Core.Interfaces.IServiceBaseHelp,Manager.Core.Interfaces.IServiceRecommendation,Manager.Core.Interfaces.IServiceSalaryScale,Manager.Core.Interfaces.IServiceUser,Manager.Core.Interfaces.IServiceOnBoarding,Manager.Core.Interfaces.IServiceHRDrive)">
             <summary>
             
             </summary>
@@ -104,6 +104,7 @@
             <param name="_serviceSalaryScale"></param>
             <param name="_serviceOnBoarding"></param>
             <param name="_serviceUser"></param>
+             <param name="_serviceHRDrive"></param>
         </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.Post">
             <summary>
@@ -131,6 +132,13 @@
             <param name="idregister"></param>
             <param name="iditem"></param>
             <param name="typeuser"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.AddHRDrive(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcompany"></param>
             <returns></returns>
         </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.PostBaseHelp(System.String)">
