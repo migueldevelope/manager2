@@ -208,6 +208,25 @@
             <param name="persons"></param>
             <returns></returns>
         </member>
+        <member name="T:Mobile.Controllers.PanelController">
+            <summary>
+            Controlador do Onboarding
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.PanelController.#ctor(Manager.Core.Interfaces.IServiceOnBoarding,Manager.Core.Interfaces.IServiceIndicators,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_serviceOnborading">Serviço de Onboarding</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Mobile.Controllers.PanelController.GetNotesPerson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
         <member name="T:Mobile.Program">
             <summary>
             
