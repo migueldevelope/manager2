@@ -132,6 +132,15 @@
             <param name="onboarding">Objeto Crud</param>
             <returns>Mensagem de sucesso</returns>
         </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.Update(Manager.Views.BusinessCrud.ViewCrudCommentEnd,System.String,Manager.Views.Enumns.EnumUserComment)">
+            <summary>
+            
+            </summary>
+            <param name="comments"></param>
+            <param name="idonboarding"></param>
+            <param name="usercomment"></param>
+            <returns></returns>
+        </member>
         <member name="M:Mobile.Controllers.OnBoardingController.ListEnded(System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Lista onboarding finalizados

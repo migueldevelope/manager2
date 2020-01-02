@@ -256,7 +256,7 @@ namespace Manager.Services.Specific
         List<string> filtermanager = null;
         if (managers.Count > 0)
           filtermanager = managers.Select(p => p._id).ToList();
-        
+
         var list = new List<ViewListPending>();
         var parameterget = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
         long parameter = 90;
@@ -1682,16 +1682,30 @@ namespace Manager.Services.Specific
       {
         List<ViewIndicatorsNotes> result = new List<ViewIndicatorsNotes>();
         long totalqtd = 0;
-        var monitorings = serviceMonitoring.CountNewVersion(p => p.Person._idManager == id & p.StatusMonitoring != EnumStatusMonitoring.InProgressPerson & p.StatusMonitoring != EnumStatusMonitoring.Wait & p.StatusMonitoring != EnumStatusMonitoring.End).Result;
-        var onboardings = serviceOnboarding.CountNewVersion(p => p.Person.TypeJourney == EnumTypeJourney.OnBoarding && p.Person._idManager == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.WaitPerson & p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
-        var onboardingsoccupation = serviceOnboarding.CountNewVersion(p => p.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation && p.Person._idManager == id & p.StatusOnBoarding != EnumStatusOnBoarding.InProgressPerson & p.StatusOnBoarding != EnumStatusOnBoarding.WaitPerson & p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
-        var workflows = serviceWorkflow.CountNewVersion(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == id).Result;
+        long onboardings = 0;
+        long monitorings = 0;
+        long workflows = 0;
+        foreach (var item in persons)
+        {
+          onboardings += serviceOnboarding.CountNewVersion(p => p.Person._id == item._id & (p.StatusOnBoarding == EnumStatusOnBoarding.WaitManager || p.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision || p.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager)).Result;
+          monitorings += serviceMonitoring.CountNewVersion(p => p.Person._id == item._id & (p.StatusMonitoring == EnumStatusMonitoring.WaitManager || p.StatusMonitoring == EnumStatusMonitoring.InProgressManager)).Result;
+          if ((onboardings == 0) && (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)){
+            onboardings += 1;
+          }
+          if ((monitorings == 0) && (serviceMonitoring.CountNewVersion(p => p.Person._id == item._id & p.StatusMonitoring == EnumStatusMonitoring.End).Result == 0))
+          {
+            monitorings += 1;
+          }
 
-        totalqtd = monitorings + onboardings + workflows + onboardingsoccupation;
+        }
+
+        workflows = serviceWorkflow.CountNewVersion(p => p.Requestor._id == id & p.StatusWorkflow == EnumWorkflow.Open).Result;
+
+        totalqtd = monitorings + onboardings + workflows;
 
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Monitoring, Qtd = monitorings, Total = totalqtd });
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.OnBoarding, Qtd = onboardings, Total = totalqtd });
-        result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.OnBoardingOccupation, Qtd = onboardingsoccupation, Total = totalqtd });
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Workflow, Qtd = workflows, Total = totalqtd });
 
         return result;
@@ -2798,7 +2812,7 @@ namespace Manager.Services.Specific
             && p.StatusUser != EnumStatusUser.Disabled).Result.OrderBy(p => p.Manager?.Name).ToList();
 
           var persons = team.Select(p => p._id).ToList();
-          
+
           var view = new ViewListScheduleManager();
           view.Manager = item.User?.Name;
           view.QtdTeam = team.Count();
