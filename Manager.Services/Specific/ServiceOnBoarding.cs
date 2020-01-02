@@ -645,6 +645,8 @@ namespace Manager.Services.Specific
           onboarding.CommentsPerson = comments.Comments;
         else if (userComment == EnumUserComment.Manager)
           onboarding.CommentsManager = comments.Comments;
+      else
+          onboarding.CommentsEnd = comments.Comments;
 
         var i = serviceOnboarding.Update(onboarding, null);
 

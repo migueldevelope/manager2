@@ -2,6 +2,6 @@
 {
   public enum EnumUserComment : byte
   {
-    Person = 0, Manager = 1, HR = 2
+    Person = 0, Manager = 1, End = 2
   }
 }
