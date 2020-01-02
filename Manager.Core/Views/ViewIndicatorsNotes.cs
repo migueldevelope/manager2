@@ -1,9 +1,11 @@
-﻿namespace Manager.Core.Views
+﻿using Manager.Views.Enumns;
+
+namespace Manager.Core.Views
 {
   public class ViewIndicatorsNotes
   {
-    public string Name { get; set; }
-    public long qtd { get; set; }
-    public long total { get; set; }
+    public EnumTypeWork Type { get; set; }
+    public long Qtd { get; set; }
+    public long Total { get; set; }
   }
 }

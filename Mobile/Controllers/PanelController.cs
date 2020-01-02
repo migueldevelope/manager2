@@ -151,6 +151,21 @@ namespace Mobile.Controllers
       return Ok(listAttachments);
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getnotes/{idperson}")]
+    public async Task<List<ViewIndicatorsNotes>> GetNotes(string idperson)
+    {
+      return await Task.Run(() => serviceIndicators.GetNotes(idperson));
+    }
+
+
     #endregion
   }
 }
