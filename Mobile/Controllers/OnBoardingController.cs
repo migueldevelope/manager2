@@ -186,7 +186,7 @@ namespace Mobile.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [Route("updatecomments/{idonboarding}/{usercomment}")]
+    [Route("updatecommentsgeral/{idonboarding}/{usercomment}")]
     public async Task<IActionResult> UpdateComments([FromBody]ViewCrudCommentEnd comments, string idonboarding, EnumUserComment usercomment)
     {
       return await Task.Run(() => Ok(service.UpdateCommentsEndMobile(idonboarding, usercomment, comments)));
