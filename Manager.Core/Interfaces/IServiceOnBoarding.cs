@@ -37,5 +37,9 @@ namespace Manager.Core.Interfaces
     void MailTest();
     List<OnBoarding> Load();
     string AddCommentsSpeech(string idonboarding, string iditem, string link, EnumUserComment user, string path);
+    
+    #region Mobile
+    ViewListOnBoardingMobile GetMobile(string id);
+    #endregion
   }
 }

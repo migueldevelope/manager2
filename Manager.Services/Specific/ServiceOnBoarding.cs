@@ -411,6 +411,230 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public ViewListOnBoardingMobile GetMobile(string id)
+    {
+      try
+      {
+        OnBoarding onboarding = serviceOnboarding.GetNewVersion(p => p._id == id).Result;
+        Person person = servicePerson.GetNewVersion(p => p._id == onboarding.Person._id).Result;
+
+        if (onboarding == null)
+          return null;
+
+        var result = new ViewListOnBoardingMobile()
+        {
+          _id = onboarding._id,
+          Person = onboarding.Person,
+          Occupation = person.Occupation,
+          CommentsPerson = onboarding.CommentsPerson,
+          CommentsManager = onboarding.CommentsManager,
+          CommentsEnd = onboarding.CommentsEnd,
+          StatusOnBoarding = onboarding.StatusOnBoarding,
+          Itens = new List<ViewListItensMobile>()
+        };
+
+
+
+        if (onboarding.SkillsCompany != null)
+          foreach (var item in onboarding.SkillsCompany)
+          {
+            var view = new ViewListItensMobile()
+            {
+              _id = item._id,
+              CommentsManager = item.CommentsManager,
+              CommentsPerson = item.CommentsPerson,
+              StatusViewManager = item.StatusViewManager,
+              StatusViewPerson = item.StatusViewPerson,
+              Comments = item.Comments?.Select(c => new ViewCrudComment()
+              {
+                _id = c._id,
+                Date = c.Date,
+                StatusView = c.StatusView,
+                UserComment = c.UserComment,
+                Comments = c.Comments,
+                SpeechLink = c.SpeechLink
+              }).ToList()
+            };
+            var detail = new ViewListItensDetailMobile()
+            {
+              _id = item.Skill._id,
+              Name = item.Skill.Name,
+              Concept = item.Skill.Concept,
+              TypeSkill = item.Skill.TypeSkill,
+              TypeItem = EnumTypeItem.SkillCompany
+            };
+            view.Item = detail;
+            result.Itens.Add(view);
+          }
+
+        if (onboarding.SkillsGroup != null)
+          foreach (var item in onboarding.SkillsGroup)
+          {
+            var view = new ViewListItensMobile()
+            {
+              _id = item._id,
+              CommentsManager = item.CommentsManager,
+              CommentsPerson = item.CommentsPerson,
+              StatusViewManager = item.StatusViewManager,
+              StatusViewPerson = item.StatusViewPerson,
+              Comments = item.Comments?.Select(c => new ViewCrudComment()
+              {
+                _id = c._id,
+                Date = c.Date,
+                StatusView = c.StatusView,
+                UserComment = c.UserComment,
+                Comments = c.Comments,
+                SpeechLink = c.SpeechLink
+              }).ToList()
+            };
+            var detail = new ViewListItensDetailMobile()
+            {
+              _id = item.Skill._id,
+              Name = item.Skill.Name,
+              Concept = item.Skill.Concept,
+              TypeSkill = item.Skill.TypeSkill,
+              TypeItem = EnumTypeItem.SkillGroup
+            };
+            view.Item = detail;
+            result.Itens.Add(view);
+          }
+
+        if (onboarding.SkillsOccupation != null)
+          foreach (var item in onboarding.SkillsOccupation)
+          {
+            var view = new ViewListItensMobile()
+            {
+              _id = item._id,
+              CommentsManager = item.CommentsManager,
+              CommentsPerson = item.CommentsPerson,
+              StatusViewManager = item.StatusViewManager,
+              StatusViewPerson = item.StatusViewPerson,
+              Comments = item.Comments?.Select(c => new ViewCrudComment()
+              {
+                _id = c._id,
+                Date = c.Date,
+                StatusView = c.StatusView,
+                UserComment = c.UserComment,
+                Comments = c.Comments,
+                SpeechLink = c.SpeechLink
+              }).ToList()
+            };
+            var detail = new ViewListItensDetailMobile()
+            {
+              _id = item.Skill._id,
+              Name = item.Skill.Name,
+              Concept = item.Skill.Concept,
+              TypeSkill = item.Skill.TypeSkill,
+              TypeItem = EnumTypeItem.SkillOccupation
+            };
+            view.Item = detail;
+            result.Itens.Add(view);
+          }
+
+        if (onboarding.Activities != null)
+          foreach (var item in onboarding.Activities)
+          {
+            var view = new ViewListItensMobile()
+            {
+              _id = item._id,
+              CommentsManager = item.CommentsManager,
+              CommentsPerson = item.CommentsPerson,
+              StatusViewManager = item.StatusViewManager,
+              StatusViewPerson = item.StatusViewPerson,
+              Comments = item.Comments?.Select(c => new ViewCrudComment()
+              {
+                _id = c._id,
+                Date = c.Date,
+                StatusView = c.StatusView,
+                UserComment = c.UserComment,
+                Comments = c.Comments,
+                SpeechLink = c.SpeechLink
+              }).ToList()
+            };
+            var detail = new ViewListItensDetailMobile()
+            {
+              _id = item.Activitie._id,
+              Name = item.Activitie.Name,
+              Order = item.Activitie.Order,
+              TypeItem = EnumTypeItem.Activitie
+            };
+            view.Item = detail;
+            result.Itens.Add(view);
+          }
+
+        if (onboarding.Scopes != null)
+          foreach (var item in onboarding.Scopes)
+          {
+            var view = new ViewListItensMobile()
+            {
+              _id = item._id,
+              CommentsManager = item.CommentsManager,
+              CommentsPerson = item.CommentsPerson,
+              StatusViewManager = item.StatusViewManager,
+              StatusViewPerson = item.StatusViewPerson,
+              Comments = item.Comments?.Select(c => new ViewCrudComment()
+              {
+                _id = c._id,
+                Date = c.Date,
+                StatusView = c.StatusView,
+                UserComment = c.UserComment,
+                Comments = c.Comments,
+                SpeechLink = c.SpeechLink
+              }).ToList()
+            };
+            var detail = new ViewListItensDetailMobile()
+            {
+              _id = item.Scope._id,
+              Name = item.Scope.Name,
+              Order = item.Scope.Order,
+              TypeItem = EnumTypeItem.Scope
+            };
+            view.Item = detail;
+            result.Itens.Add(view);
+          }
+
+        if (onboarding.Schoolings != null)
+          foreach (var item in onboarding.Schoolings)
+          {
+            var view = new ViewListItensMobile()
+            {
+              _id = item._id,
+              CommentsManager = item.CommentsManager,
+              CommentsPerson = item.CommentsPerson,
+              StatusViewManager = item.StatusViewManager,
+              StatusViewPerson = item.StatusViewPerson,
+              Comments = item.Comments?.Select(c => new ViewCrudComment()
+              {
+                _id = c._id,
+                Date = c.Date,
+                StatusView = c.StatusView,
+                UserComment = c.UserComment,
+                Comments = c.Comments,
+                SpeechLink = c.SpeechLink
+              }).ToList()
+            };
+            var detail = new ViewListItensDetailMobile()
+            {
+              _id = item.Schooling._id,
+              Name = item.Schooling.Name,
+              Order = item.Schooling.Order,
+              Complement = item.Schooling.Complement,
+              Type = item.Schooling.Type,
+              TypeItem = EnumTypeItem.Schooling
+            };
+            view.Item = detail;
+            result.Itens.Add(view);
+          }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment)
     {
       try

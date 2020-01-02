@@ -120,9 +120,9 @@ namespace Mobile.Controllers
     [Authorize]
     [HttpGet]
     [Route("get/{id}")]
-    public async Task<ViewCrudOnboarding> Get(string id)
+    public async Task<ViewListOnBoardingMobile> Get(string id)
     {
-      return await Task.Run(() => service.Get(id));
+      return await Task.Run(() => service.GetMobile(id));
     }
     /// <summary>
     /// Apagar comentários

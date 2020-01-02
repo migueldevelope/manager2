@@ -213,14 +213,31 @@
             Controlador do Onboarding
             </summary>
         </member>
-        <member name="M:Mobile.Controllers.PanelController.#ctor(Manager.Core.Interfaces.IServiceOnBoarding,Manager.Core.Interfaces.IServiceIndicators,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+        <member name="M:Mobile.Controllers.PanelController.#ctor(Manager.Core.Interfaces.IServiceOnBoarding,Manager.Core.Interfaces.IServiceIndicators,Manager.Core.Interfaces.IServiceUser,Manager.Core.Interfaces.IServicePerson,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
             <summary>
             Construtor do controlador
             </summary>
             <param name="_serviceOnborading">Serviço de Onboarding</param>
+            <param name="_serviceIndicators">Serviço de Indicadores</param>
+            <param name="_servicePerson">Serviço de Contratos</param>
+            <param name="_serviceUser">Serviço de Usuários</param>
             <param name="contextAccessor">Token de segurança</param>
         </member>
         <member name="M:Mobile.Controllers.PanelController.GetNotesPerson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.PanelController.Get(System.String)">
+            <summary>
+            Buscar informações da pessoa para alteração
+            </summary>
+            <param name="id">Identificador da pessoa</param>
+            <returns>Objeto de alteração da pessoa</returns>
+        </member>
+        <member name="M:Mobile.Controllers.PanelController.PostPhoto(System.String)">
             <summary>
             
             </summary>
