@@ -627,6 +627,8 @@ namespace Manager.Services.Specific
             result.Itens.Add(view);
           }
 
+        result.Itens = result.Itens.OrderBy(p => p.Item.TypeItem).ToList();
+
         return result;
       }
       catch (Exception e)

@@ -2,6 +2,6 @@
 {
   public enum EnumTypeItem : byte
   {
-    SkillCompany = 0, SkillGroup = 1, SkillOccupation = 2, Activitie = 3, Scope = 4, Schooling = 5, All = 6
+    Scope = 0, SkillCompany = 1, Activitie = 2, SkillGroup = 3, SkillOccupation = 4,  Schooling = 5
   }
 }
