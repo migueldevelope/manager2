@@ -434,7 +434,67 @@ namespace Manager.Services.Specific
           Itens = new List<ViewListItensMobile>()
         };
 
+        if (onboarding.Scopes != null)
+          foreach (var item in onboarding.Scopes)
+          {
+            var view = new ViewListItensMobile()
+            {
+              _id = item._id,
+              CommentsManager = item.CommentsManager,
+              CommentsPerson = item.CommentsPerson,
+              StatusViewManager = item.StatusViewManager,
+              StatusViewPerson = item.StatusViewPerson,
+              Comments = item.Comments?.Select(c => new ViewCrudComment()
+              {
+                _id = c._id,
+                Date = c.Date,
+                StatusView = c.StatusView,
+                UserComment = c.UserComment,
+                Comments = c.Comments,
+                SpeechLink = c.SpeechLink
+              }).ToList()
+            };
+            var detail = new ViewListItensDetailMobile()
+            {
+              _id = item.Scope._id,
+              Name = item.Scope.Name,
+              Order = item.Scope.Order,
+              TypeItem = EnumTypeItem.Scope
+            };
+            view.Item = detail;
+            result.Itens.Add(view);
+          }
 
+        if (onboarding.Activities != null)
+          foreach (var item in onboarding.Activities)
+          {
+            var view = new ViewListItensMobile()
+            {
+              _id = item._id,
+              CommentsManager = item.CommentsManager,
+              CommentsPerson = item.CommentsPerson,
+              StatusViewManager = item.StatusViewManager,
+              StatusViewPerson = item.StatusViewPerson,
+              Comments = item.Comments?.Select(c => new ViewCrudComment()
+              {
+                _id = c._id,
+                Date = c.Date,
+                StatusView = c.StatusView,
+                UserComment = c.UserComment,
+                Comments = c.Comments,
+                SpeechLink = c.SpeechLink
+              }).ToList()
+            };
+            var detail = new ViewListItensDetailMobile()
+            {
+              _id = item.Activitie._id,
+              Name = item.Activitie.Name,
+              Order = item.Activitie.Order,
+              TypeItem = EnumTypeItem.Activitie
+            };
+            view.Item = detail;
+            result.Itens.Add(view);
+          }
 
         if (onboarding.SkillsCompany != null)
           foreach (var item in onboarding.SkillsCompany)
@@ -532,67 +592,6 @@ namespace Manager.Services.Specific
             result.Itens.Add(view);
           }
 
-        if (onboarding.Activities != null)
-          foreach (var item in onboarding.Activities)
-          {
-            var view = new ViewListItensMobile()
-            {
-              _id = item._id,
-              CommentsManager = item.CommentsManager,
-              CommentsPerson = item.CommentsPerson,
-              StatusViewManager = item.StatusViewManager,
-              StatusViewPerson = item.StatusViewPerson,
-              Comments = item.Comments?.Select(c => new ViewCrudComment()
-              {
-                _id = c._id,
-                Date = c.Date,
-                StatusView = c.StatusView,
-                UserComment = c.UserComment,
-                Comments = c.Comments,
-                SpeechLink = c.SpeechLink
-              }).ToList()
-            };
-            var detail = new ViewListItensDetailMobile()
-            {
-              _id = item.Activitie._id,
-              Name = item.Activitie.Name,
-              Order = item.Activitie.Order,
-              TypeItem = EnumTypeItem.Activitie
-            };
-            view.Item = detail;
-            result.Itens.Add(view);
-          }
-
-        if (onboarding.Scopes != null)
-          foreach (var item in onboarding.Scopes)
-          {
-            var view = new ViewListItensMobile()
-            {
-              _id = item._id,
-              CommentsManager = item.CommentsManager,
-              CommentsPerson = item.CommentsPerson,
-              StatusViewManager = item.StatusViewManager,
-              StatusViewPerson = item.StatusViewPerson,
-              Comments = item.Comments?.Select(c => new ViewCrudComment()
-              {
-                _id = c._id,
-                Date = c.Date,
-                StatusView = c.StatusView,
-                UserComment = c.UserComment,
-                Comments = c.Comments,
-                SpeechLink = c.SpeechLink
-              }).ToList()
-            };
-            var detail = new ViewListItensDetailMobile()
-            {
-              _id = item.Scope._id,
-              Name = item.Scope.Name,
-              Order = item.Scope.Order,
-              TypeItem = EnumTypeItem.Scope
-            };
-            view.Item = detail;
-            result.Itens.Add(view);
-          }
 
         if (onboarding.Schoolings != null)
           foreach (var item in onboarding.Schoolings)
@@ -1356,7 +1355,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == idonboarding).Result.FirstOrDefault();
+        var onboarding = serviceOnboarding.GetNewVersion(p => p._id == idonboarding).Result;
         foreach (var item in onboarding.Activities)
         {
           if (item._id == iditem)

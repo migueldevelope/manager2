@@ -244,6 +244,13 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
+        <member name="M:Mobile.Controllers.PanelController.GetNotes(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
         <member name="T:Mobile.Program">
             <summary>
             
