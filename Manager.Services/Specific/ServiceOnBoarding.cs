@@ -636,6 +636,26 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string UpdateCommentsEndMobile(string idonboarding, EnumUserComment userComment, ViewCrudCommentEnd comments)
+    {
+      try
+      {
+        var onboarding = serviceOnboarding.GetNewVersion(p => p._id == idonboarding).Result;
+        if (userComment == EnumUserComment.Person)
+          onboarding.CommentsPerson = comments.Comments;
+        else if (userComment == EnumUserComment.Manager)
+          onboarding.CommentsManager = comments.Comments;
+
+        var i = serviceOnboarding.Update(onboarding, null);
+
+        return "ok";
+      }
+      catch(Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string UpdateCommentsView(string idonboarding, string iditem, EnumUserComment userComment)
     {
       try
