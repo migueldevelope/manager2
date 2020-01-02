@@ -186,10 +186,24 @@ namespace Mobile.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [Route("update/{idonboarding}/{usercomment}")]
-    public async Task<IActionResult> Update([FromBody]ViewCrudCommentEnd comments, string idonboarding, EnumUserComment usercomment)
+    [Route("updatecomments/{idonboarding}/{usercomment}")]
+    public async Task<IActionResult> UpdateComments([FromBody]ViewCrudCommentEnd comments, string idonboarding, EnumUserComment usercomment)
     {
       return await Task.Run(() => Ok(service.UpdateCommentsEndMobile(idonboarding, usercomment, comments)));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idonboarding"></param>
+    /// <param name="status"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatestatus/{idonboarding}/{status}")]
+    public async Task<IActionResult> UpdateStatus(string idonboarding, EnumStatusOnBoarding status)
+    {
+      return await Task.Run(() => Ok(service.UpdateStatusOnBoarding(idonboarding, status)));
     }
 
     /// <summary>

@@ -41,6 +41,7 @@ namespace Manager.Core.Interfaces
     #region Mobile
     ViewListOnBoardingMobile GetMobile(string id);
     string UpdateCommentsEndMobile(string idonboarding, EnumUserComment userComment, ViewCrudCommentEnd comments);
+    string UpdateStatusOnBoarding(string idonboarding, EnumStatusOnBoarding status);
     #endregion
   }
 }

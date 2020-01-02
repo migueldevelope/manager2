@@ -1755,6 +1755,105 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateStatusOnBoarding(string idonboarding, EnumStatusOnBoarding status)
+    {
+      try
+      {
+        var onboarding = serviceOnboarding.GetNewVersion(p => p._id == idonboarding).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == onboarding.Person._id).Result;
+
+        onboarding.StatusOnBoarding = status;
+
+        if (person.User._id != _user._idUser)
+        {
+          if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson)
+          {
+            onboarding.DateEndManager = DateTime.Now;
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              Task.Run(() => MailOccupation(person));
+            else
+              Task.Run(() => Mail(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", onboarding._id)));
+          }
+
+          if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
+          {
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              Task.Run(() => serviceLogMessages.NewLogMessage("OnBoarding", string.Format("Embarque | OnBoarding realizado para {0}.", onboarding.Person.Name), person));
+            else
+              Task.Run(() => serviceLogMessages.NewLogMessage("OnBoarding", string.Format("Embarque | OnBoarding de troca de cargo realizado para {0}.", onboarding.Person.Name), person));
+
+            onboarding.DateEndEnd = DateTime.Now;
+            Task.Run(() => SendQueue(onboarding._id, person._id));
+
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              person.TypeJourney = EnumTypeJourney.Monitoring;
+            else
+              person.TypeJourney = EnumTypeJourney.Checkpoint;
+            servicePerson.Update(person, null).Wait();
+
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", onboarding._id)));
+          }
+        }
+        else
+        {
+          if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.End)
+          {
+            if (ValidOnboardingComments(onboarding))
+            {
+              onboarding.StatusOnBoarding = EnumStatusOnBoarding.WaitManagerRevision;
+              onboarding.DateEndPerson = DateTime.Now;
+              if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+                Task.Run(() => MailDisapprovedOccupation(person));
+              else
+                Task.Run(() => MailDisapproved(person));
+              Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", onboarding._id)));
+            }
+            else
+            {
+              if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+                Task.Run(() => serviceLogMessages.NewLogMessage("OnBoarding", string.Format("Embarque | OnBoarding realizado para {0}.", onboarding.Person.Name), person));
+              else
+                Task.Run(() => serviceLogMessages.NewLogMessage("OnBoarding", string.Format("Embarque | OnBoarding de troca de cargo realizado para {0}.", person.User.Name), person));
+              onboarding.DateEndEnd = DateTime.Now;
+              if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+                person.TypeJourney = EnumTypeJourney.Monitoring;
+              else
+                person.TypeJourney = EnumTypeJourney.Checkpoint;
+              Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", onboarding._id)));
+              servicePerson.Update(person, null).Wait();
+            }
+
+
+          }
+          else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManager)
+          {
+            onboarding.DateEndPerson = DateTime.Now;
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              Task.Run(() => MailManagerOccupation(person));
+            else
+              Task.Run(() => MailManager(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", onboarding._id)));
+          }
+          else if (onboarding.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision)
+          {
+            if (onboarding.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
+              Task.Run(() => MailDisapprovedOccupation(person));
+            else
+              Task.Run(() => MailDisapproved(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", onboarding._id)));
+          }
+        }
+        serviceOnboarding.Update(onboarding, null).Wait();
+        return "OnBoarding altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListOnBoarding> ListExcluded(ref long total, string filter, int count, int page)
     {
       try
