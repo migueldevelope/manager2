@@ -132,13 +132,21 @@
             <param name="onboarding">Objeto Crud</param>
             <returns>Mensagem de sucesso</returns>
         </member>
-        <member name="M:Mobile.Controllers.OnBoardingController.Update(Manager.Views.BusinessCrud.ViewCrudCommentEnd,System.String,Manager.Views.Enumns.EnumUserComment)">
+        <member name="M:Mobile.Controllers.OnBoardingController.UpdateComments(Manager.Views.BusinessCrud.ViewCrudCommentEnd,System.String,Manager.Views.Enumns.EnumUserComment)">
             <summary>
             
             </summary>
             <param name="comments"></param>
             <param name="idonboarding"></param>
             <param name="usercomment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.UpdateStatus(System.String,Manager.Views.Enumns.EnumStatusOnBoarding)">
+            <summary>
+            
+            </summary>
+            <param name="idonboarding"></param>
+            <param name="status"></param>
             <returns></returns>
         </member>
         <member name="M:Mobile.Controllers.OnBoardingController.ListEnded(System.String,System.Int32,System.Int32,System.String)">
@@ -215,6 +223,15 @@
             
             </summary>
             <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.PostSpeechRecognitionOnboarding(System.String,System.String,Manager.Views.Enumns.EnumUserComment)">
+            <summary>
+            
+            </summary>
+            <param name="idregister"></param>
+            <param name="iditem"></param>
+            <param name="typeuser"></param>
             <returns></returns>
         </member>
         <member name="T:Mobile.Controllers.PanelController">
