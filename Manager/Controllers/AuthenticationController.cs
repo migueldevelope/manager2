@@ -76,6 +76,7 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idaccount"></param>
     /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]

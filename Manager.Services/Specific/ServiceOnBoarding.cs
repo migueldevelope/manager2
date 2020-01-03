@@ -256,12 +256,15 @@ namespace Manager.Services.Specific
             serviceOnboarding.Update(onBoarding, null).Wait();
           }
         }
+        
         return new ViewListOnBoarding()
         {
           Name = onBoarding.Person.Name,
           StatusOnBoarding = onBoarding.StatusOnBoarding,
           _id = onBoarding._id,
-          _idPerson = onBoarding.Person._id
+          _idPerson = onBoarding.Person._id,
+          OccupationName = onBoarding.Person.Occupation,
+          Photo = person.User.PhotoUrl
         };
       }
       catch (Exception e)
