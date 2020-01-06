@@ -42,7 +42,7 @@ namespace Mobile.Controllers
     {
       try
       {
-        return await Task.Run(() => Ok(service.Authentication(userLogin, true)));
+        return await Task.Run(() => Ok(service.Authentication(userLogin, false)));
       }
       catch (Exception e)
       {
@@ -64,7 +64,7 @@ namespace Mobile.Controllers
     {
       try
       {
-        return await Task.Run(() => Ok(service.AuthenticationV2(userLogin, true)));
+        return await Task.Run(() => Ok(service.AuthenticationV2(userLogin, false)));
       }
       catch (Exception e)
       {
