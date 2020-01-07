@@ -984,7 +984,7 @@ namespace Manager.Services.Specific
 
             var result = new ViewCSVLO
             {
-              Name = skill.Name.Replace("\n", "").Replace(";", ".") + ":" + skill.Concept.Replace("\n", "").Replace(";", "."),
+              Name = skill.Name.Replace("\n", "").Replace(";", ".") + ":" + skill.Concept?.Replace("\n", "").Replace(";", "."),
               Line = line,
               Col = col,
               Type = EnumTypeLineOpportunity.Skill,
