@@ -841,7 +841,7 @@ namespace Manager.Services.Auth
           UserAdmin = false
         };
 
-        if (string.IsNullOrEmpty(user.Mail))
+        if ((user.Mail != null)&&(user.Mail != string.Empty))
         {
           if (user.Mail.IndexOf("@maristas.org.br") != -1 || user.Mail.IndexOf("@pucrs.br") != -1)
             user.ChangePassword = EnumChangePassword.No;
