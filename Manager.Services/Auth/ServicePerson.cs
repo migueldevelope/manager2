@@ -214,15 +214,11 @@ namespace Manager.Services.Auth
             DateAdm = user.DateAdm,
             DateBirth = user.DateBirth,
             Document = user.Document,
-            DocumentCTPF = user.DocumentCTPF,
-            DocumentID = user.DocumentID,
             Mail = user.Mail,
             Name = user.Name,
             Nickname = user.Nickname,
-            Password = user.Password,
             Phone = user.Phone,
             PhoneFixed = user.PhoneFixed,
-            PhotoUrl = user.PhotoUrl,
             Schooling = user.Schooling,
             Sex = user.Sex,
             _id = user._id,
@@ -234,21 +230,16 @@ namespace Manager.Services.Auth
             var viewPerson = new ViewPersonNickName()
             {
               Company = person.Company,
-              DateLastOccupation = person.DateLastOccupation,
-              DateLastReadjust = person.DateLastReadjust,
               DateResignation = person.DateResignation,
               Establishment = person.Establishment,
-              HolidayReturn = person.HolidayReturn,
               Manager = person.Manager == null ? null : new ViewBaseFields()
               {
                 _id = person.Manager._id,
                 Mail = person.Manager.Mail,
                 Name = person.Manager.Name
               },
-              MotiveAside = person.MotiveAside,
               Occupation = person.Occupation,
               Registration = person.Registration,
-              Salary = person.Salary,
               StatusUser = person.StatusUser,
               TypeJourney = person.TypeJourney,
               TypeUser = person.TypeUser,

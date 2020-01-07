@@ -75,6 +75,7 @@ namespace IntegrationClient
         if (File.Exists(Path.Combine(txtPst.Text, "Tabulacao.xlsx")))
         {
           File.Delete(Path.Combine(txtPst.Text, "Tabulacao.xlsx"));
+          Directory.GetFiles(txtPst.Text, "*.log", SearchOption.AllDirectories).ToList().ForEach(f => File.Delete(f));
         }
         foreach (string file in files)
         {
@@ -125,63 +126,78 @@ namespace IntegrationClient
       item = item.Replace("LEGISLACAO", "LEGISLAÇÃO");
       item = item.Replace("TRIBUTARIA", "TRIBUTÁRIA");
       item = item.Replace("GESTAO", "GESTÃO");
-      item = item.Equals("INSTRUÇÕES/ PROCEDIMENTOS E / OU ROTINAS DE TRABALHO") ? "INSTRUÇÕES, PROCEDIMENTOS E/OU ROTINAS DE TRABALHO" : item;
-      item = item.Equals("LEGISLAÇÃO TRIBUTÁRIA FISCAL") ? "LEGISLAÇÃO FISCAL E TRIBUTÁRIA" : item;
-      item = item.Equals("PACOTE DE APLICATIVOS OFFICE") ? "APLICATIVOS OFFICE" : item;
-      item = item.Equals("SISTEMAS  E FERRAMENTAS DE GESTÃO") ? "SISTEMAS E FERRAMENTAS DE GESTÃO" : item;
-      item = item.Equals("CONTROLE DE ESTOQUES") ? "CONTROLE DE ESTOQUE" : item;
-      item = item.Equals("TÉCNICAS E CONTROLE DE ESTOQUES") ? "TÉCNICAS DE CONTROLE E GESTÃO DE ESTOQUES" : item;
+
       item = item.Equals("AUTOMAÇÃO CLP E PLC") ? "AUTOMAÇÃO INDUSTRIAL" : item;
+      item = item.Equals("AUTOMAÇÃO INDUSTRIAL (CLP, PLC, ETC)") ? "AUTOMAÇÃO INDUSTRIAL" : item;
+
       item = item.Equals("CADEIA DE VALORES DOS NEGÓCIOS DO GRUPO") ? "CADEIA DE VALOR DOS NEGÓCIOS DO GRUPO" : item;
+      item = item.Equals("CATALOG") ? "PROMOB CATALOG" : item;
       item = item.Equals("COMUNICAÇÃO INTEGRADA EM MARKETING") ? "COMUNICAÇÃO INTEGRADA DE MARKETING" : item;
       item = item.Equals("CONHECIMENTO DE PRODUTO") ? "CONHECIMENTO DE PRODUTOS" : item;
       item = item.Equals("CONTABILIDADE.") ? "CONTABILIDADE" : item;
+      item = item.Equals("CONTROLE DE ESTOQUES") ? "CONTROLE DE ESTOQUE" : item;
       item = item.Equals("DICCÇÃO E ORATÓRIA") ? "DICÇÃO E ORATÓRIA" : item;
       item = item.Equals("EFICIÊNCIA PRODUTIVA") ? "EFICIÊNCIA PRODUTIVA/PRODUÇÃO ENXUTA/LEAN MANUFACTURING" : item;
       item = item.Equals("EFICIÊNCIA PRODUTIVA/PRODUÇÃO ENXUTA") ? "EFICIÊNCIA PRODUTIVA/PRODUÇÃO ENXUTA/LEAN MANUFACTURING" : item;
+      item = item.Equals("ERP(ENTERPRISE RESOURCE PLANNING)") ? "SISTEMAS INFORMATIZADOS DE GESTÃO" : item;
+      item = item.Equals("ESTATÍTICA") ? "ESTATÍSTICA" : item;
       item = item.Equals("EXCEL  AVANÇADO") ? "EXCEL AVANÇADO" : item;
+      item = item.Equals("FISCAL E TRIBUTÁRIA") ? "LEGISLAÇÃO FISCAL E TRIBUTÁRIA" : item;
       item = item.Equals("GESTÃO DE CONFLITO") ? "GESTÃO DE CONFLITOS" : item;
       item = item.Equals("GESTÃO CUSTOS") ? "GESTÃO DE CUSTOS" : item;
       item = item.Equals("HIDRAULICA") ? "HIDRÁULICA" : item;
+      item = item.Equals("IDIOMA ESPANHOL") ? "LINGUA ESPANHOLA" : item;
       item = item.Equals("IMPOSTOS E OBRIGAÇÕES ACESSÓRIAS (SEFIP, RAIS, CAGED).") ? "IMPOSTOS E OBRIGAÇÕES ACESSÓRIAS (SEFIP, RAIS, CAGED, DIRF)" : item;
+      item = item.Equals("IMPOSTOS E OBRIGAÇÕES ACESSÓRIAS (SEFIP, RAIS, CAGED, DIRF).") ? "IMPOSTOS E OBRIGAÇÕES ACESSÓRIAS (SEFIP, RAIS, CAGED, DIRF)" : item;
       item = item.Equals("INSTRUÇÕES/PROCEDIMENTOS E/OU ROTINAS DE TRABALHO") ? "INSTRUÇÕES, PROCEDIMENTOS E/OU ROTINAS DE TRABALHO" : item;
+      item = item.Equals("INSTRUÇÕES/ PROCEDIMENTOS E / OU ROTINAS DE TRABALHO") ? "INSTRUÇÕES, PROCEDIMENTOS E/OU ROTINAS DE TRABALHO" : item;
       item = item.Equals("INSTRUMENTAÇÃO") ? "INSTRUMENTAÇÃO (PAQUÍMETROS, MICROMETROS)" : item;
       item = item.Equals("LEAN MANUFECTURING") ? "LEAN MANUFACTURING" : item;
       item = item.Equals("LEGISLAÇÃO FISCAL (SINTEGRA, SPED, DCTF, DIRF, ETC)") ? "LEGISLAÇÃO FISCAL E OBRIGAÇÕES (SINTEGRA, SPED, DCTF, DIRF, ETC)" : item;
       item = item.Equals("LEGISLAÇÃO FISCAL E OBRIGAÇÕES (SINTEGRA / SPED / DCTF / DIRF ETC.)") ? "LEGISLAÇÃO FISCAL E OBRIGAÇÕES (SINTEGRA, SPED, DCTF, DIRF, ETC)" : item;
+      item = item.Equals("LEGISLAÇÃO TRIBUTÁRIA FISCAL") ? "LEGISLAÇÃO FISCAL E TRIBUTÁRIA" : item;
+      item = item.Equals("LEGISLAÇÃO TRIBUTÁRIA, FISCAL E ADMINISTRATIVA") ? "LEGISLAÇÃO FISCAL E TRIBUTÁRIA" : item;
       item = item.Equals("LOGÍSTICA INTERNA (ALMOXARIFADO/EXPEDIÇÃO)") ? "LOGÍSTICA INTERNA" : item;
-      item = item.Equals("MANUTENÇÃO INDUSTRIAL (ELÉTRICA, MECÂNICA E ELETRÔNICA)") ? "MANUTENÇÃO INDUSTRIAL (ELÉTRICA, ELETRÔNICA E MECÂNICA)" : item;
+      item = item.Equals("LID - LEITURA INTERPRETAÇÃO DE DESENHOS") ? "LEITURA E INTERPRETAÇÃO DE DESENHOS" : item;
+      item = item.Equals("LID - LEITURA INTERPRETAÇÃO DE DESENHOS") ? "LEITURA E INTERPRETAÇÃO DE DESENHOS" : item;
+      item = item.Equals("LÍNGUA ESTRANGEIRA (ESPANHOL E INGLÊS)") ? "INGLÊS E ESPANHOL" : item;
       item = item.Equals("MERCADO DE PLANEJADO") ? "MERCADO DE PLANEJADOS" : item;
       item = item.Equals("NR10") ? "NR 10" : item;
+      item = item.Equals("NORMAIS INTERNACIONAIS") ? "NORMAS INTERNACIONAIS" : item;
       item = item.Equals("OPERAÇÃO DE EMPILHADEIRA - NR11") ? "OPERAÇÃO DE EMPILHADEIRA - NR 11" : item;
       item = item.Equals("OPERAÇÃO DE PONTE ROLANTE") ? "OPERAÇÃO DE PONTE ROLANTE - NR 11" : item;
       item = item.Equals("OPERADOR DE EMPILHADEIRA") ? "OPERAÇÃO DE EMPILHADEIRA - NR 11" : item;
+      item = item.Equals("PACOTE DE APLICATIVOS OFFICE") ? "APLICATIVOS OFFICE" : item;
       item = item.Equals("PACOTE DE APLICATIVO OFFICE") ? "APLICATIVOS OFFICE" : item;
       item = item.Equals("PACOTE OFFICE") ? "APLICATIVOS OFFICE" : item;
       item = item.Equals("PESQUISAS EM MARKETING") ? "PESQUISAS DE MARKETING" : item;
       item = item.Equals("POLÍTICAS  DA ORGANIZAÇÃO") ? "POLÍTICAS DA ORGANIZAÇÃO" : item;
-      item = item.Equals("POLÍTICAS DE QUALIDADE INTERNAS") ? "POLÍTICAS DE QUALIDADE INTERNA" : item;
+      item = item.Equals("POLÍTICAS DE QUALIDADE INTERNAS") ? "POLÍTICA INTERNA DE QUALIDADE" : item;
+      item = item.Equals("POLÍTICAS DE QUALIDADE INTERNA") ? "POLÍTICA INTERNA DE QUALIDADE" : item;
+      item = item.Equals("POLÍTICAS INTERNAS DE QUALIDADE") ? "POLÍTICA INTERNA DE QUALIDADE" : item;
       item = item.Equals("PRODUTO") ? "PRODUTOS" : item;
       item = item.Equals("PRODUTO MOEIS DE AÇO") ? "PRODUTO MÓVEIS DE AÇO" : item;
-      item = item.Equals("CATALOG") ? "PROMOB CATALOG" : item;
       item = item.Equals("PROMOB") ? "PROMOB CATALOG" : item;
       item = item.Equals("SEGURANÇA DE TRABALHO") ? "SEGURANÇA DO TRABALHO" : item;
       item = item.Equals("SEGURANÇA DO TRABALHO (NRS 10, SEP, 12...)") ? "SEGURANÇA DO TRABALHO" : item;
       item = item.Equals("SEGURANÇA DO TRABALHO/NRS") ? "SEGURANÇA DO TRABALHO" : item;
       item = item.Equals("SISTEMAS DE DESENHO") ? "SISTEMAS DE DESENHO (CAD)" : item;
       item = item.Equals("SISTEMAS INFORMATIZADOS DE GESTÃO (ERP)") ? "SISTEMAS INFORMATIZADOS DE GESTÃO" : item;
+      item = item.Equals("SISTEMA FERRAMENTAS DE GESTÃO") ? "SISTEMAS E FERRAMENTAS DE GESTÃO" : item;
+      item = item.Equals("SISTEMAS GESTÃO REVENDAS") ? "SISTEMA DE GESTÃO DE REVENDA" : item;
+      item = item.Equals("SISTEMAS INFORMATIZADOS (EVISTA, PRIMUS)") ? "SISTEMAS INFORMATIZADOS DE GESTÃO" : item;
       item = item.Equals("SISTEMÁTICA DO COMÉRCIO EXTERIOR") ? "SISTEMÁTICA DE COMÉRCIO EXTERIOR" : item;
       item = item.Equals("SISTEMÁTICA DO COMÉRCIO EXTERIOR (DOCUMENTAÇÃO, PRAZOS, INCOTERMS, CÂMBIO...)") ? "SISTEMÁTICA DE COMÉRCIO EXTERIOR" : item;
+      item = item.Equals("SISTEMAS  E FERRAMENTAS DE GESTÃO") ? "SISTEMAS E FERRAMENTAS DE GESTÃO" : item;
       item = item.Equals("SOFTWARE CATALOG") ? "PROMOB CATALOG" : item;
       item = item.Equals("SOFTWARE DE PROJETO") ? "SOFTWARE DE PROJETOS" : item;
       item = item.Equals("SUBSISTEMAS DE RECURSOS HUMANOS") ? "SUBSISTEMAS DE RH" : item;
       item = item.Equals("TÉCNICCAS DE NEGOCIAÇÃO") ? "TÉCNICAS DE NEGOCIAÇÃO" : item;
+      item = item.Equals("TÉCNICAS E CONTROLE DE ESTOQUES") ? "TÉCNICAS DE CONTROLE E GESTÃO DE ESTOQUES" : item;
       item = item.Equals("TRABALHO EM ALTURA") ? "TRABALHO EM ALTURA - NR 35" : item;
-      item = item.Equals("TRATAMENTO DE RESSIDUOS E EFLENTES") ? "TRATAMENTO DE RESSIDUOS E EFLUNTES" : item;
+      item = item.Equals("TRATAMENTO DE RESSIDUOS E EFLENTES") ? "TRATAMENTO DE RESÍDUOS E EFLUNTES" : item;
+      item = item.Equals("TRATAMENTO DE RESSIDUOS E EFLUNTES") ? "TRATAMENTO DE RESÍDUOS E EFLUNTES" : item;
       item = item.Equals("TRATAMENTO DE EFLUENTES") ? "TRATAMENTO DE RESSIDUOS E EFLUNTES" : item;
-      item = item.Equals("ERP(ENTERPRISE RESOURCE PLANNING)") ? "SISTEMAS INFORMATIZADOS DE GESTÃO" : item;
-      item = item.Equals("FISCAL E TRIBUTÁRIA") ? "LEGISLAÇÃO FISCAL E TRIBUTÁRIA" : item;
-      item = item.Equals("IDIOMA ESPANHOL") ? "LINGUA ESPANHOLA" : item;
       return item;
     }
     private string DictionarySchooling(string item)
@@ -383,8 +399,13 @@ namespace IntegrationClient
             skills.Add(new SkillStatistic()
             {
               Name = item,
-              Found = true
+              Found = true,
+              Used = 1
             });
+          }
+          else
+          {
+            skills[index].Used++;
           }
           occupationSkills.Add(new OccupationSkillStatistic()
           {
@@ -423,8 +444,13 @@ namespace IntegrationClient
               skills.Add(new SkillStatistic()
               {
                 Name = itemAux[0],
-                Found = false
+                Found = false,
+                Used = 1
               });
+            }
+            else
+            {
+              skills[index].Used++;
             }
             occupationSkills.Add(new OccupationSkillStatistic()
             {
@@ -484,11 +510,13 @@ namespace IntegrationClient
         excelPln.Name = "Competências";
         excelPln.Range["A1"].Value = "Competência";
         excelPln.Range["B1"].Value = "Cadastrada";
+        excelPln.Range["C1"].Value = "Usada em Cargos";
         int line = 2;
         foreach (SkillStatistic item in skills)
         {
           excelPln.Range[string.Format("A{0}", line)].Value = item.Name;
           excelPln.Range[string.Format("B{0}", line)].Value = item.Found ? "Sim" : "Não";
+          excelPln.Range[string.Format("C{0}", line)].Value = item.Used;
           line++;
         }
         // Planilha de Escolaridades

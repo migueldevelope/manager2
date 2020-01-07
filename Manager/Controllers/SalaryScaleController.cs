@@ -104,7 +104,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Listar todas as tabelas salariais da empresa
     /// </summary>
-    /// <param name="idcompany">Identificador da empresa</param>
+    /// <param name="idsalaryscale">Identificador da tabela salarial</param>
     /// <param name="count">Quantidade de registros</param>
     /// <param name="page">Página para mostrar</param>
     /// <param name="filter">Filtro para o nome da tabela salarial</param>

@@ -80,6 +80,7 @@ namespace Indicators.Controllers
     /// 
     /// </summary>
     /// <param name="idmanager"></param>
+    /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
@@ -288,6 +289,7 @@ namespace Indicators.Controllers
     /// 
     /// </summary>
     /// <param name="idmanager"></param>
+    /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]

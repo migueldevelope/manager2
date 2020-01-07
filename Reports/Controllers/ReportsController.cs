@@ -48,6 +48,7 @@ namespace Reports.Controllers
     /// 
     /// </summary>
     /// <param name="idcompany"></param>
+    /// <param name="idarea"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]

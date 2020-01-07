@@ -6,5 +6,6 @@ namespace IntegrationClient.ModelTools
   {
     public string Name { get; set; }
     public bool Found { get; set; }
+    public int Used { get; set; }
   }
 }
