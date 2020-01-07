@@ -199,6 +199,77 @@ namespace Manager.Services.Auth
 
     #region Person
 
+    public List<ViewUserNickName> GetPersonNickName(string nickname)
+    {
+      try
+      {
+        var users = serviceUser.GetAllNewVersion(p => p.Nickname == nickname).Result;
+        var list = new List<ViewUserNickName>();
+        foreach (var user in users)
+        {
+          var persons = servicePerson.GetAllNewVersion(p => p.User._id == user._id).Result;
+
+          var viewUser = new ViewUserNickName()
+          {
+            DateAdm = user.DateAdm,
+            DateBirth = user.DateBirth,
+            Document = user.Document,
+            DocumentCTPF = user.DocumentCTPF,
+            DocumentID = user.DocumentID,
+            Mail = user.Mail,
+            Name = user.Name,
+            Nickname = user.Nickname,
+            Password = user.Password,
+            Phone = user.Phone,
+            PhoneFixed = user.PhoneFixed,
+            PhotoUrl = user.PhotoUrl,
+            Schooling = user.Schooling,
+            Sex = user.Sex,
+            _id = user._id,
+            Contracts = new List<ViewPersonNickName>()
+          };
+
+          foreach (var person in persons)
+          {
+            var viewPerson = new ViewPersonNickName()
+            {
+              Company = person.Company,
+              DateLastOccupation = person.DateLastOccupation,
+              DateLastReadjust = person.DateLastReadjust,
+              DateResignation = person.DateResignation,
+              Establishment = person.Establishment,
+              HolidayReturn = person.HolidayReturn,
+              Manager = person.Manager == null ? null : new ViewBaseFields()
+              {
+                _id = person.Manager._id,
+                Mail = person.Manager.Mail,
+                Name = person.Manager.Name
+              },
+              MotiveAside = person.MotiveAside,
+              Occupation = person.Occupation,
+              Registration = person.Registration,
+              Salary = person.Salary,
+              StatusUser = person.StatusUser,
+              TypeJourney = person.TypeJourney,
+              TypeUser = person.TypeUser,
+              Workload = person.Workload,
+              _id = person._id
+            };
+            viewUser.Contracts.Add(viewPerson);
+          }
+
+          list.Add(viewUser);
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     public List<_ViewListBase> GetPersons()
     {
       try
@@ -433,13 +504,13 @@ namespace Manager.Services.Auth
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
           var persons = servicePerson.CountNewVersion(p => p.User._id == person.User._id &&
           p.StatusUser != EnumStatusUser.Disabled).Result;
-          if(persons == 0)
+          if (persons == 0)
           {
             user.Status = EnumStatus.Disabled;
             var i = serviceUser.Update(user, null);
           }
         }
-          
+
         if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.Occupation == null)
@@ -746,7 +817,7 @@ namespace Manager.Services.Auth
           if (exists > 0)
             throw new Exception("existsdocument");
         }
-          
+
 
         User user = new User()
         {
@@ -923,7 +994,7 @@ namespace Manager.Services.Auth
             var i = serviceUser.Update(user, null);
           }
         }
-          
+
         if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.Occupation == null)

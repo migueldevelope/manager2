@@ -4,6 +4,7 @@ using System.Globalization;
 using Manager.Core.Business.Integration;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Manager.Views.Integration.V2;
@@ -215,7 +216,8 @@ namespace IntegrationServer.InfraController
 
           switch (view.Colaborador.Situacao.ToLower())
           {
-            case "férias": case "ferias":
+            case "férias":
+            case "ferias":
               viewPerson.StatusUser = EnumStatusUser.Vacation;
               break;
             case "afastado":
@@ -229,7 +231,7 @@ namespace IntegrationServer.InfraController
               break;
           }
           viewPerson.User = userView;
-          viewPerson = servicePerson.New(viewPerson) ;
+          viewPerson = servicePerson.New(viewPerson);
           view.Message = "Person Included!";
           view.IdPerson = viewPerson._id;
         }
@@ -645,6 +647,31 @@ namespace IntegrationServer.InfraController
         }
       }
     }
+
+    /// <summary>
+    /// Rertorna usuários com seus contratos filtrados pelo nickname
+    /// </summary>
+    /// <param name="nickname"></param>
+    /// <returns></returns>
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<ColaboradorV2Base>), StatusCodes.Status200OK)]
+    [Authorize]
+    [HttpGet]
+    [Route("listusernickname/{nickname}")]
+    public ObjectResult GetPersonNickName(string nickname)
+    {
+      {
+        try
+        {
+          return Ok(servicePerson.GetPersonNickName(nickname));
+        }
+        catch (Exception e)
+        {
+          return BadRequest(e.Message);
+        }
+      }
+    }
+
     #endregion
 
     #region PayrollEmployee
