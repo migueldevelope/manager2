@@ -278,6 +278,17 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
+        <member name="T:Mobile.Controllers.ValuesController">
+            <summary>
+            Controle para verficação de API ativa
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.ValuesController.Get">
+            <summary>
+            Método único para demonstração de API REST ativa
+            </summary>
+            <returns>String com a versão da API REST</returns>
+        </member>
         <member name="T:Mobile.Program">
             <summary>
             

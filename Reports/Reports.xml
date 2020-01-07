@@ -27,6 +27,7 @@
             
             </summary>
             <param name="idcompany"></param>
+            <param name="idarea"></param>
             <returns></returns>
         </member>
         <member name="M:Reports.Controllers.ReportsController.ListTraining(System.String)">

@@ -54,6 +54,7 @@
             
             </summary>
             <param name="idmanager"></param>
+            <param name="idperson"></param>
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudPerson(System.String)">
@@ -165,6 +166,7 @@
             
             </summary>
             <param name="idmanager"></param>
+            <param name="idperson"></param>
             <returns></returns>
         </member>
         <member name="M:Indicators.Controllers.IndicatorsController.ListTagsCloudCompanyPerson(System.String)">
