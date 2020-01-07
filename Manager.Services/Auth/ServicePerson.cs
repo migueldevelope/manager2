@@ -218,9 +218,8 @@ namespace Manager.Services.Auth
             Name = user.Name,
             Nickname = user.Nickname,
             Phone = user.Phone,
-            PhoneFixed = user.PhoneFixed,
             Schooling = user.Schooling,
-            Sex = user.Sex,
+            Sex = Enum.GetName(typeof(EnumSex), user.Sex),
             _id = user._id,
             Contracts = new List<ViewPersonNickName>()
           };
@@ -240,10 +239,9 @@ namespace Manager.Services.Auth
               },
               Occupation = person.Occupation,
               Registration = person.Registration,
-              StatusUser = person.StatusUser,
-              TypeJourney = person.TypeJourney,
-              TypeUser = person.TypeUser,
-              Workload = person.Workload,
+              StatusUser = Enum.GetName(typeof(EnumStatusUser), person.StatusUser),
+              TypeJourney = Enum.GetName(typeof(EnumTypeJourney), person.TypeJourney),
+              TypeUser = Enum.GetName(typeof(EnumTypeUser), person.TypeUser),
               _id = person._id
             };
             viewUser.Contracts.Add(viewPerson);

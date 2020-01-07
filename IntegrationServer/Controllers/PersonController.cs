@@ -647,31 +647,6 @@ namespace IntegrationServer.InfraController
         }
       }
     }
-
-    /// <summary>
-    /// Rertorna usuários com seus contratos filtrados pelo nickname
-    /// </summary>
-    /// <param name="nickname"></param>
-    /// <returns></returns>
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(List<ViewUserNickName>), StatusCodes.Status200OK)]
-    [Authorize]
-    [HttpGet]
-    [Route("listusernickname/{nickname}")]
-    public ObjectResult GetPersonNickName(string nickname)
-    {
-      {
-        try
-        {
-          return Ok(servicePerson.GetPersonNickName(nickname));
-        }
-        catch (Exception e)
-        {
-          return BadRequest(e.Message);
-        }
-      }
-    }
-
     #endregion
 
     #region PayrollEmployee
@@ -700,5 +675,30 @@ namespace IntegrationServer.InfraController
     }
     #endregion
 
+    #region Person
+    /// <summary>
+    /// Rertorna usuários com seus contratos filtrados pelo nickname
+    /// </summary>
+    /// <param name="nickname"></param>
+    /// <returns></returns>
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<ViewUserNickName>), StatusCodes.Status200OK)]
+    [Authorize]
+    [HttpGet]
+    [Route("listusernickname/{nickname}")]
+    public ObjectResult GetPersonNickName(string nickname)
+    {
+      {
+        try
+        {
+          return Ok(servicePerson.GetPersonNickName(nickname));
+        }
+        catch (Exception e)
+        {
+          return BadRequest(e.Message);
+        }
+      }
+    }
+    #endregion
   }
 }
