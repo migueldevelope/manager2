@@ -71,13 +71,21 @@ namespace Manager.Services.Specific
     {
       try
       {
-        MyAwareness myawareness = new MyAwareness()
+        bool exists = true;
+        MyAwareness myawareness = serviceMyAwareness.GetNewVersion(p => p._id == view._id).Result;
+
+        if (myawareness == null)
         {
-          _id = view._id,
-          NamePerson = view.NamePerson,
-          _idPerson = view._idPerson,
-          Date = DateTime.Now
-        };
+          exists = false;
+          myawareness = new MyAwareness()
+          {
+            _id = view._id,
+            NamePerson = view.NamePerson,
+            _idPerson = view._idPerson,
+            Date = DateTime.Now
+          };
+        }
+
 
         myawareness.FutureVision = new MyAwarenessQuestions()
         {
@@ -116,13 +124,21 @@ namespace Manager.Services.Specific
           Worker = view.Planning.Worker
         };
 
+        MyAwareness result = null;
 
-        var result = serviceMyAwareness.InsertNewVersion(myawareness).Result;
+        if (exists)
+          serviceMyAwareness.Update(myawareness, null).Wait();
+        else
+        {
+          result = serviceMyAwareness.InsertNewVersion(myawareness).Result;
+          view._id = result._id;
+        }
 
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", result._id)));
+
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", view._id)));
 
 
-        return "MyAwareness added!";
+        return view._id;
       }
       catch (Exception e)
       {
