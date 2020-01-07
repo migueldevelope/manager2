@@ -654,7 +654,7 @@ namespace IntegrationServer.InfraController
     /// <param name="nickname"></param>
     /// <returns></returns>
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(List<ColaboradorV2Base>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ViewUserNickName>), StatusCodes.Status200OK)]
     [Authorize]
     [HttpGet]
     [Route("listusernickname/{nickname}")]
