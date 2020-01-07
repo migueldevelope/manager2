@@ -146,7 +146,7 @@ namespace Manager.Services.Auth
         }
         else
         {
-          return Authentication(user);
+          return AuthenticationIntegration(user);
         }
       }
       catch (Exception e)
@@ -156,7 +156,7 @@ namespace Manager.Services.Auth
     }
 
 
-    public ViewPerson AuthenticationV2(ViewAuthentication userLogin, bool manager)
+    public ViewPerson AuthenticationV2(ViewAuthentication userLogin, EnumTypeAuth typeauth)
     {
       try
       {
@@ -179,7 +179,7 @@ namespace Manager.Services.Auth
         {
           if (userLogin.Mail != null)
             userLogin.Mail = userLogin.Mail.Replace(".", "").Replace("-", "").Trim();
-          
+
           user = serviceUser.GetAllFreeNewVersion(p => p.Document == userLogin.Mail && p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
           if (user == null)
           {
@@ -204,14 +204,23 @@ namespace Manager.Services.Auth
             throw new Exception("password_invalid");
         }
 
-        if (manager)
+        if (typeauth == EnumTypeAuth.Default)
         {
           return Authentication(user, true);
         }
+        else if (typeauth == EnumTypeAuth.Integration)
+        {
+          return AuthenticationIntegration(user);
+        }
+        else if (typeauth == EnumTypeAuth.Mobile)
+        {
+          return AuthenticationMobile(user);
+        }
         else
         {
-          return Authentication(user);
+          return null;
         }
+
       }
       catch (Exception e)
       {
@@ -223,7 +232,7 @@ namespace Manager.Services.Auth
 
     #region Authentication Internal
     // Valida autenticação para Manager
-    public ViewPerson Authentication(User user, bool registerLog)
+    public ViewPerson Authentication(User user, bool logRegistration)
     {
       try
       {
@@ -289,11 +298,11 @@ namespace Manager.Services.Auth
             NameAccount = serviceAccount.GetFreeNewVersion(p => p._id == x._idAccount).Result?.Name,
             Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name
           }).ToList();
-        if (registerLog)
-        {
-          serviceLog.SetUser(_user);
+
+        serviceLog.SetUser(_user);
+        if (logRegistration)
           Task.Run(() => LogSave(person.Contracts[0].IdPerson));
-        }
+
         List<ViewContract> per = person?.Contracts;
         if (per.Count() > 0)
         {
@@ -332,8 +341,118 @@ namespace Manager.Services.Auth
         throw e;
       }
     }
+
+    public ViewPerson AuthenticationMobile(User user)
+    {
+      try
+      {
+        BaseUser _user = new BaseUser()
+        {
+          _idAccount = user._idAccount
+        };
+        serviceIPerson.SetUser(_user);
+        serviceTermsOfService.SetUser(_user);
+        serviceTermsOfService._user = _user;
+        ViewListTermsOfService date = serviceTermsOfService.GetTerm();
+        int countterm = 0;
+        Account account = serviceAccount.GetFreeNewVersion(p => p._id == user._idAccount).Result;
+        if ((account.InfoClient != null) && (account?.InfoClient != string.Empty))
+        {
+          countterm = 1;
+        }
+        UserTermOfService term = null;
+        UserTermOfService viewDate = null;
+        if (date != null)
+        {
+          viewDate = new UserTermOfService()
+          {
+            Date = date?.Date,
+            _idTermOfService = date?._id
+          };
+          if (user.UserTermOfServices != null)
+          {
+            foreach (var item in user.UserTermOfServices)
+            {
+              if (viewDate._idTermOfService == item._idTermOfService)
+              {
+                term = viewDate;
+              }
+            }
+          }
+        }
+        serviceDictionarySystem.SetUser(_user);
+        ViewPerson person = new ViewPerson()
+        {
+          IdUser = user._id,
+          Name = user.Name,
+          IdAccount = user._idAccount,
+          ChangePassword = user.ChangePassword,
+          Photo = user.PhotoUrl,
+          NameAccount = account?.Name,
+          TermOfService = date == null ? true : term == null ? false : true,
+          ExistsTermOfService = countterm == 0 ? false : true,
+          ViewLO = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "viewlo").Result?.Content,
+          GoalProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "goalProcess").Result?.Content,
+          MeritocracyProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result?.Content,
+          ShowAutoManager = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showAutoManager").Result?.Content,
+          ShowSalaryScaleManager = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showSalaryScaleManager").Result?.Content,
+          DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result,
+        };
+        person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id && p.StatusUser != EnumStatusUser.Disabled).Result
+          .Select(x => new ViewContract()
+          {
+            IdPerson = x._id,
+            TypeUser = x.TypeUser,
+            Registration = x.Registration,
+            _idAccount = x._idAccount,
+            NameAccount = serviceAccount.GetFreeNewVersion(p => p._id == x._idAccount).Result?.Name,
+            Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name
+          }).ToList();
+
+        serviceLog.SetUser(_user);
+        Task.Run(() => LogSave(person.Contracts[0].IdPerson));
+
+        List<ViewContract> per = person?.Contracts;
+        if (per.Count() > 0)
+        {
+          ViewContract perT = per.FirstOrDefault();
+          if ((perT.TypeUser == EnumTypeUser.Manager) || (perT.TypeUser == EnumTypeUser.ManagerHR))
+          {
+            List<_ViewList> idmanagers = new List<_ViewList>
+            {
+              new _ViewList() { _id = perT.IdPerson }
+            };
+            person.Team = serviceIPerson.GetFilterPersons(idmanagers);
+          }
+        }
+        // Token
+        Claim[] claims = new[]
+        {
+        new Claim(ClaimTypes.Name, person.Name),
+        new Claim(ClaimTypes.Hash, person.IdAccount),
+        new Claim(ClaimTypes.Email, user.Mail),
+        new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
+        new Claim(ClaimTypes.UserData, person.IdUser),
+        new Claim(ClaimTypes.Actor, person.Contracts.FirstOrDefault().IdPerson)
+        };
+        JwtSecurityToken token = new JwtSecurityToken(
+            issuer: "localhost",
+            audience: "localhost",
+            claims: claims,
+            expires: DateTime.Now.AddYears(1),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
+        );
+        person.Token = new JwtSecurityTokenHandler().WriteToken(token);
+        return person;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     // Valida autenticação para IntegrationServer
-    public ViewPerson Authentication(User user)
+    public ViewPerson AuthenticationIntegration(User user)
     {
       try
       {

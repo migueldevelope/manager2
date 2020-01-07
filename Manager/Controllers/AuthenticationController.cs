@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +65,7 @@ namespace Manager.Controllers
     {
       try
       {
-        return await Task.Run(() => Ok(service.AuthenticationV2(userLogin, true)));
+        return await Task.Run(() => Ok(service.AuthenticationV2(userLogin, EnumTypeAuth.Default)));
       }
       catch (Exception e)
       {

@@ -33,6 +33,7 @@
             <summary>
             
             </summary>
+            <param name="idaccount"></param>
             <param name="idperson"></param>
             <returns></returns>
         </member>
@@ -229,7 +230,7 @@
             <summary>
             
             </summary>
-            <param name="idregister"></param>
+            <param name="idonboarding"></param>
             <param name="iditem"></param>
             <param name="typeuser"></param>
             <returns></returns>
