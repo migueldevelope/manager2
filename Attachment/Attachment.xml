@@ -30,6 +30,13 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:EdeskIntegration.Controllers.DownloadController.GetSalaryScaleUpdate(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:EdeskIntegration.Controllers.ImageDownloadController">
             <summary>
             

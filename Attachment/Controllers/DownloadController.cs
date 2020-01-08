@@ -133,5 +133,48 @@ namespace EdeskIntegration.Controllers
         throw e;
       }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet("{id}/salaryscaleupdate")]
+    public async Task<dynamic> GetSalaryScaleUpdate(string id)
+    {
+      try
+      {
+        //string fullPath = @"Models/SALARYSCALE.xlsx";
+        //var stream = new FileStream(fullPath, FileMode.Open);
+
+        //var result = serviceSalaryScale.ExportSalaryScale(id);
+        var name = serviceSalaryScale.ExportUpdateSalaryScale(id);
+        var result = new FileStream(name, FileMode.Open);
+
+
+        CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+        CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+        CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+        if (await cloudBlobContainer.CreateIfNotExistsAsync())
+        {
+          await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+          {
+            PublicAccess = BlobContainerPublicAccessType.Blob
+          });
+        }
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", ObjectId.GenerateNewId().ToString(), ".xlsx"));
+        //blockBlob.Properties.ContentType = "xlsx";
+        await blockBlob.UploadFromStreamAsync(result);
+
+        return new { Url = blockBlob.Uri.ToString() };
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
   }
 }
