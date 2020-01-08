@@ -74,67 +74,67 @@ namespace Manager.Services.Specific
         //bool exists = true;
         //MyAwareness myawareness = serviceMyAwareness.GetNewVersion(p => p._id == view._id).Result;
 
-        //if (myawareness == null)
+        if (view._id == null)
+        {
+          //exists = false;
+          var myawareness = new MyAwareness()
+          {
+            _id = view._id,
+            NamePerson = view.NamePerson,
+            _idPerson = view._idPerson,
+            Date = DateTime.Now
+          };
+          view._id = serviceMyAwareness.InsertNewVersion(myawareness).Result._id;
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", view._id)));
+        }
+
+
+        //myawareness.FutureVision = new MyAwarenessQuestions()
         //{
-        //exists = false;
-        var myawareness = new MyAwareness()
-        {
-          _id = view._id,
-          NamePerson = view.NamePerson,
-          _idPerson = view._idPerson,
-          Date = DateTime.Now
-        };
-        //}
+        //  Health = view.FutureVision.Health,
+        //  PersonalInterest = view.FutureVision.PersonalInterest,
+        //  PersonalRelationships = view.FutureVision.PersonalRelationships,
+        //  PurposeOfLife = view.FutureVision.PurposeOfLife,
+        //  SelfImage = view.FutureVision.SelfImage,
+        //  Worker = view.FutureVision.Worker
+        //};
+        //myawareness.Impediment = new MyAwarenessQuestions()
+        //{
+        //  Health = view.Impediment.Health,
+        //  PersonalInterest = view.Impediment.PersonalInterest,
+        //  PersonalRelationships = view.Impediment.PersonalRelationships,
+        //  PurposeOfLife = view.Impediment.PurposeOfLife,
+        //  SelfImage = view.Impediment.SelfImage,
+        //  Worker = view.Impediment.Worker
+        //};
+        //myawareness.Reality = new MyAwarenessQuestions()
+        //{
+        //  Health = view.Reality.Health,
+        //  PersonalInterest = view.Reality.PersonalInterest,
+        //  PersonalRelationships = view.Reality.PersonalRelationships,
+        //  PurposeOfLife = view.Reality.PurposeOfLife,
+        //  SelfImage = view.Reality.SelfImage,
+        //  Worker = view.Reality.Worker
+        //};
+        //myawareness.Planning = new MyAwarenessQuestions()
+        //{
+        //  Health = view.Planning.Health,
+        //  PersonalInterest = view.Planning.PersonalInterest,
+        //  PersonalRelationships = view.Planning.PersonalRelationships,
+        //  PurposeOfLife = view.Planning.PurposeOfLife,
+        //  SelfImage = view.Planning.SelfImage,
+        //  Worker = view.Planning.Worker
+        //};
 
 
-        myawareness.FutureVision = new MyAwarenessQuestions()
-        {
-          Health = view.FutureVision.Health,
-          PersonalInterest = view.FutureVision.PersonalInterest,
-          PersonalRelationships = view.FutureVision.PersonalRelationships,
-          PurposeOfLife = view.FutureVision.PurposeOfLife,
-          SelfImage = view.FutureVision.SelfImage,
-          Worker = view.FutureVision.Worker
-        };
-        myawareness.Impediment = new MyAwarenessQuestions()
-        {
-          Health = view.Impediment.Health,
-          PersonalInterest = view.Impediment.PersonalInterest,
-          PersonalRelationships = view.Impediment.PersonalRelationships,
-          PurposeOfLife = view.Impediment.PurposeOfLife,
-          SelfImage = view.Impediment.SelfImage,
-          Worker = view.Impediment.Worker
-        };
-        myawareness.Reality = new MyAwarenessQuestions()
-        {
-          Health = view.Reality.Health,
-          PersonalInterest = view.Reality.PersonalInterest,
-          PersonalRelationships = view.Reality.PersonalRelationships,
-          PurposeOfLife = view.Reality.PurposeOfLife,
-          SelfImage = view.Reality.SelfImage,
-          Worker = view.Reality.Worker
-        };
-        myawareness.Planning = new MyAwarenessQuestions()
-        {
-          Health = view.Planning.Health,
-          PersonalInterest = view.Planning.PersonalInterest,
-          PersonalRelationships = view.Planning.PersonalRelationships,
-          PurposeOfLife = view.Planning.PurposeOfLife,
-          SelfImage = view.Planning.SelfImage,
-          Worker = view.Planning.Worker
-        };
 
-
-        //if (exists)
         //  serviceMyAwareness.Update(myawareness, null).Wait();
         //else
         //{
-        view._id = serviceMyAwareness.InsertNewVersion(myawareness).Result._id;
+        //if (exists == false)
+        //{
+          
         //}
-
-
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", view._id)));
-
 
         return view._id;
       }
@@ -198,6 +198,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
     public ViewCrudMyAwareness Get(string id)
     {
       try
