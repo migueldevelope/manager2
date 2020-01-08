@@ -187,14 +187,14 @@ namespace Manager.Services.Commons
         // col i = 9 lin = 50
         double[][] matriz = tuple.Item1;
 
-        
+
         IRow headerRow = sheet.CreateRow(0); //Get Header Row
         headerRow.CreateCell(0).SetCellValue("GRADE");
         headerRow.CreateCell(1).SetCellValue("CARGA HORÁRIA");
-        headerRow.CreateCell(2).SetCellValue("STEP");
+        headerRow.CreateCell(2).SetCellValue("");
         headerRow.CreateCell(3).SetCellValue("");
         headerRow.CreateCell(4).SetCellValue("");
-        headerRow.CreateCell(5).SetCellValue("");
+        headerRow.CreateCell(5).SetCellValue("STEP");
         headerRow.CreateCell(6).SetCellValue("");
         headerRow.CreateCell(7).SetCellValue("");
         headerRow.CreateCell(8).SetCellValue("");
@@ -212,13 +212,14 @@ namespace Manager.Services.Commons
         stepRow.CreateCell(9).SetCellValue("H");
         //headerRow.CreateCell(10).SetCellValue("I");
 
-     
+
 
         ICellStyle style = hssfwb.CreateCellStyle();
         style.BorderBottom = BorderStyle.Thin;
         style.BorderLeft = BorderStyle.Thin;
         style.BorderRight = BorderStyle.Thin;
         style.BorderTop = BorderStyle.Thin;
+        style.WrapText = true;
         style.FillForegroundColor = IndexedColors.Grey25Percent.Index;
         style.FillPattern = FillPattern.SolidForeground;
 
@@ -227,6 +228,7 @@ namespace Manager.Services.Commons
         styleValues.BorderLeft = BorderStyle.Thin;
         styleValues.BorderRight = BorderStyle.Thin;
         styleValues.BorderTop = BorderStyle.Thin;
+        style.WrapText = true;
         styleValues.FillForegroundColor = IndexedColors.White.Index;
         styleValues.FillPattern = FillPattern.SolidForeground;
 
@@ -235,6 +237,33 @@ namespace Manager.Services.Commons
           headerRow.GetCell(hd).CellStyle = style;
           stepRow.GetCell(hd).CellStyle = style;
         }
+
+
+        ICellStyle styleTitle = hssfwb.CreateCellStyle();
+        styleTitle.BorderBottom = BorderStyle.None;
+        styleTitle.BorderLeft = BorderStyle.None;
+        styleTitle.BorderTop = BorderStyle.Thin;
+        styleTitle.WrapText = true;
+        styleTitle.FillForegroundColor = IndexedColors.Grey25Percent.Index;
+        styleTitle.FillPattern = FillPattern.SolidForeground;
+        for (int j = 2; j < 10; j++)
+        {
+          headerRow.GetCell(j).CellStyle = styleTitle;
+        }
+        ICellStyle styleHead = hssfwb.CreateCellStyle();
+        styleHead.BorderTop = BorderStyle.None;
+        styleHead.BorderBottom = BorderStyle.None;
+        styleHead.BorderLeft = BorderStyle.Thin;
+        styleHead.BorderRight = BorderStyle.Thin;
+        styleHead.WrapText = true;
+        styleHead.FillForegroundColor = IndexedColors.Grey25Percent.Index;
+        styleHead.FillPattern = FillPattern.SolidForeground;
+
+        headerRow.GetCell(0).CellStyle = styleHead;
+        headerRow.GetCell(1).CellStyle = styleHead;
+        stepRow.GetCell(0).CellStyle = styleHead;
+        stepRow.GetCell(1).CellStyle = styleHead;
+
 
 
         long cellCount = count;
@@ -267,6 +296,8 @@ namespace Manager.Services.Commons
         FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");
 
         hssfwb.Write(sw);
+
+
         //sw.Flush();
         //sw.Close();
 
