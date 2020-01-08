@@ -47,7 +47,9 @@ namespace Mobile.Controllers
       serviceAttachment = new ServiceGeneric<Attachments>(context);
 
       service = _service;
+      
       service.SetUser(contextAccessor);
+      serviceAttachment.User(contextAccessor);
     }
     #endregion
 
