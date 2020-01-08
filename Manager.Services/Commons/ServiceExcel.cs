@@ -167,6 +167,118 @@ namespace Manager.Services.Commons
         throw e;
       }
     }
+
+    public string ExportUpdateSalaryScale(Tuple<double[][], string[], int[], long> tuple)
+    {
+      try
+      {
+        ISheet sheet;
+        var excel = tuple.Item1;
+
+        //XSSFWorkbook hssfwb = new XSSFWorkbook(excel); //This will read 2007 Excel format  
+        XSSFWorkbook hssfwb = new XSSFWorkbook(); //This will read 2007 Excel format  
+
+        sheet = hssfwb.CreateSheet("salaryscale"); //get first sheet from workbook   
+
+        long count = tuple.Item4 + 1;
+        string[] grades = tuple.Item2;
+        int[] workloads = tuple.Item3;
+
+        // col i = 9 lin = 50
+        double[][] matriz = tuple.Item1;
+
+        
+        IRow headerRow = sheet.CreateRow(0); //Get Header Row
+        headerRow.CreateCell(0).SetCellValue("GRADE");
+        headerRow.CreateCell(1).SetCellValue("CARGA HORÁRIA");
+        headerRow.CreateCell(2).SetCellValue("STEP");
+        headerRow.CreateCell(3).SetCellValue("");
+        headerRow.CreateCell(4).SetCellValue("");
+        headerRow.CreateCell(5).SetCellValue("");
+        headerRow.CreateCell(6).SetCellValue("");
+        headerRow.CreateCell(7).SetCellValue("");
+        headerRow.CreateCell(8).SetCellValue("");
+        headerRow.CreateCell(9).SetCellValue("");
+        IRow stepRow = sheet.CreateRow(1); //Get Header Row
+        stepRow.CreateCell(0).SetCellValue("");
+        stepRow.CreateCell(1).SetCellValue("");
+        stepRow.CreateCell(2).SetCellValue("A");
+        stepRow.CreateCell(3).SetCellValue("B");
+        stepRow.CreateCell(4).SetCellValue("C");
+        stepRow.CreateCell(5).SetCellValue("D");
+        stepRow.CreateCell(6).SetCellValue("E");
+        stepRow.CreateCell(7).SetCellValue("F");
+        stepRow.CreateCell(8).SetCellValue("G");
+        stepRow.CreateCell(9).SetCellValue("H");
+        //headerRow.CreateCell(10).SetCellValue("I");
+
+     
+
+        ICellStyle style = hssfwb.CreateCellStyle();
+        style.BorderBottom = BorderStyle.Thin;
+        style.BorderLeft = BorderStyle.Thin;
+        style.BorderRight = BorderStyle.Thin;
+        style.BorderTop = BorderStyle.Thin;
+        style.FillForegroundColor = IndexedColors.Grey25Percent.Index;
+        style.FillPattern = FillPattern.SolidForeground;
+
+        ICellStyle styleValues = hssfwb.CreateCellStyle();
+        styleValues.BorderBottom = BorderStyle.Thin;
+        styleValues.BorderLeft = BorderStyle.Thin;
+        styleValues.BorderRight = BorderStyle.Thin;
+        styleValues.BorderTop = BorderStyle.Thin;
+        styleValues.FillForegroundColor = IndexedColors.White.Index;
+        styleValues.FillPattern = FillPattern.SolidForeground;
+
+        for (var hd = 0; hd <= 9; hd++)
+        {
+          headerRow.GetCell(hd).CellStyle = style;
+          stepRow.GetCell(hd).CellStyle = style;
+        }
+
+
+        long cellCount = count;
+
+        for (int i = 2; i < count; i++) //Read Excel File
+        {
+          IRow row = sheet.CreateRow(i);
+
+          row.CreateCell(0).SetCellValue(grades[i - 2]);
+          row.CreateCell(1).SetCellValue(workloads[i - 2]);
+          row.GetCell(0).CellStyle = style;
+          row.GetCell(1).CellStyle = style;
+
+          for (int j = 2; j < 10; j++)
+          {
+            row.CreateCell(j).SetCellValue(matriz[i - 2][j - 2]);
+            row.GetCell(j).CellStyle = styleValues;
+          }
+        }
+
+        IRow blocksheet = sheet.GetRow(3);
+        blocksheet.CreateCell(12).SetCellValue("sheetimport");
+
+        var font = hssfwb.CreateFont();
+        font.Color = IndexedColors.White.Index;
+        blocksheet.GetCell(12).CellStyle = hssfwb.CreateCellStyle();
+        blocksheet.GetCell(12).CellStyle.SetFont(font);
+
+        //FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");
+        FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");
+
+        hssfwb.Write(sw);
+        //sw.Flush();
+        //sw.Close();
+
+        //getexcel.Close();
+
+        return sw.Name;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     #endregion
 
     #region Training
