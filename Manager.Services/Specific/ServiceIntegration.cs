@@ -1471,7 +1471,7 @@ namespace Manager.Services.Specific
       {
         string occupationId = occupationService.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
           .Result.Select(p => new { p._id, Name = p.Name + p.Description })
-          .Where(p => p.Name == view.Name).FirstOrDefault()._id;
+          .Where(p => p.Name == view.Name).FirstOrDefault()?._id;
         occupation = occupationService.GetNewVersion(p => p._id == occupationId).Result;
       }
       if (occupation == null)
