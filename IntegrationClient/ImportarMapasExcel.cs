@@ -385,21 +385,15 @@ namespace IntegrationClient
           Description = viewOccupation.Description,
           Status = viewOccupation.Messages.Count > 0 ? "Erro" : string.IsNullOrEmpty(viewOccupation._id) ? "Não Atualizado" : "Ok"
         };
-        excelPst.Close(false);
-        if (string.IsNullOrEmpty(viewOccupation.Description))
+        if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name && p.Description == viewOccupation.Description) == null)
         {
-          if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name) == null)
-          {
-            occupations.Add(occupation);
-          }
+          occupations.Add(occupation);
         }
         else
         {
-          if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name && p.Description == viewOccupation.Description) == null)
-          {
-            occupations.Add(occupation);
-          }
+          MessageBox.Show("Achei");
         }
+        excelPst.Close(false);
         bool found;
         foreach (string item in viewOccupation.Skills)
         {

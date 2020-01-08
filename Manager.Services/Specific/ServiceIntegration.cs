@@ -1466,9 +1466,7 @@ namespace Manager.Services.Specific
         view.Messages.Add("Subprocesso de integração não localizado!!!");
         return view;
       }
-      Occupation occupation = string.IsNullOrEmpty(view.Description)
-        ? occupationService.GetNewVersion(p => p.Name == view.Name).Result
-        : occupationService.GetNewVersion(p => p.Name == view.Name && p.Description == view.Description).Result;
+      Occupation occupation = occupationService.GetNewVersion(p => p.Name == view.Name && p.Description == view.Description).Result;
       if (occupation == null)
       {
         occupation = new Occupation()
