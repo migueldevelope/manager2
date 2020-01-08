@@ -53,7 +53,7 @@ namespace Mobile.Controllers
       context = new DataContext(conn.Server, conn.DataBase);
       blobKey = conn.BlobKey;
       serviceAttachment = new ServiceGeneric<Attachments>(context);
-      
+
       serviceOnborading = _serviceOnborading;
       serviceIndicators = _serviceIndicators;
       servicePerson = _servicePerson;
@@ -148,7 +148,7 @@ namespace Mobile.Controllers
         serviceUser.SetPhoto(idperson, url);
         listAttachments.Add(attachment);
       }
-      return Ok(listAttachments);
+      return Ok(new { Link = url });
     }
 
 
