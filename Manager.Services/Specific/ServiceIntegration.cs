@@ -1466,14 +1466,9 @@ namespace Manager.Services.Specific
         view.Messages.Add("Subprocesso de integração não localizado!!!");
         return view;
       }
-      Occupation occupation = occupationService.GetNewVersion(p => p.Name == view.Name).Result;
-      if (occupation == null)
-      {
-        string occupationId = occupationService.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
-          .Result.Select(p => new { p._id, Name = p.Name + p.Description })
-          .Where(p => p.Name == view.Name).FirstOrDefault()?._id;
-        occupation = occupationService.GetNewVersion(p => p._id == occupationId).Result;
-      }
+      Occupation occupation = string.IsNullOrEmpty(view.Description)
+        ? occupationService.GetNewVersion(p => p.Name == view.Name).Result
+        : occupationService.GetNewVersion(p => p.Name == view.Name && p.Description == view.Description).Result;
       if (occupation == null)
       {
         occupation = new Occupation()
@@ -1481,6 +1476,7 @@ namespace Manager.Services.Specific
           Group = group.GetViewList(),
           Cbo = null,
           Name = CapitalizeOccupation(view.Name),
+          Description = view.Description,
           SpecificRequirements = view.SpecificRequirements,
           SalaryScales = null,
           Process = new List<ViewListProcessLevelTwo>(),

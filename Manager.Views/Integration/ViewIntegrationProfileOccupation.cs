@@ -6,6 +6,7 @@ namespace Manager.Views.Integration
   {
     public string _id { get; set; }
     public string Name { get; set; }
+    public string Description { get; set; }
     public string NameGroup { get; set; }
     public string IdProcessLevelTwo { get; set; }
     public List<string> Activities { get; set; }

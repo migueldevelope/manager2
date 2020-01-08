@@ -218,6 +218,11 @@ namespace IntegrationClient
     private void ImportFileExcel(string file, InfraIntegration infraIntegration)
     {
       string cellName = "C5";
+      // Utilizado para identificar a quebra de cargo por área (exemplo Bertolini)
+      // Gerente Comercial - BSA
+      //    Nome na celula C5: Gerente Comercial,
+      //    Complemento na célula K5: - BSA, exatamente igual ao campo Description, inclusive com os espaços na frente
+      string cellNameComplement = "K5";
       string cellGroup = "C6";
       string cellColumnCheck = "A";
       // Responsabilidade
@@ -253,6 +258,7 @@ namespace IntegrationClient
         Update = chkAtu.Checked,
         UpdateSkill = chkCom.Checked,
         Name = string.Empty,
+        Description = string.Empty,
         NameGroup = string.Empty,
         SpecificRequirements = string.Empty,
         _id = string.Empty
@@ -263,7 +269,9 @@ namespace IntegrationClient
         excelPln = excelPst.Worksheets[1];
         excelPln.Activate();
         viewOccupation.Name = excelPln.Range[cellName].Value.ToString();
+        viewOccupation.Description = excelPln.Range[cellNameComplement].Value ?? string.Empty;
         viewOccupation.NameGroup = excelPln.Range[cellGroup].Value.ToString();
+
         if (!(excelPln.Range[string.Format("{0}{1}", responsibilityCellColumn, responsibilityCellLine)].Value).ToString().Trim().ToUpper().Equals(responsibilityTextCheck.ToUpper()))
         {
           throw new Exception("Não encontrei a primeira linha das entregas");
