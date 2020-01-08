@@ -301,7 +301,7 @@ namespace Manager.Services.Auth
 
         serviceLog.SetUser(_user);
         if (logRegistration)
-          Task.Run(() => LogSave(person.Contracts[0].IdPerson));
+          Task.Run(() => LogSave(person.Contracts[0].IdPerson, EnumTypeAuth.Default));
 
         List<ViewContract> per = person?.Contracts;
         if (per.Count() > 0)
@@ -410,7 +410,7 @@ namespace Manager.Services.Auth
           }).ToList();
 
         serviceLog.SetUser(_user);
-        Task.Run(() => LogSave(person.Contracts[0].IdPerson));
+        Task.Run(() => LogSave(person.Contracts[0].IdPerson, EnumTypeAuth.Mobile));
 
         List<ViewContract> per = person?.Contracts;
         if (per.Count() > 0)
@@ -633,13 +633,21 @@ namespace Manager.Services.Auth
         throw ex;
       }
     }
-    private void LogSave(string idPerson)
+    private void LogSave(string idPerson, EnumTypeAuth type)
     {
       try
       {
+        string local = "";
+        if (type == EnumTypeAuth.Default)
+          local = "Web";
+        else if (type == EnumTypeAuth.Mobile)
+          local = "Mobile";
+        else if (type == EnumTypeAuth.Integration)
+          local = "Integration";
+
         serviceLog.NewLog(new ViewLog()
         {
-          Description = "Login",
+          Description = "Login " + local,
           Local = "Authentication",
           _idPerson = idPerson
         });
