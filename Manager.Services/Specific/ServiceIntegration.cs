@@ -1459,7 +1459,7 @@ namespace Manager.Services.Specific
         view.Messages.Add("Grupo de cargo não encontrado!!!");
         return view;
       }
-      ProcessLevelTwo processLevelTwo = processLevelTwoService.GetNewVersion(p => p.Name == "Integração").Result;
+      ProcessLevelTwo processLevelTwo = processLevelTwoService.GetNewVersion(p => p._id == view.IdProcessLevelTwo).Result;
       if (processLevelTwo == null)
       {
         view.Messages.Add("Subprocesso de integração não localizado!!!");
@@ -1479,7 +1479,7 @@ namespace Manager.Services.Specific
           Skills = new List<ViewListSkill>(),
           Activities = new List<ViewListActivitie>(),
           Schooling = group.Schooling,
-        Line = 0
+          Line = 0
         };
         occupation.Process.Add(processLevelTwo.GetViewList());
       }
@@ -1498,7 +1498,21 @@ namespace Manager.Services.Specific
         skill = skillService.GetNewVersion(p => p.Name == itemAux).Result;
         if (skill == null)
         {
-          view.Messages.Add(string.Format("{0}@ competência não cadastrada", itemAux));
+          if (view.UpdateSkill)
+          {
+            skill = new Skill()
+            {
+              Name = itemAux,
+              TypeSkill = EnumTypeSkill.Hard,
+              Concept = string.Empty
+            };
+            skill = skillService.InsertNewVersion(skill).Result;
+            occupation.Skills.Add(skill.GetViewList());
+          }
+          else
+          {
+            view.Messages.Add(string.Format("{0}@ competência não cadastrada", itemAux));
+          }
         }
         else
         {
@@ -1557,7 +1571,6 @@ namespace Manager.Services.Specific
       return new ViewIntegrationProfileOccupation()
       {
         _id = occupation._id,
-        IdCompany = occupation.Group.Company._id,
         IdProcessLevelTwo = occupation.Process[0]._id,
         Name = occupation.Name,
         NameGroup = occupation.Group.Name,

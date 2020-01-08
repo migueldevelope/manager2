@@ -274,8 +274,7 @@ namespace IntegrationClient
                 Schooling = new List<string>(),
                 SchoolingComplement = new List<string>(),
                 Skills = new List<string>(),
-                SpecificRequirements = string.Empty,
-                IdCompany = lblIdCompany.Text
+                SpecificRequirements = string.Empty
               };
             }
             switch (short.Parse(item["tipo"].ToString()))

@@ -31,10 +31,10 @@
       this.txtPst = new System.Windows.Forms.TextBox();
       this.lblPst = new System.Windows.Forms.Label();
       this.btnImpV2 = new System.Windows.Forms.Button();
-      this.chkEppPlus = new System.Windows.Forms.CheckBox();
       this.chkAtu = new System.Windows.Forms.CheckBox();
       this.folder = new System.Windows.Forms.FolderBrowserDialog();
       this.chkLjo = new System.Windows.Forms.CheckBox();
+      this.chkCom = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // txtPst
@@ -42,7 +42,7 @@
       this.txtPst.Location = new System.Drawing.Point(114, 6);
       this.txtPst.Name = "txtPst";
       this.txtPst.Size = new System.Drawing.Size(674, 22);
-      this.txtPst.TabIndex = 25;
+      this.txtPst.TabIndex = 2;
       // 
       // lblPst
       // 
@@ -50,7 +50,7 @@
       this.lblPst.Location = new System.Drawing.Point(12, 9);
       this.lblPst.Name = "lblPst";
       this.lblPst.Size = new System.Drawing.Size(94, 17);
-      this.lblPst.TabIndex = 24;
+      this.lblPst.TabIndex = 1;
       this.lblPst.Text = "Pasta Origem";
       // 
       // btnImpV2
@@ -59,49 +59,50 @@
       this.btnImpV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.btnImpV2.Name = "btnImpV2";
       this.btnImpV2.Size = new System.Drawing.Size(254, 23);
-      this.btnImpV2.TabIndex = 26;
+      this.btnImpV2.TabIndex = 7;
       this.btnImpV2.Text = "Importar Modelo Padrão Fluid";
       this.btnImpV2.UseVisualStyleBackColor = true;
       this.btnImpV2.Click += new System.EventHandler(this.BtnImpV2_Click);
       // 
-      // chkEppPlus
-      // 
-      this.chkEppPlus.AutoSize = true;
-      this.chkEppPlus.Location = new System.Drawing.Point(114, 33);
-      this.chkEppPlus.Name = "chkEppPlus";
-      this.chkEppPlus.Size = new System.Drawing.Size(220, 21);
-      this.chkEppPlus.TabIndex = 27;
-      this.chkEppPlus.Text = "Utilizar EppPlus (apenas .xlsx)";
-      this.chkEppPlus.UseVisualStyleBackColor = true;
-      // 
       // chkAtu
       // 
       this.chkAtu.AutoSize = true;
-      this.chkAtu.Location = new System.Drawing.Point(114, 60);
+      this.chkAtu.Location = new System.Drawing.Point(114, 59);
       this.chkAtu.Name = "chkAtu";
       this.chkAtu.Size = new System.Drawing.Size(142, 21);
-      this.chkAtu.TabIndex = 28;
+      this.chkAtu.TabIndex = 5;
       this.chkAtu.Text = "Atualizar Cargos?";
       this.chkAtu.UseVisualStyleBackColor = true;
+      this.chkAtu.CheckedChanged += new System.EventHandler(this.ChkAtu_CheckedChanged);
       // 
       // chkLjo
       // 
       this.chkLjo.AutoSize = true;
-      this.chkLjo.Location = new System.Drawing.Point(114, 87);
+      this.chkLjo.Location = new System.Drawing.Point(114, 86);
       this.chkLjo.Name = "chkLjo";
       this.chkLjo.Size = new System.Drawing.Size(88, 21);
-      this.chkLjo.TabIndex = 29;
+      this.chkLjo.TabIndex = 6;
       this.chkLjo.Text = "Log Json";
       this.chkLjo.UseVisualStyleBackColor = true;
+      // 
+      // chkCom
+      // 
+      this.chkCom.AutoSize = true;
+      this.chkCom.Location = new System.Drawing.Point(114, 35);
+      this.chkCom.Name = "chkCom";
+      this.chkCom.Size = new System.Drawing.Size(186, 21);
+      this.chkCom.TabIndex = 4;
+      this.chkCom.Text = "Atualizar Competências?";
+      this.chkCom.UseVisualStyleBackColor = true;
       // 
       // ImportarMapasExcel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 450);
+      this.Controls.Add(this.chkCom);
       this.Controls.Add(this.chkLjo);
       this.Controls.Add(this.chkAtu);
-      this.Controls.Add(this.chkEppPlus);
       this.Controls.Add(this.btnImpV2);
       this.Controls.Add(this.txtPst);
       this.Controls.Add(this.lblPst);
@@ -119,9 +120,9 @@
     private System.Windows.Forms.TextBox txtPst;
     private System.Windows.Forms.Label lblPst;
     private System.Windows.Forms.Button btnImpV2;
-    private System.Windows.Forms.CheckBox chkEppPlus;
     private System.Windows.Forms.CheckBox chkAtu;
     private System.Windows.Forms.FolderBrowserDialog folder;
     private System.Windows.Forms.CheckBox chkLjo;
+    private System.Windows.Forms.CheckBox chkCom;
   }
 }
