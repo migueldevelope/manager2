@@ -468,7 +468,7 @@ namespace Manager.Services.Specific
           SchoolingError = integrationSchoolingService.GetAllNewVersion(p => p.IdSchooling == "000000000000000000000000").Result.Count(),
           CriticalError = param.CriticalError,
           ProgramVersionExecution = param.ProgramVersionExecution,
-          StatusExecution = param.StatusExecution          
+          StatusExecution = param.StatusExecution
         };
         return view;
       }
@@ -801,7 +801,8 @@ namespace Manager.Services.Specific
             item.IdOccupation = occupations[0]._id;
             item.NameOccupation = occupations[0].Name;
             var i = integrationOccupationService.Update(item, null);
-          } else
+          }
+          else
           {
             occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.Trim().ToLower() && p.Description == null).Result.ToList();
             if (occupations.Count == 1)
@@ -1466,6 +1467,13 @@ namespace Manager.Services.Specific
         return view;
       }
       Occupation occupation = occupationService.GetNewVersion(p => p.Name == view.Name).Result;
+      if (occupation == null)
+      {
+        string occupationId = occupationService.GetAllNewVersion(p => p.Status == EnumStatus.Enabled)
+          .Result.Select(p => new { p._id, Name = p.Name + p.Description })
+          .Where(p => p.Name == view.Name).FirstOrDefault()._id;
+        occupation = occupationService.GetNewVersion(p => p._id == occupationId).Result;
+      }
       if (occupation == null)
       {
         occupation = new Occupation()
@@ -2321,8 +2329,8 @@ namespace Manager.Services.Specific
         PayrollEmployee payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Chave1).Result.OrderBy(o => o.DateRegister).LastOrDefault();
         if (payrollEmployee == null)
           payrollEmployee = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Chave2).Result.OrderBy(o => o.DateRegister).LastOrDefault();
-          if (payrollEmployee == null)
-            throw new Exception("Colaborador não encontrado na integração");
+        if (payrollEmployee == null)
+          throw new Exception("Colaborador não encontrado na integração");
         return payrollEmployee.GetColaboradorV2();
       }
       catch (Exception)
@@ -2353,14 +2361,14 @@ namespace Manager.Services.Specific
         List<IntegrationOccupation> integrationOccupations = integrationOccupationService.GetAllNewVersion().ToList();
         List<Person> persons = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator && p.Company != null && p.Establishment != null).Result;
         return persons.Select(p => new ColaboradorV2Base()
-          {
-            Cpf = p.User.Document,
-            Empresa = integrationCompanies.FirstOrDefault(c => c.IdCompany == p.Company._id).Key,
-            NomeEmpresa = integrationCompanies.FirstOrDefault(c => c.IdCompany == p.Company._id).Name,
-            Estabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Key.Split(";")[1],
-            NomeEstabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Name,
-            Matricula = p.Registration
-          }).ToList();
+        {
+          Cpf = p.User.Document,
+          Empresa = integrationCompanies.FirstOrDefault(c => c.IdCompany == p.Company._id).Key,
+          NomeEmpresa = integrationCompanies.FirstOrDefault(c => c.IdCompany == p.Company._id).Name,
+          Estabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Key.Split(";")[1],
+          NomeEstabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Name,
+          Matricula = p.Registration
+        }).ToList();
       }
       catch (Exception)
       {
@@ -2550,7 +2558,7 @@ namespace Manager.Services.Specific
 
         if (result.IndexOf(" Ti") + 3 == result.Length)
         {
-          result = string.Concat(result.Substring(0, result.Length - 2),"TI");
+          result = string.Concat(result.Substring(0, result.Length - 2), "TI");
         }
         if (result.IndexOf(" Jr") + 3 == result.Length)
         {

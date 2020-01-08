@@ -1845,7 +1845,7 @@ namespace Manager.Services.Specific
       {
         var skill = new Skill()
         {
-          Name = view.Name,
+          Name = view.Name.Trim(),
           Concept = view.Concept,
           TypeSkill = view.TypeSkill,
           Status = EnumStatus.Enabled
@@ -2922,7 +2922,7 @@ namespace Manager.Services.Specific
         {
           var skill = new Skill()
           {
-            Name = item.Name,
+            Name = item.Name.Trim(),
             Concept = item.Concept,
             TypeSkill = item.TypeSkill,
             Status = EnumStatus.Enabled
@@ -4263,7 +4263,7 @@ namespace Manager.Services.Specific
       {
         var skill = new Skill()
         {
-          Name = view.Name,
+          Name = view.Name.Trim(),
           Concept = view.Concept,
           TypeSkill = view.TypeSkill,
           Status = EnumStatus.Enabled

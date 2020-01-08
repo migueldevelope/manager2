@@ -162,7 +162,7 @@ namespace IntegrationClient
       item = item.Equals("POLÍTICAS DE QUALIDADE INTERNA") ? "POLÍTICA INTERNA DE QUALIDADE" : item;
       item = item.Equals("POLÍTICAS INTERNAS DE QUALIDADE") ? "POLÍTICA INTERNA DE QUALIDADE" : item;
       item = item.Equals("PRODUTO") ? "PRODUTOS" : item;
-      item = item.Equals("PRODUTOS E/ OU SERVIÇOS DA EMPRESA") ? "PRODUTOS" : item;
+      item = item.Equals("PRODUTOS E/OU SERVIÇOS DA EMPRESA") ? "PRODUTOS" : item;
       item = item.Equals("PRODUTO MOEIS DE AÇO") ? "PRODUTO MÓVEIS DE AÇO" : item;
       item = item.Equals("PROMOB") ? "PROMOB CATALOG" : item;
       item = item.Equals("REMUNERAÇÃO (SALÁRIOS E GESTÃO DE BENEFÍCIOS)") ? "REMUNERAÇÃO ESTRATÉGICA" : item;
@@ -381,9 +381,11 @@ namespace IntegrationClient
         {
           occupations.Add(occupation);
         }
+        bool found;
         foreach (string item in viewOccupation.Skills)
         {
           int index = skills.FindIndex(p => p.Name.Equals(item));
+          found = true;
           if (index == -1)
           {
             skills.Add(new SkillStatistic()
@@ -396,11 +398,13 @@ namespace IntegrationClient
           else
           {
             skills[index].Used++;
+            found = skills[index].Found;
           }
           occupationSkills.Add(new OccupationSkillStatistic()
           {
             FileName = file,
-            SkillName = item
+            SkillName = item,
+            Found = found
           });
         }
         foreach (string item in viewOccupation.Schooling)
@@ -549,11 +553,13 @@ namespace IntegrationClient
         excelPln.Name = "CargosCompetencias";
         excelPln.Range["A1"].Value = "Cargo";
         excelPln.Range["B1"].Value = "Competência";
+        excelPln.Range["C1"].Value = "Cadastrada";
         line = 2;
         foreach (OccupationSkillStatistic item in occupationSkills)
         {
           excelPln.Range[string.Format("A{0}", line)].Value = item.FileName;
           excelPln.Range[string.Format("B{0}", line)].Value = item.SkillName;
+          excelPln.Range[string.Format("C{0}", line)].Value = item.Found;
           line++;
         }
         // Planilha de Competências por cargo
