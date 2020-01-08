@@ -32,6 +32,26 @@ namespace Mobile.Controllers
     }
     #endregion
 
+    #region Recommendation
+    /// <summary>
+    /// Listar as reconhecimentos
+    /// </summary>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da reconhecimento</param>
+    /// <returns>Lista de reconhecimentos cadastradas</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("list")]
+    public async Task<List<ViewListRecommendation>> List(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      List<ViewListRecommendation> result = service.List(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+    #endregion
+
     #region RecommendationPerson
 
     /// <summary>
