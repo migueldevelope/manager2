@@ -1577,6 +1577,7 @@ namespace Manager.Services.Specific
         _id = occupation._id,
         IdProcessLevelTwo = occupation.Process[0]._id,
         Name = occupation.Name,
+        Description = occupation.Description,
         NameGroup = occupation.Group.Name,
         Activities = occupation.Activities.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
         Skills = occupation.Skills.OrderBy(o => o.Name).Select(x => x.Name).ToList(),

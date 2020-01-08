@@ -63,6 +63,11 @@ namespace IntegrationClient
         }
         Properties.Settings.Default.MapExcelPath = txtPst.Text;
         Properties.Settings.Default.Save();
+        if (File.Exists(Path.Combine(txtPst.Text, "Tabulacao.xlsx")))
+        {
+          File.Delete(Path.Combine(txtPst.Text, "Tabulacao.xlsx"));
+          Directory.GetFiles(txtPst.Text, "*.log", SearchOption.AllDirectories).ToList().ForEach(f => File.Delete(f));
+        }
         InfraIntegration infraIntegration = new InfraIntegration(Program.PersonLogin);
         IEnumerable<string> files;
         excelApp = new Excel.Application
@@ -70,17 +75,12 @@ namespace IntegrationClient
           DisplayAlerts = false,
           Visible = true
         };
-        files = Directory.EnumerateFiles(txtPst.Text, "*.xls*", SearchOption.TopDirectoryOnly);
+        files = Directory.EnumerateFiles(txtPst.Text, "*.xls*", SearchOption.TopDirectoryOnly).OrderBy(filename => filename);
         occupations = new List<OccupationStatistic>();
         skills = new List<SkillStatistic>();
         schoolings = new List<SchoolingStatistic>();
         occupationSkills = new List<OccupationSkillStatistic>();
         occupationSchoolings = new List<OccupationSchoolingStatistic>();
-        if (File.Exists(Path.Combine(txtPst.Text, "Tabulacao.xlsx")))
-        {
-          File.Delete(Path.Combine(txtPst.Text, "Tabulacao.xlsx"));
-          Directory.GetFiles(txtPst.Text, "*.log", SearchOption.AllDirectories).ToList().ForEach(f => File.Delete(f));
-        }
         foreach (string file in files)
         {
           ImportFileExcel(file, infraIntegration);
@@ -382,12 +382,23 @@ namespace IntegrationClient
           FileName = file,
           GroupName = viewOccupation.NameGroup,
           Name = viewOccupation.Name,
+          Description = viewOccupation.Description,
           Status = viewOccupation.Messages.Count > 0 ? "Erro" : string.IsNullOrEmpty(viewOccupation._id) ? "Não Atualizado" : "Ok"
         };
         excelPst.Close(false);
-        if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name) == null)
+        if (string.IsNullOrEmpty(viewOccupation.Description))
         {
-          occupations.Add(occupation);
+          if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name) == null)
+          {
+            occupations.Add(occupation);
+          }
+        }
+        else
+        {
+          if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name && p.Description == viewOccupation.Description) == null)
+          {
+            occupations.Add(occupation);
+          }
         }
         bool found;
         foreach (string item in viewOccupation.Skills)
@@ -551,7 +562,7 @@ namespace IntegrationClient
         {
           excelPln.Range[string.Format("A{0}", line)].Value = item.FileName;
           excelPln.Range[string.Format("B{0}", line)].Value = item.GroupName;
-          excelPln.Range[string.Format("C{0}", line)].Value = item.Name;
+          excelPln.Range[string.Format("C{0}", line)].Value = string.IsNullOrEmpty(item.Description) ? item.Name : string.Concat(item.Name, item.Description);
           excelPln.Range[string.Format("D{0}", line)].Value = item.Status;
           line++;
         }
