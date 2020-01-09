@@ -3901,6 +3901,7 @@ namespace Manager.Services.Specific
 
           }
         }
+
         if(list.Count() == 0)
         {
           var item = occupations.FirstOrDefault();
