@@ -84,56 +84,53 @@ namespace Manager.Services.Specific
             _idPerson = view._idPerson,
             Date = DateTime.Now
           };
+          myawareness.FutureVision = new MyAwarenessQuestions()
+          {
+            Health = view.FutureVision.Health,
+            PersonalInterest = view.FutureVision.PersonalInterest,
+            PersonalRelationships = view.FutureVision.PersonalRelationships,
+            PurposeOfLife = view.FutureVision.PurposeOfLife,
+            SelfImage = view.FutureVision.SelfImage,
+            Worker = view.FutureVision.Worker
+          };
+          myawareness.Impediment = new MyAwarenessQuestions()
+          {
+            Health = view.Impediment.Health,
+            PersonalInterest = view.Impediment.PersonalInterest,
+            PersonalRelationships = view.Impediment.PersonalRelationships,
+            PurposeOfLife = view.Impediment.PurposeOfLife,
+            SelfImage = view.Impediment.SelfImage,
+            Worker = view.Impediment.Worker
+          };
+          myawareness.Reality = new MyAwarenessQuestions()
+          {
+            Health = view.Reality.Health,
+            PersonalInterest = view.Reality.PersonalInterest,
+            PersonalRelationships = view.Reality.PersonalRelationships,
+            PurposeOfLife = view.Reality.PurposeOfLife,
+            SelfImage = view.Reality.SelfImage,
+            Worker = view.Reality.Worker
+          };
+          myawareness.Planning = new MyAwarenessQuestions()
+          {
+            Health = view.Planning.Health,
+            PersonalInterest = view.Planning.PersonalInterest,
+            PersonalRelationships = view.Planning.PersonalRelationships,
+            PurposeOfLife = view.Planning.PurposeOfLife,
+            SelfImage = view.Planning.SelfImage,
+            Worker = view.Planning.Worker
+          };
+
           view._id = serviceMyAwareness.InsertNewVersion(myawareness).Result._id;
           Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", view._id)));
         }
-
-
-        //myawareness.FutureVision = new MyAwarenessQuestions()
-        //{
-        //  Health = view.FutureVision.Health,
-        //  PersonalInterest = view.FutureVision.PersonalInterest,
-        //  PersonalRelationships = view.FutureVision.PersonalRelationships,
-        //  PurposeOfLife = view.FutureVision.PurposeOfLife,
-        //  SelfImage = view.FutureVision.SelfImage,
-        //  Worker = view.FutureVision.Worker
-        //};
-        //myawareness.Impediment = new MyAwarenessQuestions()
-        //{
-        //  Health = view.Impediment.Health,
-        //  PersonalInterest = view.Impediment.PersonalInterest,
-        //  PersonalRelationships = view.Impediment.PersonalRelationships,
-        //  PurposeOfLife = view.Impediment.PurposeOfLife,
-        //  SelfImage = view.Impediment.SelfImage,
-        //  Worker = view.Impediment.Worker
-        //};
-        //myawareness.Reality = new MyAwarenessQuestions()
-        //{
-        //  Health = view.Reality.Health,
-        //  PersonalInterest = view.Reality.PersonalInterest,
-        //  PersonalRelationships = view.Reality.PersonalRelationships,
-        //  PurposeOfLife = view.Reality.PurposeOfLife,
-        //  SelfImage = view.Reality.SelfImage,
-        //  Worker = view.Reality.Worker
-        //};
-        //myawareness.Planning = new MyAwarenessQuestions()
-        //{
-        //  Health = view.Planning.Health,
-        //  PersonalInterest = view.Planning.PersonalInterest,
-        //  PersonalRelationships = view.Planning.PersonalRelationships,
-        //  PurposeOfLife = view.Planning.PurposeOfLife,
-        //  SelfImage = view.Planning.SelfImage,
-        //  Worker = view.Planning.Worker
-        //};
-
-
 
         //  serviceMyAwareness.Update(myawareness, null).Wait();
         //else
         //{
         //if (exists == false)
         //{
-          
+
         //}
 
         return view._id;
