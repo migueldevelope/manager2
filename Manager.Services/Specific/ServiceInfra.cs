@@ -3883,7 +3883,7 @@ namespace Manager.Services.Specific
           }
           foreach (var group in listGroup.Where(p => p._id == item.Group._id))
           {
-            if ((list.Where(p => p._id == item._id && p.Date == group.Date).Count() == 0) && (group.Date > list.FirstOrDefault()?.Date))
+            if ((list.Where(p => p._id == item._id && p.Date == group.Date).Count() == 0) && (group.Date >= list.FirstOrDefault()?.Date))
               list.Add(new ViewListOccupationLog()
               {
                 _id = item._id,
