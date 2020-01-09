@@ -71,13 +71,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //bool exists = true;
-        //MyAwareness myawareness = serviceMyAwareness.GetNewVersion(p => p._id == view._id).Result;
+        MyAwareness myawareness = serviceMyAwareness.GetNewVersion(p => p._idPerson == _user._idPerson).Result;
 
-        if (view._id == null)
+        if (myawareness == null)
         {
-          //exists = false;
-          var myawareness = new MyAwareness()
+          myawareness = new MyAwareness()
           {
             _id = view._id,
             NamePerson = view.NamePerson,
@@ -133,7 +131,7 @@ namespace Manager.Services.Specific
 
         //}
 
-        return view._id;
+        return myawareness._id;
       }
       catch (Exception e)
       {
