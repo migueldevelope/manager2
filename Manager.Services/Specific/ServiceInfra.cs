@@ -3872,7 +3872,7 @@ namespace Manager.Services.Specific
         {
           foreach (var company in listCompany.Where(p => p._id == item.Group.Company._id))
           {
-            if ((list.Where(p => p._id == item._id && p.Date == company.Date).Count() == 0)&&(company.Date > list.FirstOrDefault()?.Date))
+            if ((list.Where(p => p._id == item._id && p.Date == company.Date).Count() == 0)&&(company.Date >= list.FirstOrDefault()?.Date))
               list.Add(new ViewListOccupationLog()
               {
                 _id = item._id,
