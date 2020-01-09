@@ -924,7 +924,7 @@ namespace Manager.Services.Specific
           Comments = comments,
           Date = DateTime.Now,
           StatusView = EnumStatusView.None,
-          UserComment = EnumUserComment.Person,
+          UserComment = user,
           SpeechLink = link
         };
         AddComments(idonboarding, iditem, view);

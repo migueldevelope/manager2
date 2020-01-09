@@ -3873,25 +3873,47 @@ namespace Manager.Services.Specific
           foreach (var company in listCompany.Where(p => p._id == item.Group.Company._id))
           {
             if (list.Where(p => p._id == item._id && p.Date == company.Date).Count() == 0)
-              list.Add(new ViewListOccupationLog()
-              {
-                _id = item._id,
-                Name = item.Name,
-                Date = company.Date,
-                DateLog = company.DateLog
-              });
+            {
+              if (company.Date >= list.FirstOrDefault()?.Date)
+                list.Add(new ViewListOccupationLog()
+                {
+                  _id = item._id,
+                  Name = item.Name,
+                  Date = company.Date,
+                  DateLog = company.DateLog
+                });
+            }
+
           }
           foreach (var group in listGroup.Where(p => p._id == item.Group._id))
           {
             if (list.Where(p => p._id == item._id && p.Date == group.Date).Count() == 0)
-              list.Add(new ViewListOccupationLog()
-              {
-                _id = item._id,
-                Name = item.Name,
-                Date = group.Date,
-                DateLog = group.DateLog
-              });
+            {
+              if (group.Date >= list.FirstOrDefault()?.Date) 
+                list.Add(new ViewListOccupationLog()
+                {
+                  _id = item._id,
+                  Name = item.Name,
+                  Date = group.Date,
+                  DateLog = group.DateLog
+                });
+            }
+
           }
+        }
+
+        if(list.Count() == 0)
+        {
+          var item = occupations.FirstOrDefault();
+          var company = listCompany.FirstOrDefault();
+          list.Add(new ViewListOccupationLog()
+          {
+            _id = item._id,
+            Name = item.Name,
+            Date = company.Date,
+            DateLog = company.DateLog
+          });
+          
         }
 
         total = list.Count();
