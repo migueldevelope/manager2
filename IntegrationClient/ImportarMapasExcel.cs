@@ -268,7 +268,7 @@ namespace IntegrationClient
         excelPst = excelApp.Workbooks.Open(file, false);
         excelPln = excelPst.Worksheets[1];
         excelPln.Activate();
-        viewOccupation.Name = excelPln.Range[cellName].Value.ToString();
+        viewOccupation.Name = excelPln.Range[cellName].Value.ToString().Trim();
         viewOccupation.Description = excelPln.Range[cellNameComplement].Value ?? string.Empty;
         viewOccupation.NameGroup = excelPln.Range[cellGroup].Value.ToString();
 
