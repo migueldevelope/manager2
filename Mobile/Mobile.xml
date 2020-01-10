@@ -278,6 +278,79 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
+        <member name="T:Mobile.Controllers.RecommendationController">
+            <summary>
+            Controlador da reconhecimento
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.#ctor(Manager.Core.Interfaces.IServiceRecommendation,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="_service">Serviço da reconhecimento</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as reconhecimentos
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da reconhecimento</param>
+            <returns>Lista de reconhecimentos cadastradas</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.List(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as reconhecimentos
+            </summary>
+            <param name="idperson">id pessoa</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da reconhecimento</param>
+            <returns>Lista de reconhecimentos cadastradas</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.ListRecommendationPerson(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar reconhecimento de pessoas
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do reconhecimento de pessoa</param>
+            <returns>Lista de reconhecimento de pessoas</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.ListRecommendationPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar reconhecimento de pessoa de uma reconhecimento
+            </summary>
+            <param name="idrecommendation">Identificador da reconhecimento</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do reconhecimento de pessoa</param>
+            <returns>Lista de reconhecimento de pessoas da reconhecimento</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.PostRecommendationPerson(Manager.Views.BusinessCrud.ViewCrudRecommendationPerson)">
+            <summary>
+            Novo reconhecimento de pessoa
+            </summary>
+            <param name="view">Objeto de manutenção do reconhecimento de pessoa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.ReadRecommendationPerson(System.String)">
+            <summary>
+            Read
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.ListPerson(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar pessoa 
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do reconhecimento de pessoa</param>
+            <returns>Lista de reconhecimento de pessoas da reconhecimento</returns>
+        </member>
         <member name="T:Mobile.Controllers.ValuesController">
             <summary>
             Controle para verficação de API ativa
