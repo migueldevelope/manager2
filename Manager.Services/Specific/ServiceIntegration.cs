@@ -1272,15 +1272,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Schooling result = schoolingService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        return result != null
-          ? new ViewListSchooling()
-          {
-            Name = result.Name,
-            Order = result.Order,
-            _id = result._id
-          }
-          : null;
+        return schoolingService.GetNewVersion(p => p._id == id).Result?.GetViewList();
       }
       catch (Exception)
       {
@@ -1291,14 +1283,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var result = companyService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        return result != null
-          ? new ViewListCompany()
-          {
-            Name = result.Name,
-            _id = result._id
-          }
-          : null;
+        return companyService.GetNewVersion(p => p._id == id).Result?.GetViewList();
       }
       catch (Exception)
       {
@@ -1309,14 +1294,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var result = establishmentService.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        return result != null
-          ? new ViewListEstablishment()
-          {
-            Name = result.Name,
-            _id = result._id
-          }
-          : null;
+        return establishmentService.GetNewVersion(p => p._id == id).Result?.GetViewList();
       }
       catch (Exception)
       {

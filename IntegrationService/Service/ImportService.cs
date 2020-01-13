@@ -373,8 +373,8 @@ namespace IntegrationService.Service
       try
       {
         ControleColaboradores = new List<ControleColaborador>();
-        if (File.Exists(string.Format("{0}/colaborador.txt", pathLogs)))
-          ControleColaboradores = JsonConvert.DeserializeObject<List<ControleColaborador>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/colaborador.txt", pathLogs)));
+        //if (File.Exists(string.Format("{0}/colaborador.txt", pathLogs)))
+        //  ControleColaboradores = JsonConvert.DeserializeObject<List<ControleColaborador>>(FileClass.ReadFromBinaryFile<string>(string.Format("{0}/colaborador.txt", pathLogs)));
       }
       catch (Exception)
       {
@@ -1300,8 +1300,11 @@ namespace IntegrationService.Service
 
     protected virtual void OnRefreshProgressBar(EventArgs e)
     {
-      EventHandler handler = RefreshProgressBar;
-      handler(this, e);
+      if (RefreshProgressBar != null)
+      {
+        EventHandler handler = RefreshProgressBar;
+        handler(this, e);
+      }
     }
 
     #endregion
