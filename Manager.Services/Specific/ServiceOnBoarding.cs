@@ -921,7 +921,7 @@ namespace Manager.Services.Specific
 
         var view = new ViewCrudComment()
         {
-          Comments = comments,
+          CommentsSpeech = comments,
           Date = DateTime.Now,
           StatusView = EnumStatusView.None,
           UserComment = user,
@@ -968,7 +968,8 @@ namespace Manager.Services.Specific
                Date = comments.Date,
                StatusView = comments.StatusView,
                UserComment = comments.UserComment,
-               SpeechLink = comments.SpeechLink
+               SpeechLink = comments.SpeechLink,
+               CommentsSpeech = comments.CommentsSpeech
              });
             serviceOnboarding.Update(onboarding, null).Wait();
             return item.Comments.Select(p => new ViewCrudComment()
@@ -978,7 +979,8 @@ namespace Manager.Services.Specific
               Date = p.Date,
               StatusView = p.StatusView,
               UserComment = p.UserComment,
-              SpeechLink = p.SpeechLink
+              SpeechLink = p.SpeechLink,
+              CommentsSpeech = p.CommentsSpeech
             }).ToList();
           }
         }
@@ -1008,7 +1010,8 @@ namespace Manager.Services.Specific
               Date = comments.Date,
               StatusView = comments.StatusView,
               UserComment = comments.UserComment,
-              SpeechLink = comments.SpeechLink
+              SpeechLink = comments.SpeechLink,
+              CommentsSpeech = comments.CommentsSpeech
             });
 
             serviceOnboarding.Update(onboarding, null).Wait();
@@ -1020,7 +1023,8 @@ namespace Manager.Services.Specific
               Date = p.Date,
               StatusView = p.StatusView,
               UserComment = p.UserComment,
-              SpeechLink = p.SpeechLink
+              SpeechLink = p.SpeechLink,
+              CommentsSpeech = p.CommentsSpeech
             }).ToList();
           }
         }
@@ -1051,7 +1055,8 @@ namespace Manager.Services.Specific
               Date = comments.Date,
               StatusView = comments.StatusView,
               UserComment = comments.UserComment,
-              SpeechLink = comments.SpeechLink
+              SpeechLink = comments.SpeechLink,
+              CommentsSpeech = comments.CommentsSpeech
             });
 
             serviceOnboarding.Update(onboarding, null).Wait();
@@ -1063,7 +1068,8 @@ namespace Manager.Services.Specific
               Date = p.Date,
               StatusView = p.StatusView,
               UserComment = p.UserComment,
-              SpeechLink = p.SpeechLink
+              SpeechLink = p.SpeechLink,
+              CommentsSpeech = p.CommentsSpeech
             }).ToList();
           }
         }
@@ -1094,7 +1100,8 @@ namespace Manager.Services.Specific
                Date = comments.Date,
                StatusView = comments.StatusView,
                UserComment = comments.UserComment,
-               SpeechLink = comments.SpeechLink
+               SpeechLink = comments.SpeechLink,
+               CommentsSpeech = comments.CommentsSpeech
              });
 
             serviceOnboarding.Update(onboarding, null).Wait();
@@ -1106,7 +1113,8 @@ namespace Manager.Services.Specific
               Date = p.Date,
               StatusView = p.StatusView,
               UserComment = p.UserComment,
-              SpeechLink = p.SpeechLink
+              SpeechLink = p.SpeechLink,
+              CommentsSpeech = p.CommentsSpeech
             }).ToList();
           }
         }
@@ -1136,7 +1144,8 @@ namespace Manager.Services.Specific
               Date = comments.Date,
               StatusView = comments.StatusView,
               UserComment = comments.UserComment,
-              SpeechLink = comments.SpeechLink
+              SpeechLink = comments.SpeechLink,
+              CommentsSpeech = comments.CommentsSpeech
             });
 
             serviceOnboarding.Update(onboarding, null).Wait();
@@ -1148,7 +1157,8 @@ namespace Manager.Services.Specific
               Date = p.Date,
               StatusView = p.StatusView,
               UserComment = p.UserComment,
-              SpeechLink = p.SpeechLink
+              SpeechLink = p.SpeechLink,
+              CommentsSpeech = p.CommentsSpeech
             }).ToList();
           }
         }
@@ -1179,7 +1189,8 @@ namespace Manager.Services.Specific
               Date = comments.Date,
               StatusView = comments.StatusView,
               UserComment = comments.UserComment,
-              SpeechLink = comments.SpeechLink
+              SpeechLink = comments.SpeechLink,
+              CommentsSpeech = comments.CommentsSpeech
             });
 
             serviceOnboarding.Update(onboarding, null).Wait();
@@ -1191,7 +1202,8 @@ namespace Manager.Services.Specific
               Date = p.Date,
               StatusView = p.StatusView,
               UserComment = p.UserComment,
-              SpeechLink = p.SpeechLink
+              SpeechLink = p.SpeechLink,
+              CommentsSpeech = p.CommentsSpeech
             }).ToList();
           }
         }
