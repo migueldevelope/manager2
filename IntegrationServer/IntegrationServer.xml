@@ -379,13 +379,6 @@
             <response code="400">Problemas na geração da lista</response>
             <returns>Objeto de retorno da integração </returns>
         </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.GetPersonNickName(System.String)">
-            <summary>
-            Rertorna usuários com seus contratos filtrados pelo nickname
-            </summary>
-            <param name="nickname"></param>
-            <returns></returns>
-        </member>
         <member name="M:IntegrationServer.InfraController.PersonController.Payroll(System.String)">
             <summary>
             Atualizar integração de colaborador pendente
@@ -394,6 +387,13 @@
             <response code="200">Informações sobre a integração do colaborador</response>
             <response code="400">Problemas na integração do colaborador</response>
             <returns>Mensagem de sucesso ou erro</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.GetPersonNickName(System.String)">
+            <summary>
+            Rertorna usuários com seus contratos filtrados pelo nickname
+            </summary>
+            <param name="nickname"></param>
+            <returns></returns>
         </member>
         <member name="T:IntegrationServer.Program">
             <summary>

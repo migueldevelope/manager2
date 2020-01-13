@@ -37,6 +37,96 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
+        <member name="T:Mobile.Controllers.CheckpointController">
+            <summary>
+            Controlador do Checkpoint
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.#ctor(Manager.Core.Interfaces.IServiceCheckpoint,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Contrutor do controlador
+            </summary>
+            <param name="_service">Servico do checkpoint</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.ListWaitManager(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar pendências de checkpoint para gestor
+            </summary>
+            <param name="idmanager">Identificador do gestor</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do colaborador</param>
+            <returns>Lista de pendência de checkpoint</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.ListWaitManager_V2(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators},System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar pendências de checkpoint para gestor
+            </summary>
+            <param name="persons">Identificador do gestor</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do colaborador</param>
+            <returns>Lista de pendência de checkpoint</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.ListWaitPerson(System.String)">
+            <summary>
+            Listar status de checkpoint para colaborador
+            </summary>
+            <param name="idperson">Identificação do colaborador</param>
+            <returns>Objeto de lista de checkpoint</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.NewCheckpoint(System.String)">
+            <summary>
+            Inclusão de novo checkpoint
+            </summary>
+            <param name="idperson">Identificador do colaborador</param>
+            <returns>Objeto de visibilidade de checkpoint</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.GetCheckpoint(System.String)">
+            <summary>
+            Buscar checkpoint para manutenção
+            </summary>
+            <param name="id">Identificador do checkpoint</param>
+            <returns>Objeto de manuten~ção do checkpoint</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.UpdateCheckpoint(Manager.Views.BusinessCrud.ViewCrudCheckpoint)">
+            <summary>
+            Alterar objeto de checkpoint
+            </summary>
+            <param name="view">Objeto de manutenção</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.PersonCheckpointEnd(System.String)">
+            <summary>
+            Buscar checkpoint finalizado para mostrar no histórico
+            </summary>
+            <param name="id">Identificador do checkpoint</param>
+            <returns>Objeto de manutenção do checkpoint</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.DeleteCheckpoint(System.String)">
+            <summary>
+            Remover um checkpoint
+            </summary>
+            <param name="id">Identificador do checkpoint</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.ListEnded(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar checkpoints finalizados
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do colaborador</param>
+            <returns>Lista de checkpoint finalizados</returns>
+        </member>
+        <member name="M:Mobile.Controllers.CheckpointController.ExportStatusCheckpoint(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
         <member name="T:Mobile.Controllers.DefaultController">
             <summary>
             controller padrão
@@ -277,6 +367,79 @@
             </summary>
             <param name="idperson"></param>
             <returns></returns>
+        </member>
+        <member name="T:Mobile.Controllers.RecommendationController">
+            <summary>
+            Controlador da reconhecimento
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.#ctor(Manager.Core.Interfaces.IServiceRecommendation,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="_service">Serviço da reconhecimento</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as reconhecimentos
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da reconhecimento</param>
+            <returns>Lista de reconhecimentos cadastradas</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.List(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as reconhecimentos
+            </summary>
+            <param name="idperson">id pessoa</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da reconhecimento</param>
+            <returns>Lista de reconhecimentos cadastradas</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.ListRecommendationPerson(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar reconhecimento de pessoas
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do reconhecimento de pessoa</param>
+            <returns>Lista de reconhecimento de pessoas</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.ListRecommendationPerson(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar reconhecimento de pessoa de uma reconhecimento
+            </summary>
+            <param name="idrecommendation">Identificador da reconhecimento</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do reconhecimento de pessoa</param>
+            <returns>Lista de reconhecimento de pessoas da reconhecimento</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.PostRecommendationPerson(Manager.Views.BusinessCrud.ViewCrudRecommendationPerson)">
+            <summary>
+            Novo reconhecimento de pessoa
+            </summary>
+            <param name="view">Objeto de manutenção do reconhecimento de pessoa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.ReadRecommendationPerson(System.String)">
+            <summary>
+            Read
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.RecommendationController.ListPerson(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar pessoa 
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do reconhecimento de pessoa</param>
+            <returns>Lista de reconhecimento de pessoas da reconhecimento</returns>
         </member>
         <member name="T:Mobile.Controllers.ValuesController">
             <summary>
