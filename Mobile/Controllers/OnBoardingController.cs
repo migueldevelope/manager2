@@ -10,6 +10,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
+using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,8 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Tools;
 using Tools.Data;
+using NAudio.Wave;
+using MongoDB.Bson;
 
 namespace Mobile.Controllers
 {
@@ -47,7 +50,7 @@ namespace Mobile.Controllers
       serviceAttachment = new ServiceGeneric<Attachments>(context);
 
       service = _service;
-      
+
       service.SetUser(contextAccessor);
       serviceAttachment.User(contextAccessor);
     }
@@ -375,13 +378,14 @@ namespace Mobile.Controllers
         if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
           return BadRequest("Bad file type.");
       }
+      
       List<Attachments> listAttachments = new List<Attachments>();
       var url = "";
       foreach (var file in HttpContext.Request.Form.Files)
       {
         Attachments attachment = new Attachments()
         {
-          Extension = Path.GetExtension(file.FileName).ToLower(),
+          Extension = ".wav",
           LocalName = file.FileName,
           Lenght = file.Length,
           Status = EnumStatus.Enabled,
@@ -401,15 +405,21 @@ namespace Mobile.Controllers
             });
           }
           CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
-          blockBlob.Properties.ContentType = file.ContentType;
-          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          var filename = attachment._id.ToString() + ObjectId.GenerateNewId().ToString() + ".wav";
+          
+          blockBlob.Properties.ContentType = "audio/wav";
+          
+          ConvertMp3ToWav(file.OpenReadStream(), filename);
+          var stream = new StreamReader(filename);
+          
+          await blockBlob.UploadFromStreamAsync(stream.BaseStream);
           url = blockBlob.Uri.ToString();
         }
-        catch (Exception)
+        catch (Exception e)
         {
           attachment.Saved = false;
           await serviceAttachment.Update(attachment, null);
-          throw;
+          throw e;
         }
         var pathspeech = "http://10.0.0.16:5400/";
         service.AddCommentsSpeech(idonboarding, iditem, url, typeuser, pathspeech);
@@ -418,6 +428,21 @@ namespace Mobile.Controllers
       return Ok(listAttachments);
     }
 
+
+
+    #endregion
+
+    #region private
+    private void ConvertMp3ToWav(Stream _inPath_, string _outPath_)
+    {
+      using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
+      {
+        using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
+        {
+          WaveFileWriter.CreateWaveFile(_outPath_, pcm);
+        }
+      }
+    }
     #endregion
   }
 }
