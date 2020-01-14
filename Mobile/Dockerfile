@@ -22,4 +22,5 @@ RUN dotnet publish "Mobile.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+RUN mkdir audios
 ENTRYPOINT ["dotnet", "Mobile.dll"]

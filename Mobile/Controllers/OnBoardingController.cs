@@ -407,14 +407,14 @@ namespace Mobile.Controllers
               });
             }
             CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
-            var filename = attachment._id.ToString() + ObjectId.GenerateNewId().ToString() + ".wav";
+            var filename = "audios/" + attachment._id.ToString() + ObjectId.GenerateNewId().ToString() + ".wav";
 
             blockBlob.Properties.ContentType = "audio/wav";
 
             ConvertMp3ToWav(file.OpenReadStream(), filename);
             var stream = new StreamReader(filename);
 
-            //await blockBlob.UploadFromStreamAsync(stream.BaseStream);
+            await blockBlob.UploadFromStreamAsync(stream.BaseStream);
             url = blockBlob.Uri.ToString();
           }
           catch (Exception e)
