@@ -23,4 +23,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 RUN mkdir audios
+RUN apt-get update
+RUN apt-get install ffmpeg
 ENTRYPOINT ["dotnet", "Mobile.dll"]
