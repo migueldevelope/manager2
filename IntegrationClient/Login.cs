@@ -22,14 +22,18 @@ namespace IntegrationClient
       Text = string.Format("Login Robo Ana - Versão {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
       if (System.IO.File.Exists(Program.FileConfig))
       {
-        // Ler arquivo persistido
         Program.PersonLogin = JsonConvert.DeserializeObject<ViewPersonLogin>(FileClass.ReadFromBinaryFile<string>(Program.FileConfig));
+        string pathLogs = string.Format("{0}_{1}/integration", Program.PersonLogin.NameAccount, Program.PersonLogin.IdAccount);
+        string LogFileName = string.Format("{0}/{1}.log", pathLogs, DateTime.Now.ToString("AUTO_yyyyMMdd_HHmmss"));
+        // Ler arquivo persistido
         if (Program.autoImport && Program.autoVersion.Equals("V1"))
         {
+          FileClass.SaveLog(LogFileName, "Rotina automática V1 iniciada", EnumTypeLineOpportunityg.Information);
           Environment.ExitCode = 0;
           // Atualizar funcionários
           try
           {
+            FileClass.SaveLog(LogFileName, "Admissões e alterações", EnumTypeLineOpportunityg.Information);
             ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
             ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
             import.Execute();
@@ -47,6 +51,7 @@ namespace IntegrationClient
           {
             try
             {
+              FileClass.SaveLog(LogFileName, "Demissões", EnumTypeLineOpportunityg.Information);
               ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
               ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
               import.Execute(DateTime.Now.Date, DateTime.Now.Date);
@@ -60,14 +65,17 @@ namespace IntegrationClient
               Environment.ExitCode = 1;
             }
           }
+          FileClass.SaveLog(LogFileName, "Rotina automática V1 encerrada", EnumTypeLineOpportunityg.Information);
           Application.Exit();
         }
         if (Program.autoImport && Program.autoVersion.Equals("V2"))
         {
+          FileClass.SaveLog(LogFileName, "Rotina automática V2 iniciada", EnumTypeLineOpportunityg.Information);
           Environment.ExitCode = 0;
           // Atualizar funcionários
           try
           {
+            FileClass.SaveLog(LogFileName, "Admissões e alterações", EnumTypeLineOpportunityg.Information);
             ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
             ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
             import.ExecuteV2(false);
@@ -85,6 +93,7 @@ namespace IntegrationClient
           {
             try
             {
+              FileClass.SaveLog(LogFileName, "Demissões por ausencia de ativos", EnumTypeLineOpportunityg.Information);
               ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
               ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
               import.ExecuteDemissionAbsenceV2(false);
@@ -98,11 +107,15 @@ namespace IntegrationClient
               Environment.ExitCode = 1;
             }
           }
+          FileClass.SaveLog(LogFileName, "Rotina automática V2 encerrada", EnumTypeLineOpportunityg.Information);
           Application.Exit();
         }
-        Thread t = new Thread(new ThreadStart(CallMenu));
-        t.Start();
-        Close();
+        if (!Program.autoImport)
+        {
+          Thread t = new Thread(new ThreadStart(CallMenu));
+          t.Start();
+          Close();
+        }
       }
     }
 

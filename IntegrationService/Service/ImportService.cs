@@ -59,11 +59,12 @@ namespace IntegrationService.Service
         }
         // Limpeza de arquivos LOG
         DirectoryInfo diretorio = new DirectoryInfo(pathLogs);
-        List<FileInfo> Arquivos = diretorio.GetFiles("*.log").Where(p => p.CreationTime.Date < DateTime.Now.Date).ToList();
+        List<FileInfo> Arquivos = diretorio.GetFiles("*.log").Where(p => p.CreationTime.Date < DateTime.Now.Date.AddDays(-30)).ToList();
         //Comea a listar o(s) arquivo(s)
         foreach (FileInfo fileinfo in Arquivos)
+        {
           File.Delete(fileinfo.FullName);
-
+        }
         LogFileName = string.Format("{0}/{1}.log", pathLogs, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
         Assembly assem = Assembly.GetEntryAssembly();
         AssemblyName assemName = assem.GetName();
