@@ -412,9 +412,9 @@ namespace Mobile.Controllers
             blockBlob.Properties.ContentType = "audio/wav";
 
             ConvertMp3ToWav(file.OpenReadStream(), filename);
-            var stream = new StreamReader(filename);
+            //var stream = new StreamReader(filename);
 
-            await blockBlob.UploadFromStreamAsync(stream.BaseStream);
+            //await blockBlob.UploadFromStreamAsync(stream.BaseStream);
             url = blockBlob.Uri.ToString();
           }
           catch (Exception e)
@@ -449,7 +449,7 @@ namespace Mobile.Controllers
         {
           using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
           {
-            WaveFileWriter.CreateWaveFile(_outPath_, pcm);
+            //WaveFileWriter.CreateWaveFile(_outPath_, pcm);
           }
         }
       }
