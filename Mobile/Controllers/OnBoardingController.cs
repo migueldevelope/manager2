@@ -411,8 +411,8 @@ namespace Mobile.Controllers
 
             blockBlob.Properties.ContentType = "audio/wav";
 
-            //ConvertMp3ToWav(file.OpenReadStream(), filename);
-            //var stream = new StreamReader(filename);
+            ConvertMp3ToWav(file.OpenReadStream(), filename);
+            var stream = new StreamReader(filename);
 
             //await blockBlob.UploadFromStreamAsync(stream.BaseStream);
             url = blockBlob.Uri.ToString();
