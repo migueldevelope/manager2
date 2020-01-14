@@ -445,14 +445,14 @@ namespace Mobile.Controllers
     {
       try
       {
-        using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
+        /*using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
         {
-          /*using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
+          using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
           {
             WaveFileWriter.CreateWaveFile(_outPath_, pcm);
           }
-          */
-        }
+          
+        }*/
       }
       catch (Exception e)
       {
