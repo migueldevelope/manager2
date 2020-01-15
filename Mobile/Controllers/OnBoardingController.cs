@@ -408,10 +408,15 @@ namespace Mobile.Controllers
             }
             CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
             var filename = "audios/" + attachment._id.ToString() + ObjectId.GenerateNewId().ToString() + ".wav";
+            var filenamemp3 = filename.Replace(".wav", ".mp3");
+
+
+            SaveFileStream(filenamemp3, file.OpenReadStream());
 
             blockBlob.Properties.ContentType = "audio/wav";
+            //Stream streamMp3 = new StreamReader(filenamemp3);
 
-            ConvertMp3ToWav(file.OpenReadStream(), filename);
+            ConvertMp3ToWav(filenamemp3, filename);
             var stream = new StreamReader(filename);
 
             await blockBlob.UploadFromStreamAsync(stream.BaseStream);
@@ -441,7 +446,14 @@ namespace Mobile.Controllers
     #endregion
 
     #region private
-    private void ConvertMp3ToWav(Stream _inPath_, string _outPath_)
+    private void SaveFileStream(string path, Stream stream)
+    {
+      var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+      stream.CopyTo(fileStream);
+      fileStream.Dispose();
+    }
+
+    private void ConvertMp3ToWav(string _inPath_, string _outPath_)
     {
       try
       {
