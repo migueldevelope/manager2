@@ -370,7 +370,7 @@ namespace Mobile.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost("{idonboarding}/speech/{iditem}/{typeuser}/onboarding")]
-    public async Task<ObjectResult> PostSpeechRecognitionOnboarding(string idonboarding, string iditem, EnumUserComment typeuser)
+    public async Task<string> PostSpeechRecognitionOnboarding(string idonboarding, string iditem, EnumUserComment typeuser)
     {
       try
       {
@@ -378,7 +378,7 @@ namespace Mobile.Controllers
         {
           var ext = Path.GetExtension(file.FileName).ToLower();
           if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
-            return BadRequest("Bad file type.");
+            return "Bad file type.";
         }
 
         List<Attachments> listAttachments = new List<Attachments>();
@@ -427,7 +427,7 @@ namespace Mobile.Controllers
           service.AddCommentsSpeech(idonboarding, iditem, url, typeuser, pathspeech);
           listAttachments.Add(attachment);
         }
-        return Ok(listAttachments);
+        return url;
       }
       catch (Exception e)
       {
@@ -435,12 +435,10 @@ namespace Mobile.Controllers
       }
 
     }
-
-
-
     #endregion
 
     #region private
+
     private void ConvertMp3ToWav(Stream _inPath_, string _outPath_)
     {
       try
@@ -448,6 +446,9 @@ namespace Mobile.Controllers
         using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
         {
           using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
+          //var waveFormat = WaveFormat.CreateMuLawFormat(8000, 1);
+          //var reader = new RawSourceWaveStream(_inPath_, waveFormat);
+          //using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(reader))
           {
             WaveFileWriter.CreateWaveFile(_outPath_, pcm);
           }
