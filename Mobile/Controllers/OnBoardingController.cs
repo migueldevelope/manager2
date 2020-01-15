@@ -370,7 +370,7 @@ namespace Mobile.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost("{idonboarding}/speech/{iditem}/{typeuser}/onboarding")]
-    public async Task<ObjectResult> PostSpeechRecognitionOnboarding(string idonboarding, string iditem, EnumUserComment typeuser)
+    public async Task<string> PostSpeechRecognitionOnboarding(string idonboarding, string iditem, EnumUserComment typeuser)
     {
       try
       {
@@ -378,7 +378,7 @@ namespace Mobile.Controllers
         {
           var ext = Path.GetExtension(file.FileName).ToLower();
           if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
-            return BadRequest("Bad file type.");
+            return "Bad file type.";
         }
 
         List<Attachments> listAttachments = new List<Attachments>();
@@ -408,10 +408,10 @@ namespace Mobile.Controllers
             }
             CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
             var filename = "audios/" + attachment._id.ToString() + ObjectId.GenerateNewId().ToString() + ".wav";
-            //var filenamemp3 = filename.Replace(".wav", ".mp3");
+            var filenamemp3 = filename.Replace(".wav", ".mp3");
 
 
-            //SaveFileStream(filenamemp3, file.OpenReadStream());
+            SaveFileStream(filenamemp3, file.OpenReadStream());
 
             blockBlob.Properties.ContentType = "audio/wav";
             //Stream streamMp3 = new StreamReader(filenamemp3);
@@ -432,7 +432,7 @@ namespace Mobile.Controllers
           service.AddCommentsSpeech(idonboarding, iditem, url, typeuser, pathspeech);
           listAttachments.Add(attachment);
         }
-        return Ok(listAttachments);
+        return url;
       }
       catch (Exception e)
       {
@@ -440,18 +440,15 @@ namespace Mobile.Controllers
       }
 
     }
-
-
-
     #endregion
 
     #region private
-    //private void SaveFileStream(string path, Stream stream)
-    //{
-    //  var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
-    //  stream.CopyTo(fileStream);
-    //  fileStream.Dispose();
-    //}
+    private void SaveFileStream(string path, Stream stream)
+    {
+      var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+      stream.CopyTo(fileStream);
+      fileStream.Dispose();
+    }
 
     private void ConvertMp3ToWav(Stream _inPath_, string _outPath_)
     {
@@ -460,10 +457,11 @@ namespace Mobile.Controllers
         using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
         {
           using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
+          //WaveFileReader reader = new WaveFileReader(_inPath_);
+          //using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(reader))
           {
             WaveFileWriter.CreateWaveFile(_outPath_, pcm);
           }
-
         }
       }
       catch (Exception e)
