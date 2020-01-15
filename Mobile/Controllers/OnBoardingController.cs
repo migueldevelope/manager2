@@ -412,9 +412,9 @@ namespace Mobile.Controllers
             blockBlob.Properties.ContentType = "audio/wav";
 
             ConvertMp3ToWav(file.OpenReadStream(), filename);
-            //var stream = new StreamReader(filename);
+            var stream = new StreamReader(filename);
 
-            //await blockBlob.UploadFromStreamAsync(stream.BaseStream);
+            await blockBlob.UploadFromStreamAsync(stream.BaseStream);
             url = blockBlob.Uri.ToString();
           }
           catch (Exception e)
@@ -443,16 +443,17 @@ namespace Mobile.Controllers
     {
       try
       {
-        //using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
-        //{
-        //using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
-        var waveFormat = WaveFormat.CreateMuLawFormat(8000, 1);
-        var reader = new RawSourceWaveStream(_inPath_, waveFormat);
-        using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(reader))
+        using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
         {
-          //WaveFileWriter.CreateWaveFile(_outPath_, pcm);
-        }
+          using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
+          //var waveFormat = WaveFormat.CreateMuLawFormat(8000, 1);
+          //var reader = new RawSourceWaveStream(_inPath_, waveFormat);
+          //using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(reader))
+          {
+            WaveFileWriter.CreateWaveFile(_outPath_, pcm);
+          }
 
+        }
       }
       catch (Exception e)
       {
