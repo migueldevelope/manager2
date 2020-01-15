@@ -24,7 +24,7 @@ namespace IntegrationClient
       {
         Program.PersonLogin = JsonConvert.DeserializeObject<ViewPersonLogin>(FileClass.ReadFromBinaryFile<string>(Program.FileConfig));
         string pathLogs = string.Format("{0}_{1}/integration", Program.PersonLogin.NameAccount, Program.PersonLogin.IdAccount);
-        string LogFileName = string.Format("{0}/{1}.log", pathLogs, DateTime.Now.ToString("AUTO_yyyyMMdd_HHmmss"));
+        string LogFileName = string.Format("{0}/{1}.log", pathLogs, DateTime.Now.ToString("yyyyMMdd_HHmmss_auto"));
         // Ler arquivo persistido
         if (Program.autoImport && Program.autoVersion.Equals("V1"))
         {
@@ -89,23 +89,20 @@ namespace IntegrationClient
             Environment.ExitCode = 1;
           }
           // Demitir funcionários
-          if (Environment.ExitCode == 0)
+          try
           {
-            try
-            {
-              FileClass.SaveLog(LogFileName, "Demissões por ausencia de ativos", EnumTypeLineOpportunityg.Information);
-              ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-              ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
-              import.ExecuteDemissionAbsenceV2(false);
-              if (import.Status == EnumStatusService.Error)
-              {
-                Environment.ExitCode = 1;
-              }
-            }
-            catch
+            FileClass.SaveLog(LogFileName, "Demissões por ausencia de ativos", EnumTypeLineOpportunityg.Information);
+            ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
+            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+            import.ExecuteDemissionAbsenceV2(false);
+            if (import.Status == EnumStatusService.Error)
             {
               Environment.ExitCode = 1;
             }
+          }
+          catch
+          {
+            Environment.ExitCode = 1;
           }
           FileClass.SaveLog(LogFileName, "Rotina automática V2 encerrada", EnumTypeLineOpportunityg.Information);
           Application.Exit();

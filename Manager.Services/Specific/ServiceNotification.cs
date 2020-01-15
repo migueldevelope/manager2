@@ -855,7 +855,7 @@ namespace Manager.Services.Specific
       catch (Exception)
       {
 
-      } 
+      }
     }
 
     private void OnboardingManagerDeadlineV2(bool sendTest)
@@ -1597,5 +1597,18 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-  }
+
+
+    #region Onboarding CS
+    public List<string> EmployeeWaiting(EnumActionNotification action)
+    {
+      throw new Exception("Não implementado");
+    }
+    public List<string> ManagerWaiting(EnumActionNotification action)
+    {
+      throw new Exception("Não implementado");
+    }
+  #endregion
+
+}
 }
