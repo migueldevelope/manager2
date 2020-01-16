@@ -36,12 +36,13 @@ namespace Manager.Core.Interfaces
     List<ViewExportOnboardingComments> ExportOnboardingComments(List<ViewListIdIndicators> persons);
     void MailTest();
     List<OnBoarding> Load();
-    string AddCommentsSpeech(string idonboarding, string iditem, string link, EnumUserComment user, string path);
+    string AddCommentsSpeech(string idonboarding, string iditem, string link, EnumUserComment user);
     
     #region Mobile
     ViewListOnBoardingMobile GetMobile(string id);
     string UpdateCommentsEndMobile(string idonboarding, EnumUserComment userComment, ViewCrudCommentEnd comments);
     string UpdateStatusOnBoarding(string idonboarding, EnumStatusOnBoarding status);
+    void UpdateCommentsSpeech(string idonboarding, string iditem, EnumUserComment user, string path, string link);
     #endregion
   }
 }

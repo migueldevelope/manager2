@@ -11,12 +11,14 @@ using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.ServiceBus;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,7 +37,9 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<OnBoarding> serviceOnboarding;
+    private readonly ServiceGeneric<Reports> serviceReport;
     private readonly IServiceControlQueue serviceControlQueue;
+    private readonly IQueueClient queueClient;
 
     public string pathToken;
 
@@ -55,7 +59,9 @@ namespace Manager.Services.Specific
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceControlQueue = _serviceControlQueue;
-
+        serviceReport = new ServiceGeneric<Reports>(context);
+        queueClient = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "reports");
+        
         pathToken = _pathToken;
       }
       catch (Exception e)
@@ -75,6 +81,7 @@ namespace Manager.Services.Specific
       serviceOccupation._user = _user;
       serviceOnboarding._user = _user;
       servicePerson._user = _user;
+      serviceReport._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -88,6 +95,7 @@ namespace Manager.Services.Specific
       serviceOccupation._user = user;
       serviceOnboarding._user = user;
       servicePerson._user = user;
+      serviceReport._user = user;
     }
     #endregion
 
@@ -905,17 +913,56 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddCommentsSpeech(string idonboarding, string iditem, string link, EnumUserComment user, string path)
+    public string AddCommentsSpeech(string idonboarding, string iditem, string link, EnumUserComment user)
     {
       try
       {
+
+        var view = new ViewCrudComment()
+        {
+          CommentsSpeech = "",
+          Date = DateTime.Now,
+          StatusView = EnumStatusView.None,
+          UserComment = user,
+          SpeechLink = link
+        };
+        AddComments(idonboarding, iditem, view);
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public void UpdateCommentsSpeech(string idonboarding, string iditem, EnumUserComment user, string path, string link)
+    {
+      try
+      {
+
+        var viewreport = new ViewReport()
+        {
+          Data = null,
+          Name = "audioonboarding",
+          _idReport = NewReport("audioonboarding"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(viewreport);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == viewreport._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+        }
+
         string comments = "";
 
         using (var client = new HttpClient())
         {
           client.BaseAddress = new Uri(path);
-          var resultMail = client.GetAsync("speech/" + link).Result;
-          //var resultMail = client.GetAsync("speech/test1.wav").Result;
+          var resultMail = client.GetAsync("speech/" + report.Link).Result;
           comments = resultMail.Content.ReadAsStringAsync().Result;
         }
 
@@ -925,10 +972,10 @@ namespace Manager.Services.Specific
           Date = DateTime.Now,
           StatusView = EnumStatusView.None,
           UserComment = user,
-          SpeechLink = link
+          SpeechLink = report.Link
         };
-        AddComments(idonboarding, iditem, view);
-        return "ok";
+
+        UpdateComments(idonboarding, iditem, view);
       }
       catch (Exception e)
       {
@@ -1218,7 +1265,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var onboarding = serviceOnboarding.GetAllNewVersion(p => p._id == idonboarding).Result.FirstOrDefault();
+        var onboarding = serviceOnboarding.GetNewVersion(p => p._id == idonboarding).Result;
         foreach (var item in onboarding.Activities)
         {
           if (item._id == iditem)
@@ -1230,6 +1277,7 @@ namespace Manager.Services.Specific
                 comment.StatusView = comments.StatusView;
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
+                comment.CommentsSpeech = comment.CommentsSpeech;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
                 return item.Comments.Select(p => new ViewCrudComment()
@@ -1258,6 +1306,7 @@ namespace Manager.Services.Specific
                 comment.StatusView = comments.StatusView;
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
+                comment.CommentsSpeech = comment.CommentsSpeech;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
                 return item.Comments.Select(p => new ViewCrudComment()
@@ -1285,6 +1334,7 @@ namespace Manager.Services.Specific
                 comment.StatusView = comments.StatusView;
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
+                comment.CommentsSpeech = comment.CommentsSpeech;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
                 return item.Comments.Select(p => new ViewCrudComment()
@@ -1312,6 +1362,7 @@ namespace Manager.Services.Specific
                 comment.StatusView = comments.StatusView;
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
+                comment.CommentsSpeech = comment.CommentsSpeech;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
                 return item.Comments.Select(p => new ViewCrudComment()
@@ -1339,6 +1390,7 @@ namespace Manager.Services.Specific
                 comment.StatusView = comments.StatusView;
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
+                comment.CommentsSpeech = comment.CommentsSpeech;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
                 return item.Comments.Select(p => new ViewCrudComment()
@@ -1366,6 +1418,7 @@ namespace Manager.Services.Specific
                 comment.StatusView = comments.StatusView;
                 comment.Comments = comments.Comments;
                 comment.Date = comment.Date;
+                comment.CommentsSpeech = comment.CommentsSpeech;
 
                 serviceOnboarding.Update(onboarding, null).Wait();
                 return item.Comments.Select(p => new ViewCrudComment()
@@ -2551,9 +2604,44 @@ namespace Manager.Services.Specific
       }
     }
 
+
+    private void SendMessageAsync(ViewReport view)
+    {
+      try
+      {
+        dynamic result = view;
+        var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(result)));
+        queueClient.SendAsync(message);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<OnBoarding> Load()
     {
       return serviceOnboarding.GetAllFreeNewVersion().Result;
+    }
+
+
+    private string NewReport(string name)
+    {
+      try
+      {
+        var report = new Reports()
+        {
+          StatusReport = EnumStatusReport.Open,
+          Date = DateTime.Now,
+          Name = name
+        };
+
+        return serviceReport.InsertNewVersion(report).Result._id;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
     }
     #endregion
   }

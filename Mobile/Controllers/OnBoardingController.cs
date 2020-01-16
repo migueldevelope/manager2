@@ -407,14 +407,11 @@ namespace Mobile.Controllers
               });
             }
             CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
-            var filename = "audios/" + attachment._id.ToString() + ObjectId.GenerateNewId().ToString() + ".wav";
 
-            blockBlob.Properties.ContentType = "audio/wav";
+            blockBlob.Properties.ContentType = "audio/mpeg";
 
-            ConvertMp3ToWav(file.OpenReadStream(), filename);
-            var stream = new StreamReader(filename);
 
-            await blockBlob.UploadFromStreamAsync(stream.BaseStream);
+            await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
             url = blockBlob.Uri.ToString();
           }
           catch (Exception e)
@@ -423,8 +420,8 @@ namespace Mobile.Controllers
             await serviceAttachment.Update(attachment, null);
             throw e;
           }
-          var pathspeech = "http://10.0.0.16:5400/";
-          service.AddCommentsSpeech(idonboarding, iditem, url, typeuser, pathspeech);
+          service.AddCommentsSpeech(idonboarding, iditem, url, typeuser);
+          Task.Run(() => SendCommentsSpeech(idonboarding, iditem, typeuser, url));
           listAttachments.Add(attachment);
         }
         return url;
@@ -437,23 +434,50 @@ namespace Mobile.Controllers
     }
     #endregion
 
-    #region private
 
-    private void ConvertMp3ToWav(Stream _inPath_, string _outPath_)
+    #region audio
+
+    private void SendCommentsSpeech(string idonboarding, string iditem, EnumUserComment user, string link)
+    {
+      try
+      {
+
+        var pathspeech = "http://10.0.0.16:5400/";
+        service.UpdateCommentsSpeech(idonboarding, iditem, user, pathspeech, link);
+      }
+      catch(Exception e)
+      {
+        throw e;
+      }
+    }
+    private async void ConvertMp3ToWav(Stream _inPath_, string _outPath_)
     {
       try
       {
         using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
         {
           using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
-          //var waveFormat = WaveFormat.CreateMuLawFormat(8000, 1);
-          //var reader = new RawSourceWaveStream(_inPath_, waveFormat);
-          //using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(reader))
           {
             WaveFileWriter.CreateWaveFile(_outPath_, pcm);
           }
-
         }
+        Stream stream = new StreamReader(_outPath_).BaseStream;
+
+        CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+        CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+        CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(serviceAttachment._user._idAccount);
+        if (await cloudBlobContainer.CreateIfNotExistsAsync())
+        {
+          await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+          {
+            PublicAccess = BlobContainerPublicAccessType.Blob
+          });
+        }
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(_outPath_.Replace(".wav",""));
+
+        blockBlob.Properties.ContentType = "audio/wav";
+        await blockBlob.UploadFromStreamAsync(stream);
+        var url = blockBlob.Uri.ToString();
       }
       catch (Exception e)
       {
@@ -461,5 +485,6 @@ namespace Mobile.Controllers
       }
     }
     #endregion
+
   }
 }
