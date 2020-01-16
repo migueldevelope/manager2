@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using Newtonsoft.Json;
@@ -20,11 +21,12 @@ namespace IntegrationClient
     private void Login_Load(object sender, EventArgs e)
     {
       Text = string.Format("Login Robo Ana - Versão {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
-      if (System.IO.File.Exists(Program.FileConfig))
+      if (File.Exists(Program.FileConfig))
       {
         Program.PersonLogin = JsonConvert.DeserializeObject<ViewPersonLogin>(FileClass.ReadFromBinaryFile<string>(Program.FileConfig));
         string pathLogs = string.Format("{0}_{1}/integration", Program.PersonLogin.NameAccount, Program.PersonLogin.IdAccount);
-        string LogFileName = string.Format("{0}/{1}.log", pathLogs, DateTime.Now.ToString("yyyyMMdd_HHmmss_auto"));
+        DateTime initialTime = DateTime.Now;
+        string LogFileName = string.Format("{0}/{1}_tarefa.log", pathLogs, initialTime.ToString("yyyyMMdd_HHmmss"));
         // Ler arquivo persistido
         if (Program.autoImport && Program.autoVersion.Equals("V1"))
         {
@@ -35,7 +37,7 @@ namespace IntegrationClient
           {
             FileClass.SaveLog(LogFileName, "Admissões e alterações", EnumTypeLineOpportunityg.Information);
             ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
             import.Execute();
             if (import.Status == EnumStatusService.Error)
             {
@@ -47,23 +49,20 @@ namespace IntegrationClient
             Environment.ExitCode = 1;
           }
           // Demitir funcionários
-          if (Environment.ExitCode == 0)
+          try
           {
-            try
-            {
-              FileClass.SaveLog(LogFileName, "Demissões", EnumTypeLineOpportunityg.Information);
-              ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-              ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
-              import.Execute(DateTime.Now.Date, DateTime.Now.Date);
-              if (import.Status == EnumStatusService.Error)
-              {
-                Environment.ExitCode = 1;
-              }
-            }
-            catch
+            FileClass.SaveLog(LogFileName, "Demissões", EnumTypeLineOpportunityg.Information);
+            ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
+            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
+            import.Execute(DateTime.Now.Date, DateTime.Now.Date);
+            if (import.Status == EnumStatusService.Error)
             {
               Environment.ExitCode = 1;
             }
+          }
+          catch
+          {
+            Environment.ExitCode = 1;
           }
           FileClass.SaveLog(LogFileName, "Rotina automática V1 encerrada", EnumTypeLineOpportunityg.Information);
           Application.Exit();
@@ -77,7 +76,7 @@ namespace IntegrationClient
           {
             FileClass.SaveLog(LogFileName, "Admissões e alterações", EnumTypeLineOpportunityg.Information);
             ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
             import.ExecuteV2(false);
             if (import.Status == EnumStatusService.Error)
             {
@@ -93,7 +92,7 @@ namespace IntegrationClient
           {
             FileClass.SaveLog(LogFileName, "Demissões por ausencia de ativos", EnumTypeLineOpportunityg.Information);
             ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
             import.ExecuteDemissionAbsenceV2(false);
             if (import.Status == EnumStatusService.Error)
             {

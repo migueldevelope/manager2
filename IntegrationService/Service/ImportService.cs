@@ -44,7 +44,7 @@ namespace IntegrationService.Service
     public string testresult;
 
     #region Construtores
-    public ImportService(ViewPersonLogin person, ConfigurationService serviceConfiguration)
+    public ImportService(ViewPersonLogin person, ConfigurationService serviceConfiguration, DateTime initialTime)
     {
       try
       {
@@ -65,7 +65,7 @@ namespace IntegrationService.Service
         {
           File.Delete(fileinfo.FullName);
         }
-        LogFileName = string.Format("{0}/{1}.log", pathLogs, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+        LogFileName = string.Format("{0}/{1}.log", pathLogs, initialTime.ToString("yyyyMMdd_HHmmss"));
         Assembly assem = Assembly.GetEntryAssembly();
         AssemblyName assemName = assem.GetName();
         VersionProgram = assemName.Version;

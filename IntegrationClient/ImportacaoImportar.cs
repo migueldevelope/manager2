@@ -23,7 +23,7 @@ namespace IntegrationClient
     {
       try
       {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
         import.Execute();
         if (import.Status == EnumStatusService.Error)
         {
@@ -43,7 +43,7 @@ namespace IntegrationClient
     {
       try
       {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
         import.Execute(DateTime.Parse(txtDatIni.Text).Date, DateTime.Parse(txtDatFin.Text).Date);
         if (import.Status == EnumStatusService.Error)
         {
@@ -64,7 +64,7 @@ namespace IntegrationClient
     {
       try
       {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
         import.RefreshProgressBar += Import_RefreshProgressBar;
         import.ExecuteV2(chkLjo.Checked);
         if (import.Status == EnumStatusService.Error)
@@ -88,7 +88,7 @@ namespace IntegrationClient
     {
       try
       {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
         //import.ExecuteDemissionLastImportV2();
         if (import.Status == EnumStatusService.Error)
         {
@@ -108,7 +108,7 @@ namespace IntegrationClient
     {
       try
       {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration);
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
         import.RefreshProgressBar += Import_RefreshProgressBar;
         import.ExecuteDemissionAbsenceV2(chkLjo.Checked);
         if (import.Status == EnumStatusService.Error)
