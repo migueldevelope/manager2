@@ -26,15 +26,15 @@ namespace Indicators.Controllers
     /// 
     /// </summary>
     /// <param name="_service"></param>
-    /// <param name="_serviceManager"></param>
     /// <param name="contextAccessor"></param>
-    public IndicatorsController(IServiceIndicators _service, IServiceManager _serviceManager,
+    //public IndicatorsController(IServiceIndicators _service, IServiceManager _serviceManager,
+    public IndicatorsController(IServiceIndicators _service, 
       IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
-      serviceManager = _serviceManager;
+      //serviceManager = _serviceManager;
       service.SetUser(contextAccessor);
-      serviceManager.SetUser(contextAccessor);
+      //serviceManager.SetUser(contextAccessor);
     }
 
     /// <summary>
