@@ -101,6 +101,22 @@ namespace Manager.Controllers
     #endregion
 
     #region Salary Scale
+
+
+    /// <summary>
+    /// Update salaryscale
+    /// </summary>
+    /// <param name="idsalaryscale"></param>
+    /// <param name="percent"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatesteps/{idsalaryscale}")]
+    public async Task<string> UpdateSteps(string idsalaryscale, decimal percent)
+    {
+      return await Task.Run(() => service.UpdateSteps(idsalaryscale, percent));
+    }
+
     /// <summary>
     /// Listar todas as tabelas salariais da empresa
     /// </summary>

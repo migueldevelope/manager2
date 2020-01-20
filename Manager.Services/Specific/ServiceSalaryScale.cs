@@ -652,6 +652,28 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateSteps(string id, decimal percent)
+    {
+      try
+      {
+        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
+        foreach(var item in salaryScale.Grades)
+        {
+          foreach(var step in item.ListSteps)
+          {
+            step.Salary = step.Salary + (step.Salary * (percent / 100));
+          }
+        }
+        serviceSalaryScale.Update(salaryScale, null).Wait();
+        return "Salary scale altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string UpdateStep(ViewCrudStep view)
     {
       try

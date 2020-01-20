@@ -37,5 +37,6 @@ namespace Manager.Core.Interfaces
     List<ViewListSalaryScaleLog> ListSalaryScaleLog(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "");
     ViewCrudSalaryScaleLog GetSalaryScaleLog(string id);
     List<ViewListGrade> ListGradeManager(string idmanager, ref long total, int count = 10, int page = 1, string filter = "");
+    string UpdateSteps(string id, decimal percent);
   }
 }
