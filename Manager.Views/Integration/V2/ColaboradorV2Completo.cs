@@ -34,7 +34,7 @@ namespace Manager.Views.Integration.V2
     public string MotivoUltimoReajuste { get; set; }
     // Chaves de cálculo interno
     public string ChaveCargo => string.Format("{0};{1}", Colaborador.ChaveEmpresa, Cargo.Trim().ToLower());
-    public string ChaveCentroCusto => string.Format("{0};{1}", Colaborador.ChaveEmpresa, CentroCusto.Trim().ToLower());
+    public string ChaveCentroCusto => string.IsNullOrEmpty(CentroCusto) ? null : string.Format("{0};{1}", Colaborador.ChaveEmpresa, CentroCusto.Trim().ToLower());
 
     #region Constructor
     public ColaboradorV2Completo()
@@ -87,6 +87,18 @@ namespace Manager.Views.Integration.V2
         };
         if (Gestor.Cpf == null || Gestor.Matricula == null)
         {
+          Gestor = new ColaboradorV2Base
+          {
+            Cpf = FieldStringCpf(list, title, "cpf_chefe", null),
+            Empresa = FieldString(list, title, "empresa_chefe", null),
+            NomeEmpresa = FieldString(list, title, "nome_empresa_chefe", null),
+            Estabelecimento = FieldString(list, title, "estabelecimento_chefe", null),
+            NomeEstabelecimento = FieldString(list, title, "nome_estabelecimento_chefe", null),
+            Matricula = FieldString(list, title, "matricula_chefe", null)
+          };
+        }
+        if (Gestor.Cpf == null || Gestor.Matricula == null)
+        {
           Gestor = null;
         }
       }
@@ -115,7 +127,9 @@ namespace Manager.Views.Integration.V2
       try
       {
         int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
-        return index == -1 ? defaultValue : list[index].Replace(".",string.Empty).Replace("-",string.Empty).PadLeft(11,'0');
+        return index == -1
+          ? defaultValue
+          : string.IsNullOrEmpty(list[index]) ? defaultValue : list[index].Replace(".",string.Empty).Replace("-",string.Empty).PadLeft(11,'0');
       }
       catch (Exception ex)
       {

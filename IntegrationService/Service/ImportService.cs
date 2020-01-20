@@ -263,7 +263,7 @@ namespace IntegrationService.Service
           default:
             break;
         }
-        LogFileName = string.Format("{0}/Demissao_{1}.log", pathLogs, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+        LogFileName = string.Format("{0}/{1}_demissao.log", pathLogs, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
         Demission();
         service.Param.CriticalError = string.Empty;
         service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
@@ -960,7 +960,11 @@ namespace IntegrationService.Service
         {
           if (jsonLog)
           {
-            FileClass.SaveLog(LogFileName.Replace(".log", "api.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
+            if (!File.Exists(LogFileName.Replace(".log", "_api.log")))
+            {
+              FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
+            }
+            FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
           }
           viewRetorno = personIntegration.PostV2Completo(colaborador);
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
@@ -1218,7 +1222,10 @@ namespace IntegrationService.Service
           "data_nascimento", "celular", "grau_instrucao", "nome_grau_instrucao", "apelido", "situacao", "data_admissao",
           "data_demissao", "cargo", "nome_cargo", "data_ultima_troca_cargo", "cpf_gestor", "empresa_gestor", "nome_empresa_gestor",
           "estabelecimento_gestor", "nome_estabelecimento_gestor", "matricula_gestor", "nome_gestor", "centro_custo", "nome_centro_custo",
-          "data_troca_centro_custo", "salario_nominal", "carga_horaria", "data_ultimo_reajuste", "motivo_ultimo_reajuste", "acao"
+          "data_troca_centro_custo", "salario_nominal", "carga_horaria", "data_ultimo_reajuste", "motivo_ultimo_reajuste", "acao",
+          // COmpatibilidade V1
+          "telefone", "identidade", "carteira_profissional", "retorno_ferias", "motivo_afastamento",
+          "empresa_chefe", "nome_empresa_chefe", "estabelecimento_chefe", "nome_estabelecimento_chefe", "cpf_chefe", "matricula_chefe"
         };
         ProgressBarMaximun = rowCount;
         ProgressBarValue = 0;
