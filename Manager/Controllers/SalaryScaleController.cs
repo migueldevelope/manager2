@@ -107,14 +107,14 @@ namespace Manager.Controllers
     /// Update salaryscale
     /// </summary>
     /// <param name="idsalaryscale"></param>
-    /// <param name="percent"></param>
+    /// <param name="view"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("updatesteps/{idsalaryscale}")]
-    public async Task<string> UpdateSteps(string idsalaryscale, decimal percent)
+    public async Task<string> UpdateSteps([FromBody]ViewPercent view, string idsalaryscale)
     {
-      return await Task.Run(() => service.UpdateSteps(idsalaryscale, percent));
+      return await Task.Run(() => service.UpdateSteps(idsalaryscale, view.Percent));
     }
 
     /// <summary>
