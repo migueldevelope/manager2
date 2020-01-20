@@ -109,9 +109,9 @@ namespace Manager.Services.Commons
         IRow headerRow = sheet.CreateRow(0); //Get Header Row
         headerRow.CreateCell(0).SetCellValue("CARGOS");
         headerRow.CreateCell(1).SetCellValue("FUNÇÃO");
-        headerRow.CreateCell(2).SetCellValue("GRADES");
-        headerRow.CreateCell(3).SetCellValue("GRUPOS");
-        headerRow.CreateCell(4).SetCellValue("ESFERAS");
+        headerRow.CreateCell(2).SetCellValue("GRADE");
+        headerRow.CreateCell(3).SetCellValue("GRUPO");
+        headerRow.CreateCell(4).SetCellValue("ESFERA");
         headerRow.CreateCell(5).SetCellValue("CARGA HORÁRIA");
         headerRow.CreateCell(6).SetCellValue("A");
         headerRow.CreateCell(7).SetCellValue("B");
