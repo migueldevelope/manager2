@@ -339,8 +339,8 @@ namespace EdeskIntegration.Controllers
             await service.Update(attachment, null);
             throw;
           }
-          var pathspeech = "http://10.0.0.16:5400/";
-          serviceOnBoarding.AddCommentsSpeech(idregister, iditem, url, typeuser, pathspeech);
+          // var pathspeech = "http://10.0.0.16:5400/";
+          serviceOnBoarding.AddCommentsSpeech(idregister, iditem, url, typeuser);
           listAttachments.Add(attachment);
         }
         return Ok(listAttachments);

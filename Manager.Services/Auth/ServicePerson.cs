@@ -711,18 +711,18 @@ namespace Manager.Services.Auth
             Mail = p.User.Mail
           }).FirstOrDefault();
 
-        if (_idManager != _idManagerOld)
-          Task.Run(() => SendQueue(_idManager, _idPerson));
+        //if (_idManager != _idManagerOld)
+        //  Task.Run(() => SendQueue(_idManager, _idPerson));
 
         person.Manager = manager;
         var result = servicePerson.Update(person, null);
 
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(pathSignalr + "messagesHub")
-            .Build();
+        //hubConnection = new HubConnectionBuilder()
+        //    .WithUrl(pathSignalr + "messagesHub")
+        //    .Build();
 
-        hubConnection.StartAsync();
-        hubConnection.InvokeAsync("GetFilterPersons", person.Manager?._id, person._idAccount);
+        //hubConnection.StartAsync();
+        //hubConnection.InvokeAsync("GetFilterPersons", person.Manager?._id, person._idAccount);
 
         return manager;
       }
