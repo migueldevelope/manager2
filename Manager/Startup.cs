@@ -110,6 +110,8 @@ namespace Manager
       IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
+      //audios
+      serviceOnBoarding.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
       services.AddSingleton(_ => serviceHRDrive);

@@ -43,6 +43,7 @@ namespace Manager.Core.Interfaces
     string UpdateCommentsEndMobile(string idonboarding, EnumUserComment userComment, ViewCrudCommentEnd comments);
     string UpdateStatusOnBoarding(string idonboarding, EnumStatusOnBoarding status);
     void UpdateCommentsSpeech(string idonboarding, string iditem, EnumUserComment user, string path, string link);
+    public void RegisterOnMessageHandlerAndReceiveMesssages();
     #endregion
   }
 }

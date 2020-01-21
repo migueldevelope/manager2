@@ -40,6 +40,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Reports> serviceReport;
     private readonly IServiceControlQueue serviceControlQueue;
     private readonly IQueueClient queueClient;
+    private readonly IQueueClient queueClientReturn;
 
     public string pathToken;
 
@@ -60,8 +61,8 @@ namespace Manager.Services.Specific
         servicePerson = new ServiceGeneric<Person>(context);
         serviceControlQueue = _serviceControlQueue;
         serviceReport = new ServiceGeneric<Reports>(context);
-        queueClient = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "reports");
-        
+        queueClient = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "audios");
+        queueClientReturn = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "audiosreturn");
         pathToken = _pathToken;
       }
       catch (Exception e)
@@ -2186,7 +2187,6 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Private
-
     public void MailTest()
     {
       try
@@ -2215,7 +2215,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     private void SendQueue(string id, string idperson)
     {
       try
@@ -2604,7 +2603,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
     private void SendMessageAsync(ViewReport view)
     {
       try
@@ -2618,13 +2616,10 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public List<OnBoarding> Load()
     {
       return serviceOnboarding.GetAllFreeNewVersion().Result;
     }
-
-
     private string NewReport(string name)
     {
       try
@@ -2642,6 +2637,56 @@ namespace Manager.Services.Specific
       {
         throw e;
       }
+    }
+
+    public void RegisterOnMessageHandlerAndReceiveMesssages()
+    {
+      try
+      {
+        var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+        {
+          MaxConcurrentCalls = 1,
+          AutoComplete = false
+        };
+
+        queueClientReturn.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private async Task ProcessMessagesAsync(Message message, CancellationToken token)
+    {
+      try
+      {
+        var view = JsonConvert.DeserializeObject<ViewCrudReport>(Encoding.UTF8.GetString(message.Body));
+        SetUser(new BaseUser()
+        {
+          _idAccount = view._idAccount
+        });
+
+        if (view.StatusReport != EnumStatusReport.Open)
+        {
+          Reports report = serviceReport.GetFreeNewVersion(p => p._id == view._id).Result;
+          report.StatusReport = view.StatusReport;
+          report.Link = view.Link;
+          serviceReport.UpdateAccount(report, null).Wait();
+
+          await queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
+        }
+      }
+      catch (Exception e)
+      {
+        var error = e.Message;
+        queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
+      }
+
+    }
+    private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+    {
+      var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+      return Task.CompletedTask;
     }
     #endregion
   }

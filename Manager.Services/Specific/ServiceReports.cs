@@ -442,7 +442,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     private void SendMessageAsync(ViewReport view)
     {
       try
@@ -473,7 +472,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     private async Task ProcessMessagesAsync(Message message, CancellationToken token)
     {
       try
@@ -501,7 +499,6 @@ namespace Manager.Services.Specific
       }
 
     }
-
     private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
     {
       var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
