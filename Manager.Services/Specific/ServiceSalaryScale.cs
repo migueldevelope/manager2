@@ -657,14 +657,16 @@ namespace Manager.Services.Specific
     {
       try
       {
+        Task.Run(() => NewVersion(id));
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
-        foreach(var item in salaryScale.Grades)
+        foreach (var item in salaryScale.Grades)
         {
-          foreach(var step in item.ListSteps)
+          foreach (var step in item.ListSteps)
           {
             step.Salary = step.Salary + (step.Salary * (percent / 100));
           }
         }
+
         serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Salary scale altered!";
       }
@@ -945,7 +947,7 @@ namespace Manager.Services.Specific
       try
       {
         var serviceExcel = new ServiceExcel();
-        
+
 
         var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
         if (salaryScale.Grades.Count > 0)
