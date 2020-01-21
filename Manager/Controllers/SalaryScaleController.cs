@@ -118,6 +118,19 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// Restore Version
+    /// </summary>
+    /// <param name="idsalaryscale"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("restoreversion/{idsalaryscale}")]
+    public async Task<string> UpdateSteps(string idsalaryscale)
+    {
+      return await Task.Run(() => service.RestoreVersion(idsalaryscale));
+    }
+
+    /// <summary>
     /// Listar todas as tabelas salariais da empresa
     /// </summary>
     /// <param name="idsalaryscale">Identificador da tabela salarial</param>

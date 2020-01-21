@@ -208,6 +208,37 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string RestoreVersion(string idsalaryscale)
+    {
+      try
+      {
+        var salaryscale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
+        var salaryscaleLog = serviceSalaryScaleLog.GetAllNewVersion(p => p._idSalaryScalePrevious == idsalaryscale).Result.LastOrDefault();
+
+
+        foreach (var item in salaryscale.Grades)
+        {
+          foreach (var step in item.ListSteps)
+          {
+            var grade = salaryscaleLog.Grades.Where(p => p._id == item._id).FirstOrDefault();
+            if (grade != null)
+            {
+              decimal salary = grade.Steps.Where(p => p.Step == step.Step).FirstOrDefault().Salary;
+              step.Salary = salary;
+            }
+
+          }
+        }
+        var i = serviceSalaryScale.Update(salaryscale, null);
+
+        return "Salary scale restore!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string Update(ViewCrudSalaryScale view)
     {
       try
