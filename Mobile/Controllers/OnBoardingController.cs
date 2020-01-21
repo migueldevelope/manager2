@@ -387,7 +387,7 @@ namespace Mobile.Controllers
         {
           Attachments attachment = new Attachments()
           {
-            Extension = ".wav",
+            Extension = ".mp3",
             LocalName = file.FileName,
             Lenght = file.Length,
             Status = EnumStatus.Enabled,
@@ -421,7 +421,7 @@ namespace Mobile.Controllers
             throw e;
           }
           service.AddCommentsSpeech(idonboarding, iditem, url, typeuser);
-          //Task.Run(() => SendCommentsSpeech(idonboarding, iditem, typeuser, url));
+          var i = Task.Run(() => SendCommentsSpeech(idonboarding, iditem, typeuser, url));
           listAttachments.Add(attachment);
         }
         return url;

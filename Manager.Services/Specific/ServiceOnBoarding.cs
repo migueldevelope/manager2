@@ -943,7 +943,7 @@ namespace Manager.Services.Specific
 
         var viewreport = new ViewReport()
         {
-          Data = null,
+          Data = link,
           Name = "audioonboarding",
           _idReport = NewReport("audioonboarding"),
           _idAccount = _user._idAccount
