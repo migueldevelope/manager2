@@ -421,7 +421,7 @@ namespace Mobile.Controllers
             throw e;
           }
           service.AddCommentsSpeech(idonboarding, iditem, url, typeuser);
-          Task.Run(() => SendCommentsSpeech(idonboarding, iditem, typeuser, url));
+          //Task.Run(() => SendCommentsSpeech(idonboarding, iditem, typeuser, url));
           listAttachments.Add(attachment);
         }
         return url;
