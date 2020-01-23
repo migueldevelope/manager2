@@ -37,6 +37,20 @@ namespace Manager.Controllers
 
     #region Onboarding
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idonboarding"></param>
+    /// <param name="status"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatestatus/{idonboarding}/{status}")]
+    public async Task<IActionResult> UpdateStatus(string idonboarding, EnumStatusOnBoarding status)
+    {
+      return await Task.Run(() => Ok(service.UpdateStatusOnBoarding(idonboarding, status)));
+    }
+
+    /// <summary>
     /// Listar as pendências de Onboarding para o gestor
     /// </summary>
     /// <param name="idmanager">Identificação do gestor</param>
