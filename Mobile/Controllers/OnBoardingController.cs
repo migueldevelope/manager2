@@ -134,18 +134,6 @@ namespace Mobile.Controllers
       return await Task.Run(() => service.New(idperson));
     }
     /// <summary>
-    /// Iniciar o processo de onboarding do colaborador
-    /// </summary>
-    /// <param name="id">Identificador do colaborador</param>
-    /// <returns>Objeto de listagem do OnBoarding</returns>
-    [Authorize]
-    [HttpGet]
-    [Route("get/{id}")]
-    public async Task<ViewListOnBoardingMobile> Get(string id)
-    {
-      return await Task.Run(() => service.GetMobile(id));
-    }
-    /// <summary>
     /// Apagar comentários
     /// </summary>
     /// <param name="idonboarding">Identificador do onboarding</param>
@@ -360,6 +348,10 @@ namespace Mobile.Controllers
     {
       return await Task.Run(() => service.ExportStatusOnboarding(persons));
     }
+    #endregion
+
+    #region Mobile
+
 
     /// <summary>
     /// 
@@ -432,8 +424,22 @@ namespace Mobile.Controllers
       }
 
     }
-    #endregion
 
+
+    /// <summary>
+    /// Iniciar o processo de onboarding do colaborador
+    /// </summary>
+    /// <param name="id">Identificador do colaborador</param>
+    /// <returns>Objeto de listagem do OnBoarding</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("get/{id}")]
+    public async Task<ViewListOnBoardingMobile> Get(string id)
+    {
+      return await Task.Run(() => service.GetMobile(id));
+    }
+
+    #endregion
 
     #region audio
 
@@ -445,7 +451,7 @@ namespace Mobile.Controllers
         var pathspeech = "http://10.0.0.16:5400/";
         service.UpdateCommentsSpeech(idonboarding, iditem, user, pathspeech, link);
       }
-      catch(Exception e)
+      catch (Exception e)
       {
         throw e;
       }
@@ -473,7 +479,7 @@ namespace Mobile.Controllers
             PublicAccess = BlobContainerPublicAccessType.Blob
           });
         }
-        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(_outPath_.Replace(".wav",""));
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(_outPath_.Replace(".wav", ""));
 
         blockBlob.Properties.ContentType = "audio/wav";
         await blockBlob.UploadFromStreamAsync(stream);
@@ -485,6 +491,6 @@ namespace Mobile.Controllers
       }
     }
     #endregion
-
+  
   }
 }

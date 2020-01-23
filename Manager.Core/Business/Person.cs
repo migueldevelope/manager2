@@ -104,6 +104,7 @@ namespace Manager.Core.Business
         _id = _id,
         Name = User.Name,
         TypeJourney = TypeJourney,
+        OccupationId = Occupation?._id,
         Occupation = Occupation?.Name,
         _idManager = Manager?._id,
         Manager = Manager?.Name,

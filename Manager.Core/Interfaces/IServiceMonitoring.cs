@@ -49,6 +49,8 @@ namespace Manager.Core.Interfaces
     List<ViewExportMonitoringComments> ExportMonitoringComments(ViewFilterIdAndDate filter);
     List<ViewListMonitoring> ListMonitoringsWait_V2(List<ViewListIdIndicators> persons, ref long total, string filter, int count, int page);
 
+    ViewCrudMonitoringMobile GetMonitoringsMobile(string id);
+
     #endregion
 
   }

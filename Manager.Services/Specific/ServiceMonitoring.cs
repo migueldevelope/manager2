@@ -856,6 +856,126 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public ViewCrudMonitoringMobile GetMonitoringsMobile(string id)
+    {
+      try
+      {
+        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+
+        var view = new ViewCrudMonitoringMobile()
+        {
+          _id = monitoring._id,
+          Person = monitoring.Person,
+          CommentsPerson = monitoring.CommentsPerson,
+          CommentsEnd = monitoring.CommentsEnd,
+          CommentsManager = monitoring.CommentsManager,
+          Items = new List<ViewListItensMobile>(),
+          StatusMonitoring = monitoring.StatusMonitoring
+        };
+
+        foreach (var item in monitoring.SkillsCompany)
+        {
+          var result = new ViewListItensMobile()
+          {
+            _id = item._id,
+            Comments = item.Comments?.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              CommentsSpeech = p.CommentsSpeech,
+              Date = p.Date,
+              SpeechLink = p.SpeechLink,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment
+            }).ToList(),
+            CommentsManager = item.CommentsManager,
+            CommentsPerson = item.CommentsPerson,
+            StatusViewManager = item.StatusViewManager,
+            StatusViewPerson = item.StatusViewPerson
+          };
+          var detail = new ViewListItensDetailMobile()
+          {
+            _id = item.Skill._id,
+            Name = item.Skill.Name,
+            TypeItem = EnumTypeItem.Activitie
+          };
+          result.Item = detail;
+
+          view.Items.Add(result);
+        }
+
+        foreach (var item in monitoring.Activities)
+        {
+          var result = new ViewListItensMobile()
+          {
+            _id = item._id,
+            Comments = item.Comments?.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              CommentsSpeech = p.CommentsSpeech,
+              Date = p.Date,
+              SpeechLink = p.SpeechLink,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment
+            }).ToList(),
+            CommentsManager = item.CommentsManager,
+            CommentsPerson = item.CommentsPerson,
+            StatusViewManager = item.StatusViewManager,
+            StatusViewPerson = item.StatusViewPerson
+          };
+          var detail = new ViewListItensDetailMobile()
+          {
+            _id = item.Activities._id,
+            Name = item.Activities.Name,
+            Order = item.Activities.Order,
+            TypeItem = EnumTypeItem.Activitie
+          };
+          result.Item = detail;
+
+          view.Items.Add(result);
+        }
+
+        foreach (var item in monitoring.Schoolings)
+        {
+          var result = new ViewListItensMobile()
+          {
+            _id = item._id,
+            Comments = item.Comments?.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              CommentsSpeech = p.CommentsSpeech,
+              Date = p.Date,
+              SpeechLink = p.SpeechLink,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment
+            }).ToList(),
+            CommentsManager = item.CommentsManager,
+            CommentsPerson = item.CommentsPerson,
+            StatusViewManager = item.StatusViewManager,
+            StatusViewPerson = item.StatusViewPerson
+          };
+          var detail = new ViewListItensDetailMobile()
+          {
+            _id = item.Schooling._id,
+            Name = item.Schooling.Name,
+            Order = item.Schooling.Order,
+            TypeItem = EnumTypeItem.Activitie
+          };
+          result.Item = detail;
+
+          view.Items.Add(result);
+        }
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public ViewCrudMonitoringActivities GetMonitoringActivities(string idmonitoring, string idactivitie)
     {
       try

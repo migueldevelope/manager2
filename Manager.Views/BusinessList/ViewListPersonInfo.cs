@@ -10,6 +10,8 @@ namespace Manager.Views.BusinessList
   public class ViewListPersonInfo : _ViewListBase
   {
     public EnumTypeJourney TypeJourney { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string OccupationId { get; set; }
     public string Occupation { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idManager { get; set; }
