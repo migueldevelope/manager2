@@ -12,26 +12,30 @@ namespace IntegrationService.Api
   public class ApiMetadados
   {
 
-    public List<ViewIntegrationMetadados> GetEmployee(string token)
+    public List<ViewIntegrationMetadadosV1> GetEmployee(string token, int page, int limit)
     {
       try
       {
+        if (limit>100)
+        {
+          throw new Exception("100 é o Limite de registros por página");
+        }
         using (HttpClient client = new HttpClient())
         {
           client.Timeout = TimeSpan.FromMinutes(60);
           client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", token));
-          client.BaseAddress = new Uri(" https://metadados.linkapi.com.br/v1/analisaFluid");
+          client.BaseAddress = new Uri(string.Format(@"https://metadados.linkapi.com.br/v1/analisaFluid?offset={0}&limit={1}",page,limit));
           StringContent content = new StringContent(string.Empty);
           content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
           HttpResponseMessage result = client.PostAsync("/", content).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
           {
-            throw new Exception("Integration Error!");
+            throw new Exception("API Integration Error!");
           }
           string resultContent = result.Content.ReadAsStringAsync().Result;
           IsoDateTimeConverter dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" };
-          return JsonConvert.DeserializeObject<List<ViewIntegrationMetadados>>(resultContent, dateTimeConverter);
+          return JsonConvert.DeserializeObject<List<ViewIntegrationMetadadosV1>>(resultContent, dateTimeConverter);
         }
       }
       catch (Exception e)
@@ -39,7 +43,7 @@ namespace IntegrationService.Api
         throw e;
       }
     }
-    public List<ViewIntegrationMetadados> GetDemissionEmployee(string token, DateTime dateDemissionRef)
+    public List<ViewIntegrationMetadadosV1> GetDemissionEmployee(string token, DateTime dateDemissionRef)
     {
       try
       {
@@ -59,7 +63,7 @@ namespace IntegrationService.Api
           }
           string resultContent = result.Content.ReadAsStringAsync().Result;
           IsoDateTimeConverter dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy" };
-          return JsonConvert.DeserializeObject<List<ViewIntegrationMetadados>>(resultContent, dateTimeConverter);
+          return JsonConvert.DeserializeObject<List<ViewIntegrationMetadadosV1>>(resultContent, dateTimeConverter);
         }
       }
       catch (Exception e)

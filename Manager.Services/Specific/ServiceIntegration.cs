@@ -1094,38 +1094,30 @@ namespace Manager.Services.Specific
         {
           param = parameterService.InsertNewVersion(new IntegrationParameter()
           {
-            Process = EnumIntegrationProcess.System,
-            Type = EnumIntegrationType.Complete,
-            Mode = EnumIntegrationMode.DataBaseV1,
-            Status = EnumStatus.Enabled,
+            Mode = EnumIntegrationMode.DataBase,
+            Version = EnumIntegrationVersion.V1,
+            IntegrationKey = EnumIntegrationKey.Company,
             CultureDate = "pt-BR",
-            IntegrationKey = EnumIntegrationKey.Company
+            Status = EnumStatus.Enabled
           }).Result;
         }
         return new ViewCrudIntegrationParameter()
         {
           ConnectionString = param.ConnectionString,
           CriticalError = param.CriticalError,
-          CustomVersionExecution = param.CustomVersionExecution,
           FilePathLocal = param.FilePathLocal,
           SheetName = param.SheetName,
           LastExecution = param.LastExecution,
-          LinkPackCustom = param.LinkPackCustom,
-          LinkPackProgram = param.LinkPackProgram,
           MachineIdentity = param.MachineIdentity,
-          MessageAtualization = param.MessageAtualization,
-          Process = param.Process,
           Mode = param.Mode,
           ProgramVersionExecution = param.ProgramVersionExecution,
           SqlCommand = param.SqlCommand,
           StatusExecution = param.StatusExecution,
-          Type = param.Type,
-          UploadNextLog = param.UploadNextLog,
-          VersionPackCustom = param.VersionPackCustom,
-          VersionPackProgram = param.VersionPackProgram,
+          Version = param.Version,
           ApiIdentification = param.ApiIdentification,
           IntegrationKey = param.IntegrationKey,
           CultureDate = param.CultureDate,
+          ApiToken = param.ApiToken,
           _id = param._id
         };
       }
@@ -1147,53 +1139,38 @@ namespace Manager.Services.Specific
         if (param == null)
           throw new Exception("Parameter Integration not found!");
         param.Mode = view.Mode;
-        param.Process = view.Process;
-        param.Type = view.Type;
+        param.Version = view.Version;
+        param.IntegrationKey = view.IntegrationKey;
+        param.CultureDate = view.CultureDate;
+
         param.ConnectionString = view.ConnectionString;
         param.SqlCommand = view.SqlCommand;
         param.FilePathLocal = view.FilePathLocal;
         param.SheetName = view.SheetName;
-        param.VersionPackProgram = view.VersionPackProgram;
-        param.LinkPackProgram = view.LinkPackProgram;
-        param.VersionPackCustom = view.VersionPackCustom;
-        param.LinkPackCustom = view.LinkPackCustom;
-        param.MessageAtualization = view.MessageAtualization;
         param.StatusExecution = view.StatusExecution;
         param.ProgramVersionExecution = view.ProgramVersionExecution;
-        param.CustomVersionExecution = view.CustomVersionExecution;
         param.CriticalError = view.CriticalError;
         param.MachineIdentity = view.MachineIdentity;
-        param.UploadNextLog = view.UploadNextLog;
-        param.LinkLogExecution = view.LinkLogExecution;
         param.ApiIdentification = view.ApiIdentification;
-        param.IntegrationKey = view.IntegrationKey;
-        param.CultureDate = view.CultureDate;
+        param.ApiToken = view.ApiToken;
         parameterService.Update(param, null).Wait();
         return new ViewCrudIntegrationParameter()
         {
+          Mode = param.Mode,
+          Version = param.Version,
+          IntegrationKey = param.IntegrationKey,
+          CultureDate = param.CultureDate,
           ConnectionString = param.ConnectionString,
           CriticalError = param.CriticalError,
-          CustomVersionExecution = param.CustomVersionExecution,
           FilePathLocal = param.FilePathLocal,
           SheetName = param.SheetName,
           LastExecution = param.LastExecution,
-          LinkPackCustom = param.LinkPackCustom,
-          LinkPackProgram = param.LinkPackProgram,
           MachineIdentity = param.MachineIdentity,
-          MessageAtualization = param.MessageAtualization,
-          Process = param.Process,
-          Mode = param.Mode,
           ProgramVersionExecution = param.ProgramVersionExecution,
           SqlCommand = param.SqlCommand,
           StatusExecution = param.StatusExecution,
-          Type = param.Type,
-          UploadNextLog = param.UploadNextLog,
-          VersionPackCustom = param.VersionPackCustom,
-          VersionPackProgram = param.VersionPackProgram,
           ApiIdentification = param.ApiIdentification,
-          IntegrationKey = param.IntegrationKey,
-          CultureDate = param.CultureDate,
-          LinkLogExecution = param.LinkLogExecution,
+          ApiToken = param.ApiToken,
           _id = param._id
         };
       }

@@ -107,6 +107,60 @@ namespace Manager.Views.Integration.V2
         throw ex;
       }
     }
+    public ColaboradorV2Completo(ViewIntegrationMetadadosV1 view, string cultureDate)
+    {
+      try
+      {
+        Colaborador = new ColaboradorV2Base
+        {
+          Cpf = FieldStringCpf(view.Cpf, null),
+          Empresa = view.Empresa.Trim(),
+          NomeEmpresa = view.NomeEmpresa.Trim(),
+          Estabelecimento = view.Estabelecimento.Trim(),
+          NomeEstabelecimento = view.NomeEstabelecimento.Trim(),
+          Matricula = view.Matricula.Trim()
+        };
+        Acao = "CARGA";
+        Nome = view.Nome.Trim();
+        Email = view.Email.Trim();
+        Sexo = view.Sexo.Trim();
+        DataNascimento = FieldDate(view.DataNascimento, null, cultureDate);
+        Celular = view.Celular.Trim();
+        GrauInstrucao = view.GrauInstrucao.Trim();
+        NomeGrauInstrucao = view.NomeGrauInstrucao.Trim();
+        Apelido = view.UsuarioAd.Trim();
+        Situacao = view.Situacao.Trim();
+        DataAdmissao = (DateTime)FieldDate(view.DataAdmissao, DateTime.MinValue, cultureDate);
+        DataDemissao = FieldDate(view.DataDemissao, null, cultureDate);
+        Cargo = view.Cargo.Trim();
+        NomeCargo = view.NomeCargo.Trim();
+        DataTrocaCargo = FieldDate(view.DataTrocaCargo, null, cultureDate);
+        CentroCusto = view.ClassContabil.Trim();
+        NomeCentroCusto = view.ClassContabil.Trim();
+        DataTrocaCentroCusto = FieldDate(view.DataTrocaClassContabil, null, cultureDate);
+        SalarioNominal = view.SalarioNominal;
+        CargaHoraria = view.CargaHoraria;
+        DataUltimoReajuste = FieldDate(view.DataUltimoReajuste, null, cultureDate);
+        MotivoUltimoReajuste = view.MotivoUltimoReajuste.Trim();
+        Gestor = new ColaboradorV2Base
+        {
+          Cpf = FieldStringCpf(view.GestorCpf, null),
+          Empresa = view.GestorEmpresa?.Trim(),
+          NomeEmpresa = view.GestorNomeEmpresa?.Trim(),
+          Estabelecimento = view.GestorEstabelecimento?.Trim(),
+          NomeEstabelecimento = view.GestorNomeEstabelecimento?.Trim(),
+          Matricula = view.GestorMatricula?.Trim()
+        };
+        if (Gestor.Cpf == null || Gestor.Matricula == null)
+        {
+          Gestor = null;
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     #endregion
 
     #region Field Formmating
@@ -115,7 +169,7 @@ namespace Manager.Views.Integration.V2
       try
       {
         int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
-        return index == -1 ? defaultValue : list[index];
+        return index == -1 ? defaultValue : list[index].Trim();
       }
       catch (Exception ex)
       {
@@ -129,11 +183,22 @@ namespace Manager.Views.Integration.V2
         int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
         return index == -1
           ? defaultValue
-          : string.IsNullOrEmpty(list[index]) ? defaultValue : list[index].Replace(".",string.Empty).Replace("-",string.Empty).PadLeft(11,'0');
+          : FieldStringCpf(list[index], defaultValue);
       }
       catch (Exception ex)
       {
         throw ex;
+      }
+    }
+    private string FieldStringCpf(string cpf, string defaultValue)
+    {
+      try
+      {
+        return string.IsNullOrEmpty(cpf) ? defaultValue : cpf.Trim().Replace(".", string.Empty).Replace("-", string.Empty).PadLeft(11, '0');
+      }
+      catch (Exception)
+      {
+        throw;
       }
     }
     private DateTime? FieldDate(List<string> list, List<string> title, string field, DateTime? defaultValue, string culture)
@@ -143,9 +208,20 @@ namespace Manager.Views.Integration.V2
         int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
         if (index == -1)
           return null;
-        DateTime.TryParse(list[index].Substring(0, 10), CultureInfo.CreateSpecificCulture(culture), DateTimeStyles.AdjustToUniversal, out DateTime resultParse);
+        return FieldDate(list[index], defaultValue, culture);
+      }
+      catch (Exception)
+      {
+        return null;
+      }
+    }
+    private DateTime? FieldDate(string field, DateTime? defaultValue, string culture)
+    {
+      try
+      {
+        DateTime.TryParse(field.Substring(0, 10), CultureInfo.CreateSpecificCulture(culture), DateTimeStyles.AdjustToUniversal, out DateTime resultParse);
         DateTime? result = defaultValue;
-        if (!string.IsNullOrEmpty(list[index]))
+        if (!string.IsNullOrEmpty(field))
           result = resultParse.ToUniversalTime();
         return result;
       }
@@ -161,7 +237,18 @@ namespace Manager.Views.Integration.V2
         int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
         if (index == -1)
           return defaultValue;
-        return string.IsNullOrEmpty(list[index]) ? defaultValue : Convert.ToDecimal(list[index].Trim());
+        return FieldDecimal(list[index], defaultValue);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    private decimal FieldDecimal(string field, decimal defaultValue)
+    {
+      try
+      {
+        return string.IsNullOrEmpty(field) ? defaultValue : Convert.ToDecimal(field.Trim());
       }
       catch (Exception ex)
       {

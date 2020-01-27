@@ -2,6 +2,6 @@
 {
   public enum EnumIntegrationMode : byte
   {
-    DataBaseV1 = 0, FileCsvV1 = 1, FileExcelV1 = 2, ApplicationInterface = 3
+    DataBase = 0, FileCsv = 1, FileExcel = 2, ApplicationInterface = 3
   }
 }

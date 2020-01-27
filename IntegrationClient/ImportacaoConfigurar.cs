@@ -21,18 +21,16 @@ namespace IntegrationClient
     {
       try
       {
-        Text = "Configuração da Importãção de Colaboradores";
         serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-        CboDatabaseType.DataSource = Enum.GetValues(typeof(EnumDatabaseType));
-        CboProc.DataSource = Enum.GetValues(typeof(EnumIntegrationProcess));
-        CboType.DataSource = Enum.GetValues(typeof(EnumIntegrationType));
+        Text = "Configuração da Importãção de Colaboradores";
         CboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
-        CboChave.DataSource = Enum.GetValues(typeof(EnumIntegrationKey));
-        CboProc.SelectedIndex = CboProc.FindStringExact(serviceConfiguration.Param.Process.ToString());
-        CboType.SelectedIndex = CboType.FindStringExact(serviceConfiguration.Param.Type.ToString());
         CboMode.SelectedIndex = CboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
+        CboVersion.DataSource = Enum.GetValues(typeof(EnumIntegrationVersion));
+        CboVersion.SelectedIndex = CboVersion.FindStringExact(serviceConfiguration.Param.Version.ToString());
+        CboChave.DataSource = Enum.GetValues(typeof(EnumIntegrationKey));
         CboChave.SelectedIndex = CboChave.FindStringExact(serviceConfiguration.Param.IntegrationKey.ToString());
         txtDatCul.Text = string.IsNullOrEmpty(serviceConfiguration.Param.CultureDate) ? "en-US" : serviceConfiguration.Param.CultureDate;
+        CboDatabaseType.DataSource = Enum.GetValues(typeof(EnumDatabaseType));
       }
       catch (Exception ex)
       {
@@ -94,10 +92,10 @@ namespace IntegrationClient
           }
         }
         txtSql.Text = serviceConfiguration.Param.SqlCommand;
-        txtIdApi.Text = string.Empty;
+        txtApiId.Text = string.Empty;
         txtFileName.Text = string.Empty;
       }
-      if (CboMode.SelectedItem.ToString().StartsWith("FileCsv"))
+      if (CboMode.SelectedItem.Equals("FileCsv"))
       {
         grpArq.Visible = true;
         grpBD.Visible = false;
@@ -111,10 +109,10 @@ namespace IntegrationClient
         lblSheetName.Visible = false;
         txtSheetName.Visible = false;
         txtSheetName.Text = string.Empty;
-        txtIdApi.Text = string.Empty;
+        txtApiId.Text = string.Empty;
         grpArq.Text = "Arquivo Csv";
       }
-      if (CboMode.SelectedItem.ToString().StartsWith("FileExcel"))
+      if (CboMode.SelectedItem.Equals("FileExcel"))
       {
         grpArq.Visible = true;
         grpBD.Visible = false;
@@ -128,10 +126,10 @@ namespace IntegrationClient
         txtSheetName.Visible = true;
         txtFileName.Text = serviceConfiguration.Param.FilePathLocal;
         txtSheetName.Text = serviceConfiguration.Param.SheetName;
-        txtIdApi.Text = string.Empty;
-        grpArq.Text = "Arquivo Microsoft Excel";
+        txtApiId.Text = string.Empty;
+        grpArq.Text = "Microsoft Excel";
       }
-      if (CboMode.SelectedItem.ToString().StartsWith("Application"))
+      if (CboMode.SelectedItem.Equals("Application"))
       {
         grpArq.Visible = false;
         grpBD.Visible = false;
@@ -145,8 +143,8 @@ namespace IntegrationClient
         txtSheetName.Visible = true;
         txtFileName.Text = string.Empty;
         txtSheetName.Text = string.Empty;
-        txtIdApi.Text = serviceConfiguration.Param.ApiIdentification;
-        txtIdApi.Focus();
+        txtApiId.Text = serviceConfiguration.Param.ApiIdentification;
+        txtApiId.Focus();
       }
     }
 
@@ -184,28 +182,6 @@ namespace IntegrationClient
           lblStr.Visible = true;
           txtStr.Visible = true;
         }
-      }
-    }
-
-    private void CboProc_SelectedIndexChanged(object sender, EventArgs e)
-    {
-      if (CboProc.SelectedItem.ToString().StartsWith("Application"))
-      {
-        CboType.Visible = false;
-        CboMode.Visible = false;
-        grpBD.Visible = false;
-        grpArq.Visible = false;
-        label3.Visible = false;
-        label2.Visible = false;
-        grpApi.Visible = true;
-      }
-      else
-      {
-        CboType.Visible = true;
-        CboMode.Visible = true;
-        label3.Visible = true;
-        label2.Visible = true;
-        grpApi.Visible = false;
       }
     }
 
@@ -275,7 +251,7 @@ namespace IntegrationClient
           txtFileName.Focus();
           throw new Exception("O arquivo informado deve existir.");
         }
-        if ((EnumIntegrationMode)CboMode.SelectedItem == EnumIntegrationMode.FileExcelV1 && string.IsNullOrEmpty(txtSheetName.Text))
+        if ((EnumIntegrationMode)CboMode.SelectedItem == EnumIntegrationMode.FileExcel && string.IsNullOrEmpty(txtSheetName.Text))
         {
           txtSheetName.Focus();
           throw new Exception("Informe o nome da planilha de colaboradores.");
@@ -296,18 +272,19 @@ namespace IntegrationClient
     {
       try
       {
-        if (string.IsNullOrEmpty(txtIdApi.Text))
+        if (string.IsNullOrEmpty(txtApiId.Text))
         {
-          txtIdApi.Focus();
+          txtApiId.Focus();
           throw new Exception("Identificação da API customizada deve ser informada.");
         }
-        if (!txtIdApi.Text.ToUpper().Equals("UNIMEDNERS"))
+        if (!txtApiId.Text.ToUpper().Equals("UNIMEDNERS"))
         {
-          txtIdApi.Focus();
+          txtApiId.Focus();
           throw new Exception("Identificação inválida, entre em contato com o suporte e solicite um ID de aplicação correto.");
         }
         SetParameters();
-        serviceConfiguration.Param.ApiIdentification = txtIdApi.Text;
+        serviceConfiguration.Param.ApiIdentification = txtApiId.Text;
+        serviceConfiguration.Param.ApiToken = txtApiToken.Text;
         serviceConfiguration.SetParameter(serviceConfiguration.Param);
         MessageBox.Show("Parâmetro atualizado!", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
@@ -328,8 +305,7 @@ namespace IntegrationClient
       // API
       serviceConfiguration.Param.ApiIdentification = string.Empty;
       // Commun fields
-      serviceConfiguration.Param.Process = (EnumIntegrationProcess)CboProc.SelectedItem;
-      serviceConfiguration.Param.Type = (EnumIntegrationType)CboType.SelectedItem;
+      serviceConfiguration.Param.Version = (EnumIntegrationVersion)CboVersion.SelectedItem;
       serviceConfiguration.Param.Mode = (EnumIntegrationMode)CboMode.SelectedItem;
       serviceConfiguration.Param.IntegrationKey = (EnumIntegrationKey)CboChave.SelectedItem;
       serviceConfiguration.Param.CultureDate = txtDatCul.Text;

@@ -279,7 +279,7 @@ namespace IntegrationService.Data
         throw;
       }
     }
-    public ColaboradorImportar(ViewIntegrationMetadados view, EnumLayoutSystemCompleteV1 enumeration)
+    public ColaboradorImportar(ViewIntegrationMetadadosV1 view, EnumLayoutSystemCompleteV1 enumeration)
     {
       try
       {
@@ -328,7 +328,7 @@ namespace IntegrationService.Data
         NomeEstabelecimentoGestor = string.Empty;
         DocumentoGestor = string.Empty;
         MatriculaGestor = string.Empty;
-        Apelido = view.UsuarioAD;
+        Apelido = view.UsuarioAd;
         ValidDataColaborator();
       }
       catch (Exception)
