@@ -95,7 +95,7 @@ namespace IntegrationClient
         txtApiId.Text = string.Empty;
         txtFileName.Text = string.Empty;
       }
-      if (CboMode.SelectedItem.Equals("FileCsv"))
+      if (CboMode.SelectedItem.ToString().StartsWith("FileCsv"))
       {
         grpArq.Visible = true;
         grpBD.Visible = false;
@@ -112,7 +112,7 @@ namespace IntegrationClient
         txtApiId.Text = string.Empty;
         grpArq.Text = "Arquivo Csv";
       }
-      if (CboMode.SelectedItem.Equals("FileExcel"))
+      if (CboMode.SelectedItem.ToString().StartsWith("FileExcel"))
       {
         grpArq.Visible = true;
         grpBD.Visible = false;
@@ -129,7 +129,7 @@ namespace IntegrationClient
         txtApiId.Text = string.Empty;
         grpArq.Text = "Microsoft Excel";
       }
-      if (CboMode.SelectedItem.Equals("Application"))
+      if (CboMode.SelectedItem.ToString().StartsWith("ApplicationInterface"))
       {
         grpArq.Visible = false;
         grpBD.Visible = false;
@@ -144,6 +144,7 @@ namespace IntegrationClient
         txtFileName.Text = string.Empty;
         txtSheetName.Text = string.Empty;
         txtApiId.Text = serviceConfiguration.Param.ApiIdentification;
+        txtApiToken.Text = serviceConfiguration.Param.ApiToken;
         txtApiId.Focus();
       }
     }

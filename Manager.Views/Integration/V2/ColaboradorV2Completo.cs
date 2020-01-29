@@ -118,30 +118,30 @@ namespace Manager.Views.Integration.V2
           NomeEmpresa = view.NomeEmpresa.Trim(),
           Estabelecimento = view.Estabelecimento.Trim(),
           NomeEstabelecimento = view.NomeEstabelecimento.Trim(),
-          Matricula = view.Matricula.Trim()
+          Matricula = view.Matricula?.Trim()
         };
         Acao = "CARGA";
-        Nome = view.Nome.Trim();
-        Email = view.Email.Trim();
-        Sexo = view.Sexo.Trim();
+        Nome = FieldString(view.Nome,null);
+        Email = FieldString(view.Email, null);
+        Sexo = FieldString(view.Sexo, null);
         DataNascimento = FieldDate(view.DataNascimento, null, cultureDate);
-        Celular = view.Celular.Trim();
-        GrauInstrucao = view.GrauInstrucao.Trim();
-        NomeGrauInstrucao = view.NomeGrauInstrucao.Trim();
-        Apelido = view.UsuarioAd.Trim();
-        Situacao = view.Situacao.Trim();
+        Celular = FieldString(view.Celular,null);
+        GrauInstrucao = FieldString(view.GrauInstrucao,"7");
+        NomeGrauInstrucao = FieldString(view.NomeGrauInstrucao,"Ensino médio completo");
+        Apelido = FieldString(view.UsuarioAd,null);
+        Situacao = FieldString(view.Situacao,"ATIVO");
         DataAdmissao = (DateTime)FieldDate(view.DataAdmissao, DateTime.MinValue, cultureDate);
         DataDemissao = FieldDate(view.DataDemissao, null, cultureDate);
-        Cargo = view.Cargo.Trim();
-        NomeCargo = view.NomeCargo.Trim();
+        Cargo = FieldString(view.Cargo,null);
+        NomeCargo = FieldString(view.NomeCargo,null);
         DataTrocaCargo = FieldDate(view.DataTrocaCargo, null, cultureDate);
-        CentroCusto = view.ClassContabil.Trim();
-        NomeCentroCusto = view.ClassContabil.Trim();
+        CentroCusto = FieldString(view.ClassContabil,null);
+        NomeCentroCusto = FieldString(view.ClassContabil, null);
         DataTrocaCentroCusto = FieldDate(view.DataTrocaClassContabil, null, cultureDate);
         SalarioNominal = view.SalarioNominal;
         CargaHoraria = view.CargaHoraria;
         DataUltimoReajuste = FieldDate(view.DataUltimoReajuste, null, cultureDate);
-        MotivoUltimoReajuste = view.MotivoUltimoReajuste.Trim();
+        MotivoUltimoReajuste = FieldString(view.MotivoUltimoReajuste,null);
         Gestor = new ColaboradorV2Base
         {
           Cpf = FieldStringCpf(view.GestorCpf, null),
@@ -155,6 +155,8 @@ namespace Manager.Views.Integration.V2
         {
           Gestor = null;
         }
+        // TODO: Atualização de gestor desativada
+        Gestor = null;
       }
       catch (Exception)
       {
@@ -170,6 +172,17 @@ namespace Manager.Views.Integration.V2
       {
         int index = title.FindIndex(p => p.Trim().ToLower().Equals(field));
         return index == -1 ? defaultValue : list[index].Trim();
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    private string FieldString(string field, string defaultValue)
+    {
+      try
+      {
+        return string.IsNullOrEmpty(field) ? defaultValue : field.Trim();
       }
       catch (Exception ex)
       {

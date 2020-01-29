@@ -1,5 +1,6 @@
 ﻿using IntegrationService.Enumns;
 using IntegrationService.Service;
+using Manager.Views.Enumns;
 using System;
 using System.Windows.Forms;
 
@@ -19,54 +20,23 @@ namespace IntegrationClient
       lblPrb.Text = string.Empty;
       serviceConfiguration = new ConfigurationService(Program.PersonLogin);
     }
-    private void BtImp_Click(object sender, EventArgs e)
-    {
-      try
-      {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
-        import.Execute();
-        if (import.Status == EnumStatusService.Error)
-        {
-          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        else
-        {
-          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(ex.Message, Text,MessageBoxButtons.OK,MessageBoxIcon.Error);
-      }
-    }
-    private void BtDemInd_Click(object sender, EventArgs e)
-    {
-      try
-      {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
-        import.Execute(DateTime.Parse(txtDatIni.Text).Date, DateTime.Parse(txtDatFin.Text).Date);
-        if (import.Status == EnumStatusService.Error)
-        {
-          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        else
-        {
-          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-      }
-
-    }
-    private void BtnImpV2_Click(object sender, EventArgs e)
+    private void BtnImp_Click(object sender, EventArgs e)
     {
       try
       {
         ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
         import.RefreshProgressBar += Import_RefreshProgressBar;
-        import.ExecuteV2(chkLjo.Checked);
+        switch (serviceConfiguration.Param.Version)
+        {
+          case EnumIntegrationVersion.V1:
+            import.Execute();
+            break;
+          case EnumIntegrationVersion.V2:
+            import.ExecuteV2(chkLjo.Checked);
+            break;
+          default:
+            break;
+        }
         if (import.Status == EnumStatusService.Error)
         {
           MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -84,7 +54,7 @@ namespace IntegrationClient
         MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
-    private void BtnDemIndV2_Click(object sender, EventArgs e)
+    private void BtnDemInd_Click(object sender, EventArgs e)
     {
       try
       {
@@ -104,13 +74,23 @@ namespace IntegrationClient
         MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
-    private void BtnDemAusV2_Click(object sender, EventArgs e)
+    private void BtnDemAus_Click(object sender, EventArgs e)
     {
       try
       {
         ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
         import.RefreshProgressBar += Import_RefreshProgressBar;
-        import.ExecuteDemissionAbsenceV2(chkLjo.Checked);
+        switch (serviceConfiguration.Param.Version)
+        {
+          case EnumIntegrationVersion.V1:
+            MessageBox.Show("Versão de ausência não implementada!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            break;
+          case EnumIntegrationVersion.V2:
+            import.ExecuteDemissionAbsenceV2(chkLjo.Checked);
+            break;
+          default:
+            break;
+        }
         if (import.Status == EnumStatusService.Error)
         {
           MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);

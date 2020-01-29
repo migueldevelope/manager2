@@ -41,7 +41,7 @@ namespace IntegrationService.Service
     private string LogFileName;
     private readonly Version VersionProgram;
     private bool hasLogFile;
-    public string testresult;
+    private bool executeDemission;
 
     #region Construtores
     public ImportService(ViewPersonLogin person, ConfigurationService serviceConfiguration, DateTime initialTime)
@@ -744,53 +744,18 @@ namespace IntegrationService.Service
     #region V2
 
     #region Inicio da integração
-    private void LoadEmploee()
-    {
-      try
-      {
-        switch (service.Param.Mode)
-        {
-          case EnumIntegrationMode.DataBase:
-            DatabaseV2();
-            break;
-          case EnumIntegrationMode.FileCsv:
-            throw new Exception("Modo CSV não implementado no processo de sistema.");
-          case EnumIntegrationMode.FileExcel:
-            ExcelV2();
-            break;
-          case EnumIntegrationMode.ApplicationInterface:
-            switch (service.Param.ApiIdentification.ToUpper())
-            {
-              case "METADADOS":
-                ApiMetadadosV2();
-                break;
-              default:
-                throw new Exception("Identificação da API inválida (METADADOS).");
-            }
-            break;
-          default:
-            throw new Exception("Nenhum modo implementado no processo de sistema.");
-        }
-        if (Status == EnumStatusService.CriticalError)
-        {
-          throw new Exception(Message);
-        }
-      }
-      catch (Exception ex)
-      {
-        throw ex;
-      }
-    }
     public void ExecuteV2(bool jsonLog)
     {
       try
       {
+        executeDemission = true;
         FileClass.SaveLog(LogFileName, string.Format("Iniciando o processo de integração."), EnumTypeLineOpportunityg.Information);
         LoadEmploee();
         if (ColaboradoresV2.Count == 0)
         {
           throw new Exception("Lista de colaboradores vazia.");
         }
+        CleanEmploee();
         // Rotina de Importação
         ColaboradorV2Retorno viewRetorno;
         ProgressBarMaximun = ColaboradoresV2.Count;
@@ -840,6 +805,10 @@ namespace IntegrationService.Service
         service.Param.ProgramVersionExecution = VersionProgram.ToString();
         service.SetParameter(service.Param);
         FileClass.SaveLog(LogFileName, string.Format("Finalizando o processo de integração."), EnumTypeLineOpportunityg.Information);
+        if (executeDemission)
+        {
+          ExecuteDemissionAbsenceV2(jsonLog);
+        }
       }
       catch (Exception ex)
       {
@@ -852,6 +821,103 @@ namespace IntegrationService.Service
         service.Param.StatusExecution = "Critical Error";
         service.Param.ProgramVersionExecution = VersionProgram.ToString();
         service.SetParameter(service.Param);
+        throw ex;
+      }
+    }
+    private void LoadEmploee()
+    {
+      try
+      {
+        switch (service.Param.Mode)
+        {
+          case EnumIntegrationMode.DataBase:
+            DatabaseV2();
+            break;
+          case EnumIntegrationMode.FileCsv:
+            throw new Exception("Modo CSV não implementado no processo de sistema.");
+          case EnumIntegrationMode.FileExcel:
+            ExcelV2();
+            break;
+          case EnumIntegrationMode.ApplicationInterface:
+            switch (service.Param.ApiIdentification.ToUpper())
+            {
+              case "UNIMEDNERS":
+                ApiUnimedNersV2();
+                break;
+              default:
+                throw new Exception("Identificação da API inválida (UNIMEDNERS).");
+            }
+            break;
+          default:
+            throw new Exception("Nenhum modo implementado no processo de sistema.");
+        }
+        if (Status == EnumStatusService.CriticalError)
+        {
+          throw new Exception(Message);
+        }
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    private void CleanEmploee()
+    {
+      try
+      {
+        if (Person.IdAccount.Equals("5b91299a17858f95ffdb79f6")) // Unimed Nordeste Rs
+        {
+          // Limpeza de matriculas vazias
+          int work = ColaboradoresV2.FindIndex(p => p.Colaborador.Matricula == null);
+          while (work != -1)
+          {
+            FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", "Sem matricula!",
+              ColaboradoresV2[work].Colaborador.Cpf,
+              ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
+              ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
+              ColaboradoresV2[work].Nome), EnumTypeLineOpportunityg.Warning);
+            ColaboradoresV2.RemoveAt(work);
+            work = ColaboradoresV2.FindIndex(p => p.Colaborador.Matricula == null);
+            executeDemission = false;
+          }
+          // Limpeza de Jovens Aprendizes
+          work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Contains("JOVEM APRENDIZ"));
+          while (work != -1)
+          {
+            FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", "Jovem Aprendiz removido!",
+              ColaboradoresV2[work].Colaborador.Cpf,
+              ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
+              ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
+              ColaboradoresV2[work].Nome), EnumTypeLineOpportunityg.Register);
+            ColaboradoresV2.RemoveAt(work);
+            work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Contains("JOVEM APRENDIZ"));
+          }
+        }
+        if (Person.IdAccount.Equals("5cb8bbfb27a5e8f3ef548b1f")) // Bertolini
+        {
+          // remover uma determinada lista de cargos
+          List<string> cleanOccupations = new List<string>
+          {
+            "Cargo 1",
+            "Cargo 2",
+            "Cargo 3",
+            "Cargo 4",
+            "Cargo 5"
+          };
+          foreach (string occupation in cleanOccupations)
+          {
+            int work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
+            while (work != -1)
+            {
+              FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", "Cargo não autorizado!", ColaboradoresV2[work].Colaborador.Cpf, ColaboradoresV2[work].Colaborador.NomeEmpresa, ColaboradoresV2[work].Colaborador.NomeEstabelecimento, ColaboradoresV2[work].Nome, string.Empty), EnumTypeLineOpportunityg.Warning);
+              ColaboradoresV2.RemoveAt(work);
+              work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
+            }
+          }
+        }
+      }
+      catch (Exception ex)
+      {
         throw ex;
       }
     }
@@ -936,26 +1002,30 @@ namespace IntegrationService.Service
     }
 
     #region Leitura de Colaboradores
-    private void ApiMetadadosV2()
+    private void ApiUnimedNersV2()
     {
       try
       {
         ApiMetadados apiMetadados = new ApiMetadados();
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
         List<ViewIntegrationMetadadosV1> colaboradores;
-        int page = 0;
+        int offset = 0;
+        int limit = 100;
+        int register = 0;
         bool nextPage = true;
         while (nextPage)
         {
           colaboradores = new List<ViewIntegrationMetadadosV1>();
-          page++;
-          colaboradores = apiMetadados.GetEmployee(service.Param.ApiToken, page, 100);
+          colaboradores = apiMetadados.GetEmployee(service.Param.ApiToken, offset, limit);
           // Carregar Lista de Colaboradores
           foreach (ViewIntegrationMetadadosV1 colaborador in colaboradores)
           {
             ColaboradoresV2.Add(new ColaboradorV2Completo(colaborador, service.Param.CultureDate));
+            //FileClass.SaveLog("juremir.txt", string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8}", register, offset, colaborador.Cpf, colaborador.Empresa, colaborador.NomeEmpresa, colaborador.Estabelecimento, colaborador.NomeEstabelecimento, colaborador.Matricula, colaborador.Nome), EnumTypeLineOpportunityg.Register);
+            register++;
           }
-          if (colaboradores.Count < 100)
+          offset = offset + limit;
+          if (colaboradores.Count < limit)
           {
             nextPage = false;
           }

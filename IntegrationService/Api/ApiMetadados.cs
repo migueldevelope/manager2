@@ -12,23 +12,16 @@ namespace IntegrationService.Api
   public class ApiMetadados
   {
 
-    public List<ViewIntegrationMetadadosV1> GetEmployee(string token, int page, int limit)
+    public List<ViewIntegrationMetadadosV1> GetEmployee(string token, int offset, int limit)
     {
       try
       {
-        if (limit>100)
-        {
-          throw new Exception("100 é o Limite de registros por página");
-        }
         using (HttpClient client = new HttpClient())
         {
           client.Timeout = TimeSpan.FromMinutes(60);
           client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", token));
-          client.BaseAddress = new Uri(string.Format(@"https://metadados.linkapi.com.br/v1/analisaFluid?offset={0}&limit={1}",page,limit));
-          StringContent content = new StringContent(string.Empty);
-          content.Headers.ContentType.MediaType = "application/json";
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
-          HttpResponseMessage result = client.PostAsync("/", content).Result;
+          HttpResponseMessage result = client.GetAsync(string.Format("https://metadados.linkapi.com.br/v1/analisaFluid?offset={0}&limit={1}", offset, limit)).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
           {
             throw new Exception("API Integration Error!");

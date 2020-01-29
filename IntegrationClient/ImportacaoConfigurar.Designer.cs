@@ -77,7 +77,7 @@
       this.CboVersion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.CboVersion.Name = "CboVersion";
       this.CboVersion.Size = new System.Drawing.Size(250, 24);
-      this.CboVersion.TabIndex = 3;
+      this.CboVersion.TabIndex = 1;
       // 
       // label3
       // 
@@ -94,8 +94,8 @@
       this.CboMode.Location = new System.Drawing.Point(146, 12);
       this.CboMode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.CboMode.Name = "CboMode";
-      this.CboMode.Size = new System.Drawing.Size(225, 24);
-      this.CboMode.TabIndex = 4;
+      this.CboMode.Size = new System.Drawing.Size(220, 24);
+      this.CboMode.TabIndex = 0;
       this.CboMode.SelectedIndexChanged += new System.EventHandler(this.CboMode_SelectedIndexChanged);
       // 
       // label2
@@ -124,7 +124,7 @@
       this.grpBD.Controls.Add(this.lblHostName);
       this.grpBD.Controls.Add(this.lblUser);
       this.grpBD.Controls.Add(this.txtUser);
-      this.grpBD.Location = new System.Drawing.Point(9, 164);
+      this.grpBD.Location = new System.Drawing.Point(9, 72);
       this.grpBD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.grpBD.Name = "grpBD";
       this.grpBD.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -141,7 +141,7 @@
       this.txtStr.Multiline = true;
       this.txtStr.Name = "txtStr";
       this.txtStr.Size = new System.Drawing.Size(660, 54);
-      this.txtStr.TabIndex = 60;
+      this.txtStr.TabIndex = 5;
       // 
       // lblStr
       // 
@@ -159,7 +159,7 @@
       this.CboDatabaseType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.CboDatabaseType.Name = "CboDatabaseType";
       this.CboDatabaseType.Size = new System.Drawing.Size(225, 24);
-      this.CboDatabaseType.TabIndex = 59;
+      this.CboDatabaseType.TabIndex = 4;
       this.CboDatabaseType.SelectedIndexChanged += new System.EventHandler(this.CboDatabaseType_SelectedIndexChanged);
       // 
       // btSave
@@ -191,7 +191,7 @@
       this.txtSql.Name = "txtSql";
       this.txtSql.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
       this.txtSql.Size = new System.Drawing.Size(660, 252);
-      this.txtSql.TabIndex = 61;
+      this.txtSql.TabIndex = 6;
       // 
       // lblDefault
       // 
@@ -352,7 +352,7 @@
       this.grpApi.Controls.Add(this.btSaveApi);
       this.grpApi.Controls.Add(this.txtApiId);
       this.grpApi.Controls.Add(this.label4);
-      this.grpApi.Location = new System.Drawing.Point(9, 573);
+      this.grpApi.Location = new System.Drawing.Point(9, 72);
       this.grpApi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.grpApi.Name = "grpApi";
       this.grpApi.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -380,7 +380,7 @@
       this.txtApiToken.Name = "txtApiToken";
       this.txtApiToken.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
       this.txtApiToken.Size = new System.Drawing.Size(585, 106);
-      this.txtApiToken.TabIndex = 71;
+      this.txtApiToken.TabIndex = 8;
       // 
       // btSaveApi
       // 
@@ -388,7 +388,7 @@
       this.btSaveApi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.btSaveApi.Name = "btSaveApi";
       this.btSaveApi.Size = new System.Drawing.Size(69, 23);
-      this.btSaveApi.TabIndex = 70;
+      this.btSaveApi.TabIndex = 9;
       this.btSaveApi.Text = "Salvar";
       this.btSaveApi.UseVisualStyleBackColor = true;
       this.btSaveApi.Click += new System.EventHandler(this.BtSaveApi_Click);
@@ -399,7 +399,7 @@
       this.txtApiId.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.txtApiId.Name = "txtApiId";
       this.txtApiId.Size = new System.Drawing.Size(585, 22);
-      this.txtApiId.TabIndex = 16;
+      this.txtApiId.TabIndex = 7;
       // 
       // label4
       // 
@@ -416,8 +416,8 @@
       this.CboChave.Location = new System.Drawing.Point(146, 43);
       this.CboChave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.CboChave.Name = "CboChave";
-      this.CboChave.Size = new System.Drawing.Size(225, 24);
-      this.CboChave.TabIndex = 5;
+      this.CboChave.Size = new System.Drawing.Size(220, 24);
+      this.CboChave.TabIndex = 2;
       // 
       // label1
       // 
@@ -431,7 +431,7 @@
       // lblDatCul
       // 
       this.lblDatCul.AutoSize = true;
-      this.lblDatCul.Location = new System.Drawing.Point(372, 46);
+      this.lblDatCul.Location = new System.Drawing.Point(372, 49);
       this.lblDatCul.Name = "lblDatCul";
       this.lblDatCul.Size = new System.Drawing.Size(184, 17);
       this.lblDatCul.TabIndex = 46;
@@ -443,22 +443,22 @@
       this.txtDatCul.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.txtDatCul.Name = "txtDatCul";
       this.txtDatCul.Size = new System.Drawing.Size(250, 22);
-      this.txtDatCul.TabIndex = 6;
+      this.txtDatCul.TabIndex = 3;
       // 
       // ImportacaoConfigurar
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(818, 843);
+      this.ClientSize = new System.Drawing.Size(818, 481);
       this.Controls.Add(this.txtDatCul);
       this.Controls.Add(this.lblDatCul);
       this.Controls.Add(this.CboChave);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.CboVersion);
-      this.Controls.Add(this.grpBD);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.CboMode);
       this.Controls.Add(this.label2);
+      this.Controls.Add(this.grpBD);
       this.Controls.Add(this.grpApi);
       this.Controls.Add(this.grpArq);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
