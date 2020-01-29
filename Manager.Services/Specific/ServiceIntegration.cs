@@ -281,6 +281,15 @@ namespace Manager.Services.Specific
             Workload = payrollEmployee.Workload
           };
 
+          if (_user._idAccount.Equals("5b91299a17858f95ffdb79f6"))
+          // Ajuste de jornada para temporários e estagiários da UNIMED NORDESTE RS
+          {
+            if (person.Establishment.Name.StartsWith("Estagiários") || person.Establishment.Name.StartsWith("Multy Pessoal"))
+            {
+              person.TypeJourney = EnumTypeJourney.OutOfJourney;
+            }
+          }
+
           if (personManager != null)
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
 
@@ -303,6 +312,15 @@ namespace Manager.Services.Specific
           person.DateLastReadjust = payrollEmployee.SalaryChangeDate;
           person.DateResignation = payrollEmployee.DemissionDate;
           person.Workload = payrollEmployee.Workload;
+
+          if (_user._idAccount.Equals("5b91299a17858f95ffdb79f6"))
+          // Ajuste de jornada para temporários e estagiários da UNIMED NORDESTE RS
+          {
+            if (person.Establishment.Name.StartsWith("Estagiários") || person.Establishment.Name.StartsWith("Multy Pessoal"))
+            {
+              person.TypeJourney = EnumTypeJourney.OutOfJourney;
+            }
+          }
 
           if (personManager != null)
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
