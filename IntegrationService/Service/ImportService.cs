@@ -807,7 +807,7 @@ namespace IntegrationService.Service
         FileClass.SaveLog(LogFileName, string.Format("Finalizando o processo de integração."), EnumTypeLineOpportunityg.Information);
         if (executeDemission)
         {
-          ExecuteDemissionAbsenceV2(jsonLog);
+          //ExecuteDemissionAbsenceV2(jsonLog);
         }
       }
       catch (Exception ex)
@@ -1021,7 +1021,7 @@ namespace IntegrationService.Service
           foreach (ViewIntegrationMetadadosV1 colaborador in colaboradores)
           {
             ColaboradoresV2.Add(new ColaboradorV2Completo(colaborador, service.Param.CultureDate));
-            FileClass.SaveLog("juremir.txt", string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9}", register, offset, colaborador.Cpf, colaborador.Empresa, colaborador.NomeEmpresa, colaborador.Estabelecimento, colaborador.NomeEstabelecimento, colaborador.Matricula, colaborador.Nome, colaborador.NomeCargo), EnumTypeLineOpportunityg.Register);
+            FileClass.SaveLog("juremir.txt", string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11}", register, offset, colaborador.Cpf, colaborador.Empresa, colaborador.NomeEmpresa, colaborador.Estabelecimento, colaborador.NomeEstabelecimento, colaborador.Matricula, colaborador.Nome, colaborador.NomeCargo, colaborador.NomeClassContabil, colaborador.Email), EnumTypeLineOpportunityg.Register);
             register++;
           }
           offset = offset + limit;

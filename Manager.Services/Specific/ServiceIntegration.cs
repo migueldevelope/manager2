@@ -546,17 +546,17 @@ namespace Manager.Services.Specific
             NameCompany = string.Empty,
             Status = EnumStatus.Enabled
           };
-          var i = integrationCompanyService.InsertNewVersion(item);
+          item = integrationCompanyService.InsertNewVersion(item).Result;
         }
         if (item.IdCompany.Equals("000000000000000000000000"))
         {
           item.Name = name;
-          List<Company> companies = companyService.GetAllNewVersion(p => p.Name.ToLower() == name.ToLower()).Result.ToList<Company>();
+          List<Company> companies = companyService.GetAllNewVersion(p => p.Name == name).Result.ToList();
           if (companies.Count == 1)
           {
             item.IdCompany = companies[0]._id;
             item.NameCompany = companies[0].Name;
-            var i = integrationCompanyService.Update(item, null);
+            Task i = integrationCompanyService.Update(item, null);
           }
         }
         return item;
@@ -682,18 +682,18 @@ namespace Manager.Services.Specific
             NameEstablishment = string.Empty,
             Status = EnumStatus.Enabled
           };
-          var i = integrationEstablishmentService.InsertNewVersion(item);
+          item = integrationEstablishmentService.InsertNewVersion(item).Result;
         }
         if (item.IdEstablishment.Equals("000000000000000000000000"))
         {
           item.Name = name;
           item._idCompany = idcompany;
-          List<Establishment> establishments = establishmentService.GetAllNewVersion(p => p.Company._id == idcompany && p.Name.ToLower() == name.ToLower()).Result.ToList<Establishment>();
+          List<Establishment> establishments = establishmentService.GetAllNewVersion(p => p.Company._id == idcompany && p.Name == name).Result.ToList();
           if (establishments.Count == 1)
           {
             item.IdEstablishment = establishments[0]._id;
             item.NameEstablishment = establishments[0].Name;
-            var i = integrationEstablishmentService.Update(item, null);
+            Task i = integrationEstablishmentService.Update(item, null);
           }
         }
         return item;
@@ -806,28 +806,28 @@ namespace Manager.Services.Specific
             NameOccupation = string.Empty,
             Status = EnumStatus.Enabled
           };
-          var i = integrationOccupationService.InsertNewVersion(item);
+          item = integrationOccupationService.InsertNewVersion(item).Result;
         }
         if (item.IdOccupation.Equals("000000000000000000000000"))
         {
           item.Name = name;
           item._idCompany = idcompany;
           // Ajuste para cargos com centro de custo
-          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.Trim().ToLower()).Result.ToList();
+          List<Occupation> occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name == name).Result.ToList();
           if (occupations.Count == 1)
           {
             item.IdOccupation = occupations[0]._id;
             item.NameOccupation = occupations[0].Name;
-            var i = integrationOccupationService.Update(item, null);
+            Task i = integrationOccupationService.Update(item, null);
           }
           else
           {
-            occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name.ToLower() == name.Trim().ToLower() && p.Description == null).Result.ToList();
+            occupations = occupationService.GetAllNewVersion(p => p.Group.Company._id == idcompany && p.Name == name && p.Description == null).Result.ToList();
             if (occupations.Count == 1)
             {
               item.IdOccupation = occupations[0]._id;
               item.NameOccupation = occupations[0].Name;
-              var i = integrationOccupationService.Update(item, null);
+              Task i = integrationOccupationService.Update(item, null);
             }
           }
         }
@@ -999,17 +999,17 @@ namespace Manager.Services.Specific
             NameSchooling = string.Empty,
             Status = EnumStatus.Enabled
           };
-          var i = integrationSchoolingService.InsertNewVersion(item).Result;
+          item = integrationSchoolingService.InsertNewVersion(item).Result;
         }
         if (item.IdSchooling.Equals("000000000000000000000000"))
         {
           item.Name = name;
-          List<Schooling> schoolings = schoolingService.GetAllNewVersion(p => p.Name.ToLower() == name.ToLower()).Result.ToList<Schooling>();
+          List<Schooling> schoolings = schoolingService.GetAllNewVersion(p => p.Name == name).Result.ToList();
           if (schoolings.Count == 1)
           {
             item.IdSchooling = schoolings[0]._id;
             item.NameSchooling = schoolings[0].Name;
-            var i = integrationSchoolingService.Update(item, null);
+            Task i = integrationSchoolingService.Update(item, null);
           }
         }
         return item;

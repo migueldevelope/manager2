@@ -123,6 +123,11 @@ namespace Manager.Views.Integration.V2
         Acao = "CARGA";
         Nome = FieldString(view.Nome,null);
         Email = FieldString(view.Email, null);
+        // Ajuste de e-mail da UNIMEDNERS
+        if (Email != null && Email.Contains("unimed-ners.net"))
+        {
+          Email = null;
+        }
         Sexo = FieldString(view.Sexo, null);
         DataNascimento = FieldDate(view.DataNascimento, null, cultureDate);
         Celular = FieldString(view.Celular,null);
@@ -158,9 +163,9 @@ namespace Manager.Views.Integration.V2
         // TODO: Atualização de gestor desativada
         Gestor = null;
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        throw;
+        throw ex;
       }
     }
     #endregion
