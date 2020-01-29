@@ -927,10 +927,14 @@ namespace IntegrationService.Service
       {
         LogFileName = LogFileName.Replace(".log", "_demissao.log");
         FileClass.SaveLog(LogFileName, string.Format("Iniciando o processo de integração."), EnumTypeLineOpportunityg.Information);
-        LoadEmploee();
         if (ColaboradoresV2.Count == 0)
         {
-          throw new Exception("Lista de colaboradores vazia.");
+          LoadEmploee();
+          if (ColaboradoresV2.Count == 0)
+          {
+            throw new Exception("Lista de colaboradores vazia.");
+          }
+          CleanEmploee();
         }
         // Rotina de Demissão por Ausencia
         List<ColaboradorV2Base> colaboradores = personIntegration.GetActiveV2();
