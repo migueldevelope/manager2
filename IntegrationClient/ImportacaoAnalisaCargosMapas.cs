@@ -6,6 +6,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
+using Newtonsoft.Json;
 using OracleTools;
 using SqlServerTools;
 using System;
@@ -274,7 +275,10 @@ namespace IntegrationClient
                 Schooling = new List<string>(),
                 SchoolingComplement = new List<string>(),
                 Skills = new List<string>(),
-                SpecificRequirements = string.Empty
+                SpecificRequirements = string.Empty,
+                Messages = new List<string>(),
+                Update = true,
+                UpdateSkill = true
               };
             }
             switch (short.Parse(item["tipo"].ToString()))

@@ -927,7 +927,7 @@ namespace IntegrationService.Service
       {
         LogFileName = LogFileName.Replace(".log", "_demissao.log");
         FileClass.SaveLog(LogFileName, string.Format("Iniciando o processo de integração."), EnumTypeLineOpportunityg.Information);
-        if (ColaboradoresV2.Count == 0)
+        if (ColaboradoresV2 == null || ColaboradoresV2.Count == 0)
         {
           LoadEmploee();
           if (ColaboradoresV2.Count == 0)
