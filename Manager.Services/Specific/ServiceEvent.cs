@@ -1601,7 +1601,7 @@ namespace Manager.Services.Specific
             if (entity == null)
               entity = serviceEntity.InsertNewVersion(new Entity { Name = item.NameEntity }).Result;
 
-            var cpf = item.Cpf.Replace(".", "").Replace("-", "").Trim();
+            var cpf = item.Cpf.Replace(".", "").Replace("-", "").Trim().PadLeft(11, '0');
             var person = servicePerson.GetNewVersion(p => p.User.Document == cpf).Result;
             if (person != null)
             {
