@@ -863,7 +863,7 @@ namespace Manager.Services.Specific
         var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result;
         foreach (var person in listperson)
         {
-          var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
           total = serviceEventHistoric.CountNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           return detail.Select(p => new ViewCrudEventHistoric()
           {
@@ -878,7 +878,7 @@ namespace Manager.Services.Specific
             Event = p.Event,
             Workload = p.Workload,
             Attachments = p.Attachments
-          }).OrderBy(p => p.NamePerson).ThenByDescending(p => p.End).ToList();
+          }).ToList();
         }
         return null;
       }
