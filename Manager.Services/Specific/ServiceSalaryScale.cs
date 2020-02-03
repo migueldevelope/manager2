@@ -431,7 +431,7 @@ namespace Manager.Services.Specific
             var newStep = new ViewListStep()
             {
               Step = step.Step,
-              Salary = step.Salary
+              Salary = Math.Round(step.Salary, 2)
             };
             view.Steps.Add(newStep);
           }
