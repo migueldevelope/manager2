@@ -846,7 +846,7 @@ namespace Manager.Services.Specific
           Name = p.Name,
           _idPerson = p.Person._id,
           NamePerson = p.Person.Name
-        }).ToList();
+        }).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -863,7 +863,7 @@ namespace Manager.Services.Specific
         var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result;
         foreach (var person in listperson)
         {
-          var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+          var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
           total = serviceEventHistoric.CountNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           return detail.Select(p => new ViewCrudEventHistoric()
           {
@@ -1583,51 +1583,59 @@ namespace Manager.Services.Specific
 
         foreach (var item in list)
         {
-          var course = serviceCourse.GetNewVersion(p => p.Name == item.NameCourse).Result;
-          if (course == null)
+          try
           {
-            course = new Course()
+            var course = serviceCourse.GetNewVersion(p => p.Name == item.NameCourse).Result;
+            if (course == null)
             {
-              Name = item.NameCourse,
-              Content = item.Content,
-              Wordkload = item.Workload
-            };
-            course = serviceCourse.InsertNewVersion(course).Result;
-          }
-
-          var entity = serviceEntity.GetNewVersion(p => p.Name == item.NameEntity).Result;
-          if (entity == null)
-            entity = serviceEntity.InsertNewVersion(new Entity { Name = item.NameEntity }).Result;
-
-          var cpf = item.Cpf.Replace(".", "").Replace("-", "").Trim();
-          var person = servicePerson.GetNewVersion(p => p.User.Document == cpf).Result;
-          if (person != null)
-          {
-            var eventHistoric = new EventHistoric()
-            {
-              Course = course.GetViewList(),
-              Workload = item.Workload,
-              Begin = item.DateBegin.Value,
-              End = item.DateEnd.Value,
-              Name = item.NameEvent,
-              Entity = entity.GetCrudEntity(),
-              Event = new ViewListEvent()
+              course = new Course()
               {
-                Name = item.NameEvent,
-                NameCourse = item.NameCourse,
-                _idCourse = course._id,
-                _id = ObjectId.GenerateNewId().ToString()
-              },
-              Person = person.GetViewListBase()
-            };
+                Name = item.NameCourse,
+                Content = item.Content,
+                Wordkload = item.Workload
+              };
+              course = serviceCourse.InsertNewVersion(course).Result;
+            }
 
-            var hst = serviceEventHistoric.InsertNewVersion(eventHistoric).Result;
+            var entity = serviceEntity.GetNewVersion(p => p.Name == item.NameEntity).Result;
+            if (entity == null)
+              entity = serviceEntity.InsertNewVersion(new Entity { Name = item.NameEntity }).Result;
+
+            var cpf = item.Cpf.Replace(".", "").Replace("-", "").Trim().PadLeft(11, '0');
+            var person = servicePerson.GetNewVersion(p => p.User.Document == cpf).Result;
+            if (person != null)
+            {
+              var eventHistoric = new EventHistoric()
+              {
+                Course = course.GetViewList(),
+                Workload = item.Workload,
+                Begin = item.DateBegin.Value,
+                End = item.DateEnd.Value,
+                Name = item.NameEvent,
+                Entity = entity.GetCrudEntity(),
+                Event = new ViewListEvent()
+                {
+                  Name = item.NameEvent,
+                  NameCourse = item.NameCourse,
+                  _idCourse = course._id,
+                  _id = ObjectId.GenerateNewId().ToString()
+                },
+                Person = person.GetViewListBase()
+              };
+
+              var hst = serviceEventHistoric.InsertNewVersion(eventHistoric).Result;
+            }
+          }
+          catch(Exception e)
+          {
+            var x = e.Message;
+          }
+          
           }
           //throw new Exception("not_person");
 
 
 
-        }
         return "import_ok";
       }
       catch (Exception e)

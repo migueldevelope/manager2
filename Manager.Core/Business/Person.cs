@@ -56,7 +56,7 @@ namespace Manager.Core.Business
       return new ViewListPersonBase()
       {
         _id = _id,
-        Name = User.Name
+        Name = User?.Name
       };
     }
     public ViewListPersonBaseManager GetViewListBaseManager()
