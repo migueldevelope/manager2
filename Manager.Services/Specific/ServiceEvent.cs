@@ -1624,7 +1624,9 @@ namespace Manager.Services.Specific
               };
 
               var hst = serviceEventHistoric.InsertNewVersion(eventHistoric).Result;
-            }catch(Exception e)
+            }
+          }
+          catch(Exception e)
           {
             var x = e.Message;
           }
@@ -1634,7 +1636,6 @@ namespace Manager.Services.Specific
 
 
 
-        }
         return "import_ok";
       }
       catch (Exception e)
