@@ -138,6 +138,251 @@
             </summary>
             <param name="contextAccessor"></param>
         </member>
+        <member name="T:Mobile.Controllers.MonitoringController">
+            <summary>
+            Controlador para acompanhamento
+            </summary>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.#ctor(Manager.Core.Interfaces.IServiceMonitoring,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controlador
+            </summary>
+            <param name="_service">Serviço de acompanhamento</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.RemoveAllMonitoring(System.String)">
+            <summary>
+            Remover todos os monitoramentos de uma pessoa
+            </summary>
+            <param name="idperson">Identificador da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.RemoveOnBoarding(System.String)">
+            <summary>
+            Exclusão de um monitoramento
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.RemoveLastMonitoring(System.String)">
+            <summary>
+            Exclusão do último monitoramento
+            </summary>
+            <param name="idperson">Identificação da pessoa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.RemoveMonitoringActivities(System.String,System.String)">
+            <summary>
+            Exclusão de atividade do monitoramento
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <param name="idactivitie">Identificador da atividade</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.DeleteComments(System.String,System.String,System.String)">
+            <summary>
+            Exclusão de compentário
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <param name="iditem">Identificador do item</param>
+            <param name="idcomments">Identificador do comentário</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.UpdateCommentsView(System.String,System.String,Manager.Views.Enumns.EnumUserComment)">
+            <summary>
+            Alteração de comentário
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <param name="iditem">Identificador do item</param>
+            <param name="usercomment">Tipo de usuário do comentário</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.UpdateCommentsView(System.String)">
+            <summary>
+            Alteração do comentário
+            </summary>
+            <param name="idmonitoring">Identificador do monitoramento</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.NewMonitoring(System.String)">
+            <summary>
+            Inclusão monitoring
+            </summary>
+            <param name="idperson">Identificador contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.UpdateMonitoring(Manager.Views.BusinessCrud.ViewCrudMonitoring)">
+            <summary>
+            Atualiza informações monitogin
+            </summary>
+            <param name="monitoring">Objeto Crud</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.ListMonitoringsEnd(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista monitoring finalizado para gestor
+            </summary>
+            <param name="idmanager">Identificador Gestor</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.GetListExclud(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista monitoring para exclusão
+            </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.ListMonitoringsWait(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista monitoring em andamento para gestor
+            </summary>
+            <param name="idmanager"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.ListMonitoringsWait_V2(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators},System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista monitoring em andamento para gestor
+            </summary>
+            <param name="persons"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.PersonMonitoringsEnd(System.String)">
+            <summary>
+            Lista monitoring para pessoa
+            </summary>
+            <param name="idmanager">Identificador contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.PersonMonitoringsWait(System.String)">
+            <summary>
+            Lista monitoring para pessoa
+            </summary>
+            <param name="idmanager">Identificador do contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.GetSkills(System.String)">
+            <summary>
+            Lista skills
+            </summary>
+            <param name="idperson">Identificador do contrato</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.GetMonitoringActivities(System.String,System.String)">
+            <summary>
+            Busca informações para editar entrega
+            </summary>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="idactivitie">Identificador entrega</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.UpdateMonitoringActivities(Manager.Views.BusinessCrud.ViewCrudMonitoringActivities,System.String)">
+            <summary>
+            Atualiza entrega monitoring
+            </summary>
+            <param name="activitie">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.AddMonitoringActivities(Manager.Views.BusinessCrud.ViewCrudActivities,System.String)">
+            <summary>
+            Adiciona um entrega no monitoring
+            </summary>
+            <param name="activitie">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.GetListComments(System.String,System.String)">
+            <summary>
+            Lista comentarios de um item do monitoring
+            </summary>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="iditem">Identificador Item</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.AddComments(Manager.Views.BusinessCrud.ViewCrudComment,System.String,System.String)">
+            <summary>
+            Inclusão comentario
+            </summary>
+            <param name="comments">Objeto Crud</param>
+            <param name="idmonitoring">Identificador Monitoring</param>
+            <param name="iditem">Identificador item monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.UpdateComments(Manager.Views.BusinessCrud.ViewCrudComment,System.String,System.String)">
+            <summary>
+            Atualiza comentario item do monitoring
+            </summary>
+            <param name="comments">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="iditem">Identificador item do monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.AddPlan(Manager.Views.BusinessCrud.ViewCrudPlan,System.String,System.String)">
+            <summary>
+            Adiciona um plano
+            </summary>
+            <param name="plan">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="iditem">Identificador item</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.UpdatePlan(Manager.Views.BusinessCrud.ViewCrudPlan,System.String,System.String)">
+            <summary>
+            Atualiza informações do plano dentro de um item do monitoring
+            </summary>
+            <param name="plan">Objeto Crud</param>
+            <param name="idmonitoring">Identificador monitoring</param>
+            <param name="iditem">Identificador item do monitoring</param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.DeletePlan(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idmonitoring"></param>
+            <param name="iditem"></param>
+            <param name="idplan"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.ExportStatusMonitoring(System.Collections.Generic.List{Manager.Views.BusinessList.ViewListIdIndicators})">
+            <summary>
+            
+            </summary>
+            <param name="persons"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.ExportMonitoringComments(Manager.Views.BusinessList.ViewFilterIdAndDate)">
+            <summary>
+            
+            </summary>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.ExportStatusMonitoring(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.MonitoringController.GetMonitoringMobile(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:Mobile.Controllers.OnBoardingController">
             <summary>
             Controlador do Onboarding
@@ -182,13 +427,6 @@
             Inclusão de novo OnBoarding
             </summary>
             <param name="idperson">Identificador da pessoa</param>
-            <returns>Objeto de listagem do OnBoarding</returns>
-        </member>
-        <member name="M:Mobile.Controllers.OnBoardingController.Get(System.String)">
-            <summary>
-            Iniciar o processo de onboarding do colaborador
-            </summary>
-            <param name="id">Identificador do colaborador</param>
             <returns>Objeto de listagem do OnBoarding</returns>
         </member>
         <member name="M:Mobile.Controllers.OnBoardingController.DeleteComments(System.String,System.String,System.String)">
@@ -324,6 +562,13 @@
             <param name="iditem"></param>
             <param name="typeuser"></param>
             <returns></returns>
+        </member>
+        <member name="M:Mobile.Controllers.OnBoardingController.Get(System.String)">
+            <summary>
+            Iniciar o processo de onboarding do colaborador
+            </summary>
+            <param name="id">Identificador do colaborador</param>
+            <returns>Objeto de listagem do OnBoarding</returns>
         </member>
         <member name="T:Mobile.Controllers.PanelController">
             <summary>
