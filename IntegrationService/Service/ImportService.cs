@@ -899,39 +899,6 @@ namespace IntegrationService.Service
             }
           }
         }
-        if (Person.IdAccount.Equals("5cb8bbfb27a5e8f3ef548b1f")) // Bertolini
-        {
-          // remover uma determinada lista de cargos
-          List<string> cleanOccupations = new List<string>
-          {
-            "Aprendiz - Administrativo",
-            "Aprendiz Senai",
-            "Conselheiro",
-            "Diretor Suprimentos",
-            "Fonoaudiologo",
-            "Mecanico Manutenção automoveis",
-            "Médico",
-            "Montador",
-            "Motorista de Caminhao I",
-            "Motorista de Caminhao II",
-            "Motorista de Caminhao III",
-            "Projetista"
-          };
-          foreach (string occupation in cleanOccupations)
-          {
-            int work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
-            while (work != -1)
-            {
-              FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", string.Format("{0} removido!", occupation),
-                ColaboradoresV2[work].Colaborador.Cpf,
-                ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
-                ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
-                ColaboradoresV2[work].Nome), EnumTypeLineOpportunityg.Register);
-              ColaboradoresV2.RemoveAt(work);
-              work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
-            }
-          }
-        }
       }
       catch (Exception ex)
       {
@@ -1041,7 +1008,7 @@ namespace IntegrationService.Service
           // Carregar Lista de Colaboradores
           foreach (ViewIntegrationMetadadosV1 colaborador in colaboradores)
           {
-            ColaboradoresV2.Add(new ColaboradorV2Completo(colaborador, service.Param.CultureDate));
+            ColaboradoresV2.Add(new ColaboradorV2Completo(colaborador, service.Param.CultureDate, Person.IdAccount));
             // FileClass.SaveLog("juremir.txt", string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11}", register, offset, colaborador.Cpf, colaborador.Empresa, colaborador.NomeEmpresa, colaborador.Estabelecimento, colaborador.NomeEstabelecimento, colaborador.Matricula, colaborador.Nome, colaborador.NomeCargo, colaborador.NomeClassContabil, colaborador.Email), EnumTypeLineOpportunityg.Register);
             register++;
           }
@@ -1143,7 +1110,80 @@ namespace IntegrationService.Service
         excelPln.Activate();
         excelPln.Range["A1"].Select();
         excelApp.Selection.End[Excel.XlDirection.xlDown].Select();
-        int rowCount = excelApp.ActiveCell.Row + 1;
+        int finalRow = excelApp.ActiveCell.Row;
+        // Reformatação da planilha AEL
+        if (Person.IdAccount.Equals("5d6ebda43501a40001d97db7")) 
+        {
+          excelPln.Range["A1"].Select();
+          excelApp.Selection.End[Excel.XlDirection.xlDown].Select();
+          excelPln.Range["AN2"].Select();
+          excelPln.Range["AN2"].FormulaR1C1 = "=VLOOKUP(RC[-2],C[-39]:C[-38],2,FALSE)";
+          excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AN2:AN{0}", finalRow)]);
+          excelPln.Range[string.Format("AN2:AN{0}", finalRow)].Select();
+          excelApp.Selection.Copy();
+          excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
+          excelPln.Range["AO2"].Select();
+          excelPln.Range["AO2"].FormulaR1C1 = "=VLOOKUP(RC[-2],C[-38]:C[-18],21,FALSE)";
+          excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AO2:AO{0}", finalRow)]);
+          excelPln.Range[string.Format("AO2:AO{0}", finalRow)].Select();
+          excelApp.Selection.Copy();
+          excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
+          excelPln.Range["AP2"].Select();
+          excelPln.Range["AP2"].FormulaR1C1 = "=VLOOKUP(RC[-3],C[-39]:C[-8],32,FALSE)";
+          excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AP2:AP{0}", finalRow)]);
+          excelPln.Range[string.Format("AP2:AP{0}", finalRow)].Select();
+          excelApp.Selection.Copy();
+          excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
+          excelPln.Range["AQ2"].Select();
+          excelPln.Range["AQ2"].FormulaR1C1 = "=VLOOKUP(RC[-4],C[-40]:C[-8],33,FALSE)";
+          excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AQ2:AQ{0}", finalRow)]);
+          excelPln.Range[string.Format("AQ2:AQ{0}", finalRow)].Select();
+          excelApp.Selection.Copy();
+          excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
+          excelPln.Columns[37].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[36].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[32].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[31].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[30].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[29].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[28].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[27].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[25].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[24].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[22].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[21].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[20].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[19].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[18].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[10].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[9].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Columns[5].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+          excelPln.Cells[1, 1].Value = "empresa";
+          excelPln.Cells[1, 2].Value = "nome_empresa";
+          excelPln.Cells[1, 3].Value = "matricula";
+          excelPln.Cells[1, 4].Value = "nome";
+          excelPln.Cells[1, 5].Value = "situacao";
+          excelPln.Cells[1, 6].Value = "centro_custo";
+          excelPln.Cells[1, 7].Value = "nome_centro_custo";
+          excelPln.Cells[1, 8].Value = "cargo";
+          excelPln.Cells[1, 9].Value = "nome_cargo";
+          excelPln.Cells[1, 10].Value = "salario_nominal";
+          excelPln.Cells[1, 11].Value = "nome_grau_instrucao";
+          excelPln.Cells[1, 12].Value = "grau_instrucao";
+          excelPln.Cells[1, 13].Value = "data_admissao";
+          excelPln.Cells[1, 14].Value = "data_nascimento";
+          excelPln.Cells[1, 15].Value = "cpf";
+          excelPln.Cells[1, 16].Value = "celular";
+          excelPln.Cells[1, 17].Value = "sexo";
+          excelPln.Cells[1, 18].Value = "estabelecimento";
+          excelPln.Cells[1, 19].Value = "nome_estabelecimento";
+          excelPln.Cells[1, 20].Value = "empresa_gestor";
+          excelPln.Cells[1, 21].Value = "matricula_gestor";
+          excelPln.Cells[1, 22].Value = "nome_empresa_gestor";
+          excelPln.Cells[1, 23].Value = "cpf_gestor";
+          excelPln.Cells[1, 24].Value = "estabelecimento_gestor";
+          excelPln.Cells[1, 25].Value = "nome_estabelecimento_gestor";
+        }
         excelPln.Range["A1"].Select();
         excelApp.Selection.End[Excel.XlDirection.xlToRight].Select();
         int collumnCount = excelApp.ActiveCell.Column + 1;
@@ -1161,7 +1201,7 @@ namespace IntegrationService.Service
           "telefone", "identidade", "carteira_profissional", "retorno_ferias", "motivo_afastamento",
           "empresa_chefe", "nome_empresa_chefe", "estabelecimento_chefe", "nome_estabelecimento_chefe", "cpf_chefe", "matricula_chefe"
         };
-        ProgressBarMaximun = rowCount;
+        ProgressBarMaximun = finalRow + 1;
         ProgressBarValue = 0;
         ProgressMessage = "Carregando colaboradores 1/2...";
         OnRefreshProgressBar(EventArgs.Empty);
@@ -1181,7 +1221,7 @@ namespace IntegrationService.Service
         List<string> rowData;
         string collumName;
         dynamic workData;
-        for (int row = 2; row < rowCount; row++)
+        for (int row = 2; row < finalRow+1; row++)
         {
           rowData = new List<string>();
 

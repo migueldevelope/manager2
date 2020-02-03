@@ -107,7 +107,7 @@ namespace Manager.Views.Integration.V2
         throw ex;
       }
     }
-    public ColaboradorV2Completo(ViewIntegrationMetadadosV1 view, string cultureDate)
+    public ColaboradorV2Completo(ViewIntegrationMetadadosV1 view, string cultureDate, string idAccount)
     {
       try
       {
@@ -121,7 +121,7 @@ namespace Manager.Views.Integration.V2
           Matricula = view.Matricula?.Trim()
         };
         Acao = "CARGA";
-        Nome = FieldString(view.Nome,null);
+        Nome = FieldString(view.Nome, null);
         Email = FieldString(view.Email, null);
         // Ajuste de e-mail da UNIMEDNERS
         if (Email != null && Email.Contains("unimed-ners.net"))
@@ -130,23 +130,23 @@ namespace Manager.Views.Integration.V2
         }
         Sexo = FieldString(view.Sexo, null);
         DataNascimento = FieldDate(view.DataNascimento, null, cultureDate);
-        Celular = FieldString(view.Celular,null);
-        GrauInstrucao = FieldString(view.GrauInstrucao,"7");
-        NomeGrauInstrucao = FieldString(view.NomeGrauInstrucao,"Ensino médio completo");
-        Apelido = FieldString(view.UsuarioAd,null);
-        Situacao = FieldString(view.Situacao,"ATIVO");
+        Celular = FieldString(view.Celular, null);
+        GrauInstrucao = FieldString(view.GrauInstrucao, "7");
+        NomeGrauInstrucao = FieldString(view.NomeGrauInstrucao, "Ensino médio completo");
+        Apelido = FieldString(view.UsuarioAd, null);
+        Situacao = FieldString(view.Situacao, "ATIVO");
         DataAdmissao = (DateTime)FieldDate(view.DataAdmissao, DateTime.MinValue, cultureDate);
         DataDemissao = FieldDate(view.DataDemissao, null, cultureDate);
-        Cargo = FieldString(view.Cargo,null);
-        NomeCargo = FieldString(view.NomeCargo,null);
+        Cargo = FieldString(view.Cargo, null);
+        NomeCargo = FieldString(view.NomeCargo, null);
         DataTrocaCargo = FieldDate(view.DataTrocaCargo, null, cultureDate);
-        CentroCusto = FieldString(view.ClassContabil,null);
+        CentroCusto = FieldString(view.ClassContabil, null);
         NomeCentroCusto = FieldString(view.ClassContabil, null);
         DataTrocaCentroCusto = FieldDate(view.DataTrocaClassContabil, null, cultureDate);
         SalarioNominal = view.SalarioNominal;
         CargaHoraria = view.CargaHoraria;
         DataUltimoReajuste = FieldDate(view.DataUltimoReajuste, null, cultureDate);
-        MotivoUltimoReajuste = FieldString(view.MotivoUltimoReajuste,null);
+        MotivoUltimoReajuste = FieldString(view.MotivoUltimoReajuste, null);
         Gestor = new ColaboradorV2Base
         {
           Cpf = FieldStringCpf(view.GestorCpf, null),
@@ -160,8 +160,10 @@ namespace Manager.Views.Integration.V2
         {
           Gestor = null;
         }
-        // TODO: Atualização de gestor desativada
-        Gestor = null;
+        if (idAccount.Equals("5b91299a17858f95ffdb79f6")) // Unimed Nordeste Rs
+        {
+          Gestor = null;
+        }
       }
       catch (Exception ex)
       {

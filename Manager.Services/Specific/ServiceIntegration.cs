@@ -277,7 +277,7 @@ namespace Manager.Services.Specific
             Salary = payrollEmployee.Salary,
             DateLastReadjust = payrollEmployee.SalaryChangeDate,
             DateResignation = payrollEmployee.DemissionDate,
-            TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.OnBoardingOccupation : EnumTypeJourney.OnBoarding,
+            TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding,
             Workload = payrollEmployee.Workload
           };
 
