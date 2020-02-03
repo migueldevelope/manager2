@@ -846,7 +846,7 @@ namespace Manager.Services.Specific
           Name = p.Name,
           _idPerson = p.Person._id,
           NamePerson = p.Person.Name
-        }).ToList();
+        }).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
@@ -878,7 +878,7 @@ namespace Manager.Services.Specific
             Event = p.Event,
             Workload = p.Workload,
             Attachments = p.Attachments
-          }).ToList();
+          }).OrderBy(p => p.NamePerson).ThenByDescending(p => p.End).ToList();
         }
         return null;
       }
