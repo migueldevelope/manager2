@@ -289,10 +289,15 @@ namespace Manager.Services.Specific
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
           }
-
+          // Afastados aparecem fora de jornada
+          if (person.StatusUser == EnumStatusUser.Away)
+          {
+            person.TypeJourney = EnumTypeJourney.OutOfJourney;
+          }
           if (personManager != null)
+          {
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
-
+          }
           person.StatusUser = payrollEmployee.StatusUser;
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
           person = personService.New(person);
@@ -312,19 +317,18 @@ namespace Manager.Services.Specific
           person.DateLastReadjust = payrollEmployee.SalaryChangeDate;
           person.DateResignation = payrollEmployee.DemissionDate;
           person.Workload = payrollEmployee.Workload;
-
-          if (_user._idAccount.Equals("5b91299a17858f95ffdb79f6"))
           // Ajuste de jornada para temporários e estagiários da UNIMED NORDESTE RS
+          if (_user._idAccount.Equals("5b91299a17858f95ffdb79f6"))
           {
             if (person.Establishment.Name.StartsWith("Estagiários") || person.Establishment.Name.StartsWith("Multy Pessoal"))
             {
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
           }
-
           if (personManager != null)
+          {
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
-
+          }
           person.StatusUser = payrollEmployee.StatusUser;
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
           string updatePerson = personService.Update(person);

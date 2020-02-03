@@ -881,31 +881,7 @@ namespace Manager.Services.Auth
         };
 
         person = servicePerson.InsertNewVersion(person).Result;
-        return new ViewCrudPerson()
-        {
-          _id = person._id,
-          Company = person.Company,
-          DateLastOccupation = person.DateLastOccupation,
-          DateLastReadjust = person.DateLastReadjust,
-          DateResignation = person.DateResignation,
-          Establishment = person.Establishment,
-          HolidayReturn = person.HolidayReturn,
-          Manager = person.Manager == null ? null : new ViewBaseFields()
-          {
-            _id = person.Manager._id,
-            Name = person.Manager.Name,
-            Mail = person.Manager.Mail
-          },
-          MotiveAside = person.MotiveAside,
-          Occupation = person.Occupation,
-          Registration = person.Registration,
-          Salary = person.Salary,
-          StatusUser = person.StatusUser,
-          TypeJourney = person.TypeJourney,
-          TypeUser = person.TypeUser,
-          User = person.User,
-        };
-        // TODO: Manager
+        return person.GetViewCrud();
       }
       catch (Exception e)
       {

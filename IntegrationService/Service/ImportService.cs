@@ -14,7 +14,6 @@ using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace IntegrationService.Service
@@ -881,16 +880,23 @@ namespace IntegrationService.Service
             executeDemission = false;
           }
           // Limpeza de Jovens Aprendizes
-          work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Contains("JOVEM APRENDIZ"));
-          while (work != -1)
+          List<string> cleanOccupations = new List<string>
           {
-            FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", "Jovem Aprendiz removido!",
-              ColaboradoresV2[work].Colaborador.Cpf,
-              ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
-              ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
-              ColaboradoresV2[work].Nome), EnumTypeLineOpportunityg.Register);
-            ColaboradoresV2.RemoveAt(work);
-            work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Contains("JOVEM APRENDIZ"));
+            "Jovem Aprendiz"
+          };
+          foreach (string occupation in cleanOccupations)
+          {
+            work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
+            while (work != -1)
+            {
+              FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", string.Format("{0} removido!",occupation),
+                ColaboradoresV2[work].Colaborador.Cpf,
+                ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
+                ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
+                ColaboradoresV2[work].Nome), EnumTypeLineOpportunityg.Register);
+              ColaboradoresV2.RemoveAt(work);
+              work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
+            }
           }
         }
         if (Person.IdAccount.Equals("5cb8bbfb27a5e8f3ef548b1f")) // Bertolini
@@ -898,18 +904,29 @@ namespace IntegrationService.Service
           // remover uma determinada lista de cargos
           List<string> cleanOccupations = new List<string>
           {
-            "Cargo 1",
-            "Cargo 2",
-            "Cargo 3",
-            "Cargo 4",
-            "Cargo 5"
+            "Aprendiz - Administrativo",
+            "Aprendiz Senai",
+            "Conselheiro",
+            "Diretor Suprimentos",
+            "Fonoaudiologo",
+            "Mecanico Manutenção automoveis",
+            "Médico",
+            "Montador",
+            "Motorista de Caminhao I",
+            "Motorista de Caminhao II",
+            "Motorista de Caminhao III",
+            "Projetista"
           };
           foreach (string occupation in cleanOccupations)
           {
             int work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
             while (work != -1)
             {
-              FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", "Cargo não autorizado!", ColaboradoresV2[work].Colaborador.Cpf, ColaboradoresV2[work].Colaborador.NomeEmpresa, ColaboradoresV2[work].Colaborador.NomeEstabelecimento, ColaboradoresV2[work].Nome, string.Empty), EnumTypeLineOpportunityg.Warning);
+              FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", string.Format("{0} removido!", occupation),
+                ColaboradoresV2[work].Colaborador.Cpf,
+                ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
+                ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
+                ColaboradoresV2[work].Nome), EnumTypeLineOpportunityg.Register);
               ColaboradoresV2.RemoveAt(work);
               work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
             }
