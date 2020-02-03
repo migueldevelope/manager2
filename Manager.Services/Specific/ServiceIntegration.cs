@@ -299,7 +299,7 @@ namespace Manager.Services.Specific
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
           }
           person.StatusUser = payrollEmployee.StatusUser;
-          person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
+          person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result.GetViewCrud();
           person = personService.New(person);
         }
         else
