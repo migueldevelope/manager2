@@ -1583,45 +1583,52 @@ namespace Manager.Services.Specific
 
         foreach (var item in list)
         {
-          var course = serviceCourse.GetNewVersion(p => p.Name == item.NameCourse).Result;
-          if (course == null)
+          try
           {
-            course = new Course()
+            var course = serviceCourse.GetNewVersion(p => p.Name == item.NameCourse).Result;
+            if (course == null)
             {
-              Name = item.NameCourse,
-              Content = item.Content,
-              Wordkload = item.Workload
-            };
-            course = serviceCourse.InsertNewVersion(course).Result;
-          }
-
-          var entity = serviceEntity.GetNewVersion(p => p.Name == item.NameEntity).Result;
-          if (entity == null)
-            entity = serviceEntity.InsertNewVersion(new Entity { Name = item.NameEntity }).Result;
-
-          var cpf = item.Cpf.Replace(".", "").Replace("-", "").Trim();
-          var person = servicePerson.GetNewVersion(p => p.User.Document == cpf).Result;
-          if (person != null)
-          {
-            var eventHistoric = new EventHistoric()
-            {
-              Course = course.GetViewList(),
-              Workload = item.Workload,
-              Begin = item.DateBegin.Value,
-              End = item.DateEnd.Value,
-              Name = item.NameEvent,
-              Entity = entity.GetCrudEntity(),
-              Event = new ViewListEvent()
+              course = new Course()
               {
-                Name = item.NameEvent,
-                NameCourse = item.NameCourse,
-                _idCourse = course._id,
-                _id = ObjectId.GenerateNewId().ToString()
-              },
-              Person = person.GetViewListBase()
-            };
+                Name = item.NameCourse,
+                Content = item.Content,
+                Wordkload = item.Workload
+              };
+              course = serviceCourse.InsertNewVersion(course).Result;
+            }
 
-            var hst = serviceEventHistoric.InsertNewVersion(eventHistoric).Result;
+            var entity = serviceEntity.GetNewVersion(p => p.Name == item.NameEntity).Result;
+            if (entity == null)
+              entity = serviceEntity.InsertNewVersion(new Entity { Name = item.NameEntity }).Result;
+
+            var cpf = item.Cpf.Replace(".", "").Replace("-", "").Trim();
+            var person = servicePerson.GetNewVersion(p => p.User.Document == cpf).Result;
+            if (person != null)
+            {
+              var eventHistoric = new EventHistoric()
+              {
+                Course = course.GetViewList(),
+                Workload = item.Workload,
+                Begin = item.DateBegin.Value,
+                End = item.DateEnd.Value,
+                Name = item.NameEvent,
+                Entity = entity.GetCrudEntity(),
+                Event = new ViewListEvent()
+                {
+                  Name = item.NameEvent,
+                  NameCourse = item.NameCourse,
+                  _idCourse = course._id,
+                  _id = ObjectId.GenerateNewId().ToString()
+                },
+                Person = person.GetViewListBase()
+              };
+
+              var hst = serviceEventHistoric.InsertNewVersion(eventHistoric).Result;
+            }catch(Exception e)
+          {
+            var x = e.Message;
+          }
+          
           }
           //throw new Exception("not_person");
 
