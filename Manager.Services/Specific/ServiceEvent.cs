@@ -744,7 +744,7 @@ namespace Manager.Services.Specific
             if (date.Value.Date < item.Begin.Value.AddDays(item.DaysSubscription * -1).Date)
             {
               var instructors = item.Instructors.Where(p => p.Person != null).ToList();
-              if (instructors.Where(p => p.Person._id == idperson).Count() == 0)
+              if (instructors.Where(p => p.Person._id == idperson).Count() > 0)
                 result.Add(item);
             }
           }

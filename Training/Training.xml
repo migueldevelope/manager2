@@ -144,6 +144,16 @@
             <param name="filter"></param>
             <returns></returns>
         </member>
+        <member name="M:Training.Controllers.EventController.ListEventInstructor(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista para instrutor marcar presença
+            </summary>
+            <param name="idperson"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
         <member name="M:Training.Controllers.EventController.ListHistoric(Manager.Views.BusinessView.ViewFilterDate,System.String,System.String)">
             <summary>
             
