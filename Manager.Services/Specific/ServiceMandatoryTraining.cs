@@ -932,7 +932,7 @@ namespace Manager.Services.Specific
 
         //}
 
-        return result;
+        return list;
       }
       catch (Exception e)
       {
