@@ -808,7 +808,7 @@ namespace Manager.Services.Specific
           }
           else
           {
-            detail = serviceTrainingPlan.GetAllNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.NameManager).ThenBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
         }
@@ -816,12 +816,12 @@ namespace Manager.Services.Specific
         {
           if (origin == EnumOrigin.Full)
           {
-            detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.NameManager).ThenBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
           else
           {
-            detail = serviceTrainingPlan.GetAllNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.NameManager).ThenBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
         }
@@ -833,7 +833,7 @@ namespace Manager.Services.Specific
 
         var _idManager = detail.FirstOrDefault().Person._idManager;
         var _idPerson = detail.FirstOrDefault().Person._id;
-
+        bool zero = true;
         var persons = new ViewListTrainingPlanManager
         {
           Manager = detail.FirstOrDefault().Person.NameManager,
@@ -871,10 +871,14 @@ namespace Manager.Services.Specific
             StatusTrainingPlan = item.StatusTrainingPlan
           };
           person.Courses.Add(course);
-          list.Add(persons);
+          persons.Persons.Add(person);
+
+          if ((_idManager != item.Person._idManager) || zero)
+            list.Add(persons);
 
           _idManager = item.Person._idManager;
           _idPerson = item.Person._id;
+          zero = false;
         }
 
         var result = new List<ViewListTrainingPlanManager>();
