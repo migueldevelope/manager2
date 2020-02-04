@@ -198,12 +198,15 @@ namespace Manager.Services.Specific
         foreach (var item in list)
         {
           var course = serviceCourse.GetNewVersion(p => p._id == item.Course._id).Result;
-          if(course != null)
+          if (course != null)
           {
-            if (course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
-              result.Add(item);
+            if (course.Equivalents != null)
+            {
+              if (course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
+                result.Add(item);
+            }
           }
-          
+
         }
 
         return result;
@@ -219,8 +222,9 @@ namespace Manager.Services.Specific
       {
         foreach (var item in serviceCourse.GetAllNewVersion().ToList())
         {
-          if (item.Prerequisites.Where(x => x._id == idcourse).Count() > 0)
-            return true;
+          if (item.Prerequisites != null)
+            if (item.Prerequisites.Where(x => x._id == idcourse).Count() > 0)
+              return true;
         }
 
         return false;
@@ -236,11 +240,15 @@ namespace Manager.Services.Specific
     {
       try
       {
-        foreach (var item in course.Prerequisites)
+        if (course.Prerequisites != null)
         {
-          if (serviceEventHistoric.CountNewVersion(p => p.Course._id == course._id & p.Person._id == idperson).Result == 0)
-            return true;
+          foreach (var item in course.Prerequisites)
+          {
+            if (serviceEventHistoric.CountNewVersion(p => p.Course._id == course._id & p.Person._id == idperson).Result == 0)
+              return true;
+          }
         }
+        
 
         return false;
       }
@@ -433,7 +441,7 @@ namespace Manager.Services.Specific
           mandatory.Persons.Add(list.FirstOrDefault());
           serviceMandatoryTraining.Update(mandatory, null).Wait();
         }
-        UpdateTrainingPlanPerson(course, person, view.BeginDate, view.TypeMandatoryTraining);
+        Task.Run(() => UpdateTrainingPlanPerson(course, person, view.BeginDate, view.TypeMandatoryTraining));
 
         return "add occupation";
       }
@@ -535,12 +543,12 @@ namespace Manager.Services.Specific
       {
         var plan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == idperson & p.Course._id == idcourse
         & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).Result.FirstOrDefault();
-        if(plan != null)
+        if (plan != null)
         {
           plan.Status = EnumStatus.Disabled;
           serviceTrainingPlan.Update(plan, null).Wait();
         }
-        
+
       }
       catch (Exception e)
       {
@@ -801,7 +809,7 @@ namespace Manager.Services.Specific
         {
           if (origin == EnumOrigin.Full)
           {
-            detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course!= null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
             total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
           }
           else
@@ -839,20 +847,20 @@ namespace Manager.Services.Specific
           //if (item.Person != view.Person)
           //{
 
-            if (totalGeral > 0)
-            {
-              view.TraningPlans.FirstOrDefault().PercentRealized = ((countRealized * 100) / totalGeral);
-              view.TraningPlans.FirstOrDefault().PercentNo = ((countNo * 100) / totalGeral);
-            }
-            result.Add(view);
-            view = new ViewTrainingPlanList
-            {
-              Person = item.Person,
-              TraningPlans = new List<ViewTrainingPlan>()
-            };
-            totalGeral = 0;
-            countRealized = 0;
-            countNo = 0;
+          if (totalGeral > 0)
+          {
+            view.TraningPlans.FirstOrDefault().PercentRealized = ((countRealized * 100) / totalGeral);
+            view.TraningPlans.FirstOrDefault().PercentNo = ((countNo * 100) / totalGeral);
+          }
+          result.Add(view);
+          view = new ViewTrainingPlanList
+          {
+            Person = item.Person,
+            TraningPlans = new List<ViewTrainingPlan>()
+          };
+          totalGeral = 0;
+          countRealized = 0;
+          countNo = 0;
           //}
 
           var training = new ViewTrainingPlan
