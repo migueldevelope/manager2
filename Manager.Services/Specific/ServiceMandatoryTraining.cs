@@ -793,7 +793,90 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListTrainingPlanManager> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListTrainingPlan> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = new List<TrainingPlan>();
+        if (typeUser == EnumTypeUser.Manager)
+        {
+          if (origin == EnumOrigin.Full)
+          {
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+          }
+          else
+          {
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.NameManager).ThenBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Person._idManager == idmanager & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+          }
+        }
+        else
+        {
+          if (origin == EnumOrigin.Full)
+          {
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.NameManager).ThenBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+          }
+          else
+          {
+            detail = serviceTrainingPlan.GetAllNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.NameManager).ThenBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
+            total = serviceTrainingPlan.CountNewVersion(p => p.Origin == origin & p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person != null & p.Course != null & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+          }
+        }
+
+        var list = new List<ViewListTrainingPlan>();
+
+        if (detail.Count() == 0)
+          return null;
+
+        var _idPerson = detail.FirstOrDefault().Person._id;
+        bool zero = true;
+
+        var person = new ViewListTrainingPlan()
+        {
+          Person = detail.FirstOrDefault().Person.User.Name,
+          Courses = new List<ViewListTrainingPlanPerson>()
+        };
+        list.Add(person);
+
+        foreach (var item in detail)
+        {
+          if (_idPerson != item.Person._id)
+            person = new ViewListTrainingPlan()
+            {
+              Person = item.Person.User.Name,
+              Courses = new List<ViewListTrainingPlanPerson>()
+            };
+
+          var course = new ViewListTrainingPlanPerson()
+          {
+
+            Course = item.Course.Name,
+            Origin = item.Origin,
+            StatusTrainingPlan = item.StatusTrainingPlan
+          };
+          person.Courses.Add(course);
+
+          if ((_idPerson != item.Person._id) || zero)
+            list.Add(person);
+
+          _idPerson = item.Person._id;
+          zero = false;
+        }
+
+
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListTrainingPlanManager> ListTrainingPlanPersonManager(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {

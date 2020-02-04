@@ -27,8 +27,9 @@ namespace Manager.Core.Interfaces
      List<ViewListPersonBase> ListPerson(string idcourse, string idcompany,  ref long total, int count = 10, int page = 1, string filter = "");
      List<ViewListCompany> ListCompany(string idcourse,  ref long total, int count = 10, int page = 1, string filter = "");
      ViewListTrainingPlan ListTrainingPlanPerson(string iduser,  ref long total, int count = 10, int page = 1, string filter = "");
-     List<ViewListTrainingPlanManager> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  ref long total, int count = 10, int page = 1, string filter = "");
-     ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse);
+     List<ViewListTrainingPlan> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin,  ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListTrainingPlanManager> ListTrainingPlanPersonManager(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "");
+    ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse);
      List<ViewCrudMandatoryTraining> List( ref long total, int count = 10, int page = 1, string filter = "");
      string NewTrainingPlanInternal(TrainingPlan view);
      string UpdateTrainingPlanInternal(TrainingPlan view);
