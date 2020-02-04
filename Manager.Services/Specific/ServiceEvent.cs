@@ -726,7 +726,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListEvent> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListEventSubscription> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -751,12 +751,16 @@ namespace Manager.Services.Specific
         }
         total = result.Count();
 
-        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEvent()
+        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
         {
           _id = p._id,
-          Name = p.Name,
-          _idCourse = p.Course._id,
-          NameCourse = p.Course.Name
+          NameEvent = p.Name,
+          Attachments = p.Attachments,
+          Days = p.Days,
+          Entity = p.Entity?.Name,
+          Instructors = p.Instructors,
+          Observation = p.Observation,
+          Workload = p.Workload
         }).ToList();
       }
       catch (Exception e)
@@ -765,7 +769,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListEvent> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListEventSubscription> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -793,12 +797,16 @@ namespace Manager.Services.Specific
         }
         total = result.Count();
 
-        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEvent()
+        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
         {
           _id = p._id,
-          Name = p.Name,
-          _idCourse = p.Course._id,
-          NameCourse = p.Course.Name
+          NameEvent = p.Name,
+          Attachments = p.Attachments,
+          Days = p.Days,
+          Entity = p.Entity?.Name,
+          Instructors = p.Instructors,
+          Observation = p.Observation,
+          Workload = p.Workload
         }).ToList();
       }
       catch (Exception e)
@@ -1626,13 +1634,13 @@ namespace Manager.Services.Specific
               var hst = serviceEventHistoric.InsertNewVersion(eventHistoric).Result;
             }
           }
-          catch(Exception e)
+          catch (Exception e)
           {
             var x = e.Message;
           }
-          
-          }
-          //throw new Exception("not_person");
+
+        }
+        //throw new Exception("not_person");
 
 
 

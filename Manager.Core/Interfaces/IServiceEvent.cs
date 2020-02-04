@@ -55,8 +55,8 @@ namespace Manager.Core.Interfaces
     List<ViewCrudParticipant> ListParticipants(string idevent, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListEvent> ListEventOpen(ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListEvent> ListEventEnd(ref long total, int count = 10, int page = 1, string filter = "");
-    List<ViewListEvent> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
-    List<ViewListEvent> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListEventSubscription> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListEventSubscription> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     string ImportTraning(Stream stream);
     List<ViewListHistoric> ListHistoric(string idperson, string idcourse, ViewFilterDate date);
   }
