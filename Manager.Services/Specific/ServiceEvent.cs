@@ -789,7 +789,9 @@ namespace Manager.Services.Specific
             {
               var participants = item.Participants.Where(p => p.Person != null).ToList();
               if (participants.Where(p => p.Person._id == idperson).Count() == 0)
-                result.Add(item);
+                if (item.LimitParticipants > participants.Count())
+                  result.Add(item);
+
             }
           }
         }
