@@ -733,8 +733,7 @@ namespace Manager.Services.Specific
         //LogSave(_user._idPerson, "List Open Events subscrive");
         DateTime? date = DateTime.Now;
         int skip = (count * (page - 1));
-        var detail = serviceEvent.GetAllNewVersion(p => p.OpenSubscription == true &
-        p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+        var detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
 
         var result = new List<Event>();
         foreach (var item in detail)
