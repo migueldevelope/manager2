@@ -230,6 +230,25 @@ namespace Training.Controllers
     }
 
     /// <summary>
+    /// Lista para instrutor marcar presença
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listeventinstructor/{idperson}")]
+    public async Task<List<ViewListEventSubscription>> ListEventInstructor(string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventInstructor(idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="date"></param>

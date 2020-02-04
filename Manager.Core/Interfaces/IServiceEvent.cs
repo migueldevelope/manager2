@@ -59,5 +59,6 @@ namespace Manager.Core.Interfaces
     List<ViewListEventSubscription> ListEventSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     string ImportTraning(Stream stream);
     List<ViewListHistoric> ListHistoric(string idperson, string idcourse, ViewFilterDate date);
+    List<ViewListEventSubscription> ListEventInstructor(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

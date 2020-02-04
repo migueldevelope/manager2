@@ -726,6 +726,49 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListEventSubscription> ListEventInstructor(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        //LogSave(_user._idPerson, "List Open Events subscrive");
+        DateTime? date = DateTime.Now;
+        int skip = (count * (page - 1));
+        var detail = serviceEvent.GetAllNewVersion(p => p.OpenSubscription == true &
+        p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+
+        var result = new List<Event>();
+        foreach (var item in detail)
+        {
+          if (item.Begin != null)
+          {
+            if (date.Value.Date < item.Begin.Value.AddDays(item.DaysSubscription * -1).Date)
+            {
+              var instructors = item.Instructors.Where(p => p.Person != null).ToList();
+              if (instructors.Where(p => p.Person._id == idperson).Count() == 0)
+                result.Add(item);
+            }
+          }
+        }
+        total = result.Count();
+
+        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
+        {
+          _id = p._id,
+          NameEvent = p.Name,
+          Attachments = p.Attachments,
+          Days = p.Days,
+          Entity = p.Entity?.Name,
+          Instructors = p.Instructors,
+          Observation = p.Observation,
+          Workload = p.Workload
+        }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListEventSubscription> ListEventOpenSubscription(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
