@@ -13,5 +13,6 @@ namespace Manager.Views.BusinessList
     public string Entity { get; set; }
     public string Observation { get; set; }
     public List<ViewCrudAttachmentField> Attachments { get; set; }
+    public string Content { get; set; }
   }
 }

@@ -9,6 +9,7 @@ using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -133,7 +134,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("trainingplanlist/{idmanager}/{type}/{origin}")]
-    public async Task<List<ViewTrainingPlanList>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser type, EnumOrigin origin,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListTrainingPlanManager>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser type, EnumOrigin origin,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListTrainingPlanPersonList(idmanager, type, origin, ref total, count, page, filter);
@@ -173,7 +174,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listtrainingplanperson/{idperson}")]
-    public async Task<List<ViewTrainingPlan>> ListTrainingPlanPerson(string idperson,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListTrainingPlan>> ListTrainingPlanPerson(string idperson,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListTrainingPlanPerson(idperson, ref total, count, page, filter);

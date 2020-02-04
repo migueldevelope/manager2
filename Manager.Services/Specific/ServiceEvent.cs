@@ -760,7 +760,8 @@ namespace Manager.Services.Specific
           Entity = p.Entity?.Name,
           Instructors = p.Instructors,
           Observation = p.Observation,
-          Workload = p.Workload
+          Workload = p.Workload,
+          Content = p.Content
         }).ToList();
       }
       catch (Exception e)
@@ -803,7 +804,8 @@ namespace Manager.Services.Specific
           Entity = p.Entity?.Name,
           Instructors = p.Instructors,
           Observation = p.Observation,
-          Workload = p.Workload
+          Workload = p.Workload,
+          Content = p.Content
         }).ToList();
       }
       catch (Exception e)
@@ -849,7 +851,8 @@ namespace Manager.Services.Specific
           Entity = p.Entity?.Name,
           Instructors = p.Instructors,
           Observation = p.Observation,
-          Workload = p.Workload
+          Workload = p.Workload,
+          Content = p.Content
         }).ToList();
       }
       catch (Exception e)

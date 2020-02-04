@@ -6,6 +6,7 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -248,7 +249,7 @@ namespace Manager.Services.Specific
               return true;
           }
         }
-        
+
 
         return false;
       }
@@ -744,41 +745,47 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTrainingPlan> ListTrainingPlanPerson(string iduser, ref long total, int count = 10, int page = 1, string filter = "")
+    public ViewListTrainingPlan ListTrainingPlanPerson(string iduser, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
         var detail = serviceTrainingPlan.GetAllNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.User.Name).Skip(skip).Take(count).ToList();
         total = serviceTrainingPlan.CountNewVersion(p => p.StatusTrainingPlan != EnumStatusTrainingPlan.Canceled & p.Person.User._id == iduser & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
-        var list = new List<ViewTrainingPlan>();
+        //var list = new List<ViewListTrainingPlan>();
         var countRealized = 0;
         var countNo = 0;
 
+        if (detail.FirstOrDefault() == null)
+          return null;
+
+        var view = new ViewListTrainingPlan
+        {
+          Person = detail.FirstOrDefault().Person.User.Name,
+          Courses = new List<ViewListTrainingPlanPerson>()
+        };
+
         foreach (var item in detail)
         {
-          var view = new ViewTrainingPlan
-          {
-            Person = item.Person.User.Name,
-            Course = item.Course.Name
-          };
+          var course = new ViewListTrainingPlanPerson();
+
           if (item.StatusTrainingPlan == EnumStatusTrainingPlan.Realized)
             countRealized += 1;
           else
             countNo += 1;
-          view.Origin = item.Origin;
-          view.StatusTrainingPlan = item.StatusTrainingPlan;
-          list.Add(view);
+          course.Origin = item.Origin;
+          course.StatusTrainingPlan = item.StatusTrainingPlan;
+          view.Courses.Add(course);
         }
 
         if (total > 0)
         {
-          list.FirstOrDefault().PercentRealized = ((countRealized * 100) / total);
-          list.FirstOrDefault().PercentNo = ((countNo * 100) / total);
+          view.PercentRealized = ((countRealized * 100) / total);
+          view.PercentNo = ((countNo * 100) / total);
         }
 
 
-        return list;
+        return view;
       }
       catch (Exception e)
       {
@@ -786,7 +793,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTrainingPlanList> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListTrainingPlanManager> ListTrainingPlanPersonList(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -819,75 +826,111 @@ namespace Manager.Services.Specific
           }
         }
 
-        var list = new List<ViewTrainingPlan>();
+        var list = new List<ViewListTrainingPlanManager>();
+
+        if (detail.Count() == 0)
+          return null;
+
+        var _idManager = detail.FirstOrDefault().Person._idManager;
+        var _idPerson = detail.FirstOrDefault().Person._id;
+
+        var persons = new ViewListTrainingPlanManager
+        {
+          Manager = detail.FirstOrDefault().Person.NameManager,
+          Persons = new List<ViewListTrainingPlan>()
+        };
+        var person = new ViewListTrainingPlan()
+        {
+          Person = detail.FirstOrDefault().Person.User.Name,
+          Courses = new List<ViewListTrainingPlanPerson>()
+        };
+        persons.Persons.Add(person);
 
         foreach (var item in detail)
         {
-          var plan = new ViewTrainingPlan
+          if (_idManager != item.Person._idManager)
           {
-            Person = item.Person.User.Name,
+            persons = new ViewListTrainingPlanManager
+            {
+              Manager = item.Person.NameManager,
+              Persons = new List<ViewListTrainingPlan>()
+            };
+          }
+          if (_idPerson != item.Person._id)
+            person = new ViewListTrainingPlan()
+            {
+              Person = item.Person.User.Name,
+              Courses = new List<ViewListTrainingPlanPerson>()
+            };
+
+          var course = new ViewListTrainingPlanPerson()
+          {
+
             Course = item.Course.Name,
             Origin = item.Origin,
             StatusTrainingPlan = item.StatusTrainingPlan
           };
-          list.Add(plan);
+          person.Courses.Add(course);
+          list.Add(persons);
+
+          _idManager = item.Person._idManager;
+          _idPerson = item.Person._id;
         }
 
-
-
-        var result = new List<ViewTrainingPlanList>();
-        var view = new ViewTrainingPlanList();
+        var result = new List<ViewListTrainingPlanManager>();
+        var view = new ViewListTrainingPlanManager();
         var countRealized = 0;
         var countNo = 0;
         var totalGeral = 0;
-        view.Person = list.FirstOrDefault().Person;
-        view.TraningPlans = new List<ViewTrainingPlan>();
-        foreach (var item in list)
-        {
-          //if (item.Person != view.Person)
-          //{
+        view.Manager = list.FirstOrDefault().Manager;
+        view.Persons = new List<ViewListTrainingPlan>();
 
-          if (totalGeral > 0)
-          {
-            view.TraningPlans.FirstOrDefault().PercentRealized = ((countRealized * 100) / totalGeral);
-            view.TraningPlans.FirstOrDefault().PercentNo = ((countNo * 100) / totalGeral);
-          }
-          result.Add(view);
-          view = new ViewTrainingPlanList
-          {
-            Person = item.Person,
-            TraningPlans = new List<ViewTrainingPlan>()
-          };
-          totalGeral = 0;
-          countRealized = 0;
-          countNo = 0;
-          //}
+        //foreach (var item in list)
+        //{
+        //  //if (item.Person != view.Person)
+        //  //{
 
-          var training = new ViewTrainingPlan
-          {
-            Person = view.Person,
-            Course = item.Course,
-            StatusTrainingPlan = item.StatusTrainingPlan,
-            PercentNo = item.PercentNo,
-            PercentRealized = item.PercentRealized
-          };
-          totalGeral += 1;
-          if (item.StatusTrainingPlan == EnumStatusTrainingPlan.Realized)
-            countRealized += 1;
-          else
-            countNo += 1;
-          view.TraningPlans.Add(training);
-          if (item == list.Last())
-          {
-            if (totalGeral > 0)
-            {
-              view.TraningPlans.FirstOrDefault().PercentRealized = ((countRealized * 100) / totalGeral);
-              view.TraningPlans.FirstOrDefault().PercentNo = ((countNo * 100) / totalGeral);
-            }
-            view.TraningPlans.Add(training);
-          }
+        //  if (totalGeral > 0)
+        //  {
+        //    view.Persons.FirstOrDefault().PercentRealized = ((countRealized * 100) / totalGeral);
+        //    view.Persons.FirstOrDefault().PercentNo = ((countNo * 100) / totalGeral);
+        //  }
+        //  result.Add(view);
+        //  view = new ViewListTrainingPlanManager
+        //  {
+        //    Manager = item.Manager,
+        //    Persons = new List<ViewListTrainingPlan>()
+        //  };
+        //  totalGeral = 0;
+        //  countRealized = 0;
+        //  countNo = 0;
+        //  //}
 
-        }
+        //  var training = new ViewListTrainingPlan
+        //  {
+        //    Person = view.Person,
+        //    Course = item.Course,
+        //    StatusTrainingPlan = item.StatusTrainingPlan,
+        //    PercentNo = item.PercentNo,
+        //    PercentRealized = item.PercentRealized
+        //  };
+        //  totalGeral += 1;
+        //  if (item.StatusTrainingPlan == EnumStatusTrainingPlan.Realized)
+        //    countRealized += 1;
+        //  else
+        //    countNo += 1;
+        //  view.TraningPlans.Add(training);
+        //  if (item == list.Last())
+        //  {
+        //    if (totalGeral > 0)
+        //    {
+        //      view.TraningPlans.FirstOrDefault().PercentRealized = ((countRealized * 100) / totalGeral);
+        //      view.TraningPlans.FirstOrDefault().PercentNo = ((countNo * 100) / totalGeral);
+        //    }
+        //    view.TraningPlans.Add(training);
+        //  }
+
+        //}
 
         return result;
       }
