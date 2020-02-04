@@ -1609,8 +1609,8 @@ namespace Manager.Services.Specific
               {
                 Course = course.GetViewList(),
                 Workload = item.Workload,
-                Begin = item.DateBegin.Value.AddDays(-1),
-                End = item.DateEnd.Value.AddDays(-1),
+                Begin = item.DateBegin.Value,
+                End = item.DateEnd.Value,
                 Name = item.NameEvent,
                 Entity = entity.GetCrudEntity(),
                 Event = new ViewListEvent()
