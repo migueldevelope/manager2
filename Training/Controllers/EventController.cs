@@ -203,7 +203,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventopensubscription/{idperson}")]
-    public async Task<List<ViewListEvent>> ListEventOpenSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventSubscription>> ListEventOpenSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventOpenSubscription(idperson, ref total, count, page, filter);
@@ -221,12 +221,31 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventsubscription/{idperson}")]
-    public async Task<List<ViewListEvent>> ListEventSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventSubscription>> ListEventSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventSubscription(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
+    }
+
+    /// <summary>
+    /// Lista para instrutor marcar presença
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listeventinstructor/{idperson}")]
+    public async Task<List<ViewListEventSubscription>> ListEventInstructor(string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventInstructor(idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
     /// <summary>
