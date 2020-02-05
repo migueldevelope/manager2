@@ -869,8 +869,8 @@ namespace Manager.Services.Specific
 
           if ((_idPerson != item.Person._id) || zero)
           {
-            person.PercentNo = (countNoRealized * 100) / total;
-            person.PercentRealized = (countRealized * 100) / total;
+            person.PercentNo = (countNoRealized * 100) / totalPerson;
+            person.PercentRealized = (countRealized * 100) / totalPerson;
             list.Add(person);
             totalPerson = 0;
             countRealized = 0;
