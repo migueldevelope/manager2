@@ -49,6 +49,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<Reports> serviceReport;
     private readonly ServiceGeneric<Event> serviceEvent;
+    private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
     private readonly ServiceGeneric<Group> serviceGroup;
     private readonly IServicePerson serviceIPerson;
 
@@ -83,6 +84,7 @@ namespace Manager.Services.Specific
         serviceArea = new ServiceGeneric<Area>(context);
         serviceReport = new ServiceGeneric<Reports>(context);
         serviceEvent = new ServiceGeneric<Event>(context);
+        serviceEventHistoric = new ServiceGeneric<EventHistoric>(context);
         serviceIPerson = _serviceIPerson;
         queueClient = new QueueClient(serviceBusConnectionString, "reports");
         queueClientReturn = new QueueClient(serviceBusConnectionString, "reportsreturn");
@@ -115,6 +117,7 @@ namespace Manager.Services.Specific
       serviceOccupation._user = _user;
       serviceArea._user = _user;
       serviceEvent._user = _user;
+      serviceEventHistoric._user = _user;
       serviceGroup._user = _user;
       serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
@@ -142,6 +145,7 @@ namespace Manager.Services.Specific
       serviceArea._user = _user;
       serviceGroup._user = _user;
       serviceEvent._user = _user;
+      serviceEventHistoric._user = _user;
       serviceCertificationPerson._user = _user;
       serviceIPerson.SetUser(_user);
     }
@@ -361,40 +365,62 @@ namespace Manager.Services.Specific
       try
       {
         var events = serviceEvent.GetNewVersion(p => p._id == idevent).Result;
-
+        
         List<ViewCertificate> data = new List<ViewCertificate>();
         string instructors = "";
 
-        if (events.Instructors != null)
+        if (events != null)
         {
-          foreach (var item in events.Instructors)
+          if (events.Instructors != null)
           {
-            instructors += item.Name + "\n";
+            foreach (var item in events.Instructors)
+            {
+              instructors += item.Name + "\n";
+            }
+          }
+
+          if (idperson != string.Empty)
+            events.Participants = events.Participants.Where(p => p.Person._id == idperson).ToList();
+
+          if (events.Participants != null)
+          {
+            foreach (var item in events.Participants)
+            {
+              var viewEvent = new ViewCertificate()
+              {
+                NameEvent = events.Name,
+                NameCourse = events.Course?.Name,
+                Content = events.Content,
+                DateBegin = events.Begin,
+                DateEnd = events.End,
+                NameEntity = events.Entity?.Name,
+                NameParticipant = item.Name,
+                Workload = Math.Round(events.Workload / 60, 2),
+                Instructor = instructors,
+              };
+              data.Add(viewEvent);
+            };
           }
         }
-
-        if (idperson != string.Empty)
-          events.Participants = events.Participants.Where(p => p.Person._id == idperson).ToList();
-
-        if (events.Participants != null)
+        else
         {
-          foreach (var item in events.Participants)
+          var eventsHistoric = serviceEventHistoric.GetFreeNewVersion(p => p.Event._id == idevent).Result;
+          
+          var viewEvent = new ViewCertificate()
           {
-            var viewEvent = new ViewCertificate()
-            {
-              NameEvent = events.Name,
-              NameCourse = events.Course?.Name,
-              Content = events.Content,
-              DateBegin = events.Begin,
-              DateEnd = events.End,
-              NameEntity = events.Entity?.Name,
-              NameParticipant = item.Name,
-              Workload = Math.Round(events.Workload / 60, 2),
-              Instructor = instructors,
-            };
-            data.Add(viewEvent);
+            NameEvent = eventsHistoric.Name,
+            NameCourse = eventsHistoric.Course?.Name,
+            Content = "",
+            DateBegin = eventsHistoric.Begin,
+            DateEnd = eventsHistoric.End,
+            NameEntity = eventsHistoric.Entity?.Name,
+            NameParticipant = eventsHistoric.Name,
+            Workload = Math.Round(eventsHistoric.Workload / 60, 2),
+            Instructor = "",
           };
+          data.Add(viewEvent);
         }
+          
 
         var view = new ViewReport()
         {
