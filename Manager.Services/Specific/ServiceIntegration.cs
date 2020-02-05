@@ -468,6 +468,72 @@ namespace Manager.Services.Specific
         resultV2.Mensagem.Add(ex.ToString());
       }
     }
+    private string PersonUpdateTypeUser(ColaboradorV2Base view)
+    {
+      try
+      {
+        IntegrationCompany integrationCompany = GetIntegrationCompany(view.Empresa, view.NomeEmpresa);
+        Company company = companyService.GetNewVersion(p => p._id == integrationCompany.IdCompany).Result;
+        IntegrationEstablishment integrationEstablishment = null;
+        Establishment establishment = null;
+        if (company == null)
+        {
+          return "Falta integração da empresa";
+        }
+        else
+        {
+          // Estabelecimento
+          integrationEstablishment = GetIntegrationEstablishment(view.Estabelecimento, view.NomeEstabelecimento, company._id);
+          establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
+          if (establishment == null)
+          {
+            return "Falta integração de estabelecimento";
+          }
+        }
+        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
+        ViewCrudPerson person;
+        if (viewCrudIntegrationParameter.IntegrationKey == EnumIntegrationKey.Company)
+        {
+          person = personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
+              && p.Registration == view.Matricula).Result?.GetViewCrud();
+        }
+        else
+        {
+          person = personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
+              && p.Establishment._id == establishment._id && p.Registration == view.Matricula).Result?.GetViewCrud();
+        }
+        if (person != null)
+        {
+          return "Gestor não encontrado";
+        }
+        switch (person.TypeUser)
+        {
+          case EnumTypeUser.Support:
+            return "Colaborador de suporte";
+          case EnumTypeUser.Administrator:
+            return "Colaborador é administrador";
+          case EnumTypeUser.Manager:
+            return "Colaborador já é gestor";
+          case EnumTypeUser.Employee:
+            person.TypeUser = EnumTypeUser.Manager;
+            string updatePerson = personService.Update(person);
+            return "Gestor atualizado";
+          case EnumTypeUser.Anonymous:
+            return "Colaborador anônimo";
+          case EnumTypeUser.HR:
+            return "Colaborador é de RH";
+          case EnumTypeUser.ManagerHR:
+            return "Colaborador é gestor de RH";
+          default:
+            return "Tipo de colaborador não encontrado";
+        }
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+
     #endregion
 
     #region Colaborador V1
@@ -2347,6 +2413,17 @@ namespace Manager.Services.Specific
       catch (Exception)
       {
         throw;
+      }
+    }
+    public string PerfilGestorV2(ColaboradorV2Base view)
+    {
+      try
+      {
+        return PersonUpdateTypeUser(view);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
       }
     }
 

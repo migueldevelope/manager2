@@ -647,6 +647,33 @@ namespace IntegrationServer.InfraController
         }
       }
     }
+    /// <summary>
+    /// Integração com objeto único do colaborador versão 2
+    /// </summary>
+    /// <param name="view">Objeto de integração completo do colaborador</param>
+    /// <response code="200">Informações sobre a integração do colaborador</response>
+    /// <response code="400">Problemas na integração do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
+    [Authorize]
+    [HttpPost]
+    [Route("v2/perfilgestor")]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    public ObjectResult V2PerfilGestor([FromBody]ColaboradorV2Base view)
+    {
+      try
+      {
+        return Ok(service.PerfilGestorV2(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(new ColaboradorV2Retorno()
+        {
+          Mensagem = new List<string> { e.Message },
+          Situacao = "Erro"
+        });
+      }
+    }
     #endregion
 
     #region PayrollEmployee

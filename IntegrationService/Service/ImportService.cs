@@ -31,6 +31,7 @@ namespace IntegrationService.Service
 
     #region Private V2
     private List<ColaboradorV2Completo> ColaboradoresV2;
+    private List<ColaboradorV2Base> GestoresV2;
     #endregion
 
     private readonly ViewPersonLogin Person;
@@ -759,7 +760,7 @@ namespace IntegrationService.Service
         ColaboradorV2Retorno viewRetorno;
         ProgressBarMaximun = ColaboradoresV2.Count;
         ProgressBarValue = 0;
-        ProgressMessage = "Atualizando colaboradores 2/2...";
+        ProgressMessage = "Atualizando colaboradores 2/3...";
         OnRefreshProgressBar(EventArgs.Empty);
         foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
         {
@@ -788,6 +789,22 @@ namespace IntegrationService.Service
           }
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
+        }
+        ProgressBarMaximun = ColaboradoresV2.Count;
+        ProgressBarValue = 0;
+        ProgressMessage = "Atualizando gestores 3/3...";
+        OnRefreshProgressBar(EventArgs.Empty);
+        // Atualização de gestores
+        if (GestoresV2.Count > 0)
+        {
+          string result = string.Empty;
+          foreach (ColaboradorV2Base gestor in GestoresV2)
+          {
+            result = personIntegration.PutV2PerfilGestor(gestor);
+            FileClass.SaveLog(LogFileName.Replace(".log", "_gestor.log"), string.Format("{0};{1};{2};{3};{4}", gestor.Cpf, gestor.NomeEmpresa, gestor.NomeEstabelecimento, gestor.Matricula, result), EnumTypeLineOpportunityg.Register);
+            ProgressBarValue++;
+            OnRefreshProgressBar(EventArgs.Empty);
+          }
         }
         Status = EnumStatusService.Ok;
         Message = "Fim de integração!";
@@ -994,8 +1011,13 @@ namespace IntegrationService.Service
     {
       try
       {
+        ProgressBarMaximun = 100;
+        ProgressBarValue = 0;
+        ProgressMessage = "Carregando colaboradores 1/3...";
+        OnRefreshProgressBar(EventArgs.Empty);
         ApiMetadados apiMetadados = new ApiMetadados();
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
+        GestoresV2 = new List<ColaboradorV2Base>();
         List<ViewIntegrationMetadadosV1> colaboradores;
         int offset = 0;
         int limit = 100;
@@ -1009,7 +1031,10 @@ namespace IntegrationService.Service
           foreach (ViewIntegrationMetadadosV1 colaborador in colaboradores)
           {
             ColaboradoresV2.Add(new ColaboradorV2Completo(colaborador, service.Param.CultureDate, Person.IdAccount));
-            // FileClass.SaveLog("juremir.txt", string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11}", register, offset, colaborador.Cpf, colaborador.Empresa, colaborador.NomeEmpresa, colaborador.Estabelecimento, colaborador.NomeEstabelecimento, colaborador.Matricula, colaborador.Nome, colaborador.NomeCargo, colaborador.NomeClassContabil, colaborador.Email), EnumTypeLineOpportunityg.Register);
+            if (ColaboradoresV2[ColaboradoresV2.Count-1].Gestor != null)
+            {
+              GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+            }
             register++;
           }
           offset = offset + limit;
@@ -1044,6 +1069,7 @@ namespace IntegrationService.Service
           throw new Exception("Não tem nenhum colaborador para integração.");
         }
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
+        GestoresV2 = new List<ColaboradorV2Base>();
         // Carregar Lista de Colaboradores
         bool validColumn = true;
         List<string> columnsValidV2 = new List<string>
@@ -1056,7 +1082,7 @@ namespace IntegrationService.Service
         };
         ProgressBarMaximun = readData.Rows.Count;
         ProgressBarValue = 0;
-        ProgressMessage = "Carregando colaboradores 1/2...";
+        ProgressMessage = "Carregando colaboradores 1/3...";
         OnRefreshProgressBar(EventArgs.Empty);
         foreach (DataRow row in readData.Rows)
         {
@@ -1073,6 +1099,10 @@ namespace IntegrationService.Service
           }
           ColaboradoresV2.Add(new ColaboradorV2Completo(row.ItemArray.Select(x => x.ToString()).ToList(),
             readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList(), service.Param.CultureDate));
+          if (ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor != null)
+          {
+            GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+          }
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }
@@ -1111,33 +1141,42 @@ namespace IntegrationService.Service
         excelPln.Range["A1"].Select();
         excelApp.Selection.End[Excel.XlDirection.xlDown].Select();
         int finalRow = excelApp.ActiveCell.Row;
-        // Reformatação da planilha AEL
+        ProgressBarMaximun = finalRow + 1;
+        ProgressBarValue = 0;
+        ProgressMessage = "Carregando colaboradores 1/3...";
+        OnRefreshProgressBar(EventArgs.Empty);
+
+        #region Reformatação da planilha AEL
         if (Person.IdAccount.Equals("5d6ebda43501a40001d97db7")) 
         {
           excelPln.Range["A1"].Select();
           excelApp.Selection.End[Excel.XlDirection.xlDown].Select();
+          // Buscar nome da empresa do gestor
           excelPln.Range["AN2"].Select();
           excelPln.Range["AN2"].FormulaR1C1 = "=VLOOKUP(RC[-2],C[-39]:C[-38],2,FALSE)";
           excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AN2:AN{0}", finalRow)]);
           excelPln.Range[string.Format("AN2:AN{0}", finalRow)].Select();
           excelApp.Selection.Copy();
           excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
-          excelPln.Range["AO2"].Select();
-          excelPln.Range["AO2"].FormulaR1C1 = "=VLOOKUP(RC[-2],C[-38]:C[-18],21,FALSE)";
-          excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AO2:AO{0}", finalRow)]);
-          excelPln.Range[string.Format("AO2:AO{0}", finalRow)].Select();
-          excelApp.Selection.Copy();
-          excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
+          // Buscar cpf do gestor
           excelPln.Range["AP2"].Select();
-          excelPln.Range["AP2"].FormulaR1C1 = "=VLOOKUP(RC[-3],C[-39]:C[-8],32,FALSE)";
+          excelPln.Range["AP2"].FormulaR1C1 = "=VLOOKUP(RC[-3],C[-39]:C[-19],21,FALSE)";
           excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AP2:AP{0}", finalRow)]);
           excelPln.Range[string.Format("AP2:AP{0}", finalRow)].Select();
           excelApp.Selection.Copy();
           excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
+          // Buscar estabelecimento do gestor
           excelPln.Range["AQ2"].Select();
-          excelPln.Range["AQ2"].FormulaR1C1 = "=VLOOKUP(RC[-4],C[-40]:C[-8],33,FALSE)";
+          excelPln.Range["AQ2"].FormulaR1C1 = "=VLOOKUP(RC[-4],C[-40]:C[-9],32,FALSE)";
           excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AQ2:AQ{0}", finalRow)]);
           excelPln.Range[string.Format("AQ2:AQ{0}", finalRow)].Select();
+          excelApp.Selection.Copy();
+          excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
+          // Buscar nome do estabelecimento do gestor
+          excelPln.Range["AR2"].Select();
+          excelPln.Range["AR2"].FormulaR1C1 = "=VLOOKUP(RC[-5],C[-41]:C[-9],33,FALSE)";
+          excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AR2:AR{0}", finalRow)]);
+          excelPln.Range[string.Format("AR2:AR{0}", finalRow)].Select();
           excelApp.Selection.Copy();
           excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
           excelPln.Columns[37].EntireColumn.Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
@@ -1180,15 +1219,19 @@ namespace IntegrationService.Service
           excelPln.Cells[1, 20].Value = "empresa_gestor";
           excelPln.Cells[1, 21].Value = "matricula_gestor";
           excelPln.Cells[1, 22].Value = "nome_empresa_gestor";
-          excelPln.Cells[1, 23].Value = "cpf_gestor";
-          excelPln.Cells[1, 24].Value = "estabelecimento_gestor";
-          excelPln.Cells[1, 25].Value = "nome_estabelecimento_gestor";
+          excelPln.Cells[1, 23].Value = "email";
+          excelPln.Cells[1, 24].Value = "cpf_gestor";
+          excelPln.Cells[1, 25].Value = "estabelecimento_gestor";
+          excelPln.Cells[1, 26].Value = "nome_estabelecimento_gestor";
         }
+        #endregion
+
         excelPln.Range["A1"].Select();
         excelApp.Selection.End[Excel.XlDirection.xlToRight].Select();
         int collumnCount = excelApp.ActiveCell.Column + 1;
         excelPln.Range["A1"].Select();
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
+        GestoresV2 = new List<ColaboradorV2Base>();
         // Carregar Lista de Colaboradores
         List<string> columnsValidV2 = new List<string>
         {
@@ -1201,10 +1244,6 @@ namespace IntegrationService.Service
           "telefone", "identidade", "carteira_profissional", "retorno_ferias", "motivo_afastamento",
           "empresa_chefe", "nome_empresa_chefe", "estabelecimento_chefe", "nome_estabelecimento_chefe", "cpf_chefe", "matricula_chefe"
         };
-        ProgressBarMaximun = finalRow + 1;
-        ProgressBarValue = 0;
-        ProgressMessage = "Carregando colaboradores 1/2...";
-        OnRefreshProgressBar(EventArgs.Empty);
         List<string> headers = new List<string>();
         string work;
         for (int collumn = 1; collumn < collumnCount; collumn++)
@@ -1232,6 +1271,10 @@ namespace IntegrationService.Service
             rowData.Add(workData == null ? string.Empty : workData.ToString().Trim());
           }
           ColaboradoresV2.Add(new ColaboradorV2Completo(rowData, headers, service.Param.CultureDate));
+          if (ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor != null)
+          {
+            GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+          }
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }

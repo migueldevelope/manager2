@@ -22,10 +22,6 @@ namespace IntegrationService.Api
       else
         pathUrl = string.Format("{0}/", Person.Url).Replace("//test.", "//test_integrationserver.");
         //pathUrl = string.Format("{0}/", "http://10.0.0.16:5203");
-
-      if (Person.Url == "https://analisa.unimednordesters.com.br")
-        pathUrl = "https://analisa.unimednordesters.com.br/integrationserver/";
-
       clientSkill = new HttpClient()
       {
         BaseAddress = new Uri(pathUrl)
@@ -89,6 +85,20 @@ namespace IntegrationService.Api
         content.Headers.ContentType.MediaType = "application/json";
         HttpResponseMessage result = clientSkill.PutAsync("person/v2/demissao", content).Result;
         return JsonConvert.DeserializeObject<ColaboradorV2Retorno>(result.Content.ReadAsStringAsync().Result);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    public string PutV2PerfilGestor(ColaboradorV2Base view)
+    {
+      try
+      {
+        StringContent content = new StringContent(JsonConvert.SerializeObject(view));
+        content.Headers.ContentType.MediaType = "application/json";
+        HttpResponseMessage result = clientSkill.PutAsync("person/v2/perfilgestor", content).Result;
+        return JsonConvert.DeserializeObject<string>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception ex)
       {
