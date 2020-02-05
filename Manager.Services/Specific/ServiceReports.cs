@@ -414,7 +414,7 @@ namespace Manager.Services.Specific
             DateBegin = eventsHistoric.Begin,
             DateEnd = eventsHistoric.End,
             NameEntity = eventsHistoric.Entity?.Name,
-            NameParticipant = eventsHistoric.Name,
+            NameParticipant = eventsHistoric.Person.Name,
             Workload = Math.Round(eventsHistoric.Workload / 60, 2),
             Instructor = "",
           };
