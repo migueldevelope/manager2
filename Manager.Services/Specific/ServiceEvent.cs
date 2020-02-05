@@ -739,15 +739,10 @@ namespace Manager.Services.Specific
         var result = new List<Event>();
         foreach (var item in detail)
         {
-          if (item.Begin != null)
-          {
-            if (date.Value.Date < item.Begin.Value.AddDays(item.DaysSubscription * -1).Date)
-            {
-              var instructors = item.Instructors.Where(p => p.Person != null).ToList();
-              if (instructors.Where(p => p.Person._id == idperson).Count() > 0)
-                result.Add(item);
-            }
-          }
+          var instructors = item.Instructors.Where(p => p.Person != null).ToList();
+          if (instructors.Where(p => p.Person._id == idperson).Count() > 0)
+            result.Add(item);
+
         }
         total = result.Count();
 
