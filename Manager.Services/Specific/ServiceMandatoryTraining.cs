@@ -839,7 +839,6 @@ namespace Manager.Services.Specific
           Person = detail.FirstOrDefault().Person.User.Name,
           Courses = new List<ViewListTrainingPlanPerson>()
         };
-        list.Add(person);
 
         foreach (var item in detail)
         {
