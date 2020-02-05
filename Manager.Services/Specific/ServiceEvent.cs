@@ -746,7 +746,7 @@ namespace Manager.Services.Specific
         }
         total = result.Count();
 
-        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
+        return result.OrderBy(p => p.End).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
         {
           _id = p._id,
           NameEvent = p.Name,
