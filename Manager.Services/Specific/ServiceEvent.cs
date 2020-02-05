@@ -604,6 +604,7 @@ namespace Manager.Services.Specific
                 _id = item._id,
                 Name = item.User.Name,
                 Document = item.User.Document,
+                Registration = item.Registration,
                 //Person = item.GetViewList(),
                 Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
                 {

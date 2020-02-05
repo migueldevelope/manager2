@@ -286,6 +286,8 @@ namespace Manager.Services.Specific
             {
               NameEvent = events.Name,
               NameCourse = events.Course?.Name,
+              Workload = events.Workload,
+              Registration = item.Person.Registration,
               Content = events.Content,
               DateBegin = events.Begin,
               DateEnd = events.End,

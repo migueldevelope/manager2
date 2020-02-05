@@ -28,6 +28,8 @@ namespace Manager.Views.BusinessView
     public string Day15 { get; set; }
     public string Instructor { get; set; }
     public string NameParticipant { get; set; }
+    public string Registration { get; set; }
+    public decimal Workload { get; set; }
 
   }
 }

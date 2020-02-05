@@ -827,6 +827,9 @@ namespace Manager.Services.Specific
         }
 
         var list = new List<ViewListTrainingPlan>();
+        var countRealized = 0;
+        var countNoRealized = 0;
+        var totalPerson = 0;
 
         if (detail.Count() == 0)
           return null;
@@ -856,10 +859,24 @@ namespace Manager.Services.Specific
             Origin = item.Origin,
             StatusTrainingPlan = item.StatusTrainingPlan
           };
+          totalPerson += 1;
+          if (course.StatusTrainingPlan == EnumStatusTrainingPlan.Open)
+            countNoRealized += 1;
+          else
+            countRealized += 1;
+
           person.Courses.Add(course);
 
           if ((_idPerson != item.Person._id) || zero)
+          {
+            person.PercentNo = (countNoRealized * 100) / total;
+            person.PercentRealized = (countRealized * 100) / total;
             list.Add(person);
+            totalPerson = 0;
+            countRealized = 0;
+            countNoRealized = 0;
+          }
+            
 
           _idPerson = item.Person._id;
           zero = false;
