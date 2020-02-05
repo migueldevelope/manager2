@@ -827,6 +827,11 @@ namespace Manager.Services.Specific
           }
         }
 
+        var personsdisabled = servicePerson.GetAllNewVersion(p => p.StatusUser == EnumStatusUser.Disabled).Result
+          ?.Select(p => p._id).ToList();
+
+        detail = detail.Where(p => !personsdisabled.Contains(p.Person._id)).ToList();
+
         var list = new List<ViewListTrainingPlan>();
         var countRealized = 0;
         var countNoRealized = 0;
