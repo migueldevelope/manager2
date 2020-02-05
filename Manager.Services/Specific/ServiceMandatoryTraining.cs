@@ -773,6 +773,7 @@ namespace Manager.Services.Specific
             countRealized += 1;
           else
             countNo += 1;
+          course.Course = item.Course.Name;
           course.Origin = item.Origin;
           course.StatusTrainingPlan = item.StatusTrainingPlan;
           view.Courses.Add(course);
