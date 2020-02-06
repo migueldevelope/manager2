@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using Manager.Core.BusinessModel;
 using Manager.Views.CustomClient;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 
 namespace Manager.Services.Auth
 {
