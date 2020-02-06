@@ -655,7 +655,7 @@ namespace IntegrationServer.InfraController
     /// <response code="400">Problemas na integração do colaborador</response>
     /// <returns>Objeto de retorno da integração </returns>
     [Authorize]
-    [HttpPost]
+    [HttpPut]
     [Route("v2/perfilgestor")]
     [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]

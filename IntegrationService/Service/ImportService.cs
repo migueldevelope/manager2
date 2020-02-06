@@ -777,9 +777,12 @@ namespace IntegrationService.Service
           {
             FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
-            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Colaborador.Matricula)), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
-            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Colaborador.Matricula)), "Json Post integrationserver/person/v2/completo", EnumTypeLineOpportunityg.Register);
-            FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Colaborador.Matricula)), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
+            if (!File.Exists(LogFileName.Replace(".log", "_json.log")))
+            {
+              FileClass.SaveLog(LogFileName.Replace(".log", "_json.log"), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
+              FileClass.SaveLog(LogFileName.Replace(".log", "_json.log"), "Json Post integrationserver/person/v2/completo", EnumTypeLineOpportunityg.Register);
+            }
+            FileClass.SaveLog(LogFileName.Replace(".log", "_json.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
             hasLogFile = true;
           }
           else
@@ -790,7 +793,7 @@ namespace IntegrationService.Service
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }
-        ProgressBarMaximun = ColaboradoresV2.Count;
+        ProgressBarMaximun = GestoresV2.Count;
         ProgressBarValue = 0;
         ProgressMessage = "Atualizando gestores 3/3...";
         OnRefreshProgressBar(EventArgs.Empty);
@@ -801,6 +804,12 @@ namespace IntegrationService.Service
           foreach (ColaboradorV2Base gestor in GestoresV2)
           {
             result = personIntegration.PutV2PerfilGestor(gestor);
+            if (!File.Exists(LogFileName.Replace(".log", "_gestor_json.log")))
+            {
+              FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_json.log"), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
+              FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_json.log"), "Json Post integrationserver/person/v2/perfilgestor", EnumTypeLineOpportunityg.Register);
+            }
+            FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_json.log"), JsonConvert.SerializeObject(gestor), EnumTypeLineOpportunityg.Register);
             FileClass.SaveLog(LogFileName.Replace(".log", "_gestor.log"), string.Format("{0};{1};{2};{3};{4}", gestor.Cpf, gestor.NomeEmpresa, gestor.NomeEstabelecimento, gestor.Matricula, result), EnumTypeLineOpportunityg.Register);
             ProgressBarValue++;
             OnRefreshProgressBar(EventArgs.Empty);
@@ -1023,6 +1032,7 @@ namespace IntegrationService.Service
         int limit = 100;
         int register = 0;
         bool nextPage = true;
+        ColaboradorV2Base gestor;
         while (nextPage)
         {
           colaboradores = new List<ViewIntegrationMetadadosV1>();
@@ -1033,7 +1043,11 @@ namespace IntegrationService.Service
             ColaboradoresV2.Add(new ColaboradorV2Completo(colaborador, service.Param.CultureDate, Person.IdAccount));
             if (ColaboradoresV2[ColaboradoresV2.Count-1].Gestor != null)
             {
-              GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+              gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
+              if (GestoresV2.FindIndex(p => p.Empresa == gestor.Empresa && p.Estabelecimento == gestor.Estabelecimento && p.Cpf == gestor.Cpf && p.Matricula == gestor.Matricula) == -1)
+              {
+                GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+              }
             }
             register++;
           }
@@ -1084,6 +1098,7 @@ namespace IntegrationService.Service
         ProgressBarValue = 0;
         ProgressMessage = "Carregando colaboradores 1/3...";
         OnRefreshProgressBar(EventArgs.Empty);
+        ColaboradorV2Base gestor;
         foreach (DataRow row in readData.Rows)
         {
           if (validColumn)
@@ -1101,7 +1116,11 @@ namespace IntegrationService.Service
             readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList(), service.Param.CultureDate));
           if (ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor != null)
           {
-            GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+            gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
+            if (GestoresV2.FindIndex(p => p.Empresa == gestor.Empresa && p.Estabelecimento == gestor.Estabelecimento && p.Cpf == gestor.Cpf && p.Matricula == gestor.Matricula) == -1)
+            {
+              GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+            }
           }
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
@@ -1260,6 +1279,7 @@ namespace IntegrationService.Service
         List<string> rowData;
         string collumName;
         dynamic workData;
+        ColaboradorV2Base gestor;
         for (int row = 2; row < finalRow+1; row++)
         {
           rowData = new List<string>();
@@ -1273,7 +1293,11 @@ namespace IntegrationService.Service
           ColaboradoresV2.Add(new ColaboradorV2Completo(rowData, headers, service.Param.CultureDate));
           if (ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor != null)
           {
-            GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+            gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
+            if (GestoresV2.FindIndex(p => p.Empresa == gestor.Empresa && p.Estabelecimento == gestor.Estabelecimento && p.Cpf == gestor.Cpf && p.Matricula == gestor.Matricula) == -1)
+            {
+              GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
+            }
           }
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
