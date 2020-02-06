@@ -804,13 +804,6 @@ namespace IntegrationService.Service
           foreach (ColaboradorV2Base gestor in GestoresV2)
           {
             result = personIntegration.PutV2PerfilGestor(gestor);
-            if (!File.Exists(LogFileName.Replace(".log", "_gestor_json.log")))
-            {
-              FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_json.log"), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
-              FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_json.log"), "Json Post integrationserver/person/v2/perfilgestor", EnumTypeLineOpportunityg.Register);
-            }
-            FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_json.log"), JsonConvert.SerializeObject(gestor), EnumTypeLineOpportunityg.Register);
-            FileClass.SaveLog(LogFileName.Replace(".log", "_gestor.log"), string.Format("{0};{1};{2};{3};{4}", gestor.Cpf, gestor.NomeEmpresa, gestor.NomeEstabelecimento, gestor.Matricula, result), EnumTypeLineOpportunityg.Register);
             ProgressBarValue++;
             OnRefreshProgressBar(EventArgs.Empty);
           }
@@ -822,7 +815,6 @@ namespace IntegrationService.Service
           Message = "Fim de integração com LOG!";
           Status = EnumStatusService.Error;
         }
-        // até aqui
         service.Param.CriticalError = string.Empty;
         service.Param.LastExecution = DateTime.UtcNow;
         service.Param.MachineIdentity = Environment.GetEnvironmentVariable("COMPUTERNAME");
