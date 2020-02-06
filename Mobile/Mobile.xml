@@ -15,14 +15,14 @@
             </summary>
             <param name="_service">Serviço de autenticação</param>
         </member>
-        <member name="M:Mobile.Controllers.AuthenticationController.Post(Manager.Core.Views.ViewAuthentication)">
+        <member name="M:Mobile.Controllers.AuthenticationController.Post(Manager.Views.BusinessView.ViewAuthentication)">
             <summary>
             Autenticação de usuário
             </summary>
             <param name="userLogin">Objeto de autenticação de usuário</param>
             <returns>Informações de login e token de segurança, caso haja problema retorna a mensagem com o problema</returns>
         </member>
-        <member name="M:Mobile.Controllers.AuthenticationController.PostV2(Manager.Core.Views.ViewAuthentication)">
+        <member name="M:Mobile.Controllers.AuthenticationController.PostV2(Manager.Views.BusinessView.ViewAuthentication)">
             <summary>
             Authentication version 2
             </summary>

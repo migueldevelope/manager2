@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

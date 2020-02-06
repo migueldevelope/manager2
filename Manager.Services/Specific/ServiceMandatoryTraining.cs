@@ -773,6 +773,7 @@ namespace Manager.Services.Specific
             countRealized += 1;
           else
             countNo += 1;
+          course.Course = item.Course.Name;
           course.Origin = item.Origin;
           course.StatusTrainingPlan = item.StatusTrainingPlan;
           view.Courses.Add(course);
@@ -826,7 +827,15 @@ namespace Manager.Services.Specific
           }
         }
 
+        var personsdisabled = servicePerson.GetAllNewVersion(p => p.StatusUser == EnumStatusUser.Disabled).Result
+          ?.Select(p => p._id).ToList();
+
+        detail = detail.Where(p => !personsdisabled.Contains(p.Person._id)).ToList();
+
         var list = new List<ViewListTrainingPlan>();
+        var countRealized = 0;
+        var countNoRealized = 0;
+        var totalPerson = 0;
 
         if (detail.Count() == 0)
           return null;
@@ -839,7 +848,6 @@ namespace Manager.Services.Specific
           Person = detail.FirstOrDefault().Person.User.Name,
           Courses = new List<ViewListTrainingPlanPerson>()
         };
-        list.Add(person);
 
         foreach (var item in detail)
         {
@@ -857,10 +865,24 @@ namespace Manager.Services.Specific
             Origin = item.Origin,
             StatusTrainingPlan = item.StatusTrainingPlan
           };
+          totalPerson += 1;
+          if (course.StatusTrainingPlan == EnumStatusTrainingPlan.Open)
+            countNoRealized += 1;
+          else
+            countRealized += 1;
+
           person.Courses.Add(course);
 
           if ((_idPerson != item.Person._id) || zero)
+          {
+            person.PercentNo = (countNoRealized * 100) / totalPerson;
+            person.PercentRealized = (countRealized * 100) / totalPerson;
             list.Add(person);
+            totalPerson = 0;
+            countRealized = 0;
+            countNoRealized = 0;
+          }
+            
 
           _idPerson = item.Person._id;
           zero = false;

@@ -45,7 +45,7 @@
             </summary>
             <param name="_service">Serviço de autenticação</param>
         </member>
-        <member name="M:IntegrationServer.Controllers.AuthenticationController.Post(Manager.Core.Views.ViewAuthentication)">
+        <member name="M:IntegrationServer.Controllers.AuthenticationController.Post(Manager.Views.BusinessView.ViewAuthentication)">
             <summary>
             Autenticação de usuário
             </summary>
@@ -377,6 +377,15 @@
             </summary>
             <response code="200">Lista de colaboradores ativos</response>
             <response code="400">Problemas na geração da lista</response>
+            <returns>Objeto de retorno da integração </returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.PersonController.V2PerfilGestor(Manager.Views.Integration.V2.ColaboradorV2Base)">
+            <summary>
+            Integração com objeto único do colaborador versão 2
+            </summary>
+            <param name="view">Objeto de integração completo do colaborador</param>
+            <response code="200">Informações sobre a integração do colaborador</response>
+            <response code="400">Problemas na integração do colaborador</response>
             <returns>Objeto de retorno da integração </returns>
         </member>
         <member name="M:IntegrationServer.InfraController.PersonController.Payroll(System.String)">

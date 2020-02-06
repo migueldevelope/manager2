@@ -604,6 +604,7 @@ namespace Manager.Services.Specific
                 _id = item._id,
                 Name = item.User.Name,
                 Document = item.User.Document,
+                Registration = item.Registration,
                 //Person = item.GetViewList(),
                 Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
                 {
@@ -738,19 +739,14 @@ namespace Manager.Services.Specific
         var result = new List<Event>();
         foreach (var item in detail)
         {
-          if (item.Begin != null)
-          {
-            if (date.Value.Date < item.Begin.Value.AddDays(item.DaysSubscription * -1).Date)
-            {
-              var instructors = item.Instructors.Where(p => p.Person != null).ToList();
-              if (instructors.Where(p => p.Person._id == idperson).Count() > 0)
-                result.Add(item);
-            }
-          }
+          var instructors = item.Instructors.Where(p => p.Person != null).ToList();
+          if (instructors.Where(p => p.Person._id == idperson).Count() > 0)
+            result.Add(item);
+
         }
         total = result.Count();
 
-        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
+        return result.OrderBy(p => p.End).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
         {
           _id = p._id,
           NameEvent = p.Name,

@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Views;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 
 namespace Manager.Core.Interfaces

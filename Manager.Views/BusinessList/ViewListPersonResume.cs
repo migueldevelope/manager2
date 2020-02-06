@@ -6,6 +6,7 @@ namespace Manager.Views.BusinessList
   {
     public string Document { get; set; }
     public ViewListCbo Cbo { get; set; }
+    public string Registration { get; set; }
     //public ViewListPerson Person { get; set; }
 
   }
