@@ -291,7 +291,7 @@ namespace Manager.Services.Specific
               NameEvent = events.Name,
               NameCourse = events.Course?.Name,
               Workload = Math.Round(events.Workload / 60, 2),
-              Registration = item.Person.Registration,
+              Registration = item.Person?.Registration,
               Content = events.Content,
               DateBegin = events.Begin,
               DateEnd = events.End,

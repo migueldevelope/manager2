@@ -734,7 +734,7 @@ namespace Manager.Services.Specific
         //LogSave(_user._idPerson, "List Open Events subscrive");
         DateTime? date = DateTime.Now;
         int skip = (count * (page - 1));
-        var detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+        var detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.End).ToList();
 
         var result = new List<Event>();
         foreach (var item in detail)
@@ -773,7 +773,7 @@ namespace Manager.Services.Specific
         DateTime? date = DateTime.Now;
         int skip = (count * (page - 1));
         var detail = serviceEvent.GetAllNewVersion(p => p.OpenSubscription == true &
-        p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+        p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.End).ToList();
 
         var result = new List<Event>();
         foreach (var item in detail)
@@ -792,7 +792,7 @@ namespace Manager.Services.Specific
         }
         total = result.Count();
 
-        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
+        return result.Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
         {
           _id = p._id,
           NameEvent = p.Name,
@@ -818,7 +818,7 @@ namespace Manager.Services.Specific
         //LogSave(_user._idPerson, "List Open Events subscrive");
         DateTime? date = DateTime.Now;
         int skip = (count * (page - 1));
-        var detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+        var detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open & p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.End).ToList();
 
         var result = new List<Event>();
         foreach (var item in detail)
@@ -839,7 +839,7 @@ namespace Manager.Services.Specific
         }
         total = result.Count();
 
-        return result.OrderBy(p => p.Name).Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
+        return result.Skip(skip).Take(count).Select(p => new ViewListEventSubscription()
         {
           _id = p._id,
           NameEvent = p.Name,
