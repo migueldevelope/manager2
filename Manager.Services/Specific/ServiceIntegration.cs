@@ -502,7 +502,7 @@ namespace Manager.Services.Specific
           person = personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
               && p.Establishment._id == establishment._id && p.Registration == view.Matricula).Result?.GetViewCrud();
         }
-        if (person != null)
+        if (person == null)
         {
           return "Gestor não encontrado";
         }
