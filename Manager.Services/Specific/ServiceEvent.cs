@@ -10,9 +10,14 @@ using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using MongoDB.Bson;
+using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,11 +35,11 @@ namespace Manager.Services.Specific
     private readonly ServiceLog serviceLog;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlan;
-
     private readonly string Path;
+    private readonly string blobkey;
 
     #region Constructor
-    public ServiceEvent(DataContext context, DataContext contextLog, string pathToken) : base(context)
+    public ServiceEvent(DataContext context, DataContext contextLog, string pathToken, string _blobkey) : base(context)
     {
       try
       {
@@ -47,6 +52,7 @@ namespace Manager.Services.Specific
         servicePerson = new ServiceGeneric<Person>(context);
         serviceTrainingPlan = new ServiceGeneric<TrainingPlan>(context);
         Path = pathToken;
+        blobkey = _blobkey;
       }
       catch (Exception e)
       {
@@ -1463,6 +1469,41 @@ namespace Manager.Services.Specific
     #endregion
 
     #region private
+
+    private async Task<string> GenerateQRCode(string idevent, string idparticipant)
+    {
+      try
+      {
+        var data = idevent + ";" + idparticipant;
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode(data,
+        QRCodeGenerator.ECCLevel.Q);
+        QRCode qrCode = new QRCode(qrCodeData);
+        var qrCodeImage = qrCode.GetGraphic(20);
+        var stream = new MemoryStream();
+        qrCodeImage.Save(stream, ImageFormat.Bmp);
+
+        CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobkey);
+        CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+        CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(_user._idAccount);
+        if (await cloudBlobContainer.CreateIfNotExistsAsync())
+        {
+          await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+          {
+            PublicAccess = BlobContainerPublicAccessType.Blob
+          });
+        }
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", data.Replace(";",""), ".bmp"));
+        blockBlob.Properties.ContentType = "image/bmp";
+        await blockBlob.UploadFromStreamAsync(stream);
+
+        return blockBlob.Uri.ToString();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     private void UpdateAddDaysParticipant(ref Event events, ViewCrudDaysEvent days)
     {
