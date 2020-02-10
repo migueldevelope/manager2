@@ -689,35 +689,35 @@ namespace Manager.Services.Specific
             var g = scores.Where(p => p.Step == EnumSteps.G).FirstOrDefault().Value;
             var h = scores.Where(p => p.Step == EnumSteps.H).FirstOrDefault().Value;
 
-            if (resultEnd <= a)
+            if (resultEnd < b)
             {
               resultStep = EnumSteps.A;
             }
-            else if ((resultEnd > a) && (resultEnd <= b))
+            else if ((resultEnd >= b) && (resultEnd < c))
             {
               resultStep = EnumSteps.B;
             }
-            else if ((resultEnd > b) && (resultEnd <= c))
+            else if ((resultEnd >= c) && (resultEnd < d))
             {
               resultStep = EnumSteps.C;
             }
-            else if ((resultEnd > c) && (resultEnd <= d))
+            else if ((resultEnd >= d) && (resultEnd < e))
             {
               resultStep = EnumSteps.D;
             }
-            else if ((resultEnd > d) && (resultEnd <= e))
+            else if ((resultEnd >= e) && (resultEnd < f))
             {
               resultStep = EnumSteps.E;
             }
-            else if ((resultEnd > e) && (resultEnd <= f))
+            else if ((resultEnd >= f) && (resultEnd < g))
             {
               resultStep = EnumSteps.F;
             }
-            else if ((resultEnd > f) && (resultEnd <= g))
+            else if ((resultEnd >= g) && (resultEnd < h))
             {
               resultStep = EnumSteps.G;
             }
-            else if (resultEnd > g)
+            else if (resultEnd >= h)
             {
               resultStep = EnumSteps.H;
             }
