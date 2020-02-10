@@ -498,8 +498,8 @@ namespace Manager.Services.Specific
 
           var max = scores.Where(p => p.Value > 0).Max(p => p.Value);
           var min = scores.Where(p => p.Value > 0).Min(p => p.Value);
-          if (min < 80)
-            min = 80;
+          //if (min < 80)
+          //  min = 80;
 
           var diff = max - min;
           resultEnd = ((resultEnd * diff) / 100) + min;
