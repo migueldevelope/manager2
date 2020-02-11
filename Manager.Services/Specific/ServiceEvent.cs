@@ -955,7 +955,7 @@ namespace Manager.Services.Specific
         foreach (var person in listperson)
         {
           List<Event> detail = new List<Event>();
-          var list = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
+          var list = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
           foreach (var item in list)
           {
             if (item.Instructors.Where(x => x._id == person._id).Count() > 0)
@@ -976,7 +976,7 @@ namespace Manager.Services.Specific
             Event = null,
             Workload = p.Workload,
             Attachments = p.Attachments
-          }).ToList();
+          }).OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
         }
         return null;
       }
