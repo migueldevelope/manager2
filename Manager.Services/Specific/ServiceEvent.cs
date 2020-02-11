@@ -951,15 +951,16 @@ namespace Manager.Services.Specific
       {
 
         int skip = (count * (page - 1));
-        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result;
+        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result.Select(p => p._id).ToList();
         foreach (var person in listperson)
         {
           List<Event> detail = new List<Event>();
           var list = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
           foreach (var item in list)
           {
-            if (item.Instructors.Where(x => x._id == person._id).Count() > 0)
-              detail.Add(item);
+            if (item.Instructors != null)
+              if (item.Instructors.Where(x => x.Person._id == person).Count() > 0)
+                detail.Add(item);
           }
 
           total = detail.Count();
@@ -967,8 +968,8 @@ namespace Manager.Services.Specific
           {
             _id = p._id,
             Name = p.Course.Name,
-            _idPerson = p.Instructors.Where(x => x._id == id).FirstOrDefault()._id,
-            NamePerson = p.Instructors.Where(x => x._id == id).FirstOrDefault().Name,
+            _idPerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?._id,
+            NamePerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?.Name,
             Begin = p.Begin,
             End = p.End,
             Course = p.Course,

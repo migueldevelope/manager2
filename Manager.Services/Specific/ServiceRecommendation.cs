@@ -137,7 +137,7 @@ namespace Manager.Services.Specific
         {
           recommendation = serviceRecommendation.GetNewVersion(p => p._id == idrecommendation).Result;
           recommendation.Image = url;
-          serviceRecommendation.UpdateAccount(recommendation, null).Wait();
+          serviceRecommendation.Update(recommendation, null).Wait();
         }
         else
         {
