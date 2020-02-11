@@ -2289,25 +2289,31 @@ namespace Manager.Services.Specific
           Situacao = "Ok",
           Mensagem = new List<string>()
         };
-        // Validação de campos especiais
-        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
-        view.DataDemissao = EmptyDateDefault(view.DataDemissao, DateTime.Now.Date);
-        // Atualização da base de dados
+        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
         IntegrationParameter param = parameterService.GetAllNewVersion().FirstOrDefault();
         if (param == null)
         {
           resultV2.Mensagem.Add("Não existe parâmetro de integração.");
           return resultV2;
         }
-        // Atualização da base de dados
-        List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        if (param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
+        if (view._id == null)
         {
-          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
-        }
-        else
+          // Validação de campos especiais
+          view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+          view.DataDemissao = EmptyDateDefault(view.DataDemissao, DateTime.Now.Date);
+          // Atualização da base de dados
+          // Atualização da base de dados
+          if (param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
+          {
+            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          }
+          else
+          {
+            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          }
+        } else
         {
-          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2 && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p._idContract == view._id && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
         }
         if (payrollEmployees.Count == 0)
         {
