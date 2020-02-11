@@ -515,7 +515,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.A;
             }
-            else 
+            else
             {
               resultStep = EnumSteps.B;
             }
@@ -536,7 +536,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.B;
             }
-            else if (resultEnd >= c) 
+            else if (resultEnd >= c)
             {
               resultStep = EnumSteps.C;
             }
@@ -562,7 +562,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.C;
             }
-            else if (resultEnd >= d) 
+            else if (resultEnd >= d)
             {
               resultStep = EnumSteps.D;
             }
@@ -671,7 +671,7 @@ namespace Manager.Services.Specific
             {
               resultStep = EnumSteps.F;
             }
-            else if (resultEnd >= g) 
+            else if (resultEnd >= g)
             {
               resultStep = EnumSteps.G;
             }
@@ -1313,9 +1313,9 @@ namespace Manager.Services.Specific
           ResultEnd = meritocracy.ResultEnd,
           ResultStep = meritocracy.ResultStep,
           ResultStepScale = meritocracy.ResultStepScale,
-          PercentSalary = meritocracy.PercentSalary,
-          SalaryDifference = meritocracy.SalaryDifference,
-          SalaryNew = meritocracy.SalaryNew,
+          PercentSalary = Math.Round(meritocracy.PercentSalary, 2),
+          SalaryDifference = Math.Round(meritocracy.SalaryDifference, 2),
+          SalaryNew = Math.Round(meritocracy.SalaryNew, 2),
           Score = meritocracy.Score == null ? null : new ViewCrudMeritocracyScore()
           {
             _id = meritocracy.Score._id,

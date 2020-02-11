@@ -132,9 +132,21 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Recommendation recommendation = serviceRecommendation.GetFreeNewVersion(p => p._id == idrecommendation).Result;
-        recommendation.Image = url;
-        serviceRecommendation.UpdateAccount(recommendation, null).Wait();
+        Recommendation recommendation = serviceRecommendation.GetNewVersion(p => p._id == idrecommendation).Result;
+        if(recommendation == null)
+        {
+          recommendation = serviceRecommendation.GetNewVersion(p => p._id == idrecommendation).Result;
+          recommendation.Image = url;
+          serviceRecommendation.UpdateAccount(recommendation, null).Wait();
+        }
+        else
+        {
+          recommendation.Image = url;
+          serviceRecommendation.Update(recommendation, null).Wait();
+        }
+          
+
+        
         Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
       }
       catch (Exception e)
