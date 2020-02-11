@@ -168,8 +168,8 @@ namespace Manager.Services.Specific
 
         serviceRecommendation.Update(recommendation, null).Wait();
 
-        Task.Run(() => SynchronizeRecommendationsAsync());
-        Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
+        //Task.Run(() => SynchronizeRecommendationsAsync());
+        //Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
 
         return "Recommendation altered!";
       }
