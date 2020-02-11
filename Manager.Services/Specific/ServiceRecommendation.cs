@@ -137,7 +137,7 @@ namespace Manager.Services.Specific
         {
           recommendation = serviceRecommendation.GetNewVersion(p => p._id == idrecommendation).Result;
           recommendation.Image = url;
-          serviceRecommendation.UpdateAccount(recommendation, null).Wait();
+          serviceRecommendation.Update(recommendation, null).Wait();
         }
         else
         {
@@ -147,7 +147,7 @@ namespace Manager.Services.Specific
           
 
         
-        Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
+        //Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
       }
       catch (Exception e)
       {
@@ -168,8 +168,8 @@ namespace Manager.Services.Specific
 
         serviceRecommendation.Update(recommendation, null).Wait();
 
-        Task.Run(() => SynchronizeRecommendationsAsync());
-        Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
+        //Task.Run(() => SynchronizeRecommendationsAsync());
+        //Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
 
         return "Recommendation altered!";
       }

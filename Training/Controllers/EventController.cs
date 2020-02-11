@@ -405,6 +405,25 @@ namespace Training.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
     }
+
+    /// <summary>
+    /// Lista os histórico de evento de um instrutor
+    /// </summary>
+    /// <param name="id">Identificador usuário</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("listeventhistoricinstructor/{id}")]
+    public async Task<List<ViewCrudEventHistoric>> ListEventHistoricInstructor(string id, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoricInstructor(id, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Lista os histórico de evento de um contrato
     /// </summary>

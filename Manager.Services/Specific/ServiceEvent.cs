@@ -132,8 +132,8 @@ namespace Manager.Services.Specific
             Person = item.Person?.Name,
             Event = item.Name,
             Occupation = servicePerson.GetNewVersion(p => p._id == item.Person._id).Result.Occupation?.Name,
-            Begin = item.Begin.ToString("dd/MM/yyyy"),
-            End = item.End.ToString("dd/MM/yyyy"),
+            Begin = item.Begin.Value.ToString("dd/MM/yyyy"),
+            End = item.End.Value.ToString("dd/MM/yyyy"),
             Wordload = item.Workload / 60,
             WorkloadMin = item.Workload
           };
@@ -945,6 +945,48 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewCrudEventHistoric> ListEventHistoricInstructor(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+
+        int skip = (count * (page - 1));
+        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result.Select(p => p._id).ToList();
+        foreach (var person in listperson)
+        {
+          List<Event> detail = new List<Event>();
+          var list = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+          foreach (var item in list)
+          {
+            if (item.Instructors != null)
+              if (item.Instructors.Where(x => x.Person._id == person).Count() > 0)
+                detail.Add(item);
+          }
+
+          total = detail.Count();
+          return detail.Select(p => new ViewCrudEventHistoric()
+          {
+            _id = p._id,
+            Name = p.Course.Name,
+            _idPerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?._id,
+            NamePerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?.Name,
+            Begin = p.Begin,
+            End = p.End,
+            Course = p.Course,
+            Entity = p.Entity,
+            Event = null,
+            Workload = p.Workload,
+            Attachments = p.Attachments
+          }).OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
+        }
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListCourse> ListCourse(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -1493,7 +1535,7 @@ namespace Manager.Services.Specific
             PublicAccess = BlobContainerPublicAccessType.Blob
           });
         }
-        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", data.Replace(";",""), ".bmp"));
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", data.Replace(";", ""), ".bmp"));
         blockBlob.Properties.ContentType = "image/bmp";
         await blockBlob.UploadFromStreamAsync(stream);
 

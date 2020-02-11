@@ -242,6 +242,16 @@
             <param name="filter"></param>
             <returns></returns>
         </member>
+        <member name="M:Training.Controllers.EventController.ListEventHistoricInstructor(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista os histórico de evento de um instrutor
+            </summary>
+            <param name="id">Identificador usuário</param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
         <member name="M:Training.Controllers.EventController.ListEventHistoricPerson(System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Lista os histórico de evento de um contrato
