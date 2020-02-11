@@ -973,7 +973,7 @@ namespace IntegrationService.Service
             {
               Colaborador = null,
               _id = colaborador._id,
-              DataDemissao = DateTime.Now.Date
+              DataDemissao = DateTime.UtcNow
             };
             viewRetorno = personIntegration.PutV2Demissao(demissao);
             if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
