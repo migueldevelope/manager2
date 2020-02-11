@@ -939,7 +939,7 @@ namespace IntegrationService.Service
           CleanEmploee();
         }
         // Rotina de Demissão por Ausencia
-        List<ColaboradorV2Base> colaboradores = personIntegration.GetActiveV2();
+        List<ColaboradorV2Ativo> colaboradores = personIntegration.GetActiveV2();
         ProgressBarMaximun = colaboradores.Count;
         ProgressBarValue = 0;
         ProgressMessage = "Verificando demissão de colaboradores 2/2...";
@@ -947,28 +947,38 @@ namespace IntegrationService.Service
         ColaboradorV2Demissao demissao;
         ColaboradorV2Retorno viewRetorno;
         ColaboradorV2Completo view;
-        foreach (ColaboradorV2Base colaborador in colaboradores)
+        bool fired = false;
+        foreach (ColaboradorV2Ativo colaborador in colaboradores)
         {
-          if (service.Param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
+          fired = true;
+          foreach (var item in colaborador.Chaves)
           {
-            view = ColaboradoresV2.Find(p => p.Colaborador.Chave1 == colaborador.Chave1);
+            if (service.Param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
+            {
+              view = ColaboradoresV2.Find(p => p.Colaborador.Chave1 == string.Format("{0};{1};{2};{3}", colaborador.Cpf, item.Split(',')[0], item.Split(',')[1], colaborador.Matricula));
+            }
+            else
+            {
+              view = ColaboradoresV2.Find(p => p.Colaborador.Chave2 == string.Format("{0};{1};{2}", colaborador.Cpf, item.Split(',')[0], colaborador.Matricula));
+            };
+            if (view != null)
+            {
+              fired = false;
+              break;
+            }
           }
-          else
-          {
-            view = ColaboradoresV2.Find(p => p.Colaborador.Chave2 == colaborador.Chave2);
-          };
-          if (view == null)
+          if (fired)
           {
             demissao = new ColaboradorV2Demissao()
             {
-              Colaborador = colaborador,
+              Colaborador = null,
+              _id = colaborador._id,
               DataDemissao = DateTime.Now.Date
             };
             viewRetorno = personIntegration.PutV2Demissao(demissao);
             if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
             {
-              FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4}", colaborador.Cpf, colaborador.NomeEmpresa,
-                colaborador.NomeEstabelecimento, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
+              FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2}", colaborador.Cpf, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
               hasLogFile = true;
               FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Matricula)), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
               FileClass.SaveLog(LogFileName.Replace(".log", string.Format("_{0}.log", colaborador.Matricula)), "Json Post integrationserver/person/v2/demissao", EnumTypeLineOpportunityg.Register);
@@ -976,8 +986,7 @@ namespace IntegrationService.Service
             }
             else
             {
-              FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4}", colaborador.Cpf, colaborador.NomeEmpresa,
-                colaborador.NomeEstabelecimento, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
+              FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2}", colaborador.Cpf, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
             }
           }
           ProgressBarValue++;

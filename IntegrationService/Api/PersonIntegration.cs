@@ -105,14 +105,14 @@ namespace IntegrationService.Api
         throw ex;
       }
     }
-    public List<ColaboradorV2Base> GetActiveV2()
+    public List<ColaboradorV2Ativo> GetActiveV2()
     {
       try
       {
         HttpResponseMessage result = clientSkill.GetAsync("person/v2/ativos").Result;
         return result.IsSuccessStatusCode == false
           ? null
-          : JsonConvert.DeserializeObject<List<ColaboradorV2Base>>(result.Content.ReadAsStringAsync().Result);
+          : JsonConvert.DeserializeObject<List<ColaboradorV2Ativo>>(result.Content.ReadAsStringAsync().Result);
       }
       catch (Exception)
       {

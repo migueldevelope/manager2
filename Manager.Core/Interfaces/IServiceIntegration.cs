@@ -76,7 +76,7 @@ namespace Manager.Core.Interfaces
     ColaboradorV2Retorno IntegrationV2(ColaboradorV2Demissao view);
     ColaboradorV2 GetV2(ColaboradorV2Base view);
     ColaboradorV2 GetV2(string id);
-    List<ColaboradorV2Base> GetActiveV2();
+    List<ColaboradorV2Ativo> GetActiveV2();
     string PerfilGestorV2(ColaboradorV2Base view);
     #endregion
 

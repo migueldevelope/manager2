@@ -414,43 +414,46 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationCompany integrationCompany = GetIntegrationCompany(view.Colaborador.Empresa, view.Colaborador.NomeEmpresa);
-        Company company = companyService.GetNewVersion(p => p._id == integrationCompany.IdCompany).Result;
-        IntegrationEstablishment integrationEstablishment = null;
-        Establishment establishment = null;
-        if (company == null)
+        ViewCrudPerson person;
+        if (view._id == null)
         {
-          resultV2.Mensagem.Add("Falta integração da empresa");
-          resultV2.Mensagem.Add("Falta integração de estabelecimento");
-        }
-        else
-        {
-          // Estabelecimento
-          integrationEstablishment = GetIntegrationEstablishment(view.Colaborador.ChaveEstabelecimento, view.Colaborador.NomeEstabelecimento, company._id);
-          establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
-          if (establishment == null)
+          IntegrationCompany integrationCompany = GetIntegrationCompany(view.Colaborador.Empresa, view.Colaborador.NomeEmpresa);
+          Company company = companyService.GetNewVersion(p => p._id == integrationCompany.IdCompany).Result;
+          Establishment establishment = null;
+          if (company == null)
           {
+            resultV2.Mensagem.Add("Falta integração da empresa");
             resultV2.Mensagem.Add("Falta integração de estabelecimento");
           }
-        }
-        if (resultV2.Mensagem.Count() > 0)
-          return;
-
-        ViewCrudPerson person;
-        if (integrationKey == EnumIntegrationKey.Company)
-        {
-          person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
-              && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+          else
+          {
+            // Estabelecimento
+            IntegrationEstablishment integrationEstablishment = GetIntegrationEstablishment(view.Colaborador.ChaveEstabelecimento, view.Colaborador.NomeEstabelecimento, company._id);
+            establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
+            if (establishment == null)
+            {
+              resultV2.Mensagem.Add("Falta integração de estabelecimento");
+            }
+          }
+          if (resultV2.Mensagem.Count() > 0)
+            return;
+          if (integrationKey == EnumIntegrationKey.Company)
+          {
+            person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
+                && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+          }
+          else
+          {
+            person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
+                && p.Establishment._id == establishment._id && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+          }
         }
         else
         {
-          person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
-              && p.Establishment._id == establishment._id && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+          person = personService.GetNewVersion(p => p._id == view._id).Result?.GetViewCrud();
         }
         if (person != null)
         {
-          person.Company = company.GetViewList();
-          person.Establishment = establishment.GetViewList();
           // Apenas mudar de cargo se mudou na folha de pagamento em relação a última carga
           person.DateResignation = view.DataDemissao;
           person.StatusUser = EnumStatusUser.Disabled;
@@ -2392,22 +2395,20 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    public List<ColaboradorV2Base> GetActiveV2()
+    public List<ColaboradorV2Ativo> GetActiveV2()
     {
       try
       {
-        List<IntegrationCompany> integrationCompanies = integrationCompanyService.GetAllNewVersion().ToList();
         List<IntegrationEstablishment> integrationEstablishments = integrationEstablishmentService.GetAllNewVersion().ToList();
-        List<IntegrationOccupation> integrationOccupations = integrationOccupationService.GetAllNewVersion().ToList();
-        List<Person> persons = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser > EnumTypeUser.Administrator && p.Company != null && p.Establishment != null).Result;
-        return persons.Select(p => new ColaboradorV2Base()
+        List<Person> persons = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
+          p.TypeUser > EnumTypeUser.Administrator && p.Company != null && p.Establishment != null).Result;
+        return persons.Select(x => new ColaboradorV2Ativo()
         {
-          Cpf = p.User.Document,
-          Empresa = integrationCompanies.FirstOrDefault(c => c.IdCompany == p.Company._id).Key,
-          NomeEmpresa = integrationCompanies.FirstOrDefault(c => c.IdCompany == p.Company._id).Name,
-          Estabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Key.Split(";")[1],
-          NomeEstabelecimento = integrationEstablishments.FirstOrDefault(e => e._idCompany == p.Company._id && e.IdEstablishment == p.Establishment._id).Name,
-          Matricula = p.Registration
+          _id = x._id,
+          Cpf = x.User.Document,
+          Chaves = integrationEstablishments.FindAll(e => e._idCompany == x.Company._id && e.IdEstablishment == x.Establishment._id).ToList()
+              .Select(y => y.Key).ToList(),
+          Matricula = x.Registration
         }).ToList();
       }
       catch (Exception)

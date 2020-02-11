@@ -6,5 +6,6 @@ namespace Manager.Views.Integration.V2
   {
     public ColaboradorV2Base Colaborador { get; set; }
     public DateTime? DataDemissao { get; set; }
+    public string _id { get; set; }
   }
 }
