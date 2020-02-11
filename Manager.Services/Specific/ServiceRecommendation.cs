@@ -147,7 +147,7 @@ namespace Manager.Services.Specific
           
 
         
-        Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
+        //Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
       }
       catch (Exception e)
       {
