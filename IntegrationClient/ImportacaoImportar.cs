@@ -39,10 +39,6 @@ namespace IntegrationClient
         }
         if (import.Status == EnumStatusService.Error)
         {
-          import.ExecuteDemissionAbsenceV2(chkLjo.Checked);
-        }
-        if (import.Status == EnumStatusService.Error)
-        {
           MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else

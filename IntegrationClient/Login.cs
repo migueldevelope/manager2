@@ -78,22 +78,9 @@ namespace IntegrationClient
             ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
             ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
             import.ExecuteV2(false);
-            if (import.Status == EnumStatusService.Error)
-            {
-              Environment.ExitCode = 1;
-            }
-          }
-          catch
-          {
-            Environment.ExitCode = 1;
-          }
-          // Demitir funcionários
-          try
-          {
             FileClass.SaveLog(LogFileName, "Demissões por ausencia de ativos", EnumTypeLineOpportunityg.Information);
-            ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
             import.ExecuteDemissionAbsenceV2(false);
+
             if (import.Status == EnumStatusService.Error)
             {
               Environment.ExitCode = 1;
