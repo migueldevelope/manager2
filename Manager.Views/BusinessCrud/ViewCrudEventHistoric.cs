@@ -13,8 +13,8 @@ namespace Manager.Views.BusinessCrud
     public ViewListEvent Event { get; set; }
     public decimal Workload { get; set; }
     public ViewCrudEntity Entity { get; set; }
-    public DateTime Begin { get; set; }
-    public DateTime End { get; set; }
+    public DateTime? Begin { get; set; }
+    public DateTime? End { get; set; }
     public List<ViewCrudAttachmentField> Attachments { get; set; }
   }
 }
