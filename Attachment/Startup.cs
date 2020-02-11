@@ -69,7 +69,7 @@ namespace Attachment
       IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
       IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
+      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer, conn.BlobKey);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
       IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString);
       IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);

@@ -225,7 +225,7 @@ namespace Manager.Services.Specific
 
     #endregion
 
-    #region " ... private ... "
+    #region private
 
     private void SendMessageAsync(dynamic view)
     {

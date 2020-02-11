@@ -498,6 +498,9 @@ namespace Manager.Services.Specific
 
           var max = scores.Where(p => p.Value > 0).Max(p => p.Value);
           var min = scores.Where(p => p.Value > 0).Min(p => p.Value);
+          //if (min < 80)
+          //  min = 80;
+
           var diff = max - min;
           resultEnd = ((resultEnd * diff) / 100) + min;
 
@@ -508,7 +511,7 @@ namespace Manager.Services.Specific
           {
             var a = scores.Where(p => p.Step == EnumSteps.A).FirstOrDefault().Value;
             var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
-            if (resultEnd <= a)
+            if (resultEnd < b)
             {
               resultStep = EnumSteps.A;
             }
@@ -525,15 +528,15 @@ namespace Manager.Services.Specific
             var b = scores.Where(p => p.Step == EnumSteps.B).FirstOrDefault().Value;
             var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
 
-            if (resultEnd <= a)
+            if (resultEnd < b)
             {
               resultStep = EnumSteps.A;
             }
-            else if ((resultEnd > a) && (resultEnd <= b))
+            else if ((resultEnd >= b) && (resultEnd < c))
             {
               resultStep = EnumSteps.B;
             }
-            else if (resultEnd > b)
+            else if (resultEnd >= c)
             {
               resultStep = EnumSteps.C;
             }
@@ -547,19 +550,19 @@ namespace Manager.Services.Specific
             var c = scores.Where(p => p.Step == EnumSteps.C).FirstOrDefault().Value;
             var d = scores.Where(p => p.Step == EnumSteps.D).FirstOrDefault().Value;
 
-            if (resultEnd <= a)
+            if (resultEnd < b)
             {
               resultStep = EnumSteps.A;
             }
-            else if ((resultEnd > a) && (resultEnd <= b))
+            else if ((resultEnd >= b) && (resultEnd < c))
             {
               resultStep = EnumSteps.B;
             }
-            else if ((resultEnd > b) && (resultEnd <= c))
+            else if ((resultEnd >= c) && (resultEnd < d))
             {
               resultStep = EnumSteps.C;
             }
-            else if (resultEnd > c)
+            else if (resultEnd >= d)
             {
               resultStep = EnumSteps.D;
             }
@@ -574,23 +577,23 @@ namespace Manager.Services.Specific
             var d = scores.Where(p => p.Step == EnumSteps.D).FirstOrDefault().Value;
             var e = scores.Where(p => p.Step == EnumSteps.E).FirstOrDefault().Value;
 
-            if (resultEnd <= a)
+            if (resultEnd < b)
             {
               resultStep = EnumSteps.A;
             }
-            else if ((resultEnd > a) && (resultEnd <= b))
+            else if ((resultEnd >= b) && (resultEnd < c))
             {
               resultStep = EnumSteps.B;
             }
-            else if ((resultEnd > b) && (resultEnd <= c))
+            else if ((resultEnd >= c) && (resultEnd < d))
             {
               resultStep = EnumSteps.C;
             }
-            else if ((resultEnd > c) && (resultEnd <= d))
+            else if ((resultEnd >= d) && (resultEnd < e))
             {
               resultStep = EnumSteps.D;
             }
-            else if (resultEnd > d)
+            else if (resultEnd >= e)
             {
               resultStep = EnumSteps.E;
             }
@@ -606,27 +609,27 @@ namespace Manager.Services.Specific
             var e = scores.Where(p => p.Step == EnumSteps.E).FirstOrDefault().Value;
             var f = scores.Where(p => p.Step == EnumSteps.F).FirstOrDefault().Value;
 
-            if (resultEnd <= a)
+            if (resultEnd < b)
             {
               resultStep = EnumSteps.A;
             }
-            else if ((resultEnd > a) && (resultEnd <= b))
+            else if ((resultEnd >= b) && (resultEnd < c))
             {
               resultStep = EnumSteps.B;
             }
-            else if ((resultEnd > b) && (resultEnd <= c))
+            else if ((resultEnd >= c) && (resultEnd < d))
             {
               resultStep = EnumSteps.C;
             }
-            else if ((resultEnd > c) && (resultEnd <= d))
+            else if ((resultEnd >= d) && (resultEnd < e))
             {
               resultStep = EnumSteps.D;
             }
-            else if ((resultEnd > d) && (resultEnd <= e))
+            else if ((resultEnd >= e) && (resultEnd < f))
             {
               resultStep = EnumSteps.E;
             }
-            else if (resultEnd > e)
+            else if (resultEnd >= f)
             {
               resultStep = EnumSteps.F;
             }
@@ -644,31 +647,31 @@ namespace Manager.Services.Specific
             var f = scores.Where(p => p.Step == EnumSteps.F).FirstOrDefault().Value;
             var g = scores.Where(p => p.Step == EnumSteps.G).FirstOrDefault().Value;
 
-            if (resultEnd <= a)
+            if (resultEnd < b)
             {
               resultStep = EnumSteps.A;
             }
-            else if ((resultEnd > a) && (resultEnd <= b))
+            else if ((resultEnd >= b) && (resultEnd < c))
             {
               resultStep = EnumSteps.B;
             }
-            else if ((resultEnd > b) && (resultEnd <= c))
+            else if ((resultEnd >= c) && (resultEnd < d))
             {
               resultStep = EnumSteps.C;
             }
-            else if ((resultEnd > c) && (resultEnd <= d))
+            else if ((resultEnd >= d) && (resultEnd < e))
             {
               resultStep = EnumSteps.D;
             }
-            else if ((resultEnd > d) && (resultEnd <= e))
+            else if ((resultEnd >= e) && (resultEnd < f))
             {
               resultStep = EnumSteps.E;
             }
-            else if ((resultEnd > e) && (resultEnd <= f))
+            else if ((resultEnd >= f) && (resultEnd < g))
             {
               resultStep = EnumSteps.F;
             }
-            else if (resultEnd > f)
+            else if (resultEnd >= g)
             {
               resultStep = EnumSteps.G;
             }
@@ -686,35 +689,35 @@ namespace Manager.Services.Specific
             var g = scores.Where(p => p.Step == EnumSteps.G).FirstOrDefault().Value;
             var h = scores.Where(p => p.Step == EnumSteps.H).FirstOrDefault().Value;
 
-            if (resultEnd <= a)
+            if (resultEnd < b)
             {
               resultStep = EnumSteps.A;
             }
-            else if ((resultEnd > a) && (resultEnd <= b))
+            else if ((resultEnd >= b) && (resultEnd < c))
             {
               resultStep = EnumSteps.B;
             }
-            else if ((resultEnd > b) && (resultEnd <= c))
+            else if ((resultEnd >= c) && (resultEnd < d))
             {
               resultStep = EnumSteps.C;
             }
-            else if ((resultEnd > c) && (resultEnd <= d))
+            else if ((resultEnd >= d) && (resultEnd < e))
             {
               resultStep = EnumSteps.D;
             }
-            else if ((resultEnd > d) && (resultEnd <= e))
+            else if ((resultEnd >= e) && (resultEnd < f))
             {
               resultStep = EnumSteps.E;
             }
-            else if ((resultEnd > e) && (resultEnd <= f))
+            else if ((resultEnd >= f) && (resultEnd < g))
             {
               resultStep = EnumSteps.F;
             }
-            else if ((resultEnd > f) && (resultEnd <= g))
+            else if ((resultEnd >= g) && (resultEnd < h))
             {
               resultStep = EnumSteps.G;
             }
-            else if (resultEnd > g)
+            else if (resultEnd >= h)
             {
               resultStep = EnumSteps.H;
             }
@@ -1310,9 +1313,9 @@ namespace Manager.Services.Specific
           ResultEnd = meritocracy.ResultEnd,
           ResultStep = meritocracy.ResultStep,
           ResultStepScale = meritocracy.ResultStepScale,
-          PercentSalary = meritocracy.PercentSalary,
-          SalaryDifference = meritocracy.SalaryDifference,
-          SalaryNew = meritocracy.SalaryNew,
+          PercentSalary = Math.Round(meritocracy.PercentSalary, 2),
+          SalaryDifference = Math.Round(meritocracy.SalaryDifference, 2),
+          SalaryNew = Math.Round(meritocracy.SalaryNew, 2),
           Score = meritocracy.Score == null ? null : new ViewCrudMeritocracyScore()
           {
             _id = meritocracy.Score._id,

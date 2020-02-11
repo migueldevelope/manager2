@@ -74,7 +74,7 @@ namespace Training
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
       IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
+      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer, conn.BlobKey);
       IServiceManager serviceManager = new ServiceManager(_contextStruct, _context, serviceControlQueue, serviceBusConnectionString);
 
 

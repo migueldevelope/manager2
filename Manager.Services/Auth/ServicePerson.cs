@@ -1114,7 +1114,9 @@ namespace Manager.Services.Auth
       {
 
 
-        var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        var list = servicePerson.GetAllNewVersion(p => 
+        p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney != EnumTypeJourney.OutOfJourney
+        && p.Manager._id == idmanager && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = (count * (page - 1));
 
         List<ViewListPersonTeam> listTeam = new List<ViewListPersonTeam>();

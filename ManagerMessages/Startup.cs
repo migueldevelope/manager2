@@ -56,7 +56,7 @@ namespace ManagerMessages
       IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer);
+      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer, conn.BlobKey);
       IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceNotification serviceNotification = new ServiceNotification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
