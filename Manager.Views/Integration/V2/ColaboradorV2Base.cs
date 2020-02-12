@@ -11,9 +11,9 @@
     public string NomeEstabelecimento { get; set; }
     public string Matricula { get; set; }
     // Chaves de cálculo interno
-    public string ChaveEmpresa { get { return Empresa.Trim().ToLower(); } }
-    public string ChaveEstabelecimento => string.Format("{0};{1}", Empresa.Trim().ToLower(), Estabelecimento.Trim().ToLower());
-    public string Chave1 => string.Format("{0};{1};{2};{3}", Cpf.Trim().ToLower(), Empresa.Trim().ToLower(), Estabelecimento.Trim().ToLower(), Matricula.Trim().ToLower());
-    public string Chave2 => string.Format("{0};{1};{2}", Cpf.Trim().ToLower(), Empresa.Trim().ToLower(), Matricula.Trim().ToLower());
+    public string ChaveEmpresa() { return Empresa.Trim().ToLower(); }
+    public string ChaveEstabelecimento() { return string.Format("{0};{1}", Empresa.Trim().ToLower(), Estabelecimento.Trim().ToLower()); }
+    public string Chave1() { return string.Format("{0};{1};{2};{3}", Cpf.Trim().ToLower(), Empresa.Trim().ToLower(), Estabelecimento.Trim().ToLower(), Matricula.Trim().ToLower()); }
+    public string Chave2() { return string.Format("{0};{1};{2}", Cpf.Trim().ToLower(), Empresa.Trim().ToLower(), Matricula.Trim().ToLower()); }
   }
 }

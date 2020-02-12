@@ -955,11 +955,11 @@ namespace IntegrationService.Service
           {
             if (service.Param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
             {
-              view = ColaboradoresV2.Find(p => p.Colaborador.Chave1 == string.Format("{0};{1};{2};{3}", colaborador.Cpf, item.Split(';')[0], item.Split(';')[1], colaborador.Matricula));
+              view = ColaboradoresV2.Find(p => p.Colaborador.Chave1() == string.Format("{0};{1};{2};{3}", colaborador.Cpf, item.Split(';')[0], item.Split(';')[1], colaborador.Matricula));
             }
             else
             {
-              view = ColaboradoresV2.Find(p => p.Colaborador.Chave2 == string.Format("{0};{1};{2}", colaborador.Cpf, item.Split(';')[0], colaborador.Matricula));
+              view = ColaboradoresV2.Find(p => p.Colaborador.Chave2() == string.Format("{0};{1};{2}", colaborador.Cpf, item.Split(';')[0], colaborador.Matricula));
             };
             if (view != null)
             {
