@@ -20,60 +20,6 @@ namespace IntegrationClient
       lblPrb.Text = string.Empty;
       serviceConfiguration = new ConfigurationService(Program.PersonLogin);
     }
-    private void BtnImp_Click(object sender, EventArgs e)
-    {
-      try
-      {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
-        import.RefreshProgressBar += Import_RefreshProgressBar;
-        switch (serviceConfiguration.Param.Version)
-        {
-          case EnumIntegrationVersion.V1:
-            import.Execute();
-            break;
-          case EnumIntegrationVersion.V2:
-            import.ExecuteV2(chkLjo.Checked);
-            break;
-          default:
-            break;
-        }
-        if (import.Status == EnumStatusService.Error)
-        {
-          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        else
-        {
-          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        prb.Maximum = 100;
-        prb.Value = 0;
-        lblPrb.Text = string.Empty;
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-      }
-    }
-    private void BtnDemInd_Click(object sender, EventArgs e)
-    {
-      try
-      {
-        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
-        //import.ExecuteDemissionLastImportV2();
-        if (import.Status == EnumStatusService.Error)
-        {
-          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        else
-        {
-          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-      }
-    }
     private void BtnDemAus_Click(object sender, EventArgs e)
     {
       try

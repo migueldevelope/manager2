@@ -28,45 +28,6 @@ namespace IntegrationClient
         DateTime initialTime = DateTime.Now;
         string LogFileName = string.Format("{0}/{1}_tarefa.log", pathLogs, initialTime.ToString("yyyyMMdd_HHmmss"));
         // Ler arquivo persistido
-        if (Program.autoImport && Program.autoVersion.Equals("V1"))
-        {
-          FileClass.SaveLog(LogFileName, "Rotina automática V1 iniciada", EnumTypeLineOpportunityg.Information);
-          Environment.ExitCode = 0;
-          // Atualizar funcionários
-          try
-          {
-            FileClass.SaveLog(LogFileName, "Admissões e alterações", EnumTypeLineOpportunityg.Information);
-            ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
-            import.Execute();
-            if (import.Status == EnumStatusService.Error)
-            {
-              Environment.ExitCode = 1;
-            }
-          }
-          catch
-          {
-            Environment.ExitCode = 1;
-          }
-          // Demitir funcionários
-          try
-          {
-            FileClass.SaveLog(LogFileName, "Demissões", EnumTypeLineOpportunityg.Information);
-            ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
-            ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
-            import.Execute(DateTime.Now.Date, DateTime.Now.Date);
-            if (import.Status == EnumStatusService.Error)
-            {
-              Environment.ExitCode = 1;
-            }
-          }
-          catch
-          {
-            Environment.ExitCode = 1;
-          }
-          FileClass.SaveLog(LogFileName, "Rotina automática V1 encerrada", EnumTypeLineOpportunityg.Information);
-          Application.Exit();
-        }
         if (Program.autoImport && Program.autoVersion.Equals("V2"))
         {
           FileClass.SaveLog(LogFileName, "Rotina automática V2 iniciada", EnumTypeLineOpportunityg.Information);

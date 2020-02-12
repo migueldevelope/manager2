@@ -30,7 +30,6 @@
     {
       this.components = new System.ComponentModel.Container();
       this.btnImp = new System.Windows.Forms.Button();
-      this.btnDemInd = new System.Windows.Forms.Button();
       this.btnDemAus = new System.Windows.Forms.Button();
       this.prb = new System.Windows.Forms.ProgressBar();
       this.lblPrb = new System.Windows.Forms.Label();
@@ -47,20 +46,6 @@
       this.btnImp.TabIndex = 6;
       this.btnImp.Text = "Executar Importação";
       this.btnImp.UseVisualStyleBackColor = true;
-      this.btnImp.Click += new System.EventHandler(this.BtnImp_Click);
-      // 
-      // btnDemInd
-      // 
-      this.btnDemInd.Enabled = false;
-      this.btnDemInd.Location = new System.Drawing.Point(12, 126);
-      this.btnDemInd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-      this.btnDemInd.Name = "btnDemInd";
-      this.btnDemInd.Size = new System.Drawing.Size(254, 23);
-      this.btnDemInd.TabIndex = 7;
-      this.btnDemInd.Text = "Demissões por Indicação";
-      this.toolTip1.SetToolTip(this.btnDemInd, "Demite os colaboradores executando carga de colaboradores demitidos.");
-      this.btnDemInd.UseVisualStyleBackColor = true;
-      this.btnDemInd.Click += new System.EventHandler(this.BtnDemInd_Click);
       // 
       // btnDemAus
       // 
@@ -109,7 +94,6 @@
       this.Controls.Add(this.lblPrb);
       this.Controls.Add(this.prb);
       this.Controls.Add(this.btnDemAus);
-      this.Controls.Add(this.btnDemInd);
       this.Controls.Add(this.btnImp);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -125,7 +109,6 @@
 
     #endregion
     private System.Windows.Forms.Button btnImp;
-    private System.Windows.Forms.Button btnDemInd;
     private System.Windows.Forms.Button btnDemAus;
     private System.Windows.Forms.ProgressBar prb;
     private System.Windows.Forms.Label lblPrb;

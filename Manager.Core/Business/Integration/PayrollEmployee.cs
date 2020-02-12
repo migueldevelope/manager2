@@ -98,11 +98,12 @@ namespace Manager.Core.Business.Integration
     public string _idOccupation { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idIntegrationOccupation { get; set; }
+    public List<string> Changes { get; set; }
     // Identificação do estabelecimento
-    public string EstablishmentKey => string.Format("{0};{1}", Company, Establishment);
+    public string EstablishmentKey() { return string.Format("{0};{1}", Company, Establishment); }
     // Identificação do cargo
-    public string OccupationKey => string.Format("{0};{1}", Company, Occupation);
-    public string CostCenterKey => string.Format("{0};{1}", Company, CostCenter);
+    public string OccupationKey() { return string.Format("{0};{1}", Company, Occupation); }
+    public string CostCenterKey() { return string.Format("{0};{1}", Company, CostCenter); }
 
     #region Private
     private string ActionToString()
