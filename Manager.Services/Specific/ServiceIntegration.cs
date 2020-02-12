@@ -536,7 +536,6 @@ namespace Manager.Services.Specific
         throw ex;
       }
     }
-
     #endregion
 
     #region Colaborador V1
