@@ -93,7 +93,7 @@ namespace Reports.Controllers
     /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
+    [HttpPost]
     [Route("listhistorictraining")]
     public async Task<string> ListHistoricTraining([FromBody]ViewFilterDate date, string idperson = "")
     {
