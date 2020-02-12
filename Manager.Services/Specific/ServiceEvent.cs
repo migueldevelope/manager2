@@ -1569,6 +1569,33 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public List<ViewListEventHistoricTemp> ListEventHistoricTempWait(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+
+
+        int skip = (count * (page - 1));
+        var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.StatusEventHistoricTemp == EnumStatusEventHistoricTemp.Wait 
+        & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEventHistoricTemp.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail.Select(p => new ViewListEventHistoricTemp()
+        {
+          _id = p._id,
+          Name = p.Name,
+          _idPerson = p.Person._id,
+          NamePerson = p.Person.Name,
+          StatusEventHistoricTemp = p.StatusEventHistoricTemp
+        }).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string NewEventHistoricTemp(ViewCrudEventHistoricTemp view)
     {
       try

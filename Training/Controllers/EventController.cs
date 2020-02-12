@@ -512,6 +512,26 @@ namespace Training.Controllers
     {
       return await Task.Run(() => service.NewEventHistoricTemp(view));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listeventhistorictempwait")]
+    public async Task<List<ViewListEventHistoricTemp>> ListEventHistoricTempWait(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoricTempWait(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+
     /// <summary>
     /// Lista histórico de eventos
     /// </summary>
