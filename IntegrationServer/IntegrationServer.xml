@@ -267,20 +267,6 @@
             <param name="_serviceUser">Serviço do Usuário</param>
             <param name="contextAccessor">Token de segurança</param>
         </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.PutPerson(Manager.Views.Integration.ViewIntegrationColaborador)">
-            <summary>
-            Integração de funcionário
-            </summary>
-            <param name="view">Objeto de integração do colaborador</param>
-            <returns>Objeto do colaborador atualizado</returns>
-        </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.PutPersonDemission(Manager.Views.Integration.ViewIntegrationColaborador)">
-            <summary>
-            Integração de funcionário
-            </summary>
-            <param name="view">Objeto de integração do colaborador</param>
-            <returns>Objeto do colaborador atualizado</returns>
-        </member>
         <member name="M:IntegrationServer.InfraController.PersonController.V2Completo(Manager.Views.Integration.V2.ColaboradorV2Completo)">
             <summary>
             Integração com objeto único do colaborador versão 2
@@ -307,60 +293,6 @@
             <response code="200">Informações sobre a integração do colaborador</response>
             <response code="400">Problemas na integração do colaborador</response>
             <returns>Objeto de retorno da integração do colaborador</returns>
-        </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.AdmissaoV2(Manager.Views.Integration.V2.ColaboradorV2Admissao)">
-            <summary>
-            Admissão de colaborador
-            </summary>
-            <param name="view">Objeto de integração do colaborador para o processo de admissão</param>
-            <response code="200">Informações sobre a admissão do colaborador</response>
-            <response code="400">Problemas na admissão do colaborador</response>
-            <returns>Objeto de retorno da integração </returns>
-        </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.CargoV2(Manager.Views.Integration.V2.ColaboradorV2Cargo)">
-            <summary>
-            Alteração de Cargo do colaborador
-            </summary>
-            <param name="view">Objeto de alteração do cargo do colaborador</param>
-            <response code="200">Informações sobre o cargo do colaborador</response>
-            <response code="400">Problemas no cargo do colaborador</response>
-            <returns>Objeto de retorno da integração </returns>
-        </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.CentroCustoV2(Manager.Views.Integration.V2.ColaboradorV2CentroCusto)">
-            <summary>
-            Alteração de Centro de Custo do Colaborador
-            </summary>
-            <param name="view">Objeto de alteração do centro de custo do colaborador</param>
-            <response code="200">Informações sobre o centro de custo do colaborador</response>
-            <response code="400">Problemas no centro de custo do colaborador</response>
-            <returns>Objeto de retorno da integração </returns>
-        </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.GestorV2(Manager.Views.Integration.V2.ColaboradorV2Gestor)">
-            <summary>
-            Alteração do gestor de colaborador
-            </summary>
-            <param name="view">Objeto de alteração do gestor do colaborador</param>
-            <response code="200">Informações sobre o gestor do colaborador</response>
-            <response code="400">Problemas no gestor do colaborador</response>
-            <returns>Objeto de retorno da integração </returns>
-        </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.SalarioV2(Manager.Views.Integration.V2.ColaboradorV2Salario)">
-            <summary>
-            Alteração do salário do colaborador
-            </summary>
-            <param name="view">Objeto de alteração do salário do colaborador</param>
-            <response code="200">Informações sobre o salário do colaborador</response>
-            <response code="400">Problemas no salário do colaborador</response>
-            <returns>Objeto de retorno da integração </returns>
-        </member>
-        <member name="M:IntegrationServer.InfraController.PersonController.SituacaoV2(Manager.Views.Integration.V2.ColaboradorV2Situacao)">
-            <summary>
-            Alteração da Situação do Colaborador
-            </summary>
-            <param name="view">Objeto de alteração da situação do colaborador</param>
-            <response code="200">Informações sobre a situação do colaborador</response>
-            <response code="400">Problemas na situação do colaborador</response>
-            <returns>Objeto de retorno da integração </returns>
         </member>
         <member name="M:IntegrationServer.InfraController.PersonController.DemissaoV2(Manager.Views.Integration.V2.ColaboradorV2Demissao)">
             <summary>
