@@ -892,6 +892,7 @@ namespace Manager.Services.Auth
     {
       try
       {
+        bool modifyManager = false;
         var exists = serviceUser.CountFreeNewVersion(p => p._id != view.User._id && (p.Document == view.User.Document)).Result;
         if (exists > 0)
           throw new Exception("existsdocument");
@@ -921,9 +922,8 @@ namespace Manager.Services.Auth
 
         BaseFields manager = null;
         if (view.Manager != null)
-        {
-          manager = UpdateManager(view._id, view.Manager._id, person.Manager?._id);
-        }
+          modifyManager = true;
+        
         SalaryScalePerson salaryScale = null;
         if (view.SalaryScales != null)
           salaryScale = serviceSalaryScale.GetAllNewVersion(p => p._id == view.SalaryScales._idSalaryScale)
@@ -966,6 +966,9 @@ namespace Manager.Services.Auth
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
 
         var x = servicePerson.Update(person, null);
+        if (modifyManager)
+          manager = UpdateManager(view._id, view.Manager._id, person.Manager?._id);
+
         return "Person altered!";
       }
       catch (Exception e)

@@ -2661,7 +2661,7 @@ namespace Manager.Services.Specific
           AutoComplete = false
         };
 
-        queueClientReturn.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+          queueClientReturn.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
       }
       catch (Exception e)
       {
