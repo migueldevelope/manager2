@@ -439,6 +439,7 @@ namespace Manager.Services.Auth
     {
       try
       {
+        bool modifyManager = false;
         var exists = serviceUser.CountFreeNewVersion(p => p._id != view.User._id && (p.Document == view.User.Document)).Result;
         if (exists > 0)
           throw new Exception("existsdocument");
@@ -462,9 +463,8 @@ namespace Manager.Services.Auth
 
         BaseFields manager = null;
         if (view.Person.Manager != null)
-        {
-          manager = UpdateManager(view.Person._id, view.Person.Manager._id, person.Manager?._id);
-        }
+          modifyManager = true;
+        
         SalaryScalePerson salaryScale = null;
         if (view.Person.SalaryScales != null)
           salaryScale = serviceSalaryScale.GetAllNewVersion(p => p._id == view.Person.SalaryScales._idSalaryScale).Result
@@ -504,8 +504,13 @@ namespace Manager.Services.Auth
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.Occupation == null)
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
-        servicePerson.Update(person, null).Wait();
-        serviceUser.Update(user, null).Wait();
+
+        var xi = servicePerson.Update(person, null);
+        var i = serviceUser.Update(user, null);
+
+        if (modifyManager)
+          manager = UpdateManager(view.Person._id, view.Person.Manager._id, person.Manager?._id);
+
         return "Person altered!";
       }
       catch (Exception e)
@@ -966,8 +971,9 @@ namespace Manager.Services.Auth
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
 
         var x = servicePerson.Update(person, null);
-        if (modifyManager)
-          manager = UpdateManager(view._id, view.Manager._id, person.Manager?._id);
+
+        //if (modifyManager)
+          //manager = UpdateManager(view._id, view.Manager._id, person.Manager?._id);
 
         return "Person altered!";
       }
