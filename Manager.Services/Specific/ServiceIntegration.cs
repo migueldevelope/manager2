@@ -2257,6 +2257,8 @@ namespace Manager.Services.Specific
             resultV2.IdUser = payrollEmployee._idUser;
             resultV2.IdContract = payrollEmployee._idContract;
             resultV2.IdPayrollEmployee = payrollEmployee._id;
+            resultV2.Mensagem.Add("Colaborador sem alterações");
+            resultV2.Changes = new List<string>();
             return;
           }
         }

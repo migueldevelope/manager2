@@ -207,6 +207,8 @@ namespace IntegrationService.Service
           foreach (ColaboradorV2Base gestor in GestoresV2)
           {
             result = personIntegration.PutV2PerfilGestor(gestor);
+            FileClass.SaveLog(LogFileName.Replace(".log", "_gestor.log"), string.Format("{0};{1};{2};{3};{4}", gestor.Cpf, gestor.NomeEmpresa, gestor.NomeEstabelecimento,
+              gestor.Matricula, result), EnumTypeLineOpportunityg.Register);
             ProgressBarValue++;
             OnRefreshProgressBar(EventArgs.Empty);
           }
