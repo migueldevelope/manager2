@@ -33,7 +33,7 @@ namespace Manager.Core.Interfaces
     Task<long> CountNewVersion(Expression<Func<Person, bool>> filter);
     Task<Person> GetNewVersion(Expression<Func<Person, bool>> filter);
     Task<List<Person>> GetAllNewVersion(Expression<Func<Person, bool>> filter);
-    BaseFields UpdateManager(string _idPerson, string _idManager, string _idManagerOld);
+    BaseFields UpdateManager(Person person, string _idManager, string _idManagerOld);
     List<ViewListIdIndicators> GetFilterPersons(List<_ViewList> idmanagers);
     List<Person> Load();
     ViewListJourney ListJourney(string idmanager, string filter, int count, int page);

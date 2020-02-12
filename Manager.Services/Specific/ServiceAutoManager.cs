@@ -169,7 +169,7 @@ namespace Manager.Services.Specific
           //  servicePerson.Update(manager, null).Wait();
           //}
 
-          person.Manager = servicePerson.UpdateManager(person._id, manager._id, null);
+          person.Manager = servicePerson.UpdateManager(person, manager._id, null);
           
         }
         else
@@ -286,7 +286,7 @@ namespace Manager.Services.Specific
         var manager = servicePerson.GetNewVersion(p => p._id == idManager).Result;
         var person = servicePerson.GetNewVersion(p => p._id == idPerson).Result;
         person.Manager = new BaseFields() { _id = manager._id, Mail = manager.User.Mail, Name = manager.User.Name };
-        servicePerson.UpdateManager(person._id, manager._id, null);
+        servicePerson.UpdateManager(person, manager._id, null);
         //if (manager.TypeUser == EnumTypeUser.Employee)
         //{
         //  manager.TypeUser = EnumTypeUser.Manager;
@@ -349,7 +349,7 @@ namespace Manager.Services.Specific
       {
         var person = servicePerson.GetNewVersion(p => p._id == idPerson).Result;
         person.Manager = null;
-        servicePerson.UpdateManager(person._id, null, person._id);
+        servicePerson.UpdateManager(person, null, person._id);
       }
       catch (Exception e)
       {

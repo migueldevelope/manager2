@@ -509,7 +509,7 @@ namespace Manager.Services.Auth
         var ix = serviceUser.Update(user, null);
 
         if (modifyManager)
-          manager = UpdateManager(view.Person._id, view.Person.Manager._id, person.Manager?._id);
+          manager = UpdateManager(person, view.Person.Manager._id, person.Manager?._id);
 
         return "Person altered!";
       }
@@ -702,11 +702,11 @@ namespace Manager.Services.Auth
       }
     }
 
-    public BaseFields UpdateManager(string _idPerson, string _idManager, string _idManagerOld)
+    public BaseFields UpdateManager(Person person, string _idManager, string _idManagerOld)
     {
       try
       {
-        var person = servicePerson.GetNewVersion(p => p._id == _idPerson).Result;
+        //var person = servicePerson.GetNewVersion(p => p._id == _idPerson).Result;
 
         var manager = servicePerson.GetAllNewVersion(p => p._id == _idManager).Result.
           Select(p => new BaseFields()
@@ -972,8 +972,8 @@ namespace Manager.Services.Auth
 
         var x = servicePerson.Update(person, null);
 
-        //if (modifyManager)
-          //manager = UpdateManager(view._id, view.Manager._id, person.Manager?._id);
+        if (modifyManager)
+          manager = UpdateManager(person, view.Manager._id, person.Manager?._id);
 
         return "Person altered!";
       }
