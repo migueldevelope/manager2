@@ -45,6 +45,14 @@
             <param name="idperson"></param>
             <returns></returns>
         </member>
+        <member name="M:Reports.Controllers.ReportsController.ListHistoricTraining(Manager.Views.BusinessView.ViewFilterDate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="date"></param>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
         <member name="T:Reports.Controllers.ValuesController">
             <summary>
             

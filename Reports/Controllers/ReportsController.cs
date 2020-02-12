@@ -86,5 +86,19 @@ namespace Reports.Controllers
       return await Task.Run(() => service.ListCertificate(idevent, idperson));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listhistorictraining")]
+    public async Task<string> ListHistoricTraining([FromBody]ViewFilterDate date, string idperson = "")
+    {
+      return await Task.Run(() => service.ListHistoricTraining(date, idperson));
+    }
+
   }
 }
