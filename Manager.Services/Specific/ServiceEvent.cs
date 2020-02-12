@@ -32,6 +32,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Entity> serviceEntity;
     private readonly ServiceGeneric<Event> serviceEvent;
     private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
+    private readonly ServiceGeneric<EventHistoricTemp> serviceEventHistoricTemp;
     private readonly ServiceLog serviceLog;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<TrainingPlan> serviceTrainingPlan;
@@ -48,6 +49,7 @@ namespace Manager.Services.Specific
         serviceEntity = new ServiceGeneric<Entity>(context);
         serviceEvent = new ServiceGeneric<Event>(context);
         serviceEventHistoric = new ServiceGeneric<EventHistoric>(context);
+        serviceEventHistoricTemp = new ServiceGeneric<EventHistoricTemp>(context);
         serviceLog = new ServiceLog(context, contextLog);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceTrainingPlan = new ServiceGeneric<TrainingPlan>(context);
@@ -68,6 +70,7 @@ namespace Manager.Services.Specific
       serviceEntity._user = _user;
       serviceEvent._user = _user;
       serviceEventHistoric._user = _user;
+      serviceEventHistoricTemp._user = _user;
       serviceLog.SetUser(_user);
       servicePerson._user = _user;
       serviceTrainingPlan._user = _user;
@@ -81,6 +84,7 @@ namespace Manager.Services.Specific
       serviceEntity._user = user;
       serviceEvent._user = user;
       serviceEventHistoric._user = user;
+      serviceEventHistoricTemp._user = user;
       serviceLog.SetUser(user);
       servicePerson._user = user;
       serviceTrainingPlan._user = user;
@@ -88,66 +92,6 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Event
-
-    //nome colaborador, nome cargo, nome curso, inicio, fim, carga horária
-    public List<ViewListHistoric> ListHistoric(string idperson, string idcourse, ViewFilterDate date)
-    {
-      try
-      {
-        List<EventHistoric> list = new List<EventHistoric>();
-
-        if ((idperson != string.Empty) && (idcourse != string.Empty) && (date != null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
-          && p.Course._id == idcourse &&
-          p.End >= date.Begin && p.End <= date.End).Result;
-        else if ((idperson != string.Empty) && (idcourse != string.Empty) && (date != null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
-          && p.Course._id == idcourse
-          && p.End >= date.Begin && p.End <= date.End).Result;
-        else if ((idperson != string.Empty) && (idcourse == string.Empty) && (date != null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
-          && p.End >= date.Begin && p.End <= date.End).Result;
-        else if ((idperson != string.Empty) && (idcourse != string.Empty) && (date == null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
-          && p.Course._id == idcourse).Result;
-        else if ((idperson != string.Empty) && (idcourse == string.Empty) && (date == null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result;
-        else if ((idperson == string.Empty) && (idcourse != string.Empty) && (date != null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == idcourse
-          && p.End >= date.Begin && p.End <= date.End).Result;
-        else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date != null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.End >= date.Begin && p.End <= date.End).Result;
-        else if ((idperson == string.Empty) && (idcourse != string.Empty) && (date == null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
-          && p.Course._id == idcourse).Result;
-        else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date == null))
-          list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-
-        var result = new List<ViewListHistoric>();
-
-        foreach (var item in list)
-        {
-          var view = new ViewListHistoric()
-          {
-            Person = item.Person?.Name,
-            Event = item.Name,
-            Occupation = servicePerson.GetNewVersion(p => p._id == item.Person._id).Result.Occupation?.Name,
-            Begin = item.Begin.Value.ToString("dd/MM/yyyy"),
-            End = item.End.Value.ToString("dd/MM/yyyy"),
-            Wordload = item.Workload / 60,
-            WorkloadMin = item.Workload
-          };
-          result.Add(view);
-        }
-
-        return result;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     public string RemoveDays(string idevent, string iddays)
     {
       try
@@ -243,72 +187,6 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string RemoveEventHistoric(string id)
-    {
-      try
-      {
-
-
-
-        var item = serviceEventHistoric.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-        Task.Run(() => LogSave(_user._idPerson, "Delete Event Historic " + id));
-        var obs = "Realized Event: " + item.Name + ", ID_Historic: " + item._id;
-        var trainingplan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == item.Person._id
-        & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
-        & p.Observartion == obs).Result.FirstOrDefault();
-        if (trainingplan != null)
-        {
-          trainingplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
-          serviceTrainingPlan.Update(trainingplan, null).Wait();
-        }
-        item.Status = EnumStatus.Disabled;
-        serviceEventHistoric.Update(item, null).Wait();
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string RemoveCourse(string id)
-    {
-      try
-      {
-
-
-        var item = serviceCourse.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-
-        var exists = serviceEvent.CountNewVersion(p => p.Course._id == item._id & p.StatusEvent == EnumStatusEvent.Open).Result;
-        if (exists > 0)
-          return "error_exists";
-
-        item.Status = EnumStatus.Disabled;
-        serviceCourse.Update(item, null).Wait();
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string RemoveCourseESocial(string id)
-    {
-      try
-      {
-        var item = serviceCourseESocial.GetFreeNewVersion(p => p._id == id).Result;
-        item.Status = EnumStatus.Disabled;
-        serviceCourseESocial.UpdateAccount(item, null).Wait();
-        return "deleted";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-      throw new NotImplementedException();
-    }
-
     public string ReopeningEvent(string idevent)
     {
       try
@@ -350,26 +228,6 @@ namespace Manager.Services.Specific
         }
         events.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
         serviceEvent.Update(events, null).Wait();
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public void SetAttachmentHistoric(string idevent, string url, string fileName, string attachmentid)
-    {
-      try
-      {
-        var eventsHistoric = serviceEventHistoric.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
-
-        if (eventsHistoric.Attachments == null)
-        {
-          eventsHistoric.Attachments = new List<ViewCrudAttachmentField>();
-        }
-        eventsHistoric.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
-        serviceEventHistoric.Update(eventsHistoric, null).Wait();
 
       }
       catch (Exception e)
@@ -448,8 +306,6 @@ namespace Manager.Services.Specific
     }
 
 
-
-
     public ViewCrudEvent Get(string id)
     {
       try
@@ -484,107 +340,6 @@ namespace Manager.Services.Specific
           Modality = events.Modality,
           TypeESocial = events.TypeESocial
         };
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public ViewCrudCourse GetCourse(string id)
-    {
-      try
-      {
-
-        var course = serviceCourse.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-
-        return new ViewCrudCourse()
-        {
-          _id = course._id,
-          Name = course.Name,
-          Content = course.Content,
-          CourseESocial = (course.CourseESocial == null) ? null : new ViewCrudCourseESocial() { _id = course.CourseESocial._id, Name = course.CourseESocial.Name, Code = course.CourseESocial.Code },
-          Deadline = course.Deadline,
-          Equivalents = course.Equivalents?.Select(p => new ViewListCourse()
-          {
-            _id = p._id,
-            Name = p.Name
-          }).ToList(),
-          Prerequisites = course.Prerequisites?.Select(p => new ViewListCourse()
-          {
-            _id = p._id,
-            Name = p.Name
-          }).ToList(),
-          Periodicity = course.Periodicity,
-          Wordkload = course.Wordkload
-        };
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public ViewCrudCourseESocial GetCourseESocial(string id)
-    {
-      try
-      {
-        var course = serviceCourseESocial.GetFreeNewVersion(p => p._id == id).Result;
-        return new ViewCrudCourseESocial()
-        {
-          _id = course._idAccount,
-          Name = course.Name,
-          Code = course.Code
-        };
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public ViewCrudEventHistoric GetEventHistoric(string id)
-    {
-      try
-      {
-
-        var eventhistoric = serviceEventHistoric.GetFreeNewVersion(p => p._id == id).Result;
-        Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
-
-        return new ViewCrudEventHistoric()
-        {
-          _id = eventhistoric._id,
-          Begin = eventhistoric.Begin,
-          Course = eventhistoric.Course,
-          Name = eventhistoric.Name,
-          End = eventhistoric.End,
-          Workload = eventhistoric.Workload,
-          _idPerson = eventhistoric.Person._id,
-          NamePerson = eventhistoric.Person.Name,
-          Entity = eventhistoric.Entity,
-          Event = eventhistoric.Event,
-          Attachments = eventhistoric.Attachments
-        };
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<ViewCrudEntity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var detail = serviceEntity.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEntity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return detail.Select(p => new ViewCrudEntity()
-        {
-          _id = p._id,
-          Name = p.Name
-        }).ToList();
       }
       catch (Exception e)
       {
@@ -887,149 +642,6 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListEventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-
-
-        int skip = (count * (page - 1));
-        var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceEventHistoric.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return detail.Select(p => new ViewListEventHistoric()
-        {
-          _id = p._id,
-          Name = p.Name,
-          _idPerson = p.Person._id,
-          NamePerson = p.Person.Name
-        }).OrderBy(p => p.Name).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<ViewCrudEventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-
-        int skip = (count * (page - 1));
-        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result;
-        foreach (var person in listperson)
-        {
-          var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = serviceEventHistoric.CountNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
-          return detail.Select(p => new ViewCrudEventHistoric()
-          {
-            _id = p._id,
-            Name = p.Course.Name,
-            _idPerson = p.Person._id,
-            NamePerson = p.Person.Name,
-            Begin = p.Begin,
-            End = p.End,
-            Course = p.Course,
-            Entity = p.Entity,
-            Event = p.Event,
-            Workload = p.Workload,
-            Attachments = p.Attachments
-          }).ToList();
-        }
-        return null;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<ViewCrudEventHistoric> ListEventHistoricInstructor(string id, ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-
-        int skip = (count * (page - 1));
-        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result.Select(p => p._id).ToList();
-        foreach (var person in listperson)
-        {
-          List<Event> detail = new List<Event>();
-          var list = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
-          foreach (var item in list)
-          {
-            if (item.Instructors != null)
-              if (item.Instructors.Where(x => x.Person._id == person).Count() > 0)
-                detail.Add(item);
-          }
-
-          total = detail.Count();
-          return detail.Select(p => new ViewCrudEventHistoric()
-          {
-            _id = p._id,
-            Name = p.Course.Name,
-            _idPerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?._id,
-            NamePerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?.Name,
-            Begin = p.Begin,
-            End = p.End,
-            Course = p.Course,
-            Entity = p.Entity,
-            Event = null,
-            Workload = p.Workload,
-            Attachments = p.Attachments
-          }).OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
-        }
-        return null;
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<ViewListCourse> ListCourse(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-
-
-        int skip = (count * (page - 1));
-        var detail = serviceCourse.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceCourse.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return detail.Select(p => new ViewListCourse()
-        {
-          _id = p._id,
-          Name = p.Name
-        }).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public List<ViewCrudCourseESocial> ListCourseESocial(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var detail = serviceCourseESocial.GetAllFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
-        total = serviceCourseESocial.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return detail.Select(p => new ViewCrudCourseESocial()
-        {
-          _id = p._id,
-          Name = p.Name,
-          Code = p.Code
-        }).ToList();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     public ViewListEvent New(ViewCrudEvent view)
     {
       try
@@ -1129,7 +741,6 @@ namespace Manager.Services.Specific
       }
 
     }
-
 
     public string AddInstructor(string idevent, ViewCrudInstructor view)
     {
@@ -1239,6 +850,365 @@ namespace Manager.Services.Specific
       }
     }
 
+    public ViewListEvent Update(ViewCrudEvent view)
+    {
+      try
+      {
+        var person = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
+        var events = serviceEvent.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        events.Course = serviceCourse.GetAllNewVersion(p => p._id == view.Course._id).Result.Select(p => new ViewListCourse()
+        {
+          _id = p._id,
+          Name = p.Name
+        }).FirstOrDefault();
+        events.Name = view.Name;
+        events.Begin = view.Begin;
+        events.Content = view.Content;
+        events.DateEnd = view.DateEnd;
+        events.DaysSubscription = view.DaysSubscription;
+        events.End = view.End;
+        events.Evalution = view.Evalution;
+        events.Grade = view.Grade;
+        events.LimitParticipants = view.LimitParticipants;
+        events.MinimumFrequency = view.MinimumFrequency;
+        events.Modality = view.Modality;
+        events.Observation = view.Observation;
+        events.OpenSubscription = view.OpenSubscription;
+        events.StatusEvent = view.StatusEvent;
+        events.TypeESocial = view.TypeESocial;
+        events.Workload = view.Workload;
+
+
+        events.UserEdit = person.GetViewListBase();
+        events.Entity = AddEntity(view.Entity.Name);
+        if (view.StatusEvent == EnumStatusEvent.Realized)
+        {
+          view.DateEnd = DateTime.Now;
+          GenerateHistoric(events);
+        }
+        serviceEvent.Update(events, null).Wait();
+        return new ViewListEvent()
+        {
+          _id = view._id,
+          Name = view.Name
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    #endregion
+
+    #region CourseESocial
+    public ViewCrudCourseESocial GetCourseESocial(string id)
+    {
+      try
+      {
+        var course = serviceCourseESocial.GetFreeNewVersion(p => p._id == id).Result;
+        return new ViewCrudCourseESocial()
+        {
+          _id = course._idAccount,
+          Name = course.Name,
+          Code = course.Code
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string UpdateCourseESocial(ViewCrudCourseESocial view)
+    {
+      try
+      {
+        var esocial = serviceCourseESocial.GetFreeNewVersion(p => p._id == view._id).Result;
+        esocial.Name = view.Name;
+        esocial.Code = view.Code;
+
+        serviceCourseESocial.UpdateAccount(esocial, null).Wait();
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string NewCourseESocial(ViewCrudCourseESocial view)
+    {
+      try
+      {
+        serviceCourseESocial.InsertFreeNewVersion(new CourseESocial()
+        {
+          Name = view.Name,
+          Code = view.Code,
+          Status = EnumStatus.Enabled
+        }).Wait();
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewCrudCourseESocial> ListCourseESocial(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = serviceCourseESocial.GetAllFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceCourseESocial.CountFreeNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail.Select(p => new ViewCrudCourseESocial()
+        {
+          _id = p._id,
+          Name = p.Name,
+          Code = p.Code
+        }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string RemoveCourseESocial(string id)
+    {
+      try
+      {
+        var item = serviceCourseESocial.GetFreeNewVersion(p => p._id == id).Result;
+        item.Status = EnumStatus.Disabled;
+        serviceCourseESocial.UpdateAccount(item, null).Wait();
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+      throw new NotImplementedException();
+    }
+    #endregion
+
+    #region Course
+    public string RemoveCourse(string id)
+    {
+      try
+      {
+        var item = serviceCourse.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+
+        var exists = serviceEvent.CountNewVersion(p => p.Course._id == item._id & p.StatusEvent == EnumStatusEvent.Open).Result;
+        if (exists > 0)
+          return "error_exists";
+
+        item.Status = EnumStatus.Disabled;
+        serviceCourse.Update(item, null).Wait();
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudCourse GetCourse(string id)
+    {
+      try
+      {
+
+        var course = serviceCourse.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+
+        return new ViewCrudCourse()
+        {
+          _id = course._id,
+          Name = course.Name,
+          Content = course.Content,
+          CourseESocial = (course.CourseESocial == null) ? null : new ViewCrudCourseESocial() { _id = course.CourseESocial._id, Name = course.CourseESocial.Name, Code = course.CourseESocial.Code },
+          Deadline = course.Deadline,
+          Equivalents = course.Equivalents?.Select(p => new ViewListCourse()
+          {
+            _id = p._id,
+            Name = p.Name
+          }).ToList(),
+          Prerequisites = course.Prerequisites?.Select(p => new ViewListCourse()
+          {
+            _id = p._id,
+            Name = p.Name
+          }).ToList(),
+          Periodicity = course.Periodicity,
+          Wordkload = course.Wordkload
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public List<ViewListCourse> ListCourse(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+
+
+        int skip = (count * (page - 1));
+        var detail = serviceCourse.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceCourse.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail.Select(p => new ViewListCourse()
+        {
+          _id = p._id,
+          Name = p.Name
+        }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string NewCourse(ViewCrudCourse view)
+    {
+      try
+      {
+        var course = serviceCourse.InsertNewVersion(new Course()
+        {
+          Name = view.Name,
+          Wordkload = view.Wordkload,
+          Content = view.Content,
+          Deadline = view.Deadline,
+          Periodicity = view.Periodicity,
+          CourseESocial = view.CourseESocial,
+          Status = EnumStatus.Enabled,
+          Prerequisites = view.Prerequisites,
+          Equivalents = view.Equivalents
+        }).Result;
+
+
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string UpdateCourse(ViewCrudCourse view)
+    {
+      try
+      {
+        var course = serviceCourse.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        course.Content = view.Content;
+        course.Periodicity = view.Periodicity;
+        course.Deadline = view.Deadline;
+        course.Wordkload = view.Wordkload;
+        course.CourseESocial = view.CourseESocial;
+        course.Equivalents = view.Equivalents;
+        course.Prerequisites = view.Prerequisites;
+
+        serviceCourse.Update(course, null).Wait();
+
+        VerifyEquivalent(course);
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
+    #region EventHistoric
+
+    //nome colaborador, nome cargo, nome curso, inicio, fim, carga horária
+    public List<ViewListHistoric> ListHistoric(string idperson, string idcourse, ViewFilterDate date)
+    {
+      try
+      {
+        List<EventHistoric> list = new List<EventHistoric>();
+
+        if ((idperson != string.Empty) && (idcourse != string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
+          && p.Course._id == idcourse &&
+          p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson != string.Empty) && (idcourse != string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
+          && p.Course._id == idcourse
+          && p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson != string.Empty) && (idcourse == string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
+          && p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson != string.Empty) && (idcourse != string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson
+          && p.Course._id == idcourse).Result;
+        else if ((idperson != string.Empty) && (idcourse == string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result;
+        else if ((idperson == string.Empty) && (idcourse != string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == idcourse
+          && p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date != null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.End >= date.Begin && p.End <= date.End).Result;
+        else if ((idperson == string.Empty) && (idcourse != string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled
+          && p.Course._id == idcourse).Result;
+        else if ((idperson == string.Empty) && (idcourse == string.Empty) && (date == null))
+          list = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
+        var result = new List<ViewListHistoric>();
+
+        foreach (var item in list)
+        {
+          var view = new ViewListHistoric()
+          {
+            Person = item.Person?.Name,
+            Event = item.Name,
+            Occupation = servicePerson.GetNewVersion(p => p._id == item.Person._id).Result.Occupation?.Name,
+            Begin = item.Begin.Value.ToString("dd/MM/yyyy"),
+            End = item.End.Value.ToString("dd/MM/yyyy"),
+            Wordload = item.Workload / 60,
+            WorkloadMin = item.Workload
+          };
+          result.Add(view);
+        }
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string UpdateEventHistoricFrontEnd(ViewCrudEventHistoric view)
+    {
+      try
+      {
+        var eventHistoric = serviceEventHistoric.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+        eventHistoric.Name = view.Name;
+        eventHistoric.Person = servicePerson.GetAllNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault().GetViewListBase();
+        eventHistoric.Course = (view.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == view.Course._id).Result.Select(p => new ViewListCourse()
+        {
+          _id = p._id,
+          Name = p.Name
+        }).FirstOrDefault();
+        eventHistoric.Event = (view.Event == null) ? null : serviceEvent.GetAllNewVersion(p => p._id == view.Event._id).Result.Select(p => new ViewListEvent()
+        {
+          _id = p._id,
+          Name = p.Name
+        }).FirstOrDefault();
+        eventHistoric.Workload = view.Workload;
+        eventHistoric.Begin = view.Begin;
+        eventHistoric.End = view.End;
+        eventHistoric.Attachments = view.Attachments;
+
+
+        eventHistoric.Entity = AddEntity(view.Entity.Name);
+        serviceEventHistoric.Update(eventHistoric, null).Wait();
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public string NewEventHistoricFrontEnd(ViewCrudEventHistoric view)
     {
       try
@@ -1298,6 +1268,105 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewCrudEventHistoric> ListEventHistoricPerson(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+
+        int skip = (count * (page - 1));
+        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result;
+        foreach (var person in listperson)
+        {
+          var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceEventHistoric.CountNewVersion(p => p.Person._id == person._id & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+          return detail.Select(p => new ViewCrudEventHistoric()
+          {
+            _id = p._id,
+            Name = p.Course.Name,
+            _idPerson = p.Person._id,
+            NamePerson = p.Person.Name,
+            Begin = p.Begin,
+            End = p.End,
+            Course = p.Course,
+            Entity = p.Entity,
+            Event = p.Event,
+            Workload = p.Workload,
+            Attachments = p.Attachments
+          }).ToList();
+        }
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewCrudEventHistoric> ListEventHistoricInstructor(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+
+        int skip = (count * (page - 1));
+        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result.Select(p => p._id).ToList();
+        foreach (var person in listperson)
+        {
+          List<Event> detail = new List<Event>();
+          var list = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized & p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.ToList();
+          foreach (var item in list)
+          {
+            if (item.Instructors != null)
+              if (item.Instructors.Where(x => x.Person._id == person).Count() > 0)
+                detail.Add(item);
+          }
+
+          total = detail.Count();
+          return detail.Select(p => new ViewCrudEventHistoric()
+          {
+            _id = p._id,
+            Name = p.Course.Name,
+            _idPerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?._id,
+            NamePerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?.Name,
+            Begin = p.Begin,
+            End = p.End,
+            Course = p.Course,
+            Entity = p.Entity,
+            Event = null,
+            Workload = p.Workload,
+            Attachments = p.Attachments
+          }).OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
+        }
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListEventHistoric> ListEventHistoric(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+
+
+        int skip = (count * (page - 1));
+        var detail = serviceEventHistoric.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEventHistoric.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail.Select(p => new ViewListEventHistoric()
+        {
+          _id = p._id,
+          Name = p.Name,
+          _idPerson = p.Person._id,
+          NamePerson = p.Person.Name
+        }).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public string NewEventHistoric(EventHistoric view)
     {
       try
@@ -1314,132 +1383,6 @@ namespace Manager.Services.Specific
           serviceTrainingPlan.Update(plan, null).Wait();
         }
         return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string NewCourse(ViewCrudCourse view)
-    {
-      try
-      {
-        var course = serviceCourse.InsertNewVersion(new Course()
-        {
-          Name = view.Name,
-          Wordkload = view.Wordkload,
-          Content = view.Content,
-          Deadline = view.Deadline,
-          Periodicity = view.Periodicity,
-          CourseESocial = view.CourseESocial,
-          Status = EnumStatus.Enabled,
-          Prerequisites = view.Prerequisites,
-          Equivalents = view.Equivalents
-        }).Result;
-
-
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string NewCourseESocial(ViewCrudCourseESocial view)
-    {
-      try
-      {
-        serviceCourseESocial.InsertFreeNewVersion(new CourseESocial()
-        {
-          Name = view.Name,
-          Code = view.Code,
-          Status = EnumStatus.Enabled
-        }).Wait();
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public ViewListEvent Update(ViewCrudEvent view)
-    {
-      try
-      {
-        var person = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
-        var events = serviceEvent.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
-        events.Course = serviceCourse.GetAllNewVersion(p => p._id == view.Course._id).Result.Select(p => new ViewListCourse()
-        {
-          _id = p._id,
-          Name = p.Name
-        }).FirstOrDefault();
-        events.Name = view.Name;
-        events.Begin = view.Begin;
-        events.Content = view.Content;
-        events.DateEnd = view.DateEnd;
-        events.DaysSubscription = view.DaysSubscription;
-        events.End = view.End;
-        events.Evalution = view.Evalution;
-        events.Grade = view.Grade;
-        events.LimitParticipants = view.LimitParticipants;
-        events.MinimumFrequency = view.MinimumFrequency;
-        events.Modality = view.Modality;
-        events.Observation = view.Observation;
-        events.OpenSubscription = view.OpenSubscription;
-        events.StatusEvent = view.StatusEvent;
-        events.TypeESocial = view.TypeESocial;
-        events.Workload = view.Workload;
-
-
-        events.UserEdit = person.GetViewListBase();
-        events.Entity = AddEntity(view.Entity.Name);
-        if (view.StatusEvent == EnumStatusEvent.Realized)
-        {
-          view.DateEnd = DateTime.Now;
-          GenerateHistoric(events);
-        }
-        serviceEvent.Update(events, null).Wait();
-        return new ViewListEvent()
-        {
-          _id = view._id,
-          Name = view.Name
-        };
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateEventHistoricFrontEnd(ViewCrudEventHistoric view)
-    {
-      try
-      {
-        var eventHistoric = serviceEventHistoric.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
-        eventHistoric.Name = view.Name;
-        eventHistoric.Person = servicePerson.GetAllNewVersion(p => p._id == view._idPerson).Result.FirstOrDefault().GetViewListBase();
-        eventHistoric.Course = (view.Course == null) ? null : serviceCourse.GetAllNewVersion(p => p._id == view.Course._id).Result.Select(p => new ViewListCourse()
-        {
-          _id = p._id,
-          Name = p.Name
-        }).FirstOrDefault();
-        eventHistoric.Event = (view.Event == null) ? null : serviceEvent.GetAllNewVersion(p => p._id == view.Event._id).Result.Select(p => new ViewListEvent()
-        {
-          _id = p._id,
-          Name = p.Name
-        }).FirstOrDefault();
-        eventHistoric.Workload = view.Workload;
-        eventHistoric.Begin = view.Begin;
-        eventHistoric.End = view.End;
-        eventHistoric.Attachments = view.Attachments;
-
-
-        eventHistoric.Entity = AddEntity(view.Entity.Name);
-        serviceEventHistoric.Update(eventHistoric, null).Wait();
-        return "update";
       }
       catch (Exception e)
       {
@@ -1467,23 +1410,29 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateCourse(ViewCrudCourse view)
+
+    public ViewCrudEventHistoric GetEventHistoric(string id)
     {
       try
       {
-        var course = serviceCourse.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
-        course.Content = view.Content;
-        course.Periodicity = view.Periodicity;
-        course.Deadline = view.Deadline;
-        course.Wordkload = view.Wordkload;
-        course.CourseESocial = view.CourseESocial;
-        course.Equivalents = view.Equivalents;
-        course.Prerequisites = view.Prerequisites;
 
-        serviceCourse.Update(course, null).Wait();
+        var eventhistoric = serviceEventHistoric.GetFreeNewVersion(p => p._id == id).Result;
+        Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
 
-        VerifyEquivalent(course);
-        return "update";
+        return new ViewCrudEventHistoric()
+        {
+          _id = eventhistoric._id,
+          Begin = eventhistoric.Begin,
+          Course = eventhistoric.Course,
+          Name = eventhistoric.Name,
+          End = eventhistoric.End,
+          Workload = eventhistoric.Workload,
+          _idPerson = eventhistoric.Person._id,
+          NamePerson = eventhistoric.Person.Name,
+          Entity = eventhistoric.Entity,
+          Event = eventhistoric.Event,
+          Attachments = eventhistoric.Attachments
+        };
       }
       catch (Exception e)
       {
@@ -1491,16 +1440,44 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateCourseESocial(ViewCrudCourseESocial view)
+    public string RemoveEventHistoric(string id)
     {
       try
       {
-        var esocial = serviceCourseESocial.GetFreeNewVersion(p => p._id == view._id).Result;
-        esocial.Name = view.Name;
-        esocial.Code = view.Code;
+        var item = serviceEventHistoric.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+        Task.Run(() => LogSave(_user._idPerson, "Delete Event Historic " + id));
+        var obs = "Realized Event: " + item.Name + ", ID_Historic: " + item._id;
+        var trainingplan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == item.Person._id
+        & p.Course._id == item.Course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Realized
+        & p.Observartion == obs).Result.FirstOrDefault();
+        if (trainingplan != null)
+        {
+          trainingplan.StatusTrainingPlan = EnumStatusTrainingPlan.Open;
+          serviceTrainingPlan.Update(trainingplan, null).Wait();
+        }
+        item.Status = EnumStatus.Disabled;
+        serviceEventHistoric.Update(item, null).Wait();
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
-        serviceCourseESocial.UpdateAccount(esocial, null).Wait();
-        return "update";
+    public void SetAttachmentHistoric(string idevent, string url, string fileName, string attachmentid)
+    {
+      try
+      {
+        var eventsHistoric = serviceEventHistoric.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
+
+        if (eventsHistoric.Attachments == null)
+        {
+          eventsHistoric.Attachments = new List<ViewCrudAttachmentField>();
+        }
+        eventsHistoric.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+        serviceEventHistoric.Update(eventsHistoric, null).Wait();
+
       }
       catch (Exception e)
       {
@@ -1509,6 +1486,237 @@ namespace Manager.Services.Specific
     }
 
     #endregion
+
+    #region Entity
+
+    public List<ViewCrudEntity> ListEntity(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = serviceEntity.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEntity.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail.Select(p => new ViewCrudEntity()
+        {
+          _id = p._id,
+          Name = p.Name
+        }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
+    #region EventHistoricTemp
+    public List<ViewCrudEventHistoricTemp> ListEventHistoricTempPerson(string id, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+
+        int skip = (count * (page - 1));
+        var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result;
+        foreach (var person in listperson)
+        {
+          var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.Person._id == person._id & p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceEventHistoricTemp.CountNewVersion(p => p.Person._id == person._id & p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+          return detail.Select(p => new ViewCrudEventHistoricTemp()
+          {
+            _id = p._id,
+            Name = p.Name,
+            _idPerson = p.Person._id,
+            NamePerson = p.Person.Name,
+            Begin = p.Begin,
+            End = p.End,
+            Entity = p.Entity,
+            Event = p.Event,
+            Workload = p.Workload,
+            Attachments = p.Attachments
+          }).ToList();
+        }
+        return null;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListEventHistoricTemp> ListEventHistoricTemp(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+
+
+        int skip = (count * (page - 1));
+        var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        total = serviceEventHistoricTemp.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail.Select(p => new ViewListEventHistoricTemp()
+        {
+          _id = p._id,
+          Name = p.Name,
+          _idPerson = p.Person._id,
+          NamePerson = p.Person.Name,
+          StatusEventHistoricTemp = p.StatusEventHistoricTemp
+        }).OrderBy(p => p.Name).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string NewEventHistoricTemp(ViewCrudEventHistoricTemp view)
+    {
+      try
+      {
+
+        view.Entity = AddEntity(view.Entity.Name);
+        var model = new EventHistoricTemp()
+        {
+          Begin = view.Begin,
+          End = view.End,
+          Attachments = view.Attachments,
+          Entity = view.Entity,
+          Name = view.Name,
+          Workload = view.Workload,
+          StatusEventHistoricTemp = EnumStatusEventHistoricTemp.Wait,
+          Person = new ViewListPersonBase() { _id = view._idPerson, Name = view.NamePerson }
+        };
+        var events = serviceEventHistoricTemp.InsertNewVersion(model).Result;
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateEventHistoricTemp(ViewCrudEventHistoricTemp view)
+    {
+      try
+      {
+        if (view.Workload.ToString().Contains(","))
+          view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
+        else
+          view.Workload = view.Workload * 60;
+
+        view.Entity = AddEntity(view.Entity.Name);
+        var model = serviceEventHistoricTemp.GetNewVersion(p => p._id == view._id).Result;
+        model.Begin = view.Begin;
+        model.End = view.End;
+        model.Attachments = view.Attachments;
+        model.Entity = view.Entity;
+        model.Name = view.Name;
+        model.Workload = view.Workload;
+
+        serviceEventHistoricTemp.Update(model, null).Wait();
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudEventHistoricTemp GetEventHistoricTemp(string id)
+    {
+      try
+      {
+
+        var eventhistoric = serviceEventHistoricTemp.GetFreeNewVersion(p => p._id == id).Result;
+        Task.Run(() => LogSave(_user._idPerson, "Get Historic by ID"));
+
+        return new ViewCrudEventHistoricTemp()
+        {
+          _id = eventhistoric._id,
+          Begin = eventhistoric.Begin,
+          Name = eventhistoric.Name,
+          End = eventhistoric.End,
+          Workload = eventhistoric.Workload,
+          _idPerson = eventhistoric.Person._id,
+          NamePerson = eventhistoric.Person.Name,
+          Entity = eventhistoric.Entity,
+          Event = eventhistoric.Event,
+          StatusEventHistoricTemp = eventhistoric.StatusEventHistoricTemp,
+          Attachments = eventhistoric.Attachments
+        };
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string SetStatusEventHistoricTemp(EnumStatusEventHistoricTemp status, string id, string idcourse)
+    {
+      try
+      {
+        var course = serviceCourse.GetNewVersion(p => p._id == idcourse).Result.GetViewList();
+        var model = serviceEventHistoricTemp.GetNewVersion(p => p._id == id).Result;
+        model.StatusEventHistoricTemp = status;
+        if(status == EnumStatusEventHistoricTemp.Approved)
+        {
+          NewEventHistoric(new EventHistoric()
+          {
+            Name = model.Name,
+            Course = course,
+            Entity = model.Entity,
+            Workload = model.Workload,
+            Person = model.Person,
+            Begin = model.Begin,
+            End = model.End,
+            Attachments = model.Attachments
+          });
+        }
+
+        return "ok";
+      }catch(Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public void SetAttachmentHistoricTemp(string idevent, string url, string fileName, string attachmentid)
+    {
+      try
+      {
+        var eventsHistoricTemp = serviceEventHistoricTemp.GetAllNewVersion(p => p._id == idevent).Result.FirstOrDefault();
+
+        if (eventsHistoricTemp.Attachments == null)
+        {
+          eventsHistoricTemp.Attachments = new List<ViewCrudAttachmentField>();
+        }
+        eventsHistoricTemp.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+        serviceEventHistoricTemp.Update(eventsHistoricTemp, null).Wait();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public string RemoveEventHistoricTemp(string id)
+    {
+      try
+      {
+        var item = serviceEventHistoricTemp.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+        item.Status = EnumStatus.Disabled;
+        serviceEventHistoricTemp.Update(item, null).Wait();
+        return "deleted";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
 
     #region private
 

@@ -61,5 +61,15 @@ namespace Manager.Core.Interfaces
     List<ViewListHistoric> ListHistoric(string idperson, string idcourse, ViewFilterDate date);
     List<ViewListEventSubscription> ListEventInstructor(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewCrudEventHistoric> ListEventHistoricInstructor(string id, ref long total, int count = 10, int page = 1, string filter = "");
+
+
+    string NewEventHistoricTemp(ViewCrudEventHistoricTemp view);
+    string UpdateEventHistoricTemp(ViewCrudEventHistoricTemp view);
+    ViewCrudEventHistoricTemp GetEventHistoricTemp(string id);
+    List<ViewListEventHistoricTemp> ListEventHistoricTemp(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewCrudEventHistoricTemp> ListEventHistoricTempPerson(string id, ref long total, int count = 10, int page = 1, string filter = "");
+    void SetAttachmentHistoricTemp(string idevent, string url, string fileName, string idattachmentid);
+    string SetStatusEventHistoricTemp(EnumStatusEventHistoricTemp status, string id, string idcourse);
+    string RemoveEventHistoricTemp(string id);
   }
 }

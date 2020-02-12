@@ -46,42 +46,7 @@ namespace Training.Controllers
     {
       return await Task.Run(() =>service.Remove(id));
     }
-    /// <summary>
-    /// Excluir um evento histórico
-    /// </summary>
-    /// <param name="id">Identificador do evento histórico</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpDelete]
-    [Route("deleteeventhistoric/{id}")]
-    public async Task<string> DeleteEventHistoric(string id)
-    {
-      return await Task.Run(() =>service.RemoveEventHistoric(id));
-    }
-    /// <summary>
-    /// Excluir um curso
-    /// </summary>
-    /// <param name="id">Identificador do curso</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpDelete]
-    [Route("deletecourse/{id}")]
-    public async Task<string> DeleteCourse(string id)
-    {
-      return await Task.Run(() =>service.RemoveCourse(id));
-    }
-    /// <summary>
-    /// Excluir um curso do e-Social
-    /// </summary>
-    /// <param name="id">Identificador do curso do e-Social</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpDelete]
-    [Route("deletecourseesocial/{id}")]
-    public async Task<string> DeleteCourseESocial(string id)
-    {
-      return await Task.Run(() =>service.RemoveCourseESocial(id));
-    }
+    
     /// <summary>
     /// Excluir um participante do evento
     /// </summary>
@@ -249,22 +214,6 @@ namespace Training.Controllers
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="date"></param>
-    /// <param name="idperson"></param>
-    /// <param name="idcourse"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPost]
-    [Route("listhistoric")]
-    public async Task<List<ViewListHistoric>> ListHistoric([FromBody]ViewFilterDate date, string idperson = "", string idcourse = "")
-    {
-      var result = service.ListHistoric(idperson,idcourse,date);
-      return await Task.Run(() => result);
-    }
-
-    /// <summary>
     /// Lista eventos abertos
     /// </summary>
     /// <param name="count"></param>
@@ -337,23 +286,6 @@ namespace Training.Controllers
       return await Task.Run(() =>result);
     }
     /// <summary>
-    /// Lista entidades
-    /// </summary>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("listentity")]
-    public async Task<List<ViewCrudEntity>> ListEntity( int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEntity(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
-    }
-    /// <summary>
     /// Busca informações de evento para editar 
     /// </summary>
     /// <param name="id">Identificador evento</param>
@@ -377,198 +309,7 @@ namespace Training.Controllers
     {
       return await Task.Run(() =>service.Update(view));
     }
-    /// <summary>
-    /// Inclusão histórico de evento
-    /// </summary>
-    /// <param name="view"></param>
-    /// <returns></returns>
-    [HttpPost]
-    [Route("neweventhistoric")]
-    public async Task<string> NewEventHistoricFrontEnd([FromBody]ViewCrudEventHistoric view)
-    {
-      return await Task.Run(() =>service.NewEventHistoricFrontEnd(view));
-    }
-    /// <summary>
-    /// Lista histórico de eventos
-    /// </summary>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("listeventhistoric")]
-    public async Task<List<ViewListEventHistoric>> ListEventHistoric( int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventHistoric(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
-    }
-
-    /// <summary>
-    /// Lista os histórico de evento de um instrutor
-    /// </summary>
-    /// <param name="id">Identificador usuário</param>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [HttpGet]
-    [Route("listeventhistoricinstructor/{id}")]
-    public async Task<List<ViewCrudEventHistoric>> ListEventHistoricInstructor(string id, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventHistoricInstructor(id, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() => result);
-    }
-
-    /// <summary>
-    /// Lista os histórico de evento de um contrato
-    /// </summary>
-    /// <param name="id">Identificador usuário</param>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [HttpGet]
-    [Route("listeventhistoricperson/{id}")]
-    public async Task<List<ViewCrudEventHistoric>> ListEventHistoricPerson(string id,  int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListEventHistoricPerson(id, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
-    }
-    /// <summary>
-    /// Busca informações para editar um histórico de evento
-    /// </summary>
-    /// <param name="id">Identificador histórico de evento</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("geteventhistoric/{id}")]
-    public async Task<ViewCrudEventHistoric> GetEventHistoric(string id)
-    {
-      return await Task.Run(() =>service.GetEventHistoric(id));
-    }
-    /// <summary>
-    /// Atualiza informações de um historico de eventos
-    /// </summary>
-    /// <param name="view">Objeto Crud</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPut]
-    [Route("updateeventhistoric")]
-    public async Task<string> UpdateEventHistoric([FromBody]ViewCrudEventHistoric view)
-    {
-      return await Task.Run(() =>service.UpdateEventHistoricFrontEnd(view));
-    }
-    /// <summary>
-    /// Inclusão de um novo curso
-    /// </summary>
-    /// <param name="view">Objeto Crud</param>
-    /// <returns></returns>
-    [HttpPost]
-    [Route("newcourse")]
-    public async Task<string> NewCourse([FromBody]ViewCrudCourse view)
-    {
-      return await Task.Run(() =>service.NewCourse(view));
-    }
-    /// <summary>
-    /// Lista os cursos
-    /// </summary>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("listcourse")]
-    public async Task<List<ViewListCourse>> ListCourse( int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListCourse(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
-    }
-    /// <summary>
-    /// Busca informações para editar um curso
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("getcourse/{id}")]
-    public async Task<ViewCrudCourse> GetCourse(string id)
-    {
-      return await Task.Run(() =>service.GetCourse(id));
-    }
-    /// <summary>
-    /// Atualizar informaçõe de um curso
-    /// </summary>
-    /// <param name="view">Objeto Crud</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPut]
-    [Route("updatecourse")]
-    public async Task<string> UpdateCourse([FromBody]ViewCrudCourse view)
-    {
-      return await Task.Run(() =>service.UpdateCourse(view));
-    }
-    /// <summary>
-    /// Inclusão curso esocial
-    /// </summary>
-    /// <param name="view">Objeto Crud</param>
-    /// <returns></returns>
-    [HttpPost]
-    [Route("newcourseesocial")]
-    public async Task<string> NewCourseESocial([FromBody]ViewCrudCourseESocial view)
-    {
-      return await Task.Run(() =>service.NewCourseESocial(view));
-    }
-    /// <summary>
-    /// Lista cursos do esocial
-    /// </summary>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("listcourseesocial")]
-    public async Task<List<ViewCrudCourseESocial>> ListCourseESocial( int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListCourseESocial(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
-    }
-    /// <summary>
-    /// Busca informações de um curso do esocial para editar
-    /// </summary>
-    /// <param name="id">Identificador do curso esocial</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("getcourseesocial/{id}")]
-    public async Task<ViewCrudCourseESocial> GetCourseESocial(string id)
-    {
-      return await Task.Run(() =>service.GetCourseESocial(id));
-    }
-    /// <summary>
-    /// Atualiza informações de um curso do esocial
-    /// </summary>
-    /// <param name="view">Objeto Crud</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpPut]
-    [Route("updatecourseesocial")]
-    public async Task<string> UpdateCourseESocial([FromBody]ViewCrudCourseESocial view)
-    {
-      return await Task.Run(() =>service.UpdateCourseESocial(view));
-    }
+   
     /// <summary>
     /// Adiciona um participante a um evento
     /// </summary>
@@ -623,6 +364,392 @@ namespace Training.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() =>result);
     }
+    #endregion
+
+    #region eventhistoric
+    /// <summary>
+    /// Excluir um evento histórico
+    /// </summary>
+    /// <param name="id">Identificador do evento histórico</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteeventhistoric/{id}")]
+    public async Task<string> DeleteEventHistoric(string id)
+    {
+      return await Task.Run(() => service.RemoveEventHistoric(id));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="idperson"></param>
+    /// <param name="idcourse"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listhistoric")]
+    public async Task<List<ViewListHistoric>> ListHistoric([FromBody]ViewFilterDate date, string idperson = "", string idcourse = "")
+    {
+      var result = service.ListHistoric(idperson, idcourse, date);
+      return await Task.Run(() => result);
+    }
+
+
+    /// <summary>
+    /// Inclusão histórico de evento
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("neweventhistoric")]
+    public async Task<string> NewEventHistoricFrontEnd([FromBody]ViewCrudEventHistoric view)
+    {
+      return await Task.Run(() => service.NewEventHistoricFrontEnd(view));
+    }
+    /// <summary>
+    /// Lista histórico de eventos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listeventhistoric")]
+    public async Task<List<ViewListEventHistoric>> ListEventHistoric(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoric(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// Lista os histórico de evento de um instrutor
+    /// </summary>
+    /// <param name="id">Identificador usuário</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("listeventhistoricinstructor/{id}")]
+    public async Task<List<ViewCrudEventHistoric>> ListEventHistoricInstructor(string id, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoricInstructor(id, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// Lista os histórico de evento de um contrato
+    /// </summary>
+    /// <param name="id">Identificador usuário</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("listeventhistoricperson/{id}")]
+    public async Task<List<ViewCrudEventHistoric>> ListEventHistoricPerson(string id, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoricPerson(id, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+    /// <summary>
+    /// Busca informações para editar um histórico de evento
+    /// </summary>
+    /// <param name="id">Identificador histórico de evento</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("geteventhistoric/{id}")]
+    public async Task<ViewCrudEventHistoric> GetEventHistoric(string id)
+    {
+      return await Task.Run(() => service.GetEventHistoric(id));
+    }
+    /// <summary>
+    /// Atualiza informações de um historico de eventos
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateeventhistoric")]
+    public async Task<string> UpdateEventHistoric([FromBody]ViewCrudEventHistoric view)
+    {
+      return await Task.Run(() => service.UpdateEventHistoricFrontEnd(view));
+    }
+    #endregion
+
+    #region eventhistorictemp
+    /// <summary>
+    /// Excluir um evento histórico
+    /// </summary>
+    /// <param name="id">Identificador do evento histórico</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteeventhistorictemp/{id}")]
+    public async Task<string> DeleteEventHistoricTemp(string id)
+    {
+      return await Task.Run(() => service.RemoveEventHistoricTemp(id));
+    }
+
+    /// <summary>
+    /// Inclusão histórico de evento
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("neweventhistorictemp")]
+    public async Task<string> NewEventHistoricTempFrontEnd([FromBody]ViewCrudEventHistoricTemp view)
+    {
+      return await Task.Run(() => service.NewEventHistoricTemp(view));
+    }
+    /// <summary>
+    /// Lista histórico de eventos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listeventhistorictemp")]
+    public async Task<List<ViewListEventHistoricTemp>> ListEventHistoricTemp(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoricTemp(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// Lista os histórico de evento de um contrato
+    /// </summary>
+    /// <param name="id">Identificador usuário</param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("listeventhistorictempperson/{id}")]
+    public async Task<List<ViewCrudEventHistoricTemp>> ListEventHistoricTempPerson(string id, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEventHistoricTempPerson(id, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// Busca informações para editar um histórico de evento
+    /// </summary>
+    /// <param name="id">Identificador histórico de evento</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("geteventhistorictemp/{id}")]
+    public async Task<ViewCrudEventHistoricTemp> GetEventHistoricTemp(string id)
+    {
+      return await Task.Run(() => service.GetEventHistoricTemp(id));
+    }
+    /// <summary>
+    /// Atualiza informações de um historico de eventos
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateeventhistorictemp")]
+    public async Task<string> UpdateEventHistoricTemp([FromBody]ViewCrudEventHistoricTemp view)
+    {
+      return await Task.Run(() => service.UpdateEventHistoricTemp(view));
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="status"></param>
+    /// <param name="id"></param>
+    /// <param name="idcourse"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("setstatuseventhistorictemp/{status}/{id}/{idcourse}")]
+    public async Task<string> SetStatusEventHistoricTemp(EnumStatusEventHistoricTemp status, string id, string idcourse)
+    {
+      return await Task.Run(() => service.SetStatusEventHistoricTemp(status, id, idcourse));
+    }
+
+    #endregion
+
+    #region entity
+
+    /// <summary>
+    /// Lista entidades
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listentity")]
+    public async Task<List<ViewCrudEntity>> ListEntity(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListEntity(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+    #endregion
+
+    #region course
+
+
+    /// <summary>
+    /// Excluir um curso
+    /// </summary>
+    /// <param name="id">Identificador do curso</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deletecourse/{id}")]
+    public async Task<string> DeleteCourse(string id)
+    {
+      return await Task.Run(() => service.RemoveCourse(id));
+    }
+
+    /// <summary>
+    /// Inclusão de um novo curso
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("newcourse")]
+    public async Task<string> NewCourse([FromBody]ViewCrudCourse view)
+    {
+      return await Task.Run(() => service.NewCourse(view));
+    }
+    /// <summary>
+    /// Lista os cursos
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listcourse")]
+    public async Task<List<ViewListCourse>> ListCourse(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListCourse(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+    /// <summary>
+    /// Busca informações para editar um curso
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getcourse/{id}")]
+    public async Task<ViewCrudCourse> GetCourse(string id)
+    {
+      return await Task.Run(() => service.GetCourse(id));
+    }
+    /// <summary>
+    /// Atualizar informaçõe de um curso
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatecourse")]
+    public async Task<string> UpdateCourse([FromBody]ViewCrudCourse view)
+    {
+      return await Task.Run(() => service.UpdateCourse(view));
+    }
+    #endregion
+
+    #region courseesocial
+
+    /// <summary>
+    /// Inclusão curso esocial
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("newcourseesocial")]
+    public async Task<string> NewCourseESocial([FromBody]ViewCrudCourseESocial view)
+    {
+      return await Task.Run(() => service.NewCourseESocial(view));
+    }
+    /// <summary>
+    /// Lista cursos do esocial
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listcourseesocial")]
+    public async Task<List<ViewCrudCourseESocial>> ListCourseESocial(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListCourseESocial(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+    /// <summary>
+    /// Busca informações de um curso do esocial para editar
+    /// </summary>
+    /// <param name="id">Identificador do curso esocial</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getcourseesocial/{id}")]
+    public async Task<ViewCrudCourseESocial> GetCourseESocial(string id)
+    {
+      return await Task.Run(() => service.GetCourseESocial(id));
+    }
+    /// <summary>
+    /// Atualiza informações de um curso do esocial
+    /// </summary>
+    /// <param name="view">Objeto Crud</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatecourseesocial")]
+    public async Task<string> UpdateCourseESocial([FromBody]ViewCrudCourseESocial view)
+    {
+      return await Task.Run(() => service.UpdateCourseESocial(view));
+    }
+
+    /// <summary>
+    /// Excluir um curso do e-Social
+    /// </summary>
+    /// <param name="id">Identificador do curso do e-Social</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deletecourseesocial/{id}")]
+    public async Task<string> DeleteCourseESocial(string id)
+    {
+      return await Task.Run(() => service.RemoveCourseESocial(id));
+    }
+
     #endregion
 
   }
