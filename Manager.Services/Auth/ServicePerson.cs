@@ -914,7 +914,7 @@ namespace Manager.Services.Auth
           user.PhotoUrl = view.User.PhotoUrl;
           user.Schooling = view.User.Schooling;
           user.Sex = view.User.Sex;
-          serviceUser.Update(user, null).Wait();
+          var xy = serviceUser.Update(user, null);
 
         }
 

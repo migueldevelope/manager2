@@ -128,9 +128,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public async Task<IActionResult> Update([FromBody] ViewCrudPerson view)
+    public string Update([FromBody] ViewCrudPerson view)
     {
-      return await Task.Run(() => Ok(service.Update(view)));
+      return service.Update(view);
     }
 
     /// <summary>
