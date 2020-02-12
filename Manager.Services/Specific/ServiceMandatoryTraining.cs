@@ -987,12 +987,11 @@ namespace Manager.Services.Specific
         }
 
         var result = new List<ViewListTrainingPlanManager>();
-        var view = new ViewListTrainingPlanManager();
-        var countRealized = 0;
-        var countNo = 0;
-        var totalGeral = 0;
-        view.Manager = list.FirstOrDefault().Manager;
-        view.Persons = new List<ViewListTrainingPlan>();
+        var view = new ViewListTrainingPlanManager
+        {
+          Manager = list.FirstOrDefault().Manager,
+          Persons = new List<ViewListTrainingPlan>()
+        };
 
         //foreach (var item in list)
         //{
@@ -1139,20 +1138,20 @@ namespace Manager.Services.Specific
         return model.Select(p => new ViewCrudMandatoryTraining()
         {
           _id = p._id,
-          Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
+          Persons = p.Persons?.Select(x => new ViewCrudPersonMandatory()
           {
             _id = x._id,
-            Name = x.Person == null ? null : x.Person.Name,
+            Name = x.Person?.Name,
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Person = x.Person == null ? null : x.Person
+            Person = x.Person ?? null
           }).ToList(),
           Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
           Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
           {
             _id = x._id,
-            Name = x.Company == null ? null : x.Company.Name,
+            Name = x.Company?.Name,
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
@@ -1164,7 +1163,7 @@ namespace Manager.Services.Specific
             BeginDate = x.BeginDate,
             TypeMandatoryTraining = x.TypeMandatoryTraining,
             Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Occupation = x.Occupation == null ? null : x.Occupation
+            Occupation = x.Occupation ?? null
           }).ToList()
 
         }).FirstOrDefault();

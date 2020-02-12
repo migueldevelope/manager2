@@ -20,7 +20,7 @@ namespace Indicators.Controllers
   public class IndicatorsController : DefaultController
   {
     private readonly IServiceIndicators service;
-    private readonly IServiceManager serviceManager;
+    //private readonly IServiceManager serviceManager;
 
     /// <summary>
     /// 
@@ -47,7 +47,8 @@ namespace Indicators.Controllers
     [Route("gethierarchy/{idperson}")]
     public async Task<List<ViewListStructManager>> GetHierarchy(string idmanager)
     {
-      return await Task.Run(() => serviceManager.GetHierarchy(idmanager));
+      //return await Task.Run(() => serviceManager.GetHierarchy(idmanager));
+      return null;
     }
 
     /// <summary>

@@ -2094,12 +2094,14 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
-                view = new ViewExportOnboardingComments();
-                view.NameManager = onboarding.Person.Manager;
-                view.NamePerson = onboarding.Person.Name;
-                view.NameItem = item.Activitie.Name;
-                view.Date = comm.Date;
-                view.Comments = comm.Comments;
+                view = new ViewExportOnboardingComments
+                {
+                  NameManager = onboarding.Person.Manager,
+                  NamePerson = onboarding.Person.Name,
+                  NameItem = item.Activitie.Name,
+                  Date = comm.Date,
+                  Comments = comm.Comments
+                };
                 result.Add(view);
               }
             }
@@ -2108,12 +2110,14 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
-                view = new ViewExportOnboardingComments();
-                view.NameManager = onboarding.Person.Manager;
-                view.NamePerson = onboarding.Person.Name;
-                view.NameItem = item.Schooling.Name;
-                view.Date = comm.Date;
-                view.Comments = comm.Comments;
+                view = new ViewExportOnboardingComments
+                {
+                  NameManager = onboarding.Person.Manager,
+                  NamePerson = onboarding.Person.Name,
+                  NameItem = item.Schooling.Name,
+                  Date = comm.Date,
+                  Comments = comm.Comments
+                };
                 result.Add(view);
               }
             }
@@ -2122,12 +2126,14 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
-                view = new ViewExportOnboardingComments();
-                view.NameManager = onboarding.Person.Manager;
-                view.NamePerson = onboarding.Person.Name;
-                view.NameItem = item.Scope.Name;
-                view.Date = comm.Date;
-                view.Comments = comm.Comments;
+                view = new ViewExportOnboardingComments
+                {
+                  NameManager = onboarding.Person.Manager,
+                  NamePerson = onboarding.Person.Name,
+                  NameItem = item.Scope.Name,
+                  Date = comm.Date,
+                  Comments = comm.Comments
+                };
                 result.Add(view);
               }
             }
@@ -2136,12 +2142,14 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
-                view = new ViewExportOnboardingComments();
-                view.NameManager = onboarding.Person.Manager;
-                view.NamePerson = onboarding.Person.Name;
-                view.NameItem = item.Skill.Name;
-                view.Date = comm.Date;
-                view.Comments = comm.Comments;
+                view = new ViewExportOnboardingComments
+                {
+                  NameManager = onboarding.Person.Manager,
+                  NamePerson = onboarding.Person.Name,
+                  NameItem = item.Skill.Name,
+                  Date = comm.Date,
+                  Comments = comm.Comments
+                };
                 result.Add(view);
               }
             }
@@ -2150,12 +2158,14 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
-                view = new ViewExportOnboardingComments();
-                view.NameManager = onboarding.Person.Manager;
-                view.NamePerson = onboarding.Person.Name;
-                view.NameItem = item.Skill.Name;
-                view.Date = comm.Date;
-                view.Comments = comm.Comments;
+                view = new ViewExportOnboardingComments
+                {
+                  NameManager = onboarding.Person.Manager,
+                  NamePerson = onboarding.Person.Name,
+                  NameItem = item.Skill.Name,
+                  Date = comm.Date,
+                  Comments = comm.Comments
+                };
                 result.Add(view);
               }
             }
@@ -2164,12 +2174,14 @@ namespace Manager.Services.Specific
             {
               foreach (var comm in item.Comments)
               {
-                view = new ViewExportOnboardingComments();
-                view.NameManager = onboarding.Person.Manager;
-                view.NamePerson = onboarding.Person.Name;
-                view.NameItem = item.Skill.Name;
-                view.Date = comm.Date;
-                view.Comments = comm.Comments;
+                view = new ViewExportOnboardingComments
+                {
+                  NameManager = onboarding.Person.Manager,
+                  NamePerson = onboarding.Person.Name,
+                  NameItem = item.Skill.Name,
+                  Date = comm.Date,
+                  Comments = comm.Comments
+                };
                 result.Add(view);
               }
             }
@@ -2679,7 +2691,7 @@ namespace Manager.Services.Specific
       catch (Exception e)
       {
         var error = e.Message;
-        queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
+        await queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
       }
 
     }
