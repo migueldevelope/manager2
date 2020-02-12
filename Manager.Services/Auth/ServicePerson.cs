@@ -964,7 +964,8 @@ namespace Manager.Services.Auth
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
         if (person.Occupation == null)
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
-        servicePerson.Update(person, null).Wait();
+
+        var x = servicePerson.Update(person, null);
         return "Person altered!";
       }
       catch (Exception e)
