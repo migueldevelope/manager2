@@ -46,6 +46,7 @@
       this.btnImp.TabIndex = 6;
       this.btnImp.Text = "Executar Importação";
       this.btnImp.UseVisualStyleBackColor = true;
+      this.btnImp.Click += new System.EventHandler(this.BtnImp_Click);
       // 
       // btnDemAus
       // 

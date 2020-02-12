@@ -65,5 +65,37 @@ namespace IntegrationClient
 
       }
     }
+
+    private void BtnImp_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
+        import.RefreshProgressBar += Import_RefreshProgressBar;
+        switch (serviceConfiguration.Param.Version)
+        {
+          case EnumIntegrationVersion.V1:
+            MessageBox.Show("Versão de ausência não implementada!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            break;
+          case EnumIntegrationVersion.V2:
+            import.ExecuteV2(chkLjo.Checked);
+            break;
+          default:
+            break;
+        }
+        if (import.Status == EnumStatusService.Error)
+        {
+          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        else
+        {
+          MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
   }
 }
