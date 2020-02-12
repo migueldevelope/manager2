@@ -365,7 +365,7 @@ namespace Manager.Services.Specific
       try
       {
         var events = serviceEvent.GetNewVersion(p => p._id == idevent).Result;
-        
+
         List<ViewCertificate> data = new List<ViewCertificate>();
         string instructors = "";
 
@@ -405,7 +405,7 @@ namespace Manager.Services.Specific
         else
         {
           var eventsHistoric = serviceEventHistoric.GetFreeNewVersion(p => p.Event._id == idevent).Result;
-          
+
           var viewEvent = new ViewCertificate()
           {
             NameEvent = eventsHistoric.Name,
@@ -420,13 +420,79 @@ namespace Manager.Services.Specific
           };
           data.Add(viewEvent);
         }
-          
+
 
         var view = new ViewReport()
         {
           Data = data,
           Name = "listcertificate",
           _idReport = NewReport("listcertificate"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(view);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+
+        return report.Link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public string ListHistoricTraining(ViewFilterDate date, string idperson)
+    {
+      try
+      {
+        List<EventHistoric> events = null;
+
+        if ((date == null) & (idperson == ""))
+          events = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        else if ((date == null) & (idperson != ""))
+          events = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result;
+        else if ((date != null) & (idperson == ""))
+          events = serviceEventHistoric.GetAllNewVersion(p => p.Begin >= date.Begin
+          && p.End <= date.End).Result;
+        else
+          events = serviceEventHistoric.GetAllNewVersion(p => p.Begin >= date.Begin
+          && p.End <= date.End && p.Person._id == idperson).Result;
+
+        var data = new List<ViewListHistoricTraining>();
+        var persons = servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        foreach (var item in events)
+        {
+          var person = persons.Where(p => p._id == item.Person._id).FirstOrDefault();
+          var viewL = new ViewListHistoricTraining()
+          {
+            Name = item.Person.Name,
+            Manager = person.Manager.Name,
+            Course = item.Course.Name,
+            Occupation = person.Occupation?.Name,
+            DateBegin = item.Begin,
+            DateEnd = item.End,
+            Entity = item.Entity?.Name,
+            Schooling = person.User.Schooling?.Name,
+            Workload = item.Workload,
+            _id = item.Person._id,
+            Type = EnumTypeHistoricTraining.Realized
+          };
+          data.Add(viewL);
+        }
+
+        var view = new ViewReport()
+        {
+          Data = data,
+          Name = "listhistorictraining",
+          _idReport = NewReport("listhistorictraining"),
           _idAccount = _user._idAccount
         };
         SendMessageAsync(view);

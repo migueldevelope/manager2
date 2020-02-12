@@ -17,5 +17,6 @@ namespace Manager.Core.Interfaces
     string ListTraining(string idevent);
     string ListCertificate(string idevent, string idperson);
     string ListOpportunityLine(string idcompany, string idarea);
+    string ListHistoricTraining(ViewFilterDate date, string idperson);
   }
 }
