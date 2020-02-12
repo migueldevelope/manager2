@@ -94,7 +94,7 @@ namespace Reports.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("listhistoricTraining")]
+    [Route("listhistorictraining")]
     public async Task<string> ListHistoricTraining([FromBody]ViewFilterDate date, string idperson = "")
     {
       return await Task.Run(() => service.ListHistoricTraining(date, idperson));
