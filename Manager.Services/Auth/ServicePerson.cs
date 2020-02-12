@@ -506,7 +506,7 @@ namespace Manager.Services.Auth
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
 
         var xi = servicePerson.Update(person, null);
-        var i = serviceUser.Update(user, null);
+        var ix = serviceUser.Update(user, null);
 
         if (modifyManager)
           manager = UpdateManager(view.Person._id, view.Person.Manager._id, person.Manager?._id);
