@@ -519,7 +519,7 @@ namespace Manager.Services.Specific
                 Schooling = person.User.Schooling?.Name,
                 Workload = item.Workload,
                 _id = person._id,
-                Type = EnumTypeHistoricTraining.Realized
+                Type = EnumTypeHistoricTraining.Instructor
               };
               data.Add(viewL);
             }
