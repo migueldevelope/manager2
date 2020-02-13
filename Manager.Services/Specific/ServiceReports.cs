@@ -51,6 +51,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Event> serviceEvent;
     private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
     private readonly ServiceGeneric<Group> serviceGroup;
+    private readonly ServiceGeneric<MyAwareness> serviceMyAwareness;
     private readonly IServicePerson serviceIPerson;
 
     public string path;
@@ -85,6 +86,7 @@ namespace Manager.Services.Specific
         serviceReport = new ServiceGeneric<Reports>(context);
         serviceEvent = new ServiceGeneric<Event>(context);
         serviceEventHistoric = new ServiceGeneric<EventHistoric>(context);
+        serviceMyAwareness = new ServiceGeneric<MyAwareness>(context);
         serviceIPerson = _serviceIPerson;
         queueClient = new QueueClient(serviceBusConnectionString, "reports");
         queueClientReturn = new QueueClient(serviceBusConnectionString, "reportsreturn");
@@ -116,6 +118,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceOccupation._user = _user;
       serviceArea._user = _user;
+      serviceMyAwareness._user = _user;
       serviceEvent._user = _user;
       serviceEventHistoric._user = _user;
       serviceGroup._user = _user;
@@ -141,6 +144,7 @@ namespace Manager.Services.Specific
       serviceRecommendationPerson._user = _user;
       serviceParameter._user = _user;
       serviceSalaryScale._user = _user;
+      serviceMyAwareness._user = _user;
       serviceOccupation._user = _user;
       serviceArea._user = _user;
       serviceGroup._user = _user;
@@ -153,6 +157,71 @@ namespace Manager.Services.Specific
 
 
     #region reports
+
+    public string ListMyAwareness(string idperson)
+    {
+      try
+      {
+        var data = new ViewMyAwareness();
+        var result = serviceMyAwareness.GetAllNewVersion(p => p._idPerson == idperson).Result.LastOrDefault()?.GetViewCrud();
+
+        if (result != null)
+        {
+          data._idPerson = result._idPerson;
+          data.NamePerson = result.NamePerson;
+          data.Date = result.Date;
+          data.RealitySelfImage = result.Reality?.SelfImage;
+          data.RealityWorker = result.Reality?.Worker;
+          data.RealityPersonalRelationships = result.Reality?.PersonalRelationships;
+          data.RealityPersonalInterest = result.Reality?.PersonalInterest;
+          data.RealityHealth = result.Reality?.Health;
+          data.RealityPurposeOfLife = result.Reality?.PurposeOfLife;
+          data.ImpedimentSelfImage = result.Impediment?.SelfImage;
+          data.ImpedimentWorker = result.Impediment?.Worker;
+          data.ImpedimentPersonalRelationships = result.Impediment?.PersonalRelationships;
+          data.ImpedimentPersonalInterest = result.Impediment?.PersonalInterest;
+          data.ImpedimentHealth = result.Impediment?.Health;
+          data.ImpedimentPurposeOfLife = result.Impediment?.PurposeOfLife;
+          data.FutureVisionSelfImage = result.FutureVision?.SelfImage;
+          data.FutureVisionWorker = result.FutureVision?.Worker;
+          data.FutureVisionPersonalRelationships = result.FutureVision?.PersonalRelationships;
+          data.FutureVisionPersonalInterest = result.FutureVision?.PersonalInterest;
+          data.FutureVisionHealth = result.FutureVision?.Health;
+          data.FutureVisionPurposeOfLife = result.FutureVision?.PurposeOfLife;
+          data.PlanningSelfImage = result.Planning?.SelfImage;
+          data.PlanningWorker = result.Planning?.Worker;
+          data.PlanningPersonalRelationships = result.Planning?.PersonalRelationships;
+          data.PlanningPersonalInterest = result.Planning?.PersonalInterest;
+          data.PlanningHealth = result.Planning?.Health;
+          data.PlanningPurposeOfLife = result.Planning?.PurposeOfLife;
+        }
+
+
+        var view = new ViewReport()
+        {
+          Data = data,
+          Name = "listmyawareness",
+          _idReport = NewReport("listmyawareness"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(view);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+
+        return report.Link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
 
     public string ListOpportunityLine(string idcompany, string idarea)
@@ -476,7 +545,7 @@ namespace Manager.Services.Specific
           events = serviceEventHistoric.GetAllNewVersion(p => p.Begin >= date.Begin && p.End <= date.End && p.Person._id == idperson).Result;
           listevent = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Begin >= date.Begin && p.End <= date.End).Result;
         }
-          
+
 
         var data = new List<ViewListHistoricTraining>();
         var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
@@ -501,11 +570,11 @@ namespace Manager.Services.Specific
         }
 
         //instructors
-        foreach(var item in listevent)
+        foreach (var item in listevent)
         {
-          if(item.Instructors != null)
+          if (item.Instructors != null)
           {
-            if(item.Instructors.Where(p => p.Person._id == idperson).Count() > 0)
+            if (item.Instructors.Where(p => p.Person._id == idperson).Count() > 0)
             {
               var viewL = new ViewListHistoricTraining()
               {

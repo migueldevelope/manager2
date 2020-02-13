@@ -47,6 +47,19 @@ namespace Reports.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listmyawareness/{idperson}")]
+    public async Task<string> ListPersons(string idperson)
+    {
+      return await Task.Run(() => service.ListMyAwareness(idperson));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="idcompany"></param>
     /// <param name="idarea"></param>
     /// <returns></returns>
